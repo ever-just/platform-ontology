@@ -1,0 +1,258 @@
+{
+  "id": "web.input.synthetic-input-patterns",
+  "name": "Machine made input patterns",
+  "kind": "signal",
+  "group": "input-clipboard",
+  "subgroup": "Automation",
+  "tags": [
+    "bot-detection",
+    "automation",
+    "behavior",
+    "input"
+  ],
+  "plain": "Clicks and keys sent by a tool tend to be too neat, too fast or oddly placed.",
+  "meaning": "Input sent through the DevTools Protocol is trusted, so defenses look at how it behaves. Common tells are a click with no earlier mouse move, exact element center targets, whole number coordinates, identical gaps between keys, and zero hold time between key down and key up. Some tools also gave screen coordinates that matched page coordinates, which a real desktop rarely does.",
+  "lifecycle": [
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "mousemove/pointermove/click timing; MouseEvent.clientX/screenX; KeyboardEvent timing; PointerEvent.getCoalescedEvents()",
+      "bcd": [
+        "api.MouseEvent.screenX",
+        "api.PointerEvent.getCoalescedEvents"
+      ],
+      "access": {
+        "grant": "none",
+        "prompt_ui": "None",
+        "secure_context": false,
+        "user_gesture": false,
+        "persistence": "",
+        "revocation": "",
+        "iframe": "",
+        "steps": [
+          "Page records pointer and key events with timestamps",
+          "Script measures paths, gaps and coordinate patterns",
+          "Model scores how human the pattern looks"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "",
+          "note": "Applies to any Chromium based browser",
+          "date": ""
+        },
+        "edge": {
+          "s": "y",
+          "v": "",
+          "note": "Applies to Chromium Edge",
+          "date": ""
+        },
+        "firefox": {
+          "s": "y",
+          "v": "",
+          "note": "Same patterns can be measured",
+          "date": ""
+        },
+        "safari": {
+          "s": "y",
+          "v": "",
+          "note": "Same patterns can be measured",
+          "date": ""
+        },
+        "ios_safari": {
+          "s": "y",
+          "v": "",
+          "note": "Touch patterns",
+          "date": ""
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "",
+          "note": "Touch patterns",
+          "date": ""
+        },
+        "samsung": {
+          "s": "y",
+          "v": "",
+          "note": "Touch patterns",
+          "date": ""
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "object",
+    "metric": "",
+    "update": "stream while the person interacts",
+    "fields": [
+      {
+        "name": "pointerPath",
+        "type": "list",
+        "unit": "px",
+        "range": "positions with timestamps before each click",
+        "precision": ""
+      },
+      {
+        "name": "clickOffset",
+        "type": "float",
+        "unit": "px",
+        "range": "distance from the exact center of the target",
+        "precision": ""
+      },
+      {
+        "name": "keyHoldTime",
+        "type": "integer",
+        "unit": "ms",
+        "range": "gap between key down and key up",
+        "precision": ""
+      },
+      {
+        "name": "screenVsClient",
+        "type": "integer",
+        "unit": "px",
+        "range": "difference between screenX and clientX, which should follow the window position",
+        "precision": ""
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can tell whether input has the rhythm of a person or a program",
+    "user_action": "Nothing. Page script listens in the background",
+    "can": [
+      "Record pointer paths and key timing",
+      "Measure how neat the pattern is",
+      "Flag teleporting clicks and exact centers",
+      "Score the session as human or machine"
+    ],
+    "cannot": [
+      "Catch careful tools that add human noise",
+      "Identify who runs the tool",
+      "Read what you type beyond timing",
+      "Work on pages with few interactions"
+    ],
+    "reach": 2,
+    "reach_label": "Rhythm and geometry of input",
+    "differs": "Agent tools now add random delays and curved paths, so the signal degrades over time. A person on a trackpad can also look unusually smooth."
+  },
+  "story": {
+    "what_it_is": "A program that clicks tends to move like a program. The page measures that and guesses.",
+    "icon": "mouse-pointer-2",
+    "tags": [
+      "Automation",
+      "Silent",
+      "Fraud"
+    ],
+    "marketing": [
+      {
+        "vendor": "MDN",
+        "name": "Pointer events",
+        "pitch": "Docs describe pointer events and how pages receive coordinates and timing.",
+        "url": "https://developer.mozilla.org/en-US/docs/Web/API/Pointer_events"
+      }
+    ],
+    "for_you": "You never see it. A person sounds irregular and so is accepted. An agent that clicks instantly in the exact middle of a button may be challenged.",
+    "for_makers": "Behavior models need many events, so use them on long forms, not on a single click. Add noise if you build agents that must act on defended sites, and respect the site's rules about automation.",
+    "use_cases": [
+      {
+        "type": "security",
+        "example": "A login page scores mouse movement before accepting a password attempt.",
+        "apps": []
+      },
+      {
+        "type": "shopping",
+        "example": "A ticket queue slows clients that click with no earlier movement.",
+        "apps": []
+      },
+      {
+        "type": "games",
+        "example": "A browser game flags auto clickers with identical delays.",
+        "apps": []
+      },
+      {
+        "type": "ads",
+        "example": "An ad unit discards clicks that arrive with no pointer path.",
+        "apps": []
+      },
+      {
+        "type": "banking",
+        "example": "A bank adds typing rhythm to a fraud score at sign in.",
+        "apps": []
+      },
+      {
+        "type": "developer",
+        "example": "A tester adds random delays so an agent does not trip a defense.",
+        "apps": [
+          "Playwright"
+        ]
+      }
+    ],
+    "risks": [
+      "Penalizes assistive tools and unusual input devices",
+      "Needs many events"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Defeated by tools that add human noise",
+    "Smooth trackpad users can look robotic",
+    "Works best with many events"
+  ],
+  "scores": {
+    "sensitivity": 3,
+    "utility": 4,
+    "fingerprint_bits": 2.0,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Bot defense",
+      "Fraud scoring"
+    ],
+    "abuse": [
+      "Behavior profiling",
+      "Blocking assistive tools"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2023",
+      "browser": "chrome",
+      "version": "",
+      "change": "Public reports show CDP dispatched mouse events with matching screen and client coordinates"
+    }
+  ],
+  "related": [
+    "web.input.event-istrusted",
+    "web.perf.mouse-dynamics",
+    "web.input.pointer-events",
+    "web.input.keyboard-events"
+  ],
+  "refs": [
+    {
+      "t": "mdn",
+      "label": "MDN MouseEvent.screenX",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/MouseEvent/screenX"
+    },
+    {
+      "t": "vendor",
+      "label": "Chrome DevTools Protocol: Input.dispatchMouseEvent",
+      "url": "https://chromedevtools.github.io/devtools-protocol/tot/Input/#method-dispatchMouseEvent"
+    },
+    {
+      "t": "paper",
+      "label": "Chrome Platform Status: PointerEvent coalesced events",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/PointerEvent/getCoalescedEvents"
+    }
+  ],
+  "confidence": "inferred"
+}

@@ -1,0 +1,235 @@
+{
+  "id": "web.device.cdp-runtime-enable-leak",
+  "name": "DevTools Protocol side effect",
+  "kind": "signal",
+  "group": "device-system-profile",
+  "subgroup": "Automation",
+  "tags": [
+    "cdp",
+    "devtools-protocol",
+    "automation",
+    "bot-detection"
+  ],
+  "plain": "A page can notice when a tool is listening to the browser over the DevTools Protocol.",
+  "meaning": "Playwright, Puppeteer and many cloud browsers drive Chrome through the DevTools Protocol. When the Runtime domain is enabled, the browser serializes logged objects for the tool. A page can plant an Error whose stack getter runs only when that happens, which reveals the listener. Recent tools reduce this, so it is a moving target.",
+  "lifecycle": [
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "console.debug(new Error()) with a getter on Error.prototype.stack; any accessor that fires only when Runtime.enable serializes the object",
+      "bcd": [
+        "api.Console.debug_static",
+        "api.Error.stack"
+      ],
+      "access": {
+        "grant": "none",
+        "prompt_ui": "None",
+        "secure_context": false,
+        "user_gesture": false,
+        "persistence": "",
+        "revocation": "",
+        "iframe": "",
+        "steps": [
+          "Page defines an Error with a stack getter",
+          "Page logs the Error with console.debug",
+          "If a protocol client serializes it, the getter runs and the page sees it"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "",
+          "note": "Seen with Chromium based browsers driven over the DevTools Protocol",
+          "date": ""
+        },
+        "edge": {
+          "s": "y",
+          "v": "",
+          "note": "Same Chromium behavior",
+          "date": ""
+        },
+        "firefox": {
+          "s": "n",
+          "v": "",
+          "note": "",
+          "date": ""
+        },
+        "safari": {
+          "s": "n",
+          "v": "",
+          "note": "",
+          "date": ""
+        },
+        "ios_safari": {
+          "s": "n",
+          "v": "",
+          "note": "",
+          "date": ""
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "",
+          "note": "Seen when Chrome is driven over the protocol",
+          "date": ""
+        },
+        "samsung": {
+          "s": "p",
+          "v": "",
+          "note": "Chromium based; not verified",
+          "date": ""
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "boolean",
+    "metric": "",
+    "update": "per check",
+    "fields": [
+      {
+        "name": "stackGetterCalled",
+        "type": "boolean",
+        "unit": "",
+        "range": "true when a protocol client serialized the logged object",
+        "precision": ""
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can tell that a debugging tool is attached to the browser",
+    "user_action": "Nothing. It runs from page script",
+    "can": [
+      "Detect a DevTools Protocol client that enabled the Runtime domain",
+      "Add the result to a bot score",
+      "Catch automation that hides the webdriver flag"
+    ],
+    "cannot": [
+      "See which tool is attached",
+      "Work after the tool patches or avoids Runtime.enable",
+      "Tell a developer opening DevTools from a bot",
+      "Work in Firefox or Safari"
+    ],
+    "reach": 1,
+    "reach_label": "One yes or no from a side effect",
+    "differs": "Real developers who open DevTools can trigger it too. Newer automation tools avoid enabling the Runtime domain, which defeats the test."
+  },
+  "story": {
+    "what_it_is": "Some tools watch the browser by talking to it behind the scenes. The page can catch that conversation by leaving a trap that only springs when someone listens.",
+    "icon": "radar",
+    "tags": [
+      "Automation",
+      "Silent",
+      "Chrome"
+    ],
+    "marketing": [
+      {
+        "vendor": "Chrome for Developers",
+        "name": "Chrome DevTools Protocol",
+        "pitch": "Docs list the protocol domains that tools use to inspect and control Chromium.",
+        "url": "https://chromedevtools.github.io/devtools-protocol/"
+      }
+    ],
+    "for_you": "You never see it. If you open DevTools yourself it can also fire. Agent tools that use the protocol can be spotted this way.",
+    "for_makers": "This is a cat and mouse game. Treat the result as one weak signal that decays as tools change. Do not use it alone to block people, because opening DevTools can trigger it.",
+    "use_cases": [
+      {
+        "type": "security",
+        "example": "A bot filter marks sessions where the stack getter fires.",
+        "apps": []
+      },
+      {
+        "type": "shopping",
+        "example": "A retailer flags checkout sessions from protocol driven browsers.",
+        "apps": []
+      },
+      {
+        "type": "ads",
+        "example": "An ad verifier removes views from protocol driven browsers.",
+        "apps": []
+      },
+      {
+        "type": "games",
+        "example": "An anti cheat script looks for a debugger style listener.",
+        "apps": []
+      },
+      {
+        "type": "developer",
+        "example": "A tool maker tests whether their library trips the check.",
+        "apps": [
+          "Playwright",
+          "Puppeteer"
+        ]
+      },
+      {
+        "type": "enterprise",
+        "example": "A fraud team adds the check to a layered score for login attempts.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "False positives for people with DevTools open",
+      "Fast moving"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Chromium only",
+    "Defeated by tools that avoid Runtime.enable",
+    "Developers with DevTools open can match"
+  ],
+  "scores": {
+    "sensitivity": 1,
+    "utility": 3,
+    "fingerprint_bits": 0.3,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Bot defense"
+    ],
+    "abuse": [
+      "Blocking legitimate agents",
+      "Flagging developers"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2022",
+      "browser": "chrome",
+      "version": "",
+      "change": "Runtime.enable serialization described as a way to detect automation"
+    }
+  ],
+  "related": [
+    "web.device.devtools-detection",
+    "web.device.webdriver-flag",
+    "web.net.bot-detection-signals"
+  ],
+  "refs": [
+    {
+      "t": "vendor",
+      "label": "Chrome DevTools Protocol: Runtime domain",
+      "url": "https://chromedevtools.github.io/devtools-protocol/tot/Runtime/"
+    },
+    {
+      "t": "mdn",
+      "label": "MDN console.debug",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/console/debug_static"
+    },
+    {
+      "t": "github",
+      "label": "rebrowser patches (rebrowser)",
+      "url": "https://github.com/rebrowser/rebrowser-patches"
+    }
+  ],
+  "confidence": "inferred"
+}

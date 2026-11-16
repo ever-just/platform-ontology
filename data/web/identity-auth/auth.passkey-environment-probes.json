@@ -1,0 +1,263 @@
+{
+  "id": "web.auth.passkey-environment-probes",
+  "name": "Passkey availability checks",
+  "kind": "signal",
+  "group": "identity-auth",
+  "subgroup": "WebAuthn",
+  "tags": [
+    "passkeys",
+    "webauthn",
+    "feature-detection",
+    "automation"
+  ],
+  "plain": "A page can ask whether this device can use a passkey, without showing a prompt.",
+  "meaning": "Static checks such as PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable() and getClientCapabilities() say whether a built in authenticator, passkey autofill or a phone passkey is possible. Sites use them to decide what to show. The answers also reveal a headless server, virtual machine or container, which often has no authenticator.",
+  "lifecycle": [
+    "on-arrival",
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable(); isConditionalMediationAvailable(); getClientCapabilities()",
+      "bcd": [
+        "api.PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable_static",
+        "api.PublicKeyCredential.isConditionalMediationAvailable_static"
+      ],
+      "access": {
+        "grant": "none",
+        "prompt_ui": "None",
+        "secure_context": true,
+        "user_gesture": false,
+        "persistence": "Read fresh each time",
+        "revocation": "None needed",
+        "iframe": "Needs a permissions policy in cross origin frames",
+        "steps": [
+          "Page calls the static check",
+          "Browser answers true or false with no prompt",
+          "Page picks the sign in screen and may add the answer to a risk score"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "67",
+          "note": "",
+          "date": "2018-05-29"
+        },
+        "edge": {
+          "s": "y",
+          "v": "18",
+          "note": "",
+          "date": "2018-11-13"
+        },
+        "firefox": {
+          "s": "y",
+          "v": "",
+          "note": "Version not checked",
+          "date": ""
+        },
+        "safari": {
+          "s": "y",
+          "v": "13",
+          "note": "",
+          "date": "2019-09-19"
+        },
+        "ios_safari": {
+          "s": "y",
+          "v": "14",
+          "note": "",
+          "date": "2020-09-16"
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "70",
+          "note": "",
+          "date": "2018-10-16"
+        },
+        "samsung": {
+          "s": "y",
+          "v": "",
+          "note": "Version not checked",
+          "date": ""
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "object",
+    "metric": "",
+    "update": "per check",
+    "fields": [
+      {
+        "name": "uvpaa",
+        "type": "boolean",
+        "unit": "",
+        "range": "true when a built in authenticator with user verification exists",
+        "precision": ""
+      },
+      {
+        "name": "conditionalMediation",
+        "type": "boolean",
+        "unit": "",
+        "range": "true when passkey autofill is available",
+        "precision": ""
+      },
+      {
+        "name": "clientCapabilities",
+        "type": "map",
+        "unit": "",
+        "range": "named features such as hybridTransport and passkeyPlatformAuthenticator",
+        "precision": ""
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can tell whether the device is ready for passkeys",
+    "user_action": "Nothing. No prompt appears",
+    "can": [
+      "Check for a built in passkey device",
+      "Check for passkey autofill support",
+      "Hide or show passkey buttons",
+      "Notice servers and containers that have no authenticator"
+    ],
+    "cannot": [
+      "See your passkeys",
+      "Prove a person is present",
+      "Use the answer as identity",
+      "Work in an insecure page"
+    ],
+    "reach": 1,
+    "reach_label": "A few yes or no answers",
+    "differs": "The answers vary by operating system and settings, so a false value is only a hint that the device may be a server."
+  },
+  "story": {
+    "what_it_is": "The page can ask your browser a few quiet yes or no questions about passkeys. It never sees your keys.",
+    "icon": "key-round",
+    "tags": [
+      "Sign in",
+      "Silent",
+      "Passkeys"
+    ],
+    "marketing": [
+      {
+        "vendor": "MDN",
+        "name": "PublicKeyCredential",
+        "pitch": "Docs list the static checks used to decide whether to offer passkeys.",
+        "url": "https://developer.mozilla.org/en-US/docs/Web/API/PublicKeyCredential"
+      }
+    ],
+    "for_you": "You never see it. A site uses the answers to decide whether to show a passkey button for you.",
+    "for_makers": "Use the checks to choose what to show, but never to block a person. Treat a false answer as a weak risk hint only, since many laptops without biometrics also answer false.",
+    "use_cases": [
+      {
+        "type": "security",
+        "example": "A login page shows a passkey button only where a built in authenticator exists.",
+        "apps": []
+      },
+      {
+        "type": "banking",
+        "example": "A bank offers passkey autofill when it is available.",
+        "apps": []
+      },
+      {
+        "type": "shopping",
+        "example": "A store hides a passkey prompt on devices that cannot use one.",
+        "apps": []
+      },
+      {
+        "type": "analytics",
+        "example": "A product team measures what share of visitors can use passkeys.",
+        "apps": []
+      },
+      {
+        "type": "enterprise",
+        "example": "A fraud team notes that servers and containers answer false.",
+        "apps": []
+      },
+      {
+        "type": "developer",
+        "example": "A tester sets up a virtual authenticator to make the checks pass.",
+        "apps": [
+          "Chrome DevTools"
+        ]
+      }
+    ],
+    "risks": [
+      "Weak bot hint can penalize real users",
+      "Adds a few fingerprint bits"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Varies by OS and settings",
+    "Cannot see credentials",
+    "Not identity"
+  ],
+  "scores": {
+    "sensitivity": 1,
+    "utility": 4,
+    "fingerprint_bits": 1.0,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Better sign in screens",
+      "Risk hints"
+    ],
+    "abuse": [
+      "Penalizing servers and VMs"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2018-05",
+      "browser": "chrome",
+      "version": "67",
+      "change": "isUserVerifyingPlatformAuthenticatorAvailable ships"
+    },
+    {
+      "date": "2022-10",
+      "browser": "chrome",
+      "version": "108",
+      "change": "isConditionalMediationAvailable added"
+    },
+    {
+      "date": "2024",
+      "browser": "chrome",
+      "version": "133",
+      "change": "getClientCapabilities added to Chrome"
+    }
+  ],
+  "related": [
+    "web.auth.passkeys",
+    "web.identity.webauthn-get",
+    "web.identity.webauthn-create",
+    "web.auth.virtual-authenticator-webdriver"
+  ],
+  "refs": [
+    {
+      "t": "mdn",
+      "label": "MDN PublicKeyCredential",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/PublicKeyCredential"
+    },
+    {
+      "t": "spec",
+      "label": "W3C WebAuthn Level 3",
+      "url": "https://www.w3.org/TR/webauthn-3/"
+    },
+    {
+      "t": "vendor",
+      "label": "web.dev: passkey form autofill",
+      "url": "https://web.dev/articles/passkey-form-autofill"
+    }
+  ],
+  "confidence": "docs"
+}

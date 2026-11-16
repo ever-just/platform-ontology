@@ -1,0 +1,265 @@
+{
+  "id": "web.auth.webauthn-hybrid-transport",
+  "name": "Passkey on a nearby phone (hybrid)",
+  "kind": "capability",
+  "group": "identity-auth",
+  "subgroup": "WebAuthn",
+  "tags": [
+    "passkeys",
+    "webauthn",
+    "hybrid",
+    "qr-code",
+    "cross-device"
+  ],
+  "plain": "A computer shows a QR code and your phone approves the passkey sign in.",
+  "meaning": "Hybrid transport lets a passkey on a phone sign you in on another device. The computer shows a QR code, the phone scans it, and the two devices check they are near each other over Bluetooth before talking through a relay. It works on a browser with no passkey of its own. An unattended cloud browser or agent cannot finish it without a person holding the phone.",
+  "lifecycle": [
+    "signed-in",
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "navigator.credentials.get({publicKey}) with hybrid transport chosen in the browser's passkey sheet; transport value 'hybrid'",
+      "permissions_policy": "publickey-credentials-get",
+      "bcd": [
+        "api.AuthenticatorAttestationResponse.getTransports"
+      ],
+      "access": {
+        "grant": "prompt",
+        "prompt_ui": "Browser passkey sheet with QR code, then phone prompt",
+        "secure_context": true,
+        "user_gesture": true,
+        "persistence": "Per site and passkey",
+        "revocation": "Delete the passkey on the phone or in the password manager",
+        "iframe": "Same as top level; cross origin frames need a permissions policy where listed",
+        "steps": [
+          "Site starts a passkey sign in",
+          "Browser offers 'use a phone' and shows a QR code",
+          "Phone scans, checks Bluetooth proximity and asks for biometrics",
+          "Phone sends the signed answer to the page"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "108",
+          "note": "Desktop shows a QR code for a nearby phone",
+          "date": "2022-11-29"
+        },
+        "edge": {
+          "s": "y",
+          "v": "108",
+          "note": "Chromium Edge",
+          "date": "2022-11-29"
+        },
+        "firefox": {
+          "s": "p",
+          "v": "",
+          "note": "Depends on the OS passkey dialog; check your platform",
+          "date": ""
+        },
+        "safari": {
+          "s": "y",
+          "v": "16",
+          "note": "Safari 16 and later on Mac",
+          "date": "2022-09-12"
+        },
+        "ios_safari": {
+          "s": "y",
+          "v": "16",
+          "note": "Phone side of hybrid; iOS 16",
+          "date": "2022-09-12"
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "",
+          "note": "Acts as the phone (authenticator) side",
+          "date": ""
+        },
+        "samsung": {
+          "s": "p",
+          "v": "",
+          "note": "Phone side depends on the password manager",
+          "date": ""
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "object",
+    "metric": "",
+    "update": "per sign in",
+    "fields": [
+      {
+        "name": "transports",
+        "type": "list",
+        "unit": "",
+        "range": "includes hybrid when the passkey can be used from a nearby phone",
+        "precision": ""
+      },
+      {
+        "name": "authenticatorAttachment",
+        "type": "enum",
+        "unit": "",
+        "range": "cross-platform for hybrid sign ins",
+        "precision": ""
+      },
+      {
+        "name": "signature",
+        "type": "binary",
+        "unit": "",
+        "range": "signed challenge for the site",
+        "precision": ""
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can sign you in with a passkey on a phone, with no passkey on the computer",
+    "user_action": "Scan the QR code and approve on the phone",
+    "can": [
+      "Use a passkey that lives on a nearby phone",
+      "Sign in on a shared or new computer",
+      "Prove you are near the phone, which blocks remote phishing",
+      "Work without typing a password"
+    ],
+    "cannot": [
+      "Run unattended; a person must hold the phone",
+      "Work without Bluetooth on both devices",
+      "Let an agent finish the step",
+      "Skip the phone's fingerprint or face check"
+    ],
+    "reach": 2,
+    "reach_label": "One phone approval per sign in",
+    "differs": "Needs Bluetooth, internet and a phone with a passkey. Firefox depends on the operating system. Cloud browsers and agents stop at the QR code."
+  },
+  "story": {
+    "what_it_is": "A QR code on the screen lets your phone vouch for you. The two devices check they are close so a far away attacker cannot use it.",
+    "icon": "smartphone-nfc",
+    "tags": [
+      "Sign in",
+      "Asks first",
+      "Passkeys"
+    ],
+    "marketing": [
+      {
+        "vendor": "FIDO Alliance",
+        "name": "Passkeys",
+        "pitch": "Overview of passkeys and the cross device sign in flow.",
+        "url": "https://fidoalliance.org/passkeys/"
+      }
+    ],
+    "for_you": "You scan a QR code with your phone and approve with your face or finger. Nothing is typed. It is the way to use a phone passkey on someone else's computer.",
+    "for_makers": "Do not assume the user is on a device with a passkey. Offer the phone path and an alternative. For agents and cloud browsers plan a human handoff step at the QR code.",
+    "use_cases": [
+      {
+        "type": "security",
+        "example": "An employee signs in on a shared kiosk using the phone's passkey.",
+        "apps": []
+      },
+      {
+        "type": "banking",
+        "example": "A bank customer signs in on a new laptop by scanning a QR code.",
+        "apps": []
+      },
+      {
+        "type": "shopping",
+        "example": "A shopper checks out on a borrowed computer with a phone passkey.",
+        "apps": []
+      },
+      {
+        "type": "productivity",
+        "example": "A user opens a work account on a new machine with the phone.",
+        "apps": [
+          "Google Workspace"
+        ]
+      },
+      {
+        "type": "enterprise",
+        "example": "Staff approve admin sign ins on their phone.",
+        "apps": []
+      },
+      {
+        "type": "developer",
+        "example": "An agent team adds a person to approve the QR step in an automated flow.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Needs Bluetooth and a nearby phone",
+      "Blocks fully unattended agents"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Needs the phone to be near and awake",
+    "QR scanning is a human step",
+    "Support varies by browser and OS"
+  ],
+  "scores": {
+    "sensitivity": 4,
+    "utility": 5,
+    "fingerprint_bits": 0.5,
+    "friction": 2
+  },
+  "value": {
+    "legit_uses": [
+      "Phishing resistant sign in on any computer",
+      "Human approval for agent hand offs"
+    ],
+    "abuse": [
+      "QR code social engineering at kiosks"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2022-09",
+      "browser": "safari",
+      "version": "16",
+      "change": "Passkeys and cross device sign in in Safari 16"
+    },
+    {
+      "date": "2022-11",
+      "browser": "chrome",
+      "version": "108",
+      "change": "Chrome desktop adds the phone QR code flow"
+    },
+    {
+      "date": "2024",
+      "browser": "chrome",
+      "version": "",
+      "change": "Hybrid transport value standardized"
+    }
+  ],
+  "related": [
+    "web.auth.passkeys",
+    "web.identity.webauthn-get",
+    "web.identity.webauthn-create",
+    "web.auth.cross-device-linking"
+  ],
+  "refs": [
+    {
+      "t": "spec",
+      "label": "W3C WebAuthn Level 3",
+      "url": "https://www.w3.org/TR/webauthn-3/"
+    },
+    {
+      "t": "vendor",
+      "label": "FIDO Alliance: passkeys",
+      "url": "https://fidoalliance.org/passkeys/"
+    },
+    {
+      "t": "mdn",
+      "label": "MDN Web Authentication API",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/Web_Authentication_API"
+    }
+  ],
+  "confidence": "docs"
+}

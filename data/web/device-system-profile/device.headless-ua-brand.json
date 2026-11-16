@@ -1,0 +1,261 @@
+{
+  "id": "web.device.headless-ua-brand",
+  "name": "Headless label in the browser identity",
+  "kind": "signal",
+  "group": "device-system-profile",
+  "subgroup": "Automation",
+  "tags": [
+    "user-agent",
+    "client-hints",
+    "headless",
+    "automation"
+  ],
+  "plain": "The browser's name tag can say it is running without a screen.",
+  "meaning": "Headless Chrome announces itself as HeadlessChrome in the User-Agent string and in the Sec-CH-UA brand list unless the operator overrides it. Bot defenses read it first. Agents that patch the user agent often forget the client hint brands, so the two disagree and give the agent away.",
+  "lifecycle": [
+    "on-arrival"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "navigator.userAgent contains 'HeadlessChrome'; Sec-CH-UA brand 'HeadlessChrome'; navigator.userAgentData.brands",
+      "bcd": [
+        "api.Navigator.userAgent",
+        "api.NavigatorUAData.brands"
+      ],
+      "access": {
+        "grant": "none",
+        "prompt_ui": "None",
+        "secure_context": false,
+        "user_gesture": false,
+        "persistence": "",
+        "revocation": "",
+        "iframe": "",
+        "steps": [
+          "Browser sends User-Agent and Sec-CH-UA on every request",
+          "Server or page script reads the brand names",
+          "Compare the label with the other headers and the JavaScript values"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "59",
+          "note": "Headless mode added in Chrome 59",
+          "date": "2017-06-05"
+        },
+        "edge": {
+          "s": "y",
+          "v": "79",
+          "note": "Chromium Edge headless",
+          "date": "2020-01-15"
+        },
+        "firefox": {
+          "s": "n",
+          "v": "",
+          "note": "Headless Firefox sends the normal user agent",
+          "date": ""
+        },
+        "safari": {
+          "s": "n",
+          "v": "",
+          "note": "No headless mode label",
+          "date": ""
+        },
+        "ios_safari": {
+          "s": "n",
+          "v": "",
+          "note": "",
+          "date": ""
+        },
+        "chrome_android": {
+          "s": "n",
+          "v": "",
+          "note": "",
+          "date": ""
+        },
+        "samsung": {
+          "s": "n",
+          "v": "",
+          "note": "",
+          "date": ""
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "string",
+    "metric": "",
+    "update": "static per session",
+    "fields": [
+      {
+        "name": "userAgent",
+        "type": "string",
+        "unit": "",
+        "range": "contains HeadlessChrome/<version> in headless Chrome",
+        "precision": ""
+      },
+      {
+        "name": "Sec-CH-UA",
+        "type": "header",
+        "unit": "",
+        "range": "brand list that may include HeadlessChrome",
+        "precision": ""
+      },
+      {
+        "name": "userAgentData.brands",
+        "type": "list",
+        "unit": "",
+        "range": "same brands as the header when not patched",
+        "precision": ""
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can show that Chrome is running without a visible window",
+    "user_action": "Nothing. It is sent with every request",
+    "can": [
+      "Read the browser name and brand list",
+      "Spot the HeadlessChrome label",
+      "Compare the user agent with client hints to find patched agents",
+      "Block or challenge clients that look headless"
+    ],
+    "cannot": [
+      "Tell a real person from a well disguised agent",
+      "See what the script is doing",
+      "Prove who runs the browser",
+      "Stop operators from changing the label"
+    ],
+    "reach": 1,
+    "reach_label": "A name tag the operator can rewrite",
+    "differs": "Operators change it with one launch flag, so a clean label proves little. A mismatch between the user agent and the client hints is the stronger clue."
+  },
+  "story": {
+    "what_it_is": "Headless Chrome tells every site it has no window, in the same place it states its name and version.",
+    "icon": "bot",
+    "tags": [
+      "Automation",
+      "Silent",
+      "Fraud"
+    ],
+    "marketing": [
+      {
+        "vendor": "Chrome for Developers",
+        "name": "Headless Chrome",
+        "pitch": "Docs describe running Chrome without a visible UI for automation and testing.",
+        "url": "https://developer.chrome.com/docs/chromium/headless"
+      }
+    ],
+    "for_you": "You never see it. Your normal browser reports its plain name. If you run an agent in headless mode, some sites challenge it on arrival.",
+    "for_makers": "It is the cheapest headless check and sits at the network layer, before any script runs. Check that the user agent string, the Sec-CH-UA brands and navigator.userAgentData all agree.",
+    "use_cases": [
+      {
+        "type": "security",
+        "example": "A firewall serves a challenge to any request whose brand list says HeadlessChrome.",
+        "apps": [
+          "Cloudflare"
+        ]
+      },
+      {
+        "type": "shopping",
+        "example": "A ticket seller drops queue requests from headless browsers.",
+        "apps": []
+      },
+      {
+        "type": "ads",
+        "example": "An ad network does not count views from clients that report a headless brand.",
+        "apps": []
+      },
+      {
+        "type": "analytics",
+        "example": "A site analytics tool files headless visits under bots.",
+        "apps": [
+          "Google Analytics"
+        ]
+      },
+      {
+        "type": "developer",
+        "example": "A tester sees the label in server logs and knows the run was headless.",
+        "apps": [
+          "Puppeteer",
+          "Playwright"
+        ]
+      },
+      {
+        "type": "travel",
+        "example": "A fare site hides prices from clients that announce headless mode.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Blocks useful agents",
+      "Easy to hide"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Trivially rewritten with a launch flag",
+    "A patched user agent with unpatched client hints is the stronger tell",
+    "Says nothing about intent"
+  ],
+  "scores": {
+    "sensitivity": 1,
+    "utility": 4,
+    "fingerprint_bits": 0.2,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Bot defense",
+      "Cleaner analytics"
+    ],
+    "abuse": [
+      "Blocking legitimate agents"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2017-06",
+      "browser": "chrome",
+      "version": "59",
+      "change": "Headless mode ships and sends a HeadlessChrome user agent"
+    },
+    {
+      "date": "2023",
+      "browser": "chrome",
+      "version": "112",
+      "change": "New headless mode shares the full browser code but keeps the HeadlessChrome label by default"
+    }
+  ],
+  "related": [
+    "web.device.webdriver-flag",
+    "web.device.user-agent-string",
+    "web.net.sec-ch-ua",
+    "web.net.bot-detection-signals"
+  ],
+  "refs": [
+    {
+      "t": "mdn",
+      "label": "MDN Navigator.userAgentData",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/Navigator/userAgentData"
+    },
+    {
+      "t": "vendor",
+      "label": "Chrome for Developers: Headless Chrome",
+      "url": "https://developer.chrome.com/docs/chromium/headless"
+    },
+    {
+      "t": "github",
+      "label": "CreepJS (abrahamjuliot)",
+      "url": "https://github.com/abrahamjuliot/creepjs"
+    }
+  ],
+  "confidence": "docs"
+}
