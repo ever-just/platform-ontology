@@ -17,6 +17,5 @@ mkdir -p site/data && cp -R dist/. site/data/
 mkdir -p site/schema && cp schema/*.json site/schema/
 mkdir -p site/brand && cp brand/* site/brand/
 cp brand/favicon.ico site/favicon.ico 2>/dev/null || true
-echo "platformontology.lol" > site/CNAME
 touch site/.nojekyll
 echo "site built: $(find site -type f | wc -l) files"
