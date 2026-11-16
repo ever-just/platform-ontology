@@ -14,9 +14,12 @@ import { Capabilities } from "./ui/Capabilities";
 import { Inspector } from "./ui/Inspector";
 import { clock } from "./ui/charts";
 import { Spark } from "./ui/kit";
+import { PrivacyDialog, PrivacyLink } from "./ui/Privacy";
+import { setVisit, startUploader } from "./core/uploader";
 
 registerBuiltins();
 registerLinks();
+startUploader();
 
 const RANGES: [number, string][] = [[60, "1m"], [300, "5m"], [900, "15m"], [3600, "1h"]];
 const TYPES: [ChartOpts["type"], string, typeof ChartLine][] = [["auto", "Auto", WandSparkles], ["line", "Line", ChartLine], ["area", "Area", ChartArea], ["bars", "Bars", ChartColumn]];
@@ -24,6 +27,7 @@ const GROUPINGS: [ChartOpts["by"], string][] = [["auto", "Best fit"], ["group", 
 const PREFS = "po.chart";
 const loadPrefs = (): Partial<ChartOpts> & { range?: number } => { try { return JSON.parse(localStorage.getItem(PREFS) || "{}"); } catch { return {}; } };
 const readHash = () => decodeURIComponent(location.hash.replace(/^#/, ""));
+const PRIVACY = "privacy";
 
 export function App() {
   const [atlas, setAtlas] = useState<Atlas | null>(null);
@@ -60,6 +64,19 @@ function Console({ atlas }: { atlas: Atlas }) {
   const profile = useMemo(detectProfile, []);
   const [passive, setPassive] = useState<PassiveSignal[] | null>(null);
   useEffect(() => { startTimeline(); collectPassive().then(setPassive).catch(() => setPassive([])); }, []);
+  useEffect(() => { setVisit(profile, passive); }, [profile, passive]);
+  const [privacy, setPrivacy] = useState(() => readHash() === PRIVACY);
+  useEffect(() => {
+    const on = () => setPrivacy(true);
+    const onHash = () => { if (readHash() === PRIVACY) setPrivacy(true); };
+    window.addEventListener("po:privacy", on);
+    window.addEventListener("hashchange", onHash);
+    return () => { window.removeEventListener("po:privacy", on); window.removeEventListener("hashchange", onHash); };
+  }, []);
+  const closePrivacy = useCallback(() => {
+    setPrivacy(false);
+    if (readHash() === PRIVACY) history.replaceState(null, "", location.pathname + location.search);
+  }, []);
 
   const nodeById = useMemo(() => new Map(atlas.nodes.map((n) => [n.i, n])), [atlas]);
   const byAtlas = useMemo(() => {
@@ -84,7 +101,7 @@ function Console({ atlas }: { atlas: Atlas }) {
   const [showFeed, setShowFeed] = useState(false);
 
   useEffect(() => {
-    const on = () => setSelected(resolve(readHash())?.id || null);
+    const on = () => { if (readHash() !== PRIVACY) setSelected(resolve(readHash())?.id || null); };
     window.addEventListener("hashchange", on);
     return () => window.removeEventListener("hashchange", on);
   }, [resolve]);
@@ -176,10 +193,11 @@ function Console({ atlas }: { atlas: Atlas }) {
         </div>
 
         <footer className="foot">
-          <span>Everything here runs in this tab. Nothing is sent anywhere.</span>
+          <span>Readings from this console are stored to study what browsers expose. Personal content is removed first. <PrivacyLink>Privacy notice</PrivacyLink></span>
           <span>{atlas.nodes.length} attributes across {atlas.browsers.length} browsers, built {atlas.built}</span>
         </footer>
       </main>
+      <PrivacyDialog open={privacy} onClose={closePrivacy} />
     </div>
   );
 }
