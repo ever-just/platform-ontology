@@ -345,7 +345,7 @@ function ScreensInstrument({ session }: InstrumentProps) {
           <svg viewBox={vb} className="cdf-screens">
             {d.screens.map((s, i) => (
               <g key={i}>
-                <rect x={s.left} y={s.top} width={s.width} height={s.height} fill={s.current ? "#f5f5f7" : "#fff"} stroke={s.primary ? C.ink : C.mute} strokeWidth={k * 0.35} rx={k * 0.8} />
+                <rect x={s.left} y={s.top} width={s.width} height={s.height} fill={s.current ? C.line2 : C.bg} stroke={s.primary ? C.ink : C.mute} strokeWidth={k * 0.35} rx={k * 0.8} />
                 <text x={s.left + s.width / 2} y={s.top + s.height / 2 - k * 1.5} textAnchor="middle" className="cdf-scr-label" style={{ fontSize: k * 5 }}>{s.label.length > 22 ? s.label.slice(0, 21) + "..." : s.label}</text>
                 <text x={s.left + s.width / 2} y={s.top + s.height / 2 + k * 5} textAnchor="middle" className="cdf-scr-sub" style={{ fontSize: k * 4 }}>{s.width} x {s.height}{s.primary ? " , primary" : ""}</text>
                 <text x={s.left + s.width / 2} y={s.top + s.height / 2 + k * 10.5} textAnchor="middle" className="cdf-scr-sub" style={{ fontSize: k * 3.4 }}>at {s.left}, {s.top}{s.current ? " , this window" : ""}</text>

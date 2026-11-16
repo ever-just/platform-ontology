@@ -266,9 +266,9 @@ function badgeScope(): ScopeDef {
             <div className="eir-wrap">
               <div className="eir-icon">
                 <svg width="96" height="96" viewBox="0 0 96 96">
-                  <rect x="10" y="10" width="68" height="68" rx="16" fill="#fff" stroke={C.ink} strokeWidth="1.5" />
+                  <rect x="10" y="10" width="68" height="68" rx="16" fill={C.bg} stroke={C.ink} strokeWidth="1.5" />
                   <path d="M28 52 L44 28 L60 52 Z" fill="none" stroke={C.ink} strokeWidth="1.5" strokeLinejoin="round" />
-                  {d.badge > 0 && <g><circle className="eir-badge-dot" cx="76" cy="20" r="13" /><text x="76" y="25" textAnchor="middle" fontSize="14" fill="#fff" fontFamily="Geist Mono, monospace">{d.badge > 99 ? "99+" : d.badge}</text></g>}
+                  {d.badge > 0 && <g><circle className="eir-badge-dot" cx="76" cy="20" r="13" /><text x="76" y="25" textAnchor="middle" fontSize="14" fill={C.bg} fontFamily="var(--mono)">{d.badge > 99 ? "99+" : d.badge}</text></g>}
                 </svg>
                 <div className="eir-row"><ActionButton id={id} label="Clear badge" ghost disabled={d.badge === 0} /></div>
               </div>

@@ -10,7 +10,7 @@ import { addCapture } from "../core/uploader";
 
 const COLOR = DOMAIN_COLOR.capture;
 const win = () => window as any;
-const mono = '10px "Geist Mono", ui-monospace, monospace';
+const mono = '10px ui-monospace, SFMono-Regular, Menlo, monospace';
 
 function Vid({ stream, vref }: { stream: MediaStream; vref?: { current: HTMLVideoElement | null } }) {
   const ref = useRef<HTMLVideoElement>(null);
@@ -475,13 +475,13 @@ function screenSim(ctx: Ctx) {
   ctx.granted();
   const W = 1280, H = 720;
   const src = paintedStream(W, H, (g, t) => {
-    g.fillStyle = "#f5f5f7"; g.fillRect(0, 0, W, H);
-    g.fillStyle = "#fff"; g.strokeStyle = "#d8d8dc";
+    g.fillStyle = C.line2; g.fillRect(0, 0, W, H);
+    g.fillStyle = C.bg; g.strokeStyle = C.line;
     g.fillRect(80, 60, 700, 480); g.strokeRect(80, 60, 700, 480);
-    g.fillStyle = "#ececef"; g.fillRect(80, 60, 700, 34);
+    g.fillStyle = C.line; g.fillRect(80, 60, 700, 34);
     g.fillStyle = "#cfcfd4";
     for (let i = 0; i < 9; i++) g.fillRect(110, 124 + i * 44, 300 + ((i * 97 + Math.floor(t / 400)) % 300), 14);
-    g.fillStyle = "#1f4bff"; g.fillRect(820 + Math.sin(t / 900) * 30, 220, 320, 200);
+    g.fillStyle = C.accent; g.fillRect(820 + Math.sin(t / 900) * 30, 220, 320, 200);
   }, ctx);
   const timer = every(1000, () => ctx.emit({ width: W, height: H, surface: "monitor", frame_rate: 25, label: "screen:0:0 (simulated)" } satisfies ScreenRec));
   return () => { timer(); src.stop(); };

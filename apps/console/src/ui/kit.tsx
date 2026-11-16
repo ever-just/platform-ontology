@@ -3,28 +3,44 @@ import type { DomainId, Session } from "../core/types";
 
 // Shared instrument parts. Every instrument is built from these so the console reads as one system.
 
+// Blueprint palette hues (@blueprintjs/colors, Apache 2.0); the "4" shades read on dark and light.
 export const DOMAIN_COLOR: Record<DomainId, string> = {
-  place: "#1f6feb",
-  motion: "#8250df",
-  surroundings: "#0a9396",
-  capture: "#e5484d",
-  device: "#57606a",
-  fingerprint: "#c99a06",
-  link: "#2da44e",
-  identity: "#bf3989",
-  reach: "#f76b15",
+  place: "#4c90f0",
+  motion: "#9881f3",
+  surroundings: "#13c9ba",
+  capture: "#e76a6e",
+  device: "#8f99a8",
+  fingerprint: "#f0b726",
+  link: "#43bf4d",
+  identity: "#f5498b",
+  reach: "#eb6847",
 };
 
+/** Theme tokens resolved from CSS, so SVG and canvas drawing follow the chosen look. */
+const tokCache = new Map<string, string>();
+const FALLBACK: Record<string, string> = { ink: "#f6f7f9", ink2: "#c5cbd3", mute: "#8f99a8", line: "#2f343c", line2: "#252a31", bg: "#1c2127", panel: "#252a31", accent: "#4c90f0", ok: "#32a467", warn: "#ec9a3c", err: "#e76a6e" };
+function tok(k: string): string {
+  let v = tokCache.get(k);
+  if (v) return v;
+  try { v = getComputedStyle(document.documentElement).getPropertyValue("--" + k).trim(); } catch { v = ""; }
+  v = v || FALLBACK[k];
+  tokCache.set(k, v);
+  return v;
+}
+/** Call after the look changes so the next draw reads fresh tokens. */
+export const resetTokens = () => tokCache.clear();
 export const C = {
-  ink: "#0b0b0c",
-  ink2: "#4a4a50",
-  mute: "#8a8a92",
-  line: "#ececef",
-  line2: "#f5f5f7",
-  accent: "#1f4bff",
-  ok: "#0a9f5a",
-  warn: "#d98a00",
-  err: "#e0352b",
+  get ink() { return tok("ink"); },
+  get ink2() { return tok("ink2"); },
+  get mute() { return tok("mute"); },
+  get line() { return tok("line"); },
+  get line2() { return tok("line2"); },
+  get bg() { return tok("bg"); },
+  get panel() { return tok("panel"); },
+  get accent() { return tok("accent"); },
+  get ok() { return tok("ok"); },
+  get warn() { return tok("warn"); },
+  get err() { return tok("err"); },
 };
 
 export function fmt(v: unknown, digits = 2): string {

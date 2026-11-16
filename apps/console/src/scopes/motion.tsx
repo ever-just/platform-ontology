@@ -7,7 +7,7 @@ import "./place-motion-link.css";
 // How you move: tilt, shake, pointer and typing rhythm, and attention. Mostly silent signals.
 
 const COLOR = DOMAIN_COLOR.motion;
-const MONO = '"Geist Mono", ui-monospace, monospace';
+const MONO = 'ui-monospace, SFMono-Regular, Menlo, monospace';
 
 /** iOS gates motion and orientation behind a prompt that must come from a click. */
 export async function askSensor(kind: "DeviceOrientationEvent" | "DeviceMotionEvent") {

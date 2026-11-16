@@ -4,6 +4,9 @@ import "./surroundings.css";
 import type { Ctx, InstrumentProps, ScopeDef } from "../core/types";
 import { every, noise, series, unsupported } from "../core/harness";
 import { C, DOMAIN_COLOR, Frame, Readout, Spark, Table, Waiting, fmt, lastData } from "../ui/kit";
+import { Callout, Tag } from "@blueprintjs/core";
+import { Cross, InfoSign, Tick } from "@blueprintjs/icons";
+import { btAppearance, btCompany, btUuid, usbVendor, useRefData } from "../core/ref";
 
 // What is near you: Bluetooth radar plus chooser-based peripherals (USB, serial, HID) and media devices.
 // This file is the reference shape for every scope file: adapters (live + sim) and an Instrument.
@@ -12,9 +15,40 @@ const nav = () => navigator as any;
 const COLOR = DOMAIN_COLOR.surroundings;
 
 // ---------- Bluetooth ----------
+//
+// What a web page can and cannot see (Chrome, checked 2026-11-16):
+//  * requestDevice() always opens the browser chooser and hands back ONE device, the one the person picks.
+//    acceptAllDevices only removes the filter on what the chooser lists; it never returns more than one.
+//  * getDevices() returns devices this site was already allowed to use, with no prompt. Chrome ships it behind
+//    chrome://flags/#enable-web-bluetooth-new-permissions-backend.
+//  * watchAdvertisements() streams live signal strength and advertisement data for one allowed device. Same flag.
+//  * requestLEScan() is the only way to see every advertiser nearby. It needs
+//    chrome://flags/#enable-experimental-web-platform-features, its own prompt and a click.
+//  * gatt.connect() on an allowed device needs no new prompt.
+//  * Safari and Firefox have no Web Bluetooth at all.
 
-type Ble = { id: string; name: string; rssi: number | null; tx: number; dist: number | null; kind: string; services: string[]; seen: number; battery?: number | null };
+type Ble = {
+  id: string; name: string; rssi: number | null; tx: number; dist: number | null; kind: string; services: string[]; seen: number;
+  battery?: number | null; via?: "scan" | "allowed" | "chosen"; company?: string | null; companyId?: number | null; mfr?: string | null;
+  appearance?: number | null; txPower?: number | null; ads?: number;
+};
 type BleRec = { devices: Ble[]; count: number; nearest_m: number | null; strongest_dbm: number | null; mode: string };
+
+export type BleCaps = { api: boolean; availability: boolean | null; getDevices: boolean; watchAds: boolean; leScan: boolean; secure: boolean };
+
+/** Feature detection only: nothing here prompts the person. */
+export async function bleCaps(): Promise<BleCaps> {
+  const bt = nav().bluetooth;
+  const BD = (globalThis as any).BluetoothDevice;
+  let availability: boolean | null = null;
+  try { availability = bt?.getAvailability ? await bt.getAvailability() : null; } catch { availability = null; }
+  return {
+    api: !!bt, availability, secure: typeof isSecureContext === "boolean" ? isSecureContext : true,
+    getDevices: typeof bt?.getDevices === "function",
+    watchAds: !!BD && "watchAdvertisements" in BD.prototype,
+    leScan: typeof bt?.requestLEScan === "function",
+  };
+}
 
 /** Log-distance path loss: distance in metres from received power and 1 m reference power. */
 export function rssiToMetres(rssi: number, tx = -59, n = 2.2) {
@@ -32,86 +66,142 @@ function summarize(list: Ble[], mode: string): BleRec {
   };
 }
 
+const bytesHex = (v: DataView, max = 8) => {
+  const out: string[] = [];
+  for (let i = 0; i < Math.min(v.byteLength, max); i++) out.push(v.getUint8(i).toString(16).padStart(2, "0"));
+  return out.join(" ") + (v.byteLength > max ? " …" : "");
+};
+
+/** Turns an advertisementreceived event into the fields we keep. Company and appearance names come from SIG tables. */
+function fromAdvert(e: any, prev: Ble | undefined, via: Ble["via"]): Ble {
+  const tx = typeof e.txPower === "number" ? e.txPower - 41 : prev?.tx ?? -59;
+  const rssi = typeof e.rssi === "number" ? e.rssi : null;
+  const smooth = prev && prev.rssi !== null && rssi !== null ? prev.rssi * 0.6 + rssi * 0.4 : rssi ?? prev?.rssi ?? null;
+  let companyId: number | null = prev?.companyId ?? null, mfr: string | null = prev?.mfr ?? null;
+  if (e.manufacturerData && e.manufacturerData.size) {
+    const [id, view] = [...e.manufacturerData.entries()][0];
+    companyId = id; mfr = bytesHex(view);
+  }
+  const svc = new Set<string>([...(e.uuids || []), ...(e.serviceData ? [...e.serviceData.keys()] : []), ...(prev?.services || [])]);
+  const appearance = typeof e.appearance === "number" ? e.appearance : prev?.appearance ?? null;
+  return {
+    id: e.device.id, name: e.device.name || e.name || prev?.name || "Unnamed device", rssi: smooth, tx,
+    dist: smooth !== null ? rssiToMetres(smooth, tx) : null,
+    kind: appearance !== null ? btAppearance(appearance) || `appearance ${appearance}` : prev?.kind || "advertiser",
+    services: [...svc].slice(0, 8), seen: Date.now(), battery: prev?.battery ?? null, via: prev?.via ?? via,
+    companyId, company: companyId !== null ? btCompany(companyId) : null, mfr, appearance,
+    txPower: typeof e.txPower === "number" ? e.txPower : prev?.txPower ?? null, ads: (prev?.ads || 0) + 1,
+  };
+}
+
 async function bleLive(ctx: Ctx) {
   const bt = nav().bluetooth;
   if (!bt) unsupported("Web Bluetooth");
   const found = new Map<string, Ble>();
-  const push = (mode: string) => ctx.emit(summarize([...found.values()].sort((a, b) => (b.rssi ?? -200) - (a.rssi ?? -200)), mode));
-  const onAdv = (e: any) => {
-    const id = e.device.id;
-    const prev = found.get(id);
-    const tx = typeof e.txPower === "number" ? e.txPower - 41 : -59;
-    const rssi = typeof e.rssi === "number" ? e.rssi : null;
-    const smooth = prev && prev.rssi !== null && rssi !== null ? prev.rssi * 0.6 + rssi * 0.4 : rssi;
-    found.set(id, {
-      id, name: e.device.name || e.name || "Unnamed device", rssi: smooth, tx,
-      dist: smooth !== null ? rssiToMetres(smooth, tx) : null, kind: e.appearance ? `appearance ${e.appearance}` : "advertiser",
-      services: (e.uuids || []).slice(0, 4), seen: Date.now(), battery: prev?.battery ?? null,
-    });
-    push("scan");
-  };
+  const mode = { v: "chosen" };
+  const push = () => ctx.emit(summarize([...found.values()].sort((a, b) => (b.rssi ?? -200) - (a.rssi ?? -200)), mode.v));
+  const cleanups: (() => void)[] = [];
 
-  // Full scan exists only behind a Chrome flag. Try it first, then fall back to one chosen device.
-  if (ctx.params.scan && bt.requestLEScan) {
+  // 1. Full scan: every advertiser nearby. Only with the experimental flag.
+  if (ctx.params.scan && typeof bt.requestLEScan === "function") {
     const scan = await bt.requestLEScan({ acceptAllAdvertisements: true, keepRepeatedDevices: true });
     ctx.granted();
+    mode.v = "scan";
     ctx.log("LE scan running: every advertiser nearby is visible");
+    const onAdv = (e: any) => { found.set(e.device.id, fromAdvert(e, found.get(e.device.id), "scan")); };
     bt.addEventListener("advertisementreceived", onAdv);
-    const tick = every(1000, () => push("scan"));
+    const tick = every(1000, push);
     return () => { tick(); bt.removeEventListener("advertisementreceived", onAdv); scan.stop(); };
   }
 
-  const device = await bt.requestDevice({ acceptAllDevices: true, optionalServices: ["battery_service", "device_information"] });
-  ctx.granted();
-  ctx.log(`you picked "${device.name || "Unnamed device"}"; the page sees only this device`);
-  found.set(device.id, { id: device.id, name: device.name || "Unnamed device", rssi: null, tx: -59, dist: null, kind: "chosen", services: [], seen: Date.now(), battery: null });
-  push("chosen");
-  let stopAdv: (() => void) | null = null;
-  if (device.watchAdvertisements) {
+  // 2. Devices this site was already allowed to use come back with no prompt (flagged in Chrome).
+  const watch = async (device: any, via: Ble["via"]) => {
+    if (!found.has(device.id)) found.set(device.id, { id: device.id, name: device.name || "Unnamed device", rssi: null, tx: -59, dist: null, kind: via === "allowed" ? "allowed earlier" : "chosen", services: [], seen: Date.now(), battery: null, via });
+    if (typeof device.watchAdvertisements !== "function") return false;
     try {
       const ac = new AbortController();
+      const onAdv = (e: any) => { found.set(device.id, fromAdvert(e, found.get(device.id), via)); };
       device.addEventListener("advertisementreceived", onAdv);
       await device.watchAdvertisements({ signal: ac.signal });
-      ctx.log("watching this device's signal strength");
-      stopAdv = () => { ac.abort(); device.removeEventListener("advertisementreceived", onAdv); };
+      cleanups.push(() => { ac.abort(); device.removeEventListener("advertisementreceived", onAdv); });
+      return true;
     } catch (e: any) {
-      ctx.log(`signal strength unavailable: ${e?.message || e}`);
+      ctx.log(`signal for "${device.name || device.id}" unavailable: ${e?.message || e}`);
+      return false;
+    }
+  };
+
+  let allowed: any[] = [];
+  if (typeof bt.getDevices === "function") {
+    try { allowed = await bt.getDevices(); } catch { allowed = []; }
+  }
+  if (allowed.length && !ctx.params.pickNew) {
+    ctx.granted();
+    ctx.log(`${allowed.length} device${allowed.length > 1 ? "s" : ""} allowed earlier, reconnected without a prompt`);
+    for (const d of allowed) await watch(d, "allowed");
+    mode.v = "allowed";
+  } else {
+    const device = await bt.requestDevice({ acceptAllDevices: true, optionalServices: ["battery_service", "device_information"] });
+    ctx.granted();
+    ctx.log(`you picked "${device.name || "Unnamed device"}"; the chooser always returns exactly one device`);
+    const watching = await watch(device, "chosen");
+    for (const d of allowed) if (d.id !== device.id) await watch(d, "allowed");
+    mode.v = watching ? "watch" : "chosen";
+    allowed = [device, ...allowed.filter((d) => d.id !== device.id)];
+  }
+  push();
+
+  if (ctx.params.gatt) {
+    for (const device of allowed.slice(0, 4)) {
+      if (!device.gatt) continue;
+      try {
+        const server = await device.gatt.connect();
+        const svc = await server.getPrimaryService("battery_service");
+        const v = await (await svc.getCharacteristic("battery_level")).readValue();
+        const d = found.get(device.id);
+        if (d) d.battery = v.getUint8(0);
+        ctx.log(`read battery level ${v.getUint8(0)}% from "${device.name || device.id}" over GATT`);
+        push();
+      } catch (e: any) {
+        ctx.log(`GATT read skipped for "${device.name || device.id}": ${e?.message || e}`);
+      }
+      cleanups.push(() => { try { device.gatt?.connected && device.gatt.disconnect(); } catch { /* ignore */ } });
     }
   }
-  if (ctx.params.gatt && device.gatt) {
-    try {
-      const server = await device.gatt.connect();
-      const svc = await server.getPrimaryService("battery_service");
-      const ch = await svc.getCharacteristic("battery_level");
-      const v = await ch.readValue();
-      const d = found.get(device.id)!;
-      d.battery = v.getUint8(0);
-      ctx.log(`read battery level ${d.battery}% over GATT`);
-      push("chosen");
-    } catch (e: any) {
-      ctx.log(`GATT read skipped: ${e?.message || e}`);
-    }
-  }
-  const tick = every(1500, () => push(stopAdv ? "watch" : "chosen"));
-  return () => { tick(); stopAdv?.(); try { device.gatt?.connected && device.gatt.disconnect(); } catch { /* ignore */ } };
+  const tick = every(1200, push);
+  return () => { tick(); cleanups.forEach((f) => f()); };
 }
 
-const SIM_BLE = [
-  ["AirPods Pro", "audio", -52], ["Galaxy Watch6", "wearable", -64], ["Tile Mate", "tracker", -78], ["JBL Flip 6", "speaker", -70],
-  ["Unknown, Apple 0x004C", "phone", -60], ["Model 3", "vehicle", -88], ["Fitbit Charge 6", "wearable", -74], ["Bose QC45", "audio", -82],
-  ["Nest Hub", "home", -69], ["Unknown, Microsoft 0x0006", "laptop", -80], ["Logitech MX Keys", "keyboard", -58],
-] as const;
+// name, appearance value, base dBm, SIG company id, manufacturer bytes, services
+const SIM_BLE: [string, number, number, number | null, string | null, string[]][] = [
+  ["Earbuds Pro", 0x0941, -52, 0x004c, "07 19 01 0e 20 2b 99 8f", ["0x180F"]],
+  ["Galaxy Watch6", 0x00c2, -64, 0x0075, "42 04 01 80 66 f4", ["0x180D", "0x180F"]],
+  ["Tile Mate", 0x0200, -78, 0x00c7, null, ["0xFEED"]],
+  ["Flip 6 speaker", 0x0841, -70, 0x0057, "dd 20 01 40", ["0x180A"]],
+  ["Phone", 0x0040, -60, 0x004c, "10 06 31 1d 7a 3e 21 18", []],
+  ["Car", 0x0000, -88, null, null, []],
+  ["Charge 6", 0x00c1, -74, 0x0499, "02 15 99 a1", ["0x180D"]],
+  ["QC45 headphones", 0x0942, -82, 0x009e, "01 00 2a", ["0x180F"]],
+  ["Hub display", 0x0080, -69, 0x00e0, null, ["0xFE9F"]],
+  ["Laptop", 0x0083, -80, 0x0006, "01 09 20 22 7c 4a", []],
+  ["MX Keys", 0x03c1, -58, 0x01da, null, ["0x1812", "0x180F"]],
+];
 
 function bleSim(ctx: Ctx) {
   ctx.granted();
-  const list: Ble[] = SIM_BLE.map(([name, kind, base], i) => ({ id: "sim" + i, name, kind, rssi: base, tx: -59, dist: null, services: [], seen: Date.now(), battery: kind === "audio" || kind === "wearable" ? 40 + ((i * 17) % 55) : null }));
-  const base = SIM_BLE.map((d) => d[2] as number);
+  const list: Ble[] = SIM_BLE.map(([name, app, base, cid, mfr, svcs], i) => ({
+    id: "sim" + i, name, rssi: base, tx: -59, dist: null, kind: btAppearance(app) || "advertiser", appearance: app, services: svcs, seen: Date.now(),
+    battery: svcs.includes("0x180F") ? 40 + ((i * 17) % 55) : null, via: "scan", companyId: cid, company: cid !== null ? btCompany(cid) : null, mfr, txPower: null, ads: 0,
+  }));
   return every(450, () => {
     list.forEach((d, i) => {
       const drift = Math.sin(Date.now() / (4000 + i * 900) + i) * 6;
-      d.rssi = Math.round(base[i] + drift + noise(2.5));
+      d.rssi = Math.round(SIM_BLE[i][2] + drift + noise(2.5));
       d.dist = rssiToMetres(d.rssi, d.tx);
       d.seen = Date.now();
+      d.ads = (d.ads || 0) + 1;
+      if (!d.company && d.companyId !== null) d.company = btCompany(d.companyId!);
+      if (d.appearance != null && (!d.kind || d.kind === "advertiser")) d.kind = btAppearance(d.appearance) || d.kind;
     });
     ctx.emit(summarize([...list].sort((a, b) => (b.rssi ?? -200) - (a.rssi ?? -200)), "scan"));
   });
@@ -127,13 +217,90 @@ function angleOf(id: string) {
 
 const RINGS = [0.5, 1, 2, 5, 10, 20];
 const radiusOf = (m: number) => Math.min(1, Math.log10(1 + m * 2) / Math.log10(1 + 40)) * 46;
+/** 0 to 4 bars from dBm, like a phone's signal meter. */
+const barsOf = (rssi: number | null) => (rssi === null ? 0 : rssi > -55 ? 4 : rssi > -67 ? 3 : rssi > -78 ? 2 : rssi > -90 ? 1 : 0);
+
+function Bars({ rssi }: { rssi: number | null }) {
+  const n = barsOf(rssi);
+  return (
+    <svg viewBox="0 0 14 10" className="ble-bars" aria-label={`${n} of 4 bars`}>
+      {[0, 1, 2, 3].map((i) => <rect key={i} x={i * 3.6} y={8 - i * 2.4} width="2.4" height={2 + i * 2.4} rx="0.4" fill={i < n ? COLOR : C.line} />)}
+    </svg>
+  );
+}
+
+const FLAG_NEW = "chrome://flags/#enable-web-bluetooth-new-permissions-backend";
+const FLAG_EXP = "chrome://flags/#enable-experimental-web-platform-features";
+
+/** Answers "why only one device?" with what this browser can actually do right now. */
+function BleCapsPanel() {
+  const [caps, setCaps] = useState<BleCaps | null>(null);
+  useEffect(() => { bleCaps().then(setCaps); }, []);
+  if (!caps) return null;
+  const row = (on: boolean, label: string, what: string) => (
+    <li className={on ? "on" : ""}>
+      <Tag minimal intent={on ? "success" : "none"} icon={on ? <Tick size={10} /> : <Cross size={10} />}>{on ? "yes" : "no"}</Tag>
+      <span><b>{label}</b> {what}</span>
+    </li>
+  );
+  return (
+    <Callout className="ble-why" intent={caps.leScan ? "success" : "primary"} icon={<InfoSign />} title="Why the chooser shows one device">
+      <p>
+        Browsers hand a page one Bluetooth device per prompt, the one you pick. <code>acceptAllDevices</code> only stops filtering the list; it never returns everything.
+        A page cannot silently connect to every device around you. It can reconnect, without a prompt, to devices you already allowed here, and with an experimental flag it can scan every advertiser.
+      </p>
+      <ul className="ble-caps">
+        {row(caps.api, "Web Bluetooth", caps.api ? "is available in this browser" : "is missing (Safari, Firefox and iOS browsers do not ship it)")}
+        {row(caps.availability !== false, "Adapter", caps.availability === null ? "state unknown" : caps.availability ? "is on" : "is off or absent")}
+        {row(caps.getDevices, "Reconnect without a prompt", caps.getDevices ? "via getDevices()" : `needs ${FLAG_NEW}`)}
+        {row(caps.watchAds, "Live signal for allowed devices", caps.watchAds ? "via watchAdvertisements()" : "needs the same flag")}
+        {row(caps.leScan, "Scan everything nearby", caps.leScan ? "via requestLEScan()" : `needs ${FLAG_EXP} (Chrome on Android or Mac)`)}
+      </ul>
+    </Callout>
+  );
+}
+
+const VIA_LABEL: Record<string, string> = { scan: "scan", allowed: "allowed earlier", chosen: "picked" };
+
+function DeviceCard({ x, session }: { x: Ble; session: InstrumentProps["session"] }) {
+  useRefData();
+  return (
+    <div className="card ble-card">
+      <div className="card-h"><b>{x.name}</b><Tag minimal round>{VIA_LABEL[x.via || "chosen"]}</Tag></div>
+      <div className="ble-kind">{x.appearance != null ? btAppearance(x.appearance) || x.kind : x.kind}</div>
+      <Spark values={series(session.records, "strongest_dbm", 80)} w={220} h={26} color={COLOR} />
+      <Readout rows={[
+        { k: "Signal", v: x.rssi, u: "dBm", digits: 0 },
+        { k: "Distance", v: x.dist, u: "m", digits: 2 },
+        { k: "Tx power", v: x.txPower ?? null, u: "dBm" },
+        { k: "Battery", v: x.battery ?? null, u: "%" },
+        { k: "Adverts", v: x.ads ?? null },
+        { k: "Id", v: x.id.slice(0, 12) },
+      ]} />
+      {(x.companyId != null || x.mfr) && (
+        <div className="ble-ad">
+          <span>Manufacturer data</span>
+          <b>{x.companyId != null ? (btCompany(x.companyId) || "Unlisted company") : "none"}</b>
+          {x.companyId != null && <code>{"0x" + x.companyId.toString(16).toUpperCase().padStart(4, "0")}{x.mfr ? `  ${x.mfr}` : ""}</code>}
+        </div>
+      )}
+      {x.services.length > 0 && (
+        <div className="ble-svcs">
+          {x.services.map((u) => { const r = btUuid(u); return <Tag key={u} minimal intent={r.kind === "custom" ? "none" : "primary"} title={String(u)}>{r.name || r.short}</Tag>; })}
+        </div>
+      )}
+    </div>
+  );
+}
 
 function Radar({ session }: InstrumentProps) {
+  useRefData();
   const [pick, setPick] = useState<string | null>(null);
   const d = lastData<BleRec>(session);
   const devices = d?.devices || [];
   const sel = devices.find((x) => x.id === pick) || devices[0];
   const streaming = session.state === "streaming";
+  const modeLabel = d ? ({ scan: "scan all", allowed: "allowed devices, no prompt", watch: "one device, live signal", chosen: "one chosen device" } as Record<string, string>)[d.mode] || d.mode : null;
   return (
     <Frame
       visual={
@@ -141,40 +308,49 @@ function Radar({ session }: InstrumentProps) {
           <svg viewBox="-50 -50 100 100" className="radar">
             <defs>
               <radialGradient id="sweep" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="scale(46)">
-                <stop offset="0" stopColor={COLOR} stopOpacity="0.18" />
+                <stop offset="0" stopColor={COLOR} stopOpacity="0.22" />
+                <stop offset="1" stopColor={COLOR} stopOpacity="0" />
+              </radialGradient>
+              <radialGradient id="radar-bg" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="scale(48)">
+                <stop offset="0" stopColor={COLOR} stopOpacity="0.07" />
                 <stop offset="1" stopColor={COLOR} stopOpacity="0" />
               </radialGradient>
             </defs>
+            <circle r="48" fill="url(#radar-bg)" />
             {RINGS.map((m) => (
               <g key={m}>
-                <circle r={radiusOf(m)} fill="none" stroke={C.line} strokeWidth="0.25" />
+                <circle r={radiusOf(m)} fill="none" stroke={C.line} strokeWidth="0.3" strokeDasharray={m >= 5 ? "1 1" : undefined} />
                 <text x={radiusOf(m) * 0.71 + 0.8} y={-radiusOf(m) * 0.71} className="radar-rt">{m} m</text>
               </g>
             ))}
-            <line x1="-46" x2="46" y1="0" y2="0" stroke={C.line2} strokeWidth="0.25" />
-            <line y1="-46" y2="46" x1="0" x2="0" stroke={C.line2} strokeWidth="0.25" />
+            {[0, 30, 60, 90, 120, 150].map((deg) => (
+              <line key={deg} x1={-46 * Math.cos((deg * Math.PI) / 180)} x2={46 * Math.cos((deg * Math.PI) / 180)} y1={-46 * Math.sin((deg * Math.PI) / 180)} y2={46 * Math.sin((deg * Math.PI) / 180)} stroke={C.line2} strokeWidth="0.2" />
+            ))}
             {streaming && <path className="radar-sweep" d="M0 0 L46 0 A46 46 0 0 0 39.8 -23 Z" fill="url(#sweep)" />}
             {devices.map((x) => {
               if (x.dist === null) return null;
               const a = angleOf(x.id);
               const r = radiusOf(x.dist);
               const on = sel && x.id === sel.id;
+              const fresh = Date.now() - x.seen < 2500;
               return (
                 <g key={x.id} transform={`translate(${(Math.cos(a) * r).toFixed(2)} ${(Math.sin(a) * r).toFixed(2)})`} onClick={() => setPick(x.id)} className="blip">
-                  <circle r={on ? 3.2 : 2.2} fill={COLOR} opacity="0.14" />
-                  <circle r={on ? 1.5 : 1.1} fill={on ? C.ink : COLOR} />
-                  <text y="-2.8" textAnchor="middle" className="blip-label">{x.name.length > 16 ? x.name.slice(0, 15) + "…" : x.name}</text>
+                  {fresh && streaming && <circle r="2" fill="none" stroke={COLOR} strokeWidth="0.3" className="blip-ping" />}
+                  <circle r={on ? 3.4 : 2.3} fill={COLOR} opacity="0.16" />
+                  <circle r={on ? 1.6 : 1.1} fill={on ? C.ink : COLOR} />
+                  <text y="-3" textAnchor="middle" className="blip-label">{x.name.length > 16 ? x.name.slice(0, 15) + "…" : x.name}</text>
                 </g>
               );
             })}
             <g className="radar-self">
-              <rect x="-3.2" y="-2.2" width="6.4" height="4.4" rx="0.6" fill="#fff" stroke={C.ink} strokeWidth="0.5" />
-              <line x1="-4" x2="4" y1="2.6" y2="2.6" stroke={C.ink} strokeWidth="0.5" />
+              <circle r="2.6" fill={C.bg} stroke={C.accent} strokeWidth="0.5" />
+              <circle r="0.9" fill={C.accent} />
             </g>
           </svg>
           {!d && <Waiting session={session} what="A radar of nearby Bluetooth devices with distance worked out from signal strength." />}
-          {d && d.mode === "chosen" && <div className="viz-note">Browsers show only the device you pick. A full radar needs Chrome with experimental scanning on, or Simulated.</div>}
+          {d && (d.mode === "chosen" || d.mode === "watch") && <div className="viz-note">This browser handed over only the device you picked. Switch on the Chrome flags listed below for more, or use Simulated.</div>}
           {d && <div className="viz-caption">Distance comes from signal strength (log-distance model, 1 m reference {sel?.tx ?? -59} dBm). Direction is not measurable, so angles are fixed per device.</div>}
+          <BleCapsPanel />
         </div>
       }
       side={
@@ -183,21 +359,20 @@ function Radar({ session }: InstrumentProps) {
             { k: "Devices in range", v: d?.count ?? null, hot: true },
             { k: "Nearest", v: d?.nearest_m ?? null, u: "m", digits: 1 },
             { k: "Strongest signal", v: d?.strongest_dbm ?? null, u: "dBm", digits: 0 },
-            { k: "Mode", v: d ? (d.mode === "scan" ? "scan all" : d.mode === "watch" ? "one device, live signal" : "one chosen device") : null },
+            { k: "Mode", v: modeLabel },
           ]} />
-          {sel && (
-            <div className="card">
-              <div className="card-h"><b>{sel.name}</b><span>{sel.kind}</span></div>
-              <Spark values={series(session.records, "strongest_dbm", 80)} w={220} h={26} color={COLOR} />
-              <Readout rows={[
-                { k: "Signal", v: sel.rssi, u: "dBm", digits: 0 },
-                { k: "Distance", v: sel.dist, u: "m", digits: 2 },
-                { k: "Battery", v: sel.battery ?? null, u: "%" },
-                { k: "Id", v: sel.id.slice(0, 12) },
-              ]} />
-            </div>
-          )}
-          <Table head={["Device", "dBm", "m"]} rows={devices.slice(0, 14).map((x) => [<button className="lnk" onClick={() => setPick(x.id)}>{x.name}</button>, fmt(x.rssi, 0), fmt(x.dist, 1)])} empty="No devices yet" />
+          {sel && <DeviceCard x={sel} session={session} />}
+          <div className="ble-list">
+            {devices.length === 0 && <div className="sx-empty">No devices yet</div>}
+            {devices.slice(0, 16).map((x) => (
+              <button key={x.id} className={"ble-row" + (sel && sel.id === x.id ? " on" : "")} onClick={() => setPick(x.id)}>
+                <Bars rssi={x.rssi} />
+                <span className="ble-n"><b>{x.name}</b><em>{x.company || (x.appearance != null ? btAppearance(x.appearance) : null) || x.kind}</em></span>
+                <span className="ble-v">{fmt(x.rssi, 0)}<i>dBm</i></span>
+                <span className="ble-v">{fmt(x.dist, 1)}<i>m</i></span>
+              </button>
+            ))}
+          </div>
         </>
       }
     />
@@ -639,6 +814,7 @@ function chooserScope(o: { id: string; kind: Kind; name: string; atlas: string; 
       return () => { stopTick(); releaseAll(o.id); };
     },
     Instrument: ({ scope, session }) => {
+      useRefData();
       const d = lastData<PeriphRec>(session);
       const sim = session.source === "sim";
       return (
@@ -653,7 +829,7 @@ function chooserScope(o: { id: string; kind: Kind; name: string; atlas: string; 
                         <svg viewBox="0 0 40 24" className="periph-ico"><rect x="2" y="4" width="28" height="16" rx="3" fill="none" stroke={COLOR} /><rect x="30" y="9" width="8" height="6" rx="1" fill={COLOR} opacity="0.3" /></svg>
                         <div className="sx-meta">
                           <b>{x.name}</b>
-                          <span>vendor {x.vendor} · product {x.product}</span>
+                          <span>vendor {x.vendor}{usbVendor(parseInt(x.vendor, 16)) ? ` (${usbVendor(parseInt(x.vendor, 16))})` : ""} · product {x.product}</span>
                           <em>{x.detail}</em>
                         </div>
                       </div>
@@ -740,7 +916,7 @@ export const surroundingsScopes: ScopeDef[] = [
     domain: "surroundings",
     atlas: ["web.peripherals.web-bluetooth", "web.notexposed.bluetooth-nearby"],
     summary: "Finds Bluetooth devices around you and estimates how far away each one is from its signal strength.",
-    call: "navigator.bluetooth.requestDevice({ acceptAllDevices: true })",
+    call: "navigator.bluetooth.getDevices() then requestDevice({ acceptAllDevices: true })",
     permission: "bluetooth",
     gesture: true,
     reveals: ["Which headphones, watches and trackers you carry", "Roughly how far each device is, from signal strength", "Whether you are at home (known speakers or hubs in range)"],
@@ -749,6 +925,7 @@ export const surroundingsScopes: ScopeDef[] = [
     params: [
       { key: "scan", label: "Scan everything (Chrome flag)", type: "bool", value: true, hint: "Uses requestLEScan when the experimental flag is on; otherwise falls back to one chosen device." },
       { key: "gatt", label: "Connect and read battery", type: "bool", value: true },
+      { key: "pickNew", label: "Pick a new device", type: "bool", value: false, hint: "Off: reconnect devices allowed earlier with no prompt (getDevices). On: always open the chooser." },
     ],
     live: bleLive,
     sim: bleSim,
