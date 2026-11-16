@@ -1,0 +1,80 @@
+/* Page controls: view and edit demos. */
+.pc { display: grid; gap: 10px; min-width: 0; width: 100%; }
+.pc-row { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; min-width: 0; }
+.pc-l { font-size: 12px; color: var(--mute); min-width: 44px; }
+.pc-in { flex: 1 1 180px; min-width: 0; height: 30px; padding: 0 10px; border: 1px solid var(--line); border-radius: 8px; background: var(--bg); font: 13px var(--sans); color: var(--ink); }
+.pc-in:focus { outline: 2px solid var(--accent); outline-offset: 1px; border-color: var(--accent); }
+.pc-in:disabled { opacity: .55; }
+.pc-ta { height: auto; padding: 8px 10px; resize: vertical; width: 100%; box-sizing: border-box; }
+.pc-sel { flex: 1 1 200px; }
+.pc-short { flex: 0 1 140px; }
+.pc-num { width: 64px; height: 30px; padding: 0 8px; border: 1px solid var(--line); border-radius: 8px; background: var(--bg); color: var(--ink); font: 13px var(--mono); }
+.pc-sw { display: inline-flex; align-items: center; gap: 6px; font-size: 12.5px; color: var(--ink); cursor: pointer; }
+.pc-sw input { width: 16px; height: 16px; accent-color: var(--accent); }
+.pc-rng { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; color: var(--ink2); flex: 1 1 180px; min-width: 0; }
+.pc-rng input { flex: 1; min-width: 60px; accent-color: var(--accent); }
+.pc-rng b { font: 600 12px var(--mono); color: var(--ink); min-width: 52px; text-align: right; }
+.pc .seg { flex-wrap: wrap; }
+.pc-msg { margin: 0; padding: 8px 10px; border-radius: 8px; font-size: 12.5px; }
+.pc-msg.err { background: color-mix(in srgb, var(--err) 9%, var(--bg)); color: var(--ink); }
+.pc-foot { margin: 0; font-size: 11.5px; color: var(--mute); line-height: 1.45; }
+
+/* Tab strip */
+.pc-chrome { border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--line2); }
+.pc-tabs { display: flex; gap: 2px; padding: 6px 8px 0; min-width: 0; }
+.pc-tab { display: flex; align-items: center; gap: 8px; min-width: 0; flex: 0 1 260px; padding: 8px 12px; border-radius: 8px 8px 0 0; font-size: 12.5px; color: var(--ink2); }
+.pc-tab.on { background: var(--bg); color: var(--ink); }
+.pc-tab span:last-child { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.pc-tab img { flex: none; border-radius: 3px; }
+.pc-noicon { flex: none; width: 16px; height: 16px; border-radius: 4px; background: var(--line); }
+
+/* Theme color phone */
+.pc-phone { width: 180px; max-width: 100%; border: 1px solid var(--line-strong); border-radius: 18px; overflow: hidden; margin: 0 auto; background: var(--bg); }
+.pc-bar { height: 44px; display: grid; place-items: end center; padding-bottom: 6px; transition: background .25s; border-bottom: 1px solid var(--line); }
+.pc-bar span { font: 11px var(--mono); padding: 2px 10px; border-radius: 99px; background: color-mix(in srgb, var(--bg) 85%, transparent); color: var(--ink); }
+.pc-body { height: 90px; background: repeating-linear-gradient(180deg, var(--line2) 0 10px, transparent 10px 22px); margin: 12px; border-radius: 6px; }
+.pc-sw-c { width: 24px; height: 24px; border-radius: 50%; border: 1px solid var(--line-strong); cursor: pointer; padding: 0; }
+.pc-sw-c.on { outline: 2px solid var(--accent); outline-offset: 2px; }
+.pc-color { width: 34px; height: 28px; border: 1px solid var(--line); border-radius: 6px; background: var(--bg); padding: 2px; }
+
+/* Address bar */
+.pc-url { padding: 9px 12px; border: 1px solid var(--line); border-radius: 99px; background: var(--panel); font: 12.5px var(--mono); color: var(--ink2); overflow-wrap: anywhere; }
+.pc-url b { color: var(--ink); font-weight: 600; }
+.pc-url em { font-style: normal; color: var(--accent); }
+.pc-lock { color: var(--mute); }
+
+/* Fullscreen */
+.pc-screen { height: 120px; border: 2px solid var(--line-strong); border-radius: 10px; display: grid; place-items: center; background: var(--panel); }
+.pc-screen > div { width: 70%; height: 64%; border: 1px dashed var(--line-strong); border-radius: 6px; display: grid; place-content: center; text-align: center; gap: 2px; transition: all .25s; background: var(--bg); }
+.pc-screen.full > div { width: 100%; height: 100%; border: 0; border-radius: 8px; background: var(--accent-soft); }
+.pc-screen span { font-size: 11px; color: var(--mute); }
+.pc-screen b { font: 600 15px var(--mono); color: var(--ink); }
+
+/* Speech */
+.pc-word { font: 600 14px var(--mono); color: var(--accent); padding: 2px 8px; border-radius: 6px; background: var(--accent-soft); }
+
+/* Tone */
+.pc-wave { width: 100%; height: 72px; border: 1px solid var(--line); border-radius: 10px; background: var(--panel); }
+.pc-wave path { fill: none; stroke: var(--mute); stroke-width: 1.6; vector-effect: non-scaling-stroke; }
+.pc-wave.on path { stroke: var(--accent); }
+
+/* Leave dialog */
+.pc-dialog { display: grid; gap: 6px; max-width: 280px; padding: 14px; border: 1px solid var(--line); border-radius: 12px; background: var(--panel); opacity: .45; transition: opacity .2s; }
+.pc-dialog.on { opacity: 1; border-color: var(--line-strong); }
+.pc-dialog b { font-size: 14px; color: var(--ink); }
+.pc-dialog span { font-size: 12.5px; color: var(--ink2); }
+.pc-dialog div { display: flex; justify-content: flex-end; gap: 6px; margin-top: 4px; }
+.pc-dialog i { font-style: normal; font-size: 12px; padding: 4px 10px; border: 1px solid var(--line); border-radius: 6px; }
+.pc-dialog i.pri { background: var(--accent); border-color: var(--accent); color: #fff; }
+
+/* Cookies */
+.pc-list { display: grid; gap: 2px; max-height: 200px; overflow-y: auto; border: 1px solid var(--line); border-radius: 10px; padding: 4px; }
+.pc-li { display: flex; align-items: center; gap: 10px; padding: 5px 8px; border-radius: 6px; min-width: 0; font-size: 12.5px; }
+.pc-li:hover { background: var(--panel); }
+.pc-li code { flex: none; font: 600 12px var(--mono); color: var(--ink); }
+.pc-li span { flex: 1; min-width: 0; color: var(--ink2); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-family: var(--mono); font-size: 11.5px; }
+.pc-empty { margin: 6px 8px; font-size: 12.5px; color: var(--mute); }
+
+/* window.name */
+.pc-big { padding: 14px; border: 1px solid var(--line); border-radius: 10px; background: var(--panel); overflow-wrap: anywhere; }
+.pc-big code { font: 600 15px var(--mono); color: var(--ink); }
