@@ -6,6 +6,7 @@ import { useTimeline } from "../core/timeline";
 import { supportOf } from "../browser/profile";
 import { OTHER, type ConsoleCtx, type GroupDef } from "../ext/registry";
 import { short } from "./charts";
+import { CapIcon, LayerGlyph, MechBadge, ModeBadges, mechanismOf } from "./icons";
 
 type Tab = "all" | "live" | "used" | "blocked";
 const TABS: [Tab, string][] = [["all", "All"], ["live", "Live"], ["used", "Used"], ["blocked", "Blocked"]];
@@ -90,13 +91,13 @@ export function Capabilities({ ctx, selected }: { ctx: ConsoleCtx; selected: str
 const Row = memo(function Row({ scope, on, ok, ctx }: { scope: ScopeDef; on: boolean; ok: boolean; ctx: ConsoleCtx }) {
   const s = useSession(scope.id);
   const active = isActive(s);
-  const kind = scope.passive ? "silent" : scope.gesture ? "chooser" : scope.permission ? "prompt" : "click";
+  const mech = mechanismOf(scope, ok ? undefined : "n");
   return (
     <div className={"row" + (on ? " on" : "") + (ok ? "" : " dim")} onClick={() => ctx.select(scope.id)}>
-      <i className={"dot st-" + s.state} />
+      <span className="row-i"><CapIcon scope={scope} size={15} /><i className={"dot st-" + s.state} /></span>
       <span className="row-n">{scope.name}</span>
-      <span className={"row-k k-" + kind}>{kind}</span>
-      {!ok && <span className="row-x">not here</span>}
+      <span className="row-k"><ModeBadges modes={scope.modes} compact /><LayerGlyph layer={scope.layer} /></span>
+      <MechBadge mech={mech} />
       <span className="row-v">{active && s.hz ? s.hz.toFixed(1) + " Hz" : s.count ? short(s.count) : ""}</span>
       <button className={"row-b" + (active ? " stop" : "")} onClick={(e) => { e.stopPropagation(); active ? stop(scope.id) : void request(scope.id); }} aria-label={active ? "Stop" : "Run"} title={active ? "Stop" : "Run"}>
         {active ? <Square size={11} /> : <Play size={11} />}
