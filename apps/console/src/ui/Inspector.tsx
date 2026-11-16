@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { HistoryChart } from "./history-view";
+import { Replay } from "./replay";
 import { AccessRows, FieldMeanings, LogTimeline, Provenance, Reveals } from "./inspector-views";
 import { Play, Square, Copy, X, ShieldCheck, TriangleAlert } from "lucide-react";
 import type { ScopeDef, Session } from "../core/types";
@@ -12,7 +13,7 @@ import { CapIcon, LayerGlyph, LAYERS, MECH, MechBadge, MODES, SupportMatrix, mec
 import { supportOf } from "../browser/profile";
 import { PrivacyLink } from "./Privacy";
 
-type Tab = "data" | "record" | "scope" | "log";
+type Tab = "data" | "replay" | "record" | "scope" | "log";
 
 function snippet(scope: ScopeDef, s: Session) {
   const p = Object.keys(s.params).length ? `, ${JSON.stringify(s.params)}` : "";
@@ -69,14 +70,15 @@ function ScopeInspector({ ctx, scope, onClose }: { ctx: ConsoleCtx; scope: Scope
           : <button className="btn pri" onClick={() => void request(scope.id)}><Play size={12} />{scope.passive ? "Run" : "Request access"}</button>}
       </div>
       <div className="tabs line">
-        {(["data", "record", "scope", "log"] as Tab[]).map((t) => (
+        {(["data", "replay", "record", "scope", "log"] as Tab[]).map((t) => (
           <button key={t} className={tab === t ? "on" : ""} onClick={() => setTab(t)}>
-            {t === "data" ? "Data" : t === "record" ? "Record" : t === "scope" ? "Scope" : "Log"}{t === "log" && session.logs.length > 0 && <em>{session.logs.length}</em>}
+            {t === "data" ? "Data" : t === "replay" ? "Replay" : t === "record" ? "Record" : t === "scope" ? "Scope" : "Log"}{t === "log" && session.logs.length > 0 && <em>{session.logs.length}</em>}
           </button>
         ))}
       </div>
       <div className="ins-b">
         {tab === "data" && <div className="ins-data"><Inst scope={scope} session={session} /></div>}
+        {tab === "replay" && <div className="ins-pad"><Replay scope={scope} session={session} /></div>}
         {tab === "record" && (
           <div className="ins-pad">
             <div className="mets">

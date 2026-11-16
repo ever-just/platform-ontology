@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { Square, BookOpen, Rows3, ScrollText, ChartLine, ChartArea, ChartColumn, WandSparkles, Rows2, Rows4, TrendingUp, TrendingDown } from "lucide-react";
+import { Rows3, ScrollText, ChartLine, ChartArea, ChartColumn, WandSparkles, Rows2, Rows4, TrendingUp, TrendingDown } from "lucide-react";
 import type { Atlas, AtlasNode, ScopeDef } from "./core/types";
 import { allSessions, isActive, registerScopes, stopAll } from "./core/harness";
 import { feed, startTimeline, useTimeline } from "./core/timeline";
@@ -14,6 +14,9 @@ import { Capabilities } from "./ui/Capabilities";
 import { Inspector } from "./ui/Inspector";
 import { clock } from "./ui/charts";
 import { Spark } from "./ui/kit";
+import { AnchorButton, Button, ButtonGroup, Tag } from "@blueprintjs/core";
+import { Contrast, Flash, Manual, Moon, Stop } from "@blueprintjs/icons";
+import { LOOKS, setLook, useLook } from "./ui/look";
 import { PrivacyDialog, PrivacyLink } from "./ui/Privacy";
 import { setVisit, startUploader } from "./core/uploader";
 
@@ -44,7 +47,7 @@ export function App() {
 }
 
 function Logo() {
-  return <svg width="22" height="22" viewBox="0 0 32 32" aria-hidden><rect width="32" height="32" rx="8" fill="var(--ink)" /><circle cx="16" cy="16" r="8" fill="none" stroke="var(--bg)" strokeWidth="2.5" /><circle cx="16" cy="16" r="3" fill="var(--accent)" /></svg>;
+  return <svg width="22" height="22" viewBox="0 0 32 32" aria-hidden><rect width="32" height="32" rx="4" fill="var(--panel)" stroke="var(--line-strong)" /><circle cx="16" cy="16" r="8" fill="none" stroke="var(--ink)" strokeWidth="2.5" /><circle cx="16" cy="16" r="3" fill="var(--accent)" /></svg>;
 }
 
 function Console({ atlas }: { atlas: Atlas }) {
@@ -123,6 +126,7 @@ function Console({ atlas }: { atlas: Atlas }) {
     nodeOf: (s) => nodeById.get(s.atlas[0]),
   }), [atlas, scopes, profile, passive, groups, range, chart, select, groupMap, byAtlas, nodeById]);
 
+  const look = useLook();
   useTimeline(); // header and metrics refresh once a second
   const live = allSessions().filter(isActive).length;
   const current = views.find((v) => v.id === view) || views[0];
@@ -135,9 +139,12 @@ function Console({ atlas }: { atlas: Atlas }) {
         <div className="wrap bar-in">
           <a className="brand" href="./"><Logo /><b>Platform.Ontology</b><span>Console</span></a>
           <div className="bar-r">
-            <span className={"live" + (live ? " on" : "")}><i />{live} live</span>
-            <button className="btn" onClick={stopAll} disabled={!live}><Square size={12} />Stop all</button>
-            <a className="btn ghost" href="../"><BookOpen size={14} /><span className="hide-s">Docs</span></a>
+            <Tag minimal round intent={live ? "success" : "none"} className="live-tag" icon={<span className={"live-dot" + (live ? " on" : "")} />}>{live} live</Tag>
+            <ButtonGroup className="looks hide-s" aria-label="Look">
+              {LOOKS.map((l) => <Button key={l.id} small minimal={look !== l.id} active={look === l.id} title={l.hint} onClick={() => setLook(l.id)} icon={l.id === "light" ? <Flash size={12} /> : l.id === "midnight" ? <Moon size={12} /> : <Contrast size={12} />}>{l.label}</Button>)}
+            </ButtonGroup>
+            <Button small intent="danger" outlined icon={<Stop size={12} />} onClick={stopAll} disabled={!live}>Stop all</Button>
+            <AnchorButton small minimal href="../" icon={<Manual size={14} />}><span className="hide-s">Docs</span></AnchorButton>
           </div>
         </div>
       </header>

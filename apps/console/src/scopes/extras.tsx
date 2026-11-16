@@ -81,8 +81,8 @@ function Piano({ base, held }: { base: number; held: number[] }) {
     <svg className="eir-piano" viewBox={`0 0 ${whites.length * W} 62`}>
       {whites.map((n) => (
         <g key={n}>
-          <rect x={wx(n)} y="0" width={W} height="62" fill={held.includes(n) ? COLOR : "#fff"} stroke={C.line} strokeWidth="0.6" />
-          {n % 12 === 0 && <text x={wx(n) + W / 2} y="58" textAnchor="middle" fontSize="4.5" fill={held.includes(n) ? "#fff" : C.mute}>{noteName(n)}</text>}
+          <rect x={wx(n)} y="0" width={W} height="62" fill={held.includes(n) ? COLOR : C.bg} stroke={C.line} strokeWidth="0.6" />
+          {n % 12 === 0 && <text x={wx(n) + W / 2} y="58" textAnchor="middle" fontSize="4.5" fill={held.includes(n) ? C.bg : C.mute}>{noteName(n)}</text>}
         </g>
       ))}
       {keys.filter((n) => !WHITE.includes(n % 12)).map((n) => (

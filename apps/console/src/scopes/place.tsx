@@ -75,7 +75,7 @@ function GeoMap({ session }: InstrumentProps) {
     const path = pts.map((p, i) => (i ? "L" : "M") + (p.x * s).toFixed(1) + " " + (p.y * s).toFixed(1)).join(" ");
     body = (
       <svg viewBox="-100 -100 200 200" className="pml-svg">
-        <rect x="-100" y="-100" width="200" height="200" fill="#fff" stroke={C.line} strokeWidth="0.4" />
+        <rect x="-100" y="-100" width="200" height="200" fill={C.bg} stroke={C.line} strokeWidth="0.4" />
         {lines.map((v) => (
           <g key={v}>
             <line x1={v * s} x2={v * s} y1="-100" y2="100" stroke={C.line} strokeWidth="0.3" />
@@ -88,7 +88,7 @@ function GeoMap({ session }: InstrumentProps) {
         {pts.slice(0, -1).map((p, i) => <circle key={i} cx={p.x * s} cy={p.y * s} r="0.9" fill={COLOR} opacity={0.15 + 0.5 * (i / pts.length)} />)}
         <circle r={Math.max(2, d.accuracy * s)} fill={COLOR} fillOpacity="0.1" stroke={COLOR} strokeWidth="0.5" strokeDasharray="1.5 1.5" />
         {d.heading !== null && <path d="M0 -9 L2.4 -3 L-2.4 -3 Z" fill={C.ink} transform={`rotate(${d.heading})`} />}
-        <circle r="2.2" fill={COLOR} stroke="#fff" strokeWidth="0.8" />
+        <circle r="2.2" fill={COLOR} stroke={C.bg} strokeWidth="0.8" />
         <text x="-97" y="-93">N up · grid {step} m</text>
         <text x="97" y="97" textAnchor="end">accuracy ring {Math.round(d.accuracy)} m</text>
       </svg>
@@ -217,7 +217,7 @@ function Compass({ session }: InstrumentProps) {
       visual={
         <div className="pml-vis">
           <svg viewBox="-60 -60 120 120" className="pml-svg" style={{ maxWidth: 300 }}>
-            <circle r="52" fill="#fff" stroke={C.line} strokeWidth="0.8" />
+            <circle r="52" fill={C.bg} stroke={C.line} strokeWidth="0.8" />
             <circle r="40" fill="none" stroke={C.line} strokeWidth="0.4" />
             {Array.from({ length: 72 }, (_, i) => {
               const major = i % 9 === 0, a = (i * 5 * Math.PI) / 180;
@@ -228,7 +228,7 @@ function Compass({ session }: InstrumentProps) {
               <path d="M0 -30 L4 0 L-4 0 Z" fill={C.err} />
               <path d="M0 30 L4 0 L-4 0 Z" fill={C.ink} opacity="0.75" />
             </g>
-            <circle r="1.8" fill="#fff" stroke={C.ink} strokeWidth="0.6" />
+            <circle r="1.8" fill={C.bg} stroke={C.ink} strokeWidth="0.6" />
           </svg>
           {!d && <Waiting session={session} what="A compass needle that follows the magnetic heading of the device." />}
           <div className="pml-note">The needle shows where the top of the device points. Phones read this from a magnetometer, so no GPS is needed.</div>
