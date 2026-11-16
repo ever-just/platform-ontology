@@ -1,0 +1,246 @@
+{
+  "id": "web.net.ai-agent-user-agent-tokens",
+  "name": "AI agent and crawler names",
+  "kind": "signal",
+  "group": "network-connectivity",
+  "subgroup": "Anti-bot",
+  "tags": [
+    "user-agent",
+    "robots-txt",
+    "agents",
+    "ai-crawlers"
+  ],
+  "plain": "AI crawlers and browsing agents often announce themselves by name in the User-Agent header.",
+  "meaning": "Operators publish names such as GPTBot, OAI-SearchBot, ChatGPT-User, ClaudeBot, Claude-User, PerplexityBot and Google-Extended. Many split them into training crawlers, search crawlers and fetchers that run when a person asks a question. Sites can allow or block them in robots.txt (RFC 9309). A name is only a claim unless the operator also publishes IP ranges or signs requests.",
+  "lifecycle": [
+    "on-arrival"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "User-Agent request header; robots.txt product tokens (RFC 9309)",
+      "access": {
+        "grant": "none",
+        "prompt_ui": "None",
+        "secure_context": false,
+        "user_gesture": false,
+        "persistence": "",
+        "revocation": "",
+        "iframe": "",
+        "steps": [
+          "Agent sends a User-Agent with its product name",
+          "Site reads the header and robots.txt rules",
+          "Site allows, limits or blocks by name",
+          "Site may verify IP ranges or signatures"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "n",
+          "v": "",
+          "note": "Not browser behavior; sent by agent and crawler operators",
+          "date": ""
+        },
+        "edge": {
+          "s": "n",
+          "v": "",
+          "note": "",
+          "date": ""
+        },
+        "firefox": {
+          "s": "n",
+          "v": "",
+          "note": "",
+          "date": ""
+        },
+        "safari": {
+          "s": "n",
+          "v": "",
+          "note": "",
+          "date": ""
+        },
+        "ios_safari": {
+          "s": "n",
+          "v": "",
+          "note": "",
+          "date": ""
+        },
+        "chrome_android": {
+          "s": "n",
+          "v": "",
+          "note": "",
+          "date": ""
+        },
+        "samsung": {
+          "s": "n",
+          "v": "",
+          "note": "",
+          "date": ""
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "header",
+    "metric": "",
+    "update": "per request",
+    "fields": [
+      {
+        "name": "User-Agent",
+        "type": "string",
+        "unit": "",
+        "range": "product token and URL of the operator",
+        "precision": ""
+      },
+      {
+        "name": "robots.txt rule",
+        "type": "rule",
+        "unit": "",
+        "range": "allow or disallow for a product token",
+        "precision": ""
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can tell which AI operator sent a request, if it tells the truth",
+    "user_action": "Nothing. It is sent automatically",
+    "can": [
+      "Read the agent's name from the header",
+      "Apply robots.txt rules per product token",
+      "Separate training crawlers from user triggered fetchers",
+      "Check IP lists to confirm a claim"
+    ],
+    "cannot": [
+      "Prove the name is true",
+      "Stop operators that ignore robots.txt",
+      "See the question the person asked",
+      "Cover agents that pose as a normal browser"
+    ],
+    "reach": 1,
+    "reach_label": "A name the sender chooses",
+    "differs": "Many browsing agents run a normal Chrome and send a normal user agent, so names catch only the declared ones."
+  },
+  "story": {
+    "what_it_is": "AI services often introduce themselves by name. Sites decide whether to let each one in.",
+    "icon": "tag",
+    "tags": [
+      "Agents",
+      "Network",
+      "Silent"
+    ],
+    "marketing": [
+      {
+        "vendor": "OpenAI",
+        "name": "Overview of OpenAI crawlers",
+        "pitch": "Docs list the user agents and what each one does.",
+        "url": "https://platform.openai.com/docs/bots"
+      }
+    ],
+    "for_you": "You never see it. When you ask an AI to read a page, a fetcher may visit with its own name, which the site can allow or block.",
+    "for_makers": "Decide per name and per purpose: training, search, user requested. Confirm claims with published IP ranges or signatures. Keep your list current because names and tokens change.",
+    "use_cases": [
+      {
+        "type": "news",
+        "example": "A publisher blocks training crawlers but allows search crawlers.",
+        "apps": []
+      },
+      {
+        "type": "shopping",
+        "example": "A retailer allows user triggered fetchers so shoppers can compare prices through an assistant.",
+        "apps": []
+      },
+      {
+        "type": "security",
+        "example": "A firewall rule rate limits any client that claims an AI crawler name without matching IP ranges.",
+        "apps": [
+          "Cloudflare"
+        ]
+      },
+      {
+        "type": "analytics",
+        "example": "Traffic reports separate AI fetchers from human visits.",
+        "apps": []
+      },
+      {
+        "type": "developer",
+        "example": "A docs site allows AI fetchers so developers get answers with citations.",
+        "apps": []
+      },
+      {
+        "type": "education",
+        "example": "A university site blocks training crawlers on course notes.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Names can be faked",
+      "Blocking may hide a site from AI search"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Claim only; verify by IP or signature",
+    "Agents using a normal browser look like people",
+    "Lists change often"
+  ],
+  "scores": {
+    "sensitivity": 1,
+    "utility": 4,
+    "fingerprint_bits": 0,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Content policy",
+      "Traffic reports"
+    ],
+    "abuse": [
+      "Blocking legitimate assistants"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2022-09",
+      "browser": "rfc",
+      "version": "",
+      "change": "Robots Exclusion Protocol published as RFC 9309"
+    },
+    {
+      "date": "2026-03",
+      "browser": "all",
+      "version": "",
+      "change": "Google reported to list Google-Agent as a user triggered fetcher"
+    }
+  ],
+  "related": [
+    "web.net.web-bot-auth-signatures",
+    "web.net.bot-detection-signals",
+    "web.net.client-ip",
+    "web.net.asn-isp-hosting"
+  ],
+  "refs": [
+    {
+      "t": "rfc",
+      "label": "RFC 9309 Robots Exclusion Protocol",
+      "url": "https://www.rfc-editor.org/rfc/rfc9309"
+    },
+    {
+      "t": "vendor",
+      "label": "OpenAI crawlers overview",
+      "url": "https://platform.openai.com/docs/bots"
+    },
+    {
+      "t": "vendor",
+      "label": "Google crawlers and fetchers",
+      "url": "https://developers.google.com/crawling/docs/crawlers-fetchers"
+    }
+  ],
+  "confidence": "inferred"
+}

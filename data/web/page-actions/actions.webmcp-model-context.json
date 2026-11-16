@@ -1,0 +1,256 @@
+{
+  "id": "web.actions.webmcp-model-context",
+  "name": "Page tools for AI agents (WebMCP)",
+  "kind": "capability",
+  "group": "page-actions",
+  "subgroup": "Agent interface",
+  "tags": [
+    "webmcp",
+    "agents",
+    "ai",
+    "tools"
+  ],
+  "plain": "A page can list actions an AI agent in the browser may call, instead of the agent guessing at buttons.",
+  "meaning": "WebMCP is a proposed web standard. A page registers named tools with a description and input schema through navigator.modelContext, or marks up forms. A browser agent can then call a tool such as search flights or add to cart directly. It is an early preview in Chrome behind a flag and may change.",
+  "lifecycle": [
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "navigator.modelContext.registerTool({name, description, inputSchema, execute}); declarative form attributes",
+      "access": {
+        "grant": "none",
+        "prompt_ui": "None defined yet in the draft",
+        "secure_context": true,
+        "user_gesture": false,
+        "persistence": "Tools live while the page is open",
+        "revocation": "Close the page or unregister the tool",
+        "iframe": "Draft rules for frames are not settled",
+        "steps": [
+          "Page registers tools with names and input schemas",
+          "An agent in the browser reads the tool list",
+          "The agent calls a tool; the page code runs it",
+          "Browser rules for who may call tools are still being drafted"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "f",
+          "v": "146",
+          "note": "Early preview behind a flag; may change",
+          "date": "2026-02"
+        },
+        "edge": {
+          "s": "n",
+          "v": "",
+          "note": "No public status found",
+          "date": ""
+        },
+        "firefox": {
+          "s": "n",
+          "v": "",
+          "note": "No public status found",
+          "date": ""
+        },
+        "safari": {
+          "s": "n",
+          "v": "",
+          "note": "No public status found",
+          "date": ""
+        },
+        "ios_safari": {
+          "s": "n",
+          "v": "",
+          "note": "",
+          "date": ""
+        },
+        "chrome_android": {
+          "s": "n",
+          "v": "",
+          "note": "",
+          "date": ""
+        },
+        "samsung": {
+          "s": "n",
+          "v": "",
+          "note": "",
+          "date": ""
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "object",
+    "metric": "",
+    "update": "set by the page",
+    "fields": [
+      {
+        "name": "name",
+        "type": "string",
+        "unit": "",
+        "range": "tool name",
+        "precision": ""
+      },
+      {
+        "name": "description",
+        "type": "string",
+        "unit": "",
+        "range": "what the tool does, read by the agent",
+        "precision": ""
+      },
+      {
+        "name": "inputSchema",
+        "type": "object",
+        "unit": "",
+        "range": "JSON Schema for the arguments",
+        "precision": ""
+      },
+      {
+        "name": "execute",
+        "type": "function",
+        "unit": "",
+        "range": "page code that runs when the agent calls the tool",
+        "precision": ""
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Lets a site give an agent a clean, named list of actions",
+    "user_action": "None for the page owner. Agents or browsers may ask you before they call a tool",
+    "can": [
+      "Expose named actions with typed inputs",
+      "Let an agent skip fragile clicking",
+      "Keep your own checks and limits in your tool code",
+      "Work next to the normal page for people"
+    ],
+    "cannot": [
+      "Run without a browser agent present",
+      "Stop an agent from using the visible page",
+      "Prove who the agent is",
+      "Ship to all browsers today"
+    ],
+    "reach": 2,
+    "reach_label": "A tool list on one page",
+    "differs": "Only Chrome has an early preview, behind a flag. Names, shapes and permission rules can still change."
+  },
+  "story": {
+    "what_it_is": "A site tells agents what they can do, in a menu, rather than letting them poke at the screen.",
+    "icon": "bot",
+    "tags": [
+      "Agents",
+      "Chrome",
+      "Capability"
+    ],
+    "marketing": [
+      {
+        "vendor": "W3C Web Machine Learning Community Group",
+        "name": "WebMCP",
+        "pitch": "Draft spec for exposing page tools to agents through the browser.",
+        "url": "https://webmachinelearning.github.io/webmcp/"
+      }
+    ],
+    "for_you": "You will not see it. If you use a browser agent, the sites it visits may offer tools so the agent works faster and makes fewer mistakes.",
+    "for_makers": "Validate every argument in your tool code and apply the same rules as for a user. Do not treat an agent call as safe. Plan for the spec to change.",
+    "use_cases": [
+      {
+        "type": "shopping",
+        "example": "A store exposes add to cart and check stock as tools.",
+        "apps": []
+      },
+      {
+        "type": "travel",
+        "example": "A travel site exposes a search flights tool that returns structured results.",
+        "apps": []
+      },
+      {
+        "type": "productivity",
+        "example": "A task app exposes create task and list tasks.",
+        "apps": []
+      },
+      {
+        "type": "developer",
+        "example": "A team tests how agents use their tools in Chrome with the flag on.",
+        "apps": [
+          "Chrome"
+        ]
+      },
+      {
+        "type": "enterprise",
+        "example": "An internal portal publishes approved actions for staff agents.",
+        "apps": []
+      },
+      {
+        "type": "accessibility",
+        "example": "Clear tool names help agents act for people who cannot use a mouse.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Prompt injection through tool descriptions",
+      "Agents acting without a clear person's yes",
+      "Preview may change"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Early preview only",
+    "Permission model not final",
+    "Not identity; says nothing about who the agent is"
+  ],
+  "scores": {
+    "sensitivity": 3,
+    "utility": 4,
+    "fingerprint_bits": 0.1,
+    "friction": 1
+  },
+  "value": {
+    "legit_uses": [
+      "Agent friendly sites",
+      "Faster, safer agent actions than clicking"
+    ],
+    "abuse": [
+      "Prompt injection",
+      "Agents doing more than the person meant"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2026-02",
+      "browser": "chrome",
+      "version": "146",
+      "change": "WebMCP early preview in Chrome behind a flag"
+    }
+  ],
+  "related": [
+    "web.device.webdriver-flag",
+    "web.net.bot-detection-signals",
+    "web.auth.passkeys",
+    "web.net.web-bot-auth-signatures"
+  ],
+  "refs": [
+    {
+      "t": "spec",
+      "label": "WebMCP draft spec",
+      "url": "https://webmachinelearning.github.io/webmcp/"
+    },
+    {
+      "t": "github",
+      "label": "webmachinelearning/webmcp",
+      "url": "https://github.com/webmachinelearning/webmcp"
+    },
+    {
+      "t": "vendor",
+      "label": "Chrome for Developers",
+      "url": "https://developer.chrome.com/"
+    }
+  ],
+  "confidence": "inferred"
+}

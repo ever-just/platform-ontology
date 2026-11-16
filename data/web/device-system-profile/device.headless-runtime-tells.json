@@ -1,0 +1,277 @@
+{
+  "id": "web.device.headless-runtime-tells",
+  "name": "Headless runtime mismatches",
+  "kind": "signal",
+  "group": "device-system-profile",
+  "subgroup": "Automation",
+  "tags": [
+    "headless",
+    "bot-detection",
+    "navigator",
+    "automation"
+  ],
+  "plain": "A few page details look odd when a browser has no real window or desktop.",
+  "meaning": "Older headless Chrome showed an empty plugin list, no languages, a zero outer window size and a notification setting that disagreed with the Permissions API. New headless mode closed most of these gaps. A software graphics renderer and a default 800 by 600 window can still stand out.",
+  "lifecycle": [
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "navigator.plugins.length; navigator.languages; window.outerWidth; Notification.permission vs permissions.query({name:'notifications'}); WebGL renderer; window.chrome",
+      "bcd": [
+        "api.Navigator.plugins",
+        "api.Navigator.languages",
+        "api.Window.outerWidth",
+        "api.Permissions.query"
+      ],
+      "access": {
+        "grant": "none",
+        "prompt_ui": "None",
+        "secure_context": false,
+        "user_gesture": false,
+        "persistence": "",
+        "revocation": "",
+        "iframe": "",
+        "steps": [
+          "Page script reads window, navigator and permission values",
+          "Script cross checks them against each other",
+          "Mismatches add to a bot score"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "59",
+          "note": "Applies to headless Chrome",
+          "date": "2017-06-05"
+        },
+        "edge": {
+          "s": "y",
+          "v": "79",
+          "note": "Applies to headless Edge",
+          "date": "2020-01-15"
+        },
+        "firefox": {
+          "s": "n",
+          "v": "",
+          "note": "No known headless specific values",
+          "date": ""
+        },
+        "safari": {
+          "s": "n",
+          "v": "",
+          "note": "No headless mode",
+          "date": ""
+        },
+        "ios_safari": {
+          "s": "n",
+          "v": "",
+          "note": "",
+          "date": ""
+        },
+        "chrome_android": {
+          "s": "n",
+          "v": "",
+          "note": "",
+          "date": ""
+        },
+        "samsung": {
+          "s": "n",
+          "v": "",
+          "note": "",
+          "date": ""
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "object",
+    "metric": "",
+    "update": "static per session",
+    "fields": [
+      {
+        "name": "plugins.length",
+        "type": "integer",
+        "unit": "",
+        "range": "0 in older headless Chrome",
+        "precision": ""
+      },
+      {
+        "name": "languages",
+        "type": "list",
+        "unit": "",
+        "range": "empty in older headless Chrome",
+        "precision": ""
+      },
+      {
+        "name": "outerWidth / outerHeight",
+        "type": "integer",
+        "unit": "px",
+        "range": "0 in older headless Chrome",
+        "precision": ""
+      },
+      {
+        "name": "Notification.permission vs permissions.query",
+        "type": "enum",
+        "unit": "",
+        "range": "denied vs prompt mismatch in older headless Chrome",
+        "precision": ""
+      },
+      {
+        "name": "WebGL renderer",
+        "type": "string",
+        "unit": "",
+        "range": "software renderer such as SwiftShader on servers",
+        "precision": ""
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can tell when the page has no real desktop behind it",
+    "user_action": "Nothing. Page script runs when the page loads",
+    "can": [
+      "Compare window size, plugins and languages with what a desktop shows",
+      "Compare two permission answers that should match",
+      "Notice a software graphics renderer on a server",
+      "Raise a bot score from several small mismatches"
+    ],
+    "cannot": [
+      "Prove automation from any one value",
+      "Catch new headless mode on its own",
+      "See what the agent is doing",
+      "Resist a stealth plugin that patches each value"
+    ],
+    "reach": 1,
+    "reach_label": "Small mismatches that add up",
+    "differs": "Newer Chrome builds fixed several of these. A stealth plugin can patch the rest, so sites treat them as weak clues and combine them."
+  },
+  "story": {
+    "what_it_is": "A set of tiny oddities that a screenless browser leaves behind when its values do not agree with each other.",
+    "icon": "scan-search",
+    "tags": [
+      "Automation",
+      "Silent",
+      "Fingerprinting"
+    ],
+    "marketing": [
+      {
+        "vendor": "Chrome for Developers",
+        "name": "Headless Chrome",
+        "pitch": "Docs describe Chrome running without a visible UI; no page window exists.",
+        "url": "https://developer.chrome.com/docs/chromium/headless"
+      }
+    ],
+    "for_you": "You never see it. A normal browser agrees with itself everywhere, so nothing happens. A headless agent can fail a few small tests.",
+    "for_makers": "Treat each value as a weak hint. Contradictions between values (a permission that says denied in one API and prompt in another) are stronger than any single value. Re check after Chrome releases, because defaults change.",
+    "use_cases": [
+      {
+        "type": "security",
+        "example": "A bot filter compares two permission answers and flags a mismatch.",
+        "apps": [
+          "Cloudflare"
+        ]
+      },
+      {
+        "type": "shopping",
+        "example": "A sneaker shop challenges clients with no plugins and no languages.",
+        "apps": []
+      },
+      {
+        "type": "ads",
+        "example": "An ad verifier drops views from clients with a software graphics renderer on a datacenter.",
+        "apps": []
+      },
+      {
+        "type": "games",
+        "example": "A browser game checks window size to catch bots that run without a screen.",
+        "apps": []
+      },
+      {
+        "type": "analytics",
+        "example": "Analytics filters visits with a zero sized window.",
+        "apps": []
+      },
+      {
+        "type": "developer",
+        "example": "A tester runs a detection page to see how their headless setup looks.",
+        "apps": [
+          "Puppeteer",
+          "Playwright"
+        ]
+      }
+    ],
+    "risks": [
+      "False positives for people on unusual setups",
+      "Easy to patch"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Several values changed in newer headless mode",
+    "Patched by stealth plugins",
+    "A real server hosted desktop browser can show some of them"
+  ],
+  "scores": {
+    "sensitivity": 1,
+    "utility": 3,
+    "fingerprint_bits": 1.0,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Bot defense",
+      "Fraud scoring"
+    ],
+    "abuse": [
+      "Blocking legitimate agents",
+      "Penalizing people on remote desktops"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2017-06",
+      "browser": "chrome",
+      "version": "59",
+      "change": "Headless mode ships with several values that differ from headed Chrome"
+    },
+    {
+      "date": "2023",
+      "browser": "chrome",
+      "version": "112",
+      "change": "New headless mode brings it much closer to headed Chrome"
+    }
+  ],
+  "related": [
+    "web.device.headless-ua-brand",
+    "web.device.webdriver-flag",
+    "web.device.plugins-mimetypes",
+    "web.device.webgl-renderer",
+    "web.meta.permissions-api"
+  ],
+  "refs": [
+    {
+      "t": "mdn",
+      "label": "MDN Navigator.plugins",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/Navigator/plugins"
+    },
+    {
+      "t": "mdn",
+      "label": "MDN Permissions.query",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/Permissions/query"
+    },
+    {
+      "t": "github",
+      "label": "CreepJS (abrahamjuliot)",
+      "url": "https://github.com/abrahamjuliot/creepjs"
+    }
+  ],
+  "confidence": "inferred"
+}

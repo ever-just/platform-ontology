@@ -1,0 +1,243 @@
+{
+  "id": "web.device.automation-injected-globals",
+  "name": "Automation framework leftovers",
+  "kind": "signal",
+  "group": "device-system-profile",
+  "subgroup": "Automation",
+  "tags": [
+    "selenium",
+    "playwright",
+    "puppeteer",
+    "automation",
+    "globals"
+  ],
+  "plain": "Test tools leave marks on the page that a script can look for.",
+  "meaning": "Selenium, PhantomJS, Playwright and Puppeteer inject helper properties or bindings into the page, such as cdc_ prefixed document keys, callPhantom, or names starting with __playwright and __pw. Bot defenses scan the window and document for these names. Operators rename or remove them with patches.",
+  "lifecycle": [
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "Object.keys(window) and document for names like $cdc_, __playwright*, __pw*, callPhantom, _phantom, domAutomation, __nightmare, __selenium*",
+      "access": {
+        "grant": "none",
+        "prompt_ui": "None",
+        "secure_context": false,
+        "user_gesture": false,
+        "persistence": "",
+        "revocation": "",
+        "iframe": "",
+        "steps": [
+          "Page script enumerates window and document property names",
+          "Script matches them against a list of known automation names",
+          "A hit adds to a bot score"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "",
+          "note": "Names depend on the driver and its version",
+          "date": ""
+        },
+        "edge": {
+          "s": "y",
+          "v": "",
+          "note": "Same Chromium behavior",
+          "date": ""
+        },
+        "firefox": {
+          "s": "y",
+          "v": "",
+          "note": "Some drivers leave marks here too",
+          "date": ""
+        },
+        "safari": {
+          "s": "p",
+          "v": "",
+          "note": "Fewer known marks",
+          "date": ""
+        },
+        "ios_safari": {
+          "s": "n",
+          "v": "",
+          "note": "",
+          "date": ""
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "",
+          "note": "When driven by Selenium or Appium",
+          "date": ""
+        },
+        "samsung": {
+          "s": "p",
+          "v": "",
+          "note": "Not verified",
+          "date": ""
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "list",
+    "metric": "",
+    "update": "static per session",
+    "fields": [
+      {
+        "name": "matchedNames",
+        "type": "list",
+        "unit": "",
+        "range": "automation related property names found on window or document",
+        "precision": ""
+      },
+      {
+        "name": "count",
+        "type": "integer",
+        "unit": "",
+        "range": "0 in an ordinary browser",
+        "precision": ""
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can find traces of test tools left on the page",
+    "user_action": "Nothing. It runs from page script",
+    "can": [
+      "List window and document properties",
+      "Match known test tool names",
+      "Block or challenge clients with a hit",
+      "Combine hits with the webdriver flag"
+    ],
+    "cannot": [
+      "Catch a tool that renames its marks",
+      "Tell a good test from a bad scrape",
+      "See what the script does",
+      "Prove who runs it"
+    ],
+    "reach": 1,
+    "reach_label": "A list of known names",
+    "differs": "Names change between driver versions and are removed by stealth patches. Only a known name is a hit, so new tools pass until lists catch up."
+  },
+  "story": {
+    "what_it_is": "Automation tools sometimes leave their own handwriting on the page. Defenders keep a list of the known handwriting.",
+    "icon": "bug",
+    "tags": [
+      "Automation",
+      "Silent",
+      "Developer"
+    ],
+    "marketing": [
+      {
+        "vendor": "Selenium",
+        "name": "WebDriver documentation",
+        "pitch": "Docs describe the browser automation standard and its drivers.",
+        "url": "https://www.selenium.dev/documentation/webdriver/"
+      }
+    ],
+    "for_you": "You never see it. A normal browser has none of these names. Test tools you run may be spotted by them.",
+    "for_makers": "Keep your list current and match exact known names, not loose patterns, to avoid false positives. Treat a hit as strong, and a miss as meaning nothing.",
+    "use_cases": [
+      {
+        "type": "security",
+        "example": "A web firewall flags sessions that carry a cdc_ marker on the document.",
+        "apps": [
+          "Cloudflare"
+        ]
+      },
+      {
+        "type": "shopping",
+        "example": "A ticket seller blocks scripted browsers with Playwright marks.",
+        "apps": []
+      },
+      {
+        "type": "games",
+        "example": "A browser game bans accounts whose window has automation bindings.",
+        "apps": []
+      },
+      {
+        "type": "ads",
+        "example": "An ad network discards views with PhantomJS marks.",
+        "apps": []
+      },
+      {
+        "type": "developer",
+        "example": "A tester checks a bot detection page to see which marks their framework leaves.",
+        "apps": [
+          "Selenium",
+          "Playwright"
+        ]
+      },
+      {
+        "type": "analytics",
+        "example": "A traffic tool flags visits with known automation names as bots.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Blocks useful automation",
+      "Easy to patch"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Names vary by version",
+    "Patched by stealth plugins",
+    "Says nothing about intent"
+  ],
+  "scores": {
+    "sensitivity": 1,
+    "utility": 4,
+    "fingerprint_bits": 0.2,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Bot defense",
+      "Fraud scoring"
+    ],
+    "abuse": [
+      "Blocking legitimate agents"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2016",
+      "browser": "chrome",
+      "version": "",
+      "change": "cdc_ style ChromeDriver marks widely documented by bot detection write ups"
+    }
+  ],
+  "related": [
+    "web.device.webdriver-flag",
+    "web.device.cdp-runtime-enable-leak",
+    "web.device.headless-runtime-tells",
+    "web.net.bot-detection-signals"
+  ],
+  "refs": [
+    {
+      "t": "vendor",
+      "label": "Selenium WebDriver docs",
+      "url": "https://www.selenium.dev/documentation/webdriver/"
+    },
+    {
+      "t": "vendor",
+      "label": "Playwright docs",
+      "url": "https://playwright.dev/docs/intro"
+    },
+    {
+      "t": "github",
+      "label": "puppeteer-extra stealth plugin",
+      "url": "https://github.com/berstend/puppeteer-extra/tree/master/packages/puppeteer-extra-plugin-stealth"
+    }
+  ],
+  "confidence": "inferred"
+}

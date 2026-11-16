@@ -1,0 +1,252 @@
+{
+  "id": "web.device.fresh-profile-signals",
+  "name": "Brand new browser profile",
+  "kind": "signal",
+  "group": "device-system-profile",
+  "subgroup": "Browser state",
+  "tags": [
+    "profile",
+    "history",
+    "storage",
+    "automation",
+    "agents"
+  ],
+  "plain": "A browser that has never been used looks empty in many small ways.",
+  "meaning": "A fresh profile starts with no cookies, empty storage, a history length of one, no earlier permission choices and no extensions. A person's browser rarely looks like that. Cloud browser agents often start from a clean profile each run, so they look like first time visitors. Saving and reusing a profile between runs makes the agent look like a returning visitor.",
+  "lifecycle": [
+    "on-arrival",
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "history.length; document.cookie; localStorage.length; navigator.storage.estimate(); Notification.permission; navigator.permissions.query()",
+      "bcd": [
+        "api.History.length",
+        "api.StorageManager.estimate"
+      ],
+      "access": {
+        "grant": "none",
+        "prompt_ui": "None",
+        "secure_context": false,
+        "user_gesture": false,
+        "persistence": "",
+        "revocation": "",
+        "iframe": "",
+        "steps": [
+          "Page reads history length and its own stored state",
+          "Page may read quota and permission defaults",
+          "Server notes there are no prior cookies or tokens",
+          "Combined empty state raises the score for automation"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "1",
+          "note": "",
+          "date": ""
+        },
+        "edge": {
+          "s": "y",
+          "v": "79",
+          "note": "",
+          "date": "2020-01-15"
+        },
+        "firefox": {
+          "s": "y",
+          "v": "1",
+          "note": "",
+          "date": ""
+        },
+        "safari": {
+          "s": "y",
+          "v": "1",
+          "note": "",
+          "date": ""
+        },
+        "ios_safari": {
+          "s": "y",
+          "v": "1",
+          "note": "",
+          "date": ""
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "1",
+          "note": "",
+          "date": ""
+        },
+        "samsung": {
+          "s": "y",
+          "v": "5.0",
+          "note": "",
+          "date": "2016-12-15"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "object",
+    "metric": "",
+    "update": "per visit",
+    "fields": [
+      {
+        "name": "history.length",
+        "type": "integer",
+        "unit": "",
+        "range": "1 in a new tab with no history",
+        "precision": ""
+      },
+      {
+        "name": "cookies",
+        "type": "integer",
+        "unit": "",
+        "range": "0 on a first visit",
+        "precision": ""
+      },
+      {
+        "name": "localStorage.length",
+        "type": "integer",
+        "unit": "",
+        "range": "0 on a first visit",
+        "precision": ""
+      },
+      {
+        "name": "permission states",
+        "type": "list",
+        "unit": "",
+        "range": "all default; no past choices",
+        "precision": ""
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can tell that the browser has no past",
+    "user_action": "Nothing. It reads defaults",
+    "can": [
+      "See an empty history and storage",
+      "Notice default permissions",
+      "Treat a first visit differently when risk is high",
+      "Reward a returning profile with fewer challenges"
+    ],
+    "cannot": [
+      "Tell a new person from an agent",
+      "See other sites you visited",
+      "Prove automation",
+      "Read your real history"
+    ],
+    "reach": 1,
+    "reach_label": "Several empty values",
+    "differs": "New people and private windows also look fresh. Sites weigh it with other signals and give extra trust to a profile that keeps coming back."
+  },
+  "story": {
+    "what_it_is": "A used browser carries traces of its owner's life. A brand new one carries none, and sites notice the blank.",
+    "icon": "history",
+    "tags": [
+      "Browser",
+      "Silent",
+      "Agents"
+    ],
+    "marketing": [
+      {
+        "vendor": "MDN",
+        "name": "History.length",
+        "pitch": "Docs describe how many entries are in the session history of the tab.",
+        "url": "https://developer.mozilla.org/en-US/docs/Web/API/History/length"
+      }
+    ],
+    "for_you": "You never see it. A new phone or fresh browser may get an extra check on first visit, which goes away as it is used.",
+    "for_makers": "Do not block fresh profiles on their own. Use them as one factor, and offer a clear sign in path. If you run agents, store and reuse a profile for the same site and keep it tied to one account.",
+    "use_cases": [
+      {
+        "type": "security",
+        "example": "A bank asks for more proof on a first visit from an empty profile.",
+        "apps": []
+      },
+      {
+        "type": "shopping",
+        "example": "A store applies stricter checks to a checkout from a brand new browser.",
+        "apps": []
+      },
+      {
+        "type": "ads",
+        "example": "An ad verifier counts empty profiles as lower trust.",
+        "apps": []
+      },
+      {
+        "type": "analytics",
+        "example": "A site counts first visits using the lack of stored state.",
+        "apps": [
+          "Google Analytics"
+        ]
+      },
+      {
+        "type": "developer",
+        "example": "An agent platform saves a profile so later runs look like returning visits.",
+        "apps": []
+      },
+      {
+        "type": "enterprise",
+        "example": "A fraud team compares fresh profiles on sign up with later behavior.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Penalizes new devices and private browsing",
+      "Weak alone"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Also true for new devices and private windows",
+    "Easy to fake with seeded storage",
+    "Weak alone"
+  ],
+  "scores": {
+    "sensitivity": 2,
+    "utility": 3,
+    "fingerprint_bits": 1.5,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Fraud scoring",
+      "Returning visitor trust"
+    ],
+    "abuse": [
+      "Penalizing privacy minded users"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "related": [
+    "web.device.incognito-detection",
+    "web.device.storage-estimate",
+    "web.auth.session-cookies",
+    "web.net.bot-detection-signals"
+  ],
+  "refs": [
+    {
+      "t": "mdn",
+      "label": "MDN History.length",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/History/length"
+    },
+    {
+      "t": "mdn",
+      "label": "MDN StorageManager.estimate",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/StorageManager/estimate"
+    },
+    {
+      "t": "vendor",
+      "label": "Chrome for Developers: user data directory",
+      "url": "https://developer.chrome.com/docs/chromium/headless"
+    }
+  ],
+  "confidence": "inferred"
+}

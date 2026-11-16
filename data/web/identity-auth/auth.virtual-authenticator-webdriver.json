@@ -1,0 +1,263 @@
+{
+  "id": "web.auth.virtual-authenticator-webdriver",
+  "name": "Software passkey for test tools",
+  "kind": "capability",
+  "group": "identity-auth",
+  "subgroup": "WebAuthn",
+  "tags": [
+    "webauthn",
+    "webdriver",
+    "testing",
+    "automation",
+    "passkeys"
+  ],
+  "plain": "Test tools can add a pretend passkey device to a browser so sign in flows run without hardware.",
+  "meaning": "The WebAuthn spec defines a WebDriver extension for virtual authenticators. Chrome exposes it through the DevTools Protocol WebAuthn domain and Selenium and Playwright expose it to scripts. A test or agent can register and use passkeys with no phone or security key. A site cannot call this from a page; it is a tool level control.",
+  "lifecycle": [
+    "signed-in",
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "WebDriver Virtual Authenticator commands; CDP WebAuthn.addVirtualAuthenticator, addCredential, setUserVerified",
+      "access": {
+        "grant": "none",
+        "prompt_ui": "None; only the driver can turn it on",
+        "secure_context": true,
+        "user_gesture": false,
+        "persistence": "For the test session",
+        "revocation": "Close the session or remove the authenticator",
+        "iframe": "Applies to the whole browser session",
+        "steps": [
+          "Test tool starts a virtual authenticator in the browser",
+          "Tool adds or accepts credentials through the protocol",
+          "Page runs the normal WebAuthn calls",
+          "Authenticator answers with no hardware"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "",
+          "note": "Through the DevTools Protocol WebAuthn domain and ChromeDriver",
+          "date": ""
+        },
+        "edge": {
+          "s": "y",
+          "v": "",
+          "note": "Chromium based",
+          "date": ""
+        },
+        "firefox": {
+          "s": "p",
+          "v": "",
+          "note": "Driver support varies; verify for your version",
+          "date": ""
+        },
+        "safari": {
+          "s": "p",
+          "v": "",
+          "note": "Driver support varies; verify for your version",
+          "date": ""
+        },
+        "ios_safari": {
+          "s": "n",
+          "v": "",
+          "note": "",
+          "date": ""
+        },
+        "chrome_android": {
+          "s": "n",
+          "v": "",
+          "note": "",
+          "date": ""
+        },
+        "samsung": {
+          "s": "n",
+          "v": "",
+          "note": "",
+          "date": ""
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "object",
+    "metric": "",
+    "update": "test session",
+    "fields": [
+      {
+        "name": "protocol",
+        "type": "enum",
+        "unit": "",
+        "range": "ctap2 or u2f",
+        "precision": ""
+      },
+      {
+        "name": "transport",
+        "type": "enum",
+        "unit": "",
+        "range": "internal, usb, nfc or ble",
+        "precision": ""
+      },
+      {
+        "name": "hasUserVerification",
+        "type": "boolean",
+        "unit": "",
+        "range": "whether the virtual device passes user checks",
+        "precision": ""
+      },
+      {
+        "name": "credentials",
+        "type": "list",
+        "unit": "",
+        "range": "credentials added by the tool",
+        "precision": ""
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Lets tests and agents use passkeys without a phone",
+    "user_action": "None. A developer turns it on from the test tool",
+    "can": [
+      "Create a software authenticator in tests",
+      "Register and sign in with passkeys in CI",
+      "Control user verification results",
+      "Check a sign in flow end to end"
+    ],
+    "cannot": [
+      "Be used by a normal web page",
+      "Fool a site that checks attestation against known devices",
+      "Replace a person's approval in real accounts",
+      "Work on a locked down browser"
+    ],
+    "reach": 1,
+    "reach_label": "A test device the driver controls",
+    "differs": "It is a driver feature, not a web API. Sites that require hardware attestation reject the virtual device."
+  },
+  "story": {
+    "what_it_is": "A pretend security key that a test tool plugs in so sign in tests can run on any computer.",
+    "icon": "key-round",
+    "tags": [
+      "Developer",
+      "Passkeys",
+      "Automation"
+    ],
+    "marketing": [
+      {
+        "vendor": "Chrome for Developers",
+        "name": "Emulate authenticators",
+        "pitch": "Docs show how DevTools adds a virtual authenticator to test passkeys.",
+        "url": "https://developer.chrome.com/docs/devtools/webauthn"
+      }
+    ],
+    "for_you": "You never see it. It is a tool for testers. It lets teams check that passkey sign in works without handing out hardware.",
+    "for_makers": "Use it for tests only. In agent products, a virtual authenticator must not stand in for a person's approval on a real account.",
+    "use_cases": [
+      {
+        "type": "developer",
+        "example": "A QA team tests passkey sign in in CI with a virtual authenticator.",
+        "apps": [
+          "Selenium",
+          "Playwright"
+        ]
+      },
+      {
+        "type": "security",
+        "example": "A security team tests how a site handles invalid passkey answers.",
+        "apps": []
+      },
+      {
+        "type": "banking",
+        "example": "A bank tests its sign in pages without hardware keys.",
+        "apps": []
+      },
+      {
+        "type": "enterprise",
+        "example": "A platform team checks a passkey rollout against many browsers.",
+        "apps": []
+      },
+      {
+        "type": "shopping",
+        "example": "A store tests passkey checkout on staging.",
+        "apps": []
+      },
+      {
+        "type": "productivity",
+        "example": "A SaaS team runs passkey tests on every release.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Could be used to script real sign ins if misused",
+      "Not a page API"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Driver only",
+    "Not allowed by sites that check attestation",
+    "Coverage differs by browser"
+  ],
+  "scores": {
+    "sensitivity": 3,
+    "utility": 4,
+    "fingerprint_bits": 0,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Passkey testing",
+      "Release checks"
+    ],
+    "abuse": [
+      "Scripted sign ins by agents that should hand off to a person"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2019",
+      "browser": "chrome",
+      "version": "",
+      "change": "WebAuthn domain added to the DevTools Protocol and ChromeDriver"
+    },
+    {
+      "date": "2024",
+      "browser": "spec",
+      "version": "",
+      "change": "Virtual authenticators described in the WebAuthn spec WebDriver extension"
+    }
+  ],
+  "related": [
+    "web.auth.passkeys",
+    "web.auth.passkey-environment-probes",
+    "web.auth.webauthn-hybrid-transport",
+    "web.device.webdriver-flag"
+  ],
+  "refs": [
+    {
+      "t": "vendor",
+      "label": "Chrome DevTools: emulate authenticators",
+      "url": "https://developer.chrome.com/docs/devtools/webauthn"
+    },
+    {
+      "t": "spec",
+      "label": "WebAuthn WebDriver extension",
+      "url": "https://www.w3.org/TR/webauthn-3/#sctn-automation"
+    },
+    {
+      "t": "vendor",
+      "label": "Selenium: virtual authenticator",
+      "url": "https://www.selenium.dev/documentation/webdriver/interactions/virtual_authenticator/"
+    }
+  ],
+  "confidence": "inferred"
+}

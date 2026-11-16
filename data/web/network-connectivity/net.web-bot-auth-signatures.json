@@ -1,0 +1,270 @@
+{
+  "id": "web.net.web-bot-auth-signatures",
+  "name": "Signed agent requests (Web Bot Auth)",
+  "kind": "signal",
+  "group": "network-connectivity",
+  "subgroup": "Anti-bot",
+  "tags": [
+    "web-bot-auth",
+    "http-message-signatures",
+    "agents",
+    "bots"
+  ],
+  "plain": "An agent can sign its web requests so a site can check who sent them.",
+  "meaning": "Web Bot Auth uses HTTP Message Signatures (RFC 9421). The agent adds Signature, Signature-Input and a Signature-Agent header that points to a public key directory. The site fetches the keys and verifies the signature, so a user agent name cannot be faked. Google lists it as experimental for its own agent, and cloud agent platforms are adding it.",
+  "lifecycle": [
+    "on-arrival"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "Signature, Signature-Input and Signature-Agent request headers; key directory at /.well-known/http-message-signatures-directory",
+      "access": {
+        "grant": "none",
+        "prompt_ui": "None",
+        "secure_context": false,
+        "user_gesture": false,
+        "persistence": "",
+        "revocation": "",
+        "iframe": "",
+        "steps": [
+          "Agent signs selected request parts with a private key",
+          "Agent sends Signature, Signature-Input and Signature-Agent",
+          "Site fetches the public key directory",
+          "Site verifies the signature and trusts or denies the agent"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "n",
+          "v": "",
+          "note": "Sent by agent platforms, not by the browser",
+          "date": ""
+        },
+        "edge": {
+          "s": "n",
+          "v": "",
+          "note": "",
+          "date": ""
+        },
+        "firefox": {
+          "s": "n",
+          "v": "",
+          "note": "",
+          "date": ""
+        },
+        "safari": {
+          "s": "n",
+          "v": "",
+          "note": "",
+          "date": ""
+        },
+        "ios_safari": {
+          "s": "n",
+          "v": "",
+          "note": "",
+          "date": ""
+        },
+        "chrome_android": {
+          "s": "n",
+          "v": "",
+          "note": "",
+          "date": ""
+        },
+        "samsung": {
+          "s": "n",
+          "v": "",
+          "note": "",
+          "date": ""
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "header",
+    "metric": "",
+    "update": "per request",
+    "fields": [
+      {
+        "name": "Signature",
+        "type": "header",
+        "unit": "",
+        "range": "signature bytes for chosen request parts",
+        "precision": ""
+      },
+      {
+        "name": "Signature-Input",
+        "type": "header",
+        "unit": "",
+        "range": "which parts were signed, created time, key id, tag",
+        "precision": ""
+      },
+      {
+        "name": "Signature-Agent",
+        "type": "header",
+        "unit": "",
+        "range": "URL of the agent's key directory",
+        "precision": ""
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can prove which agent operator made a request",
+    "user_action": "Nothing for people. The agent platform signs for you",
+    "can": [
+      "Check a cryptographic signature on a request",
+      "Look up the operator's published keys",
+      "Allow known agents and rate limit the rest",
+      "Stop user agent spoofing"
+    ],
+    "cannot": [
+      "Tell you what the agent will do",
+      "Work for agents that do not sign",
+      "Prove a person approved the action",
+      "Replace sign in"
+    ],
+    "reach": 2,
+    "reach_label": "A signed header set per request",
+    "differs": "Support is new and uneven. Sites must choose to honor it. A signature proves the operator, not the task or the person behind it."
+  },
+  "story": {
+    "what_it_is": "A signed envelope on each request. The site checks the signature the way a shop checks a stamp.",
+    "icon": "badge-check",
+    "tags": [
+      "Agents",
+      "Security",
+      "Network"
+    ],
+    "marketing": [
+      {
+        "vendor": "IETF",
+        "name": "HTTP Message Signatures (RFC 9421)",
+        "pitch": "Standard for signing parts of HTTP messages.",
+        "url": "https://www.rfc-editor.org/rfc/rfc9421"
+      },
+      {
+        "vendor": "Cloudflare",
+        "name": "Web Bot Auth",
+        "pitch": "Docs describe how verified bots sign requests.",
+        "url": "https://developers.cloudflare.com/bots/concepts/bot/verified-bots/web-bot-auth/"
+      }
+    ],
+    "for_you": "You never see it. If you use an agent, the platform may sign its requests so sites can recognize it and treat it well.",
+    "for_makers": "Verify signatures against the published directory and check created and expires times. Use it for an allow list, not as proof of a safe request. Keep a fallback for unsigned agents.",
+    "use_cases": [
+      {
+        "type": "security",
+        "example": "A site allows signed requests from a known agent and challenges the rest.",
+        "apps": [
+          "Cloudflare"
+        ]
+      },
+      {
+        "type": "shopping",
+        "example": "A retailer lets a verified shopping agent read stock without a challenge.",
+        "apps": []
+      },
+      {
+        "type": "news",
+        "example": "A publisher lets a signed AI fetcher read pages under its terms.",
+        "apps": []
+      },
+      {
+        "type": "developer",
+        "example": "An agent team signs requests so partner sites can recognize them.",
+        "apps": []
+      },
+      {
+        "type": "enterprise",
+        "example": "An internal API accepts only signed agent calls.",
+        "apps": []
+      },
+      {
+        "type": "travel",
+        "example": "A booking site gives signed agents a calmer rate limit.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Sites may favor big operators",
+      "Unsigned agents blocked by default"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Standards still in draft at the IETF",
+    "Only identifies the operator",
+    "Not a browser feature"
+  ],
+  "scores": {
+    "sensitivity": 2,
+    "utility": 4,
+    "fingerprint_bits": 0,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Agent allow lists",
+      "Fewer false bot blocks"
+    ],
+    "abuse": [
+      "Excluding small or independent agents"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2024-02",
+      "browser": "rfc",
+      "version": "",
+      "change": "RFC 9421 HTTP Message Signatures published"
+    },
+    {
+      "date": "2025-05",
+      "browser": "all",
+      "version": "",
+      "change": "Web Bot Auth announced by Cloudflare"
+    },
+    {
+      "date": "2026-03",
+      "browser": "all",
+      "version": "",
+      "change": "Google reported to list Google-Agent with experimental Web Bot Auth signing"
+    }
+  ],
+  "related": [
+    "web.net.bot-detection-signals",
+    "web.net.private-access-tokens-pact",
+    "web.net.ai-agent-user-agent-tokens",
+    "web.net.client-ip"
+  ],
+  "refs": [
+    {
+      "t": "rfc",
+      "label": "RFC 9421 HTTP Message Signatures",
+      "url": "https://www.rfc-editor.org/rfc/rfc9421"
+    },
+    {
+      "t": "spec",
+      "label": "IETF webbotauth working group",
+      "url": "https://datatracker.ietf.org/wg/webbotauth/about/"
+    },
+    {
+      "t": "vendor",
+      "label": "Cloudflare Web Bot Auth docs",
+      "url": "https://developers.cloudflare.com/bots/concepts/bot/verified-bots/web-bot-auth/"
+    },
+    {
+      "t": "vendor",
+      "label": "Google crawler docs: Web Bot Auth",
+      "url": "https://developers.google.com/crawling/docs/crawlers-fetchers/web-bot-auth"
+    }
+  ],
+  "confidence": "inferred"
+}
