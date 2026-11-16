@@ -1,4 +1,5 @@
 import { realHandlers } from "./handlers";
+import "./chromium";
 
 export * from "./types";
 export { collectPassive } from "./passive";

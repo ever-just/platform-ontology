@@ -883,3 +883,6 @@ add(["web.peripherals.barcode-detection"], "Barcode detection", false, async () 
 });
 
 export const realHandlers: Record<string, RealHandler> = handlers;
+
+// Shared with ./chromium, which registers the Chromium only handlers into the same table.
+export { add, f, num, unsupported, fail, stopStream, sleep };
