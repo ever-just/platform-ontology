@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import type { ReactNode } from "react";
 import "./surroundings.css";
+import { TradeChart } from "../ui/trade";
 import type { Ctx, InstrumentProps, ScopeDef } from "../core/types";
 import { every, noise, series, unsupported } from "../core/harness";
 import { C, DOMAIN_COLOR, Frame, Readout, Spark, Table, Waiting, fmt, lastData } from "../ui/kit";
@@ -293,7 +294,7 @@ function DeviceCard({ x, session }: { x: Ble; session: InstrumentProps["session"
   );
 }
 
-function Radar({ session }: InstrumentProps) {
+function Radar({ scope, session }: InstrumentProps) {
   useRefData();
   const [pick, setPick] = useState<string | null>(null);
   const d = lastData<BleRec>(session);
@@ -375,6 +376,7 @@ function Radar({ session }: InstrumentProps) {
           </div>
         </>
       }
+      foot={d ? <TradeChart scope={scope} session={session} keys={["count", "nearest_m", "strongest_dbm"]} compact height={220} /> : null}
     />
   );
 }
