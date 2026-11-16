@@ -229,9 +229,17 @@ function Step({ scope, kind, pos, total, next, ctx, silent, known, onDone, onSto
 
   // Already running (started elsewhere, or by the silent batch): nothing to ask.
   useEffect(() => {
-    if (!clickAt && isActive(s)) { setOutcome("ok"); const h = setTimeout(() => onDone("ok"), 650); return () => clearTimeout(h); }
+    if (!clickAt && isActive(s)) setOutcome("ok");
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [s.state]);
+
+  // Move on shortly after a success. Kept apart from the effects that set the outcome, so their re-run cannot cancel it.
+  useEffect(() => {
+    if (outcome !== "ok" && outcome !== "failed") return;
+    const h = setTimeout(() => onDone(outcome), outcome === "ok" ? 900 : 2400);
+    return () => clearTimeout(h);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [outcome]);
 
   // A prompt that never shows (quiet permission UI, or a prompt hidden behind another window) should not look like a hang.
   useEffect(() => {
@@ -254,8 +262,7 @@ function Step({ scope, kind, pos, total, next, ctx, silent, known, onDone, onSto
     if (!clickAt || outcome || s.startedAt < clickAt - 50) return;
     if (s.state === "granted" || s.state === "streaming") {
       setOutcome("ok");
-      const h = setTimeout(() => onDone("ok"), 650);
-      return () => clearTimeout(h);
+      return;
     }
     if (s.state === "denied") {
       const fast = Date.now() - clickAt < 400;
@@ -266,8 +273,6 @@ function Step({ scope, kind, pos, total, next, ctx, silent, known, onDone, onSto
     } else if (s.state === "stopped") { setOutcome("none"); setMsg(s.error); }
     else if (s.state === "error" || s.state === "unsupported") {
       setOutcome("failed"); setMsg(s.error);
-      const h = setTimeout(() => onDone("failed"), 2400);
-      return () => clearTimeout(h);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [s.state, s.startedAt, clickAt, outcome]);
@@ -346,7 +351,7 @@ function Step({ scope, kind, pos, total, next, ctx, silent, known, onDone, onSto
       <footer>
         <button className="btn ghost" onClick={onStop} title="Stop asking and see the summary">Stop asking</button>
         <span className="grow" />
-        {outcome !== "ok" && (outcome || lingered || slow) && (
+        {(outcome || lingered || slow) && (
           <button className="btn" onClick={() => onDone(outcome ?? "skipped")}>
             <SkipForward size={13} />{outcome ? "Next" : "Skip"}
           </button>
