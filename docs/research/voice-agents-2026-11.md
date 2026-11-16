@@ -147,7 +147,7 @@ Sources: https://vapi.ai/pricing, https://docs.vapi.ai/tools/client-side-websdk,
 
 ## Dropped
 
-* Daily Bots: 
-* Retell AI web call: 
+* Daily Bots: Deprecated by Daily (announced for July 1 2025) and merged into Pipecat Cloud, which is already covered by the Pipecat entry.
+* Retell AI web call: Custom functions are server webhooks only (no documented browser tool execution), slowest median in the Aug 2026 phone benchmark (1,740 ms), about $0.11/min, and a 148 KB gzip SDK. Weakest fit for in-page tools.
 
 Data file: `docs/research/voice-agents-2026-11.json`. Generated 2026-11-16.
