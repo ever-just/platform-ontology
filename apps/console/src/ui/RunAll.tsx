@@ -1,15 +1,17 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Ban, Check, CircleAlert, Hand, Lock, MousePointerClick, PackageOpen, Play, RotateCcw, SkipForward, X, Zap } from "lucide-react";
 import type { ScopeDef } from "../core/types";
-import { getSession, isActive, request, useSession } from "../core/harness";
-import { supportOf } from "../browser/profile";
+import { getSession, isActive, request, useSession, useVersion } from "../core/harness";
+import { gate, type Gate } from "./runall-gate";
 import type { ConsoleCtx } from "../ext/registry";
 import { CapIcon } from "./icons";
 import "./runall.css";
 
-// Run all: starts every capability this browser supports. Silent ones start at once; the rest are
-// walked through one at a time, because each browser prompt needs its own click. A refusal is
-// offered again, and a block that the browser will not re-ask comes with the steps to lift it.
+// Run all: starts every capability this browser can actually run. Before anything is queued, each one
+// is checked (feature present, not blocked, allowed by Permissions Policy, hardware present), and the
+// ones that cannot start are listed with the reason instead of prompted. Silent ones start at once; the
+// rest are walked through one at a time, because each browser prompt needs its own click. Counts come
+// from the live session state, not from what was requested.
 
 /** silent: no prompt. ask: a permission prompt. tap: needs a click but no prompt. pick: opens a chooser. */
 export type Kind = "silent" | "ask" | "tap" | "pick";
@@ -60,7 +62,9 @@ export function RunAll({ ctx }: { ctx: ConsoleCtx }) {
   const [idx, setIdx] = useState(0);
   const [results, setResults] = useState<Record<string, Outcome>>({});
   const [asked, setAsked] = useState<string[]>([]);
-  const [silentRan, setSilentRan] = useState(0);
+  const [silentIds, setSilentIds] = useState<string[]>([]);
+  const [gates, setGates] = useState<Record<string, Gate> | null>(null);
+  useVersion(); // re-render as sessions change, so every count is live
   const [pickers, setPickers] = useState(true);
   const [perm, setPerm] = useState<Record<string, string>>({});
 
@@ -72,22 +76,23 @@ export function RunAll({ ctx }: { ctx: ConsoleCtx }) {
   }, [open]);
 
   const byId = useMemo(() => new Map(ctx.scopes.map((s) => [s.id, s])), [ctx.scopes]);
-  const works = (s: ScopeDef) => { const n = ctx.nodeOf(s); return !n || "yp".includes(supportOf(n.sup, ctx.profile.column)); };
 
   // The plan, rebuilt each time the intro shows. A permission already granted needs no prompt, so it joins the silent batch.
   const plan = useMemo(() => {
-    const p = { silent: [] as ScopeDef[], ask: [] as ScopeDef[], tap: [] as ScopeDef[], pick: [] as ScopeDef[], running: 0, missing: 0 };
+    const p = { silent: [] as ScopeDef[], ask: [] as ScopeDef[], tap: [] as ScopeDef[], pick: [] as ScopeDef[], running: 0, out: [] as [ScopeDef, NonNullable<Gate>][] };
     for (const s of ctx.scopes) {
-      if (!works(s)) { p.missing++; continue; }
       if (isActive(getSession(s.id))) { p.running++; continue; }
+      const g = gates?.[s.id];
+      if (g) { p.out.push([s, g]); continue; }
       const k = kindOf(s);
       if (k !== "silent" && perm[s.id] === "granted" && k !== "pick") p.silent.push(s); else p[k].push(s);
     }
     const sort = (a: ScopeDef, b: ScopeDef) => (a.layer || 1) - (b.layer || 1) || a.name.localeCompare(b.name);
     p.ask.sort(sort); p.tap.sort(sort); p.pick.sort(sort);
+    p.out.sort((a, b) => a[1].why.localeCompare(b[1].why) || a[0].name.localeCompare(b[0].name));
     return p;
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [ctx.scopes, perm, open, phase]);
+  }, [ctx.scopes, perm, gates, open, phase]);
 
   const show = () => {
     if (phase === "done") setPhase("intro");
@@ -95,11 +100,14 @@ export function RunAll({ ctx }: { ctx: ConsoleCtx }) {
     // Look up permission states so the plan knows what is already allowed or already blocked.
     void Promise.all(ctx.scopes.filter((s) => s.permission && !s.reference).map(async (s) => [s.id, await permState(s)] as const))
       .then((rows) => setPerm(Object.fromEntries(rows)));
+    // Check what can actually start here, so impossible prompts never reach the queue.
+    void Promise.all(ctx.scopes.map(async (s) => [s.id, await gate(s, ctx.nodeOf(s), ctx.profile).catch(() => null)] as const))
+      .then((rows) => setGates(Object.fromEntries(rows)));
   };
 
   const start = () => {
     plan.silent.forEach((s) => void request(s.id));
-    setSilentRan(plan.silent.length);
+    setSilentIds(plan.silent.map((s) => s.id));
     const q = [...plan.ask, ...plan.tap, ...(pickers ? plan.pick : [])].map((s) => s.id);
     setQueue(q); setAsked(q); setResults({}); setIdx(0);
     setPhase(q.length ? "step" : "done");
@@ -123,6 +131,9 @@ export function RunAll({ ctx }: { ctx: ConsoleCtx }) {
 
   const current = phase === "step" ? byId.get(queue[idx]) : undefined;
   const again = asked.filter((id) => results[id] && results[id] !== "ok");
+  const silentLive = silentIds.filter((id) => isActive(getSession(id))).length;
+  const silentFailed = silentIds.filter((id) => ["error", "unsupported", "denied"].includes(getSession(id).state));
+  const checking = gates === null;
   const label = phase === "step" && !open ? `Resume ${idx + 1}/${queue.length}` : "Run all";
 
   return (
@@ -140,7 +151,7 @@ export function RunAll({ ctx }: { ctx: ConsoleCtx }) {
 
           {phase === "intro" && (
             <>
-              <p>Starts every capability this browser supports. The silent ones start straight away. Then each one that needs your approval comes up in turn, one click each, because browsers only show a prompt after a click.</p>
+              <p>Starts every capability this browser and device can actually run. The silent ones start straight away. Then each one that needs your approval comes up in turn, one click each, because browsers only show a prompt after a click.</p>
               <div className="ra-plan">
                 <Cell icon={Zap} n={plan.silent.length} label="Start silently" hint="No prompt. They start the moment you press Start." />
                 <Cell icon={Hand} n={plan.ask.length} label="Ask permission" hint="The browser shows an Allow or Block prompt." />
@@ -157,22 +168,36 @@ export function RunAll({ ctx }: { ctx: ConsoleCtx }) {
                 </div>
               )}
               <label className="ra-opt"><input type="checkbox" checked={pickers} onChange={(e) => setPickers(e.target.checked)} />Include choosers (devices, screen, files, contacts)</label>
-              <p className="ra-fine">{plan.running > 0 && `${plan.running} already running. `}{plan.missing > 0 && `${plan.missing} are not available in this browser and are left out. `}You can pause at any point and pick up where you left off.</p>
+              {plan.out.length > 0 && (
+                <details className="ra-out">
+                  <summary><Ban size={13} />{plan.out.length} left out because they cannot start here</summary>
+                  <div className="ra-list">
+                    {plan.out.map(([s, g]) => (
+                      <div key={s.id} className="ra-row" title={s.summary}>
+                        <CapIcon scope={s} size={14} />
+                        <button className="lnk" onClick={() => { ctx.select(s.id); setOpen(false); }}>{s.name}</button>
+                        <span className={"ra-why " + g.why}>{g.text}</span>
+                      </div>
+                    ))}
+                  </div>
+                </details>
+              )}
+              <p className="ra-fine">{checking ? "Checking what this browser and device can run. " : ""}{plan.running > 0 && `${plan.running} already running. `}You can pause at any point and pick up where you left off.</p>
               <footer>
                 <button className="btn" onClick={() => setOpen(false)}>Cancel</button>
-                <button className="btn pri" data-af onClick={start}><Play size={13} />Start</button>
+                <button className="btn pri" data-af onClick={start} disabled={checking}>{checking ? <><span className="ra-spin" />Checking</> : <><Play size={13} />Start</>}</button>
               </footer>
             </>
           )}
 
           {phase === "step" && current && (
             <Step key={current.id + ":" + idx} scope={current} kind={kindOf(current)} pos={idx} total={queue.length}
-              next={byId.get(queue[idx + 1])} ctx={ctx} silentRan={silentRan} known={perm[current.id]}
+              next={byId.get(queue[idx + 1])} ctx={ctx} silent={[silentLive, silentIds.length]} known={perm[current.id]}
               onDone={(o) => settle(current.id, o)} onStop={stopAsking} />
           )}
 
           {phase === "done" && (
-            <Summary ids={asked} results={results} byId={byId} silentRan={silentRan} ctx={ctx}
+            <Summary ids={asked} results={results} byId={byId} silentLive={silentLive} silentFailed={silentFailed} ctx={ctx}
               onRetry={retry} onClose={() => setOpen(false)} again={again} />
           )}
         </div>
@@ -185,8 +210,8 @@ function Cell({ icon: I, n, label, hint, off }: { icon: typeof Zap; n: number; l
   return <div className={"ra-cell" + (off ? " off" : "")} title={hint}><I size={14} /><b>{n}</b><span>{label}</span></div>;
 }
 
-function Step({ scope, kind, pos, total, next, ctx, silentRan, known, onDone, onStop }: {
-  scope: ScopeDef; kind: Kind; pos: number; total: number; next?: ScopeDef; ctx: ConsoleCtx; silentRan: number; known?: string;
+function Step({ scope, kind, pos, total, next, ctx, silent, known, onDone, onStop }: {
+  scope: ScopeDef; kind: Kind; pos: number; total: number; next?: ScopeDef; ctx: ConsoleCtx; silent: [number, number]; known?: string;
   onDone: (o: Outcome) => void; onStop: () => void;
 }) {
   const s = useSession(scope.id);
@@ -197,6 +222,21 @@ function Step({ scope, kind, pos, total, next, ctx, silentRan, known, onDone, on
   const [unblocked, setUnblocked] = useState(false);
   const primary = useRef<HTMLButtonElement>(null);
   const waiting = clickAt > 0 && !outcome;
+  const [slow, setSlow] = useState(false);
+
+  // Already running (started elsewhere, or by the silent batch): nothing to ask.
+  useEffect(() => {
+    if (!clickAt && isActive(s)) { setOutcome("ok"); const h = setTimeout(() => onDone("ok"), 650); return () => clearTimeout(h); }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [s.state]);
+
+  // A prompt that never shows (quiet permission UI, or a prompt hidden behind another window) should not look like a hang.
+  useEffect(() => {
+    setSlow(false);
+    if (!waiting) return;
+    const h = setTimeout(() => setSlow(true), 12000);
+    return () => clearTimeout(h);
+  }, [waiting, clickAt]);
   const g = ctx.groupOf(scope.id);
 
   const go = () => {
@@ -252,7 +292,7 @@ function Step({ scope, kind, pos, total, next, ctx, silentRan, known, onDone, on
       <div className="ra-prog">
         <span>{pos + 1} of {total}</span>
         <i><b style={{ width: `${((pos + (outcome === "ok" ? 1 : 0)) / total) * 100}%` }} /></i>
-        {silentRan > 0 && pos === 0 && <em><Check size={12} />{silentRan} started silently</em>}
+        {silent[1] > 0 && <em title="Counted from what is actually running, not from what was requested"><Check size={12} />{silent[0]} of {silent[1]} running silently</em>}
       </div>
 
       <div className={"ra-card" + (outcome ? " o-" + RESULT[outcome][2] : "")}>
@@ -273,6 +313,9 @@ function Step({ scope, kind, pos, total, next, ctx, silentRan, known, onDone, on
       )}
       {!outcome && !(known === "denied" && !clickAt) && <p className="ra-hint">{waiting ? (kind === "pick" ? "Waiting for you to pick something in the chooser." : "Waiting for your answer in the browser prompt.") : HINT[kind]}</p>}
 
+      {waiting && slow && (
+        <p className="ra-msg warn"><CircleAlert size={14} /><span>No prompt yet? Your browser may have shown it quietly as an icon in the address bar, or blocked it without asking. Check there, or press Skip.</span></p>
+      )}
       {outcome === "ok" && <p className="ra-msg ok"><Check size={14} />{scope.name} is running.</p>}
 
       {outcome === "refused" && (
@@ -301,7 +344,7 @@ function Step({ scope, kind, pos, total, next, ctx, silentRan, known, onDone, on
         <button className="btn ghost" onClick={onStop} title="Stop asking and see the summary">Stop asking</button>
         <span className="grow" />
         {outcome !== "ok" && (
-          <button className="btn" onClick={() => onDone(outcome ?? "skipped")}>
+          <button className="btn" onClick={() => onDone(outcome ?? "skipped")} disabled={waiting && !slow}>
             <SkipForward size={13} />{outcome ? "Next" : "Skip"}
           </button>
         )}
@@ -316,17 +359,20 @@ function Step({ scope, kind, pos, total, next, ctx, silentRan, known, onDone, on
   );
 }
 
-function Summary({ ids, results, byId, silentRan, ctx, again, onRetry, onClose }: {
-  ids: string[]; results: Record<string, Outcome>; byId: Map<string, ScopeDef>; silentRan: number; ctx: ConsoleCtx; again: string[];
+function Summary({ ids, results, byId, silentLive, silentFailed, ctx, again: asked, onRetry, onClose }: {
+  ids: string[]; results: Record<string, Outcome>; byId: Map<string, ScopeDef>; silentLive: number; silentFailed: string[]; ctx: ConsoleCtx; again: string[];
   onRetry: (ids: string[]) => void; onClose: () => void;
 }) {
-  const ok = ids.filter((id) => results[id] === "ok").length;
+  // Approved only counts what is still running now, so a prompt that was allowed but then failed is not counted.
+  const ok = ids.filter((id) => results[id] === "ok" && isActive(getSession(id))).length;
+  const again = [...asked, ...ids.filter((id) => results[id] === "ok" && !isActive(getSession(id))), ...silentFailed.filter((id) => !asked.includes(id))];
+  const tagOf = (id: string): Outcome => results[id] && results[id] !== "ok" ? results[id] : "failed";
   return (
     <>
       <div className="ra-plan">
-        <Cell icon={Zap} n={silentRan} label="Started silently" hint="Ran without a prompt" />
+        <Cell icon={Zap} n={silentLive} label="Running silently" hint="Started without a prompt and running now" />
         <Cell icon={Check} n={ok} label="Approved" hint="You allowed these" />
-        <Cell icon={Ban} n={again.length} label="Not running" hint="Refused, blocked, skipped or nothing picked" />
+        <Cell icon={Ban} n={again.length} label="Not running" hint="Refused, blocked, skipped, nothing picked or failed to start" />
       </div>
       {again.length > 0 ? (
         <>
@@ -334,12 +380,13 @@ function Summary({ ids, results, byId, silentRan, ctx, again, onRetry, onClose }
           <div className="ra-list">
             {again.map((id) => {
               const s = byId.get(id)!;
-              const [l, I, tone] = RESULT[results[id] || "skipped"];
+              const [l, I, tone] = RESULT[tagOf(id)];
+              const err = getSession(id).error;
               return (
                 <div key={id} className="ra-row">
                   <CapIcon scope={s} size={14} />
                   <button className="lnk" onClick={() => { ctx.select(id); onClose(); }}>{s.name}</button>
-                  <span className={"ra-tag " + tone}><I size={12} />{l}</span>
+                  <span className={"ra-tag " + tone} title={err || undefined}><I size={12} />{l}</span>
                   <button className="btn sm" onClick={() => onRetry([id])}><RotateCcw size={12} />Ask again</button>
                 </div>
               );
