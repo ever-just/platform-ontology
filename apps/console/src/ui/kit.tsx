@@ -104,17 +104,24 @@ export function Scope({ series, min, max, labels = true }: { series: { label: st
   );
 }
 
-export function Readout({ rows, cols = 1 }: { rows: { k: string; v: unknown; u?: string; digits?: number; hot?: boolean }[]; cols?: number }) {
+/** `inferred` is optional: plain source text for a value the device did not report and the console estimated. */
+export function Readout({ rows, cols = 1 }: { rows: { k: string; v: unknown; u?: string; digits?: number; hot?: boolean; inferred?: string }[]; cols?: number }) {
   return (
     <div className="readout" style={{ gridTemplateColumns: `repeat(${cols}, minmax(0, 1fr))` }}>
       {rows.map((r) => (
-        <div key={r.k} className={"ro-row" + (r.hot ? " hot" : "")}>
+        <div key={r.k} className={"ro-row" + (r.hot ? " hot" : "") + (r.inferred && r.v !== null && r.v !== undefined ? " inf" : "")}>
           <span>{r.k}</span>
           <b>{fmt(r.v, r.digits ?? 2)}{r.u && r.v !== null && r.v !== undefined ? <em> {r.u}</em> : null}</b>
+          {r.inferred && r.v !== null && r.v !== undefined ? <span className="ro-est"><Est />{r.inferred}</span> : null}
         </div>
       ))}
     </div>
   );
+}
+
+/** Small "estimated" badge shown beside any value the console inferred instead of measured. */
+export function Est({ why }: { why?: string }) {
+  return <i className="est" title={why}>estimated</i>;
 }
 
 export function Stat({ label, value, unit, digits = 0, color }: { label: string; value: unknown; unit?: string; digits?: number; color?: string }) {
