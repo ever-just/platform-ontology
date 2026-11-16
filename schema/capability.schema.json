@@ -1,0 +1,74 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://platformontology.lol/schema/capability.schema.json",
+  "title": "Platform.Ontology capability",
+  "description": "One thing an app or website can ask for, get, or do on a device. One file per capability.",
+  "type": "object",
+  "required": ["id", "name", "kind", "group", "space", "plain", "platforms"],
+  "properties": {
+    "id": { "type": "string", "pattern": "^(mob|web)\\.[a-z0-9-]+(\\.[a-z0-9-]+)+$", "description": "Stable id. mob.* for native apps, web.* for websites." },
+    "name": { "type": "string" },
+    "kind": { "enum": ["permission", "picker", "capability", "action", "signal", "tracking", "not-exposed"] },
+    "group": { "type": "string", "description": "Key into taxonomy.json groups. Must match the folder name." },
+    "subgroup": { "type": "string" },
+    "space": { "enum": ["mobile", "web"] },
+    "tags": { "type": "array", "items": { "type": "string" } },
+    "plain": { "type": "string", "description": "One sentence, plain language." },
+    "meaning": { "type": "string", "description": "What it reveals or allows, and why it matters." },
+    "lifecycle": { "type": "array", "items": { "type": "string" } },
+    "platforms": {
+      "type": "object",
+      "properties": {
+        "android": { "$ref": "#/$defs/native" },
+        "ios": { "$ref": "#/$defs/native" },
+        "web": { "$ref": "#/$defs/web" }
+      },
+      "additionalProperties": false
+    },
+    "data": { "type": "object", "description": "Shape of the data returned: type, metric, update rate, fields." },
+    "limits": {
+      "type": "object",
+      "description": "Plain language bounds: what it can and can't do.",
+      "properties": {
+        "headline": { "type": "string" }, "user_action": { "type": "string" },
+        "can": { "type": "array", "items": { "type": "string" } },
+        "cannot": { "type": "array", "items": { "type": "string" } },
+        "reach": { "type": "integer", "minimum": 1, "maximum": 4 },
+        "reach_label": { "type": "string" }, "differs": { "type": "string" }
+      }
+    },
+    "story": { "type": "object", "description": "Reader story: what_it_is, icon (Lucide), for_you, for_makers, use_cases, risks, marketing." },
+    "technical_bounds": { "type": "array", "items": { "type": "string" } },
+    "scores": { "type": "object" },
+    "value": { "type": "object", "properties": { "legit_uses": { "type": "array" }, "abuse": { "type": "array" } } },
+    "case_study": { "type": "object" },
+    "history": { "type": "array", "items": { "type": "object", "properties": { "date": { "type": "string" }, "platform": { "type": "string" }, "version": { "type": "string" }, "change": { "type": "string" } } } },
+    "related": { "type": "array", "items": { "type": "string" } },
+    "web_equivalents": { "type": "array", "items": { "type": "string" } },
+    "refs": { "type": "array", "items": { "type": "object", "required": ["url"], "properties": { "label": { "type": "string" }, "url": { "type": "string", "format": "uri" } } } },
+    "confidence": { "type": "string" }
+  },
+  "$defs": {
+    "status": { "enum": ["y", "p", "f", "n", "r"] },
+    "native": {
+      "type": ["object", "null"],
+      "properties": {
+        "s": { "$ref": "#/$defs/status" }, "v": { "type": ["string", "null"], "description": "First OS version" },
+        "api": { "type": ["integer", "null"], "description": "Android API level" },
+        "permission": { "type": ["string", "null"] }, "protection": { "type": ["string", "null"] },
+        "grant": { "type": ["string", "null"] }, "prompt_ui": { "type": ["string", "null"] },
+        "persistence": { "type": ["string", "null"] }, "revocation": { "type": ["string", "null"] },
+        "store_policy": { "type": ["string", "null"] }, "api_surface": { "type": ["string", "null"] }, "note": { "type": ["string", "null"] }
+      }
+    },
+    "web": {
+      "type": "object",
+      "properties": {
+        "api": { "type": "string" }, "permission_name": { "type": ["string", "null"] }, "permissions_policy": { "type": ["string", "null"] },
+        "bcd": { "type": "array", "items": { "type": "string" } },
+        "access": { "type": "object" },
+        "support": { "type": "object", "additionalProperties": { "type": "object", "properties": { "s": { "$ref": "#/$defs/status" }, "v": { "type": ["string", "null"] }, "note": { "type": "string" }, "date": { "type": "string" } } } }
+      }
+    }
+  }
+}
