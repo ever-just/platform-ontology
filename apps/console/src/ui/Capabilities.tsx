@@ -7,9 +7,7 @@ import { supportOf } from "../browser/profile";
 import { OTHER, type ConsoleCtx, type GroupDef } from "../ext/registry";
 import { short } from "./charts";
 import { Spark } from "./kit";
-import { DepsCount } from "./deps-graph";
-import { requirementsOf } from "../core/deps";
-import { CapIcon, MechBadge, ModeBadges, mechanismOf } from "./icons";
+import { CapIcon, MechBadge, mechanismOf } from "./icons";
 
 type Tab = "all" | "live" | "used" | "blocked" | "ref";
 const TABS: [Tab, string][] = [["all", "All"], ["live", "Live"], ["used", "Used"], ["blocked", "Blocked"], ["ref", "Reference"]];
@@ -77,7 +75,7 @@ export function Capabilities({ ctx, selected }: { ctx: ConsoleCtx; selected: str
       <div className="caps-tools">
         <label className="search"><Search size={14} /><input ref={input} value={q} onChange={(e) => setQ(e.target.value)} placeholder="Search capabilities" /><kbd>/</kbd>{q && <button onClick={() => setQ("")} aria-label="Clear"><X size={13} /></button>}</label>
       </div>
-      {logged > 0 && <div className="logged-note"><History size={13} /><span><b>{logged} silent readings</b> were taken when this page opened, with no prompt. Any site can do the same.</span></div>}
+      {logged > 0 && <div className="logged-note" title="Any site can read these on load without asking"><History size={13} /><span>{logged} read silently on load</span></div>}
       <div className="chips">
         <button className={!group ? "on" : ""} onClick={() => setGroup(null)}>All groups</button>
         {groups.map((g) => { const I = g.icon; return <button key={g.id} className={group === g.id ? "on" : ""} onClick={() => setGroup(group === g.id ? null : g.id)}>{I && <I size={13} />}{g.label}<em>{all.get(g.id)?.length}</em></button>; })}
@@ -90,8 +88,8 @@ export function Capabilities({ ctx, selected }: { ctx: ConsoleCtx; selected: str
           return (
             <div key={g.id} className="cg">
               <div className="cg-h">
-                {I && <I size={14} />}<b>{g.label}</b><span>{g.blurb}</span>
-                {silent > 0 && <button className="cg-run" onClick={() => runSilent(list)} title="Run every capability in this group that needs no prompt"><Zap size={12} />Run {silent} silent</button>}
+                {I && <I size={14} />}<b title={g.blurb}>{g.label}</b><em>{list.length}</em>
+                {silent > 0 && <button className="cg-run" onClick={() => runSilent(list)} title={`Run the ${silent} capabilities here that need no prompt`} aria-label={`Run ${silent} silent capabilities`}><Zap size={12} />{silent}</button>}
               </div>
               {list.map((s) => <Row key={s.id} scope={s} on={selected === s.id} ok={works(s)} ctx={ctx} />)}
             </div>
@@ -107,13 +105,10 @@ const Row = memo(function Row({ scope, on, ok, ctx }: { scope: ScopeDef; on: boo
   const active = isActive(s);
   const mech = mechanismOf(scope, ok ? undefined : "n");
   return (
-    <div className={"row" + (on ? " on" : "") + (ok ? "" : " dim")} onClick={() => ctx.select(scope.id)}>
+    <div className={"row" + (on ? " on" : "") + (ok ? "" : " dim") + (active ? " live" : "")} onClick={() => ctx.select(scope.id)} title={scope.summary}>
       <span className="row-i"><CapIcon scope={scope} size={15} /><i className={"dot st-" + s.state} /></span>
       <span className="row-n">{scope.name}</span>
-      <span className="row-k"><ModeBadges modes={scope.modes} compact /><DepsCount n={requirementsOf(scope, ctx.nodeOf(scope)).length} /></span>
       <MechBadge mech={mech} />
-      {scope.reference && <span className="logged" title="Reference entry: the page can only check for it here">ref</span>}
-      {scope.passive && s.count > 0 && <span className="logged" title="Already read on page load, without asking"><History size={11} />logged</span>}
       <RowSpark scope={scope} records={s.records} />
       <span className="row-v">{active && s.hz ? s.hz.toFixed(1) + " Hz" : s.count ? short(s.count) : ""}</span>
       <button className={"row-b" + (active ? " stop" : "")} onClick={(e) => { e.stopPropagation(); active ? stop(scope.id) : void request(scope.id); }} aria-label={active ? "Stop" : "Run"} title={active ? "Stop" : "Run"}>

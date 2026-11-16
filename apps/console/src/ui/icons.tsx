@@ -1,5 +1,5 @@
 import { siAndroid, siApple, siFirefoxbrowser, siGooglechrome, siSafari } from "simple-icons";
-import { Activity, Aperture, Ban, Eye, Flag, Hand, CircleHelp, MousePointerClick, ScanSearch, ShieldQuestion, CircleCheck, CircleDashed } from "lucide-react";
+import { Activity, Aperture, Ban, Check, CircleDot, CircleHelp, Eye, Flag, Hand, MousePointerClick, ScanSearch, ShieldQuestion, CircleCheck, CircleDashed, X } from "lucide-react";
 import type { AccessMode, IconType, ScopeDef } from "../core/types";
 
 // One icon vocabulary for the console: browser logos, access modes, access mechanisms and data layers.
@@ -63,21 +63,27 @@ const SUP_INFO: Record<string, { tone: string; label: string; Icon: IconType }> 
 };
 export const supInfo = (c: string) => SUP_INFO[c] || SUP_INFO.u;
 
-/** Seven browser logos, each with a status dot; the reason shows as a glyph and in the tooltip. */
+/** Seven equal tiles, one per browser: logo, a small status glyph in the corner, the name below. Unsupported
+ * browsers fade to greyscale. Colour is status only. The current browser gets a ring and a "You" tag. */
 export function SupportMatrix({ sup, me, compact }: { sup: string; me?: number; compact?: boolean }) {
   return (
-    <div className={"smx" + (compact ? " compact" : "")} role="list">
+    <ul className={"smx2" + (compact ? " compact" : "")}>
       {BROWSERS.map((b, i) => {
-        const s = supInfo(sup[i]);
+        const c = sup[i] && SUP_INFO[sup[i]] ? sup[i] : "u";
+        const s = supInfo(c);
+        const you = i === me;
+        const G = c === "y" ? Check : c === "n" ? X : c === "u" ? CircleHelp : CircleDot;
+        const text = `${b.name}: ${s.label}${you ? " (this browser)" : ""}`;
         return (
-          <div key={b.id} role="listitem" className={"smx-c t-" + s.tone + (i === me ? " me" : "")} title={`${b.name}: ${s.label}${i === me ? " (this browser)" : ""}`}>
-            <span className="smx-l"><BrowserLogo col={i} size={compact ? 16 : 22} /><i className="smx-d" /></span>
-            {!compact && <span className="smx-n">{b.short}</span>}
-            {!compact && <span className="smx-s"><s.Icon size={11} />{s.label}</span>}
-          </div>
+          <li key={b.id} className={"smx2-t" + (you ? " me" : "")} data-s={c} title={text} aria-label={text}>
+            <span className="smx2-l"><BrowserLogo col={i} size={compact ? 16 : 24} /></span>
+            <span className="smx2-g" aria-hidden="true"><G size={compact ? 10 : 12} strokeWidth={2.6} /></span>
+            {!compact && <span className="smx2-n">{b.short}</span>}
+            {you && !compact && <span className="smx2-you">You</span>}
+          </li>
         );
       })}
-    </div>
+    </ul>
   );
 }
 

@@ -1,7 +1,8 @@
 import { useMemo } from "react";
 import type { AtlasNode, ScopeDef } from "../core/types";
 import { exclusivity } from "../browser/availability";
-import { AvailabilityBadge, useAvailability } from "../scopes/reference";
+import { availabilityText, useAvailability } from "../scopes/reference";
+import { Ban, Check, CircleHelp, Minus, X } from "lucide-react";
 import { registerView, type ConsoleCtx } from "./registry";
 
 // "This browser": what is exclusive to, or strongest in, the browser the visitor is using right
@@ -22,13 +23,19 @@ function picks(ctx: ConsoleCtx) {
   return { only, best, edgeOnly };
 }
 
+const VERDICT: Record<string, [string, typeof Check]> = { ok: ["ok", Check], err: ["err", Ban], no: ["no", X], off: ["off", Minus], warn: ["warn", CircleHelp], wait: ["wait", Minus] };
+
 function Row({ node, scope, ctx }: { node: AtlasNode; scope?: ScopeDef; ctx: ConsoleCtx }) {
   const a = useAvailability(node);
+  const g = ctx.groupOfNode(node);
+  const G = g.icon;
+  const [label, tone] = availabilityText(a);
+  const [cls, V] = VERDICT[tone] || VERDICT.no;
   return (
-    <button className="tb-row" onClick={() => scope && ctx.select(scope.id)} title={node.p}>
-      <span className="tb-n">{node.n} <small>{ctx.groupOfNode(node).label}</small></span>
-      {scope && !scope.reference ? <span className="tb-live">live call</span> : <span />}
-      <AvailabilityBadge a={a} />
+    <button className={"tb-row" + (scope ? "" : " ro")} onClick={() => scope && ctx.select(scope.id)} title={`${node.p || node.n}. ${g.label}. ${label}${a?.why ? ": " + a.why : ""}`}>
+      <span className="tb-g" aria-hidden>{G ? <G size={14} /> : null}</span>
+      <span className="tb-n">{node.n}</span>
+      <span className={"tb-v " + cls} aria-label={label}><V size={13} /></span>
     </button>
   );
 }
@@ -66,26 +73,24 @@ function Outside({ ctx, byAtlas }: { ctx: ConsoleCtx; byAtlas: Map<string, Scope
   const keys = wc ? Object.keys(wc) : [];
   return (
     <div className="tb">
-      <div>
-        <p className="tb-blurb">These exist in the browser or the system, but no web page can call them. Extensions, native apps or you at the keyboard can.</p>
-      </div>
-      <div>
-        <h5>window.chrome on this page</h5>
-        <p className="tb-blurb">{wc ? "The page sees only these keys, not the extension APIs:" : "This browser has no window.chrome object."}</p>
-        {wc && <div className="tb-chips">{["runtime", "app", "csi", "loadTimes", "webstore"].map((k) => <code key={k} className={keys.includes(k) ? "on" : ""}>{k}{keys.includes(k) ? "" : " (absent)"}</code>)}</div>}
-      </div>
-      <div>
-        <h5>Extension only (chrome.*)</h5>
-        <div className="tb-list">{CHROME_APIS.map(([k, v]) => <div key={k} className="tb-row" style={{ cursor: "default" }}><span className="tb-n"><code>chrome.{k}</code> <small>{v}</small></span><span /><span className="ref-badge">extensions</span></div>)}</div>
-      </div>
-      <div>
-        <h5>Internal pages</h5>
-        <div className="tb-list">{INTERNAL.map(([k, v]) => <div key={k} className="tb-row" style={{ cursor: "default" }}><span className="tb-n"><code>{k}</code> <small>{v}</small></span><span /><span className="ref-badge">you only</span></div>)}</div>
-      </div>
-      <div>
-        <h5>Never exposed to pages ({notExposed.length})</h5>
+      {wc && (
+        <details className="tb-sec">
+          <summary><h5>window.chrome on this page</h5><em>{keys.length}</em></summary>
+          <div className="tb-chips">{["runtime", "app", "csi", "loadTimes", "webstore"].map((k) => <code key={k} className={keys.includes(k) ? "on" : ""} title={keys.includes(k) ? "present" : "absent"}>{k}</code>)}</div>
+        </details>
+      )}
+      <details className="tb-sec">
+        <summary><h5>Extensions only</h5><em>{CHROME_APIS.length}</em></summary>
+        <div className="tb-list">{CHROME_APIS.map(([k, v]) => <div key={k} className="tb-row ro" title={v}><span className="tb-n"><code>chrome.{k}</code></span><span className="tb-d">{v}</span></div>)}</div>
+      </details>
+      <details className="tb-sec">
+        <summary><h5>Address bar only</h5><em>{INTERNAL.length}</em></summary>
+        <div className="tb-list">{INTERNAL.map(([k, v]) => <div key={k} className="tb-row ro" title={v}><span className="tb-n"><code>{k}</code></span><span className="tb-d">{v}</span></div>)}</div>
+      </details>
+      <details className="tb-sec">
+        <summary><h5>Never exposed to pages</h5><em>{notExposed.length}</em></summary>
         <List nodes={notExposed} ctx={ctx} byAtlas={byAtlas} />
-      </div>
+      </details>
     </div>
   );
 }
@@ -106,23 +111,21 @@ function ThisBrowserPanel({ ctx }: { ctx: ConsoleCtx }) {
         <div className="tb">
           {edgeOnly.length > 0 && (
             <div>
-              <h5>Only in Edge ({edgeOnly.length})</h5>
+              <h5>Only in Edge <em>{edgeOnly.length}</em></h5>
               <List nodes={edgeOnly} ctx={ctx} byAtlas={byAtlas} />
             </div>
           )}
           <div>
-            <h5>Only in {fam} ({only.length})</h5>
-            <p className="tb-blurb">{brand} has these and no other engine does. Each badge is a live check: feature detection, then the permission state, then flag or trial status.</p>
+            <h5 title={`${brand} has these and no other engine does. Each mark is a live check.`}>Only in {fam} <em>{only.length}</em></h5>
             <List nodes={only} ctx={ctx} byAtlas={byAtlas} />
           </div>
           <div>
-            <h5>Best here ({best.length})</h5>
-            <p className="tb-blurb">{fam} and only one other engine support these.</p>
+            <h5 title={`${fam} and one other engine support these`}>Shared with one other <em>{best.length}</em></h5>
             <List nodes={best} ctx={ctx} byAtlas={byAtlas} />
           </div>
         </div>
       </div>
-      <div className="vp-side"><h4>Outside the web page</h4><div className="vp-scroll"><Outside ctx={ctx} byAtlas={byAtlas} /></div></div>
+      <div className="vp-side"><h4 title="These exist in the browser or the system, but no web page can call them">Outside the page</h4><div className="vp-scroll"><Outside ctx={ctx} byAtlas={byAtlas} /></div></div>
     </div>
   );
 }
@@ -134,7 +137,7 @@ export function registerThisBrowser() {
     order: 5,
     metric: (c) => {
       const { only, edgeOnly } = picks(c);
-      return { value: String(only.length + edgeOnly.length), sub: `only in ${c.profile.column === 1 && edgeOnly.length ? "Edge or Chromium" : ENGINE[c.profile.column] || c.profile.brand}`, tone: "accent" };
+      return { value: String(only.length + edgeOnly.length), sub: `Only in ${c.profile.column === 1 && edgeOnly.length ? "Edge or Chromium" : ENGINE[c.profile.column] || c.profile.brand}` };
     },
     Panel: ThisBrowserPanel,
   });

@@ -11,7 +11,7 @@ export function baseOptions(): BaseLayoutProps {
     githubUrl,
     links: [
       { text: 'Docs', url: '/docs/', active: 'nested-url' },
-      { text: 'Simulator', url: '/lab/', external: false },
+      { text: 'Console', url: '/console/', external: false },
       { text: 'Wiki', url: '/wiki/', external: false },
     ],
   };

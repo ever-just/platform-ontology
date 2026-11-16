@@ -31,7 +31,7 @@ export function registerBuiltins() {
   G("input", "Input and clipboard", "Clipboard and input APIs", Clipboard, { ids: ["capture.clipboard"], atlasGroups: ["input-clipboard"] }, 130);
   G("actions", "Page actions and AI", "Share, fullscreen, dialogs and on device AI", Sparkles, { atlasGroups: ["page-actions", "on-device-ai"] }, 140);
 
-  registerView({ id: "silent", label: "Readable silently", order: 10, metric: (c) => ({ value: c.passive ? String(c.passive.length) : "...", sub: "signals, no prompt", tone: "warn" }), Panel: SilentPanel });
+  registerView({ id: "silent", label: "Silent reads", order: 10, metric: (c) => ({ value: c.passive ? String(c.passive.length) : "...", sub: "signals, no prompt", tone: "warn" }), Panel: SilentPanel });
   registerView({ id: "live", label: "Live now", order: 20, metric: () => { const n = allSessions().filter(isActive).length; return { value: String(n), sub: n ? "streaming" : "nothing running", tone: n ? "ok" : undefined, ...trend((x) => x.live) }; }, Panel: LivePanel });
   registerView({ id: "records", label: "Records", order: 30, metric: () => { const n = allSessions().reduce((a, s) => a + s.count, 0); return { value: short(n), sub: "collected this session", ...trend((x) => x.rate, false) }; }, Panel: RecordsPanel });
   registerView({ id: "granted", label: "Granted", order: 40, metric: () => ({ value: String(grantedIds().length), sub: "allowed this session", tone: "accent", ...trend((x) => x.granted) }), Panel: GrantedPanel });
