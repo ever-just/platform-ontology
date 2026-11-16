@@ -111,10 +111,18 @@ function webTables(e) {
   const sup = w.support || {};
   const anyDate = Object.values(sup).some((s) => one(s.date));
   const head = ['Browser', 'Status', 'First version', ...(anyDate ? ['Released'] : []), 'Note'];
-  const rows = Object.keys(BROWSERS).map((k) => {
+  const keys = Object.keys(BROWSERS);
+  // One letter per browser, in taxonomy order (the same seven columns as the console).
+  const supStr = keys
+    .map((k) => {
+      const c = (sup[k] || {}).s;
+      return c === 'r' ? 'n' : ['y', 'p', 'f', 'n'].includes(c) ? c : 'u';
+    })
+    .join('');
+  const rows = keys.map((k, i) => {
     const s = sup[k] || { s: 'n', v: '', note: '' };
     return [
-      esc(BROWSERS[k]),
+      `<BrowserLogo col="${i}" size={16} /> ${esc(BROWSERS[k])}`,
       statusCell(s.s),
       s.v ? esc(s.v) : 'Not available',
       ...(anyDate ? [cell(s.date, 'Not listed')] : []),
@@ -139,6 +147,8 @@ function webTables(e) {
   ];
   const steps = (acc.steps || []).filter((x) => one(x)).map((x, n) => `${n + 1}. ${esc(x)}`).join('\n');
   return `## Browser support
+
+<SupportMatrix sup="${supStr}" />
 
 ${table(head, rows)}
 
