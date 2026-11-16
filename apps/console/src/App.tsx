@@ -10,6 +10,8 @@ import { FlowView } from "./ui/FlowView";
 import { Overlay } from "./ui/Overlay";
 import { Telemetry } from "./ui/Telemetry";
 import { DOMAIN_COLOR } from "./ui/kit";
+import { YourBrowser, BrowserLive } from "./ui/YourBrowser";
+import { detectProfile, supportOf } from "./browser/profile";
 
 type Tab = "instrument" | "map" | "flow";
 type Mob = "scopes" | "stage" | "api" | "map";
@@ -44,15 +46,21 @@ function Console({ atlas }: { atlas: Atlas }) {
     return m;
   }, [scopes]);
   const resolve = (h: string) => scopes.find((s) => s.id === h) || byAtlas.get(h);
-  const [selected, setSelected] = useState(() => resolve(readHash())?.id || "surroundings.bluetooth");
+  const profile = useMemo(detectProfile, []);
+  const [view, setView] = useState<"browser" | "scope">(() => (resolve(readHash()) ? "scope" : "browser"));
+  const nodeOf = (s: ScopeDef) => atlas.nodes.find((n) => n.i === s.atlas[0]);
+  const works = (s: ScopeDef) => { const n = nodeOf(s); return !n || "yp".includes(supportOf(n.sup, profile.column)); };
+  const firstSupported = scopes.find((s) => s.passive && works(s))?.id || scopes.find(works)?.id || scopes[0].id;
+  const [selected, setSelected] = useState(() => resolve(readHash())?.id || firstSupported);
   const [tab, setTab] = useState<Tab>("instrument");
   const [overlay, setOverlay] = useState(true);
   const [mob, setMob] = useState<Mob>("stage");
+  const showBrowser = () => { setView("browser"); setMob("stage"); history.replaceState(null, "", location.pathname + location.search); };
 
   useEffect(() => {
     const on = () => {
       const s = resolve(readHash());
-      if (s) setSelected(s.id);
+      if (s) { setSelected(s.id); setView("scope"); } else if (!readHash()) setView("browser");
     };
     window.addEventListener("hashchange", on);
     return () => window.removeEventListener("hashchange", on);
@@ -61,6 +69,7 @@ function Console({ atlas }: { atlas: Atlas }) {
 
   const select = (id: string) => {
     setSelected(id);
+    setView("scope");
     if (location.hash !== "#" + id) history.replaceState(null, "", "#" + id);
     if (tab === "map") setTab("instrument");
     setMob("stage");
@@ -75,7 +84,7 @@ function Console({ atlas }: { atlas: Atlas }) {
   const c = DOMAIN_COLOR[scope.domain];
 
   return (
-    <div className={"app mob-" + mob}>
+    <div className={"app mob-" + mob + (profile.touch && profile.coarse ? " touch" : "")}>
       <header className="top">
         <div className="brand">
           <svg width="20" height="20" viewBox="0 0 32 32"><rect width="32" height="32" rx="8" fill="#0b0b0c" /><circle cx="16" cy="16" r="8" fill="none" stroke="#fff" strokeWidth="2.5" /><circle cx="16" cy="16" r="3" fill="#1f4bff" /></svg>
@@ -89,8 +98,14 @@ function Console({ atlas }: { atlas: Atlas }) {
         </div>
       </header>
 
-      <Sidebar atlas={atlas} scopes={scopes} selected={scope.id} onSelect={select} />
+      <Sidebar atlas={atlas} scopes={scopes} selected={view === "browser" ? "" : scope.id} onSelect={select} profile={profile} browserOn={view === "browser"} onBrowser={showBrowser} />
 
+      {view === "browser" ? (
+        <main className="stage">
+          <div className="stage-h"><div className="stage-t"><h1>This browser</h1><span className="chip-dom" style={{ color: "#1f4bff", borderColor: "#1f4bff40", background: "#1f4bff0d" }}>{profile.columnLabel}</span><span className="pill st-streaming">live</span></div></div>
+          <div className="stage-body"><YourBrowser atlas={atlas} profile={profile} onSelect={select} firstSupported={firstSupported} /></div>
+        </main>
+      ) : (
       <main className="stage">
         <div className="stage-h">
           <div className="stage-t">
@@ -117,15 +132,16 @@ function Console({ atlas }: { atlas: Atlas }) {
           {tab === "flow" && <FlowView scopes={scopes} selected={scope.id} onSelect={select} />}
         </div>
       </main>
+      )}
 
-      <ApiPanel scope={scope} session={session} node={node} />
+      {view === "browser" ? <BrowserLive profile={profile} atlas={atlas} /> : <ApiPanel scope={scope} session={session} node={node} />}
 
       <div className="mapfull">{mob === "map" && <MapView atlas={atlas} scopes={scopes} selected={scope.id} onSelect={select} />}</div>
 
       <Telemetry atlas={atlas} scopes={scopes} onSelect={select} />
 
       <nav className="mnav">
-        {([["scopes", List, "Scopes"], ["stage", Activity, "Instrument"], ["api", Code2, "API"], ["map", Share2, "Map"]] as const).map(([k, I, l]) => (
+        {([["scopes", List, "Scopes"], ["stage", Activity, "Instrument"], ["api", Code2, view === "browser" ? "Hood" : "API"], ["map", Share2, "Map"]] as const).map(([k, I, l]) => (
           <button key={k} className={mob === k ? "on" : ""} onClick={() => setMob(k)}><I size={18} /><span>{l}</span></button>
         ))}
       </nav>
