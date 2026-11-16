@@ -228,7 +228,6 @@ const CONF = {
 
 function page(e) {
   const l = e.limits || {};
-  const labSlug = e.id.replace(/\./g, '-');
   const chips = [
     { text: kindLabel(e.kind), kind: true },
     { text: groupLabel(e.group) },
@@ -291,8 +290,7 @@ ${(e.refs || []).map((r) => `- ${link(r.label, r.url)}`).join('\n') || 'None lis
 
 **How well checked:** ${esc(CONF[e.confidence] || e.confidence)}.`,
     `<Cards>
-  <Card title="Try it in the simulator" href="/lab/#${labSlug}">See what this looks like on a pretend phone or browser.</Card>
-  <Card title="Edit this data on GitHub" href="${GH}/${e.space}/${e.group}/${e._file}.json">Fix a fact or add a source. One small JSON file, no code needed.</Card>
+${e.space === 'web' ? `  <Card title="Open it in the console" href="/console/#${e.id}">Request this scope in your browser and watch the data arrive.</Card>\n` : ''}  <Card title="Edit this data on GitHub" href="${GH}/${e.space}/${e.group}/${e._file}.json">Fix a fact or add a source. One small JSON file, no code needed.</Card>
 </Cards>`,
   ];
   return parts.filter(Boolean).join('\n\n') + '\n';

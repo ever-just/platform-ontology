@@ -4,7 +4,7 @@
 
 <p align="center">
 <a href="https://platformontology.lol">Docs</a> ·
-<a href="https://platformontology.lol/lab/">Simulator</a> ·
+<a href="https://platformontology.lol/console/">Console</a> ·
 <a href="https://platformontology.lol/wiki/">Wiki</a> ·
 <a href="https://platformontology.lol/data/ontology.json">Download the data</a>
 </p>
@@ -31,9 +31,13 @@ how long access lasts, how to take it back, and how it changed over time.
 ## Three ways to use it
 
 - **Docs** at [platformontology.lol](https://platformontology.lol): one page per capability, searchable.
-- **Lab** at [platformontology.lol/lab](https://platformontology.lol/lab/): a device simulator. Pick Android, iPhone or Web,
-  trigger a capability, accept or deny the system prompt, watch the data arrive, and see what this page learned about you
-  silently. On the web, many capabilities run for real in your browser.
+- **Console** at [platformontology.lol/console](https://platformontology.lol/console/): a measurement and control
+  console for web data access. Every web attribute is grouped by what the data is about (place, motion, surroundings,
+  capture, device, fingerprint, link, identity, reach) and wired to one call, `po.request(scope)`. Request a scope, live
+  in your browser or simulated, and watch it stream into an instrument built for it: a radar for Bluetooth, a map for
+  location, a scope trace for motion, a spectrum for the microphone. A toggleable overlay shows the access path, the
+  headline metrics and what the data lets a site work out. The Map tab graphs all 483 web attributes and how they feed
+  each other; the Flow tab shows live data moving from scope to permission gate to the unified API to what it reveals.
 - **Data**: plain JSON, no API key.
 
 ```js
@@ -77,7 +81,8 @@ and [docs/storage.md](docs/storage.md).
 | `schema/` | JSON Schema |
 | `scripts/` | Data build and checks |
 | `apps/docs/` | Docs site (Fumadocs, Next.js static export) |
-| `apps/lab/` | Device simulator (Vite, React) |
+| `apps/console/` | Measurement and control console for web scopes (Vite, React) |
+| `apps/lab/` | Older device simulator, no longer published (`/lab/` redirects to the console) |
 | `apps/wiki/` | Single page reader wiki |
 | `brand/` | Logo, mark, favicon, social image |
 | `docs/` | Repository docs |
@@ -88,7 +93,8 @@ and [docs/storage.md](docs/storage.md).
 node scripts/build-data.mjs            # dist/ bundles, prints warnings
 STRICT=1 node scripts/build-data.mjs   # fails on any problem
 cd apps/docs && npm ci && npm run build
-cd apps/lab && npm ci && npm run build
+node apps/console/scripts/gen-console-data.mjs
+cd apps/console && npm ci && npm run build
 ```
 
 The site is served by GitHub Pages from the `gh-pages` branch. `bash scripts/publish-pages.sh` builds everything and
