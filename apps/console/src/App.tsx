@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { Square, BookOpen, Rows3, ScrollText } from "lucide-react";
+import { Square, BookOpen, Rows3, ScrollText, ChartLine, ChartArea, ChartColumn, WandSparkles, Rows2, Rows4, TrendingUp, TrendingDown } from "lucide-react";
 import type { Atlas, AtlasNode, ScopeDef } from "./core/types";
 import { allSessions, isActive, registerScopes, stopAll } from "./core/harness";
 import { feed, startTimeline, useTimeline } from "./core/timeline";
@@ -7,15 +7,20 @@ import { buildScopes } from "./scopes";
 import { applyMeta } from "./scopes/meta";
 import { detectProfile } from "./browser/profile";
 import { collectPassive, type PassiveSignal } from "./real";
-import { listGroups, listViews, onRegistryChange, pluginScopes, resolveGroup, OTHER, type ConsoleCtx, type GroupDef } from "./ext/registry";
+import { listGroups, listViews, onRegistryChange, pluginScopes, resolveGroup, OTHER, type ChartOpts, type ConsoleCtx, type GroupDef } from "./ext/registry";
 import { registerBuiltins } from "./ext/builtins";
 import { Capabilities } from "./ui/Capabilities";
 import { Inspector } from "./ui/Inspector";
 import { clock } from "./ui/charts";
+import { Spark } from "./ui/kit";
 
 registerBuiltins();
 
-const RANGES: [number, string][] = [[60, "1m"], [300, "5m"], [900, "15m"]];
+const RANGES: [number, string][] = [[60, "1m"], [300, "5m"], [900, "15m"], [3600, "1h"]];
+const TYPES: [ChartOpts["type"], string, typeof ChartLine][] = [["auto", "Auto", WandSparkles], ["line", "Line", ChartLine], ["area", "Area", ChartArea], ["bars", "Bars", ChartColumn]];
+const GROUPINGS: [ChartOpts["by"], string][] = [["auto", "Best fit"], ["group", "Group"], ["capability", "Capability"], ["access", "Access"]];
+const PREFS = "po.chart";
+const loadPrefs = (): Partial<ChartOpts> & { range?: number } => { try { return JSON.parse(localStorage.getItem(PREFS) || "{}"); } catch { return {}; } };
 const readHash = () => decodeURIComponent(location.hash.replace(/^#/, ""));
 
 export function App() {
@@ -69,7 +74,11 @@ function Console({ atlas }: { atlas: Atlas }) {
   const resolve = useCallback((h: string) => scopes.find((s) => s.id === h) || byAtlas.get(h), [scopes, byAtlas]);
   const [selected, setSelected] = useState<string | null>(() => resolve(readHash())?.id || null);
   const [view, setView] = useState(() => views[0]?.id || "silent");
-  const [range, setRange] = useState(300);
+  const [prefs] = useState(loadPrefs);
+  const [range, setRange] = useState(prefs.range || 300);
+  const [chart, setChartState] = useState<ChartOpts>({ type: prefs.type || "auto", by: prefs.by || "auto", density: prefs.density || "comfortable" });
+  const setChart = (p: Partial<ChartOpts>) => setChartState((c) => ({ ...c, ...p }));
+  useEffect(() => { try { localStorage.setItem(PREFS, JSON.stringify({ ...chart, range })); } catch { /* private mode */ } }, [chart, range]);
   const [showFeed, setShowFeed] = useState(false);
 
   useEffect(() => {
@@ -85,7 +94,7 @@ function Console({ atlas }: { atlas: Atlas }) {
   const close = useCallback(() => { setSelected(null); history.replaceState(null, "", location.pathname + location.search); }, []);
 
   const ctx: ConsoleCtx = useMemo(() => ({
-    atlas, scopes, profile, passive, groups, range, select,
+    atlas, scopes, profile, passive, groups, range, chart, select,
     groupOf: (id) => groupMap.get(id) || OTHER,
     groupOfNode: (n: AtlasNode) => {
       const s = byAtlas.get(n.i);
@@ -93,7 +102,7 @@ function Console({ atlas }: { atlas: Atlas }) {
       return groups.find((g) => g.atlasGroups?.includes(n.g)) || OTHER;
     },
     nodeOf: (s) => nodeById.get(s.atlas[0]),
-  }), [atlas, scopes, profile, passive, groups, range, select, groupMap, byAtlas, nodeById]);
+  }), [atlas, scopes, profile, passive, groups, range, chart, select, groupMap, byAtlas, nodeById]);
 
   useTimeline(); // header and metrics refresh once a second
   const live = allSessions().filter(isActive).length;
@@ -102,7 +111,7 @@ function Console({ atlas }: { atlas: Atlas }) {
   const scope = selected ? scopes.find((s) => s.id === selected) || null : null;
 
   return (
-    <div className={"shell" + (scope ? " sheet-open" : "")}>
+    <div className={"shell" + (scope ? " sheet-open" : "") + (chart.density === "compact" ? " dense" : "")}>
       <header className="bar">
         <div className="wrap bar-in">
           <a className="brand" href="./"><Logo /><b>Platform.Ontology</b><span>Console</span></a>
@@ -123,7 +132,11 @@ function Console({ atlas }: { atlas: Atlas }) {
                 <button key={v.id} role="tab" aria-selected={v.id === current?.id} className={"kpi" + (v.id === current?.id ? " on" : "") + (m.tone ? " t-" + m.tone : "")} onClick={() => setView(v.id)}>
                   <span>{v.label}</span>
                   <b>{m.value}{m.unit && <em>{m.unit}</em>}</b>
-                  {m.sub && <small>{m.sub}</small>}
+                  <span className="kpi-f">
+                    {m.delta ? <i className={"kpi-d " + (m.delta > 0 ? "up" : "down")}>{m.delta > 0 ? <TrendingUp size={11} /> : <TrendingDown size={11} />}{m.delta > 0 ? "+" : ""}{m.delta}</i> : null}
+                    {m.sub && <small>{m.sub}</small>}
+                  </span>
+                  {m.spark && m.spark.some((v) => v !== m.spark![0]) && <span className="kpi-sp" aria-hidden><Spark values={m.spark} w={72} h={18} fill /></span>}
                 </button>
               );
             })}
@@ -131,9 +144,23 @@ function Console({ atlas }: { atlas: Atlas }) {
           <div className="ov-tools">
             <h2>{showFeed ? "Event log" : current?.label}</h2>
             <span className="grow" />
-            <div className="seg">
-              {RANGES.map(([r, l]) => <button key={r} className={range === r ? "on" : ""} onClick={() => setRange(r)}>{l}</button>)}
-            </div>
+            {!showFeed && (
+              <div className="ov-ctl">
+                <div className="seg" role="group" aria-label="Chart type">
+                  {TYPES.map(([t, l, I]) => <button key={t} className={chart.type === t ? "on" : ""} onClick={() => setChart({ type: t })} title={l + " chart"} aria-label={l + " chart"}><I size={13} /><span className="hide-s">{l}</span></button>)}
+                </div>
+                <label className="sel" title="Group the list beside the chart">
+                  <span>By</span>
+                  <select value={chart.by} onChange={(e) => setChart({ by: e.target.value as ChartOpts["by"] })}>
+                    {GROUPINGS.map(([g, l]) => <option key={g} value={g}>{l}</option>)}
+                  </select>
+                </label>
+                <div className="seg" role="group" aria-label="Time range">
+                  {RANGES.map(([r, l]) => <button key={r} className={range === r ? "on" : ""} onClick={() => setRange(r)}>{l}</button>)}
+                </div>
+                <button className="btn sm icon" onClick={() => setChart({ density: chart.density === "compact" ? "comfortable" : "compact" })} title={chart.density === "compact" ? "Roomy layout" : "Compact layout"} aria-label="Toggle density">{chart.density === "compact" ? <Rows2 size={13} /> : <Rows4 size={13} />}</button>
+              </div>
+            )}
             <button className={"btn sm" + (showFeed ? " on" : "")} onClick={() => setShowFeed(!showFeed)}>{showFeed ? <Rows3 size={13} /> : <ScrollText size={13} />}{showFeed ? "Chart" : "Event log"}</button>
           </div>
           <div className="ov-body">

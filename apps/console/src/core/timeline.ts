@@ -17,7 +17,7 @@ export type Sample = {
 
 export type Mark = { t: number; scope: string; kind: "granted" | "denied" | "stopped" | "error" | "first"; msg: string };
 
-const KEEP = 900;
+const KEEP = 3600; // one hour at one sample per second
 let samples: Sample[] = [];
 const last = new Map<string, number>();
 const subs = new Set<() => void>();
@@ -53,6 +53,8 @@ export function useTimeline(): Sample[] {
   return useSyncExternalStore((f) => { subs.add(f); return () => subs.delete(f); }, () => samples);
 }
 
+/** The latest n samples without subscribing, for metrics computed during render. */
+export const recent = (n: number) => samples.slice(-n);
 export const grantedIds = () => [...everGranted];
 export const blockedIds = () => [...everBlocked];
 
