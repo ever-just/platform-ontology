@@ -1,24 +1,21 @@
-import { useEffect, useMemo, useState } from "react";
-import { Layers, Square, BookOpen, List, Activity, Code2, Share2 } from "lucide-react";
-import type { Atlas, ScopeDef } from "./core/types";
-import { allSessions, isActive, registerScopes, stopAll, useSession, useVersion } from "./core/harness";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import { Square, BookOpen, Rows3, ScrollText } from "lucide-react";
+import type { Atlas, AtlasNode, ScopeDef } from "./core/types";
+import { allSessions, isActive, registerScopes, stopAll } from "./core/harness";
+import { feed, startTimeline, useTimeline } from "./core/timeline";
 import { buildScopes } from "./scopes";
-import { Sidebar } from "./ui/Sidebar";
-import { ApiPanel } from "./ui/ApiPanel";
-import { MapView } from "./ui/MapView";
-import { FlowView } from "./ui/FlowView";
-import { Overlay } from "./ui/Overlay";
-import { Telemetry } from "./ui/Telemetry";
-import { DOMAIN_COLOR } from "./ui/kit";
-import { YourBrowser, BrowserLive } from "./ui/YourBrowser";
-import { detectProfile, supportOf } from "./browser/profile";
+import { detectProfile } from "./browser/profile";
+import { collectPassive, type PassiveSignal } from "./real";
+import { listGroups, listViews, onRegistryChange, pluginScopes, resolveGroup, OTHER, type ConsoleCtx, type GroupDef } from "./ext/registry";
+import { registerBuiltins } from "./ext/builtins";
+import { Capabilities } from "./ui/Capabilities";
+import { Inspector } from "./ui/Inspector";
+import { clock } from "./ui/charts";
 
-type Tab = "instrument" | "map" | "flow";
-type Mob = "scopes" | "stage" | "api" | "map";
+registerBuiltins();
 
-function readHash() {
-  return decodeURIComponent(location.hash.replace(/^#/, ""));
-}
+const RANGES: [number, string][] = [[60, "1m"], [300, "5m"], [900, "15m"]];
+const readHash = () => decodeURIComponent(location.hash.replace(/^#/, ""));
 
 export function App() {
   const [atlas, setAtlas] = useState<Atlas | null>(null);
@@ -30,121 +27,146 @@ export function App() {
       .catch((e) => setErr(String(e)));
   }, []);
   if (err) return <div className="boot">Could not load the atlas: {err}</div>;
-  if (!atlas) return <div className="boot"><span className="waiting-dot" />Loading the atlas</div>;
+  if (!atlas) return <div className="boot"><span className="waiting-dot" />Loading</div>;
   return <Console atlas={atlas} />;
 }
 
+function Logo() {
+  return <svg width="22" height="22" viewBox="0 0 32 32" aria-hidden><rect width="32" height="32" rx="8" fill="var(--ink)" /><circle cx="16" cy="16" r="8" fill="none" stroke="var(--bg)" strokeWidth="2.5" /><circle cx="16" cy="16" r="3" fill="var(--accent)" /></svg>;
+}
+
 function Console({ atlas }: { atlas: Atlas }) {
+  const [regVer, setRegVer] = useState(0);
+  useEffect(() => { const off = onRegistryChange(() => setRegVer((v) => v + 1)); return () => { off(); }; }, []);
+
   const scopes = useMemo(() => {
-    const list = buildScopes(atlas.nodes);
+    const list = [...buildScopes(atlas.nodes), ...pluginScopes()];
     registerScopes(list);
     return list;
-  }, [atlas]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [atlas, regVer]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const groups = useMemo(() => listGroups(), [regVer]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const views = useMemo(() => listViews(), [regVer]);
+  const profile = useMemo(detectProfile, []);
+  const [passive, setPassive] = useState<PassiveSignal[] | null>(null);
+  useEffect(() => { startTimeline(); collectPassive().then(setPassive).catch(() => setPassive([])); }, []);
+
+  const nodeById = useMemo(() => new Map(atlas.nodes.map((n) => [n.i, n])), [atlas]);
   const byAtlas = useMemo(() => {
     const m = new Map<string, ScopeDef>();
     scopes.forEach((s) => s.atlas.forEach((a) => !m.has(a) && m.set(a, s)));
     return m;
   }, [scopes]);
-  const resolve = (h: string) => scopes.find((s) => s.id === h) || byAtlas.get(h);
-  const profile = useMemo(detectProfile, []);
-  const [view, setView] = useState<"browser" | "scope">(() => (resolve(readHash()) ? "scope" : "browser"));
-  const nodeOf = (s: ScopeDef) => atlas.nodes.find((n) => n.i === s.atlas[0]);
-  const works = (s: ScopeDef) => { const n = nodeOf(s); return !n || "yp".includes(supportOf(n.sup, profile.column)); };
-  const firstSupported = scopes.find((s) => s.passive && works(s))?.id || scopes.find(works)?.id || scopes[0].id;
-  const [selected, setSelected] = useState(() => resolve(readHash())?.id || firstSupported);
-  const [tab, setTab] = useState<Tab>("instrument");
-  const [overlay, setOverlay] = useState(true);
-  const [mob, setMob] = useState<Mob>("stage");
-  const showBrowser = () => { setView("browser"); setMob("stage"); history.replaceState(null, "", location.pathname + location.search); };
+  const groupMap = useMemo(() => {
+    const m = new Map<string, GroupDef>();
+    scopes.forEach((s) => m.set(s.id, resolveGroup(s, nodeById.get(s.atlas[0]), groups)));
+    return m;
+  }, [scopes, groups, nodeById]);
+
+  const resolve = useCallback((h: string) => scopes.find((s) => s.id === h) || byAtlas.get(h), [scopes, byAtlas]);
+  const [selected, setSelected] = useState<string | null>(() => resolve(readHash())?.id || null);
+  const [view, setView] = useState(() => views[0]?.id || "silent");
+  const [range, setRange] = useState(300);
+  const [showFeed, setShowFeed] = useState(false);
 
   useEffect(() => {
-    const on = () => {
-      const s = resolve(readHash());
-      if (s) { setSelected(s.id); setView("scope"); } else if (!readHash()) setView("browser");
-    };
+    const on = () => setSelected(resolve(readHash())?.id || null);
     window.addEventListener("hashchange", on);
     return () => window.removeEventListener("hashchange", on);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [scopes]);
+  }, [resolve]);
 
-  const select = (id: string) => {
+  const select = useCallback((id: string) => {
     setSelected(id);
-    setView("scope");
     if (location.hash !== "#" + id) history.replaceState(null, "", "#" + id);
-    if (tab === "map") setTab("instrument");
-    setMob("stage");
-  };
+  }, []);
+  const close = useCallback(() => { setSelected(null); history.replaceState(null, "", location.pathname + location.search); }, []);
 
-  useVersion();
-  const scope = scopes.find((s) => s.id === selected) || scopes[0];
-  const session = useSession(scope.id);
-  const node = atlas.nodes.find((n) => n.i === scope.atlas[0]);
-  const liveCount = allSessions().filter(isActive).length;
-  const Inst = scope.Instrument;
-  const c = DOMAIN_COLOR[scope.domain];
+  const ctx: ConsoleCtx = useMemo(() => ({
+    atlas, scopes, profile, passive, groups, range, select,
+    groupOf: (id) => groupMap.get(id) || OTHER,
+    groupOfNode: (n: AtlasNode) => {
+      const s = byAtlas.get(n.i);
+      if (s) return groupMap.get(s.id) || OTHER;
+      return groups.find((g) => g.atlasGroups?.includes(n.g)) || OTHER;
+    },
+    nodeOf: (s) => nodeById.get(s.atlas[0]),
+  }), [atlas, scopes, profile, passive, groups, range, select, groupMap, byAtlas, nodeById]);
+
+  useTimeline(); // header and metrics refresh once a second
+  const live = allSessions().filter(isActive).length;
+  const current = views.find((v) => v.id === view) || views[0];
+  const Panel = current?.Panel;
+  const scope = selected ? scopes.find((s) => s.id === selected) || null : null;
 
   return (
-    <div className={"app mob-" + mob + (profile.touch && profile.coarse ? " touch" : "")}>
-      <header className="top">
-        <div className="brand">
-          <svg width="20" height="20" viewBox="0 0 32 32"><rect width="32" height="32" rx="8" fill="#0b0b0c" /><circle cx="16" cy="16" r="8" fill="none" stroke="#fff" strokeWidth="2.5" /><circle cx="16" cy="16" r="3" fill="#1f4bff" /></svg>
-          <b>Platform.Ontology</b><span>Console</span>
-        </div>
-        <div className="top-r">
-          <span className="top-live"><i className={liveCount ? "on" : ""} />{liveCount} live</span>
-          <button className={"tbtn" + (overlay ? " on" : "")} onClick={() => setOverlay(!overlay)} title="Show the access path, metrics and what the data reveals on top of the instrument"><Layers size={14} /> Overlay</button>
-          <button className="tbtn" onClick={stopAll} disabled={!liveCount}><Square size={13} /> Stop all</button>
-          <a className="tbtn ghost" href="../"><BookOpen size={14} /> <span className="hide-s">Docs</span></a>
+    <div className={"shell" + (scope ? " sheet-open" : "")}>
+      <header className="bar">
+        <div className="wrap bar-in">
+          <a className="brand" href="./"><Logo /><b>Platform.Ontology</b><span>Console</span></a>
+          <div className="bar-r">
+            <span className={"live" + (live ? " on" : "")}><i />{live} live</span>
+            <button className="btn" onClick={stopAll} disabled={!live}><Square size={12} />Stop all</button>
+            <a className="btn ghost" href="../"><BookOpen size={14} /><span className="hide-s">Docs</span></a>
+          </div>
         </div>
       </header>
 
-      <Sidebar atlas={atlas} scopes={scopes} selected={view === "browser" ? "" : scope.id} onSelect={select} profile={profile} browserOn={view === "browser"} onBrowser={showBrowser} />
-
-      {view === "browser" ? (
-        <main className="stage">
-          <div className="stage-h"><div className="stage-t"><h1>This browser</h1><span className="chip-dom" style={{ color: "#1f4bff", borderColor: "#1f4bff40", background: "#1f4bff0d" }}>{profile.columnLabel}</span><span className="pill st-streaming">live</span></div></div>
-          <div className="stage-body"><YourBrowser atlas={atlas} profile={profile} onSelect={select} firstSupported={firstSupported} /></div>
-        </main>
-      ) : (
-      <main className="stage">
-        <div className="stage-h">
-          <div className="stage-t">
-            <h1>{scope.name}</h1>
-            <span className="chip-dom" style={{ color: c, borderColor: c + "40", background: c + "0d" }}>{atlas.domains.find((d) => d.id === scope.domain)?.short}</span>
-            <code className="stage-id">{scope.id}</code>
-            <span className={"pill st-" + session.state}>{session.state}</span>
+      <main className="wrap main">
+        <section className="box overview">
+          <div className="kpis" role="tablist">
+            {views.map((v) => {
+              const m = v.metric(ctx);
+              return (
+                <button key={v.id} role="tab" aria-selected={v.id === current?.id} className={"kpi" + (v.id === current?.id ? " on" : "") + (m.tone ? " t-" + m.tone : "")} onClick={() => setView(v.id)}>
+                  <span>{v.label}</span>
+                  <b>{m.value}{m.unit && <em>{m.unit}</em>}</b>
+                  {m.sub && <small>{m.sub}</small>}
+                </button>
+              );
+            })}
           </div>
-          <div className="stage-tabs">
-            {(["instrument", "map", "flow"] as const).map((t) => (
-              <button key={t} className={tab === t ? "on" : ""} onClick={() => setTab(t)}>{t === "instrument" ? "Instrument" : t === "map" ? "Map" : "Flow"}</button>
-            ))}
-          </div>
-        </div>
-        <p className="stage-sum">{scope.summary}</p>
-        <div className="stage-body">
-          {tab === "instrument" && (
-            <div className="inst">
-              {overlay && <Overlay scope={scope} session={session} />}
-              <div className="inst-body"><Inst scope={scope} session={session} /></div>
+          <div className="ov-tools">
+            <h2>{showFeed ? "Event log" : current?.label}</h2>
+            <span className="grow" />
+            <div className="seg">
+              {RANGES.map(([r, l]) => <button key={r} className={range === r ? "on" : ""} onClick={() => setRange(r)}>{l}</button>)}
             </div>
-          )}
-          {tab === "map" && <MapView atlas={atlas} scopes={scopes} selected={scope.id} onSelect={select} />}
-          {tab === "flow" && <FlowView scopes={scopes} selected={scope.id} onSelect={select} />}
+            <button className={"btn sm" + (showFeed ? " on" : "")} onClick={() => setShowFeed(!showFeed)}>{showFeed ? <Rows3 size={13} /> : <ScrollText size={13} />}{showFeed ? "Chart" : "Event log"}</button>
+          </div>
+          <div className="ov-body">
+            {showFeed ? <Feed ctx={ctx} /> : Panel && <Panel ctx={ctx} />}
+          </div>
+        </section>
+
+        <div className="duo">
+          <Capabilities ctx={ctx} selected={selected} />
+          <Inspector ctx={ctx} scope={scope} onClose={close} />
         </div>
+
+        <footer className="foot">
+          <span>Everything here runs in this tab. Nothing is sent anywhere.</span>
+          <span>{atlas.nodes.length} attributes across {atlas.browsers.length} browsers, built {atlas.built}</span>
+        </footer>
       </main>
-      )}
+    </div>
+  );
+}
 
-      {view === "browser" ? <BrowserLive profile={profile} atlas={atlas} /> : <ApiPanel scope={scope} session={session} node={node} />}
-
-      <div className="mapfull">{mob === "map" && <MapView atlas={atlas} scopes={scopes} selected={scope.id} onSelect={select} />}</div>
-
-      <Telemetry atlas={atlas} scopes={scopes} onSelect={select} />
-
-      <nav className="mnav">
-        {([["scopes", List, "Scopes"], ["stage", Activity, "Instrument"], ["api", Code2, view === "browser" ? "Hood" : "API"], ["map", Share2, "Map"]] as const).map(([k, I, l]) => (
-          <button key={k} className={mob === k ? "on" : ""} onClick={() => setMob(k)}><I size={18} /><span>{l}</span></button>
-        ))}
-      </nav>
+function Feed({ ctx }: { ctx: ConsoleCtx }) {
+  const rows = feed().slice(0, 200);
+  const name = (id: string) => ctx.scopes.find((s) => s.id === id)?.name || id;
+  if (!rows.length) return <div className="bl-empty pad">No events yet. Run a capability and every request, grant, record and refusal shows up here.</div>;
+  return (
+    <div className="feed big">
+      {rows.map((l, i) => (
+        <div key={i} className={"fe " + l.level}>
+          <time>{clock(l.t)}</time>
+          <button className="lnk" onClick={() => ctx.select(l.scope)}>{name(l.scope)}</button>
+          <span>{l.msg}</span>
+        </div>
+      ))}
     </div>
   );
 }
