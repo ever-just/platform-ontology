@@ -7,8 +7,15 @@ const MAX_SAMPLE = 4096;
 const SCOPE = /^[a-z0-9_.-]{1,80}$/;
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
-// Scopes whose values are the visitor's own words or contacts: keep shape, drop content.
-const CONTENT_SCOPES = new Set(["clipboard", "speech", "contacts"]);
+// Scope ids are namespaced ("capture.clipboard", "identity.contacts") and generic
+// scopes use atlas ids ("clipboard-read", "contact-picker"), so match by pattern.
+// Content scopes hold the visitor's own words or contacts: keep shape, drop content.
+const CONTENT_RE = /clipboard|speech|contact|transcri|dictation|share-target|file-handl|text-select/i;
+const KEY_RE = /keystroke|key-?event|keyboard-?input/i;
+function kindOf(scope) {
+  const s = String(scope || "");
+  return CONTENT_RE.test(s) ? "content" : KEY_RE.test(s) ? "keys" : "";
+}
 const KEY_FIELDS = new Set(["key", "code", "char", "text", "value", "data"]);
 const GEO_FIELDS = new Set(["latitude", "longitude", "lat", "lon", "lng"]);
 
@@ -26,19 +33,21 @@ function limited(id) {
 
 function scrub(v, scope, key, depth = 0) {
   if (depth > 8) return null;
+  const kind = kindOf(scope);
   if (typeof v === "string") {
-    if (CONTENT_SCOPES.has(scope)) return { len: v.length };
-    if (scope === "keystroke" && KEY_FIELDS.has(key)) return undefined;
+    if (kind === "content") return { len: v.length };
+    if (kind === "keys" && KEY_FIELDS.has(key)) return undefined;
     if (/^(data|blob):/i.test(v)) return { omitted: "media", len: v.length };
     return v.length > 500 ? { omitted: "long", len: v.length } : v;
   }
   if (typeof v === "number") {
-    if (scope === "geolocation" && GEO_FIELDS.has(key)) return Math.round(v * 100) / 100;
+    // Coordinates are coarsened to about 1 km wherever they appear, whatever the scope.
+    if (GEO_FIELDS.has(String(key).toLowerCase())) return Math.round(v * 100) / 100;
     return Number.isFinite(v) ? v : null;
   }
   if (typeof v === "boolean" || v === null) return v;
   if (Array.isArray(v)) {
-    if (CONTENT_SCOPES.has(scope)) return { count: v.length };
+    if (kind === "content") return { count: v.length };
     return v.slice(0, 200).map((x) => scrub(x, scope, key, depth + 1)).filter((x) => x !== undefined);
   }
   if (typeof v === "object") {
@@ -77,7 +86,7 @@ function clean(body, country) {
     .map((e) => ({
       scope: e.scope, t: Number(e.t) || Date.now(),
       level: ["info", "ok", "warn", "err"].includes(e.level) ? e.level : "info",
-      state: str(e.state, 20), msg: CONTENT_SCOPES.has(e.scope) ? null : str(e.msg, 500),
+      state: str(e.state, 20), msg: kindOf(e.scope) === "content" ? null : str(e.msg, 500),
     }));
   const captures = (Array.isArray(body.captures) ? body.captures : []).slice(0, 50)
     .filter((c) => SCOPE.test(c?.scope || ""))
