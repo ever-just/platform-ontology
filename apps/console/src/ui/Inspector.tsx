@@ -3,7 +3,11 @@ import "./inspector.css";
 import { HistoryChart } from "./history-view";
 import { Replay } from "./replay";
 import { AccessRows, DepChips, FieldMeanings, LogTimeline, Provenance, Reveals } from "./inspector-views";
-import { Play, Square, Copy, X, ShieldCheck, TriangleAlert, ArrowLeft, Layers } from "lucide-react";
+import { Play, Square, Copy, X, ShieldCheck, TriangleAlert, ArrowLeft, Layers, Ban, FlaskConical, RotateCw } from "lucide-react";
+import { gate, type Gate } from "./runall-gate";
+import { useAvailability } from "../scopes/reference";
+import type { AtlasNode } from "../core/types";
+import type { Profile } from "../browser/profile";
 import type { ScopeDef, Session } from "../core/types";
 import { isActive, request, setParam, setSource, stop, useSession } from "../core/harness";
 import { useInternals } from "../browser/engine";
@@ -20,6 +24,34 @@ const TABS: { id: Tab; label: string }[] = [{ id: "live", label: "Live" }, { id:
 
 const LAYERS: Record<number, string> = { 1: "Insightful on its own", 2: "Joined with its group", 3: "Joined across groups" };
 const TONE: Record<string, string> = { streaming: "ok", granted: "ok", requesting: "warn", denied: "err", unsupported: "err", error: "err" };
+
+const WHY_TITLE: Record<string, string> = { missing: "Not available here", blocked: "Blocked for this site", policy: "Turned off by this site", device: "This device cannot do it", insecure: "Needs a secure page" };
+const WHY_FIX: Record<string, string> = {
+  missing: "Try a browser that supports it, or use Simulated to see how it behaves.",
+  blocked: "Open site settings (the icon left of the address), allow it, then check again.",
+  policy: "The page owner has to allow it in the Permissions-Policy header.",
+  device: "Try it on a device that has the hardware, or use Simulated.",
+  insecure: "Open the console over https.",
+};
+
+/** undefined while checking, null when it can run here, otherwise why it cannot. */
+function useGate(scope: ScopeDef, node: AtlasNode | undefined, profile: Profile, tick: number): Gate | undefined {
+  const a = useAvailability(scope.reference ? node : undefined);
+  const [g, setG] = useState<Gate | undefined>(undefined);
+  useEffect(() => {
+    if (scope.reference) return;
+    let off = false;
+    setG(undefined);
+    gate(scope, node, profile).then((r) => { if (!off) setG(r); }).catch(() => { if (!off) setG(null); });
+    return () => { off = true; };
+  }, [scope, node, profile, tick]);
+  if (!scope.reference) return g;
+  if (!a) return undefined;
+  if (a.release === "not-exposed") return { why: "missing", text: "No browser gives this to a web page. It is listed for reference only." };
+  if (a.detect === "absent") return { why: "missing", text: `This browser does not have it (${a.via} is missing).` };
+  if (a.permission === "denied") return { why: "blocked", text: "Blocked for this site." };
+  return null;
+}
 
 function snippet(scope: ScopeDef, s: Session) {
   const p = Object.keys(s.params).length ? `, ${JSON.stringify(s.params)}` : "";
@@ -70,6 +102,10 @@ function ScopeInspector({ ctx, scope, onClose, open, back, backName }: { ctx: Co
   const deps = useDeps(scope, ctx);
   const modes = MODES.filter((m) => scope.modes?.[m.id]);
   const subCtx = useMemo<ConsoleCtx>(() => ({ ...ctx, select: open }), [ctx, open]);
+  const [tick, setTick] = useState(0);
+  const g = useGate(scope, node, ctx.profile, tick);
+  const cannot = !!g && !active && session.source !== "sim";
+  const canSim = !scope.reference;
   return (
     <div className="i-root">
       <div className="ins-h">
@@ -89,17 +125,33 @@ function ScopeInspector({ ctx, scope, onClose, open, back, backName }: { ctx: Co
           <button className="icon-b ins-x" onClick={onClose} aria-label="Close"><X size={16} /></button>
         </div>
       </div>
+      {cannot ? (
+      <div className="ins-ctl ins-na" data-why={g!.why}>
+        <span className="ins-na-i"><Ban size={15} /></span>
+        <div className="ins-na-t">
+          <b>{WHY_TITLE[g!.why]}</b>
+          <span>{g!.why === "blocked" ? "" : g!.text + " "}{scope.reference ? (/reference only/.test(g!.text) ? "" : g!.why === "blocked" ? WHY_FIX.blocked : "Try a browser that supports it.") : WHY_FIX[g!.why]}</span>
+        </div>
+        <div className="ins-na-b">
+          {g!.why === "blocked" && <button className="btn" onClick={() => setTick((t) => t + 1)}><RotateCw size={12} />Check again</button>}
+          {canSim && <button className="btn" onClick={() => { setSource(scope.id, "sim"); void request(scope.id); }}><FlaskConical size={12} />Simulate</button>}
+        </div>
+      </div>
+      ) : (
       <div className="ins-ctl">
         <span className="ins-st" data-tone={TONE[session.state] || "mute"} data-state={session.state}><i />{session.state}</span>
-        <div className="seg">
+        {!scope.reference && <div className="seg">
           <button className={session.source === "live" ? "on" : ""} onClick={() => setSource(scope.id, "live")}>Live</button>
           <button className={session.source === "sim" ? "on" : ""} onClick={() => setSource(scope.id, "sim")}>Simulated</button>
-        </div>
+        </div>}
         <span className="grow" />
         {active
           ? <button className="btn" onClick={() => stop(scope.id)}><Square size={12} />Stop</button>
-          : <button className="btn pri" onClick={() => void request(scope.id)}><Play size={12} />{scope.passive ? "Run" : "Request access"}</button>}
+          : g === undefined && session.source !== "sim"
+            ? <button className="btn" disabled><Play size={12} />Checking</button>
+            : <button className="btn pri" onClick={() => void request(scope.id)}><Play size={12} />{scope.reference ? "Check availability" : session.source === "sim" ? "Run simulated" : scope.passive ? "Run" : "Request access"}</button>}
       </div>
+      )}
       <div className="tabs line" role="tablist">
         {TABS.map((t) => (
           <button key={t.id} role="tab" aria-selected={tab === t.id} className={tab === t.id ? "on" : ""} onClick={() => setTab(t.id)}>
