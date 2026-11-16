@@ -438,3 +438,34 @@ details.raw summary { cursor: pointer; font-size: 12px; color: var(--mute); marg
 .hist-f { display: flex; align-items: center; justify-content: space-between; gap: 8px; font-size: 11.5px; color: var(--mute); }
 .hist-f span { display: inline-flex; align-items: center; gap: 5px; }
 @media (max-width: 640px) { .row-sp, .logged { display: none; } }
+
+/* Phase 4: KPI trends, chart controls, density and obvious actions */
+.kpi { overflow: hidden; }
+.kpi-f { display: flex; align-items: center; gap: 6px; min-width: 0; max-width: 100%; }
+.kpi-d { display: inline-flex; align-items: center; gap: 2px; font-style: normal; font-family: var(--mono); font-size: 11px; padding: 0 5px; border-radius: 5px; flex: none; }
+.kpi-d.up { color: var(--ok); background: #0a9f5a14; } .kpi-d.down { color: var(--err); background: #e0352b12; }
+.kpi-sp { position: absolute; right: 12px; top: 14px; opacity: .85; pointer-events: none; }
+.kpi:not(.on) .kpi-sp { opacity: .5; }
+.ov-ctl { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.ov-ctl .seg button { display: inline-flex; align-items: center; gap: 5px; }
+.sel { display: inline-flex; align-items: center; gap: 6px; height: 28px; padding: 0 4px 0 9px; border: 1px solid var(--line); border-radius: 8px; background: var(--bg); font-size: 12px; color: var(--mute); }
+.sel select { border: 0; background: none; font: inherit; color: var(--ink); padding: 0 2px; cursor: pointer; }
+.btn.icon { width: 28px; padding: 0; justify-content: center; }
+.btn.primary { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+.btn.primary:hover { opacity: .88; }
+.tc-area.strong { opacity: .2; }
+.tc-bars rect { fill: var(--accent); opacity: .75; }
+.tc-start { display: flex; flex-direction: column; align-items: center; gap: 10px; pointer-events: auto; }
+.tc-empty:has(.tc-start) { pointer-events: auto; }
+.bl-go { position: relative; flex: none; color: var(--mute); opacity: 0; transition: opacity .12s; margin-left: -4px; }
+.bl-row.click:hover .bl-go, .bl-row.click:focus-visible .bl-go { opacity: 1; color: var(--accent); }
+@media (hover: none) { .bl-go { opacity: .6; } }
+/* Compact density */
+.dense .kpi { padding: 9px 12px 8px; }
+.dense .kpi b { font-size: 19px; }
+.dense .kpi-sp { top: 9px; }
+.dense .row { height: 30px; }
+.dense .bl-row { min-height: 24px; padding: 2px 8px; }
+.dense .ov-tools { padding-top: 8px; }
+@media (max-width: 640px) { .kpi-sp { display: none; } .ov-ctl { width: 100%; } .sel select { max-width: 120px; } }
+.bl-empty .tc-start { align-items: flex-start; }

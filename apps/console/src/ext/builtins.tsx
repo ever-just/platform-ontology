@@ -1,7 +1,9 @@
 import { MapPin, Compass, MousePointer2, Camera, Mic, Radio, Cpu, Fingerprint, Wifi, KeyRound, Cookie, Bell, Clipboard, Sparkles } from "lucide-react";
-import { allSessions, getSession, isActive } from "../core/harness";
-import { blockedIds, grantedIds, marks, useTimeline, type Sample } from "../core/timeline";
+import { Play } from "lucide-react";
+import { allSessions, getSession, isActive, request } from "../core/harness";
+import { blockedIds, grantedIds, marks, recent, useTimeline, type Sample } from "../core/timeline";
 import { scoreFor, supportOf } from "../browser/profile";
+import { MECH, mechanismOf } from "../ui/icons";
 import { BarList, TimeChart, short, type BarRow } from "../ui/charts";
 import { defineGroup, registerView, type ConsoleCtx } from "./registry";
 
@@ -30,14 +32,47 @@ export function registerBuiltins() {
   G("actions", "Page actions and AI", "Share, fullscreen, dialogs and on device AI", Sparkles, { atlasGroups: ["page-actions", "on-device-ai"] }, 140);
 
   registerView({ id: "silent", label: "Readable silently", order: 10, metric: (c) => ({ value: c.passive ? String(c.passive.length) : "...", sub: "signals, no prompt", tone: "warn" }), Panel: SilentPanel });
-  registerView({ id: "live", label: "Live now", order: 20, metric: () => { const n = allSessions().filter(isActive).length; return { value: String(n), sub: n ? "streaming" : "nothing running", tone: n ? "ok" : undefined }; }, Panel: LivePanel });
-  registerView({ id: "records", label: "Records", order: 30, metric: () => { const n = allSessions().reduce((a, s) => a + s.count, 0); return { value: short(n), sub: "collected this session" }; }, Panel: RecordsPanel });
-  registerView({ id: "granted", label: "Granted", order: 40, metric: () => ({ value: String(grantedIds().length), sub: "allowed this session", tone: "accent" }), Panel: GrantedPanel });
-  registerView({ id: "blocked", label: "Blocked", order: 50, metric: () => ({ value: String(blockedIds().length), sub: "refused or missing", tone: blockedIds().length ? "err" : undefined }), Panel: BlockedPanel });
+  registerView({ id: "live", label: "Live now", order: 20, metric: () => { const n = allSessions().filter(isActive).length; return { value: String(n), sub: n ? "streaming" : "nothing running", tone: n ? "ok" : undefined, ...trend((x) => x.live) }; }, Panel: LivePanel });
+  registerView({ id: "records", label: "Records", order: 30, metric: () => { const n = allSessions().reduce((a, s) => a + s.count, 0); return { value: short(n), sub: "collected this session", ...trend((x) => x.rate, false) }; }, Panel: RecordsPanel });
+  registerView({ id: "granted", label: "Granted", order: 40, metric: () => ({ value: String(grantedIds().length), sub: "allowed this session", tone: "accent", ...trend((x) => x.granted) }), Panel: GrantedPanel });
+  registerView({ id: "blocked", label: "Blocked", order: 50, metric: () => ({ value: String(blockedIds().length), sub: "refused or missing", tone: blockedIds().length ? "err" : undefined, ...trend((x) => x.blocked) }), Panel: BlockedPanel });
   registerView({ id: "supported", label: "Supported here", order: 60, metric: (c) => ({ value: String(scoreFor(c.atlas, c.profile.column).pct), unit: "%", sub: `of ${c.atlas.nodes.length} attributes` }), Panel: SupportedPanel });
 }
 
 /* ---------- helpers ---------- */
+
+/** The last minute of one timeline field as a KPI spark; delta is the change across it. */
+function trend(pick: (s: Sample) => number, withDelta = true): { spark?: number[]; delta?: number } {
+  const v = recent(60).map(pick);
+  if (v.length < 2) return {};
+  return { spark: v, delta: withDelta ? v[v.length - 1] - v[0] : undefined };
+}
+
+/** Bucket a capability by the viewer's grouping choice. */
+function bucket(c: ConsoleCtx, id: string, by: "group" | "capability" | "access") {
+  if (by === "capability") return name(c, id);
+  if (by === "access") { const s = c.scopes.find((x) => x.id === id); return s ? MECH[mechanismOf(s)].label : "Other"; }
+  return c.groupOf(id).label;
+}
+
+/** Fold per capability rows into the chosen grouping. "auto" keeps a view's natural rows. */
+function grouped(c: ConsoleCtx, rows: BarRow[], natural: "group" | "capability"): BarRow[] {
+  const by = c.chart.by === "auto" ? natural : c.chart.by;
+  if (by === "capability") return rows;
+  const m = new Map<string, { v: number; n: number }>();
+  rows.forEach((r) => { const k = bucket(c, r.key, by); const e = m.get(k) || { v: 0, n: 0 }; e.v += r.value; e.n++; m.set(k, e); });
+  return [...m.entries()].map(([k, e]) => ({ key: k, label: k, value: e.v, sub: `${e.n} capabilit${e.n === 1 ? "y" : "ies"}` })).sort((a, b) => b.value - a.value);
+}
+
+/** An empty chart with one obvious thing to do. */
+function Start({ text, label, id }: { text: string; label: string; id: string }) {
+  return (
+    <span className="tc-start">
+      <span>{text}</span>
+      <button className="btn primary" onClick={() => void request(id)}><Play size={12} />{label}</button>
+    </span>
+  );
+}
 
 const name = (c: ConsoleCtx, id: string) => c.scopes.find((s) => s.id === id)?.name || id;
 const inRange = (samples: Sample[], range: number) => { const t0 = Date.now() - range * 1000; return samples.filter((s) => s.t >= t0); };
@@ -80,20 +115,20 @@ function LivePanel({ ctx }: { ctx: ConsoleCtx }) {
   const live = allSessions().filter(isActive);
   return (
     <Split title={`Running now (${live.length})`}
-      chart={<TimeChart points={tl.map((s) => ({ t: s.t, v: s.live }))} range={ctx.range} step marks={marks()} unit="live" empty="Nothing is running. Press Run on any capability below." />}
-      side={<BarList rows={scopeRows(ctx, live.map((s) => s.id), (id) => getSession(id).hz, (id) => getSession(id).hz.toFixed(1) + " Hz")} empty="Nothing running" />} />
+      chart={<TimeChart points={tl.map((s) => ({ t: s.t, v: s.live }))} range={ctx.range} step marks={marks()} unit="live" kind={ctx.chart.type} empty={<Start text="Nothing is running." label="Track the pointer" id="motion.pointer" />} />}
+      side={<BarList rows={grouped(ctx, scopeRows(ctx, live.map((s) => s.id), (id) => getSession(id).hz, (id) => getSession(id).hz.toFixed(1) + " Hz"), "capability")} empty={<Start text="Nothing running right now." label="Track the pointer" id="motion.pointer" />} />} />
   );
 }
 
 function RecordsPanel({ ctx }: { ctx: ConsoleCtx }) {
   const tl = useTimeline();
   const by = new Map<string, number>();
-  inRange(tl, ctx.range).forEach((s) => Object.entries(s.per).forEach(([id, n]) => { const g = ctx.groupOf(id).label; by.set(g, (by.get(g) || 0) + n); }));
-  const rows: BarRow[] = [...by.entries()].map(([g, n]) => ({ key: g, label: g, value: n })).sort((a, b) => b.value - a.value);
+  inRange(tl, ctx.range).forEach((s) => Object.entries(s.per).forEach(([id, n]) => by.set(id, (by.get(id) || 0) + n)));
+  const rows = grouped(ctx, [...by.entries()].map(([id, n]) => ({ key: id, label: name(ctx, id), sub: ctx.groupOf(id).label, value: n, onClick: () => ctx.select(id) })).sort((a, b) => b.value - a.value), "group");
   return (
-    <Split title="Records by group in this window"
-      chart={<TimeChart points={tl.map((s) => ({ t: s.t, v: s.rate }))} range={ctx.range} marks={marks()} unit="rec/s" empty="No records yet. Run a capability to see data flow." />}
-      side={<BarList rows={rows} empty="No records in this window" />} />
+    <Split title={`Records by ${{ auto: "group", group: "group", capability: "capability", access: "how it is accessed" }[ctx.chart.by]} in this window`}
+      chart={<TimeChart points={tl.map((s) => ({ t: s.t, v: s.rate }))} range={ctx.range} marks={marks()} unit="rec/s" kind={ctx.chart.type} empty={<Start text="No records yet. Start something to watch data flow." label="Track the pointer" id="motion.pointer" />} />}
+      side={<BarList rows={rows} empty={<Start text="No records in this window." label="Track the pointer" id="motion.pointer" />} />} />
   );
 }
 
@@ -102,8 +137,8 @@ function GrantedPanel({ ctx }: { ctx: ConsoleCtx }) {
   const ids = grantedIds();
   return (
     <Split title={`Allowed (${ids.length})`}
-      chart={<TimeChart points={tl.map((s) => ({ t: s.t, v: s.granted }))} range={ctx.range} step marks={marks().filter((m) => m.kind === "granted")} unit="granted" empty="Nothing granted yet." />}
-      side={<BarList rows={scopeRows(ctx, ids, (id) => getSession(id).count, (id) => short(getSession(id).count) + " rec")} empty="Nothing granted yet" />} />
+      chart={<TimeChart points={tl.map((s) => ({ t: s.t, v: s.granted }))} range={ctx.range} step marks={marks().filter((m) => m.kind === "granted")} unit="granted" kind={ctx.chart.type} empty={<Start text="Nothing granted yet. A prompt appears when you ask." label="Ask for location" id="place.geolocation" />} />}
+      side={<BarList rows={grouped(ctx, scopeRows(ctx, ids, (id) => getSession(id).count, (id) => short(getSession(id).count) + " rec"), "capability")} empty="Nothing granted yet" />} />
   );
 }
 
@@ -112,8 +147,8 @@ function BlockedPanel({ ctx }: { ctx: ConsoleCtx }) {
   const ids = blockedIds();
   return (
     <Split title={`Refused or missing (${ids.length})`}
-      chart={<TimeChart points={tl.map((s) => ({ t: s.t, v: s.blocked }))} range={ctx.range} step marks={marks().filter((m) => m.kind === "denied" || m.kind === "error")} unit="blocked" empty="Nothing blocked yet." />}
-      side={<BarList rows={scopeRows(ctx, ids, () => 1, (id) => getSession(id).state, (id) => getSession(id).error || ctx.groupOf(id).label)} empty="Nothing blocked" />} />
+      chart={<TimeChart points={tl.map((s) => ({ t: s.t, v: s.blocked }))} range={ctx.range} step marks={marks().filter((m) => m.kind === "denied" || m.kind === "error")} unit="blocked" kind={ctx.chart.type} empty="Nothing blocked yet." />}
+      side={<BarList rows={grouped(ctx, scopeRows(ctx, ids, () => 1, (id) => getSession(id).state, (id) => getSession(id).error || ctx.groupOf(id).label), "capability")} empty="Nothing blocked" />} />
   );
 }
 

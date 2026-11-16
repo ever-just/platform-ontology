@@ -31,9 +31,16 @@ export type ConsoleCtx = {
   nodeOf: (scope: ScopeDef) => AtlasNode | undefined;
   select: (scopeId: string) => void;
   range: number;
+  /** Chart choices the viewer made in the overview header. Plugin panels should honor them. */
+  chart: ChartOpts;
 };
 
-export type Metric = { value: string; unit?: string; sub?: string; tone?: "ok" | "warn" | "err" | "accent" };
+export type ChartType = "auto" | "line" | "area" | "bars";
+export type Grouping = "auto" | "group" | "capability" | "access";
+export type Density = "comfortable" | "compact";
+export type ChartOpts = { type: ChartType; by: Grouping; density: Density };
+
+export type Metric = { value: string; unit?: string; sub?: string; tone?: "ok" | "warn" | "err" | "accent"; /** Recent values, oldest first, drawn as a small trend. */ spark?: number[]; /** Change over the spark window. */ delta?: number };
 
 export type ViewDef = {
   id: string;

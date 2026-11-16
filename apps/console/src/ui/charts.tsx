@@ -1,5 +1,6 @@
 import { useLayoutEffect, useRef, useState, type ReactNode } from "react";
 import type { Mark } from "../core/timeline";
+import { ChevronRight } from "lucide-react";
 
 // Charts measure their box and draw in real pixels, so text and strokes never stretch.
 
@@ -33,7 +34,9 @@ const MARK_COLOR: Record<Mark["kind"], string> = { granted: "var(--accent)", fir
 
 export type Pt = { t: number; v: number };
 
-export function TimeChart({ points, range, step, marks = [], unit = "", empty }: { points: Pt[]; range: number; step?: boolean; marks?: Mark[]; unit?: string; empty?: ReactNode }) {
+export type ChartKind = "auto" | "line" | "area" | "bars";
+
+export function TimeChart({ points, range, step, kind = "auto", marks = [], unit = "", empty }: { points: Pt[]; range: number; step?: boolean; kind?: ChartKind; marks?: Mark[]; unit?: string; empty?: ReactNode }) {
   const [ref, { w, h }] = useSize<HTMLDivElement>();
   const [hover, setHover] = useState<number | null>(null);
   const now = points.length ? points[points.length - 1].t : Date.now();
@@ -48,10 +51,13 @@ export function TimeChart({ points, range, step, marks = [], unit = "", empty }:
   pts.forEach((p, i) => {
     const X = x(Math.max(p.t, t0)).toFixed(1), Y = y(p.v).toFixed(1);
     if (!i) line = `M${X} ${Y}`;
-    else line += step ? ` H${X} V${Y}` : ` L${X} ${Y}`;
+    else line += step && kind === "auto" ? ` H${X} V${Y}` : ` L${X} ${Y}`;
   });
-  const area = pts.length > 1 ? `${line} V${T + ih} H${x(Math.max(pts[0].t, t0)).toFixed(1)} Z` : "";
-  const ticks = [0, 0.25, 0.5, 0.75, 1].map((f) => t0 + f * range * 1000);
+  const showArea = kind === "auto" || kind === "area";
+  const area = showArea && pts.length > 1 ? `${line} V${T + ih} H${x(Math.max(pts[0].t, t0)).toFixed(1)} Z` : "";
+  // Bars sample once a second, so their width follows the window.
+  const barW = Math.max(1, Math.min(10, iw / range - 0.6));
+  const ticks = (iw < 360 ? [0, 0.5, 1] : [0, 0.25, 0.5, 0.75, 1]).map((f) => t0 + f * range * 1000);
   const hp = hover !== null ? pts[hover] : null;
   const visMarks = marks.filter((m) => m.t >= t0);
   const allZero = pts.every((p) => p.v === 0);
@@ -76,10 +82,16 @@ export function TimeChart({ points, range, step, marks = [], unit = "", empty }:
             </g>
           ))}
           {ticks.map((t, i) => (
-            <text key={i} x={x(t)} y={h - 6} textAnchor={i === 0 ? "start" : i === 4 ? "end" : "middle"} className="tc-ax">{i === 4 ? "now" : clock(t)}</text>
+            <text key={i} x={x(t)} y={h - 6} textAnchor={i === 0 ? "start" : i === ticks.length - 1 ? "end" : "middle"} className="tc-ax">{i === ticks.length - 1 ? "now" : clock(t)}</text>
           ))}
-          {area && <path d={area} className="tc-area" />}
-          {line && <path d={line} className="tc-line" />}
+          {kind === "bars" ? (
+            <g className="tc-bars">{pts.map((p, i) => p.v > 0 && <rect key={i} x={x(Math.max(p.t, t0)) - barW / 2} width={barW} y={y(p.v)} height={T + ih - y(p.v)} rx={barW > 3 ? 1 : 0} />)}</g>
+          ) : (
+            <>
+              {area && <path d={area} className={"tc-area" + (kind === "area" ? " strong" : "")} />}
+              {line && <path d={line} className="tc-line" />}
+            </>
+          )}
           {visMarks.map((m, i) => (
             <g key={i} transform={`translate(${x(m.t).toFixed(1)} ${T - 9})`}>
               <line y1="4" y2={ih + 9} className="tc-mark-l" stroke={MARK_COLOR[m.kind]} />
@@ -123,6 +135,7 @@ export function BarList({ rows, empty = "Nothing yet", max }: { rows: BarRow[]; 
             )}
             <span className="bl-l">{r.label}{r.sub && <small>{r.sub}</small>}</span>
             <b className="bl-v">{r.display ?? short(r.value)}</b>
+            {r.onClick && <ChevronRight className="bl-go" size={13} aria-hidden />}
           </Tag>
         );
       })}
