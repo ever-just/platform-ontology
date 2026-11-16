@@ -17,7 +17,6 @@ import type { ConsoleCtx } from "../ext/registry";
 import { fmt } from "./kit";
 import { CapIcon, MECH, MODES, SupportMatrix, mechanismOf } from "./icons";
 import { supportOf } from "../browser/profile";
-import { PrivacyLink } from "./Privacy";
 import { useDeps } from "../core/deps";
 import { DependsOn } from "./deps-graph";
 
@@ -241,7 +240,7 @@ function ScopeInspector({ ctx, scope, onClose, open, back, backName }: { ctx: Co
                 <summary>Show code</summary>
                 <div className="snip"><button className="icon-b" title="Copy" aria-label="Copy code" onClick={() => navigator.clipboard?.writeText(code).catch(() => {})}><Copy size={12} /></button><pre className="code">{code}</pre></div>
               </details>
-              <p className="fine">Atlas {scope.atlas.map((a) => <a key={a} href={`../#${a}`}>{a}</a>)}</p>
+              <p className="fine">Atlas {scope.atlas.map((a) => <a key={a} href={`/about/#${a}`}>{a}</a>)}</p>
             </section>
           </div>
         )}
@@ -273,7 +272,7 @@ function BrowserSummary({ ctx }: { ctx: ConsoleCtx }) {
         <div className="ins-t">
           <span className="ins-g">This browser</span>
           <h3>{p.brand} {p.version.split(".")[0]}</h3>
-          <p>Readings from this tab are stored with personal content removed (<PrivacyLink>privacy notice</PrivacyLink>). Pick a capability to inspect it.</p>
+          <p>Pick a capability to inspect it.</p>
         </div>
       </div>
       <div className="ins-ctl">

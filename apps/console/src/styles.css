@@ -366,7 +366,7 @@ button.dpl-r { cursor: pointer; } button.dpl-r:hover { background: var(--line2);
   .ins { display: none; }
   .ins.open { display: flex; position: fixed; inset: 0; z-index: 40; height: auto; max-height: none; min-height: 0; border-radius: 0; border: 0; padding-top: env(safe-area-inset-top); padding-bottom: env(safe-area-inset-bottom); }
   .sheet-open { overflow: hidden; height: 100dvh; }
-  .ins-x { display: inline-grid; }
+  .ins .ins-x { display: inline-grid; }
   .ins-data { min-height: 360px; }
   .md-cols { grid-template-columns: 1fr; }
   .smx { grid-template-columns: repeat(4, minmax(0, 1fr)); }
@@ -712,4 +712,80 @@ svg.in { animation: fade .4s ease-out; }
   .box-h{flex-wrap:wrap;row-gap:8px}
   .box-h .tabs{min-width:0;max-width:100%;overflow-x:auto;scrollbar-width:none}
   .box-h .tabs::-webkit-scrollbar{display:none}
+}
+
+/* ===================== app shell =====================
+   The page never scrolls. The shell is exactly one viewport tall (100dvh, so mobile browser bars never
+   push content), and each pane scrolls inside itself. Layer 0 is the stage, layer 1 the inspector. */
+html, body, #root { height: 100%; }
+html, body { overflow: hidden; overscroll-behavior: none; }
+.shell { height: 100dvh; display: grid; grid-template-rows: auto minmax(0, 1fr) auto; overflow: hidden; }
+.bar { position: relative; padding-top: env(safe-area-inset-top, 0px); }
+.bar-in { padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); height: 52px; }
+.bar .nav { display: flex; gap: 2px; }
+.stage { display: grid; gap: 12px; min-height: 0; overflow: hidden; position: relative;
+  padding: 12px max(12px, env(safe-area-inset-right, 0px)) 12px max(12px, env(safe-area-inset-left, 0px));
+  grid-template-columns: 320px minmax(0, 1fr) minmax(360px, 420px); }
+.stage > .box { min-height: 0; height: auto; max-height: none; }
+.caps, .ins { top: auto; }
+.caps, .ins { height: auto; min-height: 0; max-height: none; position: static; }
+.caps { display: flex; flex-direction: column; overflow: hidden; }
+.caps-list { overflow-y: auto; overscroll-behavior: contain; }
+.overview { display: flex; flex-direction: column; min-height: 0; overflow: hidden; }
+.overview .ov-body { flex: 1 1 auto; height: auto; min-height: 160px; }
+.overview .act { flex: none; }
+.overview .foot { flex: none; padding: 6px 16px 8px; border-top: 1px solid var(--line); }
+.ins { display: flex; flex-direction: column; overflow: hidden; }
+.scrim, .tabbar { display: none; }
+
+/* Medium: list and stage side by side; the inspector slides over from the right as a layer. */
+@media (max-width: 1099.98px) {
+  .stage { grid-template-columns: 300px minmax(0, 1fr); grid-template-rows: minmax(0, 1fr); }
+  .ins, .scrim { grid-area: 1 / 1 / -1 / -1; }
+  .ins { display: flex; position: absolute; left: auto; top: 0; right: 0; bottom: 0; z-index: 40; width: min(480px, 92vw);
+    border-radius: 0; border-width: 0 0 0 1px; transform: translateX(105%); visibility: hidden;
+    transition: transform .26s cubic-bezier(.2,.8,.2,1), visibility 0s linear .26s; box-shadow: -12px 0 32px #0000002a;
+    padding-right: env(safe-area-inset-right, 0px); }
+  .ins.open { position: absolute; inset: 0 0 0 auto; height: auto; width: min(480px, 92vw); border-width: 0 0 0 1px; padding-top: 0; padding-bottom: 0; }
+  .ins.open { transform: none; visibility: visible; transition: transform .26s cubic-bezier(.2,.8,.2,1), visibility 0s; }
+  .scrim { display: block; position: absolute; inset: 0; z-index: 39; border: 0; padding: 0; background: #0006; animation: fade .2s ease-out; cursor: default; }
+  .ins .ins-x { display: inline-grid; }
+  .sheet-open { overflow: hidden; height: 100dvh; }
+}
+
+/* Phone: one pane at a time, switched by the tab bar; the inspector pushes in full screen. */
+@media (max-width: 699.98px) {
+  .stage { grid-template-columns: minmax(0, 1fr); padding: 8px max(8px, env(safe-area-inset-right, 0px)) 8px max(8px, env(safe-area-inset-left, 0px)); }
+  .shell[data-pane="overview"] .caps, .shell[data-pane="caps"] .overview { display: none; }
+  .ins, .ins.open { position: fixed; inset: 0; width: auto; z-index: 50; border: 0; box-shadow: none;
+    padding: env(safe-area-inset-top, 0px) env(safe-area-inset-right, 0px) env(safe-area-inset-bottom, 0px) env(safe-area-inset-left, 0px); }
+  .scrim { display: none; }
+  .tabbar { display: grid; grid-template-columns: 1fr 1fr; border-top: 1px solid var(--line); background: var(--bg);
+    padding: 0 env(safe-area-inset-right, 0px) env(safe-area-inset-bottom, 0px) env(safe-area-inset-left, 0px); }
+  .tabbar button { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; min-height: 52px;
+    border: 0; background: none; color: var(--mute); font-size: 11px; }
+  .tabbar button.on { color: var(--accent); }
+  .overview .ov-body { min-height: 0; }
+  .overview .vp { grid-template-columns: minmax(0, 1fr); grid-template-rows: minmax(0, 1fr) auto; height: 100%; }
+  .overview .vp-chart { min-height: 0; max-height: none; }
+  .overview .vp-side { max-height: 32%; }
+  .overview .vp-scroll { max-height: none; }
+  .act .feed { max-height: 44px; }
+  .act.open .feed { max-height: 160px; }
+  .overview .foot { font-size: 11px; }
+  .overview .foot span:last-child { display: none; }
+  .caps-list { overflow-y: auto; }
+}
+@media (max-width: 1099.98px) and (min-width: 700px) {
+  .overview .vp { grid-template-columns: minmax(0, 1fr); grid-template-rows: minmax(0, 1fr) auto; height: 100%; }
+  .overview .vp-side { border-left: 0; padding-left: 0; border-top: 1px solid var(--line); padding-top: 10px; max-height: 38%; }
+  .overview .vp-chart { min-height: 0; max-height: none; }
+  .overview .ov-body { height: auto; }
+}
+/* Short screens (landscape phones): keep the chart, shrink the chrome. */
+@media (max-height: 560px) {
+  .bar-in { height: 44px; }
+  .kpi { padding: 7px 12px 6px; }
+  .kpi b { font-size: 17px; }
+  .act { display: none; }
 }

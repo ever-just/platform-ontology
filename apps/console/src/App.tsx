@@ -1,8 +1,8 @@
 import { siGithub } from "simple-icons";
-import { useCallback, useEffect, useMemo, useState } from "react";
-import { ScrollText, ChartLine, ChartArea, ChartColumn, WandSparkles, Rows2, Rows4, Sun, Moon, Contrast, Square, SlidersHorizontal, ChevronDown } from "lucide-react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { ScrollText, Gauge, List, ChartLine, ChartArea, ChartColumn, WandSparkles, Rows2, Rows4, Sun, Moon, Contrast, Square, SlidersHorizontal, ChevronDown } from "lucide-react";
 import type { Atlas, AtlasNode, ScopeDef } from "./core/types";
-import { allSessions, isActive, registerScopes, stopAll } from "./core/harness";
+import { allSessions, isActive, registerScopes, restoreSaved, stopAll } from "./core/harness";
 import { feed, startTimeline, useTimeline } from "./core/timeline";
 import { buildScopes } from "./scopes";
 import { referenceScopes } from "./scopes/reference";
@@ -34,6 +34,11 @@ const PREFS = "po.chart";
 const loadPrefs = (): Partial<ChartOpts> & { range?: number } => { try { return JSON.parse(localStorage.getItem(PREFS) || "{}"); } catch { return {}; } };
 const readHash = () => decodeURIComponent(location.hash.replace(/^#/, ""));
 const PRIVACY = "privacy";
+const LAST = "po.last";
+const PANE = "po.pane";
+const store = { get: (k: string) => { try { return localStorage.getItem(k); } catch { return null; } }, set: (k: string, v: string | null) => { try { if (v === null) localStorage.removeItem(k); else localStorage.setItem(k, v); } catch { /* private mode */ } } };
+/** Wide screens dock the inspector beside the stage; narrower ones slide it over as a layer. */
+const docked = () => window.matchMedia("(min-width: 1100px)").matches;
 
 export function App() {
   const [atlas, setAtlas] = useState<Atlas | null>(null);
@@ -60,6 +65,7 @@ function Console({ atlas }: { atlas: Atlas }) {
     return list;
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [atlas, regVer]);
+  useEffect(() => { void restoreSaved(); }, [scopes]);
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const groups = useMemo(() => listGroups(), [regVer]);
   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -94,8 +100,14 @@ function Console({ atlas }: { atlas: Atlas }) {
   }, [scopes, groups, nodeById]);
 
   const resolve = useCallback((h: string) => scopes.find((s) => s.id === h) || byAtlas.get(h), [scopes, byAtlas]);
-  const [selected, setSelected] = useState<string | null>(() => resolve(readHash())?.id || null);
+  // Layer 1 (the inspector) lives in the URL hash. Opening it from nothing pushes a history entry, so the
+  // back gesture closes it; moving between capabilities while it is open replaces that entry instead.
+  const [selected, setSelected] = useState<string | null>(() => resolve(readHash())?.id || (docked() ? resolve(store.get(LAST) || "")?.id || null : null));
+  const pushed = useRef(false);
+  const opener = useRef<HTMLElement | null>(null);
   const [view, setView] = useState(() => views[0]?.id || "silent");
+  const [pane, setPaneState] = useState<"overview" | "caps">(() => (store.get(PANE) === "caps" ? "caps" : "overview"));
+  const setPane = (p: "overview" | "caps") => { setPaneState(p); store.set(PANE, p); };
   const [prefs] = useState(loadPrefs);
   const [range, setRange] = useState(prefs.range || 300);
   const [chart, setChartState] = useState<ChartOpts>({ type: prefs.type || "auto", by: prefs.by || "auto", density: prefs.density || "comfortable" });
@@ -103,16 +115,47 @@ function Console({ atlas }: { atlas: Atlas }) {
   useEffect(() => { try { localStorage.setItem(PREFS, JSON.stringify({ ...chart, range })); } catch { /* private mode */ } }, [chart, range]);
 
   useEffect(() => {
-    const on = () => { if (readHash() !== PRIVACY) setSelected(resolve(readHash())?.id || null); };
+    const on = () => {
+      if (readHash() === PRIVACY) return;
+      const id = resolve(readHash())?.id || null;
+      if (!id) pushed.current = false;
+      setSelected(id);
+    };
     window.addEventListener("hashchange", on);
     return () => window.removeEventListener("hashchange", on);
   }, [resolve]);
+  useEffect(() => { store.set(LAST, selected); }, [selected]);
 
+  const selRef = useRef(selected);
+  selRef.current = selected;
   const select = useCallback((id: string) => {
+    if (location.hash !== "#" + id) {
+      if (!selRef.current && !docked()) { history.pushState(null, "", "#" + id); pushed.current = true; opener.current = document.activeElement as HTMLElement | null; }
+      else history.replaceState(null, "", "#" + id);
+    }
     setSelected(id);
-    if (location.hash !== "#" + id) history.replaceState(null, "", "#" + id);
   }, []);
-  const close = useCallback(() => { setSelected(null); history.replaceState(null, "", location.pathname + location.search); }, []);
+  const close = useCallback(() => {
+    const back = opener.current;
+    opener.current = null;
+    if (pushed.current && resolve(readHash())) { pushed.current = false; history.back(); }
+    else history.replaceState(null, "", location.pathname + location.search);
+    setSelected(null);
+    if (back && back.isConnected) requestAnimationFrame(() => back.focus());
+  }, [resolve]);
+
+  // Escape closes the top layer only. Native dialogs (privacy, run all) handle their own Escape first.
+  useEffect(() => {
+    const on = (e: KeyboardEvent) => {
+      if (e.key !== "Escape" || e.defaultPrevented || !selected) return;
+      if (document.querySelector("dialog[open]")) return;
+      const t = e.target as HTMLElement | null;
+      if (t && (t.tagName === "INPUT" || t.tagName === "TEXTAREA" || t.tagName === "SELECT")) return;
+      close();
+    };
+    window.addEventListener("keydown", on);
+    return () => window.removeEventListener("keydown", on);
+  }, [selected, close]);
 
   const ctx: ConsoleCtx = useMemo(() => ({
     atlas, scopes, profile, passive, groups, range, chart, select,
@@ -136,14 +179,14 @@ function Console({ atlas }: { atlas: Atlas }) {
   const LookIcon = look === "light" ? Sun : look === "midnight" ? Moon : Contrast;
 
   return (
-    <div className={"shell" + (scope ? " sheet-open" : "") + (chart.density === "compact" ? " dense" : "")}>
+    <div className={"shell" + (scope ? " sheet-open" : "") + (chart.density === "compact" ? " dense" : "")} data-pane={pane}>
       <header className="bar">
-        <div className="wrap bar-in">
-          <a className="brand" href="../">Platform Ontology</a>
+        <div className="bar-in">
+          <a className="brand" href="/">Platform Ontology</a>
           <nav className="nav" aria-label="Sections">
-            <a href="../">Docs</a>
-            <a href="./" aria-current="page">Console</a>
-            <a href="../wiki">Wiki</a>
+            <a href="/" aria-current="page">Console</a>
+            <a href="/docs/">Docs</a>
+            <a href="/wiki/">Wiki</a>
           </nav>
           <span className="grow" />
           {live > 0 && (
@@ -157,8 +200,10 @@ function Console({ atlas }: { atlas: Atlas }) {
         </div>
       </header>
 
-      <main className="wrap main">
-        <section className="box overview">
+      <main className="stage">
+        <Capabilities ctx={ctx} selected={selected} />
+
+        <section className="box overview" aria-label="Overview">
           <div className="kpis" role="tablist" aria-label="Views">
             {views.map((v) => {
               const m = v.metric(ctx);
@@ -202,18 +247,20 @@ function Console({ atlas }: { atlas: Atlas }) {
             {Panel && <Panel ctx={ctx} />}
           </div>
           <Activity ctx={ctx} />
+          <footer className="foot">
+            <span><PrivacyLink>Privacy notice</PrivacyLink></span>
+            <span>{atlas.nodes.length} attributes, {atlas.browsers.length} browsers, built {atlas.built}</span>
+          </footer>
         </section>
 
-        <div className="duo">
-          <Capabilities ctx={ctx} selected={selected} />
-          <Inspector ctx={ctx} scope={scope} onClose={close} />
-        </div>
-
-        <footer className="foot">
-          <span>Readings are stored with personal content removed. <PrivacyLink>Privacy notice</PrivacyLink></span>
-          <span>{atlas.nodes.length} attributes, {atlas.browsers.length} browsers, built {atlas.built}</span>
-        </footer>
+        {scope && <button className="scrim" aria-label="Close inspector" tabIndex={-1} onClick={close} />}
+        <Inspector ctx={ctx} scope={scope} onClose={close} />
       </main>
+
+      <nav className="tabbar" aria-label="Views">
+        <button className={pane === "overview" ? "on" : ""} aria-current={pane === "overview" ? "page" : undefined} onClick={() => setPane("overview")}><Gauge size={18} /><span>Overview</span></button>
+        <button className={pane === "caps" ? "on" : ""} aria-current={pane === "caps" ? "page" : undefined} onClick={() => setPane("caps")}><List size={18} /><span>Capabilities</span></button>
+      </nav>
       <PrivacyDialog open={privacy} onClose={closePrivacy} />
     </div>
   );

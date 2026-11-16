@@ -56,7 +56,7 @@ export function Capabilities({ ctx, selected }: { ctx: ConsoleCtx; selected: str
   // A site can read every silent capability the moment it loads, so the console does the same and
   // shows those readings as already logged. Only one-shot reads run here, never live streams.
   useEffect(() => {
-    const auto = ctx.scopes.filter((s) => s.passive && !s.gesture && !s.modes?.stream && !s.modes?.create && works(s) && getSession(s.id).count === 0 && !isActive(getSession(s.id)));
+    const auto = ctx.scopes.filter((s) => s.passive && !s.gesture && !s.modes?.stream && !s.modes?.create && works(s) && (getSession(s.id).count === 0 || !!getSession(s.id).restoredAt) && !isActive(getSession(s.id)));
     auto.forEach((s) => void request(s.id));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);

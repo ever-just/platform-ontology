@@ -1,6 +1,6 @@
 import { useSyncExternalStore } from "react";
 import type { Ctx, Params, Rec, ScopeDef, Session, Source, Stop } from "./types";
-import { persist } from "./history";
+import { loadAll, persist } from "./history";
 
 // The harness: one store, one request/stop surface for every scope. Adapters push normalized
 // records through ctx.emit; the console only ever reads sessions from here.
@@ -54,6 +54,22 @@ function patch(id: string, p: Partial<Session>) {
   const cur = sessions.get(id) || blank(id);
   sessions.set(id, { ...cur, ...p, version: cur.version + 1 });
   notify();
+}
+
+/** Put a returning visitor's saved readings back into idle sessions so the console is not blank. */
+export async function restoreSaved(): Promise<number> {
+  const all = await loadAll();
+  let n = 0;
+  all.forEach((rows, id) => {
+    if (!scopes[id] || !rows.length) return;
+    const cur = getSession(id);
+    if (cur.state !== "idle" || cur.records.length) return;
+    const records: Rec[] = rows.slice(-MAX).map((r, i) => ({ seq: i + 1, t: r.t, data: r.data }));
+    const last = records[records.length - 1];
+    patch(id, { records, last, count: records.length, restoredAt: last.t });
+    n++;
+  });
+  return n;
 }
 
 export function getSession(id: string): Session {
@@ -124,7 +140,7 @@ export async function request(id: string) {
   let hz = 0;
   let records: Rec[] = [];
   let alive = true;
-  patch(id, { state: "requesting", records: [], last: null, count: 0, startedAt: Date.now(), firstAt: 0, hz: 0, error: "", media: null });
+  patch(id, { state: "requesting", records: [], last: null, count: 0, startedAt: Date.now(), firstAt: 0, hz: 0, error: "", media: null, restoredAt: undefined });
   log(id, `request ${s.id} (${source === "live" ? "live browser" : "simulated"})`);
 
   const ctx: Ctx = {
