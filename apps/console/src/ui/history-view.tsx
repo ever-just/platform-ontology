@@ -70,7 +70,7 @@ export function HistoryChart({ scope, session }: { scope: ScopeDef; session: Ses
         <p className="empty">{key ? "One saved reading so far. Run it again later to see a change." : "These readings have no numbers to chart; the latest values are listed above."}</p>
       )}
       <div className="hist-f">
-        <span><HardDrive size={12} />This chart is kept in this browser for this tab. Readings are also stored on our server, with personal content removed.</span>
+        <span><HardDrive size={12} />Kept in this browser, so it is still here when you come back.</span>
         <button className="btn ghost" onClick={() => void clearHistory(scope.id).then(() => setRows([]))}><Trash2 size={12} />Clear</button>
       </div>
     </div>

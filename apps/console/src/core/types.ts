@@ -105,5 +105,7 @@ export type Session = {
   error: string;
   logs: { t: number; msg: string; level: "info" | "ok" | "warn" | "err" }[];
   permState: string;
+  /** Time of the newest saved reading when the session was restored from an earlier visit. */
+  restoredAt?: number;
   version: number;
 };
