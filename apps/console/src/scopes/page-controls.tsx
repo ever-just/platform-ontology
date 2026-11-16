@@ -46,6 +46,14 @@ function simulate<S extends Record<string, any>>(id: string, ctx: Ctx, init: S, 
   return () => { sinks.delete(id); };
 }
 
+/** Run one edit on a running page control, the same patch its buttons send. False when it is not running. */
+export function runPageAction(id: string, p: Patch): boolean {
+  const f = sinks.get(id);
+  if (!f) return false;
+  f(p);
+  return true;
+}
+
 function useCtl<T>(scope: ScopeDef, session: Session) {
   const d = lastData<T & { error?: string }>(session);
   const on = (session.state === "streaming" || session.state === "granted") && sinks.has(scope.id);
