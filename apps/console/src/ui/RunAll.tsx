@@ -223,6 +223,9 @@ function Step({ scope, kind, pos, total, next, ctx, silent, known, onDone, onSto
   const primary = useRef<HTMLButtonElement>(null);
   const waiting = clickAt > 0 && !outcome;
   const [slow, setSlow] = useState(false);
+  // Skip only appears once an approval has failed or the person has been on this card a while.
+  const [lingered, setLingered] = useState(false);
+  useEffect(() => { setLingered(false); const h = setTimeout(() => setLingered(true), 12000); return () => clearTimeout(h); }, [scope.id]);
 
   // Already running (started elsewhere, or by the silent batch): nothing to ask.
   useEffect(() => {
@@ -343,8 +346,8 @@ function Step({ scope, kind, pos, total, next, ctx, silent, known, onDone, onSto
       <footer>
         <button className="btn ghost" onClick={onStop} title="Stop asking and see the summary">Stop asking</button>
         <span className="grow" />
-        {outcome !== "ok" && (
-          <button className="btn" onClick={() => onDone(outcome ?? "skipped")} disabled={waiting && !slow}>
+        {outcome !== "ok" && (outcome || lingered || slow) && (
+          <button className="btn" onClick={() => onDone(outcome ?? "skipped")}>
             <SkipForward size={13} />{outcome ? "Next" : "Skip"}
           </button>
         )}
