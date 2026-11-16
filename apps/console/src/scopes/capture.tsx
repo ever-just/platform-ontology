@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import type { Ctx, InstrumentProps, ScopeDef } from "../core/types";
 import { every, noise, series, unsupported } from "../core/harness";
 import { C, DOMAIN_COLOR, Frame, Gauge, Readout, Spark, Waiting, fmt, lastData } from "../ui/kit";
@@ -11,7 +11,7 @@ const COLOR = DOMAIN_COLOR.capture;
 const win = () => window as any;
 const mono = '10px "Geist Mono", ui-monospace, monospace';
 
-function Vid({ stream }: { stream: MediaStream }) {
+function Vid({ stream, vref }: { stream: MediaStream; vref?: { current: HTMLVideoElement | null } }) {
   const ref = useRef<HTMLVideoElement>(null);
   useEffect(() => {
     const v = ref.current;
@@ -19,7 +19,7 @@ function Vid({ stream }: { stream: MediaStream }) {
     v.srcObject = stream;
     void v.play().catch(() => {});
   }, [stream]);
-  return <video ref={ref} className="cdf-video" autoPlay muted playsInline />;
+  return <video ref={(el) => { ref.current = el; if (vref) vref.current = el; }} className="cdf-video" autoPlay muted playsInline />;
 }
 
 /** Canvas that redraws on every render (renders only happen when a new record arrives). */
@@ -168,8 +168,39 @@ function cameraSim(ctx: Ctx) {
   return () => { timer(); src.stop(); };
 }
 
+type Shot = { url: string; name: string };
+const MAX_SHOTS = 6;
+const stamp = () => new Date().toISOString().replace(/[:.]/g, "-").slice(0, 19);
+
 function CameraInstrument({ session }: InstrumentProps) {
   const d = lastData<CamRec>(session);
+  const vref = useRef<HTMLVideoElement | null>(null);
+  const [shots, setShots] = useState<Shot[]>([]);
+  const [shotErr, setShotErr] = useState("");
+  const shotsRef = useRef<Shot[]>([]);
+  shotsRef.current = shots;
+  useEffect(() => () => shotsRef.current.forEach((x) => URL.revokeObjectURL(x.url)), []);
+  const canShoot = !!session.media && !!d;
+  const takePhoto = () => {
+    const v = vref.current;
+    if (!v || !v.videoWidth) { setShotErr("No frame is ready yet. Try again in a moment."); return; }
+    const cv = document.createElement("canvas");
+    cv.width = v.videoWidth;
+    cv.height = v.videoHeight;
+    const g = cv.getContext("2d");
+    if (!g) { setShotErr("Could not read the frame."); return; }
+    g.drawImage(v, 0, 0, cv.width, cv.height);
+    cv.toBlob((b) => {
+      if (!b) { setShotErr("Could not save the frame."); return; }
+      setShotErr("");
+      const shot = { url: URL.createObjectURL(b), name: `photo-${stamp()}.png` };
+      setShots((cur) => {
+        const next = [shot, ...cur];
+        next.slice(MAX_SHOTS).forEach((x) => URL.revokeObjectURL(x.url));
+        return next.slice(0, MAX_SHOTS);
+      });
+    }, "image/png");
+  };
   const draw = (g: CanvasRenderingContext2D, w: number, h: number) => {
     g.clearRect(0, 0, w, h);
     if (!d) return;
@@ -194,11 +225,26 @@ function CameraInstrument({ session }: InstrumentProps) {
       visual={
         <div>
           <div className="cdf-stage">
-            {session.media ? <Vid stream={session.media} /> : null}
+            {session.media ? <Vid stream={session.media} vref={vref} /> : null}
             {!d && <div className="cdf-stage-empty"><Waiting session={session} what="A live camera preview with a luminance histogram and face boxes." /></div>}
             {d && !session.media && <div className="cdf-stage-empty"><span className="cdf-note">Simulated frame (this browser cannot stream a canvas)</span></div>}
             <Cv draw={draw} w={640} h={360} className="cdf-overlay" />
           </div>
+          <div className="cdf-actions">
+            <button type="button" className="btn sm pri" disabled={!canShoot} title={canShoot ? "Grab the current frame" : "Start the camera first"} onClick={takePhoto}>Take photo</button>
+            {shots.length > 0 && <span className="cdf-note">{shots.length} of {MAX_SHOTS} kept. Photos stay in this tab.</span>}
+            {shotErr && <span className="cdf-err">{shotErr}</span>}
+          </div>
+          {shots.length > 0 && (
+            <div className="cdf-shots">
+              {shots.map((x) => (
+                <figure key={x.url} className="cdf-shot">
+                  <img src={x.url} alt="Captured frame" />
+                  <a href={x.url} download={x.name}>Save</a>
+                </figure>
+              ))}
+            </div>
+          )}
           {d && !d.detector && <p className="cdf-note">FaceDetector is not available in this browser, so faces are not counted. Any page could still run its own model on these frames.</p>}
         </div>
       }
@@ -278,8 +324,76 @@ function micSim(ctx: Ctx) {
   });
 }
 
+const REC_SECONDS = 5;
+
 function MicInstrument({ session }: InstrumentProps) {
   const d = lastData<MicRec>(session);
+  const [left, setLeft] = useState(0);
+  const [clip, setClip] = useState<{ url: string; name: string } | null>(null);
+  const [recErr, setRecErr] = useState("");
+  const recRef = useRef<MediaRecorder | null>(null);
+  const tickRef = useRef<number | null>(null);
+  const clipRef = useRef<string | null>(null);
+  clipRef.current = clip?.url ?? null;
+  useEffect(() => () => {
+    if (tickRef.current) window.clearInterval(tickRef.current);
+    const r = recRef.current;
+    if (r && r.state !== "inactive") { r.onstop = null; try { r.stop(); } catch { /* already stopped */ } }
+    if (clipRef.current) URL.revokeObjectURL(clipRef.current);
+  }, []);
+  const hasAudio = !!session.media && session.media.getAudioTracks().length > 0;
+  const recording = left > 0;
+  const record = () => {
+    const m = session.media;
+    if (!m || typeof MediaRecorder === "undefined") { setRecErr("This browser cannot record audio."); return; }
+    setRecErr("");
+    let rec: MediaRecorder;
+    try {
+      rec = new MediaRecorder(new MediaStream(m.getAudioTracks()));
+    } catch {
+      setRecErr("Recording could not start.");
+      return;
+    }
+    const parts: Blob[] = [];
+    rec.ondataavailable = (e) => { if (e.data.size) parts.push(e.data); };
+    rec.onerror = () => setRecErr("Recording failed.");
+    rec.onstop = () => {
+      if (tickRef.current) window.clearInterval(tickRef.current);
+      tickRef.current = null;
+      setLeft(0);
+      if (!parts.length) { setRecErr("Nothing was recorded. The microphone may have stopped."); return; }
+      const type = rec.mimeType || parts[0].type || "audio/webm";
+      const ext = type.includes("ogg") ? "ogg" : type.includes("mp4") ? "m4a" : "webm";
+      const url = URL.createObjectURL(new Blob(parts, { type }));
+      setClip((old) => { if (old) URL.revokeObjectURL(old.url); return { url, name: `recording-${stamp()}.${ext}` }; });
+    };
+    recRef.current = rec;
+    rec.start();
+    let n = REC_SECONDS;
+    setLeft(n);
+    tickRef.current = window.setInterval(() => {
+      n -= 1;
+      if (n <= 0) { if (rec.state !== "inactive") rec.stop(); } else setLeft(n);
+    }, 1000);
+  };
+  const recTitle = recording ? "Recording" : hasAudio ? `Record ${REC_SECONDS} seconds from the microphone` : "Needs the real microphone. Switch to Live and press Request.";
+  const recorder = (
+    <div className="cdf-rec">
+      <div className="cdf-actions">
+        <button type="button" className="btn sm pri" disabled={!hasAudio || recording} title={recTitle} onClick={record}>
+          {recording ? `Recording, ${left}s left` : `Record ${REC_SECONDS} seconds`}
+        </button>
+        {recording && <span className="cdf-recdot" aria-hidden="true" />}
+        {recErr && <span className="cdf-err">{recErr}</span>}
+      </div>
+      {clip && (
+        <div className="cdf-actions">
+          <audio controls src={clip.url} />
+          <a className="cdf-save" href={clip.url} download={clip.name}>Save recording</a>
+        </div>
+      )}
+    </div>
+  );
   const wave = (g: CanvasRenderingContext2D, w: number, h: number) => {
     g.clearRect(0, 0, w, h);
     g.strokeStyle = C.line;
@@ -305,7 +419,7 @@ function MicInstrument({ session }: InstrumentProps) {
   const lvl = d ? Math.max(0, Math.min(1, (d.db + 80) / 80)) : 0;
   return (
     <Frame
-      visual={d ? (
+      visual={<div>{d ? (
         <div className="cdf-mic">
           <div className="cdf-mic-main">
             <div><p className="cdf-label">Waveform</p><Cv draw={wave} w={640} h={220} className="cdf-canvas" /></div>
@@ -318,7 +432,7 @@ function MicInstrument({ session }: InstrumentProps) {
             <div className="cdf-meter-val">{fmt(d.db, 0)}</div>
           </div>
         </div>
-      ) : <Waiting session={session} what="A waveform, spectrum and level meter from your microphone." />}
+      ) : <Waiting session={session} what="A waveform, spectrum and level meter from your microphone." />}{recorder}</div>}
       side={
         <>
           <Readout rows={[
@@ -571,7 +685,7 @@ function LightInstrument({ session }: InstrumentProps) {
 
 // ---------- Clipboard ----------
 
-type ClipRec = { length: number; kind: string; preview: string; lines: number };
+type ClipRec = { length: number; kind: string; text: string; lines: number };
 
 function guess(t: string): string {
   const s = t.trim();
@@ -582,13 +696,13 @@ function guess(t: string): string {
   return "text";
 }
 
-const clipRec = (t: string): ClipRec => ({ length: t.length, kind: guess(t), preview: t.slice(0, 24), lines: t ? t.split("\n").length : 0 });
+const clipRec = (t: string): ClipRec => ({ length: t.length, kind: guess(t), text: t, lines: t ? t.split("\n").length : 0 });
 
 async function clipLive(ctx: Ctx) {
   if (!navigator.clipboard?.readText) unsupported("clipboard.readText");
   const text = await navigator.clipboard.readText();
   ctx.granted();
-  ctx.log(`read ${text.length} characters; only the first 24 are kept for display`);
+  ctx.log(`read ${text.length} characters`);
   ctx.emit(clipRec(text));
 }
 
@@ -599,16 +713,58 @@ function clipSim(ctx: Ctx) {
 }
 
 function ClipInstrument({ session }: InstrumentProps) {
-  const d = lastData<ClipRec>(session);
-  const rest = d ? Math.min(40, Math.max(0, d.length - 24)) : 0;
+  const rec = lastData<ClipRec>(session);
+  const [local, setLocal] = useState<ClipRec | null>(null);
+  const [draft, setDraft] = useState("");
+  const [msg, setMsg] = useState<{ ok: boolean; text: string } | null>(null);
+  const [busy, setBusy] = useState(false);
+  const live = session.source === "live";
+  // A newer record from the session replaces anything read by hand.
+  useEffect(() => { setLocal(null); }, [rec]);
+  const d = local ?? rec;
+  const fail = (e: unknown, verb: string) => {
+    const n = (e as { name?: string })?.name;
+    setMsg({ ok: false, text: n === "NotAllowedError" ? `The browser refused to ${verb} the clipboard.` : n === "NotFoundError" ? "The clipboard is empty or has nothing readable." : `Could not ${verb} the clipboard.` });
+  };
+  const readAgain = async () => {
+    setBusy(true);
+    try {
+      if (!live) { setLocal(rec); setMsg({ ok: true, text: "Read again (simulated)." }); return; }
+      if (!navigator.clipboard?.readText) throw new Error("unsupported");
+      const t = await navigator.clipboard.readText();
+      setLocal(clipRec(t));
+      setMsg({ ok: true, text: "Read again." });
+    } catch (e) { fail(e, "read"); } finally { setBusy(false); }
+  };
+  const write = async () => {
+    if (!draft) { setMsg({ ok: false, text: "Type something to write first." }); return; }
+    setBusy(true);
+    try {
+      if (!live) { setLocal(clipRec(draft)); setMsg({ ok: true, text: "Written (simulated, your real clipboard is untouched)." }); return; }
+      if (!navigator.clipboard?.writeText) throw new Error("unsupported");
+      await navigator.clipboard.writeText(draft);
+      let t = draft;
+      try { t = await navigator.clipboard.readText(); } catch { /* writing worked; reading back may be refused */ }
+      setLocal(clipRec(t));
+      setMsg({ ok: true, text: "Written, then read back." });
+    } catch (e) { fail(e, "write to"); } finally { setBusy(false); }
+  };
   return (
     <Frame
       visual={d ? (
         <div className="cdf-clip">
           <div className="cdf-big">{fmt(d.length, 0)}<em>characters</em></div>
           <div><span className="cdf-tag">looks like: {d.kind}</span></div>
-          <div className="cdf-mask">{d.preview || "(nothing on the clipboard)"}{rest > 0 && <i>{"•".repeat(rest)}{d.length - 24 > 40 ? "…" : ""}</i>}</div>
-          <p className="cdf-note">This console masks everything after 24 characters. A real page receives the whole text, which is often a password, a one-time code or a copied address.</p>
+          <div className="cdf-mask">{d.text || "(nothing on the clipboard)"}</div>
+          <div className="cdf-actions">
+            <button type="button" className="btn sm" disabled={busy} onClick={readAgain}>Read again</button>
+          </div>
+          <form className="cdf-actions" onSubmit={(e) => { e.preventDefault(); void write(); }}>
+            <input className="cdf-input" type="text" value={draft} placeholder="Text to put on the clipboard" aria-label="Text to write to the clipboard" onChange={(e) => setDraft(e.target.value)} />
+            <button type="submit" className="btn sm pri" disabled={busy}>Write to clipboard</button>
+          </form>
+          {msg && <p className={"cdf-note " + (msg.ok ? "cdf-ok" : "cdf-err")}>{msg.text}</p>}
+          <p className="cdf-note">A real page receives the whole text, which is often a password, a one-time code or a copied address. Pages can also overwrite it.</p>
         </div>
       ) : <Waiting session={session} what="Reads whatever you last copied. Chrome asks first; Safari shows a Paste bubble." />}
       side={<Readout rows={[{ k: "Length", v: d?.length ?? null, u: "chars", digits: 0, hot: true }, { k: "Type guess", v: d?.kind ?? null }, { k: "Lines", v: d?.lines ?? null, digits: 0 }]} />}
