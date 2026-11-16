@@ -10,6 +10,7 @@ import { fmt } from "./kit";
 import { clock } from "./charts";
 import { CapIcon, LayerGlyph, LAYERS, MECH, MechBadge, MODES, SupportMatrix, mechanismOf } from "./icons";
 import { supportOf } from "../browser/profile";
+import { PrivacyLink } from "./Privacy";
 
 type Tab = "data" | "record" | "scope" | "log";
 
@@ -162,7 +163,7 @@ function BrowserSummary({ ctx }: { ctx: ConsoleCtx }) {
         <div className="ins-t">
           <span className="ins-g">This browser</span>
           <h3>{p.brand} {p.version.split(".")[0]}</h3>
-          <p>Read from this tab, on this device. Nothing leaves it. Pick a capability to inspect it.</p>
+          <p>Readings from this tab are stored with personal content removed (<PrivacyLink>privacy notice</PrivacyLink>). Pick a capability to inspect it.</p>
         </div>
       </div>
       <div className="ins-ctl">

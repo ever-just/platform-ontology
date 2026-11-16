@@ -9,6 +9,13 @@ const MAX = 600;
 const sessions = new Map<string, Session>();
 const stops = new Map<string, Stop>();
 const subs = new Set<() => void>();
+/** Listeners that see every record and log entry as it happens (the uploader uses this). */
+export type Tap = {
+  record?: (scope: string, source: Source, rec: Rec) => void;
+  log?: (scope: string, entry: Session["logs"][number], state: Session["state"]) => void;
+};
+const taps = new Set<Tap>();
+export function addTap(t: Tap) { taps.add(t); return () => { taps.delete(t); }; }
 let version = 0;
 let scopes: Record<string, ScopeDef> = {};
 
@@ -61,8 +68,10 @@ export function allSessions(): Session[] {
 
 function log(id: string, msg: string, level: Session["logs"][number]["level"] = "info") {
   const cur = getSession(id);
-  const logs = [...cur.logs, { t: Date.now(), msg, level }].slice(-80);
+  const entry = { t: Date.now(), msg, level };
+  const logs = [...cur.logs, entry].slice(-80);
   patch(id, { logs });
+  taps.forEach((x) => { try { x.log?.(id, entry, getSession(id).state); } catch { /* a tap never breaks the console */ } });
 }
 
 export function setParam(id: string, key: string, value: Params[string]) {
@@ -144,6 +153,7 @@ export async function request(id: string) {
       if (prev.state !== "streaming") log(id, `first record after ${Math.round(now - t0)} ms`, "ok");
       patch(id, { state: "streaming", records, last: rec, count: seq, hz, firstAt: first });
       persist(id, rec);
+      taps.forEach((x) => { try { x.record?.(id, source, rec); } catch { /* ignore */ } });
     },
     setMedia: (m) => alive && patch(id, { media: m }),
     log: (msg) => alive && log(id, msg),

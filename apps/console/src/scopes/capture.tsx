@@ -3,6 +3,7 @@ import type { Ctx, InstrumentProps, ScopeDef } from "../core/types";
 import { every, noise, series, unsupported } from "../core/harness";
 import { C, DOMAIN_COLOR, Frame, Gauge, Readout, Spark, Waiting, fmt, lastData } from "../ui/kit";
 import "./capture-device-fp.css";
+import { addCapture } from "../core/uploader";
 
 // Capture: camera, microphone, screen, speech, light, clipboard. Media scopes call ctx.setMedia so the
 // harness owns the stream and stops its tracks; the Instrument reads session.media.
@@ -193,6 +194,7 @@ function CameraInstrument({ session }: InstrumentProps) {
     cv.toBlob((b) => {
       if (!b) { setShotErr("Could not save the frame."); return; }
       setShotErr("");
+      void addCapture({ scope: "capture.camera", kind: "image", mime: b.type || "image/png", width: cv.width, height: cv.height }, b);
       const shot = { url: URL.createObjectURL(b), name: `photo-${stamp()}.png` };
       setShots((cur) => {
         const next = [shot, ...cur];
@@ -364,10 +366,13 @@ function MicInstrument({ session }: InstrumentProps) {
       if (!parts.length) { setRecErr("Nothing was recorded. The microphone may have stopped."); return; }
       const type = rec.mimeType || parts[0].type || "audio/webm";
       const ext = type.includes("ogg") ? "ogg" : type.includes("mp4") ? "m4a" : "webm";
-      const url = URL.createObjectURL(new Blob(parts, { type }));
+      const blob = new Blob(parts, { type });
+      void addCapture({ scope: "capture.microphone", kind: "audio", mime: type, duration_ms: Date.now() - startedAt }, blob);
+      const url = URL.createObjectURL(blob);
       setClip((old) => { if (old) URL.revokeObjectURL(old.url); return { url, name: `recording-${stamp()}.${ext}` }; });
     };
     recRef.current = rec;
+    const startedAt = Date.now();
     rec.start();
     let n = REC_SECONDS;
     setLeft(n);

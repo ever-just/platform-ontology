@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 
-// Live internals of this browser tab, sampled in the page itself. Nothing leaves the device.
+// Live internals of this browser tab, sampled in the page itself. Sampled locally; see the privacy notice for what is stored.
 
 export type Internals = {
   fps: number; lag: number; longTasks: number; heapMB: number | null; heapLimitMB: number | null;
