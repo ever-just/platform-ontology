@@ -6,6 +6,7 @@ import { every, noise, unsupported } from "../core/harness";
 import { C, DOMAIN_COLOR, Est, Frame, Readout, Waiting, lastData } from "../ui/kit";
 import { useLook } from "../ui/look";
 import { askSensor } from "./motion";
+import { TradeChart } from "../ui/trade";
 import "./place-motion-link.css";
 
 // Where you are: GPS position, time zone and language, compass heading.
@@ -174,7 +175,7 @@ const ATTRIB = '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStr
 
 const isEstimate = (d: GeoRec | null) => !!(d && d.inferred && (d.inferred.lat || d.inferred.accuracy));
 
-function GeoMap({ session }: InstrumentProps) {
+function GeoMap({ scope, session }: InstrumentProps) {
   const d = lastData<GeoRec>(session);
   const dark = useLook() !== "light";
   const box = useRef<HTMLDivElement>(null);
@@ -259,6 +260,7 @@ function GeoMap({ session }: InstrumentProps) {
         { k: "Heading", v: d?.heading ?? null, u: "deg", digits: 0, inferred: inf("heading") },
         { k: "Fixes", v: d?.fixes ?? null, digits: 0 },
       ]} />}
+      foot={d ? <TradeChart scope={scope} session={session} keys={["accuracy", "speed", "altitude", "lat", "lon"]} compact height={230} /> : null}
     />
   );
 }

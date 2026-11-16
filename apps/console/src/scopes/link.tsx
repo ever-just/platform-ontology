@@ -2,6 +2,7 @@ import { useState } from "react";
 import type { Ctx, InstrumentProps, ScopeDef, Stop } from "../core/types";
 import { every, noise, series, unsupported } from "../core/harness";
 import { C, DOMAIN_COLOR, Frame, Gauge, Readout, Scope, Table, Waiting, fmt, lastData } from "../ui/kit";
+import { TradeChart } from "../ui/trade";
 import "./place-motion-link.css";
 
 // The connection itself: what the browser says about the network, a live round trip time, and page load timing.
@@ -67,7 +68,7 @@ function netSim(ctx: Ctx): Stop {
   });
 }
 
-function Network({ session }: InstrumentProps) {
+function Network({ scope, session }: InstrumentProps) {
   const d = lastData<NetRec>(session);
   const R = session.records;
   const down = d?.downlink ?? null;
@@ -76,7 +77,7 @@ function Network({ session }: InstrumentProps) {
       visual={d ? (
         <div className="pml-link-wrap">
           <div>
-            <Scope min={0} series={[{ label: "RTT ms", values: series(R, "rtt_ms", 90), color: COLOR }, { label: "jitter ms", values: series(R, "jitter_ms", 90), color: C.warn }]} />
+            <TradeChart scope={scope} session={session} keys={["rtt_ms", "jitter_ms", "downlink"]} compact height={230} />
             <div className="pml-note" style={{ marginTop: 6, maxWidth: "none" }}>RTT is measured live: a HEAD request to this page, uncached, every 2 seconds. Any site can do the same.</div>
           </div>
           <div style={{ textAlign: "center" }}>

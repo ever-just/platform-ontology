@@ -1,0 +1,71 @@
+/* Trading terminal style chart (ui/trade.tsx). */
+.tr { display: flex; flex-direction: column; gap: 6px; min-width: 0; font-variant-numeric: tabular-nums; }
+.tr-empty { min-height: 120px; display: grid; place-items: center; border: 1px dashed var(--line); border-radius: 10px; }
+.tr-tick { display: flex; gap: 6px; overflow-x: auto; scrollbar-width: none; padding-bottom: 1px; }
+.tr-tick::-webkit-scrollbar { display: none; }
+.tr-t { flex: 0 0 auto; display: grid; gap: 1px; text-align: left; padding: 5px 9px; border: 1px solid var(--line); border-radius: 8px; background: var(--panel); color: var(--ink); cursor: pointer; min-width: 92px; }
+.tr-t:hover { border-color: var(--line-strong); }
+.tr-t.on { border-color: var(--accent); box-shadow: inset 0 0 0 1px var(--accent); }
+.tr-tl { font-size: 10.5px; color: var(--mute); text-transform: capitalize; white-space: nowrap; }
+.tr-t b { font-family: var(--mono); font-size: 13px; font-weight: 600; white-space: nowrap; }
+.tr-t b em, .tr-read em { font-style: normal; color: var(--mute); font-weight: 400; font-size: 10.5px; }
+.tr-tc { display: inline-flex; align-items: center; gap: 2px; font-family: var(--mono); font-size: 10.5px; white-space: nowrap; color: var(--mute); }
+.tr-t[data-tone="up"] .tr-tc { color: var(--ok); }
+.tr-t[data-tone="down"] .tr-tc { color: var(--err); }
+.tr-bar { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+.tr-seg button { font-family: var(--mono); font-size: 11px; display: inline-flex; align-items: center; gap: 4px; }
+.tr-live { display: inline-flex; align-items: center; gap: 5px; }
+.tr-live.on-live { color: var(--ok); }
+.tr-live.on-live::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: var(--ok); animation: tr-pulse 1.4s ease-in-out infinite; }
+@keyframes tr-pulse { 50% { opacity: .3; } }
+.tr-plot { position: relative; flex: 1; min-height: 0; border: 1px solid var(--line); border-radius: 10px; background: var(--bg); touch-action: pan-y; cursor: crosshair; user-select: none; overflow: hidden; outline: none; }
+.tr-plot:focus-visible { border-color: var(--accent); }
+.tr-plot:active { cursor: grabbing; }
+.tr-svg { display: block; position: absolute; inset: 0; }
+.tr.compact .tr-plot { min-height: 150px; }
+.tr:not(.compact) .tr-plot { min-height: 200px; }
+.tr-chartview > .tr { height: 100%; }
+.tr-grid { stroke: var(--line); stroke-width: 1; }
+.tr-base { stroke: var(--line); }
+.tr-ax { font-family: var(--mono); font-size: 10px; fill: var(--mute); }
+.tr-axl { fill: #fff; font-weight: 600; }
+.tr-vol rect { fill: var(--mute); opacity: .18; }
+.tr-up line, .tr-up rect { stroke: var(--ok); fill: var(--ok); }
+.tr-dn line, .tr-dn rect { stroke: var(--err); fill: var(--err); }
+.tr-cross line { stroke: var(--ink2); stroke-dasharray: 3 3; opacity: .7; }
+.tr-read { position: absolute; left: 8px; top: 6px; display: flex; flex-wrap: wrap; gap: 4px 10px; font-family: var(--mono); font-size: 11px; color: var(--ink2); pointer-events: none; padding: 3px 7px; border-radius: 6px; background: color-mix(in srgb, var(--bg) 82%, transparent); max-width: calc(100% - 80px); }
+.tr-read b { color: var(--ink); font-weight: 600; }
+.tr-rk { font-weight: 600; text-transform: capitalize; }
+.tr-paused { color: var(--warn, #c80); }
+.tr-foot { display: flex; align-items: center; gap: 4px 12px; flex-wrap: wrap; font-family: var(--mono); font-size: 10.5px; color: var(--mute); }
+.tr-foot b { color: var(--ink2); font-weight: 600; }
+.tr-foot .up b { color: var(--ok); }
+.tr-foot .down b { color: var(--err); }
+.tr-ov { display: inline-flex; align-items: center; gap: 4px; }
+.tr-ov select { font: inherit; color: var(--ink); background: var(--panel); border: 1px solid var(--line); border-radius: 6px; padding: 2px 4px; max-width: 150px; }
+.tr.compact .tr-foot { font-size: 10px; }
+.tr-chartview { height: min(62vh, 520px); min-height: 320px; }
+@media (max-width: 640px) {
+  .tr-kl { display: none; }
+  .tr-t { min-width: 80px; padding: 4px 7px; }
+  .tr-read { font-size: 10px; max-width: calc(100% - 66px); }
+  .tr-chartview { height: 58vh; }
+}
+
+/* OpenTelemetry export (ui/otel-panel.tsx). */
+.otel { display: grid; gap: 8px; }
+.otel-lede { margin: 0; font-size: 12.5px; color: var(--ink2); line-height: 1.5; }
+.otel-lede code, .otel small code { font-family: var(--mono); font-size: 11px; }
+.otel-d > summary { cursor: pointer; font-size: 12.5px; color: var(--accent); }
+.otel-bar { display: flex; align-items: center; gap: 6px; margin: 8px 0 6px; flex-wrap: wrap; }
+.otel-bar .btn { display: inline-flex; align-items: center; gap: 4px; }
+.otel-pre { max-height: 280px; overflow: auto; font-size: 11px; }
+.otel-send { display: grid; gap: 5px; margin-top: 8px; font-size: 12px; }
+.otel-send label { color: var(--ink2); }
+.otel-row { display: flex; gap: 6px; }
+.otel-row input { flex: 1; min-width: 0; font: inherit; font-family: var(--mono); font-size: 12px; padding: 5px 8px; border-radius: 7px; border: 1px solid var(--line); background: var(--bg); color: var(--ink); }
+.otel-row .btn { display: inline-flex; align-items: center; gap: 4px; }
+.otel small { color: var(--mute); line-height: 1.45; }
+.otel-res { font-family: var(--mono); font-size: 11px; }
+.otel-res.ok { color: var(--ok); }
+.otel-res.err { color: var(--err); }

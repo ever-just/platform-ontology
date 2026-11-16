@@ -1,0 +1,265 @@
+{
+  "id": "web.timing.opentelemetry-browser",
+  "name": "OpenTelemetry in the browser (real user monitoring)",
+  "kind": "tracking",
+  "group": "timing-performance",
+  "subgroup": "Measurement",
+  "tags": [
+    "opentelemetry",
+    "otlp",
+    "rum",
+    "tracing",
+    "traceparent",
+    "performance-observer"
+  ],
+  "plain": "A script that packages page timings, network calls and clicks into the OpenTelemetry format and sends them to the site's collector.",
+  "meaning": "OpenTelemetry is not a browser feature. It is an open standard and a set of libraries that a site loads. In the browser it reads the timing APIs the page already has (navigation, resource, paint and user timing), wraps fetch and XHR, and records clicks, then ships it all as traces and metrics. It can also stamp a trace id on requests to the site's own servers, so one visit can be followed from the click to the database.",
+  "lifecycle": [
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "@opentelemetry/sdk-trace-web with document-load, fetch, xml-http-request and user-interaction instrumentations; OTLP/HTTP exporter (POST /v1/traces, /v1/metrics, /v1/logs)",
+      "access": {
+        "grant": "none",
+        "prompt_ui": "None (no browser prompt)",
+        "secure_context": false,
+        "user_gesture": false,
+        "activation": "none",
+        "persistence": "Per page; buffered spans are sent with fetch or sendBeacon and nothing is stored in the browser by default",
+        "revocation": "Nothing to revoke; content blockers that block the collector address stop the export",
+        "iframe": "Per frame; it only sees what that frame's own timing APIs and network calls expose",
+        "steps": [
+          "Page loads the OpenTelemetry web SDK and its instrumentations",
+          "SDK reads navigation and resource timing for the page load",
+          "Fetch and XHR are wrapped so each request becomes a span, and a traceparent header is added for allowed origins",
+          "Clicks and other events become spans or span events",
+          "Batches are POSTed as OTLP to the site's collector"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "29",
+          "note": "",
+          "date": "2013-08-20"
+        },
+        "edge": {
+          "s": "y",
+          "v": "12",
+          "note": "",
+          "date": "2015-07-29"
+        },
+        "firefox": {
+          "s": "y",
+          "v": "35",
+          "note": "",
+          "date": "2015-01-13"
+        },
+        "safari": {
+          "s": "y",
+          "v": "11",
+          "note": "",
+          "date": "2017-09-19"
+        },
+        "ios_safari": {
+          "s": "y",
+          "v": "11",
+          "note": "",
+          "date": "2017-09-19"
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "29",
+          "note": "",
+          "date": "2013-08-21"
+        },
+        "samsung": {
+          "s": "y",
+          "v": "2.0",
+          "note": "",
+          "date": "2014-10-17"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "list",
+    "metric": "Spans, metrics and logs with nanosecond timestamps (browser timers are coarsened to about 0.1 ms or more)",
+    "update": "Batched, usually every few seconds and on page hide",
+    "fields": [
+      {
+        "name": "traceId",
+        "type": "string",
+        "unit": "",
+        "range": "32 hex characters",
+        "precision": "random per trace"
+      },
+      {
+        "name": "span duration",
+        "type": "float",
+        "unit": "ms",
+        "range": "0 and up",
+        "precision": "timer resolution"
+      },
+      {
+        "name": "http.url / url.full",
+        "type": "string",
+        "unit": "",
+        "range": "",
+        "precision": "full request URL"
+      },
+      {
+        "name": "user_agent.original",
+        "type": "string",
+        "unit": "",
+        "range": "",
+        "precision": ""
+      },
+      {
+        "name": "browser.platform / browser.mobile / browser.language",
+        "type": "string",
+        "unit": "",
+        "range": "",
+        "precision": "from User Agent Client Hints where available"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can record and send a detailed timeline of what you did on the page and how fast it was",
+    "user_action": "Nothing. It runs as the page loads and as you use it",
+    "can": [
+      "Time every page load, request and click",
+      "Tie your browser activity to the site's server logs with a shared trace id",
+      "Send device, browser and language details with each batch",
+      "Show the site exactly where a slow visit lost time"
+    ],
+    "cannot": [
+      "Read other sites' requests or timings",
+      "Ask permission first",
+      "Get finer timers than the browser allows",
+      "Keep working if a blocker stops the collector address"
+    ],
+    "reach": 2,
+    "reach_label": "While the page is open",
+    "differs": "The data is only as identifying as what the site attaches: some add a user or session id, which turns it into a per person activity log."
+  },
+  "story": {
+    "what_it_is": "An open standard that bundles a page's timings, network calls and clicks into traces and sends them to the site.",
+    "icon": "activity",
+    "tags": [
+      "Timing",
+      "Silent",
+      "Monitoring"
+    ],
+    "marketing": [
+      {
+        "vendor": "OpenTelemetry",
+        "name": "OpenTelemetry for JavaScript",
+        "pitch": "Vendor neutral APIs and SDKs to collect traces, metrics and logs, including from the browser.",
+        "url": "https://opentelemetry.io/docs/languages/js/"
+      }
+    ],
+    "for_you": "You never see it. When a site uses it, every load, request and click on that site can be timed and sent home, often with your browser and device details.",
+    "for_makers": "One format for front end and back end telemetry. The browser span and the server span share a trace id, so a slow checkout can be followed end to end. Any OTLP backend can receive it, so there is no lock in to one monitoring vendor.",
+    "use_cases": [
+      {
+        "type": "shopping",
+        "example": "A shop follows one slow checkout from the button click through every API call to the payment service.",
+        "apps": []
+      },
+      {
+        "type": "productivity",
+        "example": "A web app compares page load and request times by browser after each release.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Silent and always on where used",
+      "Can carry full URLs and ids",
+      "Links browser activity to server logs"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "It is a library, not a browser API: support is whatever the underlying APIs (Performance, PerformanceObserver, fetch) have",
+    "The browser client is still marked experimental by the OpenTelemetry project",
+    "The traceparent header goes to cross origin servers only when the site lists them, and those servers must allow it in CORS",
+    "Export needs the collector to allow CORS from the page origin; OTLP over HTTP usually listens on port 4318",
+    "Timings are limited by the browser's coarsened timers"
+  ],
+  "scores": {
+    "sensitivity": 2,
+    "utility": 4,
+    "fingerprint_bits": 2,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Real user monitoring",
+      "End to end tracing from click to database",
+      "Release and performance regression checks"
+    ],
+    "abuse": [
+      "Detailed per visit activity logs",
+      "Joining browser behavior to server side identity"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2019-05",
+      "browser": "all",
+      "version": "",
+      "change": "OpenTracing and OpenCensus announce their merger into OpenTelemetry"
+    },
+    {
+      "date": "2021-02",
+      "browser": "all",
+      "version": "",
+      "change": "OpenTelemetry tracing specification reaches 1.0"
+    }
+  ],
+  "related": [
+    "web.perf.navigation-resource-timing",
+    "web.timing.user-timing",
+    "web.perf.server-timing",
+    "web.perf.event-timing-inp",
+    "web.timing.reporting-api"
+  ],
+  "refs": [
+    {
+      "t": "spec",
+      "label": "OpenTelemetry specification",
+      "url": "https://opentelemetry.io/docs/specs/otel/"
+    },
+    {
+      "t": "spec",
+      "label": "OTLP protocol",
+      "url": "https://opentelemetry.io/docs/specs/otlp/"
+    },
+    {
+      "t": "docs",
+      "label": "OpenTelemetry JS in the browser",
+      "url": "https://opentelemetry.io/docs/languages/js/getting-started/browser/"
+    },
+    {
+      "t": "spec",
+      "label": "W3C Trace Context",
+      "url": "https://www.w3.org/TR/trace-context/"
+    },
+    {
+      "t": "spec",
+      "label": "Browser semantic conventions",
+      "url": "https://opentelemetry.io/docs/specs/semconv/resource/browser/"
+    }
+  ],
+  "confidence": "docs"
+}

@@ -2,6 +2,8 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import "./inspector.css";
 import { HistoryChart } from "./history-view";
 import { Replay } from "./replay";
+import { TradeChart } from "./trade";
+import { OtelPanel } from "./otel-panel";
 import { AccessRows, DepChips, FieldMeanings, LogTimeline, Provenance, Reveals } from "./inspector-views";
 import { Play, Square, Copy, X, ShieldCheck, TriangleAlert, ArrowLeft, Layers, Ban, FlaskConical, RotateCw } from "lucide-react";
 import { gate, type Gate } from "./runall-gate";
@@ -91,7 +93,7 @@ export function Inspector({ ctx, scope, onClose }: { ctx: ConsoleCtx; scope: Sco
 function ScopeInspector({ ctx, scope, onClose, open, back, backName }: { ctx: ConsoleCtx; scope: ScopeDef; onClose: () => void; open: (id: string) => void; back?: () => void; backName?: string }) {
   const session = useSession(scope.id);
   const [tab, setTab] = useState<Tab>("live");
-  const [view, setView] = useState<"now" | "replay">("now");
+  const [view, setView] = useState<"now" | "chart" | "replay">("now");
   const active = isActive(session);
   const node = ctx.nodeOf(scope);
   const group = ctx.groupOf(scope.id);
@@ -165,10 +167,11 @@ function ScopeInspector({ ctx, scope, onClose, open, back, backName }: { ctx: Co
             <div className="i-sub">
               <div className="seg" role="group" aria-label="View">
                 <button className={view === "now" ? "on" : ""} onClick={() => setView("now")}>Now</button>
+                <button className={view === "chart" ? "on" : ""} onClick={() => setView("chart")}>Chart</button>
                 <button className={view === "replay" ? "on" : ""} onClick={() => setView("replay")}>Replay</button>
               </div>
             </div>
-            {view === "now" ? <div className="ins-data"><Inst scope={scope} session={session} /></div> : <div className="ins-pad"><Replay scope={scope} session={session} /></div>}
+            {view === "now" ? <div className="ins-data"><Inst scope={scope} session={session} /></div> : view === "chart" ? <div className="ins-pad"><div className="tr-chartview"><TradeChart scope={scope} session={session} /></div></div> : <div className="ins-pad"><Replay scope={scope} session={session} /></div>}
           </div>
         )}
         {tab === "record" && (
@@ -188,6 +191,8 @@ function ScopeInspector({ ctx, scope, onClose, open, back, backName }: { ctx: Co
             <h5>What each value means</h5>
             <FieldMeanings scope={scope} session={session} node={node} />
             <details className="raw"><summary>Raw record</summary><pre className="code">{session.last ? json(session.last) : "// Run it to see the normalized record.\n// Every capability returns { seq, t, data }."}</pre></details>
+            <h5>OpenTelemetry</h5>
+            <OtelPanel scope={scope} session={session} />
           </div>
         )}
         {tab === "about" && (

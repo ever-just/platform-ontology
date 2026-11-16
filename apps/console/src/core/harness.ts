@@ -5,7 +5,7 @@ import { persist } from "./history";
 // The harness: one store, one request/stop surface for every scope. Adapters push normalized
 // records through ctx.emit; the console only ever reads sessions from here.
 
-const MAX = 600;
+const MAX = 3000; // raw records kept per session; older data lives in the 1 s rollups in ui/trade.tsx
 const sessions = new Map<string, Session>();
 const stops = new Map<string, Stop>();
 const subs = new Set<() => void>();

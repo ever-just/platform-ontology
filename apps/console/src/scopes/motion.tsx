@@ -2,6 +2,7 @@ import { useEffect, useRef } from "react";
 import type { Ctx, InstrumentProps, ScopeDef, Stop } from "../core/types";
 import { every, noise, series, unsupported } from "../core/harness";
 import { C, DOMAIN_COLOR, Frame, Readout, Scope, Waiting, lastData } from "../ui/kit";
+import { TradeChart } from "../ui/trade";
 import "./place-motion-link.css";
 
 // How you move: tilt, shake, pointer and typing rhythm, and attention. Mostly silent signals.
@@ -51,7 +52,7 @@ function oriSim(ctx: Ctx): Stop {
   });
 }
 
-function Orientation({ session }: InstrumentProps) {
+function Orientation({ scope, session }: InstrumentProps) {
   const d = lastData<OriRec>(session);
   const { alpha = 0, beta = 0, gamma = 0 } = d || {};
   return (
@@ -61,11 +62,7 @@ function Orientation({ session }: InstrumentProps) {
           <div className="pml-phone-stage">
             <div className="pml-phone" style={{ transform: `rotateZ(${-alpha}deg) rotateX(${beta}deg) rotateY(${gamma}deg)` }}><div className="pml-phone-axes" /></div>
           </div>
-          <Scope min={-180} max={360} series={[
-            { label: "alpha", values: series(session.records, "alpha"), color: COLOR },
-            { label: "beta", values: series(session.records, "beta"), color: C.accent },
-            { label: "gamma", values: series(session.records, "gamma"), color: C.ok },
-          ]} />
+          <TradeChart scope={scope} session={session} keys={["alpha", "beta", "gamma"]} compact height={250} />
         </div>
       ) : <Waiting session={session} what="A phone model that tilts as you tilt the device, with the three angles traced live." />}
       side={<Readout rows={[
@@ -133,31 +130,16 @@ function accSim(ctx: Ctx): Stop {
   });
 }
 
-function Accelerometer({ session }: InstrumentProps) {
+function Accelerometer({ scope, session }: InstrumentProps) {
   const d = lastData<AccRec>(session);
   const R = session.records;
   return (
     <Frame
       visual={d ? (
-        <div className="pml-scopes">
-          <div>
-            <h5>Acceleration (m/s2)</h5>
-            <Scope series={[
-              { label: "x", values: series(R, "ax"), color: C.err },
-              { label: "y", values: series(R, "ay"), color: C.ok },
-              { label: "z", values: series(R, "az"), color: C.accent },
-            ]} />
-          </div>
-          <div>
-            <h5>Rotation rate (deg/s)</h5>
-            <Scope series={[
-              { label: "alpha", values: series(R, "ra"), color: COLOR },
-              { label: "beta", values: series(R, "rb"), color: C.warn },
-              { label: "gamma", values: series(R, "rg"), color: C.ink2 },
-            ]} />
-          </div>
+        <div className="pml-trade">
+          <TradeChart scope={scope} session={session} keys={["mag", "ax", "ay", "az", "ra", "rb", "rg"]} compact height={260} />
         </div>
-      ) : <Waiting session={session} what="Two oscilloscopes: how hard the device is pushed, and how fast it is turning." />}
+      ) : <Waiting session={session} what="A live chart of how hard the device is pushed and how fast it is turning, with zoom, ranges and candles." />}
       side={<Readout rows={[
         { k: "Magnitude", v: d?.mag ?? null, u: "m/s2", hot: true },
         { k: "Peak", v: d?.peak ?? null, u: "m/s2" },
