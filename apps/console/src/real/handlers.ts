@@ -305,7 +305,7 @@ add(["web.notify.notifications"], "Notifications", true, async () => {
   const fields: Field[] = [f("Permission", perm === "granted" ? "Allowed" : perm === "denied" ? "Blocked" : "Not decided")];
   if (perm !== "granted") return { ok: false, fields, error: "You said no. No notification can be shown." };
   try {
-    const n = new Notification("Platform.Ontology", { body: "This is a real notification from this page.", silent: true });
+    const n = new Notification("Platform Ontology", { body: "This is a real notification from this page.", silent: true });
     setTimeout(() => n.close(), 6000);
     fields.push(f("Notification shown", true));
   } catch (e) {
@@ -318,7 +318,7 @@ add(["web.notify.notifications"], "Notifications", true, async () => {
 // ---------------- Clipboard ----------------
 add(["web.input.clipboard-write"], "Copy to clipboard", true, async () => {
   if (!nav().clipboard || !nav().clipboard.writeText) return unsupported("clipboard writing");
-  const text = "Copied by Platform.Ontology at " + new Date().toLocaleTimeString();
+  const text = "Copied by Platform Ontology at " + new Date().toLocaleTimeString();
   await nav().clipboard.writeText(text);
   return { ok: true, fields: [f("Text copied", text), f("Characters", text.length)], note: "Paste anywhere to see it." };
 });
@@ -449,7 +449,7 @@ add(["web.location.device-orientation", "web.location.sensor-orientation"], "Til
 // ---------------- Share, contacts, files ----------------
 add(["web.os.web-share"], "Share sheet", true, async () => {
   if (!nav().share) return unsupported("the share sheet", "Most desktop browsers outside Chrome, Edge and Safari lack it.");
-  const data = { title: "Platform.Ontology", text: "Seeing what a web page can really know about me.", url: location.href };
+  const data = { title: "Platform Ontology", text: "Seeing what a web page can really know about me.", url: location.href };
   const can = nav().canShare ? nav().canShare(data) : true;
   await nav().share(data);
   return { ok: true, fields: [f("Share sheet opened", true), f("Content allowed", can), f("Title shared", data.title)], note: "The page never learns which app you picked." };

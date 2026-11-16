@@ -16,11 +16,18 @@ const SUP: Record<string, [string, string]> = { y: ["Yes", "ok"], p: ["Partly", 
 let profileCache: ReturnType<typeof detectProfile> | null = null;
 const prof = () => (profileCache ??= detectProfile());
 
+/** Plain words and a tone for one availability check: ok, err (blocked), no (missing), off (never exposed), warn (cannot test). */
+export function availabilityText(a: Availability | null): [string, "ok" | "err" | "no" | "off" | "warn" | "wait"] {
+  if (!a) return ["Checking", "wait"];
+  if (a.release === "not-exposed") return ["Never exposed", "off"];
+  if (a.detect === "present") return a.permission === "denied" ? ["Blocked", "err"] : ["Available", "ok"];
+  if (a.detect === "absent") return ["Missing", "no"];
+  return ["No script test", "warn"];
+}
+
 export function AvailabilityBadge({ a }: { a: Availability | null }) {
-  if (!a) return <span className="ref-badge">checking</span>;
-  const tone = a.release === "not-exposed" ? "no" : a.detect === "present" ? (a.permission === "denied" ? "err" : "ok") : a.detect === "absent" ? "no" : "warn";
-  const text = a.release === "not-exposed" ? "never exposed" : a.detect === "present" ? (a.permission === "denied" ? "blocked" : "available") : a.detect === "absent" ? "missing" : "no script test";
-  return <span className={"ref-badge t-" + tone}>{text}</span>;
+  const [text, tone] = availabilityText(a);
+  return <span className={"ref-badge t-" + tone}>{text.toLowerCase()}</span>;
 }
 
 export function useAvailability(node: AtlasNode | undefined): Availability | null {

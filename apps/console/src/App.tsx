@@ -1,5 +1,6 @@
+import { siGithub } from "simple-icons";
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { Rows3, ScrollText, ChartLine, ChartArea, ChartColumn, WandSparkles, Rows2, Rows4, TrendingUp, TrendingDown } from "lucide-react";
+import { ScrollText, ChartLine, ChartArea, ChartColumn, WandSparkles, Rows2, Rows4, Sun, Moon, Contrast, Square, SlidersHorizontal, ChevronDown } from "lucide-react";
 import type { Atlas, AtlasNode, ScopeDef } from "./core/types";
 import { allSessions, isActive, registerScopes, stopAll } from "./core/harness";
 import { feed, startTimeline, useTimeline } from "./core/timeline";
@@ -16,8 +17,6 @@ import { Capabilities } from "./ui/Capabilities";
 import { Inspector } from "./ui/Inspector";
 import { clock } from "./ui/charts";
 import { Spark } from "./ui/kit";
-import { AnchorButton, Button, ButtonGroup, Tag } from "@blueprintjs/core";
-import { Contrast, Flash, Manual, Moon, Stop } from "@blueprintjs/icons";
 import { LOOKS, setLook, useLook } from "./ui/look";
 import { PrivacyDialog, PrivacyLink } from "./ui/Privacy";
 import { setVisit, startUploader } from "./core/uploader";
@@ -47,10 +46,6 @@ export function App() {
   if (err) return <div className="boot">Could not load the atlas: {err}</div>;
   if (!atlas) return <div className="boot"><span className="waiting-dot" />Loading</div>;
   return <Console atlas={atlas} />;
-}
-
-function Logo() {
-  return <svg width="22" height="22" viewBox="0 0 32 32" aria-hidden><rect width="32" height="32" rx="4" fill="var(--panel)" stroke="var(--line-strong)" /><circle cx="16" cy="16" r="8" fill="none" stroke="var(--ink)" strokeWidth="2.5" /><circle cx="16" cy="16" r="3" fill="var(--accent)" /></svg>;
 }
 
 function Console({ atlas }: { atlas: Atlas }) {
@@ -105,7 +100,6 @@ function Console({ atlas }: { atlas: Atlas }) {
   const [chart, setChartState] = useState<ChartOpts>({ type: prefs.type || "auto", by: prefs.by || "auto", density: prefs.density || "comfortable" });
   const setChart = (p: Partial<ChartOpts>) => setChartState((c) => ({ ...c, ...p }));
   useEffect(() => { try { localStorage.setItem(PREFS, JSON.stringify({ ...chart, range })); } catch { /* private mode */ } }, [chart, range]);
-  const [showFeed, setShowFeed] = useState(false);
 
   useEffect(() => {
     const on = () => { if (readHash() !== PRIVACY) setSelected(resolve(readHash())?.id || null); };
@@ -136,66 +130,76 @@ function Console({ atlas }: { atlas: Atlas }) {
   const current = views.find((v) => v.id === view) || views[0];
   const Panel = current?.Panel;
   const scope = selected ? scopes.find((s) => s.id === selected) || null : null;
+  const lookIdx = Math.max(0, LOOKS.findIndex((l) => l.id === look));
+  const nextLook = LOOKS[(lookIdx + 1) % LOOKS.length];
+  const LookIcon = look === "light" ? Sun : look === "midnight" ? Moon : Contrast;
 
   return (
     <div className={"shell" + (scope ? " sheet-open" : "") + (chart.density === "compact" ? " dense" : "")}>
       <header className="bar">
         <div className="wrap bar-in">
-          <a className="brand" href="./"><Logo /><b>Platform.Ontology</b><span>Console</span></a>
-          <div className="bar-r">
-            <Tag minimal round intent={live ? "success" : "none"} className="live-tag" icon={<span className={"live-dot" + (live ? " on" : "")} />}>{live} live</Tag>
-            <ButtonGroup className="looks hide-s" aria-label="Look">
-              {LOOKS.map((l) => <Button key={l.id} small minimal={look !== l.id} active={look === l.id} title={l.hint} onClick={() => setLook(l.id)} icon={l.id === "light" ? <Flash size={12} /> : l.id === "midnight" ? <Moon size={12} /> : <Contrast size={12} />}>{l.label}</Button>)}
-            </ButtonGroup>
-            <Button small intent="danger" outlined icon={<Stop size={12} />} onClick={stopAll} disabled={!live}>Stop all</Button>
-            <AnchorButton small minimal href="../" icon={<Manual size={14} />}><span className="hide-s">Docs</span></AnchorButton>
-          </div>
+          <a className="brand" href="../">Platform Ontology</a>
+          <nav className="nav" aria-label="Sections">
+            <a href="../">Docs</a>
+            <a href="./" aria-current="page">Console</a>
+            <a href="../wiki">Wiki</a>
+          </nav>
+          <span className="grow" />
+          {live > 0 && (
+            <button className="live-chip" onClick={stopAll} title="Stop every running capability">
+              <span className="live-dot on" />{live} live<span className="live-x"><Square size={10} />Stop</span>
+            </button>
+          )}
+          <button className="icon-b look-b" onClick={() => setLook(nextLook.id)} title={`Look: ${LOOKS[lookIdx]?.label}. Switch to ${nextLook.label}`} aria-label={`Switch look to ${nextLook.label}`}><LookIcon size={16} /></button>
+          <a className="icon-b gh-b" href="https://github.com/ever-just/platform-ontology" target="_blank" rel="noreferrer" aria-label="Source on GitHub" title="Source on GitHub"><svg viewBox="0 0 24 24" width={16} height={16} aria-hidden="true"><path d={siGithub.path} fill="currentColor" /></svg></a>
         </div>
       </header>
 
       <main className="wrap main">
         <section className="box overview">
-          <div className="kpis" role="tablist">
+          <div className="kpis" role="tablist" aria-label="Views">
             {views.map((v) => {
               const m = v.metric(ctx);
+              const on = v.id === current?.id;
+              const showSpark = m.spark && m.spark.some((x) => x !== m.spark![0]);
               return (
-                <button key={v.id} role="tab" aria-selected={v.id === current?.id} className={"kpi" + (v.id === current?.id ? " on" : "") + (m.tone ? " t-" + m.tone : "")} onClick={() => setView(v.id)}>
-                  <span>{v.label}</span>
+                <button key={v.id} role="tab" aria-selected={on} title={m.sub} className={"kpi" + (on ? " on" : "")} onClick={() => setView(v.id)}>
+                  <span className="kpi-l">{(m.tone === "err" || m.tone === "ok") && <i className={"kpi-dot " + m.tone} aria-hidden />}{v.label}</span>
                   <b>{m.value}{m.unit && <em>{m.unit}</em>}</b>
-                  <span className="kpi-f">
-                    {m.delta ? <i className={"kpi-d " + (m.delta > 0 ? "up" : "down")}>{m.delta > 0 ? <TrendingUp size={11} /> : <TrendingDown size={11} />}{m.delta > 0 ? "+" : ""}{m.delta}</i> : null}
-                    {m.sub && <small>{m.sub}</small>}
-                  </span>
-                  {m.spark && m.spark.some((v) => v !== m.spark![0]) && <span className="kpi-sp" aria-hidden><Spark values={m.spark} w={72} h={18} fill /></span>}
+                  <span className="kpi-sp" aria-hidden>{showSpark && <Spark values={m.spark!} w={64} h={14} />}</span>
                 </button>
               );
             })}
           </div>
           <div className="ov-tools">
-            <h2>{showFeed ? "Event log" : current?.label}</h2>
+            <h2>{current?.label}</h2>
             <span className="grow" />
-            {!showFeed && (
-              <div className="ov-ctl">
-                <div className="seg" role="group" aria-label="Chart type">
-                  {TYPES.map(([t, l, I]) => <button key={t} className={chart.type === t ? "on" : ""} onClick={() => setChart({ type: t })} title={l + " chart"} aria-label={l + " chart"}><I size={13} /><span className="hide-s">{l}</span></button>)}
+            <div className="seg" role="group" aria-label="Time range">
+              {RANGES.map(([r, l]) => <button key={r} className={range === r ? "on" : ""} onClick={() => setRange(r)}>{l}</button>)}
+            </div>
+            <details className="menu">
+              <summary className="icon-b" title="Chart options" aria-label="Chart options"><SlidersHorizontal size={15} /></summary>
+              <div className="menu-p">
+                <span className="menu-h">Chart</span>
+                <div className="seg full">
+                  {TYPES.map(([t, l, I]) => <button key={t} className={chart.type === t ? "on" : ""} onClick={() => setChart({ type: t })} title={l + " chart"}><I size={13} />{l}</button>)}
                 </div>
-                <label className="sel" title="Group the list beside the chart">
-                  <span>By</span>
-                  <select value={chart.by} onChange={(e) => setChart({ by: e.target.value as ChartOpts["by"] })}>
-                    {GROUPINGS.map(([g, l]) => <option key={g} value={g}>{l}</option>)}
-                  </select>
-                </label>
-                <div className="seg" role="group" aria-label="Time range">
-                  {RANGES.map(([r, l]) => <button key={r} className={range === r ? "on" : ""} onClick={() => setRange(r)}>{l}</button>)}
+                <span className="menu-h">Group the list by</span>
+                <div className="seg full">
+                  {GROUPINGS.map(([g, l]) => <button key={g} className={chart.by === g ? "on" : ""} onClick={() => setChart({ by: g })}>{l}</button>)}
                 </div>
-                <button className="btn sm icon" onClick={() => setChart({ density: chart.density === "compact" ? "comfortable" : "compact" })} title={chart.density === "compact" ? "Roomy layout" : "Compact layout"} aria-label="Toggle density">{chart.density === "compact" ? <Rows2 size={13} /> : <Rows4 size={13} />}</button>
+                <span className="menu-h">Spacing</span>
+                <div className="seg full">
+                  <button className={chart.density !== "compact" ? "on" : ""} onClick={() => setChart({ density: "comfortable" })}><Rows2 size={13} />Roomy</button>
+                  <button className={chart.density === "compact" ? "on" : ""} onClick={() => setChart({ density: "compact" })}><Rows4 size={13} />Compact</button>
+                </div>
               </div>
-            )}
-            <button className={"btn sm" + (showFeed ? " on" : "")} onClick={() => setShowFeed(!showFeed)}>{showFeed ? <Rows3 size={13} /> : <ScrollText size={13} />}{showFeed ? "Chart" : "Event log"}</button>
+            </details>
           </div>
-          <div className="ov-body">
-            {showFeed ? <Feed ctx={ctx} /> : Panel && <Panel ctx={ctx} />}
+          <div className="ov-body" key={current?.id}>
+            {Panel && <Panel ctx={ctx} />}
           </div>
+          <Activity ctx={ctx} />
         </section>
 
         <div className="duo">
@@ -204,8 +208,8 @@ function Console({ atlas }: { atlas: Atlas }) {
         </div>
 
         <footer className="foot">
-          <span>Readings from this console are stored to study what browsers expose. Personal content is removed first. <PrivacyLink>Privacy notice</PrivacyLink></span>
-          <span>{atlas.nodes.length} attributes across {atlas.browsers.length} browsers, built {atlas.built}</span>
+          <span>Readings are stored with personal content removed. <PrivacyLink>Privacy notice</PrivacyLink></span>
+          <span>{atlas.nodes.length} attributes, {atlas.browsers.length} browsers, built {atlas.built}</span>
         </footer>
       </main>
       <PrivacyDialog open={privacy} onClose={closePrivacy} />
@@ -213,19 +217,29 @@ function Console({ atlas }: { atlas: Atlas }) {
   );
 }
 
-function Feed({ ctx }: { ctx: ConsoleCtx }) {
-  const rows = feed().slice(0, 200);
+/** The latest few events under the chart, so the picture and the log are always visible together. */
+function Activity({ ctx }: { ctx: ConsoleCtx }) {
+  const [open, setOpen] = useState(false);
+  const rows = feed().slice(0, open ? 200 : 3);
   const name = (id: string) => ctx.scopes.find((s) => s.id === id)?.name || id;
-  if (!rows.length) return <div className="bl-empty pad">No events yet. Run a capability and every request, grant, record and refusal shows up here.</div>;
   return (
-    <div className="feed big">
-      {rows.map((l, i) => (
-        <div key={i} className={"fe " + l.level}>
-          <time>{clock(l.t)}</time>
-          <button className="lnk" onClick={() => ctx.select(l.scope)}>{name(l.scope)}</button>
-          <span>{l.msg}</span>
+    <div className={"act" + (open ? " open" : "")}>
+      <div className="act-h">
+        <ScrollText size={13} /><b>Activity</b>
+        <span className="grow" />
+        {feed().length > 3 && <button className="lnk" onClick={() => setOpen(!open)}>{open ? "Show less" : `Show all ${Math.min(feed().length, 200)}`}<ChevronDown size={13} className={open ? "flip" : ""} /></button>}
+      </div>
+      {!rows.length ? <div className="act-empty">Run a capability and each request, grant, reading and refusal appears here.</div> : (
+        <div className="feed">
+          {rows.map((l, i) => (
+            <div key={l.t + ":" + i} className={"fe " + l.level}>
+              <time>{clock(l.t)}</time>
+              <button className="lnk" onClick={() => ctx.select(l.scope)}>{name(l.scope)}</button>
+              <span>{l.msg}</span>
+            </div>
+          ))}
         </div>
-      ))}
+      )}
     </div>
   );
 }

@@ -11,7 +11,7 @@ node apps/console/scripts/gen-console-data.mjs >/dev/null
 (cd apps/console && npm ci && npm run build)
 mkdir -p site/console && cp -R apps/console/dist/. site/console/
 # The old lab now points at the console.
-mkdir -p site/lab && printf '%s\n' '<!doctype html><meta charset="utf-8"><title>Platform.Ontology Console</title><script>location.replace("/console/"+location.hash)</script><meta http-equiv="refresh" content="0;url=/console/"><a href="/console/">Open the console</a>' > site/lab/index.html
+mkdir -p site/lab && printf '%s\n' '<!doctype html><meta charset="utf-8"><title>Platform Ontology Console</title><script>location.replace("/console/"+location.hash)</script><meta http-equiv="refresh" content="0;url=/console/"><a href="/console/">Open the console</a>' > site/lab/index.html
 mkdir -p site/wiki && cp apps/wiki/index.html site/wiki/index.html
 mkdir -p site/data && cp -R dist/. site/data/
 mkdir -p site/schema && cp schema/*.json site/schema/

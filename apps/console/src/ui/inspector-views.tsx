@@ -1,8 +1,11 @@
-import { ArrowRight, CircleCheck, CircleX, Code2, Database, Eye, History, Info, KeyRound, ListTree, ShieldQuestion, TriangleAlert, Undo2 } from "lucide-react";
+import { ArrowRight, ChevronRight, CircleCheck, CircleX, Code2, Database, Eye, History, Info, KeyRound, ListTree, ShieldQuestion, TriangleAlert, Undo2 } from "lucide-react";
 import type { AtlasNode, IconType, ScopeDef, Session } from "../core/types";
 import { fmt } from "./kit";
 import { clock } from "./charts";
 import { MECH, type Mechanism } from "./icons";
+import { reqKey, type DepInfo } from "../core/deps";
+import type { ConsoleCtx } from "../ext/registry";
+import { reqIcon } from "./deps-graph";
 
 // Visual subviews for the Inspector: provenance chain, field meanings, access rows and a log timeline.
 
@@ -101,11 +104,12 @@ export function AccessRows({ scope, session, node, mech }: { scope: ScopeDef; se
   const rows: { Icon: IconType; k: string; v: React.ReactNode; tone?: string }[] = [
     { Icon: M.Icon, k: "How", v: <><b>{M.label}.</b> {M.plain}</>, tone: "k-" + mech },
     { Icon: ShieldQuestion, k: "Prompt", v: scope.passive ? "None. Read silently." : node?.ui || (scope.gesture ? "Chooser after a click" : "Browser prompt") },
-    { Icon: KeyRound, k: "Permission", v: <>{scope.permission || "none"}{session.permState && <span className={"perm p-" + session.permState}>{session.permState}</span>}</> },
   ];
-  if (node?.gr) rows.push({ Icon: CircleCheck, k: "Grant", v: node.gr });
-  if (node?.ps) rows.push({ Icon: History, k: "Remembered", v: node.ps });
-  if (node?.rv) rows.push({ Icon: Undo2, k: "Revoke", v: node.rv });
+  if (scope.permission || session.permState) rows.push({ Icon: KeyRound, k: "Permission", v: <>{scope.permission || "none"}{session.permState && <span className={"perm p-" + session.permState}>{session.permState}</span>}</> });
+  const none = (v?: string) => !v || /^(none|n\/a|-)\.?$/i.test(v.trim());
+  if (node?.gr && !none(node.gr)) rows.push({ Icon: CircleCheck, k: "Grant", v: node.gr });
+  if (node?.ps && !none(node.ps)) rows.push({ Icon: History, k: "Remembered", v: node.ps });
+  if (node?.rv && !none(node.rv)) rows.push({ Icon: Undo2, k: "Revoke", v: node.rv });
   rows.push({ Icon: Code2, k: "Browser call", v: <code>{scope.call}</code> });
   return (
     <div className="acc">
@@ -149,6 +153,44 @@ export function LogTimeline({ session }: { session: Session }) {
           return <div key={i} className={"fe " + l.level}><time>{clock(l.t)}</time><I size={12} className="fe-i" /><span>{l.msg}</span></div>;
         })}
       </div>
+    </>
+  );
+}
+
+/** Dependencies as quiet chips: a status dot (met, unmet, unknown) and the name. A capability opens as a subview. */
+export function DepChips({ ctx, info }: { ctx: ConsoleCtx; info: DepInfo }) {
+  const byId = new Map(ctx.scopes.map((s) => [s.id, s]));
+  const unlocks = info.unlocks.map((id) => byId.get(id)).filter(Boolean) as ScopeDef[];
+  if (!info.reqs.length && !unlocks.length) return <p className="lead">Needs nothing. Any page can use it.</p>;
+  const word = { met: "met here", unmet: "not met here", unknown: "cannot be checked here" } as const;
+  return (
+    <>
+      {info.reqs.length === 0 ? <p className="lead">Needs nothing.</p> : (
+        <div className="chips">
+          {info.reqs.map((r) => {
+            const st = info.status[reqKey(r)] || "unknown";
+            const target = r.kind === "capability" ? byId.get(r.id) : undefined;
+            const I = reqIcon(r);
+            const title = `${r.label}: ${r.why} (${word[st]})${target ? ". Open it." : ""}`;
+            const body = <><i /><I size={12} /><span className="t">{r.label}</span>{target && <ChevronRight size={12} className="go" />}</>;
+            return target
+              ? <button key={reqKey(r)} className="chip" data-s={st} title={title} onClick={() => ctx.select(target.id)}>{body}</button>
+              : <span key={reqKey(r)} className="chip" data-s={st} title={title}>{body}</span>;
+          })}
+        </div>
+      )}
+      {unlocks.length > 0 && (
+        <>
+          <span className="chip-l">Needed by</span>
+          <div className="chips">
+            {unlocks.map((s) => (
+              <button key={s.id} className="chip" title={`${s.name} needs this. Open it.`} onClick={() => ctx.select(s.id)}>
+                <span className="t">{s.name}</span><ChevronRight size={12} className="go" />
+              </button>
+            ))}
+          </div>
+        </>
+      )}
     </>
   );
 }

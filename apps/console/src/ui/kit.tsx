@@ -57,7 +57,7 @@ export function fmt(v: unknown, digits = 2): string {
 }
 
 export function Spark({ values, w = 120, h = 28, color = C.accent, min, max, fill = true }: { values: number[]; w?: number; h?: number; color?: string; min?: number; max?: number; fill?: boolean }) {
-  if (values.length < 2) return <svg width={w} height={h} className="spark"><line x1="0" x2={w} y1={h / 2} y2={h / 2} stroke={C.line} /></svg>;
+  if (values.length < 2) return <svg width={w} height={h} className="spark" aria-hidden />;
   const lo = min ?? Math.min(...values);
   const hi = max ?? Math.max(...values);
   const span = hi - lo || 1;

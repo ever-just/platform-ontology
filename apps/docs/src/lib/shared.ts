@@ -1,4 +1,4 @@
-export const appName = 'Platform.Ontology';
+export const appName = 'Platform Ontology';
 export const siteUrl = 'https://platformontology.lol';
 export const docsRoute = '/docs';
 

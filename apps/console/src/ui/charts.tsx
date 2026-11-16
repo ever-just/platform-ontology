@@ -61,6 +61,8 @@ export function TimeChart({ points, range, step, kind = "auto", marks = [], unit
   const hp = hover !== null ? pts[hover] : null;
   const visMarks = marks.filter((m) => m.t >= t0);
   const allZero = pts.every((p) => p.v === 0);
+  // Draw nothing until there is a real shape to show, so the chart never flickers as a flat line on load.
+  const ready = pts.length >= 3 && !allZero;
 
   const onMove = (e: React.MouseEvent) => {
     if (!pts.length) return;
@@ -74,7 +76,7 @@ export function TimeChart({ points, range, step, kind = "auto", marks = [], unit
   return (
     <div className="tc" ref={ref} onMouseMove={onMove} onMouseLeave={() => setHover(null)}>
       {w > 0 && (
-        <svg width={w} height={h}>
+        <svg width={w} height={h} className={ready ? "in" : "idle"}>
           {[0, 0.5, 1].map((f) => (
             <g key={f}>
               <line x1={L} x2={w - R} y1={y(max * f)} y2={y(max * f)} className={f ? "tc-grid" : "tc-base"} />
@@ -84,7 +86,7 @@ export function TimeChart({ points, range, step, kind = "auto", marks = [], unit
           {ticks.map((t, i) => (
             <text key={i} x={x(t)} y={h - 6} textAnchor={i === 0 ? "start" : i === ticks.length - 1 ? "end" : "middle"} className="tc-ax">{i === ticks.length - 1 ? "now" : clock(t)}</text>
           ))}
-          {kind === "bars" ? (
+          {!ready ? null : kind === "bars" ? (
             <g className="tc-bars">{pts.map((p, i) => p.v > 0 && <rect key={i} x={x(Math.max(p.t, t0)) - barW / 2} width={barW} y={y(p.v)} height={T + ih - y(p.v)} rx={barW > 3 ? 1 : 0} />)}</g>
           ) : (
             <>
@@ -111,7 +113,7 @@ export function TimeChart({ points, range, step, kind = "auto", marks = [], unit
           <span>{clock(hp.t)}</span><b>{short(hp.v)}{unit && <em> {unit}</em>}</b>
         </div>
       )}
-      {allZero && empty && <div className="tc-empty">{empty}</div>}
+      {!ready && <div className={"tc-empty" + (allZero && pts.length >= 3 ? "" : " wait")}>{allZero && pts.length >= 3 && empty ? empty : <span className="shimmer">Collecting readings</span>}</div>}
     </div>
   );
 }

@@ -109,8 +109,6 @@ ${table(['', 'Android', 'iPhone'], rows)}`;
 function webTables(e) {
   const w = e.platforms.web || {};
   const sup = w.support || {};
-  const anyDate = Object.values(sup).some((s) => one(s.date));
-  const head = ['Browser', 'Status', 'First version', ...(anyDate ? ['Released'] : []), 'Note'];
   const keys = Object.keys(BROWSERS);
   // One letter per browser, in taxonomy order (the same seven columns as the console).
   const supStr = keys
@@ -119,16 +117,15 @@ function webTables(e) {
       return c === 'r' ? 'n' : ['y', 'p', 'f', 'n'].includes(c) ? c : 'u';
     })
     .join('');
-  const rows = keys.map((k, i) => {
-    const s = sup[k] || { s: 'n', v: '', note: '' };
-    return [
-      `<BrowserLogo col="${i}" size={16} /> ${esc(BROWSERS[k])}`,
-      statusCell(s.s),
-      s.v ? esc(s.v) : 'Not available',
-      ...(anyDate ? [cell(s.date, 'Not listed')] : []),
-      cell(s.note, 'None'),
-    ];
-  });
+  // First version per browser, shown under each logo tile. Empty when unknown or unsupported.
+  const vers = keys.map((k) => (sup[k] && sup[k].s !== 'n' && sup[k].s !== 'r' ? one(sup[k].v) : ''));
+  const noteLines = keys
+    .map((k) => ({ k, note: one((sup[k] || {}).note) }))
+    .filter((x) => x.note)
+    .map((x) => `- **${esc(BROWSERS[x.k])}:** ${esc(x.note)}`);
+  const notes = noteLines.length
+    ? `\n<details>\n<summary>Version notes</summary>\n\n${noteLines.join('\n')}\n\n</details>\n`
+    : '';
   const acc = w.access || {};
   const yn = (b) => (b === true ? 'Yes' : b === false ? 'No' : 'Not listed');
   const arows = [
@@ -148,10 +145,8 @@ function webTables(e) {
   const steps = (acc.steps || []).filter((x) => one(x)).map((x, n) => `${n + 1}. ${esc(x)}`).join('\n');
   return `## Browser support
 
-<SupportMatrix sup="${supStr}" />
-
-${table(head, rows)}
-
+<SupportMatrix sup="${supStr}" vers={${jsx(vers)}} />
+${notes}
 ## How a site asks for it
 
 ${table(['', ''], arows)}
@@ -238,13 +233,12 @@ const CONF = {
 
 function page(e) {
   const l = e.limits || {};
+  // At most two chips, and only ones the page does not already show (title, group and
+  // platform are in the breadcrumb, the plain sentence is the description).
   const chips = [
-    { text: kindLabel(e.kind), kind: true },
-    { text: groupLabel(e.group) },
-    ...(e.subgroup ? [{ text: e.subgroup }] : []),
-    { text: e.space === 'mobile' ? 'Android and iPhone' : 'Web browsers' },
+    ...(e.kind && e.kind !== 'capability' ? [{ text: kindLabel(e.kind) }] : []),
     ...(e.lifecycle || []).map((x) => ({ text: lifecycleLabel(x) })),
-  ];
+  ].slice(0, 2);
   const sc = e.scores || {};
   const score = (n) => (n === null || n === undefined ? 'Not rated' : `${esc(n)}${n === 0 ? '' : ''}`);
   const scoreRows = [
@@ -258,9 +252,9 @@ function page(e) {
 
   const parts = [
     `---\ntitle: ${yaml(e.name)}\ndescription: ${yaml(e.plain)}\n---`,
-    `<Chips items={${jsx(chips)}} />`,
-    `<Callout title="In one line">\n\n${esc(l.headline || e.plain)}\n\n</Callout>`,
-    `${esc(e.plain)}${one(e.meaning) ? `\n\n${esc(e.meaning)}` : ''}`,
+    chips.length ? `<Chips items={${jsx(chips)}} />` : '',
+    // The description (e.plain) is the page subtitle, so it is not repeated in the body.
+    one(e.meaning) && one(e.meaning) !== one(e.plain) ? esc(e.meaning) : '',
     `## What it can and can't do
 
 <Reach level={${Number(l.reach) || 1}} label={${jsx(one(l.reach_label))}} />

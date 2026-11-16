@@ -19,6 +19,23 @@ const SUP_INFO: Record<string, { tone: string; label: string }> = {
   u: { tone: 'mute', label: 'unknown' },
 };
 
+/** Small status glyph: check, partial (dash) or cross. Color lives only here. */
+function Glyph({ tone }: { tone: string }) {
+  return (
+    <svg className="po-smx-g" viewBox="0 0 16 16" width={14} height={14} aria-hidden="true">
+      <circle cx="8" cy="8" r="8" fill="currentColor" />
+      {tone === 'ok' && (
+        <path d="M4.6 8.4l2.2 2.2 4.6-4.8" fill="none" stroke="#fff" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+      )}
+      {tone === 'warn' && <path d="M4.8 8h6.4" fill="none" stroke="#fff" strokeWidth="1.8" strokeLinecap="round" />}
+      {tone === 'err' && (
+        <path d="M5.4 5.4l5.2 5.2M10.6 5.4l-5.2 5.2" fill="none" stroke="#fff" strokeWidth="1.6" strokeLinecap="round" />
+      )}
+      {tone === 'mute' && <path d="M6.2 6.4a1.9 1.9 0 113 1.5c-.7.5-1.2.8-1.2 1.6M8 11.4v.1" fill="none" stroke="#fff" strokeWidth="1.5" strokeLinecap="round" />}
+    </svg>
+  );
+}
+
 function Brand({ path, hex, size }: { path: string; hex: string; size: number }) {
   return (
     <svg viewBox="0 0 24 24" width={size} height={size} aria-hidden="true">
@@ -82,30 +99,27 @@ export function BrowserLogo({ col, size = 20 }: { col: number | string; size?: n
   );
 }
 
-/** Seven browser logos, each with a status dot and a label. `sup` is one letter per browser. */
-export function SupportMatrix({ sup }: { sup: string }) {
+/**
+ * Seven equal tiles: logo, a small status glyph and the first version when known.
+ * `sup` is one letter per browser; `vers` is the first version per browser ('' when unknown).
+ */
+export function SupportMatrix({ sup, vers = [] }: { sup: string; vers?: string[] }) {
   return (
-    <div className="po-smx-wrap">
-      <div className="po-smx" role="list" aria-label="Browser support">
-        {BROWSERS.map((b, i) => {
-          const s = SUP_INFO[sup[i]] ?? SUP_INFO.u;
-          return (
-            <div
-              key={b.id}
-              role="listitem"
-              className={`po-smx-c po-t-${s.tone}`}
-              title={`${b.name}: ${s.label}`}
-            >
-              <span className="po-smx-l">
-                <BrowserLogo col={i} size={22} />
-                <i className="po-smx-d" />
-              </span>
-              <span className="po-smx-n">{b.short}</span>
-              <span className="po-smx-s">{s.label}</span>
-            </div>
-          );
-        })}
-      </div>
-    </div>
+    <ul className="po-smx" aria-label="Browser support">
+      {BROWSERS.map((b, i) => {
+        const s = SUP_INFO[sup[i]] ?? SUP_INFO.u;
+        const v = (vers[i] ?? '').trim();
+        const text = `${b.name}: ${s.label}${v ? `, since ${v}` : ''}`;
+        return (
+          <li key={b.id} className={`po-smx-c po-t-${s.tone}`} title={text} aria-label={text}>
+            <span className="po-smx-l">
+              <BrowserLogo col={i} size={26} />
+              <Glyph tone={s.tone} />
+            </span>
+            <span className="po-smx-v" aria-hidden="true">{v || '\u00a0'}</span>
+          </li>
+        );
+      })}
+    </ul>
   );
 }

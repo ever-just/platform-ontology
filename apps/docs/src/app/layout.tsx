@@ -14,11 +14,11 @@ const description =
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: {
-    default: 'Platform.Ontology',
-    template: '%s | Platform.Ontology',
+    default: 'Platform Ontology',
+    template: '%s | Platform Ontology',
   },
   description,
-  applicationName: 'Platform.Ontology',
+  applicationName: 'Platform Ontology',
   icons: {
     icon: [
       { url: '/favicon.svg', type: 'image/svg+xml' },
@@ -28,15 +28,15 @@ export const metadata: Metadata = {
   },
   openGraph: {
     type: 'website',
-    siteName: 'Platform.Ontology',
-    title: 'Platform.Ontology',
+    siteName: 'Platform Ontology',
+    title: 'Platform Ontology',
     description,
     url: siteUrl,
-    images: [{ url: '/og.png', width: 1200, height: 630, alt: 'Platform.Ontology' }],
+    images: [{ url: '/og.png', width: 1200, height: 630, alt: 'Platform Ontology' }],
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Platform.Ontology',
+    title: 'Platform Ontology',
     description,
     images: ['/og.png'],
   },
