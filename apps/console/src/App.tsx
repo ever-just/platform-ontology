@@ -4,6 +4,7 @@ import type { Atlas, AtlasNode, ScopeDef } from "./core/types";
 import { allSessions, isActive, registerScopes, stopAll } from "./core/harness";
 import { feed, startTimeline, useTimeline } from "./core/timeline";
 import { buildScopes } from "./scopes";
+import { applyMeta } from "./scopes/meta";
 import { detectProfile } from "./browser/profile";
 import { collectPassive, type PassiveSignal } from "./real";
 import { listGroups, listViews, onRegistryChange, pluginScopes, resolveGroup, OTHER, type ConsoleCtx, type GroupDef } from "./ext/registry";
@@ -40,7 +41,7 @@ function Console({ atlas }: { atlas: Atlas }) {
   useEffect(() => { const off = onRegistryChange(() => setRegVer((v) => v + 1)); return () => { off(); }; }, []);
 
   const scopes = useMemo(() => {
-    const list = [...buildScopes(atlas.nodes), ...pluginScopes()];
+    const list = applyMeta([...buildScopes(atlas.nodes), ...pluginScopes()]);
     registerScopes(list);
     return list;
     // eslint-disable-next-line react-hooks/exhaustive-deps

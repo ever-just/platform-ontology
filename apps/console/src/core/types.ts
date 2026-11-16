@@ -39,6 +39,16 @@ export type Ctx = {
 
 export type Stop = () => void;
 
+/** How a capability can be used. detect: the API exists or one value is read; stream: a continuous
+ * feed; create: it produces something new, such as a photo, a recording or a file. */
+export type AccessMode = "detect" | "stream" | "create";
+
+/** How much a capability reveals. 1: insightful alone; 2: joined with related data in its group;
+ * 3: joined across groups, the highest insight, usually with actions. */
+export type DataLayer = 1 | 2 | 3;
+
+export type IconType = ComponentType<{ size?: number; strokeWidth?: number; className?: string }>;
+
 export type InstrumentProps = { scope: ScopeDef; session: Session };
 
 /** One endpoint of the unified API, e.g. `surroundings.bluetooth`. */
@@ -58,6 +68,12 @@ export type ScopeDef = {
   gesture?: boolean;
   /** No prompt: data is collected silently. */
   passive?: boolean;
+  /** Icon for this capability. Falls back to its group icon. */
+  icon?: IconType;
+  /** Access modes this capability offers, each with one plain sentence. */
+  modes?: Partial<Record<AccessMode, string>>;
+  /** Data layer, see DataLayer. */
+  layer?: DataLayer;
   /** What this data lets a site work out. */
   reveals: string[];
   /** Other scope ids this one combines with to reveal more. */

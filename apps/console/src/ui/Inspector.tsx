@@ -6,9 +6,9 @@ import { useInternals } from "../browser/engine";
 import type { ConsoleCtx } from "../ext/registry";
 import { fmt } from "./kit";
 import { clock } from "./charts";
+import { CapIcon, LayerGlyph, LAYERS, MECH, MechBadge, MODES, SupportMatrix, mechanismOf } from "./icons";
+import { supportOf } from "../browser/profile";
 
-const BROWSER_LABEL = ["Chrome", "Edge", "Firefox", "Safari", "iOS Safari", "Android", "Samsung"];
-const SUP: Record<string, [string, string]> = { y: ["yes", "ok"], p: ["partial", "warn"], f: ["flag", "warn"], n: ["no", "no"], u: ["?", "no"] };
 type Tab = "data" | "record" | "scope" | "log";
 
 function snippet(scope: ScopeDef, s: Session) {
@@ -37,13 +37,20 @@ function ScopeInspector({ ctx, scope, onClose }: { ctx: ConsoleCtx; scope: Scope
   const group = ctx.groupOf(scope.id);
   const Inst = scope.Instrument;
   const code = snippet(scope, session);
+  const mech = mechanismOf(scope, node ? supportOf(node.sup, ctx.profile.column) : undefined);
   return (
     <>
       <div className="ins-h">
+        <span className="ins-i"><CapIcon scope={scope} size={20} /></span>
         <div className="ins-t">
           <span className="ins-g">{group.label}</span>
           <h3>{scope.name}</h3>
           <p>{scope.summary}</p>
+          <div className="ins-badges">
+            <MechBadge mech={mech} label />
+            {MODES.filter((m) => scope.modes?.[m.id]).map((m) => <span key={m.id} className={"mode m-" + m.id} title={scope.modes![m.id]}><m.Icon size={12} />{m.label}</span>)}
+            <span className="mode m-layer" title={LAYERS[scope.layer || 1].plain}><LayerGlyph layer={scope.layer} />L{scope.layer || 1}</span>
+          </div>
         </div>
         <button className="icon-b ins-x" onClick={onClose} aria-label="Close"><X size={16} /></button>
       </div>
@@ -82,10 +89,18 @@ function ScopeInspector({ ctx, scope, onClose }: { ctx: ConsoleCtx; scope: Scope
         )}
         {tab === "scope" && (
           <div className="ins-pad">
+            <h5>What you can do with it</h5>
+            <div className="mode-list">
+              {MODES.filter((m) => scope.modes?.[m.id]).map((m) => (
+                <div key={m.id} className={"mode-row m-" + m.id}><span className="mode-ic"><m.Icon size={15} /></span><div><b>{m.label}</b><span>{scope.modes![m.id]}</span></div></div>
+              ))}
+              <div className="mode-row m-layer"><span className="mode-ic"><LayerGlyph layer={scope.layer} /></span><div><b>{LAYERS[scope.layer || 1].label}</b><span>{LAYERS[scope.layer || 1].plain}</span></div></div>
+            </div>
             <h5>What it reveals</h5>
             <div className="tags">{scope.reveals.map((r) => <span key={r}>{r}</span>)}</div>
             <h5>Access</h5>
             <dl className="dl">
+              <dt>How</dt><dd><MechBadge mech={mech} label /> {MECH[mech].plain}</dd>
               <dt>Prompt</dt><dd>{scope.passive ? "None. Read silently." : node?.ui || (scope.gesture ? "Chooser after a click" : "Browser prompt")}</dd>
               <dt>Permission</dt><dd>{scope.permission || "none"}{session.permState ? ` (${session.permState})` : ""}</dd>
               {node?.gr && <><dt>Grant</dt><dd>{node.gr}</dd></>}
@@ -96,9 +111,7 @@ function ScopeInspector({ ctx, scope, onClose }: { ctx: ConsoleCtx; scope: Scope
             {node && (
               <>
                 <h5>Support</h5>
-                <div className="sup">
-                  {BROWSER_LABEL.map((b, i) => { const [t, c] = SUP[node.sup[i]] || SUP.u; return <div key={b} className={c + (i === ctx.profile.column ? " me" : "")}><span>{b}</span><b>{t}</b></div>; })}
-                </div>
+                <SupportMatrix sup={node.sup} me={ctx.profile.column} />
               </>
             )}
             {scope.params && scope.params.length > 0 && (
