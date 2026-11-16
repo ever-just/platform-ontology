@@ -9,9 +9,11 @@ import { useInternals } from "../browser/engine";
 import type { ConsoleCtx } from "../ext/registry";
 import { fmt } from "./kit";
 import { clock } from "./charts";
-import { CapIcon, LayerGlyph, LAYERS, MECH, MechBadge, MODES, SupportMatrix, mechanismOf } from "./icons";
+import { CapIcon, MECH, MechBadge, MODES, SupportMatrix, mechanismOf } from "./icons";
 import { supportOf } from "../browser/profile";
 import { PrivacyLink } from "./Privacy";
+import { useDeps } from "../core/deps";
+import { DependsOn, DepsBadge } from "./deps-graph";
 
 type Tab = "data" | "replay" | "record" | "scope" | "log";
 
@@ -42,6 +44,7 @@ function ScopeInspector({ ctx, scope, onClose }: { ctx: ConsoleCtx; scope: Scope
   const Inst = scope.Instrument;
   const code = snippet(scope, session);
   const mech = mechanismOf(scope, node ? supportOf(node.sup, ctx.profile.column) : undefined);
+  const deps = useDeps(scope, ctx);
   return (
     <>
       <div className="ins-h">
@@ -53,7 +56,7 @@ function ScopeInspector({ ctx, scope, onClose }: { ctx: ConsoleCtx; scope: Scope
           <div className="ins-badges">
             <MechBadge mech={mech} label />
             {MODES.filter((m) => scope.modes?.[m.id]).map((m) => <span key={m.id} className={"mode m-" + m.id} title={scope.modes![m.id]}><m.Icon size={12} />{m.label}</span>)}
-            <span className="mode m-layer" title={LAYERS[scope.layer || 1].plain}><LayerGlyph layer={scope.layer} />L{scope.layer || 1}</span>
+            <DepsBadge info={deps} />
           </div>
         </div>
         <button className="icon-b ins-x" onClick={onClose} aria-label="Close"><X size={16} /></button>
@@ -105,8 +108,9 @@ function ScopeInspector({ ctx, scope, onClose }: { ctx: ConsoleCtx; scope: Scope
               {MODES.filter((m) => scope.modes?.[m.id]).map((m) => (
                 <div key={m.id} className={"mode-row m-" + m.id}><span className="mode-ic"><m.Icon size={15} /></span><div><b>{m.label}</b><span>{scope.modes![m.id]}</span></div></div>
               ))}
-              <div className="mode-row m-layer"><span className="mode-ic"><LayerGlyph layer={scope.layer} /></span><div><b>{LAYERS[scope.layer || 1].label}</b><span>{LAYERS[scope.layer || 1].plain}</span></div></div>
             </div>
+            <h5>Depends on <em>{deps.reqs.length}</em></h5>
+            <DependsOn scope={scope} ctx={ctx} info={deps} />
             <h5>What it reveals</h5>
             <Reveals items={scope.reveals} />
             <h5>Access</h5>

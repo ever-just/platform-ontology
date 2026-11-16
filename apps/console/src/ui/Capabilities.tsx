@@ -7,7 +7,9 @@ import { supportOf } from "../browser/profile";
 import { OTHER, type ConsoleCtx, type GroupDef } from "../ext/registry";
 import { short } from "./charts";
 import { Spark } from "./kit";
-import { CapIcon, LayerGlyph, MechBadge, ModeBadges, mechanismOf } from "./icons";
+import { DepsCount } from "./deps-graph";
+import { requirementsOf } from "../core/deps";
+import { CapIcon, MechBadge, ModeBadges, mechanismOf } from "./icons";
 
 type Tab = "all" | "live" | "used" | "blocked" | "ref";
 const TABS: [Tab, string][] = [["all", "All"], ["live", "Live"], ["used", "Used"], ["blocked", "Blocked"], ["ref", "Reference"]];
@@ -108,7 +110,7 @@ const Row = memo(function Row({ scope, on, ok, ctx }: { scope: ScopeDef; on: boo
     <div className={"row" + (on ? " on" : "") + (ok ? "" : " dim")} onClick={() => ctx.select(scope.id)}>
       <span className="row-i"><CapIcon scope={scope} size={15} /><i className={"dot st-" + s.state} /></span>
       <span className="row-n">{scope.name}</span>
-      <span className="row-k"><ModeBadges modes={scope.modes} compact /><LayerGlyph layer={scope.layer} /></span>
+      <span className="row-k"><ModeBadges modes={scope.modes} compact /><DepsCount n={requirementsOf(scope, ctx.nodeOf(scope)).length} /></span>
       <MechBadge mech={mech} />
       {scope.reference && <span className="logged" title="Reference entry: the page can only check for it here">ref</span>}
       {scope.passive && s.count > 0 && <span className="logged" title="Already read on page load, without asking"><History size={11} />logged</span>}
