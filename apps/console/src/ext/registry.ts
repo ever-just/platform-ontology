@@ -50,7 +50,24 @@ export type ViewDef = {
   Panel: ComponentType<{ ctx: ConsoleCtx }>;
 };
 
+/** One capability inside a linked view, with the reading key drawn as its small trend. */
+export type LinkPart = { id: string; key?: string; label?: string; /** What the viewer does for the first reading to arrive, if anything. */ hint?: string };
+/** What two or more joined readings say together. Return null until there is enough to say. */
+export type Inference = { headline: string; detail?: string; tone?: "ok" | "warn" | "err" | "accent" };
+/** A layer 3 view: capabilities from different groups read together, with one action to run them all. */
+export type LinkDef = {
+  id: string;
+  title: string;
+  /** Plain words: what joining these reveals that each one alone does not. */
+  plain: string;
+  order: number;
+  parts: LinkPart[];
+  /** data: latest reading per part. records: every kept reading per part, oldest first, each with its time as _t. */
+  infer: (data: Record<string, Record<string, any> | undefined>, records: Record<string, Record<string, any>[]>) => Inference | null;
+};
+
 const groups = new Map<string, GroupDef>();
+const links = new Map<string, LinkDef>();
 const views = new Map<string, ViewDef>();
 const extraScopes: ScopeDef[] = [];
 const subs = new Set<() => void>();
@@ -59,10 +76,12 @@ const bump = () => subs.forEach((f) => f());
 export function defineGroup(g: GroupDef) { groups.set(g.id, g); bump(); }
 export function registerView(v: ViewDef) { views.set(v.id, v); bump(); }
 export function registerScopes(list: ScopeDef[]) { extraScopes.push(...list); bump(); }
+export function registerLink(l: LinkDef) { links.set(l.id, l); bump(); }
 export function onRegistryChange(f: () => void) { subs.add(f); return () => subs.delete(f); }
 
 export const listGroups = () => [...groups.values()].sort((a, b) => a.order - b.order);
 export const listViews = () => [...views.values()].sort((a, b) => a.order - b.order);
+export const listLinks = () => [...links.values()].sort((a, b) => a.order - b.order);
 export const pluginScopes = () => extraScopes;
 
 export const OTHER: GroupDef = { id: "other", label: "Other", blurb: "Not yet grouped", order: 999 };

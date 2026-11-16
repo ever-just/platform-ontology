@@ -9,12 +9,14 @@ import { detectProfile } from "./browser/profile";
 import { collectPassive, type PassiveSignal } from "./real";
 import { listGroups, listViews, onRegistryChange, pluginScopes, resolveGroup, OTHER, type ChartOpts, type ConsoleCtx, type GroupDef } from "./ext/registry";
 import { registerBuiltins } from "./ext/builtins";
+import { registerLinks } from "./ext/links";
 import { Capabilities } from "./ui/Capabilities";
 import { Inspector } from "./ui/Inspector";
 import { clock } from "./ui/charts";
 import { Spark } from "./ui/kit";
 
 registerBuiltins();
+registerLinks();
 
 const RANGES: [number, string][] = [[60, "1m"], [300, "5m"], [900, "15m"], [3600, "1h"]];
 const TYPES: [ChartOpts["type"], string, typeof ChartLine][] = [["auto", "Auto", WandSparkles], ["line", "Line", ChartLine], ["area", "Area", ChartArea], ["bars", "Bars", ChartColumn]];
