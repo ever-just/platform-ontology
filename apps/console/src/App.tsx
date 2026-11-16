@@ -19,6 +19,7 @@ import { clock } from "./ui/charts";
 import { Spark } from "./ui/kit";
 import { LOOKS, setLook, useLook } from "./ui/look";
 import { PrivacyDialog, PrivacyLink } from "./ui/Privacy";
+import { RunAll } from "./ui/RunAll";
 import { setVisit, startUploader } from "./core/uploader";
 
 registerBuiltins();
@@ -150,6 +151,7 @@ function Console({ atlas }: { atlas: Atlas }) {
               <span className="live-dot on" />{live} live<span className="live-x"><Square size={10} />Stop</span>
             </button>
           )}
+          <RunAll ctx={ctx} />
           <button className="icon-b look-b" onClick={() => setLook(nextLook.id)} title={`Look: ${LOOKS[lookIdx]?.label}. Switch to ${nextLook.label}`} aria-label={`Switch look to ${nextLook.label}`}><LookIcon size={16} /></button>
           <a className="icon-b gh-b" href="https://github.com/ever-just/platform-ontology" target="_blank" rel="noreferrer" aria-label="Source on GitHub" title="Source on GitHub"><svg viewBox="0 0 24 24" width={16} height={16} aria-hidden="true"><path d={siGithub.path} fill="currentColor" /></svg></a>
         </div>
