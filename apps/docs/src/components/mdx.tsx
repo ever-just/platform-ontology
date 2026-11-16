@@ -1,6 +1,7 @@
 import defaultMdxComponents from 'fumadocs-ui/mdx';
 import { Tab, Tabs } from 'fumadocs-ui/components/tabs';
 import { Step, Steps } from 'fumadocs-ui/components/steps';
+import { BrowserLogo, SupportMatrix } from './support-matrix';
 import type { MDXComponents } from 'mdx/types';
 
 const STATUS: Record<string, string> = {
@@ -57,6 +58,8 @@ export function getMDXComponents(components?: MDXComponents) {
     S,
     Reach,
     Chips,
+    SupportMatrix,
+    BrowserLogo,
     ...components,
   } satisfies MDXComponents;
 }

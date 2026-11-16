@@ -100,3 +100,41 @@ html > body[data-scroll-locked] {
 
 /* Wide data tables stay readable */
 .prose table { font-size: 0.875rem; }
+
+/* Browser support logo matrix (matches the console look) */
+.po-blogo { position: relative; display: inline-block; flex: none; line-height: 0; vertical-align: middle; margin-right: 0.15rem; }
+.prose td:has(> .po-blogo) { white-space: nowrap; }
+.prose td > .po-blogo { margin-right: 0.4rem; }
+.po-smx-wrap { margin: 0.5rem 0 1rem; overflow-x: auto; max-width: 100%; }
+.po-smx {
+  --po-ok: #1f9d55;
+  --po-warn: #e09a00;
+  --po-err: #d64545;
+  display: grid;
+  grid-template-columns: repeat(7, minmax(4.25rem, 1fr));
+  gap: 4px;
+}
+.dark .po-smx { --po-ok: #4cc27d; --po-warn: #f0b429; --po-err: #ef7a7a; }
+.po-smx-c {
+  display: flex; flex-direction: column; align-items: center; gap: 3px;
+  padding: 9px 4px 7px; border-radius: 9px; min-width: 0;
+  background: var(--color-fd-muted);
+}
+.po-smx-l { position: relative; line-height: 0; }
+.po-smx-d {
+  position: absolute; top: -2px; right: -4px; width: 9px; height: 9px; border-radius: 50%;
+  box-shadow: 0 0 0 2px var(--color-fd-background);
+  background: var(--color-fd-muted-foreground);
+}
+.po-t-ok .po-smx-d { background: var(--po-ok); }
+.po-t-warn .po-smx-d { background: var(--po-warn); }
+.po-t-err .po-smx-d { background: var(--po-err); }
+.po-t-ok { background: color-mix(in srgb, var(--po-ok) 12%, var(--color-fd-background)); }
+.po-t-warn { background: color-mix(in srgb, var(--po-warn) 14%, var(--color-fd-background)); }
+.po-t-err .po-smx-l, .po-t-mute .po-smx-l { filter: grayscale(1); opacity: 0.55; }
+.po-smx-n { font-size: 11px; color: var(--color-fd-foreground); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%; }
+.po-smx-s { font-size: 10px; color: var(--color-fd-muted-foreground); text-align: center; line-height: 1.2; }
+.po-t-ok .po-smx-s { color: var(--po-ok); }
+.po-t-warn .po-smx-s { color: var(--po-warn); }
+.po-t-err .po-smx-s { color: var(--po-err); }
+.po-blogo-b { position: absolute; right: -3px; bottom: -3px; background: var(--color-fd-background); border-radius: 50%; padding: 1px; line-height: 0; color: var(--color-fd-foreground); }
