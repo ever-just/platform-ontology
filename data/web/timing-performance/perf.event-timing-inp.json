@@ -1,0 +1,258 @@
+{
+  "id": "web.perf.event-timing-inp",
+  "name": "Event Timing and INP",
+  "kind": "signal",
+  "group": "timing-performance",
+  "subgroup": "Performance API",
+  "tags": [
+    "INP",
+    "event-timing",
+    "responsiveness",
+    "interaction"
+  ],
+  "plain": "Measures how long clicks, taps and key presses take to produce the next frame.",
+  "meaning": "Records each interaction's input delay, processing time and presentation delay (8 ms granularity) so sites can compute Interaction to Next Paint (INP), and also learns when and how fast people interact.",
+  "lifecycle": [
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "PerformanceObserver type 'event' and 'first-input'; performance.interactionCount",
+      "bcd": [
+        "api.PerformanceEventTiming"
+      ],
+      "access": {
+        "grant": "none",
+        "prompt_ui": "",
+        "secure_context": false,
+        "user_gesture": false,
+        "persistence": "",
+        "revocation": "",
+        "iframe": "",
+        "steps": [
+          "Observe event entries with durationThreshold",
+          "Group by interactionId",
+          "Compute worst or 98th percentile"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "76",
+          "note": "",
+          "date": "2019-07-30"
+        },
+        "edge": {
+          "s": "y",
+          "v": "79",
+          "note": "",
+          "date": "2020-01-15"
+        },
+        "firefox": {
+          "s": "n",
+          "v": "",
+          "note": ":Event Timing in development"
+        },
+        "safari": {
+          "s": "p",
+          "v": "26.2",
+          "note": ":Behind flag or in preview",
+          "date": "2025-12-12"
+        },
+        "ios_safari": {
+          "s": "p",
+          "v": "26.2",
+          "note": ":Behind flag or in preview",
+          "date": "2025-12-12"
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "76",
+          "note": "",
+          "date": "2019-07-30"
+        },
+        "samsung": {
+          "s": "y",
+          "v": "12.0",
+          "note": "",
+          "date": "2020-06-19"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "event",
+    "metric": "Entries with startTime, processingStart, duration (rounded to 8 ms)",
+    "update": "",
+    "fields": [
+      {
+        "name": "duration",
+        "type": "integer",
+        "unit": "ms",
+        "range": "16 to 10000",
+        "precision": "8 ms rounding"
+      },
+      {
+        "name": "interactionId",
+        "type": "integer",
+        "unit": "",
+        "range": "0 to unbounded",
+        "precision": "exact"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can time how fast the page responds to your taps, clicks and key presses",
+    "user_action": "You tap, click or press a key on the page",
+    "can": [
+      "Measure delay from each tap or key press to the next screen update",
+      "Report the slowest responses to the site owner",
+      "Learn if your device is slow or busy"
+    ],
+    "cannot": [
+      "Record what you typed",
+      "Get exact times, since they are rounded to about 8 ms",
+      "Work in Safari, where it is limited or partial",
+      "Ask permission first"
+    ],
+    "reach": 2,
+    "reach_label": "While you use the page",
+    "differs": "Chrome and Edge fully support it. Firefox and Safari have limited or no support."
+  },
+  "story": {
+    "what_it_is": "Browsers measure how long it takes between a click or key press and the next screen update.",
+    "icon": "mouse-pointer-click",
+    "tags": [
+      "Speed",
+      "Silent",
+      "Core Web Vitals"
+    ],
+    "marketing": [
+      {
+        "vendor": "web.dev",
+        "name": "Interaction to Next Paint (INP)",
+        "pitch": "Google says INP measures how fast a page responds to your clicks, taps and key presses.",
+        "url": "https://web.dev/articles/inp"
+      },
+      {
+        "vendor": "MDN",
+        "name": "Event Timing API",
+        "pitch": "Describes how pages can measure how long interactions take to be handled and painted.",
+        "url": "https://developer.mozilla.org/en-US/docs/Web/API/PerformanceEventTiming"
+      }
+    ],
+    "for_you": "You never see the measurement. You just feel it as a page that reacts quickly or one that feels stuck. Slow pages lose visitors and rank lower in Google search.",
+    "for_makers": "INP is one of Google's Core Web Vitals, so it affects search ranking and ad revenue. Teams measure it from real visitors, and fix slow scripts. Real time apps use it to make sure buttons feel instant.",
+    "use_cases": [
+      {
+        "type": "shopping",
+        "example": "A retailer measures how long an Add to cart tap takes to show, and fixes scripts that slow it down.",
+        "apps": [
+          "Shopify stores"
+        ]
+      },
+      {
+        "type": "games",
+        "example": "A browser game checks that button taps and key presses show on screen in time, to avoid feeling laggy.",
+        "apps": []
+      },
+      {
+        "type": "creative",
+        "example": "Figma and web editors measure how fast clicks, drags and menus respond on huge files.",
+        "apps": [
+          "Figma"
+        ]
+      },
+      {
+        "type": "news",
+        "example": "A news site finds that a slow cookie banner makes taps feel stuck, and fixes it.",
+        "apps": []
+      },
+      {
+        "type": "ads",
+        "example": "An ad tech vendor tests that its tags do not make taps slow, since publishers punish slow scripts.",
+        "apps": []
+      },
+      {
+        "type": "analytics",
+        "example": "Real user monitoring tools collect INP from visitors and show it in a dashboard.",
+        "apps": [
+          "Datadog RUM",
+          "SpeedCurve",
+          "Chrome UX Report"
+        ]
+      },
+      {
+        "type": "productivity",
+        "example": "A web spreadsheet or document app measures key press delay to keep typing smooth.",
+        "apps": [
+          "Google Docs",
+          "Notion"
+        ]
+      }
+    ],
+    "risks": [
+      "Slow scores hurt ranking",
+      "Reports go to analytics vendors"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Doesn't expose key identity or pointer coordinates",
+    "8 ms rounding limits fine timing"
+  ],
+  "scores": {
+    "sensitivity": 2,
+    "utility": 5,
+    "fingerprint_bits": 2,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": "Core Web Vitals reporting",
+    "abuse": "Interaction timing patterns for bot detection"
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2024-03",
+      "browser": "chrome",
+      "version": "",
+      "change": "INP replaces FID as a Core Web Vital"
+    },
+    {
+      "date": "2024-09",
+      "browser": "chrome",
+      "version": "",
+      "change": "INP in Search ranking signals"
+    }
+  ],
+  "related": [
+    "web.perf.long-animation-frames",
+    "web.perf.keystroke-dynamics"
+  ],
+  "refs": [
+    {
+      "t": "mdn",
+      "label": "MDN PerformanceEventTiming",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/PerformanceEventTiming"
+    },
+    {
+      "t": "vendor",
+      "label": "web.dev INP",
+      "url": "https://web.dev/articles/inp"
+    },
+    {
+      "t": "spec",
+      "label": "W3C Event Timing",
+      "url": "https://www.w3.org/TR/event-timing/"
+    }
+  ],
+  "confidence": "docs"
+}

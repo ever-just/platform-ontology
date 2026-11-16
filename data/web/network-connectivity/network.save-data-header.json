@@ -1,0 +1,210 @@
+{
+  "id": "web.network.save-data-header",
+  "name": "Save-Data header",
+  "kind": "signal",
+  "group": "network-connectivity",
+  "subgroup": "Connection state",
+  "tags": [
+    "save-data",
+    "http-header",
+    "data-saver"
+  ],
+  "plain": "Request header showing the person turned on data saving.",
+  "meaning": "Save-Data: on indicates Lite mode on a metered or slow connection, often in lower-income or roaming contexts. Sites should send lighter pages.",
+  "lifecycle": [
+    "on-arrival",
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "Save-Data: on request header, navigator.connection.saveData",
+      "bcd": [
+        "http.headers.Save-Data"
+      ],
+      "access": {
+        "grant": "none",
+        "prompt_ui": "None",
+        "secure_context": false,
+        "user_gesture": false,
+        "persistence": "read fresh on every page load; nothing stored",
+        "revocation": "none needed (no grant)",
+        "iframe": "Readable from cross-origin iframes too (same values)",
+        "steps": [
+          "Page script reads the value",
+          "No prompt is shown"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "49",
+          "note": "",
+          "date": "2016-03-02"
+        },
+        "edge": {
+          "s": "y",
+          "v": "79",
+          "note": "",
+          "date": "2020-01-15"
+        },
+        "firefox": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "safari": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "ios_safari": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "49",
+          "note": "",
+          "date": "2016-03-09"
+        },
+        "samsung": {
+          "s": "y",
+          "v": "5.0",
+          "note": "",
+          "date": "2016-12-15"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "object",
+    "metric": "",
+    "update": "static per session",
+    "fields": [
+      {
+        "name": "Save-Data",
+        "type": "enum",
+        "unit": "",
+        "range": "on or absent",
+        "precision": ""
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can see that you turned on data saving, in Chrome, Edge and Samsung Internet",
+    "user_action": "You turn on Data saver or Lite mode, then browse",
+    "can": [
+      "See a Save-Data flag on each request when you have data saving on",
+      "Send smaller images and lighter pages",
+      "Guess you are on a slow or paid data plan"
+    ],
+    "cannot": [
+      "See anything if you have not turned data saving on",
+      "Work in Firefox or Safari",
+      "See your income, plan or provider, though a site may guess",
+      "See your name or account"
+    ],
+    "reach": 2,
+    "reach_label": "A single on or off flag",
+    "differs": "Chrome, Edge and Samsung Internet only. Firefox and Safari, including all iPhone browsers, do not send it."
+  },
+  "story": {
+    "what_it_is": "A header that tells a site you turned on data saving, so it can send less.",
+    "icon": "download",
+    "tags": [
+      "Network",
+      "Silent",
+      "Data saving"
+    ],
+    "marketing": [],
+    "for_you": "You never see the header. If you turned on Data Saver, many sites send smaller images, skip auto video or simplify the page. Your data plan lasts longer.",
+    "for_makers": "Makers use it to cut costs and speed up pages for people on limited data. It is easy to support. It also tells the server a small thing about a user, which can add to a fingerprint.",
+    "use_cases": [
+      {
+        "type": "news",
+        "example": "A news site sends text and small images only when Data Saver is on, so a reader on prepaid data can read more articles.",
+        "apps": []
+      },
+      {
+        "type": "video",
+        "example": "A video site starts at low quality and disables auto play for visitors who sent the data saving header.",
+        "apps": [
+          "YouTube"
+        ]
+      },
+      {
+        "type": "shopping",
+        "example": "A store shows fewer product photos on first load for shoppers who ask to save data.",
+        "apps": []
+      },
+      {
+        "type": "games",
+        "example": "A browser game portal delays the loading of trailers and keeps only the playable game for users who save data.",
+        "apps": []
+      },
+      {
+        "type": "social",
+        "example": "A social site skips auto playing clips in the feed for people with Data Saver.",
+        "apps": []
+      },
+      {
+        "type": "education",
+        "example": "A learning platform sends lighter lessons to students on limited mobile plans.",
+        "apps": []
+      },
+      {
+        "type": "ads",
+        "example": "An ad server serves a lighter ad format when the header is on, so the page loads in time.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Adds to a fingerprint",
+      "Chromium only"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Chromium only",
+    "Opt-in by the user"
+  ],
+  "scores": {
+    "sensitivity": 2,
+    "utility": 3,
+    "fingerprint_bits": 0.3,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Serve smaller images"
+    ],
+    "abuse": [
+      "Income inference"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "related": [
+    "web.network.network-information"
+  ],
+  "refs": [
+    {
+      "t": "mdn",
+      "label": "MDN Save-Data",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/Save-Data"
+    },
+    {
+      "t": "spec",
+      "label": "WICG Save-Data",
+      "url": "https://wicg.github.io/savedata/"
+    }
+  ],
+  "confidence": "docs"
+}

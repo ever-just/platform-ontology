@@ -1,0 +1,237 @@
+{
+  "id": "web.xsite.email-open-pixels",
+  "name": "Email open pixels",
+  "kind": "tracking",
+  "group": "cross-site-tracking",
+  "subgroup": "After leaving",
+  "tags": [
+    "email",
+    "tracking-pixel",
+    "mail-privacy-protection",
+    "open-rate"
+  ],
+  "plain": "A one pixel image in an email that tells the sender when and where the message was opened.",
+  "meaning": "The request reveals open time, device type, rough location by IP and a unique recipient ID. Apple Mail Privacy Protection (iOS 15, Sep 2021) preloads images through proxies, so opens from Apple Mail are inflated and hide the real IP.",
+  "lifecycle": [
+    "after-leaving",
+    "before-visit"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "<img src=\"https://track.example/o.gif?id=...\" width=1 height=1>",
+      "access": {
+        "grant": "none",
+        "prompt_ui": "None",
+        "secure_context": false,
+        "user_gesture": false,
+        "persistence": "Fires on image load; link clicks carry the same ID",
+        "revocation": "Clear site data, browser privacy settings",
+        "iframe": "",
+        "steps": []
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "1",
+          "note": "Depends on email client, not browser",
+          "date": "2008-12-11"
+        },
+        "edge": {
+          "s": "y",
+          "v": "1",
+          "note": "Depends on email client, not browser",
+          "date": ""
+        },
+        "firefox": {
+          "s": "y",
+          "v": "1",
+          "note": "Depends on email client, not browser",
+          "date": "2004-11-09"
+        },
+        "safari": {
+          "s": "y",
+          "v": "1",
+          "note": "Depends on email client, not browser",
+          "date": "2003-06-23"
+        },
+        "ios_safari": {
+          "s": "y",
+          "v": "1",
+          "note": "Depends on email client, not browser",
+          "date": "2007-06-29"
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "1",
+          "note": "Depends on email client, not browser",
+          "date": ""
+        },
+        "samsung": {
+          "s": "y",
+          "v": "1",
+          "note": "Depends on email client, not browser",
+          "date": "2013-04-27"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "event",
+    "metric": "Image fetch",
+    "update": "on open",
+    "fields": [
+      {
+        "name": "ip",
+        "type": "string",
+        "unit": "IPv4 or IPv6",
+        "range": "any",
+        "precision": "proxy IP with Apple MPP"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can tell a sender when and roughly where you opened an email",
+    "user_action": "You open an email that loads its images",
+    "can": [
+      "Tell the sender the email was opened",
+      "Record the time and your approximate location from your network",
+      "Learn which device or mail app opened it"
+    ],
+    "cannot": [
+      "Run if your mail app blocks remote images or hides your network, as Apple Mail privacy does",
+      "Show whether you acted on the message",
+      "See anything else on your device",
+      "Work if you view the email as plain text"
+    ],
+    "reach": 2,
+    "reach_label": "Each opened email",
+    "differs": "Apple Mail privacy protection hides the real open time and location. Gmail and Outlook can also load images in a way that limits it."
+  },
+  "story": {
+    "what_it_is": "A tiny hidden picture in an email that tells the sender when you opened it.",
+    "icon": "mail",
+    "tags": [
+      "Email",
+      "Silent",
+      "Tracking"
+    ],
+    "marketing": [
+      {
+        "vendor": "Apple",
+        "name": "Mail Privacy Protection",
+        "pitch": "Apple says Mail Privacy Protection hides your IP address and stops senders from seeing when you open an email.",
+        "url": "https://support.apple.com/en-us/102420"
+      }
+    ],
+    "for_you": "You open an email and see nothing odd. The email loads a 1 pixel image, and the sender learns the time, your device and rough place. On Apple Mail, a proxy loads it ahead of time, so the open means less.",
+    "for_makers": "Senders want to know who read their message and when to follow up. Open counts feed reports, sales alerts and subject line tests. Apple's privacy feature inflated opens, so many teams now watch clicks more.",
+    "use_cases": [
+      {
+        "type": "ads",
+        "example": "A marketer sends a sale email and counts opens to pick the winning subject line in an A/B test.",
+        "apps": [
+          "Mailchimp",
+          "Klaviyo"
+        ]
+      },
+      {
+        "type": "enterprise",
+        "example": "A sales rep gets an alert when a prospect opens a proposal email and calls within minutes.",
+        "apps": [
+          "HubSpot",
+          "Outreach"
+        ]
+      },
+      {
+        "type": "shopping",
+        "example": "A retailer sends a cart reminder only to people who opened the first email.",
+        "apps": [
+          "Shopify Email",
+          "Klaviyo"
+        ]
+      },
+      {
+        "type": "news",
+        "example": "A newsletter measures which stories get opened, which sets what to write next.",
+        "apps": [
+          "Substack",
+          "Morning Brew"
+        ]
+      },
+      {
+        "type": "security",
+        "example": "A phisher sends a mass email with a pixel to learn which addresses are live.",
+        "apps": []
+      },
+      {
+        "type": "games",
+        "example": "A game studio checks who opened a new season announcement email and who needs a push notification instead.",
+        "apps": [
+          "Epic Games"
+        ]
+      }
+    ],
+    "risks": [
+      "Reveals when and where you read",
+      "Apple Mail hides it, others do not"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Apple Mail Privacy Protection preloads images, so opens are not human",
+    "Gmail serves images from its own proxy cache",
+    "Blocked when images are off"
+  ],
+  "scores": {
+    "sensitivity": 4,
+    "utility": 3,
+    "fingerprint_bits": null,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Email analytics"
+    ],
+    "abuse": [
+      "Tracking when and where a person reads mail"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2013-12",
+      "browser": "all",
+      "version": "",
+      "change": "Gmail starts serving images via its proxy"
+    },
+    {
+      "date": "2021-09",
+      "browser": "safari",
+      "version": "15",
+      "change": "Apple Mail Privacy Protection launched with iOS 15"
+    }
+  ],
+  "related": [
+    "web.xsite.utm-params"
+  ],
+  "refs": [
+    {
+      "t": "vendor",
+      "label": "Apple Mail Privacy Protection",
+      "url": "https://support.apple.com/en-us/102420"
+    },
+    {
+      "t": "vendor",
+      "label": "Litmus on Mail Privacy Protection",
+      "url": "https://www.litmus.com/blog/apple-mail-privacy-protection-what-marketers-need-to-know"
+    }
+  ],
+  "confidence": "docs"
+}

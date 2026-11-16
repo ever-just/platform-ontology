@@ -1,0 +1,261 @@
+{
+  "id": "web.network.connection-info",
+  "name": "Network Information (downlink, rtt, effectiveType)",
+  "kind": "signal",
+  "group": "network-connectivity",
+  "subgroup": "Connection",
+  "tags": [
+    "network",
+    "fingerprint"
+  ],
+  "plain": "Reads estimated connection speed, type and latency.",
+  "meaning": "Reveals if the person is on Wi-Fi, cellular or slow links; changes over time so useful for short term session linking.",
+  "lifecycle": [
+    "on-arrival",
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "navigator.connection",
+      "bcd": [
+        "api.NetworkInformation"
+      ],
+      "access": {
+        "grant": "none",
+        "prompt_ui": "None (no browser prompt)",
+        "secure_context": false,
+        "user_gesture": false,
+        "persistence": "",
+        "revocation": "",
+        "iframe": "",
+        "steps": [
+          "Script reads the value",
+          "Value joins the fingerprint payload"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "61",
+          "note": "",
+          "date": "2017-09-05"
+        },
+        "edge": {
+          "s": "y",
+          "v": "79",
+          "note": "",
+          "date": "2020-01-15"
+        },
+        "firefox": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "safari": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "ios_safari": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "38",
+          "note": "",
+          "date": "2014-10-08"
+        },
+        "samsung": {
+          "s": "y",
+          "v": "3.0",
+          "note": "",
+          "date": "2015-04-10"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "object",
+    "metric": "Network Information (downlink, rtt, effectiveType)",
+    "update": "on change",
+    "fields": [
+      {
+        "name": "downlink",
+        "type": "float",
+        "unit": "Mbps",
+        "range": "0 to 10",
+        "precision": "0.025"
+      },
+      {
+        "name": "downlinkMax",
+        "type": "float",
+        "unit": "Mbps",
+        "range": "",
+        "precision": ""
+      },
+      {
+        "name": "type",
+        "type": "enum",
+        "unit": "",
+        "range": "wifi, cellular, ethernet",
+        "precision": ""
+      },
+      {
+        "name": "effectiveType",
+        "type": "enum",
+        "unit": "",
+        "range": "slow-2g, 2g, 3g, 4g",
+        "precision": ""
+      },
+      {
+        "name": "rtt",
+        "type": "integer",
+        "unit": "ms",
+        "range": "0 to 3000",
+        "precision": "25 ms"
+      },
+      {
+        "name": "saveData",
+        "type": "boolean",
+        "unit": "",
+        "range": "",
+        "precision": ""
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can see roughly how fast and what type your connection is, in Chrome and Edge",
+    "user_action": "Nothing. It happens when the page loads and while you stay on it",
+    "can": [
+      "Check if your connection looks like Wi-Fi, cellular or slow",
+      "See rough speed and delay figures, rounded in coarse steps",
+      "Notice when your connection changes and use it to link short visits",
+      "Load lighter pages when your link is slow"
+    ],
+    "cannot": [
+      "See your exact speed or your provider",
+      "Work in Firefox or Safari, which do not offer it",
+      "See your name or location from this alone",
+      "Tell Wi-Fi from cellular in most cases outside Android"
+    ],
+    "reach": 2,
+    "reach_label": "While the page is open",
+    "differs": "Chrome, Edge and Samsung Internet share it. Firefox and Safari, including all iPhone browsers, do not."
+  },
+  "story": {
+    "what_it_is": "A page can read how fast and stable your connection seems to be, like Wi-Fi or slow 4G.",
+    "icon": "signal",
+    "tags": [
+      "Network",
+      "Silent",
+      "Browser info"
+    ],
+    "marketing": [
+      {
+        "vendor": "MDN Web Docs",
+        "name": "Network Information API",
+        "pitch": "Pages can adapt to a slow or fast connection by reading its estimated type, speed and delay.",
+        "url": "https://developer.mozilla.org/en-US/docs/Web/API/NetworkInformation"
+      }
+    ],
+    "for_you": "You never see a prompt. If your signal is weak, a site may load smaller pictures or lower video quality without telling you. On a strong connection it shows the best version.",
+    "for_makers": "Makers use it to adjust quality, skip heavy features and measure real world speeds across customers. The same numbers add a small clue to a browser fingerprint. Only Chromium browsers share them.",
+    "use_cases": [
+      {
+        "type": "video",
+        "example": "A streaming site starts a video at lower quality when the reported speed is poor, so the first frame shows quickly instead of a spinner.",
+        "apps": [
+          "YouTube"
+        ]
+      },
+      {
+        "type": "games",
+        "example": "A browser 3D game picks smaller textures and fewer effects on a slow connection, so a player on a train can still load the level.",
+        "apps": []
+      },
+      {
+        "type": "shopping",
+        "example": "A store sends lighter product pictures to shoppers on slow mobile data, which keeps them from leaving before the page loads.",
+        "apps": []
+      },
+      {
+        "type": "analytics",
+        "example": "A performance dashboard groups page speed by reported connection type, to show how real customers on 3G and Wi-Fi are doing.",
+        "apps": [
+          "Google Analytics"
+        ]
+      },
+      {
+        "type": "news",
+        "example": "A news site turns off auto loading videos on slow lines to keep articles readable.",
+        "apps": []
+      },
+      {
+        "type": "productivity",
+        "example": "A web design tool such as Figma pauses background downloads of large files when the connection looks weak.",
+        "apps": [
+          "Figma"
+        ]
+      },
+      {
+        "type": "ads",
+        "example": "An ad script uses the connection type and speed with other values to build a fingerprint of a device.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Adds to a fingerprint",
+      "Estimates can be wrong"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Rounded values",
+    "Not in Safari or Firefox"
+  ],
+  "scores": {
+    "sensitivity": 2,
+    "utility": 3,
+    "fingerprint_bits": 3,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Adaptive loading"
+    ],
+    "abuse": [
+      "Short term linking"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": true,
+      "how": "Collector key(s): networkInfo. "
+    }
+  },
+  "related": [
+    "web.tracking.linkedin-apfc-fingerprint"
+  ],
+  "refs": [
+    {
+      "t": "mdn",
+      "label": "MDN NetworkInformation",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/NetworkInformation"
+    },
+    {
+      "t": "news",
+      "label": "BrowserGate: how it works (48 feature table)",
+      "url": "https://browsergate.eu/how-it-works/"
+    },
+    {
+      "t": "github",
+      "label": "mdp/linkedin-extension-fingerprinting (LinkedIn script snapshot and ID list)",
+      "url": "https://github.com/mdp/linkedin-extension-fingerprinting"
+    }
+  ],
+  "confidence": "docs"
+}

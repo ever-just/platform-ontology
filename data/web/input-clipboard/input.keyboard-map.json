@@ -1,0 +1,214 @@
+{
+  "id": "web.input.keyboard-map",
+  "name": "Keyboard Map (layout leak)",
+  "kind": "signal",
+  "group": "input-clipboard",
+  "subgroup": "Keyboard",
+  "tags": [
+    "fingerprint",
+    "layout"
+  ],
+  "plain": "Reveals the physical-to-printed key mapping, i.e. the keyboard layout.",
+  "meaning": "Shows which keyboard layout the person uses (QWERTY, AZERTY, Dvorak, language), a strong locale and fingerprint signal. No prompt.",
+  "lifecycle": [
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "navigator.keyboard.getLayoutMap()",
+      "permissions_policy": "keyboard-map",
+      "bcd": [
+        "api.Keyboard.getLayoutMap"
+      ],
+      "access": {
+        "grant": "none",
+        "prompt_ui": "No prompt; Chromium exposes it to secure contexts.",
+        "secure_context": true,
+        "user_gesture": false,
+        "persistence": "n/a",
+        "revocation": "n/a",
+        "iframe": "Needs allow=\"keyboard-map\"",
+        "steps": [
+          "Call getLayoutMap()",
+          "Read KeyboardLayoutMap of key codes to characters"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "69",
+          "note": "",
+          "date": "2018-09-04"
+        },
+        "edge": {
+          "s": "y",
+          "v": "79",
+          "note": "",
+          "date": "2020-01-15"
+        },
+        "firefox": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "safari": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "ios_safari": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "chrome_android": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "samsung": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "object",
+    "metric": "KeyboardLayoutMap",
+    "update": "on call",
+    "fields": [
+      {
+        "name": "entries",
+        "type": "integer",
+        "unit": "keys",
+        "range": "about 48 mappable keys",
+        "precision": "1"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can tell your keyboard layout, which hints at your country and language",
+    "user_action": "Nothing. It happens when the page or app loads",
+    "can": [
+      "Check which character each physical key produces",
+      "Guess your language or region from that layout",
+      "Add to a profile of your device to help recognise you"
+    ],
+    "cannot": [
+      "See what you type",
+      "Work in Firefox or Safari",
+      "Show a permission pop up; there is none",
+      "Work outside secure (https) pages"
+    ],
+    "reach": 1,
+    "reach_label": "One layout check",
+    "differs": "Only Chrome and Edge on desktop support it. Firefox, Safari and most phones do not."
+  },
+  "story": {
+    "what_it_is": "Reveals which physical key makes which letter, so the page learns your keyboard layout.",
+    "icon": "keyboard",
+    "tags": [
+      "Keyboard",
+      "Silent",
+      "Fingerprint"
+    ],
+    "marketing": [],
+    "for_you": "You see nothing. The page quietly learns whether your keyboard is QWERTY, AZERTY, Dvorak or another layout. No prompt appears. It may be used to guess your country.",
+    "for_makers": "Makers of games and editors use it for correct key labels. Fraud and tracking systems also use it as a free hint to your language, and in a fingerprint it adds a few bits of uniqueness.",
+    "use_cases": [
+      {
+        "type": "games",
+        "example": "A browser game rebinds its movement keys to fit a Dvorak or AZERTY keyboard so players are not stuck with wrong keys.",
+        "apps": [
+          "Krunker.io",
+          "Minecraft Classic"
+        ]
+      },
+      {
+        "type": "creative",
+        "example": "A music web app maps piano keys to the correct physical row on any layout.",
+        "apps": [
+          "Soundtrap",
+          "BandLab"
+        ]
+      },
+      {
+        "type": "ads",
+        "example": "An ad network adds the layout to a profile and guesses a user's language when other signals are missing.",
+        "apps": []
+      },
+      {
+        "type": "analytics",
+        "example": "A fingerprinting script mixes layout, fonts and screen size to spot returning visitors.",
+        "apps": []
+      },
+      {
+        "type": "security",
+        "example": "A fraud engine flags an order that claims to be in Germany but types on a Russian layout.",
+        "apps": []
+      },
+      {
+        "type": "developer",
+        "example": "A coding web app shows the correct shortcut key names for each layout.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Layout hints at country",
+      "No prompt"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Chromium only",
+    "No key press data"
+  ],
+  "scores": {
+    "sensitivity": 2,
+    "utility": 2,
+    "fingerprint_bits": 3,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Showing correct key hints in games"
+    ],
+    "abuse": [
+      "Layout fingerprinting"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2018-09",
+      "browser": "chrome",
+      "version": "69",
+      "change": "Keyboard Map ships"
+    }
+  ],
+  "related": [
+    "web.input.keyboard-lock"
+  ],
+  "refs": [
+    {
+      "t": "mdn",
+      "label": "MDN Keyboard.getLayoutMap",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/Keyboard/getLayoutMap"
+    },
+    {
+      "t": "spec",
+      "label": "WICG Keyboard Map",
+      "url": "https://wicg.github.io/keyboard-map/"
+    }
+  ],
+  "confidence": "docs"
+}

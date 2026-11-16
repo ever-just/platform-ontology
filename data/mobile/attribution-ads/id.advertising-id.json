@@ -1,0 +1,226 @@
+{
+  "id": "mob.id.advertising-id",
+  "name": "Advertising ID (IDFA and AAID)",
+  "kind": "tracking",
+  "group": "attribution-ads",
+  "subgroup": "Advertising",
+  "tags": [
+    "idfa",
+    "aaid",
+    "att"
+  ],
+  "plain": "A resettable ad ID: Android gives it by default, iOS only after the person taps Allow in the ATT prompt.",
+  "meaning": "The cross-app profile key for ad targeting. ATT (iOS 14.5) cut iOS opt-in to roughly 25 percent in industry surveys; Android lets users delete it in Settings.",
+  "lifecycle": [
+    "on-launch",
+    "in-session",
+    "before-install"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "y",
+      "v": "4.0",
+      "api": 14,
+      "permission": "AD_ID (normal, Android 13)",
+      "protection": "normal",
+      "grant": "install",
+      "prompt_ui": "",
+      "persistence": "Until reset or deletion",
+      "revocation": "Settings > Privacy > Ads > Delete advertising ID",
+      "store_policy": "Play: ad ID banned in children's apps",
+      "api_surface": "AdvertisingIdClient.getAdvertisingIdInfo() (Play services)",
+      "note": "UUID; zeroed after opt-out or delete (Android 12)"
+    },
+    "ios": {
+      "s": "p",
+      "v": "6.0",
+      "permission": "prompt",
+      "protection": "prompt",
+      "grant": "none",
+      "prompt_ui": "",
+      "persistence": "Settings > Privacy > Tracking",
+      "revocation": "App Review 5.1.2 and ATT",
+      "store_policy": "",
+      "api_surface": "All zeros unless authorized",
+      "note": "Until revoked"
+    }
+  },
+  "data": {
+    "type": "string",
+    "metric": "UUID or zero",
+    "update": "Static until reset",
+    "fields": [
+      {
+        "name": "id",
+        "type": "string",
+        "unit": "UUID",
+        "range": "36 chars",
+        "precision": "122 bits, or 0 when denied"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can use a resettable ad ID, by default on Android and only after Allow on iPhone",
+    "user_action": "Nothing on Android. On iPhone you tap Allow on the tracking prompt",
+    "can": [
+      "Join your activity across apps for ad targeting",
+      "Keep the same ID until you reset or delete it",
+      "Give zeros after you delete it (Android 12 and later) or refuse tracking (iPhone)"
+    ],
+    "cannot": [
+      "Get the real ID on iPhone after you tap Ask App Not to Track",
+      "Keep the ID after you delete it on Android",
+      "Skip the iPhone prompt, where only about 25 percent say yes, by industry surveys"
+    ],
+    "reach": 4,
+    "reach_label": "Follows you across apps, anytime",
+    "differs": "Android gives the ad ID by default and lets you delete it. iPhone gives it only after you tap Allow."
+  },
+  "story": {
+    "what_it_is": "A resettable ad ID: Android gives it freely, and iOS only after you tap Allow.",
+    "icon": "fingerprint",
+    "tags": [
+      "Ads",
+      "Tracking",
+      "Resettable"
+    ],
+    "marketing": [
+      {
+        "vendor": "Apple",
+        "name": "App Tracking Transparency and IDFA",
+        "pitch": "Apps need permission before they can use the advertising identifier.",
+        "url": "https://developer.apple.com/documentation/apptrackingtransparency"
+      },
+      {
+        "vendor": "Google",
+        "name": "Advertising ID",
+        "pitch": "A user resettable, unique ID for advertising purposes on Android.",
+        "url": "https://developer.android.com/identity/user-data-ids"
+      }
+    ],
+    "for_you": "On Android it is on by default, and you can reset or delete it. On iPhone an app has to ask first, and a no returns zeros.",
+    "for_makers": "It is the cross app profile key for ad targeting. ATT cut iOS opt in to roughly 25 percent in industry surveys, while Android users can delete it but rarely do.",
+    "use_cases": [
+      {
+        "type": "ads",
+        "example": "An ad network shows you a banner for a hotel after you searched travel in another app.",
+        "apps": [
+          "Booking.com",
+          "Google Ads"
+        ]
+      },
+      {
+        "type": "games",
+        "example": "A game credits an install to a rewarded ad and grants a bonus.",
+        "apps": [
+          "Subway Surfers"
+        ]
+      },
+      {
+        "type": "shopping",
+        "example": "A retailer builds an audience of past buyers to show loyalty ads.",
+        "apps": [
+          "Amazon"
+        ]
+      },
+      {
+        "type": "analytics",
+        "example": "A growth team measures how many installs came from each network.",
+        "apps": [
+          "AppsFlyer"
+        ]
+      },
+      {
+        "type": "security",
+        "example": "A fraud tool flags one ID with dozens of installs in a minute.",
+        "apps": [
+          "Adjust"
+        ]
+      },
+      {
+        "type": "kids",
+        "example": "A kids game must not send the ID at all.",
+        "apps": [
+          "PBS Kids Games"
+        ]
+      }
+    ],
+    "risks": [
+      "Follows you across apps",
+      "Hard to understand"
+    ],
+    "android_note": "Android: the Google advertising ID, on by default with delete or reset in settings.",
+    "ios_note": "iOS: the IDFA, available only after you tap Allow on the ATT prompt."
+  },
+  "technical_bounds": [
+    "Zero when denied",
+    "Resettable by user"
+  ],
+  "scores": {
+    "sensitivity": 4,
+    "utility": 4,
+    "fingerprint_bits": 122,
+    "friction": 2
+  },
+  "value": {
+    "legit_uses": [
+      "Ad measurement"
+    ],
+    "abuse": [
+      "Cross-app profiling"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2021-04",
+      "platform": "ios",
+      "version": "iOS 14.5",
+      "change": "ATT required for IDFA"
+    },
+    {
+      "date": "2021-10",
+      "platform": "android",
+      "version": "12 (API 31)",
+      "change": "Ad ID zeroed on opt-out or delete"
+    },
+    {
+      "date": "2022-04",
+      "platform": "android",
+      "version": "13 (API 33)",
+      "change": "AD_ID permission declared"
+    }
+  ],
+  "related": [
+    "mob.id.ad-id-permission"
+  ],
+  "refs": [
+    {
+      "t": "apple",
+      "label": "Apple: App Tracking Transparency",
+      "url": "https://developer.apple.com/documentation/apptrackingtransparency"
+    },
+    {
+      "t": "apple",
+      "label": "Apple: ASIdentifierManager",
+      "url": "https://developer.apple.com/documentation/adsupport/asidentifiermanager"
+    },
+    {
+      "t": "android",
+      "label": "Android: Advertising ID",
+      "url": "https://developer.android.com/identity/user-data-ids"
+    },
+    {
+      "t": "android",
+      "label": "Android 12 behavior changes",
+      "url": "https://developer.android.com/about/versions/12/behavior-changes-12"
+    }
+  ],
+  "confidence": "verified"
+}

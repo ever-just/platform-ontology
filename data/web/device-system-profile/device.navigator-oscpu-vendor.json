@@ -1,0 +1,244 @@
+{
+  "id": "web.device.navigator-oscpu-vendor",
+  "name": "navigator.oscpu, vendor, productSub",
+  "kind": "signal",
+  "group": "device-system-profile",
+  "subgroup": "Browser identity",
+  "tags": [
+    "navigator",
+    "legacy",
+    "engine-flavor"
+  ],
+  "plain": "Legacy engine strings: oscpu (Firefox), vendor, vendorSub, productSub, cpuClass.",
+  "meaning": "Quick tells for the rendering engine and OS. vendor is Google Inc., Apple Computer, Inc. or empty (Firefox); productSub is 20030107 on Chromium and Safari, 20100101 on Firefox. Used to catch spoofed browsers.",
+  "lifecycle": [
+    "on-arrival",
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "navigator.oscpu, navigator.vendor, navigator.productSub, navigator.cpuClass",
+      "bcd": [
+        "api.Navigator.vendor",
+        "api.Navigator.oscpu",
+        "api.Navigator.productSub"
+      ],
+      "access": {
+        "grant": "none",
+        "prompt_ui": "None",
+        "secure_context": false,
+        "user_gesture": false,
+        "persistence": "read fresh on every page load; nothing stored",
+        "revocation": "none needed (no grant)",
+        "iframe": "Readable from cross-origin iframes too (same values)",
+        "steps": [
+          "Page script reads the value",
+          "No prompt is shown"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "1",
+          "note": "",
+          "date": "2008-12-11"
+        },
+        "edge": {
+          "s": "y",
+          "v": "12",
+          "note": "",
+          "date": "2015-07-29"
+        },
+        "firefox": {
+          "s": "y",
+          "v": "1",
+          "note": "oscpu is Firefox only",
+          "date": "2004-11-09"
+        },
+        "safari": {
+          "s": "y",
+          "v": "1",
+          "note": "",
+          "date": "2003-06-23"
+        },
+        "ios_safari": {
+          "s": "y",
+          "v": "1",
+          "note": "",
+          "date": "2007-06-29"
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "18",
+          "note": "",
+          "date": "2012-06-27"
+        },
+        "samsung": {
+          "s": "y",
+          "v": "1.0",
+          "note": "",
+          "date": "2013-04-27"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "object",
+    "metric": "",
+    "update": "static per session",
+    "fields": [
+      {
+        "name": "vendor",
+        "type": "enum",
+        "unit": "",
+        "range": "Google Inc., Apple Computer, Inc., empty",
+        "precision": ""
+      },
+      {
+        "name": "productSub",
+        "type": "enum",
+        "unit": "",
+        "range": "20030107 or 20100101",
+        "precision": ""
+      },
+      {
+        "name": "oscpu",
+        "type": "string",
+        "unit": "",
+        "range": "Firefox only, e.g. Intel Mac OS X 10.15",
+        "precision": "frozen in recent versions"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can see old engine labels that tell Chrome, Safari, and Firefox apart",
+    "user_action": "Nothing. It happens when the page loads",
+    "can": [
+      "Check vendor, productSub, and oscpu text",
+      "Tell the browser engine and OS family",
+      "Catch a browser that is faking its identity"
+    ],
+    "cannot": [
+      "See your exact device or OS version",
+      "See anything in oscpu on Chrome or Safari",
+      "See your name, location, or accounts",
+      "Tell you apart from others using the same browser"
+    ],
+    "reach": 1,
+    "reach_label": "A few frozen labels",
+    "differs": "The oscpu value comes back only in Firefox. Other browsers return nothing."
+  },
+  "story": {
+    "what_it_is": "Old engine strings like oscpu, vendor and productSub that quickly show which browser engine you run.",
+    "icon": "file-text",
+    "tags": [
+      "Browser",
+      "Silent",
+      "Fraud"
+    ],
+    "marketing": [],
+    "for_you": "You never see them. A site can read one short string and know you use Firefox, Chrome or Safari, even if you changed the user agent.",
+    "for_makers": "Different engines return different values, so these are quick tells. Fraud teams use them to catch fakes. Developers use them to work around engine differences.",
+    "use_cases": [
+      {
+        "type": "security",
+        "example": "A bot defence service sees vendor says Google Inc. but oscpu exists, which only Firefox has, and flags the visitor.",
+        "apps": [
+          "DataDome",
+          "Akamai Bot Manager"
+        ]
+      },
+      {
+        "type": "ads",
+        "example": "An ad verification script separates real browsers from headless tools by checking these fields.",
+        "apps": [
+          "Integral Ad Science"
+        ]
+      },
+      {
+        "type": "developer",
+        "example": "A support page prints these values to help staff work out which engine a customer runs.",
+        "apps": []
+      },
+      {
+        "type": "games",
+        "example": "A browser game portal enables a fix for a known engine bug when it recognises the engine.",
+        "apps": []
+      },
+      {
+        "type": "analytics",
+        "example": "A traffic report separates Firefox, Safari and Chrome even when the user agent is hidden.",
+        "apps": []
+      },
+      {
+        "type": "banking",
+        "example": "A bank adds a point to a login risk score when the engine tells disagree.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Quick engine test",
+      "Mismatch looks suspicious"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Deprecated fields; values are constants per engine"
+  ],
+  "scores": {
+    "sensitivity": 1,
+    "utility": 2,
+    "fingerprint_bits": 1.0,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Engine detection"
+    ],
+    "abuse": [
+      "Spoof detection for anti-fraud"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": true,
+      "how": "Collected as vendor, vendorSub, productSub, oscpu, cpuClass. Read by the LinkedIn APFC fingerprint script (48 features, alleged by BrowserGate, partly confirmed by BleepingComputer)."
+    }
+  },
+  "history": [
+    {
+      "date": "2023-02",
+      "browser": "firefox",
+      "version": "110",
+      "change": "oscpu frozen alongside UA"
+    }
+  ],
+  "related": [
+    "web.device.navigator-platform"
+  ],
+  "refs": [
+    {
+      "t": "github",
+      "label": "fingerprintjs source: os_cpu",
+      "url": "https://github.com/fingerprintjs/fingerprintjs/blob/master/src/sources/os_cpu.ts"
+    },
+    {
+      "t": "github",
+      "label": "fingerprintjs source: vendor",
+      "url": "https://github.com/fingerprintjs/fingerprintjs/blob/master/src/sources/vendor.ts"
+    },
+    {
+      "t": "github",
+      "label": "fingerprintjs source: cpu_class",
+      "url": "https://github.com/fingerprintjs/fingerprintjs/blob/master/src/sources/cpu_class.ts"
+    },
+    {
+      "t": "github",
+      "label": "CreepJS (abrahamjuliot)",
+      "url": "https://github.com/abrahamjuliot/creepjs"
+    }
+  ],
+  "confidence": "docs"
+}

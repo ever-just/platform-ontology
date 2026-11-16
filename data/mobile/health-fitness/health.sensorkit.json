@@ -1,0 +1,191 @@
+{
+  "id": "mob.health.sensorkit",
+  "name": "SensorKit research sensors",
+  "kind": "capability",
+  "group": "health-fitness",
+  "subgroup": "Research",
+  "tags": [
+    "entitlement",
+    "research",
+    "irb"
+  ],
+  "plain": "Reads broad passive sensor data for approved research studies only.",
+  "meaning": "Gives researchers keyboard metrics, ambient light, device usage and more over months, a deep behavioral record. Apple limits it to reviewed studies.",
+  "lifecycle": [
+    "background",
+    "in-session"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "n",
+      "v": "",
+      "permission": "",
+      "protection": "none",
+      "grant": "not-exposed",
+      "prompt_ui": "",
+      "persistence": "",
+      "revocation": "",
+      "store_policy": "",
+      "api_surface": "",
+      "note": "No equivalent third party research sensor API; Health Connect and Health Services cover fitness only"
+    },
+    "ios": {
+      "s": "f",
+      "v": "14",
+      "permission": "com.apple.developer.sensorkit.reader.allow, NSSensorKitUsageDescription, NSSensorKitUsageDetail",
+      "protection": "entitlement",
+      "grant": "entitlement",
+      "prompt_ui": "Per sensor consent sheet plus study description and privacy policy URL",
+      "persistence": "Data held 24 hours before app can read it",
+      "revocation": "Settings > Privacy & Security > Research Sensor & Usage Data",
+      "store_policy": "Apple approves IRB approved research studies only",
+      "api_surface": "SRSensorReader",
+      "note": "Raw data stays on device for 24 hours so people can delete it"
+    }
+  },
+  "data": {
+    "type": "stream",
+    "metric": "Sensor samples",
+    "update": "after 24 hour hold",
+    "fields": [
+      {
+        "name": "holdPeriod",
+        "type": "integer",
+        "unit": "hours",
+        "range": "24",
+        "precision": ""
+      },
+      {
+        "name": "sensors",
+        "type": "list",
+        "unit": "types",
+        "range": "ambient light, keyboard metrics, phone usage, visits, and others",
+        "precision": ""
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can't collect broad sensor data like research studies do, unless Apple approves a study",
+    "user_action": "You join an approved research study and approve each sensor on a consent sheet",
+    "can": [
+      "Collect passive sensor data for an Apple approved research study on iPhone",
+      "Show a per sensor consent sheet with study details and privacy policy link",
+      "Keep raw data on device for 24 hours so you can delete it"
+    ],
+    "cannot": [
+      "Use it in a normal app; Apple must approve the study first",
+      "Exist on Android; Health Connect and Health Services cover fitness only",
+      "Collect a sensor you did not approve",
+      "Keep raw data on the phone past 24 hours"
+    ],
+    "reach": 1,
+    "reach_label": "Research studies only",
+    "differs": "iPhone only, for approved studies. Android has no matching third party research sensor system."
+  },
+  "story": {
+    "what_it_is": "Lets approved research apps read broad passive sensor data over months.",
+    "icon": "microscope",
+    "tags": [
+      "Research",
+      "Asks first",
+      "iPhone"
+    ],
+    "marketing": [
+      {
+        "vendor": "Apple",
+        "name": "SensorKit",
+        "pitch": "Developer pitch: research apps can collect broad sensor data, with Apple review and clear consent from participants.",
+        "url": "https://developer.apple.com/documentation/sensorkit"
+      }
+    ],
+    "for_you": "If you join a study, you see a clear consent screen. The research app can then read things like keyboard typing speed, light, phone use and movement for months. You can stop at any time.",
+    "for_makers": "Researchers get rich, passive data without asking people to log it. Apple reviews each study first, so only approved research can use it.",
+    "use_cases": [
+      {
+        "type": "health",
+        "example": "A mental health study tracks sleep and phone use to look for signs of depression.",
+        "apps": []
+      },
+      {
+        "type": "health",
+        "example": "A study of Parkinson's disease measures typing and movement for months.",
+        "apps": []
+      },
+      {
+        "type": "education",
+        "example": "A university tracks how screen time changes during exams.",
+        "apps": []
+      },
+      {
+        "type": "wearables",
+        "example": "A study links watch data and phone use to mood.",
+        "apps": []
+      },
+      {
+        "type": "security",
+        "example": "Privacy experts watch SensorKit to make sure it does not leak to ads.",
+        "apps": []
+      },
+      {
+        "type": "ads",
+        "example": "Apple bans using SensorKit data for ads or sales.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Very broad data",
+      "Long running study"
+    ],
+    "android_note": "Android has no matching research tool.",
+    "ios_note": "Needs an Apple entitlement and study review, and is not open to ordinary apps."
+  },
+  "technical_bounds": [
+    "Only for approved research",
+    "Per sensor consent"
+  ],
+  "scores": {
+    "sensitivity": 5,
+    "utility": 2,
+    "fingerprint_bits": null,
+    "friction": 3
+  },
+  "value": {
+    "legit_uses": [
+      "Mental health research"
+    ],
+    "abuse": [
+      "Behavioral profiling"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2020-09",
+      "platform": "ios",
+      "version": "iOS 14",
+      "change": "SensorKit opened to approved researchers"
+    }
+  ],
+  "related": [
+    "mob.health.healthkit"
+  ],
+  "refs": [
+    {
+      "t": "apple",
+      "label": "Apple: SensorKit",
+      "url": "https://developer.apple.com/documentation/sensorkit"
+    },
+    {
+      "t": "apple",
+      "label": "Apple: Protected resources keys",
+      "url": "https://developer.apple.com/documentation/bundleresources/protected-resources"
+    }
+  ],
+  "confidence": "docs"
+}

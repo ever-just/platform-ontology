@@ -1,0 +1,193 @@
+{
+  "id": "mob.policy.accessibility-api",
+  "name": "Play AccessibilityService API policy",
+  "kind": "capability",
+  "group": "app-ecosystem",
+  "subgroup": "Play permission declarations",
+  "tags": [
+    "accessibility",
+    "accessibility-service",
+    "isAccessibilityTool",
+    "overlay"
+  ],
+  "plain": "Accessibility services see and control the screen, so Play limits them to real accessibility use.",
+  "meaning": "A powerful hook used by malware for fraud. Play requires a declaration and bars use for call recording, ads or remote control unless the app is an accessibility tool.",
+  "lifecycle": [
+    "in-session"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "p",
+      "v": "",
+      "permission": "BIND_ACCESSIBILITY_SERVICE",
+      "protection": "signature",
+      "grant": "settings",
+      "prompt_ui": "User enables it in Settings > Accessibility with a warning",
+      "persistence": "",
+      "revocation": "",
+      "store_policy": "AccessibilityService API policy; isAccessibilityTool flag; declaration form; disclosure required",
+      "api_surface": "AccessibilityService, accessibilityservice config XML",
+      "note": "Android 13 blocks Restricted settings for sideloaded apps."
+    },
+    "ios": {
+      "s": "p",
+      "v": "",
+      "permission": "",
+      "protection": "none",
+      "grant": "settings",
+      "prompt_ui": "",
+      "persistence": "",
+      "revocation": "",
+      "store_policy": "",
+      "api_surface": "UIAccessibility APIs for the app's own UI only",
+      "note": "No equivalent system wide control; Switch Control is user side."
+    }
+  },
+  "data": {
+    "type": "object",
+    "metric": "Screen content, events",
+    "update": "continuous",
+    "fields": [
+      {
+        "name": "view hierarchy",
+        "type": "tree",
+        "unit": "",
+        "range": "",
+        "precision": ""
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can see and control your screen once you turn it on in Settings",
+    "user_action": "You go to Settings, then Accessibility, switch the app on, and accept a warning",
+    "can": [
+      "See what is on screen and tap buttons for you, for people who need that help",
+      "Speak screen text aloud or fill in forms, for accessibility tools",
+      "Help control the phone with a keyboard or switch"
+    ],
+    "cannot": [
+      "Switch itself on without your steps in Settings",
+      "Be used on Play for call recording, ads or remote control, unless it is an accessibility tool",
+      "Be switched on from a sideloaded app on Android 13 without the Restricted settings step",
+      "Work this way on iPhone; Switch Control is a user side tool"
+    ],
+    "reach": 4,
+    "reach_label": "Everything on screen, anytime",
+    "differs": "Android has this service with a Play policy. iPhone has no equivalent system wide control for apps."
+  },
+  "story": {
+    "what_it_is": "Google's rule that limits the powerful screen reading tool to real accessibility apps.",
+    "icon": "eye",
+    "tags": [
+      "Android",
+      "Play rules",
+      "Fraud"
+    ],
+    "marketing": [
+      {
+        "vendor": "Google",
+        "name": "AccessibilityService API policy",
+        "pitch": "Only apps that truly help people with disabilities may use this powerful tool, and they must say so.",
+        "url": "https://support.google.com/googleplay/android-developer/answer/10964491"
+      }
+    ],
+    "for_you": "If you rely on a screen reader or switch control, this is what makes your phone work. For everyone else, it is a wall that stops malicious apps from watching and tapping for you.",
+    "for_makers": "The tool can read the whole screen and press buttons, so crooks used it to steal bank logins. Google requires a declaration, and bars use for call recording, ads or remote control unless the app is truly an accessibility tool.",
+    "use_cases": [
+      {
+        "type": "accessibility",
+        "example": "A screen reader reads the screen out loud to a blind user and lets them navigate by touch.",
+        "apps": [
+          "TalkBack",
+          "Voice Access"
+        ]
+      },
+      {
+        "type": "security",
+        "example": "Banking apps detect an accessibility service that does not belong, and block high risk actions.",
+        "apps": [
+          "Revolut",
+          "PayPal"
+        ]
+      },
+      {
+        "type": "games",
+        "example": "A game macro tool used the service to auto tap, which Play now bans for cheating.",
+        "apps": []
+      },
+      {
+        "type": "productivity",
+        "example": "A password manager uses the service as a fallback to fill logins in apps that do not support autofill.",
+        "apps": [
+          "1Password",
+          "Bitwarden"
+        ]
+      },
+      {
+        "type": "ads",
+        "example": "An ad app tried to click on ads for you in the background, and Play bans that use.",
+        "apps": []
+      },
+      {
+        "type": "enterprise",
+        "example": "A remote support tool for company phones needs a special approval and a clear on screen notice.",
+        "apps": [
+          "TeamViewer"
+        ]
+      }
+    ],
+    "risks": [
+      "Used by banking malware",
+      "Can read everything on screen"
+    ],
+    "android_note": "This is an Android only service and a favorite of malware, so Android 13 added a restricted settings gate.",
+    "ios_note": "iOS has no match. Its assistive features are built in and apps cannot read other apps' screens."
+  },
+  "technical_bounds": [
+    "Warning dialog on enable",
+    "Declared use only"
+  ],
+  "scores": {
+    "sensitivity": 5,
+    "utility": 4,
+    "fingerprint_bits": null,
+    "friction": 4
+  },
+  "value": {
+    "legit_uses": [
+      "Screen readers, switch access"
+    ],
+    "abuse": [
+      "Banking trojans, input capture"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2022-12",
+      "platform": "android",
+      "version": "Android 13",
+      "change": "Restricted settings for sideloaded accessibility services"
+    },
+    {
+      "date": "2021-11",
+      "platform": "android",
+      "version": "Play policy",
+      "change": "isAccessibilityTool declaration"
+    }
+  ],
+  "refs": [
+    {
+      "t": "android",
+      "label": "Play: AccessibilityService policy",
+      "url": "https://support.google.com/googleplay/android-developer/answer/10964491"
+    }
+  ],
+  "confidence": "docs"
+}

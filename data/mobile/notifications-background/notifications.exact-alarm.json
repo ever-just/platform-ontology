@@ -1,0 +1,243 @@
+{
+  "id": "mob.notifications.exact-alarm",
+  "name": "Alarms and reminders",
+  "kind": "permission",
+  "group": "notifications-background",
+  "subgroup": "Timing",
+  "tags": [
+    "special-access",
+    "exact-alarm",
+    "doze",
+    "alarms",
+    "exact",
+    "scheduling"
+  ],
+  "plain": "Lets the app fire alarms at an exact time.",
+  "meaning": "Wakes the phone at precise times. Revoking it cancels all future exact alarms and stops the app.",
+  "lifecycle": [
+    "background"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "y",
+      "v": "12",
+      "api": 31,
+      "permission": "SCHEDULE_EXACT_ALARM",
+      "protection": "special",
+      "grant": "settings",
+      "prompt_ui": "Settings toggle: Alarms and reminders",
+      "persistence": "Until revoked; not pre-granted for new installs targeting 13+ on Android 14 (API 34)",
+      "revocation": "Settings > Special app access > Alarms and reminders",
+      "store_policy": "Play: restricted; only for alarm, calendar, or timer-like core use",
+      "api_surface": "AlarmManager.setExact, canScheduleExactAlarms",
+      "note": "ACTION_SCHEDULE_EXACT_ALARM_PERMISSION_STATE_CHANGED fires on grant. Inexact alarms are delivered within 1 hour on API 31+ with a minimum window of 10 minutes."
+    },
+    "ios": {
+      "s": "p",
+      "v": "10",
+      "permission": "none",
+      "protection": "none",
+      "grant": "none",
+      "prompt_ui": "none",
+      "persistence": "n/a",
+      "revocation": "n/a",
+      "store_policy": "App Review 4.5.4",
+      "api_surface": "UNCalendarNotificationTrigger, AlarmKit (iOS 26)",
+      "note": "Local notifications fire at set times without extra permission beyond notifications; iOS 26 adds AlarmKit for alarm-style apps."
+    }
+  },
+  "web_equivalents": [
+    "web.notify.notification-triggers"
+  ],
+  "data": {
+    "type": "event",
+    "metric": "Exact alarm fire",
+    "update": "per alarm",
+    "fields": [
+      {
+        "name": "delay",
+        "type": "float",
+        "unit": "seconds",
+        "range": "0 to 60 or more",
+        "precision": "less than 1 s typical"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can set alarms at an exact time on Android, if you allow Alarms and reminders",
+    "user_action": "You turn on the Alarms and reminders switch in Settings, or set an alarm in the app",
+    "can": [
+      "Fire an alarm or reminder at an exact minute",
+      "Work again after you allow it, since Android tells the app about the change",
+      "Fire local notifications on iPhone at set times"
+    ],
+    "cannot": [
+      "Use exact alarms on Android 12 or newer without your toggle, unless it is an alarm or calendar app",
+      "Make normal alarms exact; they can arrive within about an hour",
+      "Use iPhone alarm style alerts before iOS 26, when AlarmKit arrived"
+    ],
+    "reach": 2,
+    "reach_label": "Only when you allow it",
+    "differs": "Android 12 and newer needs a settings toggle. iPhone uses local notifications, with AlarmKit added in iOS 26."
+  },
+  "story": {
+    "what_it_is": "Lets an Android app fire alarms and reminders at an exact time.",
+    "icon": "alarm-clock",
+    "tags": [
+      "Android",
+      "Reminders",
+      "Asks first"
+    ],
+    "marketing": [
+      {
+        "vendor": "Google",
+        "name": "Schedule exact alarms",
+        "pitch": "Google describes exact alarms for apps where the precise time is core to the feature, like alarms and calendars.",
+        "url": "https://developer.android.com/develop/background-work/services/alarms"
+      }
+    ],
+    "for_you": "Your reminder goes off at exactly 7:30. You can switch this off in Alarms and reminders, and then the app can no longer do exact times.",
+    "for_makers": "Makers need exact timing for calendars, alarms and pill reminders. Google limits it because exact alarms wake the phone and cost battery.",
+    "use_cases": [
+      {
+        "type": "productivity",
+        "example": "A calendar rings your meeting reminder at the exact minute.",
+        "apps": [
+          "Google Calendar"
+        ]
+      },
+      {
+        "type": "health",
+        "example": "A medication app rings at 8:00 sharp to take your pill.",
+        "apps": []
+      },
+      {
+        "type": "fitness",
+        "example": "An interval timer beeps on the second for your workout.",
+        "apps": []
+      },
+      {
+        "type": "games",
+        "example": "A game rings when a timed crop is ready.",
+        "apps": []
+      },
+      {
+        "type": "travel",
+        "example": "A flight app alerts you 3 hours before takeoff on the dot.",
+        "apps": []
+      },
+      {
+        "type": "education",
+        "example": "A language app reminds you to practice at your chosen time.",
+        "apps": [
+          "Duolingo"
+        ]
+      },
+      {
+        "type": "utilities",
+        "example": "A cooking timer rings at the exact end time.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Battery cost",
+      "Can wake your phone often"
+    ],
+    "android_note": "Settings toggle called Alarms and reminders. Inexact alarms can be late by up to an hour.",
+    "ios_note": "Local notifications fire at set times. iOS 26 adds AlarmKit for alarm style apps."
+  },
+  "technical_bounds": [
+    "Inexact alarms within 1 hour",
+    "Repeating alarms inexact since API 19",
+    "Revoking kills the app",
+    "iOS code cannot run at an exact time"
+  ],
+  "scores": {
+    "sensitivity": 1,
+    "utility": 4,
+    "fingerprint_bits": null,
+    "friction": 3
+  },
+  "value": {
+    "legit_uses": [
+      "Calendars",
+      "Medication reminders"
+    ],
+    "abuse": [
+      "Wake-up abuse"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2025-09",
+      "platform": "ios",
+      "version": "iOS 26",
+      "change": "AlarmKit introduced"
+    },
+    {
+      "date": "2023-10",
+      "platform": "android",
+      "version": "14 (API 34)",
+      "change": "Denied by default for fresh installs targeting 13+; kept on upgrade"
+    },
+    {
+      "date": "2023-10",
+      "platform": "android",
+      "version": "14 (API 34)",
+      "change": "SCHEDULE_EXACT_ALARM denied by default for apps targeting 13+"
+    },
+    {
+      "date": "2022-08",
+      "platform": "android",
+      "version": "13 (API 33)",
+      "change": "USE_EXACT_ALARM added for alarm and calendar apps"
+    },
+    {
+      "date": "2021-10",
+      "platform": "android",
+      "version": "12 (API 31)",
+      "change": "SCHEDULE_EXACT_ALARM introduced"
+    },
+    {
+      "date": "2021-10",
+      "platform": "android",
+      "version": "12 (API 31)",
+      "change": "SCHEDULE_EXACT_ALARM special permission introduced"
+    }
+  ],
+  "related": [
+    "mob.notifications.use-exact-alarm",
+    "mob.bg.doze",
+    "mob.bg.fgs-start-restrictions"
+  ],
+  "refs": [
+    {
+      "t": "android",
+      "label": "Android: Schedule alarms",
+      "url": "https://developer.android.com/develop/background-work/services/alarms"
+    },
+    {
+      "t": "android",
+      "label": "Android 14: Exact alarms",
+      "url": "https://developer.android.com/about/versions/14/changes/schedule-exact-alarms"
+    },
+    {
+      "t": "policy",
+      "label": "Google Play: Exact alarms",
+      "url": "https://support.google.com/googleplay/android-developer/answer/13161072"
+    },
+    {
+      "t": "apple",
+      "label": "Apple: Scheduling a notification locally",
+      "url": "https://developer.apple.com/documentation/usernotifications/scheduling-a-notification-locally-from-your-app"
+    }
+  ],
+  "confidence": "verified"
+}

@@ -1,0 +1,214 @@
+{
+  "id": "mob.bg.standby-buckets",
+  "name": "App Standby Buckets",
+  "kind": "capability",
+  "group": "notifications-background",
+  "subgroup": "Android background limits",
+  "tags": [
+    "standby-bucket",
+    "quotas",
+    "job-limits",
+    "alarm-limits"
+  ],
+  "plain": "Android sorts apps into five buckets that cap job time, alarms and network by how recently they were used.",
+  "meaning": "Rarely opened apps get tiny background budgets, so a retention team sees its sync silently slow down for dormant users. Active apps in the top bucket have almost none.",
+  "lifecycle": [
+    "background"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "y",
+      "v": "9.0",
+      "api": 28,
+      "permission": "",
+      "protection": "none",
+      "grant": "none",
+      "prompt_ui": "None; set by the system from usage",
+      "persistence": "Moves hourly based on use",
+      "revocation": "Settings > Apps; adb shell am get-standby-bucket",
+      "store_policy": "",
+      "api_surface": "UsageStatsManager.getAppStandbyBucket()",
+      "note": "Job runtime: Working 10 min per 4 h; Frequent 10 min per 12 h; Rare 10 min per 24 h; Restricted once per day. Alarms: Working 10 per hour, Frequent 2, Rare 1, Restricted 1 per day. Network off for Rare and Restricted"
+    },
+    "ios": {
+      "s": "n",
+      "v": "",
+      "permission": "",
+      "protection": "none",
+      "grant": "not-exposed",
+      "prompt_ui": "",
+      "persistence": "",
+      "revocation": "",
+      "store_policy": "",
+      "api_surface": "",
+      "note": "iOS has no per-app bucket; see Background App Refresh and Low Power Mode"
+    }
+  },
+  "web_equivalents": [
+    "web.xsite.background-wake-apis"
+  ],
+  "data": {
+    "type": "enum",
+    "metric": "Bucket",
+    "update": "Hourly",
+    "fields": [
+      {
+        "name": "bucket",
+        "type": "enum",
+        "unit": "",
+        "range": "Active, Working set, Frequent, Rare, Restricted, Never",
+        "precision": ""
+      },
+      {
+        "name": "expedited_quota",
+        "type": "integer",
+        "unit": "min per 24 h",
+        "range": "Active 30, Working 15, Frequent 10, Rare 10, Restricted 5",
+        "precision": ""
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can't run as much in the background if you rarely open the app",
+    "user_action": "Nothing. Android sorts apps into groups by how recently you opened them",
+    "can": [
+      "Run about 10 minutes per 4 hours if you use it often",
+      "Run jobs and alarms more freely when it sits in the Working group",
+      "Move back to a better group after you use the app again"
+    ],
+    "cannot": [
+      "Pick its own group; Android sets that from your use",
+      "Run more than about 10 minutes per 24 hours when the app is rarely used",
+      "Run only once a day when it is in the Restricted group",
+      "Face this on iPhone, which has no groups like this"
+    ],
+    "reach": 2,
+    "reach_label": "Limits grow tighter if unused",
+    "differs": "Android has five usage groups that cap jobs, alarms and network. iPhone has no per app group."
+  },
+  "story": {
+    "what_it_is": "Android sorts apps into groups by how often you use them and limits background work for the rarely used ones.",
+    "icon": "layers",
+    "tags": [
+      "Battery",
+      "Background",
+      "Android"
+    ],
+    "marketing": [
+      {
+        "vendor": "Google",
+        "name": "App Standby Buckets",
+        "pitch": "Google describes buckets as a way to prioritize resources for apps people use most and limit those they do not.",
+        "url": "https://developer.android.com/topic/performance/appstandby"
+      }
+    ],
+    "for_you": "You never see the groups. But an app you have not opened in weeks will be slower to sync and alert you, while apps you use daily keep working normally.",
+    "for_makers": "Makers see their reach shrink for dormant users, since background jobs, alarms and network all get cut. They lean on push messages and design the app to catch up the moment it opens.",
+    "use_cases": [
+      {
+        "type": "media",
+        "example": "A news app has fresh stories ready for daily readers but needs a moment to catch up for people who rarely open it.",
+        "apps": [
+          "NYT"
+        ]
+      },
+      {
+        "type": "shopping",
+        "example": "A store sends fewer background price refreshes to users in the rare bucket.",
+        "apps": [
+          "Amazon"
+        ]
+      },
+      {
+        "type": "games",
+        "example": "A game you stopped playing weeks ago stops its timed energy refills in the background.",
+        "apps": []
+      },
+      {
+        "type": "messaging",
+        "example": "A chat app must use high priority push to reach someone in a quiet bucket.",
+        "apps": [
+          "WhatsApp"
+        ]
+      },
+      {
+        "type": "analytics",
+        "example": "A retention team notices background sync slows for dormant users and adjusts its win back campaign.",
+        "apps": []
+      },
+      {
+        "type": "ads",
+        "example": "An ad SDK can upload events less often for apps in low buckets.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Late alerts for rarely used apps",
+      "Dormant users are harder to reach"
+    ],
+    "android_note": "Android only. Five buckets with strict job, alarm and network limits.",
+    "ios_note": "iOS has no buckets. It relies on Background App Refresh and Low Power Mode."
+  },
+  "technical_bounds": [
+    "Charging lifts limits except Restricted",
+    "Active has quota only from Android 16"
+  ],
+  "scores": {
+    "sensitivity": 1,
+    "utility": 4,
+    "fingerprint_bits": null,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Battery management"
+    ],
+    "abuse": [
+      "None"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2018-08",
+      "platform": "android",
+      "version": "9 (API 28)",
+      "change": "App Standby Buckets introduced"
+    },
+    {
+      "date": "2021-10",
+      "platform": "android",
+      "version": "12 (API 31)",
+      "change": "Restricted bucket assigned automatically after 45 days idle"
+    },
+    {
+      "date": "2025-06",
+      "platform": "android",
+      "version": "16 (API 36)",
+      "change": "Job quotas enforced for Active bucket (20 min per 60 min) and based on top state and FGS"
+    }
+  ],
+  "related": [
+    "mob.bg.restricted-battery-ui",
+    "mob.bg.workmanager-jobs"
+  ],
+  "refs": [
+    {
+      "t": "android",
+      "label": "Android: App Standby Buckets",
+      "url": "https://developer.android.com/topic/performance/appstandby"
+    },
+    {
+      "t": "android",
+      "label": "Android 16 behavior changes: all apps",
+      "url": "https://developer.android.com/about/versions/16/behavior-changes-all"
+    }
+  ],
+  "confidence": "verified"
+}

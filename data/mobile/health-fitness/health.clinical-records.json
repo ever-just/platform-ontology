@@ -1,0 +1,200 @@
+{
+  "id": "mob.health.clinical-records",
+  "name": "Clinical health records (FHIR)",
+  "kind": "permission",
+  "group": "health-fitness",
+  "subgroup": "Health data",
+  "tags": [
+    "fhir",
+    "medical-records",
+    "sensitive"
+  ],
+  "plain": "Reads medical records such as conditions, allergies and immunizations in FHIR form.",
+  "meaning": "Lab results, diagnoses and vaccines are among the most sensitive data. Both platforms use separate permissions.",
+  "lifecycle": [
+    "in-session"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "y",
+      "v": "16",
+      "api": 36,
+      "permission": "android.permission.health.READ_MEDICAL_DATA_* (for example CONDITIONS, ALLERGIES_INTOLERANCES)",
+      "protection": "dangerous",
+      "grant": "prompt",
+      "prompt_ui": "Separate health records permission screen",
+      "persistence": "Until revoked",
+      "revocation": "Settings > Health Connect",
+      "store_policy": "Play: medical records access needs declaration",
+      "api_surface": "HealthConnectClient medical resources, FHIR R4",
+      "note": "Framework PHR APIs in Android 16 SDK; Jetpack 1.1.0-beta02; constant names for immunizations vary in docs"
+    },
+    "ios": {
+      "s": "y",
+      "v": "12",
+      "permission": "NSHealthClinicalHealthRecordsShareUsageDescription, NSHealthRequiredReadAuthorizationTypeIdentifiers",
+      "protection": "prompt",
+      "grant": "prompt",
+      "prompt_ui": "Separate Health Records sharing sheet",
+      "persistence": "Until revoked",
+      "revocation": "Health app > Sharing > Apps",
+      "store_policy": "App Review 5.1.3: may not be used for ads",
+      "api_surface": "HKClinicalRecord, HKHealthStore",
+      "note": "Read only; FHIR resources from supported providers"
+    }
+  },
+  "data": {
+    "type": "list",
+    "metric": "FHIR resources",
+    "update": "on request",
+    "fields": [
+      {
+        "name": "resources",
+        "type": "list",
+        "unit": "FHIR R4",
+        "range": "per type",
+        "precision": ""
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can see your medical records, such as conditions and allergies, if you share them",
+    "user_action": "You tap Connect health records and approve a separate sheet",
+    "can": [
+      "See conditions, allergies and immunizations you choose to share",
+      "Use records in a standard medical format (FHIR)",
+      "Share the records with a care or health app you trust"
+    ],
+    "cannot": [
+      "Change your records; iPhone access is view only",
+      "See records without a separate approval screen",
+      "See records from providers that do not support it",
+      "Skip approving each record type"
+    ],
+    "reach": 3,
+    "reach_label": "Medical records you share",
+    "differs": "Android added medical records in Android 16 and the Health Connect library. iPhone has had Health Records for years."
+  },
+  "story": {
+    "what_it_is": "Lets an app read medical records such as conditions, allergies and vaccines.",
+    "icon": "stethoscope",
+    "tags": [
+      "Health",
+      "Asks first",
+      "Very sensitive"
+    ],
+    "marketing": [
+      {
+        "vendor": "Apple",
+        "name": "Health Records",
+        "pitch": "Pitch: see lab results, medications and vaccines from different providers together in the Health app.",
+        "url": "https://www.apple.com/healthcare/health-records/"
+      }
+    ],
+    "for_you": "A pop up asks to read your medical records. If you allow it, the app can see diagnoses, lab results and vaccines pulled from your doctors. This is among the most sensitive data you have.",
+    "for_makers": "Lets health apps build a full picture for care, trials and coaching without typing forms. The data is regulated and each type needs its own consent.",
+    "use_cases": [
+      {
+        "type": "health",
+        "example": "A care app pulls your allergies and medicines so a new doctor sees the full list.",
+        "apps": []
+      },
+      {
+        "type": "health",
+        "example": "A diabetes app reads lab results and shows trends over months.",
+        "apps": []
+      },
+      {
+        "type": "travel",
+        "example": "A travel app shows your vaccine record for entry rules.",
+        "apps": []
+      },
+      {
+        "type": "education",
+        "example": "A school health app checks required vaccines for a student.",
+        "apps": []
+      },
+      {
+        "type": "enterprise",
+        "example": "A clinic app imports your records before an appointment.",
+        "apps": []
+      },
+      {
+        "type": "enterprise",
+        "example": "An insurer might want records to price plans, so rules limit its access.",
+        "apps": []
+      },
+      {
+        "type": "security",
+        "example": "A medical record leak could lead to fraud or blackmail.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Highly sensitive",
+      "Leaks can hurt for life"
+    ],
+    "android_note": "Uses separate Health Connect medical data permissions.",
+    "ios_note": "Uses HealthKit clinical records permissions, granted per record type."
+  },
+  "technical_bounds": [
+    "Separate from fitness data permission",
+    "Read only on iOS"
+  ],
+  "scores": {
+    "sensitivity": 5,
+    "utility": 3,
+    "fingerprint_bits": null,
+    "friction": 3
+  },
+  "value": {
+    "legit_uses": [
+      "Patient apps"
+    ],
+    "abuse": [
+      "Insurance risk profiling"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2018-09",
+      "platform": "ios",
+      "version": "iOS 12",
+      "change": "Health Records API for clinical records"
+    },
+    {
+      "date": "2025-06",
+      "platform": "android",
+      "version": "16 (API 36)",
+      "change": "Medical records in Health Connect"
+    }
+  ],
+  "related": [
+    "mob.health.healthkit"
+  ],
+  "refs": [
+    {
+      "t": "apple",
+      "label": "Apple: Accessing health records",
+      "url": "https://developer.apple.com/documentation/healthkit/accessing-health-records"
+    },
+    {
+      "t": "android",
+      "label": "Android: Medical records in Health Connect",
+      "url": "https://developer.android.com/health-and-fitness/guides/medical-records"
+    },
+    {
+      "t": "android",
+      "label": "Android: Medical records overview",
+      "url": "https://developer.android.com/health-and-fitness/health-connect/medical-records"
+    }
+  ],
+  "confidence": "docs"
+}

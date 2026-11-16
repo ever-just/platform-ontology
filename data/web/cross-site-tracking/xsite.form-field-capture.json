@@ -1,0 +1,216 @@
+{
+  "id": "web.xsite.form-field-capture",
+  "name": "Form field capture before submit",
+  "kind": "tracking",
+  "group": "cross-site-tracking",
+  "subgroup": "In session",
+  "tags": [
+    "forms",
+    "autofill",
+    "email-leak",
+    "keylogging"
+  ],
+  "plain": "Scripts read typed or autofilled form values and can send them before the person presses submit.",
+  "meaning": "Email and name typed into a newsletter box can reach ad trackers on blur or autofill, even if never submitted. Leaky Forms (USENIX Security 2022) found about 1,800 EU and about 3,000 US crawl sites leaking emails to trackers.",
+  "lifecycle": [
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "input, change and blur listeners; Meta Pixel automatic advanced matching; autofill reads",
+      "access": {
+        "grant": "none",
+        "prompt_ui": "None",
+        "secure_context": false,
+        "user_gesture": false,
+        "persistence": "Per event; vendor retention applies",
+        "revocation": "Clear site data, browser privacy settings",
+        "iframe": "",
+        "steps": []
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "1",
+          "note": "Script behaviour, any browser",
+          "date": "2008-12-11"
+        },
+        "edge": {
+          "s": "y",
+          "v": "1",
+          "note": "Script behaviour, any browser",
+          "date": ""
+        },
+        "firefox": {
+          "s": "y",
+          "v": "1",
+          "note": "Script behaviour, any browser",
+          "date": "2004-11-09"
+        },
+        "safari": {
+          "s": "y",
+          "v": "1",
+          "note": "Script behaviour, any browser",
+          "date": "2003-06-23"
+        },
+        "ios_safari": {
+          "s": "y",
+          "v": "1",
+          "note": "Script behaviour, any browser",
+          "date": "2007-06-29"
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "1",
+          "note": "Script behaviour, any browser",
+          "date": ""
+        },
+        "samsung": {
+          "s": "y",
+          "v": "1",
+          "note": "Script behaviour, any browser",
+          "date": "2013-04-27"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "string",
+    "metric": "Typed field values",
+    "update": "per input event",
+    "fields": []
+  },
+  "limits": {
+    "headline": "Can see what you type or autofill in a form before you press submit",
+    "user_action": "You type or autofill into a form on a page with certain scripts",
+    "can": [
+      "See typed or autofilled values as soon as they appear",
+      "Send those values to a server before you submit",
+      "Capture email, phone and name fields",
+      "Keep what you entered even if you never press submit"
+    ],
+    "cannot": [
+      "See fields on pages without that script",
+      "Normally capture password fields if the site is built to exclude them",
+      "Work if a script blocker stops the script",
+      "See forms in other tabs or apps"
+    ],
+    "reach": 3,
+    "reach_label": "Form fields on that page",
+    "differs": "Browsers that block trackers can stop the script in Firefox and Safari. Chrome does not block it by default."
+  },
+  "story": {
+    "what_it_is": "Scripts read what you type in a form, and can send it before you press submit.",
+    "icon": "text-cursor-input",
+    "tags": [
+      "Forms",
+      "Silent",
+      "Email"
+    ],
+    "marketing": [],
+    "for_you": "You type your email into a box, change your mind and close the page. You may think nothing was sent. A script may have read it as you typed or when autofill filled it, and sent it to trackers.",
+    "for_makers": "A typed email is a high value ID for ad targeting and for follow up, even for people who never finish. Marketers use it to rescue lost leads. A 2022 study found this leak on thousands of sites.",
+    "use_cases": [
+      {
+        "type": "shopping",
+        "example": "You enter your email at checkout and leave. An abandoned cart tool already has it and sends a reminder.",
+        "apps": [
+          "Klaviyo",
+          "Shopify"
+        ]
+      },
+      {
+        "type": "ads",
+        "example": "A news signup box sends your email to an ad tracker the moment you tab out of the field.",
+        "apps": [
+          "Meta Pixel"
+        ]
+      },
+      {
+        "type": "analytics",
+        "example": "A form tool logs which fields people leave empty or change, to find where they give up.",
+        "apps": [
+          "Hotjar",
+          "Microsoft Clarity"
+        ]
+      },
+      {
+        "type": "games",
+        "example": "A game sign up form passes your email to ad partners before you press Create account.",
+        "apps": []
+      },
+      {
+        "type": "security",
+        "example": "Login pages watch typing speed to tell humans from bots, which also reads what you type.",
+        "apps": [
+          "Arkose Labs"
+        ]
+      },
+      {
+        "type": "enterprise",
+        "example": "A lead form tool saves a half typed contact request, so sales can call the person even if they never press submit.",
+        "apps": [
+          "HubSpot",
+          "Drift"
+        ]
+      }
+    ],
+    "risks": [
+      "Captured even if never submitted",
+      "Autofill can fill hidden fields too"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Cannot read values of password fields unless script is on that page",
+    "Browser autofill fills hidden fields only after a click on a visible one",
+    "Blockers stop vendor domains"
+  ],
+  "scores": {
+    "sensitivity": 5,
+    "utility": 3,
+    "fingerprint_bits": null,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Form analytics, abandonment recovery"
+    ],
+    "abuse": [
+      "Capturing email before consent or submit"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2022-08",
+      "browser": "all",
+      "version": "",
+      "change": "Leaky Forms study published at USENIX Security 2022"
+    }
+  ],
+  "related": [
+    "web.xsite.meta-pixel",
+    "web.xsite.email-hash-identity"
+  ],
+  "refs": [
+    {
+      "t": "paper",
+      "label": "Leaky Forms (USENIX Security 2022)",
+      "url": "https://www.usenix.org/conference/usenixsecurity22/presentation/senol"
+    },
+    {
+      "t": "vendor",
+      "label": "Meta advanced matching",
+      "url": "https://www.facebook.com/business/help/611774685654668"
+    }
+  ],
+  "confidence": "docs"
+}

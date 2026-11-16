@@ -1,0 +1,233 @@
+{
+  "id": "mob.app.carplay",
+  "name": "In-car apps (CarPlay and Android Auto)",
+  "kind": "capability",
+  "group": "app-ecosystem",
+  "subgroup": "Car",
+  "tags": [
+    "entitlement",
+    "carplay",
+    "android-auto",
+    "car-app-library"
+  ],
+  "plain": "Shows an app on the car dashboard within strict templates.",
+  "meaning": "Cars are safety critical, so both vendors restrict app categories and UI.",
+  "lifecycle": [
+    "in-session"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "y",
+      "v": "5.0",
+      "api": 21,
+      "permission": "androidx.car.app.* permissions per category; no runtime prompt",
+      "protection": "none",
+      "grant": "install",
+      "prompt_ui": "Android Auto connects; Play review by category",
+      "persistence": "While connected",
+      "revocation": "Android Auto settings",
+      "store_policy": "Play: car app categories and quality review",
+      "api_surface": "Car App Library",
+      "note": "Categories include navigation, parking, charging, media, messaging"
+    },
+    "ios": {
+      "s": "f",
+      "v": "12",
+      "permission": "com.apple.developer.carplay-audio, -communication, -charging, -maps, -parking, -quick-ordering",
+      "protection": "entitlement",
+      "grant": "entitlement",
+      "prompt_ui": "Apple entitlement request per category",
+      "persistence": "Tied to provisioning",
+      "revocation": "Settings > General > CarPlay",
+      "store_policy": "Apple approves per category",
+      "api_surface": "CarPlay framework, CPTemplate",
+      "note": "Per category entitlements"
+    }
+  },
+  "data": {
+    "type": "object",
+    "metric": "Templates",
+    "update": "event driven",
+    "fields": [
+      {
+        "name": "categories",
+        "type": "list",
+        "unit": "types",
+        "range": "6",
+        "precision": ""
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can show the app on your car screen, but only in a few fixed layouts",
+    "user_action": "You plug in or connect your phone to the car and tap the app on the car screen",
+    "can": [
+      "Show a simple screen on the dashboard in an approved layout",
+      "Play audio, give directions, or show charging and parking info if it is in an allowed category",
+      "Show messages by voice in a limited way"
+    ],
+    "cannot": [
+      "Use a free design with video, games or long text on the car screen",
+      "Appear at all without Apple approval for that category (iPhone) or a Play review (Android)",
+      "Take over the car controls such as the steering or speed"
+    ],
+    "reach": 2,
+    "reach_label": "While connected to the car",
+    "differs": "Apple gives each category its own entitlement. Android Auto uses a Play review by category."
+  },
+  "story": {
+    "what_it_is": "Lets approved apps show a simple screen on your car dashboard.",
+    "icon": "car",
+    "tags": [
+      "Car",
+      "Safe driving",
+      "Asks first"
+    ],
+    "marketing": [
+      {
+        "vendor": "Apple",
+        "name": "CarPlay",
+        "pitch": "Use your iPhone in the car with a simpler, safer view on the car display.",
+        "url": "https://developer.apple.com/carplay/"
+      },
+      {
+        "vendor": "Google",
+        "name": "Android Auto",
+        "pitch": "Bring your favorite apps to the car screen with big buttons and voice control.",
+        "url": "https://www.android.com/android-auto/"
+      }
+    ],
+    "for_you": "Your phone apps show up on the car screen with big buttons and voice control. You can get directions, play music and answer messages without touching the phone.",
+    "for_makers": "Cars are safety critical, so Apple and Google only allow certain app types (navigation, music, messaging, charging, parking) and fixed screen templates. Makers use it to stay in the driver's day and reach people who never open the phone while driving.",
+    "use_cases": [
+      {
+        "type": "maps",
+        "example": "Your navigation app draws turn by turn directions on the dashboard and reroutes around a crash in real time.",
+        "apps": [
+          "Google Maps",
+          "Waze",
+          "Apple Maps"
+        ]
+      },
+      {
+        "type": "music",
+        "example": "Your playlist and podcasts appear as a simple list; you tell the voice assistant 'play my road trip mix'.",
+        "apps": [
+          "Spotify",
+          "Apple Music",
+          "Audible"
+        ]
+      },
+      {
+        "type": "messaging",
+        "example": "Incoming texts are read out loud and you reply by voice, so the phone stays in the cup holder.",
+        "apps": [
+          "WhatsApp",
+          "Messages"
+        ]
+      },
+      {
+        "type": "automotive",
+        "example": "An electric car owner sees nearby chargers with free plugs and starts a charge from the dashboard.",
+        "apps": [
+          "PlugShare",
+          "ChargePoint"
+        ]
+      },
+      {
+        "type": "delivery",
+        "example": "A food delivery driver gets the next pickup address on the car screen while keeping eyes on the road.",
+        "apps": [
+          "DoorDash",
+          "Uber Eats"
+        ]
+      },
+      {
+        "type": "games",
+        "example": "Games stay off the dashboard on purpose. Car makers allow trivia style voice audio games only in some cars while parked.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Driver distraction",
+      "Location and trip history shared with the car"
+    ],
+    "android_note": "Android Auto runs from the phone and also has a version built into some cars (Android Automotive).",
+    "ios_note": "CarPlay is limited to Apple approved app categories, and apps need a special entitlement from Apple."
+  },
+  "technical_bounds": [
+    "Templates only; no custom UI",
+    "Apple approval per category",
+    "Apps cannot draw arbitrary UI; templates only"
+  ],
+  "scores": {
+    "sensitivity": 2,
+    "utility": 4,
+    "fingerprint_bits": null,
+    "friction": 3
+  },
+  "value": {
+    "legit_uses": [
+      "Navigation",
+      "Media"
+    ],
+    "abuse": [
+      "Driver distraction"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2025-09",
+      "platform": "ios",
+      "version": "iOS 26",
+      "change": "CarPlay widgets, Live Activities and Ultra"
+    },
+    {
+      "date": "2018-09",
+      "platform": "ios",
+      "version": "iOS 12",
+      "change": "Navigation apps allowed"
+    },
+    {
+      "date": "2018-09",
+      "platform": "ios",
+      "version": "iOS 12",
+      "change": "CarPlay maps for third parties"
+    },
+    {
+      "date": "2014-03",
+      "platform": "ios",
+      "version": "iOS 7.1",
+      "change": "CarPlay introduced"
+    }
+  ],
+  "related": [
+    "mob.app.siri",
+    "mob.hw.watch-companion"
+  ],
+  "refs": [
+    {
+      "t": "apple",
+      "label": "Apple: CarPlay",
+      "url": "https://developer.apple.com/documentation/carplay"
+    },
+    {
+      "t": "android",
+      "label": "Android: Car App Library",
+      "url": "https://developer.android.com/training/cars"
+    },
+    {
+      "t": "apple",
+      "label": "Apple: CarPlay",
+      "url": "https://developer.apple.com/carplay/"
+    }
+  ],
+  "confidence": "docs"
+}

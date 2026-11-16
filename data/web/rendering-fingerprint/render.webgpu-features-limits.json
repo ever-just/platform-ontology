@@ -1,0 +1,239 @@
+{
+  "id": "web.render.webgpu-features-limits",
+  "name": "WebGPU features and limits",
+  "kind": "tracking",
+  "group": "rendering-fingerprint",
+  "subgroup": "WebGPU",
+  "tags": [
+    "webgpu",
+    "limits",
+    "features",
+    "compute"
+  ],
+  "plain": "Reads which optional WebGPU features and numeric limits the GPU supports.",
+  "meaning": "About 30 limits and 15 optional features (for example shader-f16, timestamp-query) form a fine-grained hardware and driver signature, usable for model-size gating and for fingerprinting.",
+  "lifecycle": [
+    "on-arrival"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "adapter.features; adapter.limits; device.limits",
+      "bcd": [
+        "api.GPUAdapter.limits",
+        "api.GPUAdapter.features"
+      ],
+      "access": {
+        "grant": "none",
+        "prompt_ui": "",
+        "secure_context": false,
+        "user_gesture": false,
+        "persistence": "",
+        "revocation": "",
+        "iframe": "",
+        "steps": [
+          "Request adapter",
+          "Iterate adapter.features and adapter.limits"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "144",
+          "note": "",
+          "date": "2026-01-13"
+        },
+        "edge": {
+          "s": "y",
+          "v": "144",
+          "note": "",
+          "date": "2026-01-21"
+        },
+        "firefox": {
+          "s": "y",
+          "v": "141",
+          "note": "Windows first",
+          "date": "2025-07-22"
+        },
+        "safari": {
+          "s": "y",
+          "v": "26",
+          "note": "",
+          "date": "2025-09-15"
+        },
+        "ios_safari": {
+          "s": "y",
+          "v": "26",
+          "note": "",
+          "date": "2025-09-15"
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "121",
+          "note": "",
+          "date": "2024-01-23"
+        },
+        "samsung": {
+          "s": "y",
+          "v": "25.0",
+          "note": "",
+          "date": "2024-04-24"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "object",
+    "metric": "About 30 integer limits and up to 20 feature flags",
+    "update": "",
+    "fields": [
+      {
+        "name": "maxBufferSize",
+        "type": "integer",
+        "unit": "bytes",
+        "range": "268435456 to 17179869184",
+        "precision": "exact"
+      },
+      {
+        "name": "maxComputeWorkgroupStorageSize",
+        "type": "integer",
+        "unit": "bytes",
+        "range": "16384 to 65536",
+        "precision": "exact"
+      },
+      {
+        "name": "features",
+        "type": "list",
+        "unit": "",
+        "range": "0 to 20",
+        "precision": "exact"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can list which optional graphics features and limits your device supports",
+    "user_action": "Nothing. It happens when the page uses WebGPU",
+    "can": [
+      "List about 30 hardware limits and 15 optional features",
+      "Build a fine hardware and driver profile",
+      "Decide which size of AI model your device can run",
+      "Add the profile to a device ID"
+    ],
+    "cannot": [
+      "Ask permission first",
+      "See your files",
+      "Show you anything on screen",
+      "Work in browsers without WebGPU support"
+    ],
+    "reach": 3,
+    "reach_label": "Silent, hardware profile",
+    "differs": ""
+  },
+  "story": {
+    "what_it_is": "A script reads which optional WebGPU features and number limits your graphics chip supports.",
+    "icon": "gauge",
+    "tags": [
+      "Graphics",
+      "Silent",
+      "Fingerprinting"
+    ],
+    "marketing": [
+      {
+        "vendor": "Google Chrome",
+        "name": "WebGPU",
+        "pitch": "Chrome describes WebGPU as giving the web modern graphics and computing power similar to native apps.",
+        "url": "https://developer.chrome.com/docs/web-platform/webgpu/overview"
+      },
+      {
+        "vendor": "MDN",
+        "name": "GPUSupportedLimits",
+        "pitch": "Describes the numbers that tell a page how large and complex the graphics jobs can be.",
+        "url": "https://developer.mozilla.org/en-US/docs/Web/API/GPUSupportedLimits"
+      }
+    ],
+    "for_you": "You never see it. The page asks how big and complex a job your graphics chip can handle, then picks settings for you. Your answers also add to a unique profile of your device.",
+    "for_makers": "Game, 3D and on device AI apps read these limits to decide what to run. The numbers also split devices by chip and driver, so browsers round or hide some values.",
+    "use_cases": [
+      {
+        "type": "games",
+        "example": "A browser game checks the largest texture and buffer sizes, then picks scene detail that fits your chip.",
+        "apps": []
+      },
+      {
+        "type": "creative",
+        "example": "A web 3D tool checks features before it turns on advanced shadow and light effects.",
+        "apps": [
+          "Spline"
+        ]
+      },
+      {
+        "type": "productivity",
+        "example": "A web app that runs an AI chat model locally checks memory limits first so it does not crash.",
+        "apps": [
+          "WebLLM demos"
+        ]
+      },
+      {
+        "type": "video",
+        "example": "A browser video tool decides how many effects it can apply at once.",
+        "apps": []
+      },
+      {
+        "type": "security",
+        "example": "A fraud tool compares limits with what the claimed device should show, and finds mismatches.",
+        "apps": []
+      },
+      {
+        "type": "ads",
+        "example": "A tracker uses the exact limits as extra bits for a device ID.",
+        "apps": []
+      },
+      {
+        "type": "developer",
+        "example": "A developer uses the numbers to know why a scene runs well on one laptop and badly on another.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Reveals GPU model clues",
+      "New and not yet well defended"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Many limits cluster into a few tiers, lowering uniqueness"
+  ],
+  "scores": {
+    "sensitivity": 3,
+    "utility": 4,
+    "fingerprint_bits": 4,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": "Right-size ML and graphics workloads",
+    "abuse": "Hardware tier fingerprint"
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "related": [
+    "web.render.webgpu-adapter-info"
+  ],
+  "refs": [
+    {
+      "t": "spec",
+      "label": "WebGPU spec",
+      "url": "https://gpuweb.github.io/gpuweb/"
+    },
+    {
+      "t": "mdn",
+      "label": "MDN GPUSupportedLimits",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/GPUSupportedLimits"
+    }
+  ],
+  "confidence": "docs"
+}

@@ -1,0 +1,204 @@
+{
+  "id": "web.timing.timestamp-seed",
+  "name": "Timestamp seed (tsSeed)",
+  "kind": "signal",
+  "group": "timing-performance",
+  "subgroup": "Time",
+  "tags": [
+    "time",
+    "fingerprint"
+  ],
+  "plain": "Records the browser's clock value when collection starts.",
+  "meaning": "Time value used to order events and to check clock drift against the server.",
+  "lifecycle": [
+    "on-arrival",
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "Date.now() or performance.now()",
+      "access": {
+        "grant": "none",
+        "prompt_ui": "None (no browser prompt)",
+        "secure_context": false,
+        "user_gesture": false,
+        "persistence": "",
+        "revocation": "",
+        "iframe": "",
+        "steps": [
+          "Script reads the value",
+          "Value joins the fingerprint payload"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "",
+          "note": ""
+        },
+        "edge": {
+          "s": "y",
+          "v": "",
+          "note": ""
+        },
+        "firefox": {
+          "s": "y",
+          "v": "",
+          "note": ""
+        },
+        "safari": {
+          "s": "y",
+          "v": "",
+          "note": ""
+        },
+        "ios_safari": {
+          "s": "y",
+          "v": "",
+          "note": ""
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "",
+          "note": ""
+        },
+        "samsung": {
+          "s": "y",
+          "v": "",
+          "note": ""
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "integer",
+    "metric": "Timestamp seed (tsSeed)",
+    "update": "read on demand",
+    "fields": [
+      {
+        "name": "tsSeed",
+        "type": "integer",
+        "unit": "ms",
+        "range": "",
+        "precision": "1 ms"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can note your browser's clock when it starts collecting data",
+    "user_action": "Nothing. It happens when collection starts on the page",
+    "can": [
+      "Save the current clock value",
+      "Put events in order",
+      "Check for clock drift against the server"
+    ],
+    "cannot": [
+      "Know your exact location",
+      "Ask permission first",
+      "See your files",
+      "Know who you are by itself"
+    ],
+    "reach": 1,
+    "reach_label": "One clock value, one moment",
+    "differs": ""
+  },
+  "story": {
+    "what_it_is": "A bot defense script records the browser's clock value when its data collection starts.",
+    "icon": "clock",
+    "tags": [
+      "Anti fraud",
+      "Silent",
+      "Timing"
+    ],
+    "marketing": [],
+    "for_you": "You never see it. A security script stamps the time it started collecting traits. That helps the site check that the data it receives is fresh and was not copied from another visit.",
+    "for_makers": "Bot defense vendors use a time seed to stop replay, where an attacker reuses a valid data bundle from a real browser. It also helps measure how long each part of collection took, which separates humans from scripts.",
+    "use_cases": [
+      {
+        "type": "security",
+        "example": "A bot defense system rejects a data bundle with an old timestamp, since an attacker reused it.",
+        "apps": [
+          "Akamai Bot Manager",
+          "DataDome"
+        ]
+      },
+      {
+        "type": "shopping",
+        "example": "A sneaker or ticket site blocks bots that replay a captured valid session.",
+        "apps": [
+          "Ticketmaster"
+        ]
+      },
+      {
+        "type": "banking",
+        "example": "A bank checks that device checks were produced on this visit, not copied.",
+        "apps": []
+      },
+      {
+        "type": "games",
+        "example": "A browser game with prizes blocks replayed session data sent by cheats.",
+        "apps": []
+      },
+      {
+        "type": "social",
+        "example": "A social site blocks fake sign up scripts that reuse a valid captured bundle.",
+        "apps": []
+      },
+      {
+        "type": "ads",
+        "example": "An ad network rejects click reports with stale or repeated time seeds.",
+        "apps": []
+      },
+      {
+        "type": "analytics",
+        "example": "A fraud analytics tool measures time between steps to see if it matches a person.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Part of silent checks",
+      "Hard for honest users to see"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Rounded in some browsers"
+  ],
+  "scores": {
+    "sensitivity": 1,
+    "utility": 3,
+    "fingerprint_bits": 1,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Order events"
+    ],
+    "abuse": [
+      "Clock skew checks"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": true,
+      "how": "Collector key(s): tsSeed. Exact use of tsSeed is not documented publicly."
+    }
+  },
+  "related": [
+    "web.tracking.linkedin-apfc-fingerprint"
+  ],
+  "refs": [
+    {
+      "t": "mdn",
+      "label": "MDN Date.now",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/now"
+    },
+    {
+      "t": "github",
+      "label": "mdp/linkedin-extension-fingerprinting (LinkedIn script snapshot and ID list)",
+      "url": "https://github.com/mdp/linkedin-extension-fingerprinting"
+    }
+  ],
+  "confidence": "inferred"
+}

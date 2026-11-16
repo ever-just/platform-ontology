@@ -1,0 +1,178 @@
+{
+  "id": "mob.dev.build-fingerprint",
+  "name": "Build fingerprint and kernel version",
+  "kind": "signal",
+  "group": "device-system-profile",
+  "subgroup": "Software state",
+  "tags": [
+    "build-id",
+    "kernel"
+  ],
+  "plain": "Reads the full build ID string and kernel version.",
+  "meaning": "Pins the exact firmware (model, build, patch) and so the OEM and carrier variant. Tight fingerprint; also tells where a phone was sold.",
+  "lifecycle": [
+    "on-launch",
+    "in-session"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "y",
+      "v": "1.0",
+      "api": 1,
+      "permission": "",
+      "protection": "none",
+      "grant": "none",
+      "prompt_ui": "",
+      "persistence": "",
+      "revocation": "",
+      "store_policy": "",
+      "api_surface": "Build.FINGERPRINT, ID, DISPLAY, TAGS, TYPE; System.getProperty(os.version)",
+      "note": "Typically 100+ characters"
+    },
+    "ios": {
+      "s": "p",
+      "v": "2.0",
+      "permission": "none",
+      "protection": "none",
+      "grant": "none",
+      "prompt_ui": "",
+      "persistence": "",
+      "revocation": "",
+      "store_policy": "",
+      "api_surface": "Build and Darwin version; no carrier variant",
+      "note": ""
+    }
+  },
+  "data": {
+    "type": "string",
+    "metric": "Build fingerprint",
+    "update": "Changes on update",
+    "fields": [
+      {
+        "name": "fingerprint",
+        "type": "string",
+        "unit": "",
+        "range": "about 100 chars",
+        "precision": "exact"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can see your exact phone software build, a long label often over 100 characters",
+    "user_action": "Nothing. The app can look it up as soon as it opens",
+    "can": [
+      "See the full Android build label, with tags and type",
+      "See the kernel version on Android and iPhone",
+      "Use the label as one clue to tell similar phones apart"
+    ],
+    "cannot": [
+      "Learn who you are from this label alone",
+      "See a carrier version on iPhone; Apple gives a plain build and kernel version",
+      "Change the build or install a different one"
+    ],
+    "reach": 2,
+    "reach_label": "Always available, one label",
+    "differs": "Android shows a long detailed label. iPhone shows less and only a partial guess in some cases."
+  },
+  "story": {
+    "what_it_is": "An app can read the exact firmware and system build of your phone.",
+    "icon": "cpu",
+    "tags": [
+      "Silent",
+      "Fingerprint",
+      "Device"
+    ],
+    "marketing": [],
+    "for_you": "You never see it. It is a long label with your phone's maker, build and patch. It tells an app what exact software you have and often where the phone was sold.",
+    "for_makers": "Makers use it for bug fixes on one firmware version and for fraud checks. Because the label is so exact, it is also a strong fingerprint detail for tracking.",
+    "use_cases": [
+      {
+        "type": "games",
+        "example": "A game applies a graphics workaround for a bug on one phone maker's build.",
+        "apps": []
+      },
+      {
+        "type": "security",
+        "example": "A bank notices a login from a build string that does not match a real phone.",
+        "apps": []
+      },
+      {
+        "type": "developer",
+        "example": "A crash tool groups crashes by firmware so engineers find the bad update.",
+        "apps": [
+          "Firebase Crashlytics"
+        ]
+      },
+      {
+        "type": "ads",
+        "example": "An ad firm adds the build label to a device fingerprint.",
+        "apps": []
+      },
+      {
+        "type": "media",
+        "example": "A streaming app checks that a build supports a video codec before offering 4K.",
+        "apps": []
+      },
+      {
+        "type": "shopping",
+        "example": "A fraud team spots a fake phone because its build label does not exist.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Strong fingerprint detail",
+      "Shows where phone was sold"
+    ],
+    "android_note": "Available as Build.FINGERPRINT with no prompt.",
+    "ios_note": "iOS shows a coarser build number and kernel version through system calls."
+  },
+  "technical_bounds": [
+    "Rooted or custom ROMs often show test-keys in TAGS"
+  ],
+  "scores": {
+    "sensitivity": 1,
+    "utility": 3,
+    "fingerprint_bits": 5,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Crash reports"
+    ],
+    "abuse": [
+      "Fingerprint",
+      "Rooted-device detection"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2008-09",
+      "platform": "android",
+      "version": "1.0 (API 1)",
+      "change": "Build.FINGERPRINT available"
+    }
+  ],
+  "related": [
+    "mob.dev.model"
+  ],
+  "refs": [
+    {
+      "t": "android",
+      "label": "Android: Build",
+      "url": "https://developer.android.com/reference/android/os/Build"
+    },
+    {
+      "t": "apple",
+      "label": "Apple: ProcessInfo",
+      "url": "https://developer.apple.com/documentation/foundation/processinfo"
+    }
+  ],
+  "confidence": "docs"
+}

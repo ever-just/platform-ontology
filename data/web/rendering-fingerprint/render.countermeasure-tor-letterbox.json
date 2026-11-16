@@ -1,0 +1,219 @@
+{
+  "id": "web.render.countermeasure-tor-letterbox",
+  "name": "Tor Browser uniformity and letterboxing",
+  "kind": "tracking",
+  "group": "rendering-fingerprint",
+  "subgroup": "Countermeasures",
+  "tags": [
+    "countermeasure",
+    "tor",
+    "letterboxing",
+    "uniform"
+  ],
+  "plain": "Tor Browser makes all users look the same: fixed fonts, letterboxed window, canvas prompt.",
+  "meaning": "Standardizes fonts, screen size in 200x100 steps, UTC timezone and en-US locale. Canvas readback needs a prompt. Goal is one crowd, not noise, which yields about zero bits when users keep defaults.",
+  "lifecycle": [
+    "on-arrival"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "Tor Browser (Firefox ESR based, Safest level disables JS)",
+      "access": {
+        "grant": "none",
+        "prompt_ui": "",
+        "secure_context": false,
+        "user_gesture": false,
+        "persistence": "",
+        "revocation": "",
+        "iframe": "",
+        "steps": [
+          "RFP spoofs timezone, locale, hardware",
+          "Letterboxing rounds inner window size",
+          "Canvas extraction prompts the person"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "edge": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "firefox": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "safari": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "ios_safari": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "chrome_android": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "samsung": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "none",
+    "metric": "Uniform values for all users",
+    "update": "",
+    "fields": [
+      {
+        "name": "window width",
+        "type": "integer",
+        "unit": "px",
+        "range": "200 to 1600",
+        "precision": "rounded to 200 steps, height to 100 steps"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can't tell Tor Browser users apart, since everyone looks the same",
+    "user_action": "You open Tor Browser. It works by default",
+    "can": [
+      "Show every visitor the same fonts, time zone and language",
+      "Round the window size to fixed steps so many people match",
+      "Ask you before the site can see canvas pictures"
+    ],
+    "cannot": [
+      "Be a clean match if you resize the window or turn off its protections",
+      "Hide that you use Tor, which sites can still guess",
+      "Stop sites that follow you with a login"
+    ],
+    "reach": 1,
+    "reach_label": "Same look for all Tor users",
+    "differs": "Only Tor Browser works this way. Other browsers add noise or block only some checks."
+  },
+  "story": {
+    "what_it_is": "Tor Browser makes every user look the same: fixed fonts, a letterboxed window and a prompt before canvas reads.",
+    "icon": "venetian-mask",
+    "tags": [
+      "Privacy",
+      "Defense",
+      "Browser"
+    ],
+    "marketing": [
+      {
+        "vendor": "Tor Project",
+        "name": "Tor Browser design",
+        "pitch": "Tor says its browser aims to make all users look alike, so no one can be singled out by device details.",
+        "url": "https://2019.www.torproject.org/projects/torbrowser/design/"
+      }
+    ],
+    "for_you": "Windows open at standard sizes with gray bars around the page, called letterboxing. Some sites look plain, and canvas reads may ask your permission. In return you blend into a crowd.",
+    "for_makers": "Tor's design goal is that everyone gives the same answers. Sites that need strong fraud checks often hit more captchas or blocks, so makers have to decide whether to allow privacy first users.",
+    "use_cases": [
+      {
+        "type": "security",
+        "example": "A bank sees a login from Tor with identical device traits to thousands of others and applies extra checks.",
+        "apps": []
+      },
+      {
+        "type": "news",
+        "example": "A journalism site or a whistleblower portal welcomes Tor, so readers in risky places can read without being tracked.",
+        "apps": [
+          "The New York Times onion site",
+          "BBC onion site"
+        ]
+      },
+      {
+        "type": "social",
+        "example": "A social network that blocks Tor for spam fights, but runs a hidden onion address for people in censored countries.",
+        "apps": [
+          "Facebook onion site"
+        ]
+      },
+      {
+        "type": "ads",
+        "example": "An ad network gets the same device answers for every Tor visitor, so it cannot build a profile.",
+        "apps": []
+      },
+      {
+        "type": "shopping",
+        "example": "A store sees many Tor users share one profile and flags orders, which can block honest buyers.",
+        "apps": []
+      },
+      {
+        "type": "games",
+        "example": "A browser game with graphics tests runs, but fine graphics settings may look basic because the browser hides details.",
+        "apps": []
+      },
+      {
+        "type": "education",
+        "example": "A student in a country with censorship reads a banned encyclopedia page with no fingerprint to follow.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Sites may block or challenge Tor",
+      "Slower and plainer pages",
+      "Resizing the window can undo the benefit"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Resizing, extra fonts or JS toggles break uniformity",
+    "Exit node IPs are public and blockable"
+  ],
+  "scores": {
+    "sensitivity": 1,
+    "utility": 2,
+    "fingerprint_bits": null,
+    "friction": 3
+  },
+  "value": {
+    "legit_uses": "Anonymity",
+    "abuse": "Detect Tor via exit list, unusual JS defaults"
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2019-05",
+      "browser": "firefox",
+      "version": "67",
+      "change": "Letterboxing upstreamed to Firefox RFP"
+    }
+  ],
+  "related": [
+    "web.render.countermeasure-firefox-fpp",
+    "web.net.vpn-proxy-tor-detection"
+  ],
+  "refs": [
+    {
+      "t": "vendor",
+      "label": "Tor Browser design document",
+      "url": "https://2019.www.torproject.org/projects/torbrowser/design/"
+    },
+    {
+      "t": "mozilla",
+      "label": "Mozilla Tor Uplift",
+      "url": "https://wiki.mozilla.org/Security/Tor_Uplift"
+    }
+  ],
+  "confidence": "docs"
+}

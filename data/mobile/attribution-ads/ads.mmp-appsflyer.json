@@ -1,0 +1,218 @@
+{
+  "id": "mob.ads.mmp-appsflyer",
+  "name": "AppsFlyer SDK",
+  "kind": "tracking",
+  "group": "attribution-ads",
+  "subgroup": "Mobile measurement partners",
+  "tags": [
+    "appsflyer",
+    "onelink",
+    "mmp",
+    "sdk"
+  ],
+  "plain": "A third-party SDK that attributes installs, runs deep links, and sends events to ad networks.",
+  "meaning": "Sees device IDs, IP, user agent, in-app events for every customer app, and uses fraud and cohort tools. OneLink handles deferred deep links.",
+  "lifecycle": [
+    "before-install",
+    "on-launch",
+    "in-session",
+    "after-uninstall"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "y",
+      "v": "",
+      "permission": "INTERNET, ACCESS_NETWORK_STATE; AD_ID for GAID; Install Referrer library",
+      "protection": "normal",
+      "grant": "install",
+      "prompt_ui": "",
+      "persistence": "",
+      "revocation": "",
+      "store_policy": "Data safety must list SDK data; Families: certified ad SDK rules",
+      "api_surface": "MMP SDK + Play Install Referrer + GAID",
+      "note": "Uses Install Referrer and GAID; collects IP and OS data."
+    },
+    "ios": {
+      "s": "y",
+      "v": "",
+      "permission": "NSUserTrackingUsageDescription if IDFA used; privacy manifest from SDK",
+      "protection": "prompt",
+      "grant": "prompt",
+      "prompt_ui": "",
+      "persistence": "",
+      "revocation": "",
+      "store_policy": "Privacy manifest and signature required for listed SDKs; ATT 5.1.2(i)",
+      "api_surface": "MMP SDK + SKAdNetwork/AdAttributionKit + ATT",
+      "note": "Uses SKAN, AAK and IDFA when allowed; on iOS can run probabilistic modeling per vendor docs for some users."
+    }
+  },
+  "web_equivalents": [
+    "web.xsite.ad-click-ids"
+  ],
+  "data": {
+    "type": "object",
+    "metric": "Install, session and event records tied to an MMP ID",
+    "update": "continuous via SDK",
+    "fields": [
+      {
+        "name": "device ID",
+        "type": "string",
+        "unit": "",
+        "range": "GAID, IDFA or IDFV, MMP-specific ID",
+        "precision": ""
+      },
+      {
+        "name": "attribution source",
+        "type": "string",
+        "unit": "",
+        "range": "",
+        "precision": ""
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can link your install to an ad and watch what you do in the app",
+    "user_action": "Nothing. It starts when the app opens, after you tapped an ad and installed",
+    "can": [
+      "Match an install to an ad using the install referrer and Google ad ID",
+      "Collect device IDs, IP address and app events across its customers' apps",
+      "Open the right screen after install with a link",
+      "Send events to ad networks"
+    ],
+    "cannot": [
+      "Use the iPhone ad ID until you allow tracking",
+      "Skip Apple's delayed reports for people who said no",
+      "See what you do in apps that do not use its tool"
+    ],
+    "reach": 4,
+    "reach_label": "Ongoing, across its customers' apps",
+    "differs": "Android uses the install referrer and ad ID. iPhone uses Apple's reports and the ID only if allowed."
+  },
+  "story": {
+    "what_it_is": "A popular install tracking SDK that credits installs to ads, runs deep links and shares events with ad networks.",
+    "icon": "chart-bar",
+    "tags": [
+      "Ads",
+      "Attribution",
+      "Tracking"
+    ],
+    "marketing": [],
+    "for_you": "You never see it. If you clicked an ad, it quietly tells the app company which one, and it can take you to the right page after install.",
+    "for_makers": "AppsFlyer sees device IDs, IP, user agent and in app events across thousands of apps, and offers fraud and cohort tools. Its OneLink product handles links that survive an install.",
+    "use_cases": [
+      {
+        "type": "games",
+        "example": "A mobile game sees which TikTok ad brought the most spenders and moves its budget there.",
+        "apps": [
+          "Playtika",
+          "Moon Active"
+        ]
+      },
+      {
+        "type": "shopping",
+        "example": "A shopping app uses OneLink so a shared link opens a product, even after install.",
+        "apps": [
+          "Shein",
+          "Temu"
+        ]
+      },
+      {
+        "type": "ads",
+        "example": "An ad network sends events to AppsFlyer so the advertiser can compare it with others.",
+        "apps": [
+          "Meta",
+          "Google Ads"
+        ]
+      },
+      {
+        "type": "security",
+        "example": "Its fraud suite blocks fake installs and bot clicks before the advertiser pays.",
+        "apps": []
+      },
+      {
+        "type": "rideshare",
+        "example": "A ride app credits a first ride to the referral link that a friend shared.",
+        "apps": [
+          "Bolt"
+        ]
+      },
+      {
+        "type": "analytics",
+        "example": "A team builds groups of users who bought in week one and sends them to ad networks.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Sees activity across many customer apps",
+      "Shares events with ad networks"
+    ],
+    "android_note": "Reads the Google advertising ID and the Play install referrer.",
+    "ios_note": "Uses SKAN, AdAttributionKit and the IDFA only with consent."
+  },
+  "technical_bounds": [
+    "Data flows to the vendor's cloud",
+    "Needs ATT for IDFA matching on iOS",
+    "Privacy manifest and required reasons apply"
+  ],
+  "scores": {
+    "sensitivity": 4,
+    "utility": 5,
+    "fingerprint_bits": 12,
+    "friction": 1
+  },
+  "value": {
+    "legit_uses": [
+      "Attribution, fraud detection, deep links, ROAS"
+    ],
+    "abuse": [
+      "Cross-customer device graph",
+      "Fingerprint-style matching on non-consenting iOS"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2021-04",
+      "platform": "ios",
+      "version": "iOS 14.5",
+      "change": "MMPs shift to SKAN and consent-gated IDFA for iOS"
+    },
+    {
+      "date": "2024-05",
+      "platform": "ios",
+      "version": "iOS 17.5",
+      "change": "Privacy manifests and signatures required for the SDK"
+    },
+    {
+      "date": "2025-10",
+      "platform": "android",
+      "version": "Android 16",
+      "change": "Privacy Sandbox wind-down: Install Referrer plus GAID remain the Android core"
+    }
+  ],
+  "related": [
+    "mob.xtrack.probabilistic-matching",
+    "mob.attr.install-referrer",
+    "mob.ads.skadnetwork",
+    "mob.ads.sdk-data-sharing"
+  ],
+  "refs": [
+    {
+      "t": "vendor",
+      "label": "AppsFlyer developer hub",
+      "url": "https://dev.appsflyer.com/"
+    },
+    {
+      "t": "vendor",
+      "label": "AppsFlyer: AdAttributionKit WWDC25",
+      "url": "https://www.appsflyer.com/blog/mobile-marketing/adattributionkit-wwdc25/"
+    }
+  ],
+  "confidence": "docs"
+}

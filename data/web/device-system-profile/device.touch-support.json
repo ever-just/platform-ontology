@@ -1,0 +1,234 @@
+{
+  "id": "web.device.touch-support",
+  "name": "Touch support",
+  "kind": "signal",
+  "group": "device-system-profile",
+  "subgroup": "Input hardware",
+  "tags": [
+    "touch",
+    "maxTouchPoints",
+    "mobile-detection"
+  ],
+  "plain": "How many simultaneous touches the screen supports and whether touch events exist.",
+  "meaning": "Separates phone and tablet from desktop, and touch laptops from plain ones. maxTouchPoints is 0 on mouse-only devices, 5 on most phones, 10 on many tablets and touch PCs.",
+  "lifecycle": [
+    "on-arrival",
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "navigator.maxTouchPoints, 'ontouchstart' in window, document.createEvent('TouchEvent')",
+      "bcd": [
+        "api.Navigator.maxTouchPoints"
+      ],
+      "access": {
+        "grant": "none",
+        "prompt_ui": "None",
+        "secure_context": false,
+        "user_gesture": false,
+        "persistence": "read fresh on every page load; nothing stored",
+        "revocation": "none needed (no grant)",
+        "iframe": "Readable from cross-origin iframes too (same values)",
+        "steps": [
+          "Page script reads the value",
+          "No prompt is shown"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "35",
+          "note": "",
+          "date": "2014-05-20"
+        },
+        "edge": {
+          "s": "y",
+          "v": "12",
+          "note": "",
+          "date": "2015-07-29"
+        },
+        "firefox": {
+          "s": "y",
+          "v": "59",
+          "note": "",
+          "date": "2018-03-13"
+        },
+        "safari": {
+          "s": "y",
+          "v": "13",
+          "note": "Safari macOS reports 0; iOS 5; iPadOS 5",
+          "date": "2019-09-19"
+        },
+        "ios_safari": {
+          "s": "y",
+          "v": "13",
+          "note": "",
+          "date": "2019-09-19"
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "35",
+          "note": "",
+          "date": "2014-05-20"
+        },
+        "samsung": {
+          "s": "y",
+          "v": "3.0",
+          "note": "",
+          "date": "2015-04-10"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "object",
+    "metric": "",
+    "update": "static per session",
+    "fields": [
+      {
+        "name": "maxTouchPoints",
+        "type": "integer",
+        "unit": "touches",
+        "range": "0 to 20; typical 0, 1, 5, 10",
+        "precision": "exact"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can tell if your screen takes touch and how many fingers at once",
+    "user_action": "Nothing. It happens when the page loads",
+    "can": [
+      "See the number of touch points, often 0, 5, or 10",
+      "Tell a phone or tablet from a desktop",
+      "Spot a touch laptop",
+      "Show bigger buttons for touch"
+    ],
+    "cannot": [
+      "See where or when you touch the screen before you do",
+      "Tell your exact device model",
+      "See your finger pressure or shape",
+      "Learn much on its own; it is a common value"
+    ],
+    "reach": 1,
+    "reach_label": "Touch type, on page load",
+    "differs": ""
+  },
+  "story": {
+    "what_it_is": "Tells a page whether your screen supports touch, and how many fingers at once.",
+    "icon": "hand",
+    "tags": [
+      "Touch",
+      "Silent",
+      "Device type"
+    ],
+    "marketing": [
+      {
+        "vendor": "MDN",
+        "name": "Navigator.maxTouchPoints",
+        "pitch": "Docs explain how pages can find out how many touch points the device supports.",
+        "url": "https://developer.mozilla.org/en-US/docs/Web/API/Navigator/maxTouchPoints"
+      }
+    ],
+    "for_you": "You never see it. It quietly decides whether a page shows tap friendly buttons or small mouse sized ones. That makes pages easier to use on a phone or touch laptop.",
+    "for_makers": "Sites use it to pick touch controls, bigger buttons and gestures. The number of touch points hints at phone, tablet or touch laptop. Fraud tools also look for desktops that pretend to be phones.",
+    "use_cases": [
+      {
+        "type": "games",
+        "example": "A browser game shows an on screen joystick and buttons on a touch device and keyboard hints on a desktop.",
+        "apps": []
+      },
+      {
+        "type": "creative",
+        "example": "A browser whiteboard turns on two finger zoom and palm rejection on touch screens.",
+        "apps": [
+          "Miro",
+          "Figma"
+        ]
+      },
+      {
+        "type": "maps",
+        "example": "A web map enables pinch to zoom and two finger rotate when it detects multi touch.",
+        "apps": [
+          "Google Maps"
+        ]
+      },
+      {
+        "type": "shopping",
+        "example": "A shop shows larger tap targets and swipe galleries on touch devices.",
+        "apps": []
+      },
+      {
+        "type": "security",
+        "example": "A fraud system flags a visitor claiming to be an iPhone with zero touch points.",
+        "apps": []
+      },
+      {
+        "type": "accessibility",
+        "example": "A site increases button size for touch to help people with limited dexterity.",
+        "apps": []
+      },
+      {
+        "type": "analytics",
+        "example": "A dashboard counts how many visitors use touch laptops to guide design choices.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Splits people by device",
+      "Low risk alone"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Cannot tell stylus vs finger",
+    "Reports capability, not whether the user currently touches"
+  ],
+  "scores": {
+    "sensitivity": 1,
+    "utility": 4,
+    "fingerprint_bits": 1.5,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Pick touch-friendly UI"
+    ],
+    "abuse": [
+      "Device class inference"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": true,
+      "how": "Collector key(s): touchSupport. "
+    }
+  },
+  "related": [
+    "web.display.pointer-hover"
+  ],
+  "refs": [
+    {
+      "t": "mdn",
+      "label": "MDN maxTouchPoints",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/Navigator/maxTouchPoints"
+    },
+    {
+      "t": "github",
+      "label": "fingerprintjs source: touch_support",
+      "url": "https://github.com/fingerprintjs/fingerprintjs/blob/master/src/sources/touch_support.ts"
+    },
+    {
+      "t": "paper",
+      "label": "AmIUnique: Beauty and the Beast, Laperdrix et al. 2016 (attribute entropy)",
+      "url": "https://hal.inria.fr/hal-01285470"
+    },
+    {
+      "t": "github",
+      "label": "mdp/linkedin-extension-fingerprinting (LinkedIn script snapshot and ID list)",
+      "url": "https://github.com/mdp/linkedin-extension-fingerprinting"
+    }
+  ],
+  "confidence": "docs"
+}

@@ -1,0 +1,169 @@
+{
+  "id": "mob.id.firebase-iid",
+  "name": "Firebase installation ID",
+  "kind": "tracking",
+  "group": "cross-site-tracking",
+  "subgroup": "Device identifiers",
+  "tags": [
+    "fid",
+    "sdk-id"
+  ],
+  "plain": "A random per-install ID created by the Firebase SDK.",
+  "meaning": "Fresh per app install; many SDKs use it as a first-party ID and link it to other IDs server-side.",
+  "lifecycle": [
+    "on-launch",
+    "in-session"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "y",
+      "v": "1.0",
+      "api": 1,
+      "permission": "INTERNET",
+      "protection": "normal",
+      "grant": "install",
+      "prompt_ui": "",
+      "persistence": "Until uninstall",
+      "revocation": "Uninstall app",
+      "store_policy": "Play: data safety disclosure",
+      "api_surface": "FirebaseInstallations.getInstance().getId()",
+      "note": "22-character ID, valid until app data is cleared or the app is uninstalled; deleted if unused for 270 days"
+    },
+    "ios": {
+      "s": "y",
+      "v": "11.0",
+      "permission": "none",
+      "protection": "none",
+      "grant": "none",
+      "prompt_ui": "",
+      "persistence": "",
+      "revocation": "",
+      "store_policy": "",
+      "api_surface": "Same SDK on iOS",
+      "note": ""
+    }
+  },
+  "data": {
+    "type": "string",
+    "metric": "22 char ID",
+    "update": "Static",
+    "fields": [
+      {
+        "name": "fid",
+        "type": "string",
+        "unit": "",
+        "range": "22 chars",
+        "precision": "about 128 bits"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can recognize this one install of the app with a random ID, until it is removed",
+    "user_action": "Nothing. The ID is created the first time the app connects to the internet",
+    "can": [
+      "Tell one install of the app apart from another with a 22 character random ID",
+      "Link usage, crashes and messages to that same install over time",
+      "Keep the same ID until you clear the app's data or uninstall it"
+    ],
+    "cannot": [
+      "Follow you to other apps or other phones; the ID belongs to this install only",
+      "Survive an uninstall or Clear data; a new ID is made afterward",
+      "Stay alive forever on Android if the app goes unused; it is deleted after 270 days"
+    ],
+    "reach": 3,
+    "reach_label": "One install, ongoing",
+    "differs": ""
+  },
+  "story": {
+    "what_it_is": "A random ID made for each app install by Google's Firebase toolkit.",
+    "icon": "fingerprint",
+    "tags": [
+      "Silent",
+      "Analytics",
+      "Tracking"
+    ],
+    "marketing": [
+      {
+        "vendor": "Google",
+        "name": "Firebase installations",
+        "pitch": "Developer pitch: a stable, unique ID for each install of your app, used by Firebase services like messaging and analytics.",
+        "url": "https://firebase.google.com/docs/projects/manage-installations"
+      }
+    ],
+    "for_you": "You never see it. It quietly lets the app and Google's tools tell your phone apart from every other install, and it resets if you delete and reinstall the app.",
+    "for_makers": "Makers get a free, always available ID to count users, send push notifications and run tests. It lets crash reports, experiments and notifications line up for one install without asking for any permission.",
+    "use_cases": [
+      {
+        "type": "games",
+        "example": "A game studio uses the install ID to give one phone the same A/B test version of the tutorial every time it opens the game.",
+        "apps": []
+      },
+      {
+        "type": "messaging",
+        "example": "A chat app uses the ID as the address for push notifications, so a message reaches the right phone.",
+        "apps": []
+      },
+      {
+        "type": "analytics",
+        "example": "A product team counts daily active installs and links crash reports to one install without asking you to sign in.",
+        "apps": []
+      },
+      {
+        "type": "ads",
+        "example": "An ad network links an install to a later in-app purchase so it can tell which campaign paid off.",
+        "apps": []
+      },
+      {
+        "type": "shopping",
+        "example": "A store app shows you the same test version of its checkout page on each visit, so results stay clean.",
+        "apps": []
+      },
+      {
+        "type": "security",
+        "example": "A bank sees ten new accounts opened from one install ID and flags a possible fraud ring.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Links activity across sessions",
+      "Can be joined to other IDs on a server"
+    ],
+    "android_note": "Available to any app that includes Firebase, with no prompt.",
+    "ios_note": "Works the same way on iPhone, created fresh for each install of the app."
+  },
+  "technical_bounds": [
+    "Per-app, not cross-app"
+  ],
+  "scores": {
+    "sensitivity": 2,
+    "utility": 3,
+    "fingerprint_bits": 128,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Analytics, push"
+    ],
+    "abuse": [
+      "Link to other IDs"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "related": [
+    "mob.id.advertising-id"
+  ],
+  "refs": [
+    {
+      "t": "android",
+      "label": "Android: Best practices for unique identifiers",
+      "url": "https://developer.android.com/training/articles/user-data-ids"
+    }
+  ],
+  "confidence": "docs"
+}

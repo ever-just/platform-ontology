@@ -1,0 +1,202 @@
+{
+  "id": "mob.policy.play-data-safety",
+  "name": "Google Play Data safety section",
+  "kind": "capability",
+  "group": "app-ecosystem",
+  "subgroup": "Store transparency",
+  "tags": [
+    "data-safety",
+    "play-console",
+    "privacy-label"
+  ],
+  "plain": "A Play Store listing section where developers declare data collected, shared, and security practices.",
+  "meaning": "Required for all apps since 20 July 2022. Developers must count SDK collection too. Google may reject or remove apps whose behavior does not match.",
+  "lifecycle": [
+    "before-install"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "y",
+      "v": "",
+      "permission": "",
+      "protection": "none",
+      "grant": "none",
+      "prompt_ui": "",
+      "persistence": "",
+      "revocation": "",
+      "store_policy": "Required for all apps, including those with no data collected; declare collection, sharing, encryption in transit, deletion request path",
+      "api_surface": "Play Console > App content > Data safety",
+      "note": "Deadline 20 July 2022; user data deletion link required for apps with account creation."
+    },
+    "ios": {
+      "s": "n",
+      "v": "",
+      "permission": "",
+      "protection": "none",
+      "grant": "not-exposed",
+      "prompt_ui": "",
+      "persistence": "",
+      "revocation": "",
+      "store_policy": "",
+      "api_surface": "",
+      "note": "Apple's equivalent is the nutrition label."
+    }
+  },
+  "data": {
+    "type": "object",
+    "metric": "Declaration form",
+    "update": "per release",
+    "fields": [
+      {
+        "name": "data types",
+        "type": "list",
+        "unit": "",
+        "range": "",
+        "precision": ""
+      },
+      {
+        "name": "shared",
+        "type": "boolean",
+        "unit": "",
+        "range": "",
+        "precision": ""
+      },
+      {
+        "name": "encrypted in transit",
+        "type": "boolean",
+        "unit": "",
+        "range": "",
+        "precision": ""
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can tell you what the app says it collects and shares, on its Play Store page",
+    "user_action": "You open the app page in Google Play and scroll to Data safety",
+    "can": [
+      "List what data types the developer says it collects or shares",
+      "Show if you can ask to delete your data, with a link for apps with accounts",
+      "Count data that third party tools collect too"
+    ],
+    "cannot": [
+      "Prove the developer told the truth; Google may reject or remove apps that do not match",
+      "Appear on iPhone; Apple has a nutrition label instead",
+      "Change what the app collects, since it is a label only"
+    ],
+    "reach": 1,
+    "reach_label": "A label on the store page",
+    "differs": "This is Google Play only, required since 20 July 2022. Apple uses privacy labels."
+  },
+  "story": {
+    "what_it_is": "A box on every Play Store page where the developer lists what data the app collects.",
+    "icon": "clipboard-list",
+    "tags": [
+      "Play rules",
+      "Labels",
+      "Privacy"
+    ],
+    "marketing": [
+      {
+        "vendor": "Google",
+        "name": "Data safety section",
+        "pitch": "Developers share what data an app collects, shares and how it protects it.",
+        "url": "https://support.google.com/googleplay/android-developer/answer/10787469"
+      }
+    ],
+    "for_you": "Before you install, you can see whether the app collects your location, contacts or purchases, and whether it shares that data with others.",
+    "for_makers": "Makers must count what their ad and analytics tools collect too. Google can remove apps whose behavior differs from the form, so teams audit SDKs before each release.",
+    "use_cases": [
+      {
+        "type": "social",
+        "example": "A social app lists photos, contacts and location as collected and shared with partners.",
+        "apps": [
+          "TikTok",
+          "Facebook"
+        ]
+      },
+      {
+        "type": "games",
+        "example": "A puzzle game declares 'device ID' and 'ads data' because its ad network collects them.",
+        "apps": [
+          "Candy Crush"
+        ]
+      },
+      {
+        "type": "health",
+        "example": "A period tracker says that health data is encrypted and can be deleted on request.",
+        "apps": [
+          "Flo",
+          "Clue"
+        ]
+      },
+      {
+        "type": "banking",
+        "example": "A bank app marks account info collected for app function only, not shared.",
+        "apps": [
+          "Chase"
+        ]
+      },
+      {
+        "type": "ads",
+        "example": "A researcher compares the label with real traffic and finds apps that under reported data sent to trackers.",
+        "apps": []
+      },
+      {
+        "type": "kids",
+        "example": "Parents scan labels to pick a game that says no data is shared.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Self reported, not audited",
+      "Can mislead"
+    ],
+    "android_note": "Required for all Play apps since 20 July 2022.",
+    "ios_note": "Apple has a similar label, with different categories."
+  },
+  "technical_bounds": [
+    "Self reported",
+    "SDK collection must be included"
+  ],
+  "scores": {
+    "sensitivity": 2,
+    "utility": 3,
+    "fingerprint_bits": null,
+    "friction": 1
+  },
+  "value": {
+    "legit_uses": [
+      "Informs install choice"
+    ],
+    "abuse": [
+      "Misleading declarations"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2022-07",
+      "platform": "android",
+      "version": "Play policy",
+      "change": "Data safety required for all apps from 20 July 2022"
+    }
+  ],
+  "related": [
+    "mob.policy.privacy-labels",
+    "mob.policy.account-deletion"
+  ],
+  "refs": [
+    {
+      "t": "android",
+      "label": "Play: Data safety",
+      "url": "https://support.google.com/googleplay/android-developer/answer/10787469"
+    }
+  ],
+  "confidence": "docs"
+}

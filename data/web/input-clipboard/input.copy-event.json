@@ -1,0 +1,223 @@
+{
+  "id": "web.input.copy-event",
+  "name": "Copy and cut events (rewrite what gets copied)",
+  "kind": "action",
+  "group": "input-clipboard",
+  "subgroup": "Clipboard",
+  "tags": [
+    "copy",
+    "cut",
+    "clipboardData",
+    "pastejacking"
+  ],
+  "plain": "Lets a page change what the person's copy or cut puts on the clipboard.",
+  "meaning": "When the person presses copy, the site can append a credit line, strip formatting, or substitute other text. It cannot see other apps' copies; it only controls copies made inside its own page.",
+  "lifecycle": [
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "document.addEventListener('copy', e => { e.clipboardData.setData('text/plain', x); e.preventDefault(); })",
+      "bcd": [
+        "api.Element.copy_event",
+        "api.ClipboardEvent",
+        "api.DataTransfer.setData"
+      ],
+      "access": {
+        "grant": "none",
+        "prompt_ui": "None (no browser prompt)",
+        "secure_context": false,
+        "user_gesture": false,
+        "activation": "none",
+        "persistence": "Per copy action",
+        "revocation": "Nothing to revoke (no permission is stored)",
+        "iframe": "Applies per document; frames cannot hook the parent's copy",
+        "steps": [
+          "Person selects text and presses copy or cut",
+          "copy event fires with a writable clipboardData",
+          "Page calls setData and preventDefault"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "1",
+          "note": "",
+          "date": "2008-12-11"
+        },
+        "edge": {
+          "s": "y",
+          "v": "12",
+          "note": "",
+          "date": "2015-07-29"
+        },
+        "firefox": {
+          "s": "y",
+          "v": "22",
+          "note": "",
+          "date": "2013-06-25"
+        },
+        "safari": {
+          "s": "y",
+          "v": "3",
+          "note": "",
+          "date": "2007-10-26"
+        },
+        "ios_safari": {
+          "s": "y",
+          "v": "3",
+          "note": "All iOS browsers use WebKit",
+          "date": "2009-06-17"
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "18",
+          "note": "",
+          "date": "2012-06-27"
+        },
+        "samsung": {
+          "s": "y",
+          "v": "1.0",
+          "note": "",
+          "date": "2013-04-27"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "none",
+    "metric": "",
+    "update": "",
+    "fields": []
+  },
+  "limits": {
+    "headline": "Can change what ends up on your clipboard when you copy from its page",
+    "user_action": "You press copy or cut on text inside the page",
+    "can": [
+      "Add a credit line or link to the text you copy",
+      "Remove formatting from what you copy",
+      "Swap in different text than what you selected"
+    ],
+    "cannot": [
+      "See what you copy in other apps or other tabs",
+      "Change your clipboard when you copy elsewhere",
+      "Act when you did not press copy or cut"
+    ],
+    "reach": 1,
+    "reach_label": "Only copies made on that page",
+    "differs": ""
+  },
+  "story": {
+    "what_it_is": "A page can change what gets copied when you press Copy or Cut.",
+    "icon": "copy",
+    "tags": [
+      "Clipboard",
+      "Silent",
+      "Copying"
+    ],
+    "marketing": [],
+    "for_you": "You press copy on an article and then paste it into a message. You may find an extra line like 'Read more at ...' tacked on. Or the text pastes clean with no odd formatting. You usually never see it happen.",
+    "for_makers": "Makers use it to add credit lines and share links when text is copied, clean up formatting, or block copying of paid content. It is also used by rich editors to copy blocks of their own content in a special format.",
+    "use_cases": [
+      {
+        "type": "media",
+        "example": "A news site adds the article link and name after text a reader copies, so quotes pasted into chats point back to the source.",
+        "apps": []
+      },
+      {
+        "type": "creative",
+        "example": "A design web app puts a copied layer on the clipboard in its own format, so pasting inside the app keeps the design.",
+        "apps": [
+          "Figma",
+          "Miro"
+        ]
+      },
+      {
+        "type": "productivity",
+        "example": "A spreadsheet in the browser copies a range of cells so it pastes as a clean table in another app.",
+        "apps": [
+          "Google Sheets"
+        ]
+      },
+      {
+        "type": "education",
+        "example": "An online exam or course page tries to block copy so test questions are harder to leak.",
+        "apps": []
+      },
+      {
+        "type": "developer",
+        "example": "A docs site copies a code snippet without the line numbers and prompt symbols.",
+        "apps": [
+          "MDN"
+        ]
+      },
+      {
+        "type": "security",
+        "example": "A scam page can swap the copied text for a different address, such as a payment account.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Can alter what you copy",
+      "Used to block copying"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Fires only for user initiated copy or cut inside the page (and programmatic execCommand copies)",
+    "No prompt and no gesture requirement beyond the person's own copy action",
+    "Cannot read the clipboard from the event (clipboardData is write only during copy)",
+    "Cannot fire for text copied in other tabs, apps or the address bar",
+    "Site sees that a copy happened and which selection, so it can log copy behavior"
+  ],
+  "scores": {
+    "sensitivity": 2,
+    "utility": 3,
+    "fingerprint_bits": null,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Attribution on copy",
+      "Copy as plain text",
+      "Spreadsheet copy formats"
+    ],
+    "abuse": [
+      "Pastejacking and clipboard manipulation",
+      "Tracking what text people copy"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2012",
+      "browser": "chrome",
+      "version": "1",
+      "change": "copy and cut events with clipboardData"
+    }
+  ],
+  "related": [
+    "web.input.clipboard-write",
+    "web.input.paste-event"
+  ],
+  "refs": [
+    {
+      "t": "mdn",
+      "label": "MDN copy event",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/Element/copy_event"
+    },
+    {
+      "t": "spec",
+      "label": "W3C Clipboard API and events",
+      "url": "https://www.w3.org/TR/clipboard-apis/"
+    }
+  ],
+  "confidence": "docs"
+}

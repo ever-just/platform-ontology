@@ -1,0 +1,247 @@
+{
+  "id": "web.net.bot-detection-signals",
+  "name": "Bot detection and CAPTCHA signals",
+  "kind": "signal",
+  "group": "network-connectivity",
+  "subgroup": "Anti-bot",
+  "tags": [
+    "bot",
+    "turnstile",
+    "recaptcha",
+    "webdriver"
+  ],
+  "plain": "Anti-bot services combine many browser and network signals to guess if the visitor is automated.",
+  "meaning": "Inputs include navigator.webdriver, headless user agents and CDP side effects, JA3/JA4 and HTTP/2 mismatches, canvas and WebGL consistency, mouse and key timing, IP reputation and challenge solving (Turnstile, reCAPTCHA, hCaptcha).",
+  "lifecycle": [
+    "on-arrival"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "navigator.webdriver; challenge scripts; fingerprints; Privacy Pass tokens",
+      "access": {
+        "grant": "none",
+        "prompt_ui": "",
+        "secure_context": false,
+        "user_gesture": false,
+        "persistence": "",
+        "revocation": "",
+        "iframe": "",
+        "steps": [
+          "Load a challenge script",
+          "Collect signals and run proof of work or checks",
+          "Server scores and issues a clearance cookie or token"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "1",
+          "note": "",
+          "date": "2008-12-11"
+        },
+        "edge": {
+          "s": "y",
+          "v": "79",
+          "note": "",
+          "date": "2020-01-15"
+        },
+        "firefox": {
+          "s": "y",
+          "v": "1",
+          "note": "",
+          "date": "2004-11-09"
+        },
+        "safari": {
+          "s": "y",
+          "v": "1",
+          "note": "",
+          "date": "2003-06-23"
+        },
+        "ios_safari": {
+          "s": "y",
+          "v": "1",
+          "note": "",
+          "date": "2007-06-29"
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "1",
+          "note": "",
+          "date": ""
+        },
+        "samsung": {
+          "s": "y",
+          "v": "5.0",
+          "note": "",
+          "date": "2016-12-15"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "object",
+    "metric": "Score and pass or fail",
+    "update": "",
+    "fields": [
+      {
+        "name": "score",
+        "type": "float",
+        "unit": "",
+        "range": "0 to 1",
+        "precision": "vendor specific"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can combine many browser and network clues to guess if you are a bot",
+    "user_action": "Nothing. It happens as the page loads, and sometimes when you solve a challenge",
+    "can": [
+      "Check for signs of automation, such as odd browser details or headless modes",
+      "Compare your network and browser fingerprints for mismatches",
+      "Watch mouse and key timing and your IP reputation",
+      "Show a challenge such as Turnstile, reCAPTCHA or hCaptcha"
+    ],
+    "cannot": [
+      "Know your name from these clues alone",
+      "Be sure; real people can be flagged and bots can slip through",
+      "See your files or other tabs",
+      "Work the same on every site; each service picks its own signals"
+    ],
+    "reach": 3,
+    "reach_label": "Many signals, on every visit",
+    "differs": ""
+  },
+  "story": {
+    "what_it_is": "Sites combine many hidden clues to guess whether you are a person or a program.",
+    "icon": "bot",
+    "tags": [
+      "Silent",
+      "Anti-bot",
+      "Fraud"
+    ],
+    "marketing": [
+      {
+        "vendor": "Cloudflare",
+        "name": "Turnstile",
+        "pitch": "Cloudflare pitches a CAPTCHA alternative that checks signals quietly so most visitors never see a puzzle.",
+        "url": "https://blog.cloudflare.com/turnstile-ga/"
+      },
+      {
+        "vendor": "Google",
+        "name": "reCAPTCHA",
+        "pitch": "Google describes risk scoring that decides if a visitor is human with little or no interaction.",
+        "url": "https://developers.google.com/recaptcha"
+      }
+    ],
+    "for_you": "Most of the time you notice nothing. Sometimes you see a puzzle, a 'verify you are human' box, or a short wait. Behind it, a bot defense reads your browser, network and behavior.",
+    "for_makers": "Makers fight fake accounts, scalpers, scraping and click fraud. They read browser quirks, network details and mouse patterns. This helps stop bots, but the same signals can also act as a fingerprint.",
+    "use_cases": [
+      {
+        "type": "games",
+        "example": "A game login or shop uses a bot check so cheat sellers cannot mass create accounts.",
+        "apps": [
+          "Roblox",
+          "Epic Games"
+        ]
+      },
+      {
+        "type": "games",
+        "example": "An online ticket or loot drop page blocks bots so real players can buy limited items.",
+        "apps": []
+      },
+      {
+        "type": "shopping",
+        "example": "A sneaker or concert ticket sale blocks scalper bots at checkout.",
+        "apps": [
+          "Ticketmaster",
+          "Nike SNKRS"
+        ]
+      },
+      {
+        "type": "ads",
+        "example": "An ad platform filters fake clicks so advertisers do not pay for bots.",
+        "apps": [
+          "Google Ads"
+        ]
+      },
+      {
+        "type": "security",
+        "example": "A bank or login page scores each visit by browser, network and behavior before it asks for a password.",
+        "apps": []
+      },
+      {
+        "type": "analytics",
+        "example": "A publisher removes bot visits so traffic reports show real readers.",
+        "apps": []
+      },
+      {
+        "type": "social",
+        "example": "A social site stops mass fake sign ups and spam.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Can wrongly block real people",
+      "Works like a fingerprint"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Arms race: stealth tools and residential proxies bypass many checks",
+    "False positives for privacy tools and accessibility users"
+  ],
+  "scores": {
+    "sensitivity": 3,
+    "utility": 5,
+    "fingerprint_bits": 4,
+    "friction": 2
+  },
+  "value": {
+    "legit_uses": "Fraud, scraping and credential stuffing defense",
+    "abuse": "Excludes privacy tools; collects extensive fingerprints"
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2022-09",
+      "browser": "vendor",
+      "version": "",
+      "change": "Cloudflare Turnstile launched as a CAPTCHA alternative"
+    },
+    {
+      "date": "2022-06",
+      "browser": "vendor",
+      "version": "",
+      "change": "Apple Private Access Tokens announced at WWDC"
+    }
+  ],
+  "related": [
+    "web.net.private-access-tokens-pact",
+    "web.perf.mouse-dynamics"
+  ],
+  "refs": [
+    {
+      "t": "vendor",
+      "label": "Cloudflare Turnstile",
+      "url": "https://developers.cloudflare.com/turnstile/"
+    },
+    {
+      "t": "github",
+      "label": "puppeteer-extra stealth",
+      "url": "https://github.com/berstend/puppeteer-extra/tree/master/packages/puppeteer-extra-plugin-stealth"
+    },
+    {
+      "t": "github",
+      "label": "CreepJS",
+      "url": "https://github.com/abrahamjuliot/creepjs"
+    }
+  ],
+  "confidence": "docs"
+}

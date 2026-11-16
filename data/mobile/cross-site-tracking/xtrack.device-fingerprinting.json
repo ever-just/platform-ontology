@@ -1,0 +1,181 @@
+{
+  "id": "mob.xtrack.device-fingerprinting",
+  "name": "Device and SDK fingerprinting",
+  "kind": "tracking",
+  "group": "cross-site-tracking",
+  "subgroup": "Fingerprinting",
+  "tags": [
+    "fingerprint",
+    "device-signals",
+    "entropy"
+  ],
+  "plain": "Combining small device signals (model, OS, language, fonts, sensors) into a likely-unique identity.",
+  "meaning": "A way to track when IDs are denied. Apple rejects apps and SDKs that do this to refuse-tracking users. Android has no ban.",
+  "lifecycle": [
+    "on-launch",
+    "in-session"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "y",
+      "v": "",
+      "permission": "",
+      "protection": "none",
+      "grant": "none",
+      "prompt_ui": "",
+      "persistence": "",
+      "revocation": "",
+      "store_policy": "Play: persistent IDs only for non-ad uses; Data safety must declare",
+      "api_surface": "Build, Settings, Sensor, MediaDrm, Display",
+      "note": ""
+    },
+    "ios": {
+      "s": "p",
+      "v": "",
+      "permission": "",
+      "protection": "none",
+      "grant": "none",
+      "prompt_ui": "",
+      "persistence": "",
+      "revocation": "",
+      "store_policy": "5.1.2(i); required reason APIs; ATT",
+      "api_surface": "UIDevice, ProcessInfo, UserDefaults, file timestamps",
+      "note": ""
+    }
+  },
+  "web_equivalents": [
+    "web.render.composite-fingerprint"
+  ],
+  "data": {
+    "type": "integer",
+    "metric": "Entropy estimate",
+    "update": "once",
+    "fields": [
+      {
+        "name": "fingerprint bits",
+        "type": "float",
+        "unit": "bits",
+        "range": "10 to 30",
+        "precision": ""
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can guess who you are by combining small facts about your phone, with no prompt",
+    "user_action": "Nothing. It happens when the app or an ad tool inside it starts",
+    "can": [
+      "Combine your phone model, system version, language, screen and sensors into one fingerprint",
+      "Recognize the same phone again without any ID you can reset",
+      "Work on Android and, less completely, on iPhone"
+    ],
+    "cannot": [
+      "Be fully unique for every phone; some phones look the same",
+      "Look up an ID you can see or clear in settings",
+      "Get as many signals on iPhone; Apple limits what apps can learn",
+      "Stay the same after a system update changes one of the signals"
+    ],
+    "reach": 3,
+    "reach_label": "Ongoing, from many small signals",
+    "differs": "Android shows apps more hardware detail. iPhone offers fewer signals, but timestamps and settings can still be used."
+  },
+  "story": {
+    "what_it_is": "Mixing many small phone details into a guess that is close to unique.",
+    "icon": "fingerprint",
+    "tags": [
+      "Silent",
+      "Tracking",
+      "Fraud"
+    ],
+    "marketing": [],
+    "for_you": "You never see it. Even if you turn off the ad ID, your phone's model, language, screen and other small facts can add up to a tag that follows you. Apple bans this for people who said no to tracking.",
+    "for_makers": "Makers and ad firms use it to count people when no ID is allowed, and to spot fraud and bots. It is accurate but breaks easily, and app stores treat the tracking use as a policy violation.",
+    "use_cases": [
+      {
+        "type": "ads",
+        "example": "An ad measurement tool matches an ad click to an install by comparing device details when the ad ID is off.",
+        "apps": []
+      },
+      {
+        "type": "security",
+        "example": "A bank notices a login from a phone with a new fingerprint and asks for an extra check.",
+        "apps": []
+      },
+      {
+        "type": "games",
+        "example": "A game spots a farm of fake devices with identical settings that claim sign up bonuses.",
+        "apps": []
+      },
+      {
+        "type": "shopping",
+        "example": "A store ties a new session to a returning shopper after cookies and IDs are wiped.",
+        "apps": []
+      },
+      {
+        "type": "payments",
+        "example": "A payment company scores risk by how much a device looks like known fraud devices.",
+        "apps": []
+      },
+      {
+        "type": "analytics",
+        "example": "A tool counts unique phones from sets of signals without reading any ID.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Works without your consent",
+      "Hard to block"
+    ],
+    "android_note": "Android does not ban it in the same way, but Google Play rules restrict it for ads.",
+    "ios_note": "Apple rejects apps that fingerprint people who refused tracking."
+  },
+  "technical_bounds": [
+    "Apple review blocks it for ATT-denied users",
+    "Android allows non-ad uses"
+  ],
+  "scores": {
+    "sensitivity": 4,
+    "utility": 3,
+    "fingerprint_bits": 25,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Fraud detection"
+    ],
+    "abuse": [
+      "Cross-app tracking without consent"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2023-12",
+      "platform": "ios",
+      "version": "iOS 17",
+      "change": "Required reason APIs target fingerprint inputs"
+    }
+  ],
+  "related": [
+    "mob.ads.fingerprinting-ban",
+    "mob.policy.required-reason-apis"
+  ],
+  "refs": [
+    {
+      "t": "apple",
+      "label": "Apple: Required reason API",
+      "url": "https://developer.apple.com/documentation/bundleresources/describing-use-of-required-reason-api"
+    },
+    {
+      "t": "policy",
+      "label": "Play: Advertising ID",
+      "url": "https://support.google.com/googleplay/android-developer/answer/6048248"
+    }
+  ],
+  "confidence": "inferred"
+}

@@ -1,0 +1,290 @@
+{
+  "id": "web.peripherals.webxr-immersive",
+  "name": "WebXR immersive VR and AR sessions",
+  "kind": "permission",
+  "group": "peripherals-hardware",
+  "subgroup": "XR",
+  "tags": [
+    "webxr",
+    "vr",
+    "ar",
+    "headset"
+  ],
+  "plain": "Starts a full VR or AR session on a headset or phone.",
+  "meaning": "Streams head and controller pose every frame and, in AR, shows the camera view of the room. Reveals body movement, height and surroundings.",
+  "lifecycle": [
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "navigator.xr.isSessionSupported(), requestSession('immersive-vr'|'immersive-ar'|'inline', {requiredFeatures, optionalFeatures})",
+      "permission_name": "xr-spatial-tracking",
+      "permissions_policy": "xr-spatial-tracking",
+      "bcd": [
+        "api.XRSystem",
+        "api.XRSession",
+        "api.XRFrame",
+        "api.XRPose"
+      ],
+      "access": {
+        "grant": "prompt",
+        "prompt_ui": "Permission bubble for VR or AR tracking; AR may add camera consent",
+        "secure_context": true,
+        "user_gesture": true,
+        "persistence": "Per origin; prompt per session for AR on Chrome",
+        "revocation": "Site settings, end session, headset system menu",
+        "iframe": "Needs allow=\"xr-spatial-tracking\"",
+        "steps": [
+          "Check isSessionSupported",
+          "Click Enter VR",
+          "requestSession() with features",
+          "Frame loop via XRSession.requestAnimationFrame"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "79",
+          "note": "",
+          "date": "2019-12-10"
+        },
+        "edge": {
+          "s": "y",
+          "v": "79",
+          "note": "",
+          "date": "2020-01-15"
+        },
+        "firefox": {
+          "s": "n",
+          "v": "",
+          "note": "Firefox Desktop dropped support; Meta Quest browser has it"
+        },
+        "safari": {
+          "s": "n",
+          "v": "",
+          "note": "Safari on visionOS supports immersive-vr; not in BCD"
+        },
+        "ios_safari": {
+          "s": "n",
+          "v": "",
+          "note": "No WebXR on iPhone or iPad"
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "79",
+          "note": "",
+          "date": "2019-12-17"
+        },
+        "samsung": {
+          "s": "y",
+          "v": "12.0",
+          "note": "",
+          "date": "2020-06-19"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "stream",
+    "metric": "6DoF poses per frame",
+    "update": "per display frame (72 to 120 Hz)",
+    "fields": [
+      {
+        "name": "viewerPose.transform.position",
+        "type": "object",
+        "unit": "meters",
+        "range": "local space, unbounded",
+        "precision": "centimetre scale tracking"
+      },
+      {
+        "name": "viewerPose.transform.orientation",
+        "type": "object",
+        "unit": "quaternion",
+        "range": "unit quaternion"
+      },
+      {
+        "name": "inputSources[].gripSpace / targetRaySpace",
+        "type": "object",
+        "unit": "meters",
+        "range": "per controller"
+      },
+      {
+        "name": "boundsGeometry",
+        "type": "list",
+        "unit": "meters",
+        "range": "polygon of playable area",
+        "precision": "bounded-floor feature"
+      },
+      {
+        "name": "views[].projectionMatrix",
+        "type": "list",
+        "range": "4x4 floats"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can start a full VR or AR session after you allow it",
+    "user_action": "You tap Enter VR or View in AR and allow the pop up.",
+    "can": [
+      "Fill your view with a VR scene",
+      "Show AR items placed in your room",
+      "Track your head and device movement while the session runs"
+    ],
+    "cannot": [
+      "Start without you tapping and allowing",
+      "See your surroundings in VR",
+      "Keep running after you leave the session",
+      "Work in Firefox, Safari or on iPhone"
+    ],
+    "reach": 2,
+    "reach_label": "While the session runs",
+    "differs": "Chrome and Edge support it. Safari and Firefox do not."
+  },
+  "story": {
+    "what_it_is": "A page can start a full VR or AR session on a headset or phone.",
+    "icon": "glasses",
+    "tags": [
+      "VR and AR",
+      "Asks first",
+      "Games"
+    ],
+    "marketing": [
+      {
+        "vendor": "W3C",
+        "name": "WebXR Device API",
+        "pitch": "The Immersive Web group pitches WebXR as a way to bring virtual and augmented reality to the web.",
+        "url": "https://immersiveweb.dev/"
+      }
+    ],
+    "for_you": "You tap Enter VR or View in your room, and the page takes over your headset or your phone's screen. It asks first.",
+    "for_makers": "Makers can reach VR and AR users with just a link, with no app store. It is used for games, shopping, training and tours.",
+    "use_cases": [
+      {
+        "type": "games",
+        "example": "A browser VR game starts in a headset with one click.",
+        "apps": [
+          "Mozilla Hubs",
+          "Hyperfy"
+        ]
+      },
+      {
+        "type": "shopping",
+        "example": "You see a sofa in your room through your phone before you buy.",
+        "apps": [
+          "IKEA",
+          "Wayfair"
+        ]
+      },
+      {
+        "type": "education",
+        "example": "A web museum tour lets students stand inside an old city.",
+        "apps": []
+      },
+      {
+        "type": "travel",
+        "example": "A hotel site gives you a VR walk through a room.",
+        "apps": []
+      },
+      {
+        "type": "enterprise",
+        "example": "A web training session puts workers in a safe virtual factory.",
+        "apps": []
+      },
+      {
+        "type": "security",
+        "example": "A bad VR page could cover your view and hide real world dangers.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Disorientation",
+      "Blocks your view"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Needs HTTPS and a user gesture to start",
+    "Immersive sessions pause when page loses focus",
+    "Safari desktop and iOS have no WebXR; visionOS Safari supports immersive-vr",
+    "Firefox dropped WebXR support"
+  ],
+  "scores": {
+    "sensitivity": 4,
+    "utility": 4,
+    "fingerprint_bits": null,
+    "friction": 2
+  },
+  "value": {
+    "legit_uses": [
+      "VR games",
+      "Product visualisation",
+      "Training"
+    ],
+    "abuse": [
+      "Body and room scanning",
+      "Movement as biometrics"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2019-12",
+      "browser": "chrome",
+      "version": "79",
+      "change": "WebXR Device API ships"
+    },
+    {
+      "date": "2020-02",
+      "browser": "chrome",
+      "version": "81",
+      "change": "Hit test"
+    },
+    {
+      "date": "2021-08",
+      "browser": "chrome",
+      "version": "90",
+      "change": "Depth sensing and light estimation"
+    },
+    {
+      "date": "2024-12",
+      "browser": "chrome",
+      "version": "131",
+      "change": "Hand tracking"
+    },
+    {
+      "date": "2026-09",
+      "browser": "safari",
+      "version": "27",
+      "change": "Texture array projection layers on visionOS Safari"
+    }
+  ],
+  "related": [
+    "web.peripherals.webxr-hand-tracking",
+    "web.peripherals.webxr-world-sensing"
+  ],
+  "refs": [
+    {
+      "t": "mdn",
+      "label": "MDN WebXR Device API",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/WebXR_Device_API"
+    },
+    {
+      "t": "spec",
+      "label": "WebXR Device API",
+      "url": "https://www.w3.org/TR/webxr/"
+    },
+    {
+      "t": "webkit",
+      "label": "WebKit visionOS WebXR",
+      "url": "https://webkit.org/blog/"
+    }
+  ],
+  "confidence": "verified"
+}

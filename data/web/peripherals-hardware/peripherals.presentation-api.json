@@ -1,0 +1,224 @@
+{
+  "id": "web.peripherals.presentation-api",
+  "name": "Presentation API",
+  "kind": "permission",
+  "group": "peripherals-hardware",
+  "subgroup": "Casting",
+  "tags": [
+    "casting"
+  ],
+  "plain": "Lets a page show itself on a second screen such as a Chromecast.",
+  "meaning": "Sees which nearby display receivers exist only after the person picks one; lets a page cast to TVs.",
+  "lifecycle": [
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "new PresentationRequest(urls).start(), PresentationConnection.send(), navigator.presentation.defaultRequest",
+      "bcd": [
+        "api.PresentationRequest"
+      ],
+      "access": {
+        "grant": "picker",
+        "prompt_ui": "Cast device chooser",
+        "secure_context": true,
+        "user_gesture": true,
+        "persistence": "Per origin",
+        "revocation": "Site settings",
+        "iframe": "Same as top level; cross-origin iframes need a permissions policy where listed",
+        "steps": [
+          "Call the API",
+          "Browser applies its access rules",
+          "Page receives the result"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "47",
+          "note": "",
+          "date": "2015-12-01"
+        },
+        "edge": {
+          "s": "y",
+          "v": "79",
+          "note": "",
+          "date": "2020-01-15"
+        },
+        "firefox": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "safari": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "ios_safari": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "47",
+          "note": "",
+          "date": "2015-12-02"
+        },
+        "samsung": {
+          "s": "y",
+          "v": "5.0",
+          "note": "",
+          "date": "2016-12-15"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "object",
+    "metric": "Lets a page show itself on a second screen such as a Chromecast.",
+    "update": "on demand",
+    "fields": [
+      {
+        "name": "connection.state",
+        "type": "enum",
+        "range": "connecting, connected, closed, terminated"
+      },
+      {
+        "name": "PresentationAvailability.value",
+        "type": "boolean",
+        "range": "true or false"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can show itself on a second screen you choose, like a Chromecast",
+    "user_action": "You tap Cast and pick a screen from the list.",
+    "can": [
+      "List nearby screens you can show the page on",
+      "Show a page or video on the screen you pick",
+      "Send messages to the second screen while it runs"
+    ],
+    "cannot": [
+      "Pick a screen without you choosing",
+      "Cast on Firefox, Safari or iPhone",
+      "See other devices on your network beyond the list",
+      "Cast after you close the page"
+    ],
+    "reach": 2,
+    "reach_label": "A screen you choose",
+    "differs": "Chrome and Edge support it. Firefox and Safari, including iPhone, do not."
+  },
+  "story": {
+    "what_it_is": "A page can send itself to a second screen, like a Chromecast.",
+    "icon": "cast",
+    "tags": [
+      "Screens",
+      "Asks first",
+      "Cast"
+    ],
+    "marketing": [
+      {
+        "vendor": "Mozilla",
+        "name": "Presentation API",
+        "pitch": "MDN says it lets a page show content on a second screen like a TV or projector.",
+        "url": "https://developer.mozilla.org/en-US/docs/Web/API/Presentation_API"
+      }
+    ],
+    "for_you": "You tap a Cast button, pick a screen from a list and the page shows up on the TV. Your phone becomes the remote.",
+    "for_makers": "Makers can build second screen experiences, like slides or games that use a TV and a phone as a controller. It brings big screen use to the web.",
+    "use_cases": [
+      {
+        "type": "productivity",
+        "example": "You present slides on a TV while your phone shows speaker notes.",
+        "apps": [
+          "Google Slides"
+        ]
+      },
+      {
+        "type": "games",
+        "example": "A party game shows the board on the TV and uses phones as controllers.",
+        "apps": [
+          "Jackbox"
+        ]
+      },
+      {
+        "type": "media",
+        "example": "A music site shows lyrics on a big screen.",
+        "apps": []
+      },
+      {
+        "type": "education",
+        "example": "A teacher casts a quiz to the classroom projector.",
+        "apps": [
+          "Kahoot"
+        ]
+      },
+      {
+        "type": "live",
+        "example": "A fitness class page shows the workout on the TV and heart rate on the phone.",
+        "apps": []
+      },
+      {
+        "type": "smart-home",
+        "example": "A dashboard page appears on a kitchen display.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Casting to wrong screen",
+      "Shared with nearby devices"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "No device list without a picker click",
+    "No Firefox, Safari or iOS",
+    "Needs same network receivers"
+  ],
+  "scores": {
+    "sensitivity": 2,
+    "utility": 2,
+    "fingerprint_bits": null,
+    "friction": 2
+  },
+  "value": {
+    "legit_uses": [
+      "Slide decks on TV",
+      "Digital signage"
+    ],
+    "abuse": [
+      "None notable"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2016",
+      "browser": "chrome",
+      "version": "47",
+      "change": "Presentation API ships"
+    }
+  ],
+  "refs": [
+    {
+      "t": "mdn",
+      "label": "MDN Presentation API",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/Presentation_API"
+    },
+    {
+      "t": "spec",
+      "label": "Presentation API",
+      "url": "https://www.w3.org/TR/presentation-api/"
+    }
+  ],
+  "confidence": "verified"
+}

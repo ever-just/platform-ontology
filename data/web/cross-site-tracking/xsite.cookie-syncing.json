@@ -1,0 +1,218 @@
+{
+  "id": "web.xsite.cookie-syncing",
+  "name": "Cookie syncing",
+  "kind": "tracking",
+  "group": "cross-site-tracking",
+  "subgroup": "Before the visit",
+  "tags": [
+    "cookie-sync",
+    "id-matching",
+    "adtech",
+    "rtb"
+  ],
+  "plain": "Ad companies swap IDs through redirects so each can recognise the same person.",
+  "meaning": "Vendor A redirects the browser to vendor B with its own ID in the URL, so B stores a mapping A to B. Repeated across dozens of partners it builds the ID graph that real time bidding relies on. Academic crawls found it on a large share of sites.",
+  "lifecycle": [
+    "before-visit",
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "Image or iframe request to partner /sync?uid=...; 302 redirects; postMessage",
+      "access": {
+        "grant": "none",
+        "prompt_ui": "None",
+        "secure_context": false,
+        "user_gesture": false,
+        "persistence": "Mapping tables persist at vendors for months to years",
+        "revocation": "Clear site data, browser privacy settings",
+        "iframe": "",
+        "steps": []
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "1",
+          "note": "Works while 3P cookies are allowed",
+          "date": "2008-12-11"
+        },
+        "edge": {
+          "s": "y",
+          "v": "1",
+          "note": "",
+          "date": ""
+        },
+        "firefox": {
+          "s": "p",
+          "v": "1",
+          "note": "Partitioned so syncs are siloed per site",
+          "date": "2004-11-09"
+        },
+        "safari": {
+          "s": "p",
+          "v": "1",
+          "note": "Blocked, uses link decoration or login IDs",
+          "date": "2003-06-23"
+        },
+        "ios_safari": {
+          "s": "p",
+          "v": "1",
+          "note": "",
+          "date": "2007-06-29"
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "1",
+          "note": "",
+          "date": ""
+        },
+        "samsung": {
+          "s": "y",
+          "v": "1",
+          "note": "",
+          "date": "2013-04-27"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "hash",
+    "metric": "Pair of vendor IDs",
+    "update": "per page view with partner tags",
+    "fields": []
+  },
+  "limits": {
+    "headline": "Can let ad companies swap IDs so each recognizes you across sites",
+    "user_action": "Nothing. It happens when a page loads ads or trackers",
+    "can": [
+      "Pass your IDs between ad companies through quick redirects",
+      "Match your visits across many sites",
+      "Build one profile from several companies' cookies"
+    ],
+    "cannot": [
+      "Work where third party cookies are blocked, as in Safari and Firefox by default",
+      "Continue once you clear cookies",
+      "Know your name without a login or an email hash",
+      "Work between browsers or devices unless a login links them"
+    ],
+    "reach": 4,
+    "reach_label": "Matched across many sites",
+    "differs": "Safari and Firefox block most of this by default. Chrome still allows third party cookies."
+  },
+  "story": {
+    "what_it_is": "Ad companies swap IDs through quick redirects so each can recognise the same person.",
+    "icon": "arrow-right-left",
+    "tags": [
+      "Ads",
+      "Cookies",
+      "Silent"
+    ],
+    "marketing": [],
+    "for_you": "You never see it. When you load a page, your browser is sent through several ad companies in a blink. Each one passes along its ID for you, so they can all say that they know you.",
+    "for_makers": "Real time ad auctions need every bidder to know who is on the page. Syncing lets them match their private IDs with each other. The result is a web of IDs that makes ads follow people, and a large share of sites take part.",
+    "use_cases": [
+      {
+        "type": "ads",
+        "example": "A news page loads, and a dozen ad companies swap IDs so they can bid on you within 100 milliseconds.",
+        "apps": [
+          "Google Ad Manager",
+          "The Trade Desk"
+        ]
+      },
+      {
+        "type": "analytics",
+        "example": "A measurement company uses synced IDs to count people who saw an ad on one site and bought on another.",
+        "apps": [
+          "Nielsen",
+          "comScore"
+        ]
+      },
+      {
+        "type": "games",
+        "example": "A free browser game loads ads through partners that sync IDs so bidders value a player more.",
+        "apps": [
+          "CrazyGames",
+          "Poki"
+        ]
+      },
+      {
+        "type": "media",
+        "example": "A video site sells ad space with synced IDs, which raises the price for known viewers.",
+        "apps": [
+          "Hulu",
+          "YouTube"
+        ]
+      },
+      {
+        "type": "shopping",
+        "example": "A shopper's cart visit is shared through synced IDs so a related ad shows on a news site.",
+        "apps": [
+          "Criteo"
+        ]
+      },
+      {
+        "type": "security",
+        "example": "Researchers studied syncing to show how many sites share one ID.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Builds a web of IDs that follows you",
+      "Many companies learn your ID"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Needs a third-party cookie or another stable ID on each side",
+    "Blocked by Safari ITP and Firefox TCP; Chrome allows it with third-party cookies on",
+    "Browsers cannot distinguish a sync from an ordinary pixel"
+  ],
+  "scores": {
+    "sensitivity": 4,
+    "utility": 3,
+    "fingerprint_bits": null,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Frequency capping across vendors",
+      "Measurement matching"
+    ],
+    "abuse": [
+      "Cross-vendor profile merging without the person knowing"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2019-05",
+      "browser": "all",
+      "version": "",
+      "change": "Papadopoulos et al. (WWW 2019) quantified cookie syncing in the wild"
+    }
+  ],
+  "related": [
+    "web.xsite.id-graphs",
+    "web.xsite.third-party-cookies-status"
+  ],
+  "refs": [
+    {
+      "t": "paper",
+      "label": "Cookie Synchronization: Everything You Always Wanted to Know (WWW 2019)",
+      "url": "https://arxiv.org/abs/1805.10505"
+    },
+    {
+      "t": "webkit",
+      "label": "WebKit Tracking Prevention",
+      "url": "https://webkit.org/tracking-prevention/"
+    }
+  ],
+  "confidence": "docs"
+}

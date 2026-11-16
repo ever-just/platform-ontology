@@ -1,0 +1,218 @@
+{
+  "id": "web.render.math-precision",
+  "name": "Math function precision",
+  "kind": "tracking",
+  "group": "rendering-fingerprint",
+  "subgroup": "JS engine",
+  "tags": [
+    "math",
+    "tan",
+    "v8",
+    "spidermonkey"
+  ],
+  "plain": "Evaluates Math.tan, cosh, expm1 and similar at odd inputs and compares the exact digits.",
+  "meaning": "JS engines and CPU math libraries round the last bits differently, so a few results separate V8, SpiderMonkey and JavaScriptCore and sometimes the OS and CPU architecture.",
+  "lifecycle": [
+    "on-arrival"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "Math.tan(-1e300); Math.sinh(1); Math.acosh(1e300); Math.pow(Math.PI,-100)",
+      "access": {
+        "grant": "none",
+        "prompt_ui": "",
+        "secure_context": false,
+        "user_gesture": false,
+        "persistence": "",
+        "revocation": "",
+        "iframe": "",
+        "steps": [
+          "Evaluate a short list of Math calls",
+          "Serialize to full precision strings",
+          "Compare against known engine values"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "1",
+          "note": "",
+          "date": "2008-12-11"
+        },
+        "edge": {
+          "s": "y",
+          "v": "79",
+          "note": "",
+          "date": "2020-01-15"
+        },
+        "firefox": {
+          "s": "y",
+          "v": "1",
+          "note": "",
+          "date": "2004-11-09"
+        },
+        "safari": {
+          "s": "y",
+          "v": "1",
+          "note": "",
+          "date": "2003-06-23"
+        },
+        "ios_safari": {
+          "s": "y",
+          "v": "1",
+          "note": "",
+          "date": "2007-06-29"
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "1",
+          "note": "",
+          "date": ""
+        },
+        "samsung": {
+          "s": "y",
+          "v": "5.0",
+          "note": "",
+          "date": "2016-12-15"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "list",
+    "metric": "6 to 10 doubles at 17 significant digits",
+    "update": "",
+    "fields": [
+      {
+        "name": "Math.tan(-1e300)",
+        "type": "float",
+        "unit": "",
+        "range": "engine specific",
+        "precision": "full double precision"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can run maths tests and use the last digits to tell your browser and chip apart",
+    "user_action": "Nothing. It happens when the page loads",
+    "can": [
+      "Compute a few unusual maths results",
+      "Tell Chrome, Firefox and Safari engines apart by tiny digit differences",
+      "Sometimes guess your system and chip type",
+      "Spot a faked browser label"
+    ],
+    "cannot": [
+      "See your files or what you typed",
+      "Ask permission first",
+      "Know who you are by itself",
+      "Tell your exact device model"
+    ],
+    "reach": 2,
+    "reach_label": "Silent, browser and chip traits",
+    "differs": ""
+  },
+  "story": {
+    "what_it_is": "A script calculates unusual math functions and compares exact digits, which differ slightly by engine and CPU.",
+    "icon": "calculator",
+    "tags": [
+      "Silent",
+      "Math",
+      "Fingerprinting"
+    ],
+    "marketing": [],
+    "for_you": "You see nothing. Your device does a few odd math problems and the tail digits can differ between browsers and chips. The answer helps identify your browser engine and system.",
+    "for_makers": "Math answers are meant to be the same everywhere, but tiny rounding differences exist. Fraud and bot teams use them to tell real browsers from fake ones, and trackers add them to device IDs.",
+    "use_cases": [
+      {
+        "type": "security",
+        "example": "A bot detector runs math tests and sees results that do not match the browser it claims to be.",
+        "apps": []
+      },
+      {
+        "type": "analytics",
+        "example": "A fingerprint library adds the exact digits from a few math calls to a visitor ID.",
+        "apps": [
+          "FingerprintJS",
+          "CreepJS"
+        ]
+      },
+      {
+        "type": "games",
+        "example": "A physics heavy browser game makes sure players on different devices get the same results, so it avoids relying on risky math.",
+        "apps": []
+      },
+      {
+        "type": "ads",
+        "example": "An ad script uses math results to separate browser engines when the user agent string is hidden.",
+        "apps": []
+      },
+      {
+        "type": "banking",
+        "example": "A bank checks that the browser's math matches known real devices, to spot an emulator.",
+        "apps": []
+      },
+      {
+        "type": "creative",
+        "example": "A web 3D tool runs on many chips and tests that its math gives matching shapes.",
+        "apps": []
+      },
+      {
+        "type": "education",
+        "example": "A web calculator or graphing site like Desmos shows the same answer on every device by controlling how it rounds.",
+        "apps": [
+          "Desmos"
+        ]
+      }
+    ],
+    "risks": [
+      "Hard to change without breaking math",
+      "Adds to a device ID"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Same engine and CPU yield the same values, low per-user entropy"
+  ],
+  "scores": {
+    "sensitivity": 2,
+    "utility": 1,
+    "fingerprint_bits": 2,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": "None",
+    "abuse": "Browser and architecture identification inside composite hashes"
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2013-01",
+      "browser": "paper",
+      "version": "",
+      "change": "Mulazzani et al. JS engine fingerprinting by conformance and speed"
+    }
+  ],
+  "related": [
+    "web.render.js-engine-feature-detection"
+  ],
+  "refs": [
+    {
+      "t": "github",
+      "label": "FingerprintJS math component",
+      "url": "https://github.com/fingerprintjs/fingerprintjs"
+    },
+    {
+      "t": "github",
+      "label": "CreepJS",
+      "url": "https://github.com/abrahamjuliot/creepjs"
+    }
+  ],
+  "confidence": "docs"
+}

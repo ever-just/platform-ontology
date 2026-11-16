@@ -1,0 +1,235 @@
+{
+  "id": "web.tracking.linkedin-conversions-api",
+  "name": "Conversions API (server to server events)",
+  "kind": "tracking",
+  "group": "cross-site-tracking",
+  "subgroup": "Server side tracking",
+  "tags": [
+    "server-side",
+    "conversions-api",
+    "hashed-email",
+    "advertising"
+  ],
+  "plain": "Advertisers send purchase and lead events straight from their servers with hashed identifiers.",
+  "meaning": "Moves tracking off the browser where blockers and cookie limits apply. LinkedIn matches events to members using hashed email, click ID, IP hash and other IDs.",
+  "lifecycle": [
+    "after-leaving"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "POST https://api.linkedin.com/rest/conversionEvents (up to 5,000 events per batch)",
+      "access": {
+        "grant": "none",
+        "prompt_ui": "None (no browser prompt)",
+        "secure_context": false,
+        "user_gesture": false,
+        "persistence": "Mapping of externalIds kept 1 year; events must be within 90 days",
+        "revocation": "",
+        "iframe": "",
+        "steps": [
+          "Create a rule with conversionMethod CONVERSIONS_API (POST /rest/conversions)",
+          "Server sends events with user.userIds and userInfo",
+          "LinkedIn deduplicates on eventId and matches to members",
+          "Rate limits 600 per minute and 500,000 per day; scopes rw_conversions and r_ads"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "",
+          "note": ""
+        },
+        "edge": {
+          "s": "y",
+          "v": "",
+          "note": ""
+        },
+        "firefox": {
+          "s": "y",
+          "v": "",
+          "note": ""
+        },
+        "safari": {
+          "s": "y",
+          "v": "",
+          "note": ""
+        },
+        "ios_safari": {
+          "s": "y",
+          "v": "",
+          "note": ""
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "",
+          "note": ""
+        },
+        "samsung": {
+          "s": "y",
+          "v": "",
+          "note": ""
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "object",
+    "metric": "Conversion events",
+    "update": "batch",
+    "fields": [
+      {
+        "name": "idType",
+        "type": "enum",
+        "unit": "",
+        "range": "SHA256_EMAIL, LINKEDIN_FIRST_PARTY_ADS_TRACKING_UUID, ACXIOM_ID, PLAINTEXT_IP_ADDRESS, SHA256_IP_ADDRESS, GOOGLE_AID",
+        "precision": ""
+      },
+      {
+        "name": "userInfo",
+        "type": "object",
+        "unit": "",
+        "range": "firstName, lastName, hashed names (from 202609), companyName, title, countryCode",
+        "precision": ""
+      },
+      {
+        "name": "conversionHappenedAt",
+        "type": "integer",
+        "unit": "ms epoch",
+        "range": "within 90 days",
+        "precision": "1 ms"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can send your purchases and sign ups to LinkedIn from a company's servers",
+    "user_action": "Nothing on your side. It happens after you buy or sign up on an advertiser's site",
+    "can": [
+      "Send a purchase or lead event straight from the advertiser's servers to LinkedIn",
+      "Include a scrambled version of your email or other details to match you to a member",
+      "Count conversions even if your browser blocks tracking scripts",
+      "Report events that happened days after the ad click"
+    ],
+    "cannot": [
+      "Be seen or blocked by your browser, since it never touches your device",
+      "Match you without the advertiser having your details or click ID",
+      "Be switched off by a cookie banner choice alone, unless the advertiser honors it",
+      "Send events from sites that have not set it up"
+    ],
+    "reach": 3,
+    "reach_label": "Every conversion the advertiser sends",
+    "differs": ""
+  },
+  "story": {
+    "what_it_is": "Advertisers tell LinkedIn about your purchase or sign up from their own servers, not your browser.",
+    "icon": "server",
+    "tags": [
+      "Ads",
+      "Silent",
+      "Server side"
+    ],
+    "marketing": [
+      {
+        "vendor": "LinkedIn",
+        "name": "Conversions API",
+        "pitch": "LinkedIn pitches it as a way for advertisers to send conversion data directly, for more complete measurement as browser tracking weakens.",
+        "url": "https://learn.microsoft.com/en-us/linkedin/marketing/integrations/ads-reporting/conversions-api"
+      }
+    ],
+    "for_you": "You never see it. After you fill in a form or buy something, the company's server quietly sends LinkedIn a note with a scrambled version of your email. Your browser cannot block it, because it never passes through your browser.",
+    "for_makers": "Browsers and blockers cut what scripts can see, so advertisers lose sales they used to count. A server to server note fills the gap and lets LinkedIn match the sale to an ad. It also lets a company report offline leads, such as a signed contract after a sales call.",
+    "use_cases": [
+      {
+        "type": "ads",
+        "example": "A software company sends LinkedIn the name of each lead that turns into a paid customer, so the ad team sees which campaign paid off.",
+        "apps": [
+          "HubSpot",
+          "Salesforce"
+        ]
+      },
+      {
+        "type": "analytics",
+        "example": "A marketing team compares LinkedIn reported sales to its own records, using server events that skip ad blockers.",
+        "apps": [
+          "Segment"
+        ]
+      },
+      {
+        "type": "enterprise",
+        "example": "A B2B firm tells LinkedIn when a sales rep closes a deal weeks after the web form, linking it to the first ad click.",
+        "apps": [
+          "Salesforce",
+          "HubSpot"
+        ]
+      },
+      {
+        "type": "shopping",
+        "example": "An online shop sends a purchase event from checkout servers so a sale still counts when a shopper uses a blocker.",
+        "apps": [
+          "Shopify"
+        ]
+      },
+      {
+        "type": "security",
+        "example": "The company hashes your email on its server before sending, which it says protects privacy, though the hash still identifies you.",
+        "apps": []
+      },
+      {
+        "type": "education",
+        "example": "A university sends LinkedIn an event when a prospect finishes an application, to find more people like them.",
+        "apps": [
+          "Coursera"
+        ]
+      }
+    ],
+    "risks": [
+      "Cannot be blocked in your browser",
+      "Hashed email still identifies you"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Not a browser mechanism: needs the advertiser's server",
+    "Marketing API version 202511 sunsets 2026-11-16",
+    "Old ORACLE_MOAT_ID is not in the current schema"
+  ],
+  "scores": {
+    "sensitivity": 4,
+    "utility": 4,
+    "fingerprint_bits": null,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Reliable conversion measurement",
+      "Offline sales feedback"
+    ],
+    "abuse": [
+      "Hidden matching of customers to LinkedIn profiles"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": true,
+      "how": "Server side companion to the Insight Tag, documented on Microsoft Learn."
+    }
+  },
+  "related": [
+    "web.tracking.linkedin-li-fat-id",
+    "web.tracking.linkedin-enhanced-matching"
+  ],
+  "refs": [
+    {
+      "t": "vendor",
+      "label": "Microsoft Learn: Conversions API",
+      "url": "https://learn.microsoft.com/en-us/linkedin/marketing/integrations/ads-reporting/conversions-api"
+    },
+    {
+      "t": "vendor",
+      "label": "Microsoft Learn: Conversions API schema",
+      "url": "https://learn.microsoft.com/en-us/linkedin/marketing/integrations/ads-reporting/conversions-api-schema"
+    }
+  ],
+  "confidence": "verified"
+}

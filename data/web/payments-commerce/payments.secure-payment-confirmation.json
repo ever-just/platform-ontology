@@ -1,0 +1,230 @@
+{
+  "id": "web.payments.secure-payment-confirmation",
+  "name": "Secure Payment Confirmation",
+  "kind": "capability",
+  "group": "payments-commerce",
+  "subgroup": "Checkout",
+  "tags": [
+    "checkout"
+  ],
+  "plain": "Authenticates a card payment with a passkey inside the browser.",
+  "meaning": "Binds a WebAuthn credential to a payment so banks can confirm the person approved this exact amount.",
+  "lifecycle": [
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "PaymentRequest with method secure-payment-confirmation, securePaymentConfirmationAvailability, getSecurePaymentConfirmationCapabilities",
+      "permissions_policy": "payment",
+      "bcd": [
+        "api.PaymentRequest"
+      ],
+      "access": {
+        "grant": "prompt",
+        "prompt_ui": "Browser sheet showing merchant and amount; needs passkey",
+        "secure_context": true,
+        "user_gesture": true,
+        "persistence": "Per origin",
+        "revocation": "Site settings",
+        "iframe": "Same as top level; cross-origin iframes need a permissions policy where listed",
+        "steps": [
+          "Call the API",
+          "Browser applies its access rules",
+          "Page receives the result"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "60",
+          "note": "capabilities 148",
+          "date": "2017-07-25"
+        },
+        "edge": {
+          "s": "y",
+          "v": "15",
+          "note": "",
+          "date": "2017-04-05"
+        },
+        "firefox": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "safari": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "ios_safari": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "53",
+          "note": "",
+          "date": "2016-09-07"
+        },
+        "samsung": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "object",
+    "metric": "Authenticates a card payment with a passkey inside the browser.",
+    "update": "on demand",
+    "fields": [
+      {
+        "name": "credentialIds",
+        "type": "list",
+        "range": "binary ids"
+      },
+      {
+        "name": "payeeOrigin",
+        "type": "string",
+        "range": "origin"
+      },
+      {
+        "name": "total",
+        "type": "object",
+        "range": "currency and value"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can confirm a card payment with a passkey that you approve in the browser",
+    "user_action": "You tap Pay, then confirm with your fingerprint, face or device PIN.",
+    "can": [
+      "Show the shop name and amount before you confirm",
+      "Check you with a passkey that your bank set up",
+      "Send the bank proof that you approved this payment"
+    ],
+    "cannot": [
+      "Take payment without your passkey",
+      "Work before you set up a passkey with your bank",
+      "Work in Safari, Firefox or on iPhone",
+      "See your card number"
+    ],
+    "reach": 1,
+    "reach_label": "One payment, once you approve",
+    "differs": "Chrome and Edge support it. Safari and Firefox do not."
+  },
+  "story": {
+    "what_it_is": "Confirm a card payment with a passkey or fingerprint, right in the browser.",
+    "icon": "fingerprint",
+    "tags": [
+      "Payments",
+      "Passkey",
+      "Security"
+    ],
+    "marketing": [
+      {
+        "vendor": "Google",
+        "name": "Secure Payment Confirmation",
+        "pitch": "Chrome's docs say it lets banks confirm a card payment with a passkey, with a consistent, secure pay sheet.",
+        "url": "https://developer.chrome.com/docs/payments/secure-payment-confirmation"
+      }
+    ],
+    "for_you": "At checkout, a sheet shows the shop and amount and asks for your fingerprint or face. It replaces text message codes you have to type.",
+    "for_makers": "Banks and card networks want it because it makes card fraud harder and cuts abandoned checkouts. It is part of the 3D Secure rules for online card payments.",
+    "use_cases": [
+      {
+        "type": "banking",
+        "example": "A bank confirms an online card payment with your fingerprint instead of an SMS code.",
+        "apps": []
+      },
+      {
+        "type": "shopping",
+        "example": "A retailer sees fewer failed checkouts because people no longer wait for a code.",
+        "apps": []
+      },
+      {
+        "type": "travel",
+        "example": "An airline confirms a high value booking with a passkey.",
+        "apps": []
+      },
+      {
+        "type": "security",
+        "example": "Fraud teams get a cryptographic proof that the real card owner approved.",
+        "apps": []
+      },
+      {
+        "type": "payments",
+        "example": "A card network lets a bank run its own check with no redirect.",
+        "apps": [
+          "Visa",
+          "Mastercard"
+        ]
+      },
+      {
+        "type": "games",
+        "example": "A game store confirms a large purchase with your face.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Only some banks",
+      "Only Chromium browsers"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Chromium only",
+    "Needs registered credentials"
+  ],
+  "scores": {
+    "sensitivity": 4,
+    "utility": 3,
+    "fingerprint_bits": null,
+    "friction": 2
+  },
+  "value": {
+    "legit_uses": [
+      "Strong customer authentication"
+    ],
+    "abuse": [
+      "None notable"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2024-07",
+      "browser": "chrome",
+      "version": "139",
+      "change": "securePaymentConfirmationAvailability"
+    },
+    {
+      "date": "2026-05",
+      "browser": "chrome",
+      "version": "148",
+      "change": "getSecurePaymentConfirmationCapabilities"
+    }
+  ],
+  "refs": [
+    {
+      "t": "spec",
+      "label": "Secure Payment Confirmation",
+      "url": "https://www.w3.org/TR/secure-payment-confirmation/"
+    },
+    {
+      "t": "mdn",
+      "label": "MDN PaymentRequest",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/PaymentRequest"
+    }
+  ],
+  "confidence": "docs"
+}

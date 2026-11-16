@@ -1,0 +1,257 @@
+{
+  "id": "web.net.client-hints",
+  "name": "Client Hints (Accept-CH, Critical-CH)",
+  "kind": "signal",
+  "group": "network-connectivity",
+  "subgroup": "Headers",
+  "tags": [
+    "client-hints",
+    "accept-ch",
+    "critical-ch",
+    "ua-ch"
+  ],
+  "plain": "Servers ask the browser for extra device details through request headers.",
+  "meaning": "A server sends Accept-CH to receive hints such as Sec-CH-UA-Platform-Version, Arch, Bitness, Model, Device-Memory, DPR and Viewport-Width. Critical-CH forces a retry with them. Chromium only; Firefox and Safari do not send them.",
+  "lifecycle": [
+    "on-arrival"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "Accept-CH and Critical-CH response headers; Sec-CH-* request headers",
+      "bcd": [
+        "http.headers.Accept-CH"
+      ],
+      "access": {
+        "grant": "none",
+        "prompt_ui": "",
+        "secure_context": false,
+        "user_gesture": false,
+        "persistence": "",
+        "revocation": "",
+        "iframe": "",
+        "steps": [
+          "Server returns Accept-CH",
+          "Browser adds hints on later requests",
+          "Critical-CH triggers a same-load retry"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "46",
+          "note": "",
+          "date": "2015-10-13"
+        },
+        "edge": {
+          "s": "y",
+          "v": "79",
+          "note": "",
+          "date": "2020-01-15"
+        },
+        "firefox": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "safari": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "ios_safari": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "46",
+          "note": "",
+          "date": "2015-10-14"
+        },
+        "samsung": {
+          "s": "y",
+          "v": "5.0",
+          "note": "",
+          "date": "2016-12-15"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "list",
+    "metric": "One header per hint",
+    "update": "",
+    "fields": [
+      {
+        "name": "Sec-CH-UA-Model",
+        "type": "string",
+        "unit": "",
+        "range": "device model or empty",
+        "precision": "exact (mobile)"
+      },
+      {
+        "name": "Sec-CH-UA-Platform-Version",
+        "type": "string",
+        "unit": "",
+        "range": "OS version",
+        "precision": "exact"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can ask your browser for extra device details such as model, OS version and screen",
+    "user_action": "Nothing. It happens when a page loads and the site asks for hints",
+    "can": [
+      "Ask for details such as platform version, device model, memory and screen width",
+      "Tailor images and pages to your device",
+      "Make your browser retry the request with those details on sites that require them"
+    ],
+    "cannot": [
+      "Get these details from Firefox or Safari, which do not send them",
+      "Get details the browser does not offer; it sends only what the site asks for",
+      "Know who you are from them alone"
+    ],
+    "reach": 2,
+    "reach_label": "Details sent with page requests",
+    "differs": "Only Chromium browsers (Chrome, Edge, Samsung Internet) send them. Firefox and Safari do not."
+  },
+  "story": {
+    "what_it_is": "The server can ask your browser for extra details about your device with each request.",
+    "icon": "server",
+    "tags": [
+      "Device",
+      "Silent",
+      "Headers"
+    ],
+    "marketing": [
+      {
+        "vendor": "Google Chrome",
+        "name": "User-Agent Client Hints",
+        "pitch": "Chrome pitches it as a more private, structured replacement for the old user agent string, where sites ask for the details they need.",
+        "url": "https://developer.chrome.com/docs/privacy-security/user-agent-client-hints"
+      }
+    ],
+    "for_you": "You never see it. When a site asks, your browser quietly sends things like your device model, system version, screen density and memory size. The site then sends the right image size or layout.",
+    "for_makers": "Makers use hints to send the right images, files and layout for each device, which makes pages faster. Fraud and ad systems also use the detail as a fingerprint input, so what a server asks for matters.",
+    "use_cases": [
+      {
+        "type": "games",
+        "example": "A browser game site picks the right graphics quality and download size for a weak phone or a strong gaming laptop.",
+        "apps": [
+          "Poki",
+          "CrazyGames"
+        ]
+      },
+      {
+        "type": "games",
+        "example": "A cloud gaming site reads device and screen details to choose the stream resolution and controls.",
+        "apps": [
+          "GeForce NOW",
+          "Xbox Cloud Gaming"
+        ]
+      },
+      {
+        "type": "media",
+        "example": "A streaming site picks video quality and app layout for your TV, phone or laptop.",
+        "apps": [
+          "Netflix",
+          "YouTube"
+        ]
+      },
+      {
+        "type": "shopping",
+        "example": "A store sends smaller images to a low memory phone so the page loads fast.",
+        "apps": [
+          "Amazon"
+        ]
+      },
+      {
+        "type": "ads",
+        "example": "An ad system reads device model and system version to match ads to phone models.",
+        "apps": []
+      },
+      {
+        "type": "security",
+        "example": "A fraud tool checks that hints agree with the browser claim, and a mismatch reveals a spoofed device.",
+        "apps": []
+      },
+      {
+        "type": "analytics",
+        "example": "A product team counts visitors by exact device model and system version.",
+        "apps": [
+          "Google Analytics"
+        ]
+      }
+    ],
+    "risks": [
+      "Reveals device model",
+      "Used for fingerprinting"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "High entropy hints only sent after server opt-in and to first party by default",
+    "Third parties need Permissions-Policy delegation"
+  ],
+  "scores": {
+    "sensitivity": 2,
+    "utility": 4,
+    "fingerprint_bits": 3,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": "Responsive delivery, correct downloads",
+    "abuse": "Gets precise OS and device model without JS"
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2021-03",
+      "browser": "chrome",
+      "version": "89",
+      "change": "UA Client Hints on by default"
+    },
+    {
+      "date": "2022-03",
+      "browser": "chrome",
+      "version": "100",
+      "change": "Critical-CH shipped"
+    },
+    {
+      "date": "2023-06",
+      "browser": "chrome",
+      "version": "110",
+      "change": "User-Agent reduction completes on Android and desktop"
+    }
+  ],
+  "related": [
+    "web.net.sec-ch-ua",
+    "web.perf.network-information"
+  ],
+  "refs": [
+    {
+      "t": "mdn",
+      "label": "MDN Client Hints",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/HTTP/Client_hints"
+    },
+    {
+      "t": "spec",
+      "label": "WICG UA Client Hints",
+      "url": "https://wicg.github.io/ua-client-hints/"
+    },
+    {
+      "t": "vendor",
+      "label": "Chrome UA reduction",
+      "url": "https://developer.chrome.com/docs/privacy-security/user-agent-client-hints"
+    }
+  ],
+  "confidence": "docs"
+}

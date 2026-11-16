@@ -1,0 +1,214 @@
+{
+  "id": "mob.health.body-sensors",
+  "name": "Body sensors",
+  "kind": "permission",
+  "group": "health-fitness",
+  "subgroup": "Vitals",
+  "tags": [
+    "runtime-permission",
+    "heart-rate",
+    "wearable"
+  ],
+  "plain": "Asks to read heart rate and similar body sensor data while the app is in use.",
+  "meaning": "Heart rate and related vitals reveal fitness, stress and health conditions. Android 16 replaces this permission with granular health permissions for apps targeting 36.",
+  "lifecycle": [
+    "in-session"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "y",
+      "v": "4.4W",
+      "api": 20,
+      "permission": "BODY_SENSORS (replaced by android.permissions.health.* for apps targeting 36)",
+      "protection": "dangerous",
+      "grant": "prompt",
+      "prompt_ui": "Allow or Don't allow (While using the app, Only this time on Android 11+ for foreground sensors)",
+      "persistence": "Until revoked or auto-reset",
+      "revocation": "Settings > Apps > Permissions > Body sensors (or Health Connect permissions on 16)",
+      "store_policy": "Play: health apps declaration for Health Connect data",
+      "api_surface": "SensorManager.TYPE_HEART_RATE, Health Services client",
+      "note": "Android 16 (API 36): apps targeting 36 must use granular health permissions; a privacy-policy rationale activity is required or the permission is revoked."
+    },
+    "ios": {
+      "s": "y",
+      "v": "8.0",
+      "permission": "NSHealthShareUsageDescription, NSHealthUpdateUsageDescription, HealthKit entitlement",
+      "protection": "entitlement",
+      "grant": "prompt",
+      "prompt_ui": "Per data type read and write toggles in the Health sheet",
+      "persistence": "Until revoked; read denial looks like no data",
+      "revocation": "Health app > Sharing > Apps; Settings > Privacy > Health",
+      "store_policy": "App Review 5.1.3: health data may not be used for advertising or sold",
+      "api_surface": "HKHealthStore.requestAuthorization, HKObserverQuery",
+      "note": "Apps cannot tell if read access was denied or the user has no data."
+    }
+  },
+  "web_equivalents": [
+    "web.location.sensor-accelerometer"
+  ],
+  "data": {
+    "type": "stream",
+    "metric": "Heart rate and related vitals",
+    "update": "about 1 sample per second to a few per minute, device dependent",
+    "fields": [
+      {
+        "name": "heart_rate",
+        "type": "integer",
+        "unit": "bpm",
+        "range": "30 to 220",
+        "precision": "1 bpm"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can see your heart rate and similar body signals while the app is open",
+    "user_action": "You tap Start workout or Measure heart rate and then Allow",
+    "can": [
+      "See live heart rate from the phone or a connected watch while the app is open",
+      "Choose While using the app or Only this time on Android 11 and newer",
+      "Ask for per type access in the Health sheet on iPhone",
+      "Show your readings during a workout"
+    ],
+    "cannot": [
+      "See your heart rate when the app is closed, without the extra background permission",
+      "Use the old body sensors permission in apps aimed at Android 16; granular health permissions replace it",
+      "Tell on iPhone if you denied access; it just looks like no data",
+      "Keep going if you turn it off in Settings"
+    ],
+    "reach": 2,
+    "reach_label": "While the app is open",
+    "differs": "Android 16 replaces this with finer health permissions and a privacy policy step. iPhone uses the Health sheet with per type switches."
+  },
+  "story": {
+    "what_it_is": "Lets an app read your heart rate and similar body readings while you use it.",
+    "icon": "activity",
+    "tags": [
+      "Health",
+      "Asks first",
+      "Sensitive"
+    ],
+    "marketing": [
+      {
+        "vendor": "Google",
+        "name": "Health Connect",
+        "pitch": "Developer pitch: one place for health and fitness data with user control over which apps can read or write it.",
+        "url": "https://developer.android.com/health-and-fitness/guides/health-connect"
+      }
+    ],
+    "for_you": "A pop up asks to access body sensors. If you allow it, the app can read your heart rate and similar vitals while you use it. It can show stress or health problems, so say yes only for a good reason.",
+    "for_makers": "Fitness and wellness apps use it to show live heart rate and zones. Android 16 replaces this old permission with narrower health permissions for apps that target it.",
+    "use_cases": [
+      {
+        "type": "fitness",
+        "example": "A running app shows live heart rate zones from your watch during a workout.",
+        "apps": []
+      },
+      {
+        "type": "health",
+        "example": "A meditation app reads heart rate to show if you calm down.",
+        "apps": []
+      },
+      {
+        "type": "games",
+        "example": "A fitness game speeds up or slows down based on your heart rate.",
+        "apps": []
+      },
+      {
+        "type": "wearables",
+        "example": "A watch companion app shows today's resting heart rate.",
+        "apps": [
+          "Fitbit",
+          "Samsung Health"
+        ]
+      },
+      {
+        "type": "health",
+        "example": "A coaching app suggests rest when your heart rate stays high.",
+        "apps": []
+      },
+      {
+        "type": "ads",
+        "example": "An ad firm could infer stress or health conditions if heart data leaked.",
+        "apps": []
+      },
+      {
+        "type": "automotive",
+        "example": "A driver safety app watches heart rate for signs of drowsiness.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Reveals health and stress",
+      "Data can be sold or leaked"
+    ],
+    "android_note": "Uses the BODY_SENSORS permission, replaced by granular health permissions on Android 16.",
+    "ios_note": "iPhone apps read heart rate through HealthKit permissions, per data type."
+  },
+  "technical_bounds": [
+    "Android 16 binds sensors to Health Connect permission model",
+    "Apple review blocks ads from health data"
+  ],
+  "scores": {
+    "sensitivity": 5,
+    "utility": 3,
+    "fingerprint_bits": null,
+    "friction": 2
+  },
+  "value": {
+    "legit_uses": [
+      "Fitness apps"
+    ],
+    "abuse": [
+      "Health inference for insurance or ads"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2014-06",
+      "platform": "android",
+      "version": "4.4W (API 20)",
+      "change": "BODY_SENSORS introduced for wearables"
+    },
+    {
+      "date": "2025-06",
+      "platform": "android",
+      "version": "16 (API 36)",
+      "change": "Apps targeting 36 move from BODY_SENSORS to granular health permissions shared with Health Connect"
+    },
+    {
+      "date": "2014-09",
+      "platform": "ios",
+      "version": "iOS 8",
+      "change": "HealthKit authorization introduced"
+    }
+  ],
+  "related": [
+    "mob.health.body-sensors-background",
+    "mob.health.health-connect"
+  ],
+  "refs": [
+    {
+      "t": "android",
+      "label": "Android 16 behavior changes (apps targeting 16)",
+      "url": "https://developer.android.com/about/versions/16/behavior-changes-16"
+    },
+    {
+      "t": "android",
+      "label": "Android: Health Connect",
+      "url": "https://developer.android.com/health-and-fitness/guides/health-connect"
+    },
+    {
+      "t": "apple",
+      "label": "Apple: HealthKit privacy",
+      "url": "https://developer.apple.com/documentation/healthkit/protecting-user-privacy"
+    }
+  ],
+  "confidence": "docs"
+}

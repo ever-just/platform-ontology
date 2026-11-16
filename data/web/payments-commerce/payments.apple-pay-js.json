@@ -1,0 +1,226 @@
+{
+  "id": "web.payments.apple-pay-js",
+  "name": "Apple Pay on the web (ApplePaySession)",
+  "kind": "capability",
+  "group": "payments-commerce",
+  "subgroup": "Checkout",
+  "tags": [
+    "checkout"
+  ],
+  "plain": "Pays with Apple Pay in Safari or via the Payment Request API.",
+  "meaning": "The site gets a payment token, billing and shipping contact only after Face ID or Touch ID approval.",
+  "lifecycle": [
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "new ApplePaySession(version,request).begin(), onvalidatemerchant, onpaymentauthorized",
+      "access": {
+        "grant": "prompt",
+        "prompt_ui": "Apple Pay sheet with Face ID, Touch ID or passcode",
+        "secure_context": true,
+        "user_gesture": true,
+        "persistence": "Per origin",
+        "revocation": "Site settings",
+        "iframe": "Same as top level; cross-origin iframes need a permissions policy where listed",
+        "steps": [
+          "Call the API",
+          "Browser applies its access rules",
+          "Page receives the result"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "edge": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "firefox": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "safari": {
+          "s": "y",
+          "v": "10",
+          "note": "",
+          "date": "2016-09-20"
+        },
+        "ios_safari": {
+          "s": "y",
+          "v": "10",
+          "note": "",
+          "date": "2016-09-13"
+        },
+        "chrome_android": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "samsung": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "object",
+    "metric": "Pays with Apple Pay in Safari or via the Payment Request API.",
+    "update": "on demand",
+    "fields": [
+      {
+        "name": "token",
+        "type": "object",
+        "range": "encrypted payment data",
+        "precision": "processed by the PSP"
+      },
+      {
+        "name": "shippingContact / billingContact",
+        "type": "object",
+        "range": "name, address, email, phone",
+        "precision": "if requested"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can start an Apple Pay payment that you confirm with Face ID or Touch ID",
+    "user_action": "You tap the Apple Pay button at checkout.",
+    "can": [
+      "Show the Apple Pay sheet with your cards and shipping address",
+      "Send a one time payment code to the store after you approve",
+      "Ask for your name, email or phone if you choose to share them"
+    ],
+    "cannot": [
+      "See your real card number",
+      "Charge you without Face ID, Touch ID or your passcode",
+      "Use Apple Pay in Chrome, Edge or Firefox",
+      "Keep your details for later; each payment needs a new approval"
+    ],
+    "reach": 1,
+    "reach_label": "One payment, once you approve",
+    "differs": "Safari on iPhone and Mac supports it directly. Chrome, Edge and Firefox use other wallets."
+  },
+  "story": {
+    "what_it_is": "Pay in Safari with Apple Pay, confirmed by Face ID or Touch ID.",
+    "icon": "wallet",
+    "tags": [
+      "Payments",
+      "Asks first",
+      "Apple"
+    ],
+    "marketing": [
+      {
+        "vendor": "Apple",
+        "name": "Apple Pay on the Web",
+        "pitch": "Apple says Apple Pay lets customers check out quickly and securely on websites in Safari.",
+        "url": "https://developer.apple.com/apple-pay/"
+      }
+    ],
+    "for_you": "You tap the Apple Pay button, check the total, and approve with your face or finger. The shop gets a payment token, not your card number.",
+    "for_makers": "Makers get higher checkout completion and fewer card number worries. It also gives them your shipping contact once you approve.",
+    "use_cases": [
+      {
+        "type": "shopping",
+        "example": "You pay for shoes on a store site with one tap and no typing.",
+        "apps": [
+          "Nike",
+          "Etsy"
+        ]
+      },
+      {
+        "type": "travel",
+        "example": "A booking site lets you pay for a flight with Face ID.",
+        "apps": [
+          "Airbnb"
+        ]
+      },
+      {
+        "type": "delivery",
+        "example": "A food order site finishes checkout in one tap.",
+        "apps": [
+          "DoorDash",
+          "Uber Eats"
+        ]
+      },
+      {
+        "type": "payments",
+        "example": "A ticket seller confirms your purchase and sends the tickets to your phone.",
+        "apps": [
+          "Ticketmaster"
+        ]
+      },
+      {
+        "type": "security",
+        "example": "A fraud team sees the Apple Pay token and trusts it more than a typed card number.",
+        "apps": []
+      },
+      {
+        "type": "media",
+        "example": "A news site sells a subscription with one tap.",
+        "apps": [
+          "The New York Times"
+        ]
+      }
+    ],
+    "risks": [
+      "Easy overspending",
+      "Only Apple devices"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Apple devices only",
+    "Needs merchant validation and a registered domain"
+  ],
+  "scores": {
+    "sensitivity": 5,
+    "utility": 4,
+    "fingerprint_bits": null,
+    "friction": 2
+  },
+  "value": {
+    "legit_uses": [
+      "Checkout"
+    ],
+    "abuse": [
+      "None notable"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2016-09",
+      "browser": "safari",
+      "version": "10",
+      "change": "Apple Pay JS ships"
+    },
+    {
+      "date": "2017-09",
+      "browser": "safari",
+      "version": "11.1",
+      "change": "Payment Request integration"
+    }
+  ],
+  "refs": [
+    {
+      "t": "vendor",
+      "label": "Apple Pay on the Web",
+      "url": "https://developer.apple.com/documentation/apple_pay_on_the_web"
+    }
+  ],
+  "confidence": "docs"
+}

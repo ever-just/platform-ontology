@@ -1,0 +1,233 @@
+{
+  "id": "web.net.localhost-port-scanning",
+  "name": "Localhost and LAN port scanning",
+  "kind": "tracking",
+  "group": "network-connectivity",
+  "subgroup": "Local network",
+  "tags": [
+    "port-scan",
+    "localhost",
+    "lan",
+    "ebay"
+  ],
+  "plain": "A page probes ports on the visitor's own machine or home network to find running software.",
+  "meaning": "JavaScript uses fetch, WebSocket or image timing to test localhost ports (eBay's 2020 check, Meta Pixel and Yandex on Android in 2025 messaging via localhost). Chrome LNA prompts since 142 and PNA aim to stop this.",
+  "lifecycle": [
+    "on-arrival"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "fetch/WebSocket/img to 127.0.0.1 and RFC1918 hosts; timing",
+      "access": {
+        "grant": "none",
+        "prompt_ui": "",
+        "secure_context": false,
+        "user_gesture": false,
+        "persistence": "",
+        "revocation": "",
+        "iframe": "",
+        "steps": [
+          "Request local URLs",
+          "Measure success, error, timing",
+          "Infer open ports"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "r",
+          "v": "142",
+          "note": "Local Network Access prompt",
+          "date": "2025-10-28"
+        },
+        "edge": {
+          "s": "r",
+          "v": "142",
+          "note": "Local Network Access prompt",
+          "date": "2025-10-31"
+        },
+        "firefox": {
+          "s": "y",
+          "v": "1",
+          "note": "",
+          "date": "2004-11-09"
+        },
+        "safari": {
+          "s": "y",
+          "v": "1",
+          "note": "",
+          "date": "2003-06-23"
+        },
+        "ios_safari": {
+          "s": "y",
+          "v": "1",
+          "note": "",
+          "date": "2007-06-29"
+        },
+        "chrome_android": {
+          "s": "r",
+          "v": "142",
+          "note": "Local Network Access prompt",
+          "date": "2025-10-28"
+        },
+        "samsung": {
+          "s": "r",
+          "v": "30.0",
+          "note": "Local Network Access prompt",
+          "date": "2026-05-11"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "list",
+    "metric": "Set of open ports",
+    "update": "",
+    "fields": [
+      {
+        "name": "open ports",
+        "type": "list",
+        "unit": "",
+        "range": "0 to 65535",
+        "precision": "per port boolean"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can try to find software running on your own computer, though Chrome now blocks it",
+    "user_action": "Nothing. It happens when a page or ad script loads",
+    "can": [
+      "Test whether your computer has certain programs listening, by timing quick requests",
+      "Check whether a companion desktop app is installed",
+      "Link web activity to an app on the same device"
+    ],
+    "cannot": [
+      "Do this silently in Chrome 142 and newer, which shows a pop up first",
+      "See files or data inside the programs it finds",
+      "Reach other devices on your network without the local network pop up",
+      "Work on iPhone browsers against apps, which are sandboxed from each other"
+    ],
+    "reach": 2,
+    "reach_label": "Your own device, if not blocked",
+    "differs": "Chrome and Edge now ask first. Firefox and Safari still allow the quiet checks, though they only find what a site already expects. Android apps have been caught doing this."
+  },
+  "story": {
+    "what_it_is": "A web page quietly checks which programs are running on your own computer or home network.",
+    "icon": "radar",
+    "tags": [
+      "Tracking",
+      "Silent",
+      "Security"
+    ],
+    "marketing": [],
+    "for_you": "You never see it. A page you visit can try to connect to your own computer and learn which apps are open. The answer helps a site decide who you are.",
+    "for_makers": "Some sites use it for fraud checks, such as spotting remote control software. Others have used it to collect hidden signals about the visitor. Browsers are adding rules to stop it.",
+    "use_cases": [
+      {
+        "type": "security",
+        "example": "A bank site checks for common remote access tools on the visitor's machine. If one is running, it blocks the transfer to stop a scam call from taking over.",
+        "apps": []
+      },
+      {
+        "type": "ads",
+        "example": "An ad script tests a list of local ports to build a hidden fingerprint of installed apps, which adds to a profile without cookies.",
+        "apps": []
+      },
+      {
+        "type": "games",
+        "example": "A browser game tries to connect to a helper app on a local port. If it answers, the game unlocks desktop features for that player.",
+        "apps": []
+      },
+      {
+        "type": "social",
+        "example": "A messaging web page checks a local port to see if the desktop app is running. If so, it opens chats there and not in the tab.",
+        "apps": [
+          "Zoom",
+          "Spotify"
+        ]
+      },
+      {
+        "type": "developer",
+        "example": "A developer tool in the browser connects to a helper on localhost to read files, so the site can show them in the page.",
+        "apps": []
+      },
+      {
+        "type": "shopping",
+        "example": "A fraud tool on a checkout page watches for debugging or automation tools open on the buyer's computer.",
+        "apps": []
+      },
+      {
+        "type": "enterprise",
+        "example": "A company portal checks for its security agent on a local port before it lets staff sign in.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Hidden app detection",
+      "Probes home network"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Chrome 142 gates local requests behind a prompt",
+    "Firefox and Safari have no prompt yet (unverified at 2026-11)"
+  ],
+  "scores": {
+    "sensitivity": 2,
+    "utility": 2,
+    "fingerprint_bits": 3,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": "Dev tools, local companion apps",
+    "abuse": "Fraud detection by eBay, tracking ID bridging, router attacks"
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2020-05",
+      "browser": "vendor",
+      "version": "",
+      "change": "eBay port scanning reported by Nullsweep"
+    },
+    {
+      "date": "2025-06",
+      "browser": "vendor",
+      "version": "",
+      "change": "Local Mess: Meta and Yandex localhost ID linking on Android disclosed"
+    },
+    {
+      "date": "2025-10",
+      "browser": "chrome",
+      "version": "142",
+      "change": "Local Network Access permission prompt"
+    }
+  ],
+  "related": [
+    "web.net.local-network-access"
+  ],
+  "refs": [
+    {
+      "t": "paper",
+      "label": "Local Mess (Meta and Yandex localhost tracking) 2025",
+      "url": "https://localmess.github.io/"
+    },
+    {
+      "t": "vendor",
+      "label": "Chrome Local Network Access",
+      "url": "https://developer.chrome.com/blog/local-network-access"
+    },
+    {
+      "t": "web",
+      "label": "Nullsweep eBay port scan report",
+      "url": "https://nullsweep.com/why-is-this-website-port-scanning-me/"
+    }
+  ],
+  "confidence": "verified"
+}

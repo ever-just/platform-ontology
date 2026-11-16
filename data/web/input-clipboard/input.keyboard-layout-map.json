@@ -1,0 +1,234 @@
+{
+  "id": "web.input.keyboard-layout-map",
+  "name": "Keyboard layout map",
+  "kind": "capability",
+  "group": "input-clipboard",
+  "subgroup": "Text",
+  "tags": [
+    "keyboard-map",
+    "layout",
+    "fingerprint"
+  ],
+  "plain": "Reads which character each physical key makes, so the page can tell the keyboard layout.",
+  "meaning": "The layout map shows if the person types on QWERTY, AZERTY, Dvorak or a language specific keyboard. That narrows country and language, and helps shortcuts, but it is also a fingerprint hint.",
+  "lifecycle": [
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "navigator.keyboard.getLayoutMap()",
+      "permissions_policy": "keyboard-map",
+      "bcd": [
+        "api.Keyboard.getLayoutMap"
+      ],
+      "access": {
+        "grant": "none",
+        "prompt_ui": "None (no browser prompt)",
+        "secure_context": true,
+        "user_gesture": false,
+        "activation": "none",
+        "persistence": "One-shot per call",
+        "revocation": "Nothing to revoke (no permission is stored)",
+        "iframe": "Permissions Policy keyboard-map (default self); secure context",
+        "steps": [
+          "Page calls navigator.keyboard.getLayoutMap()",
+          "Promise resolves with a Map of KeyboardEvent.code to character",
+          "Page compares to known layouts"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "69",
+          "note": "",
+          "date": "2018-09-04"
+        },
+        "edge": {
+          "s": "y",
+          "v": "79",
+          "note": "",
+          "date": "2020-01-15"
+        },
+        "firefox": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "safari": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "ios_safari": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "69",
+          "note": "",
+          "date": "2018-09-04"
+        },
+        "samsung": {
+          "s": "y",
+          "v": "10.0",
+          "note": "",
+          "date": "2019-08-22"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "object",
+    "metric": "Map of key code to produced character",
+    "update": "one-shot",
+    "fields": [
+      {
+        "name": "KeyQ",
+        "type": "string",
+        "unit": "",
+        "range": "single character",
+        "precision": "q on QWERTY, a on AZERTY"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can learn which keyboard layout you use, such as QWERTY or AZERTY",
+    "user_action": "Nothing. It happens when the page or app loads",
+    "can": [
+      "Check which letter each physical key types",
+      "Guess your country or language from the layout",
+      "Show shortcuts that match your keyboard"
+    ],
+    "cannot": [
+      "See what you type",
+      "Work in Firefox or Safari",
+      "Show a permission pop up; there is none"
+    ],
+    "reach": 1,
+    "reach_label": "One layout check",
+    "differs": "Chrome, Edge and Samsung Internet support it. Firefox and Safari do not."
+  },
+  "story": {
+    "what_it_is": "The page can tell which keyboard layout you use, which hints at your country or language.",
+    "icon": "keyboard",
+    "tags": [
+      "Keyboard",
+      "Silent",
+      "Fingerprint"
+    ],
+    "marketing": [
+      {
+        "vendor": "MDN (standards docs)",
+        "name": "Keyboard API",
+        "pitch": "Describes a way for web apps to learn which key sits where, so games and editors can show the right key labels.",
+        "url": "https://developer.mozilla.org/en-US/docs/Web/API/Keyboard_API"
+      }
+    ],
+    "for_you": "You see correct key hints in a game, like 'Press Z to jump' on a French keyboard. You do not see that the site learned your layout. It does not ask.",
+    "for_makers": "Games and shortcut heavy apps need to know which key is where. The same info is a quiet clue to country and language, so fraud and ad systems may add it to a browser profile.",
+    "use_cases": [
+      {
+        "type": "games",
+        "example": "A browser game shows 'W A S D' hints as 'Z Q S D' for a French player, so controls make sense.",
+        "apps": [
+          "Krunker.io",
+          "Shell Shockers"
+        ]
+      },
+      {
+        "type": "creative",
+        "example": "A design or music web app maps shortcut keys by physical position, so shortcuts feel right on any layout.",
+        "apps": [
+          "Figma",
+          "Soundtrap"
+        ]
+      },
+      {
+        "type": "productivity",
+        "example": "A web editor shows the right shortcut label such as the correct slash key on German keyboards.",
+        "apps": []
+      },
+      {
+        "type": "analytics",
+        "example": "A fingerprinting script uses the layout as one more clue, together with language and time zone.",
+        "apps": []
+      },
+      {
+        "type": "security",
+        "example": "A fraud tool compares the layout with the claimed country, and a mismatch raises suspicion.",
+        "apps": []
+      },
+      {
+        "type": "accessibility",
+        "example": "A remapping tool for people with one hand or limited reach uses the layout to build custom shortcuts.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Hints at country and language",
+      "Part of a browser profile"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Chromium only (Chrome 69 and Edge 79); Firefox and Safari do not implement it",
+    "Secure contexts only; no prompt",
+    "Returns about 40 to 50 printable key entries (the alphanumeric block)",
+    "Reflects the active layout; changes fire layoutchange events",
+    "Page in a background tab may get an empty map"
+  ],
+  "scores": {
+    "sensitivity": 2,
+    "utility": 3,
+    "fingerprint_bits": 3,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Show correct shortcut labels",
+      "Games with WASD remapping"
+    ],
+    "abuse": [
+      "Language and region fingerprinting"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2018-09",
+      "browser": "chrome",
+      "version": "69",
+      "change": "Keyboard Map API ships"
+    }
+  ],
+  "related": [
+    "web.input.keyboard-events"
+  ],
+  "refs": [
+    {
+      "t": "mdn",
+      "label": "MDN getLayoutMap",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/Keyboard/getLayoutMap"
+    },
+    {
+      "t": "spec",
+      "label": "WICG Keyboard Map",
+      "url": "https://wicg.github.io/keyboard-map/"
+    },
+    {
+      "t": "chromestatus",
+      "label": "Chrome Keyboard Map",
+      "url": "https://chromestatus.com/feature/5657965899022336"
+    }
+  ],
+  "confidence": "docs"
+}

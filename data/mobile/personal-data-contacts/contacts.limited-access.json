@@ -1,0 +1,205 @@
+{
+  "id": "mob.contacts.limited-access",
+  "name": "Limited contacts access",
+  "kind": "permission",
+  "group": "personal-data-contacts",
+  "subgroup": "Address book",
+  "tags": [
+    "limited-grant",
+    "contacts",
+    "ios18"
+  ],
+  "plain": "The person lets the app see only chosen contacts, not the whole address book.",
+  "meaning": "Shrinks contact exposure to a hand picked list; the app can also surface matching contacts inside its UI without a prompt.",
+  "lifecycle": [
+    "in-session"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "p",
+      "v": "17",
+      "api": 37,
+      "permission": "READ_CONTACTS still needed for broad reads; selection via picker",
+      "protection": "dangerous",
+      "grant": "picker",
+      "prompt_ui": "Contact Picker sheet (Android 17) with field selection; legacy permission remains for full access",
+      "persistence": "Session URI valid 24 hours",
+      "revocation": "Settings > Apps > Permissions > Contacts",
+      "store_policy": "Play contact policy",
+      "api_surface": "ACTION_PICK_CONTACTS",
+      "note": "No persistent limited grant mode on Android; the picker returns a temporary Session URI"
+    },
+    "ios": {
+      "s": "y",
+      "v": "18",
+      "permission": "NSContactsUsageDescription (CNAuthorizationStatus.limited)",
+      "protection": "prompt",
+      "grant": "prompt",
+      "prompt_ui": "Allow Full Access, Limit Access (select contacts), Don't Allow",
+      "persistence": "Until revoked",
+      "revocation": "Settings > Privacy & Security > Contacts",
+      "store_policy": "App Review 5.1.1",
+      "api_surface": "ContactAccessButton (SwiftUI), contactAccessPicker, CNContactStore",
+      "note": "ContactAccessButton shows contacts matching a search string and grants individual contacts with one tap; contactAccessPicker lets people revise the limited set"
+    }
+  },
+  "web_equivalents": [
+    "web.contacts.contact-picker"
+  ],
+  "data": {
+    "type": "list",
+    "metric": "Subset of contacts",
+    "update": "on request",
+    "fields": [
+      {
+        "name": "contacts",
+        "type": "list",
+        "unit": "records",
+        "range": "chosen set",
+        "precision": "all non notes fields"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can see only the contacts you choose on iPhone; Android gives only a one time pick",
+    "user_action": "You tap Limit Access and choose contacts, or pick from a list",
+    "can": [
+      "Show the contacts you selected",
+      "Suggest matching contacts inside its own screen without a prompt (iPhone)",
+      "Add one more contact at a time when you tap it (iPhone)",
+      "Let you change the chosen set later (iPhone)"
+    ],
+    "cannot": [
+      "See contacts you did not select",
+      "Keep a limited grant on Android; the picker gives temporary access only",
+      "Open the whole address book without Allow Full Access"
+    ],
+    "reach": 2,
+    "reach_label": "Only the contacts you choose",
+    "differs": "iPhone with iOS 18 and later has a lasting Limit Access mode; Android 17 has a picker with a temporary result and no lasting limited mode."
+  },
+  "story": {
+    "what_it_is": "You let the app see only the contacts you pick, instead of the whole address book.",
+    "icon": "contact",
+    "tags": [
+      "Contacts",
+      "Privacy",
+      "Asks first"
+    ],
+    "marketing": [
+      {
+        "vendor": "Apple",
+        "name": "Limited Contacts Access",
+        "pitch": "Share only selected contacts with an app. The app can ask to find matching people.",
+        "url": "https://developer.apple.com/documentation/contactsui/contactaccessbutton"
+      }
+    ],
+    "for_you": "A sheet asks which contacts to share. You tick a few friends and the app only sees those. If you later search for someone else, the app can ask for just that person.",
+    "for_makers": "Fewer people are afraid to say yes, and the app still gets what it needs. The system shows contacts that match what you type, and you can grant one at a time with a tap. The data is smaller and safer to keep.",
+    "use_cases": [
+      {
+        "type": "messaging",
+        "example": "A chat app asks for the three people you want to invite, nothing more.",
+        "apps": [
+          "WhatsApp"
+        ]
+      },
+      {
+        "type": "payments",
+        "example": "A split bill app lets you pick the friends to share a dinner with.",
+        "apps": [
+          "Splitwise"
+        ]
+      },
+      {
+        "type": "games",
+        "example": "A game invite screen lets you pick teammates from your contacts.",
+        "apps": []
+      },
+      {
+        "type": "social",
+        "example": "A new photo app finds only the friends you choose.",
+        "apps": []
+      },
+      {
+        "type": "delivery",
+        "example": "A food app finds the person you want to send a gift to.",
+        "apps": []
+      },
+      {
+        "type": "kids",
+        "example": "A kids' messaging app lets parents pick the approved contacts.",
+        "apps": []
+      },
+      {
+        "type": "security",
+        "example": "A safety app shares your location with only the picked contacts.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "App may nag for more",
+      "Selected contacts still exposed",
+      "Only on newer iOS"
+    ],
+    "android_note": "Android has no lasting limited mode. The picker returns a temporary access link for chosen contacts.",
+    "ios_note": "iOS has a contact access button that shows matches and grants single contacts, plus a picker for lasting choice."
+  },
+  "technical_bounds": [
+    "Android has no standing partial grant, only a session picker",
+    "The limited set is stored per app"
+  ],
+  "scores": {
+    "sensitivity": 3,
+    "utility": 4,
+    "fingerprint_bits": null,
+    "friction": 2
+  },
+  "value": {
+    "legit_uses": [
+      "Messaging invites",
+      "Split bills"
+    ],
+    "abuse": [
+      "Nagging to widen access"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2024-09",
+      "platform": "ios",
+      "version": "iOS 18",
+      "change": "Limited access, ContactAccessButton and access picker"
+    },
+    {
+      "date": "2026-03",
+      "platform": "android",
+      "version": "17 (API 37)",
+      "change": "ACTION_PICK_CONTACTS picker with selection limit extras"
+    }
+  ],
+  "related": [
+    "mob.contacts.full-access",
+    "mob.contacts.picker"
+  ],
+  "refs": [
+    {
+      "t": "apple",
+      "label": "Apple: Accessing the contact store",
+      "url": "https://developer.apple.com/documentation/contacts/accessing-the-contact-store"
+    },
+    {
+      "t": "android",
+      "label": "Android: Contact Picker, privacy first contact sharing",
+      "url": "https://developer.android.com/blog/posts/contact-picker-privacy-first-contact-sharing"
+    }
+  ],
+  "confidence": "docs"
+}

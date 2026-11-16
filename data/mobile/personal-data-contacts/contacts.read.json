@@ -1,0 +1,247 @@
+{
+  "id": "mob.contacts.read",
+  "name": "Read contacts",
+  "kind": "permission",
+  "group": "personal-data-contacts",
+  "subgroup": "Address book",
+  "tags": [
+    "runtime-permission",
+    "contacts",
+    "social-graph"
+  ],
+  "plain": "Lets the app read the whole address book.",
+  "meaning": "Exposes names, numbers, emails, and who a person knows. Apps use it to match friends, which also lets them upload the entire social graph of the person's family and colleagues.",
+  "lifecycle": [
+    "in-session",
+    "signed-in"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "y",
+      "v": "6.0",
+      "api": 23,
+      "permission": "READ_CONTACTS",
+      "protection": "dangerous",
+      "grant": "prompt",
+      "prompt_ui": "Allow or Don't allow (Allow only while using app is not offered for contacts group)",
+      "persistence": "Until revoked or auto-reset",
+      "revocation": "Settings > Apps > Permissions > Contacts",
+      "store_policy": "Play: data-safety disclosure; uploading contacts needs prominent disclosure",
+      "api_surface": "ContactsContract, Intent.ACTION_PICK (no permission)",
+      "note": "Android 17 (API 37): Contacts Provider 2 removes account columns from the Data view and applies strict SQL when READ_CONTACTS is not held (apps targeting 37)."
+    },
+    "ios": {
+      "s": "y",
+      "v": "6.0",
+      "permission": "NSContactsUsageDescription",
+      "protection": "prompt",
+      "grant": "prompt",
+      "prompt_ui": "Allow Full Access, Limited Access (iOS 18), Don't Allow",
+      "persistence": "Until revoked; limited selection is per app",
+      "revocation": "Settings > Privacy & Security > Contacts",
+      "store_policy": "App Review 5.1.1(iv) and 5.1.2: do not upload contacts without consent",
+      "api_surface": "CNContactStore, ContactAccessButton (iOS 18), CNContactPickerViewController (no permission)",
+      "note": "Notes field needs the com.apple.developer.contacts.notes entitlement (iOS 13)."
+    }
+  },
+  "web_equivalents": [
+    "web.contacts.contact-picker",
+    "web.notexposed.contacts-list"
+  ],
+  "data": {
+    "type": "list",
+    "metric": "Contact records",
+    "update": "on demand",
+    "fields": [
+      {
+        "name": "contact_count",
+        "type": "integer",
+        "unit": "records",
+        "range": "0 to tens of thousands",
+        "precision": "exact"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can see your whole address book once you tap Allow, or only some on iPhone",
+    "user_action": "You tap Find friends or Match my contacts",
+    "can": [
+      "List names, numbers and emails",
+      "Upload the full list to match friends",
+      "Take a contact through the picker with no permission"
+    ],
+    "cannot": [
+      "See contacts before you tap Allow",
+      "Offer an Allow only while using choice for contacts on Android",
+      "See the Notes field on iPhone without Apple's entitlement",
+      "See account details on Android 17 apps that target the new version"
+    ],
+    "reach": 4,
+    "reach_label": "Everything in your contacts",
+    "differs": "iPhone with iOS 18 and later adds Limit Access; Android gives all or nothing for the contacts group."
+  },
+  "story": {
+    "what_it_is": "Lets the app read your whole address book.",
+    "icon": "book-user",
+    "tags": [
+      "Contacts",
+      "Permission",
+      "Sensitive"
+    ],
+    "marketing": [],
+    "for_you": "A prompt asks to access your contacts. If you allow it, the app can see the names, numbers and emails of everyone you know. They have not agreed to this.",
+    "for_makers": "Contacts let apps grow fast by finding friends. They also feed caller ID, spam block and ad matching. That social map is powerful, so platforms limit it and review apps that ask.",
+    "use_cases": [
+      {
+        "type": "messaging",
+        "example": "A chat app shows which of your friends already use it.",
+        "apps": [
+          "WhatsApp",
+          "Telegram"
+        ]
+      },
+      {
+        "type": "social",
+        "example": "A photo app suggests people to follow.",
+        "apps": [
+          "Instagram"
+        ]
+      },
+      {
+        "type": "security",
+        "example": "A caller ID app names callers by matching against its database.",
+        "apps": [
+          "Truecaller"
+        ]
+      },
+      {
+        "type": "ads",
+        "example": "An ad network matches hashed phone numbers to build a profile.",
+        "apps": []
+      },
+      {
+        "type": "games",
+        "example": "A game links friends for leaderboards and team play.",
+        "apps": []
+      },
+      {
+        "type": "payments",
+        "example": "A payment app lets you pay people without typing a number.",
+        "apps": []
+      },
+      {
+        "type": "dating",
+        "example": "A dating app hides people you already know.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Other people's data shared",
+      "Hashed numbers used for ad matching",
+      "Hard to take back"
+    ],
+    "android_note": "Android 17 removes account columns from the contacts data view and tightens queries when the permission is missing.",
+    "ios_note": "The Notes field needs an Apple entitlement. The rest of the address book comes with the permission."
+  },
+  "technical_bounds": [
+    "Contact picker avoids the permission on both platforms",
+    "iOS 18 lets people share a subset"
+  ],
+  "scores": {
+    "sensitivity": 5,
+    "utility": 4,
+    "fingerprint_bits": null,
+    "friction": 2
+  },
+  "value": {
+    "legit_uses": [
+      "Find friends",
+      "Caller ID",
+      "Messaging"
+    ],
+    "abuse": [
+      "Uploading entire address books for shadow profiles",
+      "Spam invites"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": true,
+      "how": "Address book upload fed People You May Know (policy 2.1). Contacts sync is now removed: LinkedIn help says it no longer supports syncing contacts and has started removing the feature (date not stated, pages updated about a year before Nov 2026). Members can still delete previously imported contacts. Play and Apple labels still list Contacts."
+    }
+  },
+  "history": [
+    {
+      "date": "2015-10",
+      "platform": "android",
+      "version": "6.0 (API 23)",
+      "change": "Contacts made a runtime permission"
+    },
+    {
+      "date": "2024-09",
+      "platform": "ios",
+      "version": "iOS 18",
+      "change": "Limited contacts access and ContactAccessButton added"
+    },
+    {
+      "date": "2019-09",
+      "platform": "ios",
+      "version": "iOS 13",
+      "change": "Notes field gated by entitlement"
+    },
+    {
+      "date": "2026-06",
+      "platform": "android",
+      "version": "17 (API 37)",
+      "change": "Contacts Provider 2 drops account columns from the Data view for apps targeting 37"
+    }
+  ],
+  "related": [
+    "mob.contacts.write",
+    "mob.contacts.accounts"
+  ],
+  "refs": [
+    {
+      "t": "android",
+      "label": "Android: Contacts provider",
+      "url": "https://developer.android.com/identity/providers/contacts-provider"
+    },
+    {
+      "t": "android",
+      "label": "Android 17 release notes",
+      "url": "https://developer.android.com/about/versions/17"
+    },
+    {
+      "t": "apple",
+      "label": "Apple: Accessing the contact store",
+      "url": "https://developer.apple.com/documentation/contacts/accessing-the-contact-store"
+    },
+    {
+      "t": "apple",
+      "label": "Apple: ContactAccessButton",
+      "url": "https://developer.apple.com/documentation/contactsui/contactaccessbutton"
+    },
+    {
+      "t": "android",
+      "label": "Android: Contacts provider",
+      "url": "https://developer.android.com/guide/topics/providers/contacts-provider"
+    },
+    {
+      "t": "apple",
+      "label": "Apple: Contacts framework",
+      "url": "https://developer.apple.com/documentation/contacts"
+    },
+    {
+      "t": "policy",
+      "label": "LinkedIn Help: Sync contacts from other address books no longer available",
+      "url": "https://www.linkedin.com/help/linkedin/answer/a544897"
+    },
+    {
+      "t": "policy",
+      "label": "LinkedIn Help: Delete imported contacts",
+      "url": "https://www.linkedin.com/help/linkedin/answer/a563126"
+    }
+  ],
+  "confidence": "docs"
+}

@@ -1,0 +1,226 @@
+{
+  "id": "mob.system.family-controls",
+  "name": "Screen Time and parental controls",
+  "kind": "capability",
+  "group": "system-control",
+  "subgroup": "Usage controls",
+  "tags": [
+    "entitlement",
+    "screen-time",
+    "parental",
+    "family-controls",
+    "deviceactivity",
+    "managed-settings"
+  ],
+  "plain": "Limits apps and websites and reads usage summaries, with opaque identifiers on iOS.",
+  "meaning": "Shows app habits; iOS hides which apps behind tokens, Android returns package names.",
+  "lifecycle": [
+    "background",
+    "signed-in"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "y",
+      "v": "5.0",
+      "api": 21,
+      "permission": "PACKAGE_USAGE_STATS (special app access)",
+      "protection": "special",
+      "grant": "settings",
+      "prompt_ui": "Usage access page in Settings",
+      "persistence": "Until revoked",
+      "revocation": "Settings > Special app access > Usage access",
+      "store_policy": "Play: restricted for parental and wellbeing use",
+      "api_surface": "UsageStatsManager, DevicePolicyManager",
+      "note": "Android returns package names and times; QUERY_ALL_PACKAGES also restricted"
+    },
+    "ios": {
+      "s": "f",
+      "v": "15",
+      "permission": "com.apple.developer.family-controls",
+      "protection": "entitlement",
+      "grant": "entitlement",
+      "prompt_ui": "Authorization sheet (parent or individual, iOS 16)",
+      "persistence": "Until revoked",
+      "revocation": "Settings > Screen Time",
+      "store_policy": "Apple approves; apps must follow 5.1.1 kids rules",
+      "api_surface": "FamilyControls, ManagedSettings, DeviceActivity",
+      "note": "Opaque tokens hide app identity; distribution entitlement needs Apple request"
+    }
+  },
+  "data": {
+    "type": "object",
+    "metric": "Usage durations by token",
+    "update": "per interval",
+    "fields": [
+      {
+        "name": "duration",
+        "type": "integer",
+        "unit": "seconds",
+        "range": "0 to 86400 per day",
+        "precision": ""
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can limit apps and websites and see usage summaries, once you or a parent allow it",
+    "user_action": "You approve the Screen Time sheet on iPhone, or turn on Usage access in Settings on Android",
+    "can": [
+      "Set limits on apps and websites",
+      "See how long apps were used, by name on Android",
+      "Show usage summaries to a parent or to you"
+    ],
+    "cannot": [
+      "See which apps were used on iPhone; hidden tokens stand in for app names",
+      "Ship on iPhone without Apple's family controls entitlement",
+      "List every installed app on Android; that permission is restricted"
+    ],
+    "reach": 3,
+    "reach_label": "Ongoing app habits, once allowed",
+    "differs": "Android returns app names and times; iPhone hides app identity behind tokens."
+  },
+  "story": {
+    "what_it_is": "Screen time and parental controls that limit apps and sites and show usage summaries.",
+    "icon": "hourglass",
+    "tags": [
+      "Kids",
+      "Limits",
+      "Screen Time"
+    ],
+    "marketing": [
+      {
+        "vendor": "Apple",
+        "name": "Screen Time and parental controls",
+        "pitch": "Set limits for apps, websites and communication to help families manage how kids use their devices.",
+        "url": "https://support.apple.com/en-us/105121"
+      },
+      {
+        "vendor": "Google",
+        "name": "Family Link",
+        "pitch": "Set digital ground rules, manage apps and see activity on your child's phone.",
+        "url": "https://families.google/familylink/"
+      }
+    ],
+    "for_you": "You set daily limits and see simple charts of how long each app was used. A child sees a screen asking for more time. Parents can approve in a tap.",
+    "for_makers": "Parental control apps give families a way to manage kids' phones. They need strong access to apps and websites. On iPhone the apps get opaque tokens, not names, so the maker cannot see which apps a child uses.",
+    "use_cases": [
+      {
+        "type": "kids",
+        "example": "A parent limits a child to one hour of games on school nights.",
+        "apps": [
+          "Family Link",
+          "Screen Time"
+        ]
+      },
+      {
+        "type": "education",
+        "example": "A school sets homework mode that blocks social apps.",
+        "apps": []
+      },
+      {
+        "type": "health",
+        "example": "A digital wellbeing app shows you how long you used social media today.",
+        "apps": []
+      },
+      {
+        "type": "games",
+        "example": "A parent sets a bedtime lock on a child's game console style apps.",
+        "apps": []
+      },
+      {
+        "type": "social",
+        "example": "A teen asks their parent to approve a new chat app.",
+        "apps": []
+      },
+      {
+        "type": "security",
+        "example": "A parent blocks adult sites for a child.",
+        "apps": []
+      },
+      {
+        "type": "productivity",
+        "example": "An adult sets their own limits to reduce doom scrolling.",
+        "apps": [
+          "Opal"
+        ]
+      }
+    ],
+    "risks": [
+      "Surveillance of teens",
+      "Easy to bypass",
+      "Maker sees usage on Android"
+    ],
+    "android_note": "Android gives parent apps package names and usage times. Access to the full app list is limited by store rules.",
+    "ios_note": "iPhone hides app identity behind opaque tokens. Distributing a parental app needs an Apple request."
+  },
+  "technical_bounds": [
+    "iOS app identities are opaque",
+    "Apple review gates distribution",
+    "Opaque tokens cannot be mapped to bundle ids"
+  ],
+  "scores": {
+    "sensitivity": 4,
+    "utility": 3,
+    "fingerprint_bits": null,
+    "friction": 3
+  },
+  "value": {
+    "legit_uses": [
+      "Screen Time apps",
+      "Parental controls"
+    ],
+    "abuse": [
+      "Surveillance apps"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2022-09",
+      "platform": "ios",
+      "version": "iOS 16",
+      "change": "Individual authorization"
+    },
+    {
+      "date": "2022-09",
+      "platform": "ios",
+      "version": "iOS 16",
+      "change": "Child authorization via Family Sharing"
+    },
+    {
+      "date": "2021-09",
+      "platform": "ios",
+      "version": "iOS 15",
+      "change": "Family Controls introduced"
+    },
+    {
+      "date": "2021-09",
+      "platform": "ios",
+      "version": "iOS 15",
+      "change": "Screen Time API"
+    }
+  ],
+  "related": [
+    "mob.system.network-extension",
+    "mob.apps.usage-stats",
+    "mob.sys.app-pinning"
+  ],
+  "refs": [
+    {
+      "t": "apple",
+      "label": "Apple: Family Controls",
+      "url": "https://developer.apple.com/documentation/familycontrols"
+    },
+    {
+      "t": "android",
+      "label": "Android: UsageStatsManager",
+      "url": "https://developer.android.com/reference/android/app/usage/UsageStatsManager"
+    }
+  ],
+  "confidence": "docs"
+}

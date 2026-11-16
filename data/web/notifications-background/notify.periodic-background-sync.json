@@ -1,0 +1,227 @@
+{
+  "id": "web.notify.periodic-background-sync",
+  "name": "Periodic Background Sync",
+  "kind": "permission",
+  "group": "notifications-background",
+  "subgroup": "Background",
+  "tags": [
+    "pwa",
+    "service-worker"
+  ],
+  "plain": "Wakes an installed site every so often to refresh data.",
+  "meaning": "Lets an installed web app fetch updates on a schedule while closed. The browser, not the site, picks the actual times from engagement and battery.",
+  "lifecycle": [
+    "after-leaving"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "registration.periodicSync.register('tag', {minInterval}); 'periodicsync' event",
+      "permission_name": "periodic-background-sync",
+      "bcd": [
+        "api.PeriodicSyncManager"
+      ],
+      "access": {
+        "grant": "install",
+        "prompt_ui": "No prompt; Chrome only allows it for installed PWAs, and the permission follows engagement.",
+        "secure_context": true,
+        "user_gesture": false,
+        "persistence": "Installed app only",
+        "revocation": "Uninstall or Site settings",
+        "iframe": "Service worker only",
+        "steps": [
+          "Install the PWA",
+          "Register with minInterval",
+          "Browser wakes the worker on its own schedule",
+          "Worker fetches content"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "80",
+          "note": "Installed PWAs only",
+          "date": "2020-02-04"
+        },
+        "edge": {
+          "s": "y",
+          "v": "80",
+          "note": "",
+          "date": "2020-02-07"
+        },
+        "firefox": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "safari": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "ios_safari": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "80",
+          "note": "",
+          "date": "2020-02-04"
+        },
+        "samsung": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "event",
+    "metric": "Periodic sync event",
+    "update": "browser chosen, minimum interval 12 hours (Chrome)",
+    "fields": [
+      {
+        "name": "minInterval",
+        "type": "integer",
+        "unit": "ms",
+        "range": "12 hours minimum in Chrome",
+        "precision": "browser decided"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can refresh an installed web app now and then while closed, at times the browser picks",
+    "user_action": "You install the web app and use it often",
+    "can": [
+      "Fetch fresh news, mail or podcasts on a schedule while the app is closed",
+      "Wake no more than about once every 12 hours",
+      "Update quietly with no pop up"
+    ],
+    "cannot": [
+      "Run for a site that is not installed",
+      "Choose the exact times, since the browser decides from your use and battery",
+      "Work in Firefox or Safari",
+      "Work on Samsung Internet"
+    ],
+    "reach": 3,
+    "reach_label": "Occasional refresh, installed apps",
+    "differs": "Chrome and Edge on computers and Android, for installed apps only. Firefox, Safari and iPhone do not support it."
+  },
+  "story": {
+    "what_it_is": "An installed web app can wake up now and then to refresh its content, even when closed.",
+    "icon": "clock",
+    "tags": [
+      "Background",
+      "Installed apps",
+      "Battery"
+    ],
+    "marketing": [
+      {
+        "vendor": "Google Chrome",
+        "name": "Periodic Background Sync",
+        "pitch": "Lets installed web apps update themselves regularly in the background, so content is fresh when you open them.",
+        "url": "https://developer.chrome.com/docs/capabilities/periodic-background-sync"
+      }
+    ],
+    "for_you": "There is no prompt in most cases. If you installed the app, it may refresh news or weather in the background, so it is up to date when you open it. It can use some battery and data.",
+    "for_makers": "Makers get a native feel: fresh content ready at launch. The browser decides when to wake the app, based on how often you use it. It is only for installed apps in Chromium.",
+    "use_cases": [
+      {
+        "type": "news",
+        "example": "An installed news web app fetches the morning headlines before you wake up, so it opens instantly.",
+        "apps": [
+          "BBC News"
+        ]
+      },
+      {
+        "type": "music",
+        "example": "A music web app refreshes your playlists and downloads new songs overnight.",
+        "apps": []
+      },
+      {
+        "type": "travel",
+        "example": "A transit web app updates timetables and delays in the background.",
+        "apps": []
+      },
+      {
+        "type": "utilities",
+        "example": "A weather web app refreshes the forecast so it is fresh when you open it.",
+        "apps": []
+      },
+      {
+        "type": "productivity",
+        "example": "A mail web app syncs new messages in the background to save time at launch.",
+        "apps": []
+      },
+      {
+        "type": "games",
+        "example": "A browser game refreshes daily challenges before you open it.",
+        "apps": []
+      },
+      {
+        "type": "shopping",
+        "example": "A store web app refreshes deals and wishlists in the background.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Battery and data use",
+      "Runs when not in use"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Not in Firefox or Safari",
+    "Installed PWA only",
+    "Frequency chosen by engagement"
+  ],
+  "scores": {
+    "sensitivity": 2,
+    "utility": 3,
+    "fingerprint_bits": null,
+    "friction": 1
+  },
+  "value": {
+    "legit_uses": [
+      "News and email refresh",
+      "Podcast downloads"
+    ],
+    "abuse": [
+      "Staying alive after leaving"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2020-02",
+      "browser": "chrome",
+      "version": "80",
+      "change": "Periodic Background Sync ships for installed PWAs"
+    }
+  ],
+  "related": [
+    "web.notify.background-sync"
+  ],
+  "refs": [
+    {
+      "t": "mdn",
+      "label": "MDN Periodic Background Sync",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/Web_Periodic_Background_Synchronization_API"
+    },
+    {
+      "t": "chromestatus",
+      "label": "Chrome Periodic Background Sync",
+      "url": "https://developer.chrome.com/blog/periodic-background-sync"
+    }
+  ],
+  "confidence": "docs"
+}

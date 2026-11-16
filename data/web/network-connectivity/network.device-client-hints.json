@@ -1,0 +1,228 @@
+{
+  "id": "web.network.device-client-hints",
+  "name": "Device client hints (DPR, Viewport, Memory)",
+  "kind": "signal",
+  "group": "network-connectivity",
+  "subgroup": "Client Hints",
+  "tags": [
+    "client-hints",
+    "dpr",
+    "viewport-width",
+    "device-memory"
+  ],
+  "plain": "Opt-in headers carrying DPR, viewport width, device memory and color scheme.",
+  "meaning": "Sec-CH-DPR, Sec-CH-Viewport-Width, Sec-CH-Width, Sec-CH-Device-Memory and Sec-CH-Prefers-Color-Scheme let servers pick image sizes and themes before first paint, and also hand the same fingerprint bits to every server that asks.",
+  "lifecycle": [
+    "on-arrival",
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "Accept-CH: Sec-CH-DPR, Sec-CH-Viewport-Width, Sec-CH-Device-Memory, Sec-CH-Prefers-Color-Scheme",
+      "access": {
+        "grant": "none",
+        "prompt_ui": "None",
+        "secure_context": false,
+        "user_gesture": false,
+        "persistence": "read fresh on every page load; nothing stored",
+        "revocation": "none needed (no grant)",
+        "iframe": "Readable from cross-origin iframes too (same values)",
+        "steps": [
+          "Page script reads the value",
+          "No prompt is shown"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "89",
+          "note": "",
+          "date": "2021-03-02"
+        },
+        "edge": {
+          "s": "y",
+          "v": "90",
+          "note": "",
+          "date": "2021-04-15"
+        },
+        "firefox": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "safari": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "ios_safari": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "89",
+          "note": "",
+          "date": "2021-03-02"
+        },
+        "samsung": {
+          "s": "y",
+          "v": "15.0",
+          "note": "",
+          "date": "2021-08-13"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "object",
+    "metric": "",
+    "update": "static per session",
+    "fields": [
+      {
+        "name": "Sec-CH-DPR",
+        "type": "float",
+        "unit": "ratio",
+        "range": "",
+        "precision": ""
+      },
+      {
+        "name": "Sec-CH-Viewport-Width",
+        "type": "integer",
+        "unit": "CSS px",
+        "range": "",
+        "precision": "exact"
+      },
+      {
+        "name": "Sec-CH-Device-Memory",
+        "type": "float",
+        "unit": "GB",
+        "range": "0.25 to 8",
+        "precision": ""
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can learn your screen density, window width, memory and light or dark mode in Chromium browsers",
+    "user_action": "Nothing. The browser sends it only after the site asks for it",
+    "can": [
+      "Ask your browser to send screen sharpness, window width and device memory with each request",
+      "See if you prefer dark mode",
+      "Pick the right image size and theme before the page shows"
+    ],
+    "cannot": [
+      "Get any of it unless the site asks first and the browser agrees",
+      "Work in Firefox or Safari, which do not send these",
+      "See your name or account",
+      "Learn exact memory, since it is rounded"
+    ],
+    "reach": 3,
+    "reach_label": "Repeats on every request",
+    "differs": "Chrome, Edge and Samsung Internet send these. Firefox and Safari, including all iPhone browsers, do not."
+  },
+  "story": {
+    "what_it_is": "Browsers can send screen density, window size and memory with each page request when a site asks.",
+    "icon": "monitor-smartphone",
+    "tags": [
+      "Browser info",
+      "Silent",
+      "Performance"
+    ],
+    "marketing": [
+      {
+        "vendor": "MDN Web Docs",
+        "name": "Client Hints",
+        "pitch": "Servers can opt in to receive details about the device, so they can send the best version of a page first time.",
+        "url": "https://developer.mozilla.org/en-US/docs/Web/HTTP/Guides/Client_hints"
+      }
+    ],
+    "for_you": "You never see it. If a site asks, your browser tells the server how sharp your screen is and how wide your window is. The server can then send the right sized picture right away.",
+    "for_makers": "Makers use it to ship the right image size and a lighter page for weaker devices, with no extra round trip. It also tells them things about your device that add to a fingerprint, which is why a site must ask first.",
+    "use_cases": [
+      {
+        "type": "shopping",
+        "example": "A store gets the screen sharpness and window width, then sends one right sized product photo, so a phone does not download a huge desktop image.",
+        "apps": []
+      },
+      {
+        "type": "games",
+        "example": "A browser game portal reads device memory and sends a lighter build to low memory phones, so the game does not crash on load.",
+        "apps": []
+      },
+      {
+        "type": "media",
+        "example": "A news site picks a dark or light page from the color scheme hint and avoids a bright flash on first paint.",
+        "apps": []
+      },
+      {
+        "type": "video",
+        "example": "A video site picks a starting quality from window width and screen sharpness before the player even loads.",
+        "apps": []
+      },
+      {
+        "type": "ads",
+        "example": "An ad server picks an ad size matching the window width, and may combine other hints to recognize a device again.",
+        "apps": []
+      },
+      {
+        "type": "analytics",
+        "example": "A tool records memory and screen hints to show what kind of devices visitors use, and to plan support.",
+        "apps": []
+      },
+      {
+        "type": "developer",
+        "example": "A developer tests a site on a low memory phone to see that the lighter version really arrives.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Adds to a fingerprint",
+      "Chromium only"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Chromium only",
+    "Only after Accept-CH"
+  ],
+  "scores": {
+    "sensitivity": 1,
+    "utility": 3,
+    "fingerprint_bits": 4.0,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Server-side image selection"
+    ],
+    "abuse": [
+      "Passive fingerprint across requests"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "related": [
+    "web.device.device-memory",
+    "web.display.device-pixel-ratio"
+  ],
+  "refs": [
+    {
+      "t": "mdn",
+      "label": "MDN Client Hints",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/HTTP/Guides/Client_hints"
+    },
+    {
+      "t": "chromestatus",
+      "label": "Chrome Client Hints",
+      "url": "https://developer.chrome.com/docs/privacy-security/user-agent-client-hints"
+    }
+  ],
+  "confidence": "docs"
+}

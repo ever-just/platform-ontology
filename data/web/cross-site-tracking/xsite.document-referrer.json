@@ -1,0 +1,231 @@
+{
+  "id": "web.xsite.document-referrer",
+  "name": "document.referrer",
+  "kind": "signal",
+  "group": "cross-site-tracking",
+  "subgroup": "Before the visit",
+  "tags": [
+    "referrer",
+    "dom",
+    "attribution"
+  ],
+  "plain": "Script-readable copy of the Referer, available the moment a page loads.",
+  "meaning": "Same previous-site data as the header, readable by any script on the page including third-party tags. Tag managers use it to label traffic sources; Safari 26 and Brave can blank it for classified tracker scripts.",
+  "lifecycle": [
+    "before-visit",
+    "on-arrival"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "document.referrer",
+      "bcd": [
+        "api.Document.referrer"
+      ],
+      "access": {
+        "grant": "none",
+        "prompt_ui": "None",
+        "secure_context": false,
+        "user_gesture": false,
+        "persistence": "Per document",
+        "revocation": "Clear site data, browser privacy settings",
+        "iframe": "",
+        "steps": []
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "1",
+          "note": "Value depends on Referrer-Policy",
+          "date": "2008-12-11"
+        },
+        "edge": {
+          "s": "y",
+          "v": "12",
+          "note": "Value depends on Referrer-Policy",
+          "date": "2015-07-29"
+        },
+        "firefox": {
+          "s": "y",
+          "v": "1",
+          "note": "Value depends on Referrer-Policy",
+          "date": "2004-11-09"
+        },
+        "safari": {
+          "s": "y",
+          "v": "1",
+          "note": "Value depends on Referrer-Policy",
+          "date": "2003-06-23"
+        },
+        "ios_safari": {
+          "s": "y",
+          "v": "1",
+          "note": "Value depends on Referrer-Policy",
+          "date": "2007-06-29"
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "18",
+          "note": "Value depends on Referrer-Policy",
+          "date": "2012-06-27"
+        },
+        "samsung": {
+          "s": "y",
+          "v": "1.0",
+          "note": "Value depends on Referrer-Policy",
+          "date": "2013-04-27"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "string",
+    "metric": "URL string or empty string",
+    "update": "once at load",
+    "fields": [
+      {
+        "name": "referrer",
+        "type": "string",
+        "unit": "URL",
+        "range": "empty or URL",
+        "precision": "origin only cross-origin by default"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can tell which page you came from the moment the page loads",
+    "user_action": "Nothing. It happens when a page loads after you clicked a link",
+    "can": [
+      "Tell which site or page sent you",
+      "Use that to credit a campaign, ad or search",
+      "Share the origin of the previous page with analytics tools"
+    ],
+    "cannot": [
+      "See the full address of the previous page for cross site links, by default only the site name",
+      "See pages you visited earlier than the last one",
+      "Know the search words from most search engines",
+      "Know anything if you typed the address or used a bookmark"
+    ],
+    "reach": 1,
+    "reach_label": "The one page before",
+    "differs": ""
+  },
+  "story": {
+    "what_it_is": "Any script on a page can read which site you came from.",
+    "icon": "history",
+    "tags": [
+      "Referrer",
+      "Silent",
+      "Scripts"
+    ],
+    "marketing": [
+      {
+        "vendor": "Mozilla",
+        "name": "document.referrer",
+        "pitch": "Developer docs describe it as the address of the page that linked to the current one.",
+        "url": "https://developer.mozilla.org/en-US/docs/Web/API/Document/referrer"
+      }
+    ],
+    "for_you": "You never see it. When a page loads, scripts on it, including third party ones, can check where you came from. That may be a search engine, a friend's post or an ad.",
+    "for_makers": "Tag managers use it to label traffic as search, social or ads. Analytics and ad scripts use it for attribution. Because any script can read it, it is also a leak path for details of the page you were on before.",
+    "use_cases": [
+      {
+        "type": "analytics",
+        "example": "A blog sees that most readers came from a Reddit post and tags them as social traffic.",
+        "apps": [
+          "Google Analytics",
+          "Reddit"
+        ]
+      },
+      {
+        "type": "ads",
+        "example": "An ad script checks if you came from a partner site and then shows that partner's offer.",
+        "apps": []
+      },
+      {
+        "type": "shopping",
+        "example": "A shop sees you came from a price comparison site and shows a better coupon.",
+        "apps": [
+          "Google Shopping",
+          "PriceGrabber"
+        ]
+      },
+      {
+        "type": "security",
+        "example": "A login page checks the referrer to spot hits from known phishing sites.",
+        "apps": []
+      },
+      {
+        "type": "games",
+        "example": "A game site checks if you came from a streamer's page and unlocks a bonus for that creator's fans.",
+        "apps": [
+          "Twitch",
+          "Kongregate"
+        ]
+      },
+      {
+        "type": "media",
+        "example": "A paywall that checks if you came from a search engine, and lets you read a free article.",
+        "apps": [
+          "Wall Street Journal"
+        ]
+      }
+    ],
+    "risks": [
+      "Leaks where you were before",
+      "Third party scripts can read it too"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Follows the sender's Referrer-Policy",
+    "Empty on direct visits, bookmarks, typed URLs and rel=noreferrer links",
+    "Not available to cross-origin frames beyond what their own request carried"
+  ],
+  "scores": {
+    "sensitivity": 3,
+    "utility": 4,
+    "fingerprint_bits": 1.0,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Traffic source attribution",
+      "Landing page personalisation"
+    ],
+    "abuse": [
+      "Cross-site history sniffing by tag vendors"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2025-09",
+      "browser": "safari",
+      "version": "26",
+      "change": "Advanced Fingerprinting Protection on by default in regular browsing: classified scripts lose access to document.referrer and URL query parameters (per reporting, verify scope)"
+    }
+  ],
+  "related": [
+    "web.xsite.referer-header"
+  ],
+  "refs": [
+    {
+      "t": "mdn",
+      "label": "MDN document.referrer",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/Document/referrer"
+    },
+    {
+      "t": "webkit",
+      "label": "WebKit Tracking Prevention",
+      "url": "https://webkit.org/tracking-prevention/"
+    }
+  ],
+  "confidence": "docs"
+}

@@ -1,0 +1,237 @@
+{
+  "id": "web.auth.sign-in-with-microsoft",
+  "name": "Sign in with Microsoft",
+  "kind": "capability",
+  "group": "identity-auth",
+  "subgroup": "Social login",
+  "tags": [
+    "microsoft",
+    "entra",
+    "oidc",
+    "graph"
+  ],
+  "plain": "A login where Microsoft Entra or a personal account tells the site who the person is.",
+  "meaning": "ID token claims include sub, oid (directory object ID), tid (tenant ID), name, preferred_username and optionally email. Work accounts reveal the employer's tenant ID. Graph scopes can add mail, files and calendar.",
+  "lifecycle": [
+    "signed-in"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "MSAL.js or OIDC redirect; id_token",
+      "access": {
+        "grant": "prompt",
+        "prompt_ui": "None",
+        "secure_context": false,
+        "user_gesture": false,
+        "persistence": "Refresh tokens last up to 90 days for work accounts by default",
+        "revocation": "Clear site data, browser privacy settings",
+        "iframe": "",
+        "steps": []
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "1",
+          "note": ":Redirect or popup flow",
+          "date": "2008-12-11"
+        },
+        "edge": {
+          "s": "y",
+          "v": "1",
+          "note": ":Redirect or popup flow",
+          "date": ""
+        },
+        "firefox": {
+          "s": "y",
+          "v": "1",
+          "note": ":Redirect or popup flow",
+          "date": "2004-11-09"
+        },
+        "safari": {
+          "s": "y",
+          "v": "1",
+          "note": ":Redirect or popup flow",
+          "date": "2003-06-23"
+        },
+        "ios_safari": {
+          "s": "y",
+          "v": "1",
+          "note": ":Redirect or popup flow",
+          "date": "2007-06-29"
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "1",
+          "note": ":Redirect or popup flow",
+          "date": ""
+        },
+        "samsung": {
+          "s": "y",
+          "v": "1",
+          "note": ":Redirect or popup flow",
+          "date": "2013-04-27"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "object",
+    "metric": "ID token claims",
+    "update": "at sign in",
+    "fields": [
+      {
+        "name": "oid",
+        "type": "string",
+        "unit": "GUID",
+        "range": "any",
+        "precision": "exact"
+      },
+      {
+        "name": "tid",
+        "type": "string",
+        "unit": "GUID",
+        "range": "any",
+        "precision": "exact"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can sign you in with Microsoft and learn your name, email and employer",
+    "user_action": "You tap Sign in with Microsoft and choose a work, school or personal account",
+    "can": [
+      "Receive a stable Microsoft ID for you",
+      "Get your name, sign in name and sometimes your email",
+      "Learn your employer or school directory ID if you use a work account",
+      "Ask for extra access such as mail, files or calendar on a second screen"
+    ],
+    "cannot": [
+      "See your mail, files or calendar unless you approve that extra access",
+      "Get your Microsoft password",
+      "Skip a company's own sign in rules for work accounts",
+      "Sign in without you choosing an account"
+    ],
+    "reach": 2,
+    "reach_label": "Basic profile, extra on request",
+    "differs": ""
+  },
+  "story": {
+    "what_it_is": "A login where your Microsoft work, school or personal account tells the site who you are.",
+    "icon": "building-2",
+    "tags": [
+      "Sign in",
+      "Microsoft",
+      "Work"
+    ],
+    "marketing": [
+      {
+        "vendor": "Microsoft",
+        "name": "Microsoft identity platform",
+        "pitch": "Microsoft pitches one sign in for work, school and personal accounts across apps, with built in security checks.",
+        "url": "https://learn.microsoft.com/en-us/entra/identity-platform/v2-overview"
+      }
+    ],
+    "for_you": "You click a Microsoft button, pick a personal or work account and may approve on your phone. Work accounts can show an admin message about what the site may see. You then land in the app already signed in.",
+    "for_makers": "Makers of business software get single sign on with a company's own directory and access rules. They also get a tenant ID so they know which customer company a user belongs to.",
+    "use_cases": [
+      {
+        "type": "games",
+        "example": "Xbox Cloud Gaming signs a person in with their Microsoft account in the browser, then streams a console game on a laptop or phone.",
+        "apps": [
+          "Xbox Cloud Gaming",
+          "Minecraft"
+        ]
+      },
+      {
+        "type": "enterprise",
+        "example": "A company app lets staff sign in with their work account so IT can turn off access the day someone leaves.",
+        "apps": [
+          "Microsoft 365",
+          "Salesforce"
+        ]
+      },
+      {
+        "type": "education",
+        "example": "A school portal lets students use their school account to open assignments and online tests.",
+        "apps": [
+          "Teams for Education"
+        ]
+      },
+      {
+        "type": "video",
+        "example": "A video call web app opens a meeting with the signed in name, so hosts can tell guests from staff.",
+        "apps": [
+          "Microsoft Teams"
+        ]
+      },
+      {
+        "type": "security",
+        "example": "A security team requires a second factor and a managed device check before the sign in finishes.",
+        "apps": []
+      },
+      {
+        "type": "creative",
+        "example": "A web based design or writing tool uses the same account to open cloud files from OneDrive.",
+        "apps": [
+          "Canva",
+          "Miro"
+        ]
+      }
+    ],
+    "risks": [
+      "Shows company affiliation",
+      "Admin can see sign ins"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "email claim is optional and not always verified",
+    "tid reveals the organisation for work accounts",
+    "Admin consent may be needed for broad scopes"
+  ],
+  "scores": {
+    "sensitivity": 5,
+    "utility": 5,
+    "fingerprint_bits": null,
+    "friction": 2
+  },
+  "value": {
+    "legit_uses": [
+      "Enterprise single sign on"
+    ],
+    "abuse": [
+      "Employer identification, broad Graph access if consented"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2019-05",
+      "browser": "all",
+      "version": "",
+      "change": "Microsoft identity platform v2 endpoint consolidated personal and work sign in"
+    }
+  ],
+  "related": [
+    "web.auth.sign-in-with-google"
+  ],
+  "refs": [
+    {
+      "t": "vendor",
+      "label": "Microsoft Entra ID token claims",
+      "url": "https://learn.microsoft.com/en-us/entra/identity-platform/id-token-claims-reference"
+    },
+    {
+      "t": "spec",
+      "label": "OpenID Connect Core 1.0 standard claims",
+      "url": "https://openid.net/specs/openid-connect-core-1_0.html#StandardClaims"
+    }
+  ],
+  "confidence": "docs"
+}

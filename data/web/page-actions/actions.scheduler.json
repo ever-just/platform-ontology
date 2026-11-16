@@ -1,0 +1,239 @@
+{
+  "id": "web.actions.scheduler",
+  "name": "Task scheduling (postTask, yield)",
+  "kind": "capability",
+  "group": "page-actions",
+  "subgroup": "Scheduling",
+  "tags": [
+    "scheduler",
+    "posttask",
+    "yield",
+    "inp"
+  ],
+  "plain": "Lets a page prioritize its own tasks and yield to input so it stays responsive.",
+  "meaning": "A site can order its work and split long tasks. It cannot run when the tab is hidden any faster; it only improves smoothness inside the page.",
+  "lifecycle": [
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "scheduler.postTask(fn, {priority}); scheduler.yield(); isInputPending()",
+      "bcd": [
+        "api.Scheduler.postTask",
+        "api.Scheduler.yield"
+      ],
+      "access": {
+        "grant": "none",
+        "prompt_ui": "None (no browser prompt)",
+        "secure_context": false,
+        "user_gesture": false,
+        "activation": "none",
+        "persistence": "None",
+        "revocation": "Nothing to revoke (no permission is stored)",
+        "iframe": "No iframe flag",
+        "steps": [
+          "Call scheduler.postTask with a priority",
+          "Browser runs it after higher priority work",
+          "AbortController can cancel it"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "94",
+          "note": "",
+          "date": "2021-09-21"
+        },
+        "edge": {
+          "s": "y",
+          "v": "94",
+          "note": "",
+          "date": "2021-09-24"
+        },
+        "firefox": {
+          "s": "y",
+          "v": "142",
+          "note": "",
+          "date": "2025-08-19"
+        },
+        "safari": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "ios_safari": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "94",
+          "note": "",
+          "date": "2021-09-21"
+        },
+        "samsung": {
+          "s": "y",
+          "v": "17.0",
+          "note": "",
+          "date": "2022-05-04"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "none",
+    "metric": "",
+    "update": "",
+    "fields": []
+  },
+  "limits": {
+    "headline": "Can sort its own tasks so the page stays quick when you tap",
+    "user_action": "Nothing. It happens while the page runs and you scroll or tap.",
+    "can": [
+      "Run important page tasks before less important ones",
+      "Pause its own long work so taps and scrolls feel smooth",
+      "Cancel or move its own queued tasks"
+    ],
+    "cannot": [
+      "Change what other tabs or other sites do",
+      "Speed up the device itself",
+      "Skip the browser's own power saving rules",
+      "Work in Safari or on iPhone, where it is not offered yet"
+    ],
+    "reach": 1,
+    "reach_label": "Only its own page work",
+    "differs": "Chrome and Edge and Firefox support it. Safari, including on iPhone, does not yet."
+  },
+  "story": {
+    "what_it_is": "A page can rank its own jobs so it stays responsive when you tap.",
+    "icon": "gauge",
+    "tags": [
+      "Speed",
+      "Developer tool",
+      "Silent"
+    ],
+    "marketing": [
+      {
+        "vendor": "Google",
+        "name": "Optimize long tasks",
+        "pitch": "Chrome's web.dev guide teaches splitting work and yielding so pages respond quickly to taps and keys.",
+        "url": "https://web.dev/articles/optimize-long-tasks"
+      }
+    ],
+    "for_you": "You never see it. A page that uses it responds faster when you tap a button while it is still loading something else.",
+    "for_makers": "Makers use it to meet speed scores that affect search ranking and sales. Giving the browser room to handle taps first makes heavy pages feel quick.",
+    "use_cases": [
+      {
+        "type": "shopping",
+        "example": "A busy product page loads reviews in the background so the Add to cart button answers right away.",
+        "apps": [
+          "Amazon",
+          "Shopify stores"
+        ]
+      },
+      {
+        "type": "games",
+        "example": "A browser game keeps frames steady by deferring low priority work, like loading far away level pieces.",
+        "apps": []
+      },
+      {
+        "type": "productivity",
+        "example": "A big web spreadsheet recalculates in small chunks so typing is not delayed.",
+        "apps": [
+          "Google Sheets"
+        ]
+      },
+      {
+        "type": "analytics",
+        "example": "Measurement scripts are queued at low priority so they do not slow the page.",
+        "apps": [
+          "Google Tag Manager"
+        ]
+      },
+      {
+        "type": "ads",
+        "example": "Ads load at a lower priority than the article text.",
+        "apps": []
+      },
+      {
+        "type": "social",
+        "example": "A feed renders posts slice by slice as you scroll.",
+        "apps": [
+          "X",
+          "Facebook"
+        ]
+      }
+    ],
+    "risks": [
+      "Few for readers",
+      "Unequal priority for ads"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Priorities: user-blocking, user-visible, background",
+    "Does not bypass background tab throttling",
+    "Support per MDN BCD: Chrome 94 (postTask) and 129 (yield), Firefox 142, no Safari support"
+  ],
+  "scores": {
+    "sensitivity": 1,
+    "utility": 3,
+    "fingerprint_bits": null,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "INP and responsiveness work"
+    ],
+    "abuse": [
+      "None meaningful"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2021-09",
+      "browser": "chrome",
+      "version": "94",
+      "change": "scheduler.postTask ships"
+    },
+    {
+      "date": "2024-09",
+      "browser": "chrome",
+      "version": "129",
+      "change": "scheduler.yield ships"
+    },
+    {
+      "date": "2025-08",
+      "browser": "firefox",
+      "version": "142",
+      "change": "Scheduler API ships"
+    }
+  ],
+  "refs": [
+    {
+      "t": "mdn",
+      "label": "MDN Scheduler",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/Scheduler"
+    },
+    {
+      "t": "spec",
+      "label": "WICG Prioritized Task Scheduling",
+      "url": "https://wicg.github.io/scheduling-apis/"
+    },
+    {
+      "t": "chromestatus",
+      "label": "Chrome scheduler.postTask",
+      "url": "https://chromestatus.com/feature/6031399673896960"
+    }
+  ],
+  "confidence": "docs"
+}

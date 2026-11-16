@@ -1,0 +1,231 @@
+{
+  "id": "web.display.custom-cursor",
+  "name": "Custom or hidden cursor",
+  "kind": "action",
+  "group": "display-window",
+  "subgroup": "Pointer appearance",
+  "tags": [
+    "cursor",
+    "css",
+    "pointer",
+    "cursor-spoofing"
+  ],
+  "plain": "Replaces the mouse pointer with an image, or hides it, inside the page.",
+  "meaning": "A site can change or hide the pointer, helping games and drawing apps. Browsers block cursors that could imitate system pointers or hide over browser UI, so a page cannot fake the cursor outside its own area.",
+  "lifecycle": [
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "CSS cursor: url(img) x y, auto; cursor: none",
+      "bcd": [
+        "css.properties.cursor"
+      ],
+      "access": {
+        "grant": "none",
+        "prompt_ui": "None (no browser prompt)",
+        "secure_context": false,
+        "user_gesture": false,
+        "activation": "none",
+        "persistence": "Per element, while the pointer is over it; no stored state",
+        "revocation": "Nothing to revoke (no permission is stored)",
+        "iframe": "Applies to the frame's own content only",
+        "steps": [
+          "Page sets CSS cursor on an element",
+          "Browser draws the image while the pointer is over the element",
+          "Cursor reverts at the edge or over browser UI"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "1",
+          "note": "",
+          "date": "2008-12-11"
+        },
+        "edge": {
+          "s": "y",
+          "v": "12",
+          "note": "",
+          "date": "2015-07-29"
+        },
+        "firefox": {
+          "s": "y",
+          "v": "1",
+          "note": "",
+          "date": "2004-11-09"
+        },
+        "safari": {
+          "s": "y",
+          "v": "1.2",
+          "note": "",
+          "date": "2004-02-02"
+        },
+        "ios_safari": {
+          "s": "y",
+          "v": "13.4",
+          "note": "All iOS browsers use WebKit",
+          "date": "2020-03-24"
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "18",
+          "note": "",
+          "date": "2012-06-27"
+        },
+        "samsung": {
+          "s": "y",
+          "v": "1.0",
+          "note": "",
+          "date": "2013-04-27"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "none",
+    "metric": "",
+    "update": "",
+    "fields": []
+  },
+  "limits": {
+    "headline": "Can swap your mouse pointer for an image, or hide it, only inside the page",
+    "user_action": "You move your mouse over the page or a button on it.",
+    "can": [
+      "Show a custom image as the pointer",
+      "Hide the pointer while it is over the page",
+      "Change the pointer for different buttons or areas"
+    ],
+    "cannot": [
+      "Change the pointer outside the page, in the browser's toolbar or other apps",
+      "Use very large images, since browsers cap the size and fall back to the normal pointer",
+      "Hide the pointer after you move it out of the page"
+    ],
+    "reach": 2,
+    "reach_label": "Only while over the page",
+    "differs": "Phones and tablets have no mouse pointer, so touch screens ignore this."
+  },
+  "story": {
+    "what_it_is": "A page swaps your mouse pointer for its own picture, or hides it.",
+    "icon": "mouse-pointer",
+    "tags": [
+      "Pointer",
+      "Games",
+      "Design"
+    ],
+    "marketing": [
+      {
+        "vendor": "MDN",
+        "name": "CSS cursor",
+        "pitch": "Shows how a page can use built in pointer shapes or its own image for the pointer.",
+        "url": "https://developer.mozilla.org/en-US/docs/Web/CSS/cursor"
+      }
+    ],
+    "for_you": "You see the pointer change into a hand, a crosshair, a paint brush or a game sword. Sometimes it vanishes so you can look around a 3D scene.",
+    "for_makers": "A custom pointer makes a site feel like an app and tells you what a click will do. It is used for polish and for games. It can also be abused to hide the real pointer position in tricks.",
+    "use_cases": [
+      {
+        "type": "games",
+        "example": "A first person browser shooter hides the pointer and locks it in place so moving the mouse turns your view.",
+        "apps": [
+          "Krunker.io"
+        ]
+      },
+      {
+        "type": "creative",
+        "example": "A design board shows each teammate's name next to their own colored pointer as they move around the canvas.",
+        "apps": [
+          "Figma",
+          "Miro"
+        ]
+      },
+      {
+        "type": "creative",
+        "example": "A drawing tool turns the pointer into a circle that matches your brush size.",
+        "apps": []
+      },
+      {
+        "type": "ads",
+        "example": "A flashy brand site turns the pointer into a logo or a follow along shape to feel playful.",
+        "apps": []
+      },
+      {
+        "type": "security",
+        "example": "A scam page hides the real pointer and draws a fake one a few pixels off so clicks land on a hidden button.",
+        "apps": []
+      },
+      {
+        "type": "accessibility",
+        "example": "A site enlarges the pointer for people with low vision.",
+        "apps": []
+      },
+      {
+        "type": "kids",
+        "example": "A kids learning game turns the pointer into a friendly animal or star.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Fake pointer tricks",
+      "Can confuse people"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Image size limit is 128 by 128 px in Chrome and Firefox (32 by 32 recommended); larger images are ignored",
+    "Chrome blocks cursors larger than 32 by 32 px when they would overlap browser UI (about 2019)",
+    "Cursors only change inside the viewport; the cursor cannot be moved by script (see Pointer Lock for hidden relative motion)",
+    "cursor: none hides the pointer; the person can still see it over browser UI",
+    "Touch screens ignore custom cursors"
+  ],
+  "scores": {
+    "sensitivity": 1,
+    "utility": 3,
+    "fingerprint_bits": null,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Games and drawing tools",
+      "Design and map tools",
+      "Whiteboards"
+    ],
+    "abuse": [
+      "Hidden pointer on spoof overlays",
+      "Fake cursor positioned away from the true pointer (clickjacking aid)"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2019-06",
+      "browser": "chrome",
+      "version": "75",
+      "change": "Large custom cursors are blocked when they would overlap browser UI"
+    }
+  ],
+  "related": [
+    "web.input.pointer-lock",
+    "web.input.pointer-events"
+  ],
+  "refs": [
+    {
+      "t": "mdn",
+      "label": "MDN cursor",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/CSS/cursor"
+    },
+    {
+      "t": "spec",
+      "label": "CSS UI: cursor",
+      "url": "https://drafts.csswg.org/css-ui/#cursor"
+    }
+  ],
+  "confidence": "docs"
+}

@@ -1,0 +1,172 @@
+{
+  "id": "mob.nx.system-logs",
+  "name": "System logs",
+  "kind": "not-exposed",
+  "group": "system-control",
+  "subgroup": "Sandbox",
+  "tags": [
+    "logcat",
+    "blocked"
+  ],
+  "plain": "Blocked: apps can read only their own logs.",
+  "meaning": "System logs once leaked other apps' data. Android 4.1 limited apps to their own logs; iOS gives a normal app only its own process logs.",
+  "lifecycle": [
+    "on-launch",
+    "in-session"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "r",
+      "v": "4.1",
+      "api": 16,
+      "permission": "READ_LOGS (signature, development)",
+      "protection": "signature",
+      "grant": "not-exposed",
+      "prompt_ui": "",
+      "persistence": "",
+      "revocation": "",
+      "store_policy": "",
+      "api_surface": "logcat; only the caller's own logs",
+      "note": "Own app logs only"
+    },
+    "ios": {
+      "s": "n",
+      "v": "",
+      "permission": "none",
+      "protection": "not-exposed",
+      "grant": "not-exposed",
+      "prompt_ui": "",
+      "persistence": "",
+      "revocation": "",
+      "store_policy": "",
+      "api_surface": "OSLogStore only for own process (iOS 15)",
+      "note": "Own logs only"
+    }
+  },
+  "data": {
+    "type": "none",
+    "metric": "None",
+    "update": "N/A",
+    "fields": []
+  },
+  "limits": {
+    "headline": "Can't see other apps' logs, only its own",
+    "user_action": "Nothing. The phone limits each app to its own logs",
+    "can": [
+      "See the app's own log messages",
+      "Check its own process logs on iPhone (iOS 15 and later)"
+    ],
+    "cannot": [
+      "See logs from other apps",
+      "Use the old log permission as a normal app; it is for the system and developers only",
+      "Unlock them with a prompt"
+    ],
+    "reach": 1,
+    "reach_label": "Only its own logs",
+    "differs": "Android keeps the old log permission for the system; iPhone offers only own process logs."
+  },
+  "story": {
+    "what_it_is": "A block that stops apps from reading the phone's system logs, so they can only read their own.",
+    "icon": "scroll-text",
+    "tags": [
+      "Blocked",
+      "Logs",
+      "Privacy"
+    ],
+    "marketing": [],
+    "for_you": "You never see it. Apps cannot read logs from other apps or the system, so your messages and the pages you open stay private.",
+    "for_makers": "System logs once leaked other apps' data, including tokens and messages. Apps wanted them to debug problems and spot fraud. Today they get only their own logs, or use official crash reports.",
+    "use_cases": [
+      {
+        "type": "developer",
+        "example": "A developer wanted to read the full phone log to debug a crash, and now uses their own logging.",
+        "apps": [
+          "Sentry",
+          "Firebase Crashlytics"
+        ]
+      },
+      {
+        "type": "security",
+        "example": "A security app wanted to watch other apps' logs for malware.",
+        "apps": []
+      },
+      {
+        "type": "ads",
+        "example": "An ad SDK wanted to read other apps' logs for hints and is blocked.",
+        "apps": []
+      },
+      {
+        "type": "games",
+        "example": "A game studio wanted device logs for cheating checks and uses its own server checks.",
+        "apps": []
+      },
+      {
+        "type": "analytics",
+        "example": "A measurement SDK wanted system events and uses its own events.",
+        "apps": []
+      },
+      {
+        "type": "enterprise",
+        "example": "A device fleet tool wanted logs to diagnose faults and uses MDM channels.",
+        "apps": []
+      },
+      {
+        "type": "health",
+        "example": "A health app wanted to see what other apps were doing on the phone and cannot.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Leaks in the past",
+      "Debugging is harder",
+      "Carriers may see more"
+    ],
+    "android_note": "Since Android 4.1 an app reads only its own logs, with a rare system exception.",
+    "ios_note": "On iPhone an app sees only its own logs and there is no system log permission."
+  },
+  "technical_bounds": [
+    "ADB required for system logs"
+  ],
+  "scores": {
+    "sensitivity": 4,
+    "utility": 1,
+    "fingerprint_bits": null,
+    "friction": 3
+  },
+  "value": {
+    "legit_uses": [
+      "None"
+    ],
+    "abuse": [
+      "Data leaks"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2012-07",
+      "platform": "android",
+      "version": "4.1 (API 16)",
+      "change": "READ_LOGS limited to own logs"
+    }
+  ],
+  "refs": [
+    {
+      "t": "android",
+      "label": "Android: Logcat command-line tool",
+      "url": "https://developer.android.com/tools/logcat"
+    },
+    {
+      "t": "apple",
+      "label": "Apple: OSLogStore",
+      "url": "https://developer.apple.com/documentation/oslog/oslogstore"
+    }
+  ],
+  "confidence": "docs"
+}

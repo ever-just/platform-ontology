@@ -1,0 +1,253 @@
+{
+  "id": "web.payments.payment-request",
+  "name": "Payment Request API",
+  "kind": "capability",
+  "group": "payments-commerce",
+  "subgroup": "Checkout",
+  "tags": [
+    "checkout"
+  ],
+  "plain": "Opens the browser's native pay sheet with saved cards and addresses.",
+  "meaning": "The site sees only what the person approves: card or wallet token, shipping, email and phone if requested.",
+  "lifecycle": [
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "new PaymentRequest(methodData, details, options).show(), canMakePayment(), hasEnrolledInstrument()",
+      "permissions_policy": "payment",
+      "bcd": [
+        "api.PaymentRequest"
+      ],
+      "access": {
+        "grant": "prompt",
+        "prompt_ui": "Browser payment sheet listing cards, addresses and wallets",
+        "secure_context": true,
+        "user_gesture": true,
+        "persistence": "Per origin",
+        "revocation": "Site settings",
+        "iframe": "Same as top level; cross-origin iframes need a permissions policy where listed",
+        "steps": [
+          "Call the API",
+          "Browser applies its access rules",
+          "Page receives the result"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "60",
+          "note": "",
+          "date": "2017-07-25"
+        },
+        "edge": {
+          "s": "y",
+          "v": "15",
+          "note": "",
+          "date": "2017-04-05"
+        },
+        "firefox": {
+          "s": "f",
+          "v": "55",
+          "note": "Behind a flag"
+        },
+        "safari": {
+          "s": "y",
+          "v": "11.1",
+          "note": "",
+          "date": "2018-04-12"
+        },
+        "ios_safari": {
+          "s": "y",
+          "v": "11.3",
+          "note": "",
+          "date": "2018-03-29"
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "53",
+          "note": "",
+          "date": "2016-09-07"
+        },
+        "samsung": {
+          "s": "y",
+          "v": "6.0",
+          "note": "Chrome Android 53",
+          "date": "2017-08-23"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "object",
+    "metric": "Opens the browser's native pay sheet with saved cards and addresses.",
+    "update": "on demand",
+    "fields": [
+      {
+        "name": "methodName",
+        "type": "string",
+        "range": "basic-card (removed), https://google.com/pay, https://apple.com/apple-pay, secure-payment-confirmation"
+      },
+      {
+        "name": "details",
+        "type": "object",
+        "range": "token or card data",
+        "precision": "per handler"
+      },
+      {
+        "name": "shippingAddress",
+        "type": "object",
+        "range": "country, region, city, postalCode, recipient, phone",
+        "precision": "if requestShipping"
+      },
+      {
+        "name": "payerEmail / payerPhone / payerName",
+        "type": "string",
+        "range": "free text",
+        "precision": "if requested"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can open the browser's pay sheet with saved cards and addresses you pick",
+    "user_action": "You tap Pay or a wallet button at checkout.",
+    "can": [
+      "Show a pay sheet with your saved cards, wallets and addresses",
+      "Ask for your name, email, phone and shipping address",
+      "Send the store the details you approve"
+    ],
+    "cannot": [
+      "See all your saved cards at once",
+      "Pay without you tapping Pay in the sheet",
+      "Work the same in every browser; some show a limited sheet",
+      "Keep the details after the payment ends"
+    ],
+    "reach": 1,
+    "reach_label": "One payment, once you approve",
+    "differs": "Chrome, Edge, Safari and Samsung Internet show it. Firefox shows only a partial version."
+  },
+  "story": {
+    "what_it_is": "The browser shows its own pay sheet with your saved cards and address.",
+    "icon": "credit-card",
+    "tags": [
+      "Payments",
+      "Asks first",
+      "Autofill"
+    ],
+    "marketing": [
+      {
+        "vendor": "Mozilla",
+        "name": "Payment Request API",
+        "pitch": "MDN says the API gives a consistent checkout flow, with the browser handling the payment sheet.",
+        "url": "https://developer.mozilla.org/en-US/docs/Web/API/Payment_Request_API"
+      }
+    ],
+    "for_you": "A pay sheet pops up from the browser with your saved cards and address. You pick, confirm and you are done without retyping.",
+    "for_makers": "Makers get faster checkouts and fewer typing errors. The browser holds the card, so the shop can lean on it for trusted wallets like Google Pay and Apple Pay.",
+    "use_cases": [
+      {
+        "type": "shopping",
+        "example": "A store opens the browser pay sheet and finishes your order in one step.",
+        "apps": [
+          "Shopify stores"
+        ]
+      },
+      {
+        "type": "delivery",
+        "example": "A takeout site fills your address and card from the browser.",
+        "apps": []
+      },
+      {
+        "type": "travel",
+        "example": "A booking site reads your name and email from the sheet.",
+        "apps": []
+      },
+      {
+        "type": "games",
+        "example": "A game store buys coins with a saved card.",
+        "apps": []
+      },
+      {
+        "type": "security",
+        "example": "A shop only sees a token and not the full card number.",
+        "apps": []
+      },
+      {
+        "type": "media",
+        "example": "A news site sells an annual pass in one tap.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Easy overspending",
+      "Shares contact details"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Must be called from a user gesture",
+    "Only methods the browser supports",
+    "Merchant never sees the full card number from Chrome autofill without CVC"
+  ],
+  "scores": {
+    "sensitivity": 5,
+    "utility": 4,
+    "fingerprint_bits": null,
+    "friction": 2
+  },
+  "value": {
+    "legit_uses": [
+      "One tap checkout"
+    ],
+    "abuse": [
+      "Skimmers if site is compromised"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2016",
+      "browser": "chrome",
+      "version": "53",
+      "change": "Payment Request ships on Chrome Android"
+    },
+    {
+      "date": "2017",
+      "browser": "chrome",
+      "version": "60",
+      "change": "Desktop"
+    },
+    {
+      "date": "2017-09",
+      "browser": "safari",
+      "version": "11.1",
+      "change": "Safari via Apple Pay"
+    },
+    {
+      "date": "2022",
+      "browser": "chrome",
+      "version": "",
+      "change": "basic-card deprecated; Google Pay and other handlers remain"
+    }
+  ],
+  "refs": [
+    {
+      "t": "mdn",
+      "label": "MDN Payment Request API",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/Payment_Request_API"
+    },
+    {
+      "t": "spec",
+      "label": "Payment Request",
+      "url": "https://www.w3.org/TR/payment-request/"
+    }
+  ],
+  "confidence": "verified"
+}

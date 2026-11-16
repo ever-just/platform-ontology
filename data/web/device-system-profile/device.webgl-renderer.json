@@ -1,0 +1,272 @@
+{
+  "id": "web.device.webgl-renderer",
+  "name": "GPU via WebGL unmasked renderer",
+  "kind": "signal",
+  "group": "device-system-profile",
+  "subgroup": "Hardware",
+  "tags": [
+    "webgl",
+    "gpu",
+    "WEBGL_debug_renderer_info"
+  ],
+  "plain": "Reads the graphics card and driver name through WebGL.",
+  "meaning": "Exposes GPU model and driver (ANGLE (NVIDIA, GeForce RTX 4070 ...)). Identifies the device tier and OS. Safari reports a generic Apple GPU; Brave and Firefox spoof or trim it.",
+  "lifecycle": [
+    "on-arrival",
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "gl.getParameter(UNMASKED_VENDOR_WEBGL / UNMASKED_RENDERER_WEBGL) via WEBGL_debug_renderer_info",
+      "bcd": [
+        "api.WEBGL_debug_renderer_info",
+        "api.WebGLRenderingContext.getParameter"
+      ],
+      "access": {
+        "grant": "none",
+        "prompt_ui": "None",
+        "secure_context": false,
+        "user_gesture": false,
+        "persistence": "read fresh on every page load; nothing stored",
+        "revocation": "none needed (no grant)",
+        "iframe": "Readable from cross-origin iframes too (same values)",
+        "steps": [
+          "Page script reads the value",
+          "No prompt is shown"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "33",
+          "note": "",
+          "date": "2014-02-20"
+        },
+        "edge": {
+          "s": "y",
+          "v": "12",
+          "note": "",
+          "date": "2015-07-29"
+        },
+        "firefox": {
+          "s": "y",
+          "v": "53",
+          "note": "",
+          "date": "2017-04-19"
+        },
+        "safari": {
+          "s": "y",
+          "v": "9.1",
+          "note": "Generic Apple GPU string since Safari 15",
+          "date": "2016-03-21"
+        },
+        "ios_safari": {
+          "s": "y",
+          "v": "9.3",
+          "note": "",
+          "date": "2016-03-21"
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "33",
+          "note": "",
+          "date": "2014-02-26"
+        },
+        "samsung": {
+          "s": "y",
+          "v": "2.0",
+          "note": "",
+          "date": "2014-10-17"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "object",
+    "metric": "",
+    "update": "static per session",
+    "fields": [
+      {
+        "name": "UNMASKED_RENDERER_WEBGL",
+        "type": "string",
+        "unit": "",
+        "range": "free text, about 300 known values",
+        "precision": "GPU model plus backend"
+      },
+      {
+        "name": "UNMASKED_VENDOR_WEBGL",
+        "type": "string",
+        "unit": "",
+        "range": "Google Inc. (NVIDIA) etc.",
+        "precision": ""
+      },
+      {
+        "name": "VENDOR, RENDERER",
+        "type": "string",
+        "unit": "",
+        "range": "masked WebKit WebGL values",
+        "precision": ""
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can see your graphics card and driver name through WebGL",
+    "user_action": "Nothing. It happens when a page draws 3D graphics or tests for it",
+    "can": [
+      "See your GPU make and model, like an NVIDIA GeForce",
+      "See your driver and graphics layer",
+      "Guess your device tier and OS",
+      "Tune graphics settings to your GPU"
+    ],
+    "cannot": [
+      "See the exact GPU in Safari; it shows a generic Apple GPU",
+      "See the real name in Brave or Firefox when they hide it",
+      "See your files or screen contents",
+      "Work if graphics support is off"
+    ],
+    "reach": 2,
+    "reach_label": "GPU name, silently",
+    "differs": "Safari shows a generic Apple GPU. Brave and Firefox hide or trim the name."
+  },
+  "story": {
+    "what_it_is": "Reads the name of your graphics card and driver through the browser's 3D drawing tool.",
+    "icon": "monitor",
+    "tags": [
+      "Graphics",
+      "Games",
+      "Fingerprinting"
+    ],
+    "marketing": [],
+    "for_you": "You never see it. A game or video site reads your graphics chip name to pick settings, for example turning on high detail for a strong card. Safari shows a generic name to protect you.",
+    "for_makers": "Graphics apps use the name to apply known fixes for specific chips and to choose a quality level. Fraud teams spot virtual machines by names like SwiftShader. Trackers use the exact name as a fingerprint piece.",
+    "use_cases": [
+      {
+        "type": "games",
+        "example": "A browser game sees an RTX card and starts on ultra graphics, while a weak integrated chip gets low settings.",
+        "apps": []
+      },
+      {
+        "type": "games",
+        "example": "A cloud gaming site picks a different video decoder path for a known buggy graphics driver.",
+        "apps": [
+          "Xbox Cloud Gaming",
+          "GeForce NOW"
+        ]
+      },
+      {
+        "type": "security",
+        "example": "A bot defence service flags a visit that reports SwiftShader, which is how many headless servers draw graphics.",
+        "apps": [
+          "DataDome"
+        ]
+      },
+      {
+        "type": "developer",
+        "example": "A support team reads the graphics name from a bug report to match a known driver bug.",
+        "apps": [
+          "Sentry"
+        ]
+      },
+      {
+        "type": "ads",
+        "example": "An advertiser treats a high end graphics chip as a sign of a gaming PC and shows hardware ads.",
+        "apps": []
+      },
+      {
+        "type": "creative",
+        "example": "A browser 3D design tool turns off heavy effects on integrated graphics.",
+        "apps": []
+      },
+      {
+        "type": "analytics",
+        "example": "A product team counts graphics chips to decide whether it can require newer features.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Names your exact hardware",
+      "Browsers like Safari and Brave hide or blur it"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "No driver version precision on Safari",
+    "Extension can be disabled by browser policy"
+  ],
+  "scores": {
+    "sensitivity": 1,
+    "utility": 3,
+    "fingerprint_bits": 5.0,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Quality settings by GPU",
+      "Driver bug workarounds"
+    ],
+    "abuse": [
+      "High-precision device ID"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": true,
+      "how": "WebGL renderer, vendor, extensions, 65+ parameters. Read by the LinkedIn APFC fingerprint script (48 features, alleged by BrowserGate, partly confirmed by BleepingComputer)."
+    }
+  },
+  "history": [
+    {
+      "date": "2016-01",
+      "browser": "paper",
+      "version": "",
+      "change": "WebGL renderer 3.4 bits, vendor 2.14 bits in AmIUnique"
+    },
+    {
+      "date": "2021-09",
+      "browser": "safari",
+      "version": "15",
+      "change": "Unmasked renderer returns generic Apple GPU"
+    },
+    {
+      "date": "2026-01",
+      "browser": "brave",
+      "version": "1.93",
+      "change": "Brave cuts three GPU signals by default"
+    },
+    {
+      "date": "2025-11",
+      "browser": "firefox",
+      "version": "145",
+      "change": "Fingerprinting protection limits graphics hardware info in Private Browsing and ETP Strict"
+    }
+  ],
+  "related": [
+    "web.device.webgl-parameters",
+    "web.device.webgpu-adapter"
+  ],
+  "refs": [
+    {
+      "t": "github",
+      "label": "fingerprintjs source: webgl",
+      "url": "https://github.com/fingerprintjs/fingerprintjs/blob/master/src/sources/webgl.ts"
+    },
+    {
+      "t": "paper",
+      "label": "AmIUnique: Beauty and the Beast, Laperdrix et al. 2016 (attribute entropy)",
+      "url": "https://hal.inria.fr/hal-01285470"
+    },
+    {
+      "t": "mozilla",
+      "label": "Mozilla Security Blog 2026-11-10: harder to fingerprint",
+      "url": "https://blog.mozilla.org/security/2026/11/10/open-research-stronger-privacy-making-firefox-users-harder-to-fingerprint/"
+    },
+    {
+      "t": "news",
+      "label": "ppc.land: Brave cuts three GPU signals in 1.93",
+      "url": "https://ppc.land/brave-cuts-three-gpu-fingerprinting-signals-in-version-1-93-by-default/"
+    }
+  ],
+  "confidence": "docs"
+}

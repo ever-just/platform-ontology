@@ -1,0 +1,219 @@
+{
+  "id": "mob.system.lockdown-mode",
+  "name": "Lockdown Mode and Advanced Protection",
+  "kind": "capability",
+  "group": "system-control",
+  "subgroup": "Hardening",
+  "tags": [
+    "hardening",
+    "high-risk",
+    "attack-surface",
+    "lockdown-mode",
+    "advanced-protection"
+  ],
+  "plain": "An extreme protection mode that turns off risky features for high risk people.",
+  "meaning": "Cuts attack surface at the cost of features. Apps may see features missing.",
+  "lifecycle": [
+    "on-launch",
+    "in-session"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "y",
+      "v": "16",
+      "api": 36,
+      "permission": "None; Advanced Protection Mode (opt in)",
+      "protection": "none",
+      "grant": "settings",
+      "prompt_ui": "Advanced Protection toggle",
+      "persistence": "Until turned off",
+      "revocation": "Settings > Security > Advanced Protection",
+      "store_policy": "",
+      "api_surface": "System",
+      "note": "Blocks unknown sideloading, enforces memory tagging and more"
+    },
+    "ios": {
+      "s": "y",
+      "v": "16",
+      "permission": "None",
+      "protection": "none",
+      "grant": "settings",
+      "prompt_ui": "Lockdown Mode toggle in Settings",
+      "persistence": "Until turned off",
+      "revocation": "Settings > Privacy & Security > Lockdown Mode",
+      "store_policy": "",
+      "api_surface": "System",
+      "note": "Disables JIT, most attachments, FaceTime from strangers"
+    }
+  },
+  "data": {
+    "type": "none",
+    "metric": "Mode",
+    "update": "static",
+    "fields": [
+      {
+        "name": "enabled",
+        "type": "boolean",
+        "unit": "",
+        "range": "true or false",
+        "precision": "1 bit"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can't use many risky features when Lockdown Mode or Advanced Protection is on",
+    "user_action": "You switch on Lockdown Mode (iPhone) or Advanced Protection (Android) in Settings",
+    "can": [
+      "Keep working with fewer features",
+      "Notice that some features are missing"
+    ],
+    "cannot": [
+      "Use just in time code and most attachments (iPhone Lockdown Mode)",
+      "Receive FaceTime calls from strangers (iPhone Lockdown Mode)",
+      "Install from unknown sources (Android Advanced Protection)",
+      "Turn itself on; you choose it"
+    ],
+    "reach": 1,
+    "reach_label": "Blocks features for you",
+    "differs": "iPhone Lockdown Mode switches off JIT, most attachments and FaceTime from strangers; Android Advanced Protection blocks unknown sideloading."
+  },
+  "story": {
+    "what_it_is": "An extreme protection mode that turns off risky features for people who may be targeted.",
+    "icon": "shield-alert",
+    "tags": [
+      "Security",
+      "Extreme",
+      "Protection"
+    ],
+    "marketing": [
+      {
+        "vendor": "Apple",
+        "name": "Lockdown Mode",
+        "pitch": "An optional extreme protection for the very small number of people who may be targeted by advanced spyware.",
+        "url": "https://support.apple.com/en-us/105120"
+      },
+      {
+        "vendor": "Google",
+        "name": "Advanced Protection",
+        "pitch": "Google's strongest account protection for people at high risk, with stricter security rules.",
+        "url": "https://landing.google.com/advancedprotection/"
+      }
+    ],
+    "for_you": "You turn it on in Settings and the phone becomes stricter. Some web features, message attachments and calls from strangers stop working. Safety goes up and convenience goes down.",
+    "for_makers": "The mode cuts the attack surface that spyware vendors use, such as complex web code and attachments. App and site makers see odd behavior when features are missing. It is aimed at journalists, activists and officials.",
+    "use_cases": [
+      {
+        "type": "security",
+        "example": "A journalist turns it on before travelling to a country with spyware risks.",
+        "apps": []
+      },
+      {
+        "type": "security",
+        "example": "An activist uses it to cut risk of a phone being hijacked by a link.",
+        "apps": []
+      },
+      {
+        "type": "news",
+        "example": "A news site's fancy fonts and scripts do not load in Lockdown Mode.",
+        "apps": []
+      },
+      {
+        "type": "messaging",
+        "example": "A chat app cannot receive a rich attachment from an unknown number.",
+        "apps": [
+          "iMessage"
+        ]
+      },
+      {
+        "type": "games",
+        "example": "A web game that needs advanced browser features fails to run.",
+        "apps": []
+      },
+      {
+        "type": "enterprise",
+        "example": "An executive turns on Advanced Protection for work accounts.",
+        "apps": []
+      },
+      {
+        "type": "developer",
+        "example": "A developer tests how an app behaves when features are off.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Features missing",
+      "Sites look broken",
+      "Not needed for most people"
+    ],
+    "android_note": "Android's Advanced Protection blocks unknown sideloading and adds memory tagging and other checks.",
+    "ios_note": "Lockdown Mode turns off JIT in the browser, blocks most attachments and stops FaceTime from strangers."
+  },
+  "technical_bounds": [
+    "Features reduced",
+    "Signal availability varies"
+  ],
+  "scores": {
+    "sensitivity": 3,
+    "utility": 1,
+    "fingerprint_bits": 1,
+    "friction": 1
+  },
+  "value": {
+    "legit_uses": [
+      "High risk users"
+    ],
+    "abuse": [
+      "None"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2025-06",
+      "platform": "android",
+      "version": "16 (API 36)",
+      "change": "Advanced Protection Mode"
+    },
+    {
+      "date": "2025-06",
+      "platform": "android",
+      "version": "16",
+      "change": "Advanced Protection"
+    },
+    {
+      "date": "2022-09",
+      "platform": "ios",
+      "version": "iOS 16",
+      "change": "Lockdown Mode"
+    },
+    {
+      "date": "2022-07",
+      "platform": "ios",
+      "version": "iOS 16",
+      "change": "Lockdown Mode"
+    }
+  ],
+  "related": [
+    "mob.system.safety-check",
+    "mob.os.sideloading-verification"
+  ],
+  "refs": [
+    {
+      "t": "apple",
+      "label": "Apple: Lockdown Mode",
+      "url": "https://support.apple.com/en-us/105120"
+    },
+    {
+      "t": "android",
+      "label": "Android: Advanced Protection",
+      "url": "https://developer.android.com/privacy-and-security/advanced-protection-mode"
+    }
+  ],
+  "confidence": "docs"
+}

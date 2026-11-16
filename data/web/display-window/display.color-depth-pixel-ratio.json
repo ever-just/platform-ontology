@@ -1,0 +1,222 @@
+{
+  "id": "web.display.color-depth-pixel-ratio",
+  "name": "Color depth, pixel depth and pixel ratio",
+  "kind": "signal",
+  "group": "display-window",
+  "subgroup": "Screen",
+  "tags": [
+    "screen",
+    "fingerprint"
+  ],
+  "plain": "Reads bits per pixel and the device pixel ratio (zoom or Retina factor).",
+  "meaning": "Pixel ratio shows Retina screens and browser zoom. Together with resolution it identifies display class.",
+  "lifecycle": [
+    "on-arrival",
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "screen.colorDepth, screen.pixelDepth, window.devicePixelRatio",
+      "bcd": [
+        "api.Window.devicePixelRatio"
+      ],
+      "access": {
+        "grant": "none",
+        "prompt_ui": "None (no browser prompt)",
+        "secure_context": false,
+        "user_gesture": false,
+        "persistence": "",
+        "revocation": "",
+        "iframe": "",
+        "steps": [
+          "Script reads the value",
+          "Value joins the fingerprint payload"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "1",
+          "note": "",
+          "date": "2008-12-11"
+        },
+        "edge": {
+          "s": "y",
+          "v": "12",
+          "note": "",
+          "date": "2015-07-29"
+        },
+        "firefox": {
+          "s": "y",
+          "v": "18",
+          "note": "",
+          "date": "2013-01-08"
+        },
+        "safari": {
+          "s": "y",
+          "v": "3",
+          "note": "",
+          "date": "2007-10-26"
+        },
+        "ios_safari": {
+          "s": "y",
+          "v": "2",
+          "note": "",
+          "date": "2008-07-11"
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "18",
+          "note": "",
+          "date": "2012-06-27"
+        },
+        "samsung": {
+          "s": "y",
+          "v": "1.0",
+          "note": "",
+          "date": "2013-04-27"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "object",
+    "metric": "Color depth, pixel depth and pixel ratio",
+    "update": "changes with zoom",
+    "fields": [
+      {
+        "name": "colorDepth",
+        "type": "integer",
+        "unit": "bits",
+        "range": "24 or 30",
+        "precision": "1"
+      },
+      {
+        "name": "pixelRatio",
+        "type": "float",
+        "unit": "",
+        "range": "1 to 4",
+        "precision": "0.01"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can see your screen's color depth and how sharp or zoomed it is",
+    "user_action": "Nothing. It happens when the page loads or you zoom.",
+    "can": [
+      "Check the color depth number",
+      "Check how many real pixels sit behind each page pixel (Retina or zoom)",
+      "Notice when you zoom or drag the window to another screen",
+      "Pick sharper images to match"
+    ],
+    "cannot": [
+      "Tell your screen model",
+      "Tell zoom apart from a high density screen, since the two blend into one number",
+      "See anything beyond these two numbers"
+    ],
+    "reach": 1,
+    "reach_label": "Two numbers, no prompt",
+    "differs": ""
+  },
+  "story": {
+    "what_it_is": "Reads how many color bits the screen has and how sharp or zoomed the display is.",
+    "icon": "ratio",
+    "tags": [
+      "Display",
+      "Silent",
+      "Fingerprint"
+    ],
+    "marketing": [
+      {
+        "vendor": "MDN",
+        "name": "Window.devicePixelRatio",
+        "pitch": "Explains the ratio of physical screen pixels to CSS pixels, which tells a page how sharp the display is.",
+        "url": "https://developer.mozilla.org/en-US/docs/Web/API/Window/devicePixelRatio"
+      }
+    ],
+    "for_you": "You never see the reading. It is why a site shows crisp logos on a Retina laptop and a lighter picture on an old monitor.",
+    "for_makers": "Sites use it to send images of the right size and save data. Trackers like it because ratio plus depth plus zoom make a more unusual combination than either alone.",
+    "use_cases": [
+      {
+        "type": "shopping",
+        "example": "A fashion store sends sharper photos to a phone with a ratio of 3 and plain ones to a cheap screen.",
+        "apps": []
+      },
+      {
+        "type": "games",
+        "example": "A browser game draws its canvas at full sharp resolution on a Retina screen, or at half to keep a smooth frame rate on a weak laptop.",
+        "apps": []
+      },
+      {
+        "type": "creative",
+        "example": "A design tool like Figma keeps lines crisp when you zoom by matching its drawing to the screen ratio.",
+        "apps": [
+          "Figma"
+        ]
+      },
+      {
+        "type": "ads",
+        "example": "A tracking script combines the ratio with screen size and fonts to build a device ID without cookies.",
+        "apps": []
+      },
+      {
+        "type": "analytics",
+        "example": "A site team sees that 40 percent of mobile visitors have a ratio of 3 and tests for that first.",
+        "apps": []
+      },
+      {
+        "type": "maps",
+        "example": "A web map loads sharper tiles on dense screens so street names stay readable.",
+        "apps": [
+          "Google Maps"
+        ]
+      }
+    ],
+    "risks": [
+      "Adds to a fingerprint",
+      "Reveals zoom level"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "No monitor model"
+  ],
+  "scores": {
+    "sensitivity": 2,
+    "utility": 3,
+    "fingerprint_bits": 3,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Serve right images"
+    ],
+    "abuse": [
+      "Fingerprint input"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": true,
+      "how": "Collector key(s): colorDepth, pixelDepth, pixelRatio. "
+    }
+  },
+  "related": [
+    "web.tracking.linkedin-apfc-fingerprint"
+  ],
+  "refs": [
+    {
+      "t": "mdn",
+      "label": "MDN devicePixelRatio",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/Window/devicePixelRatio"
+    },
+    {
+      "t": "github",
+      "label": "mdp/linkedin-extension-fingerprinting (LinkedIn script snapshot and ID list)",
+      "url": "https://github.com/mdp/linkedin-extension-fingerprinting"
+    }
+  ],
+  "confidence": "docs"
+}

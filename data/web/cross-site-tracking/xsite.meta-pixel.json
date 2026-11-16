@@ -1,0 +1,232 @@
+{
+  "id": "web.xsite.meta-pixel",
+  "name": "Meta Pixel",
+  "kind": "tracking",
+  "group": "cross-site-tracking",
+  "subgroup": "Ad pixels",
+  "tags": [
+    "meta-pixel",
+    "facebook",
+    "fbp",
+    "fbc",
+    "advanced-matching"
+  ],
+  "plain": "Meta's page script that reports visits and actions on an advertiser's site back to Meta.",
+  "meaning": "Sets _fbp (90 days) and _fbc (from the fbclid) cookies and sends page, button and form events, plus hashed email or phone if Advanced Matching is on. Lets Meta tie a visit to a Facebook or Instagram account.",
+  "lifecycle": [
+    "in-session",
+    "after-leaving",
+    "before-visit"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "fbq('track', ...); requests to facebook.com/tr",
+      "access": {
+        "grant": "none",
+        "prompt_ui": "None",
+        "secure_context": false,
+        "user_gesture": false,
+        "persistence": "_fbp and _fbc cookies last 90 days",
+        "revocation": "Clear site data, browser privacy settings",
+        "iframe": "",
+        "steps": []
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "1",
+          "note": "Script runs in any browser, cookie lifetimes vary",
+          "date": "2008-12-11"
+        },
+        "edge": {
+          "s": "y",
+          "v": "1",
+          "note": "Script runs in any browser, cookie lifetimes vary",
+          "date": ""
+        },
+        "firefox": {
+          "s": "y",
+          "v": "1",
+          "note": "Script runs in any browser, cookie lifetimes vary",
+          "date": "2004-11-09"
+        },
+        "safari": {
+          "s": "y",
+          "v": "1",
+          "note": "Script runs in any browser, cookie lifetimes vary",
+          "date": "2003-06-23"
+        },
+        "ios_safari": {
+          "s": "y",
+          "v": "1",
+          "note": "Script runs in any browser, cookie lifetimes vary",
+          "date": "2007-06-29"
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "1",
+          "note": "Script runs in any browser, cookie lifetimes vary",
+          "date": ""
+        },
+        "samsung": {
+          "s": "y",
+          "v": "1",
+          "note": "Script runs in any browser, cookie lifetimes vary",
+          "date": "2013-04-27"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "event",
+    "metric": "Pixel events",
+    "update": "per action",
+    "fields": []
+  },
+  "limits": {
+    "headline": "Can tell Meta about your visits and actions on a site that uses the pixel",
+    "user_action": "Nothing. It happens when you open a page with the Meta Pixel",
+    "can": [
+      "Report page views, add to cart and purchases to Meta",
+      "Link them to your Facebook or Instagram account if you are signed in",
+      "Let the advertiser show you ads on Meta apps later"
+    ],
+    "cannot": [
+      "Run on sites without the pixel",
+      "See what you do in other apps",
+      "Work if the pixel is blocked",
+      "Know who you are if you are not signed in to Meta, unless the site shares your email"
+    ],
+    "reach": 3,
+    "reach_label": "Your visits to tagged sites",
+    "differs": "Safari and Firefox limit how long and how widely the cookies work. Chrome allows them."
+  },
+  "story": {
+    "what_it_is": "Meta's page script that tells Facebook and Instagram about your visits and actions on other sites.",
+    "icon": "eye",
+    "tags": [
+      "Ads",
+      "Cross site",
+      "Silent"
+    ],
+    "marketing": [
+      {
+        "vendor": "Meta",
+        "name": "Meta Pixel",
+        "pitch": "Meta pitches it as a piece of code that measures ad results and builds audiences from site actions.",
+        "url": "https://developers.facebook.com/docs/meta-pixel/"
+      }
+    ],
+    "for_you": "You never see it. When you view a product or fill a form on a site, the pixel tells Meta. It sets _fbp and _fbc cookies, and with Advanced Matching it sends your scrambled email. Meta can tie it to your account.",
+    "for_makers": "Advertisers can count sales from Facebook and Instagram ads and build audiences from site visitors. Meta gets one of the richest data sets of off platform behavior. It powers lookalike audiences and retargeting.",
+    "use_cases": [
+      {
+        "type": "ads",
+        "example": "You look at a jacket on a store site. Later your Instagram feed shows that jacket.",
+        "apps": [
+          "Meta Ads",
+          "Instagram"
+        ]
+      },
+      {
+        "type": "shopping",
+        "example": "A shop counts each purchase from an ad, and sends the order value to Meta.",
+        "apps": [
+          "Shopify"
+        ]
+      },
+      {
+        "type": "games",
+        "example": "A mobile game's site uses a pixel to find players like those who paid, and shows ads to them.",
+        "apps": [
+          "Zynga",
+          "Supercell"
+        ]
+      },
+      {
+        "type": "analytics",
+        "example": "A marketer sees which ad, audience and picture gave the cheapest sign up.",
+        "apps": []
+      },
+      {
+        "type": "media",
+        "example": "A newsletter sees which Facebook ads bring paying readers.",
+        "apps": [
+          "Substack"
+        ]
+      },
+      {
+        "type": "health",
+        "example": "A health site pixel has been criticized for sending page visits about conditions to Meta.",
+        "apps": [
+          "GoodRx",
+          "BetterHelp"
+        ]
+      }
+    ],
+    "risks": [
+      "Can reveal sensitive page visits",
+      "Linked to your Facebook account"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Blocked by many tracker blockers and Safari ITP limits script cookies",
+    "Conversions API sends the same events from the server",
+    "Hashed email is SHA-256 normalised"
+  ],
+  "scores": {
+    "sensitivity": 4,
+    "utility": 4,
+    "fingerprint_bits": null,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Ad measurement, retargeting"
+    ],
+    "abuse": [
+      "Cross-site profile building, sensitive health or finance leaks"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2021-04",
+      "browser": "safari",
+      "version": "14.5",
+      "change": "App tracking transparency raised pressure on pixels"
+    },
+    {
+      "date": "2022-08",
+      "browser": "all",
+      "version": "",
+      "change": "Meta Pixel health data settlements and lawsuits began"
+    }
+  ],
+  "related": [
+    "web.xsite.conversions-api",
+    "web.xsite.email-hash-identity",
+    "web.xsite.ad-click-ids"
+  ],
+  "refs": [
+    {
+      "t": "vendor",
+      "label": "Meta Pixel documentation",
+      "url": "https://developers.facebook.com/docs/meta-pixel/"
+    },
+    {
+      "t": "vendor",
+      "label": "Meta cookies policy",
+      "url": "https://www.facebook.com/privacy/policies/cookies/"
+    }
+  ],
+  "confidence": "docs"
+}

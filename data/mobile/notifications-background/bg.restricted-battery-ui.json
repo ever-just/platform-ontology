@@ -1,0 +1,218 @@
+{
+  "id": "mob.bg.restricted-battery-ui",
+  "name": "Restricted bucket and battery restriction settings",
+  "kind": "capability",
+  "group": "notifications-background",
+  "subgroup": "Android background limits",
+  "tags": [
+    "battery-restriction",
+    "restricted-bucket",
+    "user-control"
+  ],
+  "plain": "The user can set an app to Unrestricted, Optimized or Restricted; unused apps can fall into Restricted.",
+  "meaning": "The strongest user lever over background activity. Restricted means one 10 minute job session a day, almost no alarms, and no network; people rarely change it, so defaults shape reach.",
+  "lifecycle": [
+    "background"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "y",
+      "v": "9.0",
+      "api": 28,
+      "permission": "REQUEST_IGNORE_BATTERY_OPTIMIZATIONS",
+      "protection": "normal",
+      "grant": "settings",
+      "prompt_ui": "Settings > Battery: Unrestricted, Optimized, Restricted",
+      "persistence": "Restricted bucket after 45 days (Android 12) or 8 days (Android 13+) of no interaction, or excessive broadcasts or bindings in 24 h",
+      "revocation": "Settings > Apps > Battery",
+      "store_policy": "Play: battery opt-out prompts only for allowed use cases",
+      "api_surface": "UsageStatsManager.getAppStandbyBucket(), ActivityManager.isBackgroundRestricted()",
+      "note": "Exempt: companion apps, device owner, VPN, active widgets, USE_EXACT_ALARM holders, user chosen Unrestricted. Restricted bucket: one 10 min job session per day, 1 alarm per day"
+    },
+    "ios": {
+      "s": "p",
+      "v": "6.0",
+      "permission": "",
+      "protection": "none",
+      "grant": "settings",
+      "prompt_ui": "Background App Refresh toggle per app and globally; Low Power Mode",
+      "persistence": "Per app until toggled",
+      "revocation": "Settings > General > Background App Refresh",
+      "store_policy": "",
+      "api_surface": "UIApplication.backgroundRefreshStatus",
+      "note": "Off disables background fetch and silent push handling for that app"
+    }
+  },
+  "data": {
+    "type": "enum",
+    "metric": "Restriction state",
+    "update": "On change",
+    "fields": [
+      {
+        "name": "state",
+        "type": "enum",
+        "unit": "",
+        "range": "Unrestricted, Optimized, Restricted",
+        "precision": ""
+      },
+      {
+        "name": "restricted_after_idle",
+        "type": "integer",
+        "unit": "days",
+        "range": "8 (Android 13+)",
+        "precision": ""
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can only run in the background as much as your battery setting allows",
+    "user_action": "You open Settings, then Battery, and set the app to Unrestricted, Optimized or Restricted",
+    "can": [
+      "Run freely in the background if you pick Unrestricted on Android",
+      "Run background tasks on iPhone if Background App Refresh is on",
+      "Ask you to loosen the limit when it needs more room"
+    ],
+    "cannot": [
+      "Override your choice; Restricted allows very little, about one short job a day",
+      "Run background fetch or silent push handling on iPhone when that app's refresh is off",
+      "Keep running if the system moves an unused app into the Restricted bucket on Android"
+    ],
+    "reach": 2,
+    "reach_label": "Only what your battery setting allows",
+    "differs": "Android has three battery choices per app plus an automatic Restricted bucket. iPhone has a Background App Refresh switch and Low Power Mode."
+  },
+  "story": {
+    "what_it_is": "You can set each app to unrestricted, optimized or restricted to control how much it runs in the background.",
+    "icon": "sliders-horizontal",
+    "tags": [
+      "Control",
+      "Battery",
+      "Android"
+    ],
+    "marketing": [
+      {
+        "vendor": "Google",
+        "name": "Battery settings",
+        "pitch": "Google explains battery tools in Android settings, including how to limit apps that use too much power in the background.",
+        "url": "https://support.google.com/android/answer/7664692"
+      }
+    ],
+    "for_you": "You can open Battery settings and cap any app. A restricted app gets almost no background time, so it may stop alerts. Most people never touch it, so the default decides what happens.",
+    "for_makers": "Makers know most users stay on the default, so reach depends on it. Some apps ask people to switch to Unrestricted for reliable alarms or tracking, which also costs more battery.",
+    "use_cases": [
+      {
+        "type": "fitness",
+        "example": "A run tracker asks you to choose Unrestricted so it can record a full marathon.",
+        "apps": [
+          "Strava"
+        ]
+      },
+      {
+        "type": "health",
+        "example": "A glucose monitor companion app is allowed to run freely so alerts for lows are never missed.",
+        "apps": [
+          "Dexcom",
+          "LibreLink"
+        ]
+      },
+      {
+        "type": "messaging",
+        "example": "A chat app warns that alerts will be late while it is set to Restricted.",
+        "apps": [
+          "Signal"
+        ]
+      },
+      {
+        "type": "smart-home",
+        "example": "A baby monitor or door camera app is given unrestricted use so alerts come on time.",
+        "apps": []
+      },
+      {
+        "type": "games",
+        "example": "A game with timed events loses its reminder alerts after the phone moves it to Restricted.",
+        "apps": []
+      },
+      {
+        "type": "productivity",
+        "example": "A calendar app that adds a reminder at the right minute needs relaxed battery rules to be on time.",
+        "apps": [
+          "Google Calendar"
+        ]
+      }
+    ],
+    "risks": [
+      "Apps may nag you to remove limits",
+      "Unrestricted can drain battery"
+    ],
+    "android_note": "Settings offer Unrestricted, Optimized and Restricted. Restricted gets one short job session per day.",
+    "ios_note": "iOS has a Background App Refresh switch per app and Low Power Mode, which is simpler."
+  },
+  "technical_bounds": [
+    "Apps can detect it but not override it"
+  ],
+  "scores": {
+    "sensitivity": 1,
+    "utility": 4,
+    "fingerprint_bits": null,
+    "friction": 3
+  },
+  "value": {
+    "legit_uses": [
+      "Battery control"
+    ],
+    "abuse": [
+      "Prompting users to whitelist"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2018-08",
+      "platform": "android",
+      "version": "9 (API 28)",
+      "change": "Background restriction user setting"
+    },
+    {
+      "date": "2021-10",
+      "platform": "android",
+      "version": "12 (API 31)",
+      "change": "Restricted bucket after 45 days idle"
+    },
+    {
+      "date": "2022-08",
+      "platform": "android",
+      "version": "13 (API 33)",
+      "change": "Idle threshold cut to 8 days; FGS task manager"
+    },
+    {
+      "date": "2023-10",
+      "platform": "android",
+      "version": "14 (API 34)",
+      "change": "Apps whose tasks time out too often can move to Restricted"
+    }
+  ],
+  "related": [
+    "mob.bg.standby-buckets",
+    "mob.bg.oem-killers",
+    "mob.bg.low-power-state"
+  ],
+  "refs": [
+    {
+      "t": "android",
+      "label": "Android: App Standby Buckets",
+      "url": "https://developer.android.com/topic/performance/appstandby"
+    },
+    {
+      "t": "android",
+      "label": "Android: Power management restrictions",
+      "url": "https://developer.android.com/topic/performance/power/power-details"
+    }
+  ],
+  "confidence": "verified"
+}

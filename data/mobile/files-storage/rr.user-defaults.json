@@ -1,0 +1,188 @@
+{
+  "id": "mob.rr.user-defaults",
+  "name": "Required Reason: UserDefaults",
+  "kind": "capability",
+  "group": "files-storage",
+  "subgroup": "Privacy manifests",
+  "tags": [
+    "required-reason-api",
+    "user-defaults"
+  ],
+  "plain": "iOS UserDefaults access needs a reason code such as CA92.1 (app only) or 1C8F.1 (app group).",
+  "meaning": "Shared defaults can leak info across apps. CA92.1 is app-only data, 1C8F.1 is data shared in one app group, C56D.1 is an SDK wrapper, AC6B.1 reads managed configuration.",
+  "lifecycle": [
+    "on-launch",
+    "in-session"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "n",
+      "v": "",
+      "api": "",
+      "permission": "none",
+      "protection": "none",
+      "grant": "not-exposed",
+      "prompt_ui": "",
+      "persistence": "",
+      "revocation": "",
+      "store_policy": "",
+      "api_surface": "Android has no gate: SharedPreferences is app-private",
+      "note": "Android analog: no reason needed"
+    },
+    "ios": {
+      "s": "f",
+      "v": "17.0",
+      "permission": "entitlement",
+      "protection": "entitlement",
+      "grant": "none",
+      "prompt_ui": "",
+      "persistence": "",
+      "revocation": "App Review: reason must match use",
+      "store_policy": "",
+      "api_surface": "CA92.1 app-only; 1C8F.1 same app group; C56D.1 SDK wrapper only; AC6B.1 managed app config",
+      "note": ""
+    }
+  },
+  "data": {
+    "type": "object",
+    "metric": "Reason codes",
+    "update": "At upload",
+    "fields": [
+      {
+        "name": "reason_codes",
+        "type": "list",
+        "unit": "code",
+        "range": "4 values",
+        "precision": "exact"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can keep its own saved settings on iPhone, but must give Apple a reason",
+    "user_action": "Nothing. The app stores settings quietly as you use it",
+    "can": [
+      "Save its own settings and choices, with a stated reason on iPhone",
+      "Share settings with apps in the same developer group on iPhone",
+      "Save settings on Android with no gate, in the app's own private area"
+    ],
+    "cannot": [
+      "Use it to see other apps' settings; the data stays in the app or its group",
+      "Skip the stated reason on iPhone; App Store review checks it",
+      "Use it to track you across other developers' apps",
+      "Share settings across developers on Android"
+    ],
+    "reach": 2,
+    "reach_label": "Its own settings",
+    "differs": "Android keeps preferences app private and has no gate. iPhone needs a declared reason code."
+  },
+  "story": {
+    "what_it_is": "iOS makes apps give an approved reason before using a shared settings store.",
+    "icon": "settings",
+    "tags": [
+      "Rules",
+      "iPhone",
+      "Settings"
+    ],
+    "marketing": [
+      {
+        "vendor": "Apple",
+        "name": "Required Reason APIs",
+        "pitch": "Developer rule: apps must declare why they use UserDefaults, since shared defaults can leak information across apps.",
+        "url": "https://developer.apple.com/documentation/bundleresources/describing-use-of-required-reason-api"
+      }
+    ],
+    "for_you": "You never see it. UserDefaults is where apps save small settings. Apple makes apps explain why they use it, so no app quietly reads another app's data.",
+    "for_makers": "Makers choose a reason code, like CA92.1 for the app's own data or 1C8F.1 for an app group. Sharing across companies is not allowed.",
+    "use_cases": [
+      {
+        "type": "productivity",
+        "example": "A notes app saves your theme choice and declares CA92.1.",
+        "apps": []
+      },
+      {
+        "type": "games",
+        "example": "A game saves your sound setting and declares CA92.1.",
+        "apps": []
+      },
+      {
+        "type": "enterprise",
+        "example": "A work app reads settings set by a company manager and declares AC6B.1.",
+        "apps": []
+      },
+      {
+        "type": "developer",
+        "example": "An SDK wraps defaults for the app and declares C56D.1.",
+        "apps": []
+      },
+      {
+        "type": "media",
+        "example": "A music app shares settings with its widget through an app group and declares 1C8F.1.",
+        "apps": []
+      },
+      {
+        "type": "ads",
+        "example": "A tracker that reads settings shared with other apps is flagged.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Reason may be misused",
+      "Shared defaults can leak data"
+    ],
+    "android_note": "Android has no matching rule.",
+    "ios_note": "Enforced through the privacy manifest and App Store checks."
+  },
+  "technical_bounds": [
+    "Cannot read data of other apps"
+  ],
+  "scores": {
+    "sensitivity": 1,
+    "utility": 2,
+    "fingerprint_bits": null,
+    "friction": 3
+  },
+  "value": {
+    "legit_uses": [
+      "Compliance"
+    ],
+    "abuse": [
+      "None"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2024-05",
+      "platform": "ios",
+      "version": "iOS 17.x",
+      "change": "Reason required to ship"
+    }
+  ],
+  "related": [
+    "mob.rr.regime"
+  ],
+  "refs": [
+    {
+      "t": "apple",
+      "label": "Apple: Describing use of required reason API",
+      "url": "https://developer.apple.com/documentation/bundleresources/describing-use-of-required-reason-api"
+    },
+    {
+      "t": "apple",
+      "label": "Apple: Privacy manifest files",
+      "url": "https://developer.apple.com/documentation/bundleresources/privacy-manifest-files"
+    },
+    {
+      "t": "apple",
+      "label": "Apple: UserDefaults",
+      "url": "https://developer.apple.com/documentation/foundation/userdefaults"
+    }
+  ],
+  "confidence": "docs"
+}

@@ -1,0 +1,173 @@
+{
+  "id": "mob.nx.call-audio",
+  "name": "Call audio recording",
+  "kind": "not-exposed",
+  "group": "telephony-sms",
+  "subgroup": "Calls",
+  "tags": [
+    "call-recording",
+    "blocked"
+  ],
+  "plain": "Blocked: neither platform lets normal apps record the other side of a phone call.",
+  "meaning": "Android narrowed call recording over time (mic limits in 9, VOICE_CALL source blocked in 10). iOS never allowed it.",
+  "lifecycle": [
+    "in-session"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "r",
+      "v": "10",
+      "api": 29,
+      "permission": "CAPTURE_AUDIO_OUTPUT (system)",
+      "protection": "signature",
+      "grant": "not-exposed",
+      "prompt_ui": "",
+      "persistence": "",
+      "revocation": "",
+      "store_policy": "",
+      "api_surface": "MediaRecorder.AudioSource.VOICE_CALL",
+      "note": "Blocked for normal apps"
+    },
+    "ios": {
+      "s": "n",
+      "v": "",
+      "permission": "none",
+      "protection": "not-exposed",
+      "grant": "not-exposed",
+      "prompt_ui": "",
+      "persistence": "",
+      "revocation": "",
+      "store_policy": "",
+      "api_surface": "No public API for call audio",
+      "note": "CallKit does not give audio"
+    }
+  },
+  "data": {
+    "type": "none",
+    "metric": "None",
+    "update": "N/A",
+    "fields": []
+  },
+  "limits": {
+    "headline": "Can't record the other side of a phone call",
+    "user_action": "Nothing. The phone blocks normal apps from call audio",
+    "can": [
+      "Use the microphone when you allow it, with limits during calls on Android 9 and later",
+      "Tell that a call is active through CallKit (iPhone), with no audio"
+    ],
+    "cannot": [
+      "Use the call recording source on Android; it has been blocked since Android 10",
+      "Get call audio on iPhone; it was never allowed",
+      "Get around it with a permission; only system apps hold the call audio permission"
+    ],
+    "reach": 1,
+    "reach_label": "Blocked for normal apps",
+    "differs": "Android narrowed call recording step by step; iPhone never allowed it."
+  },
+  "story": {
+    "what_it_is": "Blocked: normal apps cannot record the other person's side of a phone call.",
+    "icon": "phone-off",
+    "tags": [
+      "Blocked",
+      "Calls",
+      "Privacy"
+    ],
+    "marketing": [],
+    "for_you": "You cannot record a call with a normal app. The other person's voice is not available to apps. Some phones have a built in recorder that tells everyone on the call.",
+    "for_makers": "Call recording is sensitive and often illegal without consent. Platforms narrowed access over time. Apps that wanted it now use other routes like internet calls, or record the speaker with the mic.",
+    "use_cases": [
+      {
+        "type": "productivity",
+        "example": "A call notes app wanted to record both sides and now records on speaker with the mic.",
+        "apps": [
+          "Otter.ai"
+        ]
+      },
+      {
+        "type": "enterprise",
+        "example": "A sales tool wanted every customer call saved and now uses its own calling.",
+        "apps": [
+          "Gong"
+        ]
+      },
+      {
+        "type": "security",
+        "example": "A fraud app wanted to listen to scam calls and cannot.",
+        "apps": []
+      },
+      {
+        "type": "health",
+        "example": "A therapy app wanted session recordings and uses its own video calls.",
+        "apps": []
+      },
+      {
+        "type": "media",
+        "example": "A podcast app wanted to record interviews by phone and uses internet calls.",
+        "apps": []
+      },
+      {
+        "type": "news",
+        "example": "A reporter wanted to record an interview call and uses a recording line.",
+        "apps": []
+      },
+      {
+        "type": "developer",
+        "example": "A developer wanted a simple recorder app and is blocked by the platform.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Secret recording",
+      "Consent laws",
+      "Workarounds like speaker mode"
+    ],
+    "android_note": "Android narrowed call recording over time, with mic limits in Android 9 and the call audio source blocked in Android 10.",
+    "ios_note": "iPhone has never given apps call audio, and the call system does not expose it."
+  },
+  "technical_bounds": [
+    "Device owner or system apps only"
+  ],
+  "scores": {
+    "sensitivity": 5,
+    "utility": 2,
+    "fingerprint_bits": null,
+    "friction": 3
+  },
+  "value": {
+    "legit_uses": [
+      "None"
+    ],
+    "abuse": [
+      "Wiretapping"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2018-08",
+      "platform": "android",
+      "version": "9 (API 28)",
+      "change": "Background mic access limited"
+    },
+    {
+      "date": "2019-09",
+      "platform": "android",
+      "version": "10 (API 29)",
+      "change": "VOICE_CALL source blocked for normal apps"
+    }
+  ],
+  "refs": [
+    {
+      "t": "android",
+      "label": "Android 10 privacy changes",
+      "url": "https://developer.android.com/about/versions/10/privacy/changes"
+    }
+  ],
+  "confidence": "docs"
+}

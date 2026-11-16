@@ -1,0 +1,273 @@
+{
+  "id": "web.peripherals.gamepad",
+  "name": "Gamepad API and haptics",
+  "kind": "signal",
+  "group": "peripherals-hardware",
+  "subgroup": "Input devices",
+  "tags": [
+    "gamepad",
+    "rumble",
+    "controller"
+  ],
+  "plain": "Reads buttons and sticks of a connected game controller; can trigger rumble.",
+  "meaning": "Shows that a controller exists and exactly how it is being used. Controller id strings leak make and model.",
+  "lifecycle": [
+    "on-arrival",
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "navigator.getGamepads(), gamepadconnected, gamepad.axes, gamepad.buttons, gamepad.vibrationActuator.playEffect('dual-rumble')",
+      "permissions_policy": "gamepad",
+      "bcd": [
+        "api.Gamepad",
+        "api.Navigator.getGamepads",
+        "api.Gamepad.vibrationActuator",
+        "api.GamepadHapticActuator"
+      ],
+      "access": {
+        "grant": "gesture",
+        "prompt_ui": "No prompt; the controller must be used (button press) before the page can see it",
+        "secure_context": true,
+        "user_gesture": true,
+        "persistence": "Per session",
+        "revocation": "Unplug controller",
+        "iframe": "Gated by gamepad permissions policy (Chrome 86+)",
+        "steps": [
+          "User presses a controller button",
+          "gamepadconnected fires",
+          "Page polls getGamepads() every frame"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "21",
+          "note": "",
+          "date": "2012-07-31"
+        },
+        "edge": {
+          "s": "y",
+          "v": "12",
+          "note": "",
+          "date": "2015-07-29"
+        },
+        "firefox": {
+          "s": "p",
+          "v": "29",
+          "note": "No vibration actuator",
+          "date": "2014-04-29"
+        },
+        "safari": {
+          "s": "p",
+          "v": "10.1",
+          "note": "Vibration only on macOS 16.4; Vision Pro connect events fire without press",
+          "date": "2017-03-27"
+        },
+        "ios_safari": {
+          "s": "y",
+          "v": "10.3",
+          "note": "",
+          "date": "2017-03-27"
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "25",
+          "note": "",
+          "date": "2013-02-27"
+        },
+        "samsung": {
+          "s": "y",
+          "v": "1.5",
+          "note": "",
+          "date": "2013-09-25"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "object",
+    "metric": "Axes and button states",
+    "update": "poll per animation frame (60 Hz typical)",
+    "fields": [
+      {
+        "name": "id",
+        "type": "string",
+        "range": "controller defined",
+        "precision": "for example vendor and product id plus name; fingerprint bit source"
+      },
+      {
+        "name": "axes",
+        "type": "list",
+        "range": "-1 to 1",
+        "precision": "float per axis, 4 typical"
+      },
+      {
+        "name": "buttons[].value",
+        "type": "float",
+        "range": "0 to 1",
+        "precision": "analog triggers"
+      },
+      {
+        "name": "mapping",
+        "type": "enum",
+        "range": "standard or empty"
+      },
+      {
+        "name": "vibrationActuator effects",
+        "type": "object",
+        "unit": "ms",
+        "range": "duration, strongMagnitude, weakMagnitude 0 to 1",
+        "precision": "Chrome and Safari only"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can see your game controller after you press a button, and make it rumble",
+    "user_action": "You press any button on a connected controller while the page is open.",
+    "can": [
+      "See which buttons you press and how far you move the sticks",
+      "Make a controller rumble",
+      "Tell which controller is connected, once you use it"
+    ],
+    "cannot": [
+      "See the controller before you press a button",
+      "See controllers when the page is in a hidden tab in most cases",
+      "Keep going after you close the page",
+      "Work fully in Safari or Firefox, where rumble is limited"
+    ],
+    "reach": 2,
+    "reach_label": "While the page is open",
+    "differs": "Chrome and Edge fully support it. Safari and Firefox support parts, with rumble often missing."
+  },
+  "story": {
+    "what_it_is": "A page can read your game controller's buttons and make it rumble.",
+    "icon": "gamepad-2",
+    "tags": [
+      "Games",
+      "Hardware",
+      "Needs a press"
+    ],
+    "marketing": [
+      {
+        "vendor": "Mozilla",
+        "name": "Gamepad API",
+        "pitch": "MDN says it lets pages read game controllers' buttons and sticks, and make them vibrate.",
+        "url": "https://developer.mozilla.org/en-US/docs/Web/API/Gamepad_API/Using_the_Gamepad_API"
+      }
+    ],
+    "for_you": "You plug in or connect a controller, press a button, and the page notices it. Your controller can shake when your car hits a wall.",
+    "for_makers": "Makers can build console style games in a tab. It is key for cloud gaming, where the browser sends your button presses to a faraway console or PC.",
+    "use_cases": [
+      {
+        "type": "games",
+        "example": "Xbox Cloud Gaming in the browser reads your Xbox controller and sends your moves to the cloud.",
+        "apps": [
+          "Xbox Cloud Gaming",
+          "GeForce NOW"
+        ]
+      },
+      {
+        "type": "games",
+        "example": "A browser racing game rumbles your controller when you scrape a wall.",
+        "apps": []
+      },
+      {
+        "type": "media",
+        "example": "A streaming site lets you move through menus with a controller on a TV.",
+        "apps": [
+          "YouTube TV"
+        ]
+      },
+      {
+        "type": "accessibility",
+        "example": "A page lets someone with limited mobility use a special controller.",
+        "apps": []
+      },
+      {
+        "type": "education",
+        "example": "A coding class teaches kids to write games that use controllers.",
+        "apps": [
+          "Scratch"
+        ]
+      },
+      {
+        "type": "security",
+        "example": "A site can tell which controllers are connected, which adds to a fingerprint.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Device fingerprint",
+      "Accidental button presses"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Needs a button press before first exposure",
+    "Only the focused page sees gamepads",
+    "No rumble in Firefox",
+    "Android Chrome limited to connected gamepads"
+  ],
+  "scores": {
+    "sensitivity": 1,
+    "utility": 4,
+    "fingerprint_bits": 2,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Games",
+      "Emulators",
+      "Accessible input"
+    ],
+    "abuse": [
+      "Controller id as fingerprint signal",
+      "Presence signals gamers"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2013",
+      "browser": "chrome",
+      "version": "21",
+      "change": "Gamepad API ships; connected events in 25"
+    },
+    {
+      "date": "2019-04",
+      "browser": "chrome",
+      "version": "68",
+      "change": "vibrationActuator and haptics"
+    },
+    {
+      "date": "2023-03",
+      "browser": "safari",
+      "version": "16.4",
+      "change": "vibrationActuator on macOS"
+    }
+  ],
+  "related": [
+    "web.peripherals.webhid"
+  ],
+  "refs": [
+    {
+      "t": "mdn",
+      "label": "MDN Gamepad API",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/Gamepad_API"
+    },
+    {
+      "t": "spec",
+      "label": "W3C Gamepad",
+      "url": "https://www.w3.org/TR/gamepad/"
+    }
+  ],
+  "confidence": "verified"
+}

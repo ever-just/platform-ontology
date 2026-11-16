@@ -1,0 +1,227 @@
+{
+  "id": "web.render.audio-context",
+  "name": "Audio fingerprint (OfflineAudioContext)",
+  "kind": "signal",
+  "group": "rendering-fingerprint",
+  "subgroup": "Rendering",
+  "tags": [
+    "audio",
+    "fingerprint"
+  ],
+  "plain": "Renders a sound offline and reads tiny numeric differences.",
+  "meaning": "Audio stack differences give a device specific value without ever playing sound or asking permission. LinkedIn uses OfflineAudioContext(1,44100,44100).",
+  "lifecycle": [
+    "on-arrival",
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "new OfflineAudioContext(1, 44100, 44100)",
+      "bcd": [
+        "api.OfflineAudioContext"
+      ],
+      "access": {
+        "grant": "none",
+        "prompt_ui": "None (no browser prompt)",
+        "secure_context": false,
+        "user_gesture": false,
+        "persistence": "",
+        "revocation": "",
+        "iframe": "",
+        "steps": [
+          "Script reads the value",
+          "Value joins the fingerprint payload"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "35",
+          "note": "",
+          "date": "2014-05-20"
+        },
+        "edge": {
+          "s": "y",
+          "v": "12",
+          "note": "",
+          "date": "2015-07-29"
+        },
+        "firefox": {
+          "s": "y",
+          "v": "25",
+          "note": "",
+          "date": "2013-10-29"
+        },
+        "safari": {
+          "s": "y",
+          "v": "14.1",
+          "note": "",
+          "date": "2021-04-26"
+        },
+        "ios_safari": {
+          "s": "y",
+          "v": "14.5",
+          "note": "",
+          "date": "2021-04-26"
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "35",
+          "note": "",
+          "date": "2014-05-20"
+        },
+        "samsung": {
+          "s": "y",
+          "v": "3.0",
+          "note": "",
+          "date": "2015-04-10"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "hash",
+    "metric": "Audio fingerprint (OfflineAudioContext)",
+    "update": "static per setup",
+    "fields": [
+      {
+        "name": "audio_sum",
+        "type": "float",
+        "unit": "",
+        "range": "hash of samples",
+        "precision": "float precision"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can make a silent test sound to tell your device apart from others",
+    "user_action": "Nothing. It happens when the page loads",
+    "can": [
+      "Process a short sound in memory without playing it",
+      "Measure tiny number differences that depend on your device and browser",
+      "Combine that number with other signals to recognise you later"
+    ],
+    "cannot": [
+      "Play sound through your speakers",
+      "Record from your microphone",
+      "Ask you first, since there is no pop up",
+      "Work as an ID on its own, because many similar devices give the same result"
+    ],
+    "reach": 2,
+    "reach_label": "Silent, while the page runs",
+    "differs": ""
+  },
+  "story": {
+    "what_it_is": "A page plays a sound silently in memory and reads tiny number differences that vary by device.",
+    "icon": "audio-waveform",
+    "tags": [
+      "Audio",
+      "Silent",
+      "Fingerprinting"
+    ],
+    "marketing": [
+      {
+        "vendor": "MDN",
+        "name": "OfflineAudioContext",
+        "pitch": "Renders audio faster than real time into a buffer, without playing it to the speakers, for effects and analysis.",
+        "url": "https://developer.mozilla.org/en-US/docs/Web/API/OfflineAudioContext"
+      }
+    ],
+    "for_you": "You hear nothing and see no prompt. The page just does some math that a sound chip would do, and the answer helps it recognize your device later.",
+    "for_makers": "Trackers and fraud teams add this to a bundle of signals to build a device ID. It is cheap, needs no permission, and is hard for people to notice. The real feature exists so audio apps can process sound offline.",
+    "use_cases": [
+      {
+        "type": "music",
+        "example": "A web music studio renders a finished track to a file offline, much faster than playing it back.",
+        "apps": [
+          "BandLab",
+          "Soundtrap"
+        ]
+      },
+      {
+        "type": "games",
+        "example": "A browser game builds echo or reverb effects ahead of time so sound effects play instantly in battle.",
+        "apps": []
+      },
+      {
+        "type": "security",
+        "example": "A bank's fraud script plays a silent tone and compares the result with the last visit to confirm it is the same device.",
+        "apps": []
+      },
+      {
+        "type": "ads",
+        "example": "An ad tech script adds the audio result to a device ID to recognize you across sites without cookies.",
+        "apps": []
+      },
+      {
+        "type": "analytics",
+        "example": "A visitor counting tool uses the audio hash to avoid double counting the same person who cleared cookies.",
+        "apps": [
+          "FingerprintJS"
+        ]
+      },
+      {
+        "type": "creative",
+        "example": "A podcast editor in the browser exports a mixed episode by rendering all tracks offline.",
+        "apps": []
+      },
+      {
+        "type": "accessibility",
+        "example": "A page prepares sound effects for screen reader users before they hear them.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Works without asking",
+      "Hard to reset",
+      "Browsers are adding noise to fight it"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Noise added by some privacy browsers"
+  ],
+  "scores": {
+    "sensitivity": 2,
+    "utility": 3,
+    "fingerprint_bits": 5,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Audio rendering tests"
+    ],
+    "abuse": [
+      "Fingerprint input"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": true,
+      "how": "Collector key(s): audio. BleepingComputer confirms audio."
+    }
+  },
+  "related": [
+    "web.tracking.linkedin-apfc-fingerprint"
+  ],
+  "refs": [
+    {
+      "t": "mdn",
+      "label": "MDN OfflineAudioContext",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/OfflineAudioContext"
+    },
+    {
+      "t": "news",
+      "label": "BleepingComputer: LinkedIn scans for 6,000+ Chrome extensions",
+      "url": "https://www.bleepingcomputer.com/news/security/linkedin-secretely-scans-for-6-000-plus-chrome-extensions-collects-data/"
+    },
+    {
+      "t": "github",
+      "label": "mdp/linkedin-extension-fingerprinting (LinkedIn script snapshot and ID list)",
+      "url": "https://github.com/mdp/linkedin-extension-fingerprinting"
+    }
+  ],
+  "confidence": "docs"
+}

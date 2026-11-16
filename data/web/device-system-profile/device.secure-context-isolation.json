@@ -1,0 +1,234 @@
+{
+  "id": "web.device.secure-context-isolation",
+  "name": "Secure context and cross-origin isolation",
+  "kind": "signal",
+  "group": "device-system-profile",
+  "subgroup": "Browser state",
+  "tags": [
+    "secure-context",
+    "COOP",
+    "COEP",
+    "sharedarraybuffer"
+  ],
+  "plain": "Flags telling whether the page is HTTPS and isolated from other origins.",
+  "meaning": "isSecureContext and crossOriginIsolated are set by the site itself, so they mostly describe the page, not the person. They gate high-power APIs and timer precision (5 microseconds when isolated, 100 microseconds otherwise in Chrome).",
+  "lifecycle": [
+    "on-arrival",
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "window.isSecureContext, window.crossOriginIsolated",
+      "bcd": [
+        "api.Window.isSecureContext",
+        "api.Window.crossOriginIsolated"
+      ],
+      "access": {
+        "grant": "none",
+        "prompt_ui": "None",
+        "secure_context": false,
+        "user_gesture": false,
+        "persistence": "read fresh on every page load; nothing stored",
+        "revocation": "none needed (no grant)",
+        "iframe": "Readable from cross-origin iframes too (same values)",
+        "steps": [
+          "Page script reads the value",
+          "No prompt is shown"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "47",
+          "note": "",
+          "date": "2015-12-01"
+        },
+        "edge": {
+          "s": "y",
+          "v": "79",
+          "note": "",
+          "date": "2020-01-15"
+        },
+        "firefox": {
+          "s": "y",
+          "v": "49",
+          "note": "",
+          "date": "2016-09-20"
+        },
+        "safari": {
+          "s": "y",
+          "v": "11.1",
+          "note": "",
+          "date": "2018-04-12"
+        },
+        "ios_safari": {
+          "s": "y",
+          "v": "11.3",
+          "note": "",
+          "date": "2018-03-29"
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "47",
+          "note": "",
+          "date": "2015-12-02"
+        },
+        "samsung": {
+          "s": "y",
+          "v": "5.0",
+          "note": "",
+          "date": "2016-12-15"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "object",
+    "metric": "",
+    "update": "static per session",
+    "fields": [
+      {
+        "name": "isSecureContext",
+        "type": "boolean",
+        "unit": "",
+        "range": "true or false",
+        "precision": ""
+      },
+      {
+        "name": "crossOriginIsolated",
+        "type": "boolean",
+        "unit": "",
+        "range": "true when COOP+COEP set",
+        "precision": ""
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can check whether the page is on HTTPS and isolated, which describes the site, not you",
+    "user_action": "Nothing. It describes how the site itself was set up",
+    "can": [
+      "Check if the page runs on HTTPS",
+      "Check if the page is isolated from other origins",
+      "Unlock stronger features and finer timers when both are true"
+    ],
+    "cannot": [
+      "Tell anything about you or your device",
+      "Be changed by you; the site sets it",
+      "Unlock powerful features on plain HTTP pages",
+      "Give you finer timers unless the site opts in"
+    ],
+    "reach": 1,
+    "reach_label": "Page setup, not you",
+    "differs": ""
+  },
+  "story": {
+    "what_it_is": "Two yes or no flags showing whether a page is on HTTPS and walled off from other sites.",
+    "icon": "lock",
+    "tags": [
+      "Security",
+      "Silent",
+      "Performance"
+    ],
+    "marketing": [
+      {
+        "vendor": "Google",
+        "name": "Making your website cross-origin isolated",
+        "pitch": "web.dev explains the isolation switch that unlocks powerful features like shared memory and precise timers.",
+        "url": "https://web.dev/articles/coop-coep"
+      }
+    ],
+    "for_you": "You never see these flags. They mostly describe how the site is built. If a site turns the isolation on, you may get faster, more powerful pages such as full speed browser games and editors.",
+    "for_makers": "Powerful features like shared memory and fine timers only work on pages that are secure and isolated. Heavy apps flip the switch to run fast. The flags describe the page rather than the person, so they carry little tracking value.",
+    "use_cases": [
+      {
+        "type": "games",
+        "example": "A browser game engine needs isolation to use shared memory threads, so it runs at a smooth frame rate.",
+        "apps": [
+          "Unity WebGL games"
+        ]
+      },
+      {
+        "type": "creative",
+        "example": "A browser video editor needs it to run fast video code in the page.",
+        "apps": [
+          "Clipchamp"
+        ]
+      },
+      {
+        "type": "developer",
+        "example": "A web code editor runs a full programming environment in the tab, which needs the isolation flag.",
+        "apps": [
+          "StackBlitz"
+        ]
+      },
+      {
+        "type": "productivity",
+        "example": "A browser version of a design app turns on advanced timers and threads for heavy files.",
+        "apps": [
+          "Figma"
+        ]
+      },
+      {
+        "type": "security",
+        "example": "A bank locks down its pages so another site cannot peek into them.",
+        "apps": []
+      },
+      {
+        "type": "analytics",
+        "example": "A site monitors how many visitors lack isolation to find broken embeds.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Low tracking value",
+      "Isolation can break embeds"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Describes the page, not the user"
+  ],
+  "scores": {
+    "sensitivity": 1,
+    "utility": 3,
+    "fingerprint_bits": 0.1,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Gate APIs"
+    ],
+    "abuse": [
+      "None meaningful"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2020-07",
+      "browser": "chrome",
+      "version": "92",
+      "change": "SharedArrayBuffer requires crossOriginIsolated"
+    }
+  ],
+  "refs": [
+    {
+      "t": "mdn",
+      "label": "MDN isSecureContext",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/Window/isSecureContext"
+    },
+    {
+      "t": "mdn",
+      "label": "MDN crossOriginIsolated",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/Window/crossOriginIsolated"
+    }
+  ],
+  "confidence": "docs"
+}

@@ -1,0 +1,215 @@
+{
+  "id": "web.net.webrtc-stun-public-ip",
+  "name": "WebRTC STUN public IP discovery",
+  "kind": "signal",
+  "group": "network-connectivity",
+  "subgroup": "WebRTC",
+  "tags": [
+    "webrtc",
+    "stun",
+    "public-ip",
+    "vpn-bypass"
+  ],
+  "plain": "A STUN request lets a page discover the public IP of the real network path, even behind some VPNs.",
+  "meaning": "ICE gathering sends UDP to a STUN server and learns the server reflexive address. Proxies and browser VPN extensions that cannot proxy UDP leak the real IP. Chrome WebRTC IP handling policies and Brave default settings block this.",
+  "lifecycle": [
+    "on-arrival"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "new RTCPeerConnection({iceServers:[{urls:'stun:...'}]}); srflx candidates",
+      "bcd": [
+        "api.RTCIceCandidate"
+      ],
+      "access": {
+        "grant": "none",
+        "prompt_ui": "",
+        "secure_context": false,
+        "user_gesture": false,
+        "persistence": "",
+        "revocation": "",
+        "iframe": "",
+        "steps": [
+          "Open peer connection with a STUN server",
+          "Read srflx candidate",
+          "Compare with HTTP IP"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "23",
+          "note": "",
+          "date": "2012-11-06"
+        },
+        "edge": {
+          "s": "y",
+          "v": "15",
+          "note": "",
+          "date": "2017-04-05"
+        },
+        "firefox": {
+          "s": "y",
+          "v": "44",
+          "note": "",
+          "date": "2016-01-26"
+        },
+        "safari": {
+          "s": "y",
+          "v": "11",
+          "note": "",
+          "date": "2017-09-19"
+        },
+        "ios_safari": {
+          "s": "y",
+          "v": "11",
+          "note": "",
+          "date": "2017-09-19"
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "25",
+          "note": "",
+          "date": "2013-02-27"
+        },
+        "samsung": {
+          "s": "y",
+          "v": "1.5",
+          "note": "",
+          "date": "2013-09-25"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "string",
+    "metric": "Public IPv4 or IPv6",
+    "update": "",
+    "fields": [
+      {
+        "name": "srflx address",
+        "type": "string",
+        "unit": "",
+        "range": "IPv4 or IPv6",
+        "precision": "exact"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can find the public internet address of your real connection, even when some VPNs hide it",
+    "user_action": "Nothing. A page can start a call setup without any pop up",
+    "can": [
+      "Ask an outside server what your public address looks like",
+      "Find your real address if a VPN or proxy does not carry call traffic",
+      "Compare it with your claimed address to spot hiding"
+    ],
+    "cannot": [
+      "Bypass a VPN that carries all traffic, including call traffic",
+      "See your address when you turn on browser protections that block it, such as in Brave or Chrome policies",
+      "See your name or account",
+      "Do this without a script running on the page"
+    ],
+    "reach": 2,
+    "reach_label": "Your public address, if leaked",
+    "differs": ""
+  },
+  "story": {
+    "what_it_is": "A page can ask a helper server for your real public internet address, sometimes beating a VPN.",
+    "icon": "globe",
+    "tags": [
+      "Network",
+      "Privacy",
+      "Calls"
+    ],
+    "marketing": [],
+    "for_you": "You never see it. A page can start a hidden call setup and learn the public address your device really uses. If your VPN only covers some traffic, your real address may leak.",
+    "for_makers": "Makers need this step so calls and games can connect through home routers. It is also used by fraud tools to see past proxies. Privacy tools block or limit it, which can break calls.",
+    "use_cases": [
+      {
+        "type": "video",
+        "example": "Zoom or Google Meet in the browser asks a helper server what public address you appear to have, then shares it so the other person can reach you directly.",
+        "apps": [
+          "Zoom",
+          "Google Meet"
+        ]
+      },
+      {
+        "type": "games",
+        "example": "A browser multiplayer game with direct player links uses it so two players behind home routers can connect, without paying for a relay.",
+        "apps": []
+      },
+      {
+        "type": "security",
+        "example": "A bank's fraud script sets up a hidden call to learn the real address behind a VPN, and flags a mismatch with the connection address.",
+        "apps": []
+      },
+      {
+        "type": "ads",
+        "example": "An ad tech script reads the real public address behind a proxy to catch click fraud from hidden networks.",
+        "apps": []
+      },
+      {
+        "type": "video",
+        "example": "A cloud gaming site uses it to pick the closest game server and the best path for the live video stream.",
+        "apps": [
+          "GeForce NOW"
+        ]
+      },
+      {
+        "type": "shopping",
+        "example": "A fraud tool at checkout compares the address from the call setup with the address on the page request. Different values raise the risk score.",
+        "apps": []
+      },
+      {
+        "type": "developer",
+        "example": "A developer opens browser leak test pages to check if their VPN hides the real address during calls.",
+        "apps": [
+          "BrowserLeaks"
+        ]
+      }
+    ],
+    "risks": [
+      "VPN leak",
+      "Used to unmask visitors"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Brave and Firefox (media.peerconnection.ice.default_address_only) can limit candidates",
+    "Chrome policy setting disable_non_proxied_udp restricts it"
+  ],
+  "scores": {
+    "sensitivity": 2,
+    "utility": 4,
+    "fingerprint_bits": 3,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": "Calling apps",
+    "abuse": "Defeating VPN and proxy privacy"
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "related": [
+    "web.net.webrtc-host-candidates"
+  ],
+  "refs": [
+    {
+      "t": "tool",
+      "label": "BrowserLeaks WebRTC",
+      "url": "https://browserleaks.com/webrtc"
+    },
+    {
+      "t": "rfc",
+      "label": "RFC 8445 ICE",
+      "url": "https://www.rfc-editor.org/rfc/rfc8445"
+    }
+  ],
+  "confidence": "docs"
+}

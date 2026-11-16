@@ -1,0 +1,238 @@
+{
+  "id": "web.notify.background-sync",
+  "name": "Background Sync",
+  "kind": "capability",
+  "group": "notifications-background",
+  "subgroup": "Background",
+  "tags": [
+    "service-worker",
+    "offline"
+  ],
+  "plain": "Retries a request later when the connection returns, after the tab closes.",
+  "meaning": "Lets a site send queued data (a message, a form, a like) once the device is back online even if the person has left. Quiet and automatic, so no prompt is shown.",
+  "lifecycle": [
+    "after-leaving"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "registration.sync.register('tag'); service worker 'sync' event; event.lastChance",
+      "permission_name": "background-sync",
+      "bcd": [
+        "api.SyncManager",
+        "api.SyncEvent"
+      ],
+      "access": {
+        "grant": "none",
+        "prompt_ui": "No prompt; the Permissions API reports background-sync as always granted.",
+        "secure_context": true,
+        "user_gesture": false,
+        "persistence": "Tied to the service worker registration",
+        "revocation": "Unregister the service worker or clear site data",
+        "iframe": "Service worker only",
+        "steps": [
+          "Register a sync tag from the page",
+          "Browser fires sync in the service worker when online",
+          "Worker sends queued request",
+          "On failure the browser retries with backoff, lastChance on the final try"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "49",
+          "note": "",
+          "date": "2016-03-02"
+        },
+        "edge": {
+          "s": "y",
+          "v": "79",
+          "note": "",
+          "date": "2020-01-15"
+        },
+        "firefox": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "safari": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "ios_safari": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "49",
+          "note": "",
+          "date": "2016-03-09"
+        },
+        "samsung": {
+          "s": "y",
+          "v": "5.0",
+          "note": "",
+          "date": "2016-12-15"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "event",
+    "metric": "Sync event with a tag",
+    "update": "when connectivity returns",
+    "fields": [
+      {
+        "name": "retries",
+        "type": "integer",
+        "unit": "count",
+        "range": "3 attempts with exponential backoff in Chrome",
+        "precision": "per tag"
+      },
+      {
+        "name": "tag",
+        "type": "string",
+        "unit": "text",
+        "range": "any, repeated tags merge",
+        "precision": "per origin"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can retry sending queued data after you close the tab, once you are back online",
+    "user_action": "You tap Send or Save while offline, then leave the page",
+    "can": [
+      "Send a saved message, form or like later when your device is online again",
+      "Finish quietly in the background without a pop up",
+      "Retry a few times if sending fails"
+    ],
+    "cannot": [
+      "Run in Firefox or Safari",
+      "Do anything open ended; it only sends items the page already queued",
+      "Keep trying forever, since the browser stops it after a few tries",
+      "Show you any prompt or notice that it ran"
+    ],
+    "reach": 3,
+    "reach_label": "Queued sends, after you leave",
+    "differs": "Chrome, Edge and Samsung Internet only. Firefox, Safari and iPhone browsers do not support it."
+  },
+  "story": {
+    "what_it_is": "A site can retry a failed action later, once your connection returns, even after you close the tab.",
+    "icon": "refresh-cw",
+    "tags": [
+      "Background",
+      "Offline",
+      "Silent"
+    ],
+    "marketing": [
+      {
+        "vendor": "MDN Web Docs",
+        "name": "Background Synchronization API",
+        "pitch": "Defer actions until the user has a stable connection, so work is sent even if the tab closes.",
+        "url": "https://developer.mozilla.org/en-US/docs/Web/API/Background_Synchronization_API"
+      }
+    ],
+    "for_you": "You send a message or form while offline. The site says it will send later. When your phone gets signal, it goes out without reopening the page.",
+    "for_makers": "Makers use it so users never lose a post, order or edit because of a bad connection. It builds trust and cuts support issues. It only runs in Chromium browsers.",
+    "use_cases": [
+      {
+        "type": "social",
+        "example": "You post in a web chat on a subway. The post is queued, and sends itself after you leave the tunnel and close the browser.",
+        "apps": []
+      },
+      {
+        "type": "productivity",
+        "example": "A web note app saves your note locally, and sends it to the cloud when the signal returns.",
+        "apps": [
+          "Google Keep"
+        ]
+      },
+      {
+        "type": "shopping",
+        "example": "A web store queues an order placed in a weak signal area, and completes it later.",
+        "apps": []
+      },
+      {
+        "type": "games",
+        "example": "A browser game sends your final score or save data later, so a lost signal does not erase progress.",
+        "apps": []
+      },
+      {
+        "type": "creative",
+        "example": "A web design tool uploads your latest edits in the background when the network is back.",
+        "apps": [
+          "Figma"
+        ]
+      },
+      {
+        "type": "health",
+        "example": "A web health log syncs your entries to the clinic when the connection returns.",
+        "apps": []
+      },
+      {
+        "type": "analytics",
+        "example": "A web app sends queued usage events later, so measurement does not drop when the user is offline.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Actions happen later",
+      "Only in Chromium"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Not in Firefox or Safari",
+    "Only when the browser process runs and the device is online",
+    "Limited retries"
+  ],
+  "scores": {
+    "sensitivity": 2,
+    "utility": 4,
+    "fingerprint_bits": null,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Offline form submit",
+      "Queued chat messages"
+    ],
+    "abuse": [
+      "Delayed beacon after leaving"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2016-03",
+      "browser": "chrome",
+      "version": "49",
+      "change": "Background Sync ships"
+    }
+  ],
+  "related": [
+    "web.notify.periodic-background-sync"
+  ],
+  "refs": [
+    {
+      "t": "mdn",
+      "label": "MDN Background Synchronization",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/Background_Synchronization_API"
+    },
+    {
+      "t": "spec",
+      "label": "WICG Background Sync",
+      "url": "https://wicg.github.io/background-sync/spec/"
+    }
+  ],
+  "confidence": "docs"
+}

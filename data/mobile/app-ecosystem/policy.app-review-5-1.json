@@ -1,0 +1,188 @@
+{
+  "id": "mob.policy.app-review-5-1",
+  "name": "App Review 5.1.1 and 5.1.2 data rules",
+  "kind": "capability",
+  "group": "app-ecosystem",
+  "subgroup": "App Store rules",
+  "tags": [
+    "app-review",
+    "5-1-1",
+    "5-1-2",
+    "purpose-strings",
+    "data-minimization"
+  ],
+  "plain": "Apple's review rules: collect only needed data, say why, ask consent, and do not track without ATT.",
+  "meaning": "5.1.1 covers privacy policy, consent, data minimization, permission purpose strings and account deletion. 5.1.2 covers data use and sharing, ATT and the ban on building profiles or fingerprinting. Reviews are the real enforcement.",
+  "lifecycle": [
+    "in-session"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "n",
+      "v": "",
+      "permission": "",
+      "protection": "none",
+      "grant": "not-exposed",
+      "prompt_ui": "",
+      "persistence": "",
+      "revocation": "",
+      "store_policy": "",
+      "api_surface": "",
+      "note": "Play User Data policy is the equivalent; see Data safety and permissions entries."
+    },
+    "ios": {
+      "s": "y",
+      "v": "",
+      "permission": "",
+      "protection": "prompt",
+      "grant": "prompt",
+      "prompt_ui": "",
+      "persistence": "",
+      "revocation": "",
+      "store_policy": "5.1.1(i) policy link, (ii) consent, (iii) minimization, (v) account deletion; 5.1.2(i) no sharing without permission, ATT, no fingerprinting",
+      "api_surface": "App Store review, purpose strings in Info.plist",
+      "note": "Guideline text changes several times a year; always check the live page."
+    }
+  },
+  "data": {
+    "type": "object",
+    "metric": "Review outcomes",
+    "update": "per submission",
+    "fields": []
+  },
+  "limits": {
+    "headline": "Can't collect data or track you in ways that break App Store review",
+    "user_action": "Nothing for you to do. The rules are checked when the developer submits the app",
+    "can": [
+      "Collect data it needs, with a privacy policy and your consent",
+      "Explain why in the permission text",
+      "Ask to track across apps through the Allow or Ask App Not to Track box"
+    ],
+    "cannot": [
+      "Build a profile of you or fingerprint your phone",
+      "Collect more than it needs",
+      "Track you after you said no, without being rejected",
+      "Skip account deletion if it has accounts"
+    ],
+    "reach": 1,
+    "reach_label": "Rules, not data",
+    "differs": "These are Apple rules for iPhone. Google Play has its own User Data policy for Android."
+  },
+  "story": {
+    "what_it_is": "Apple's rules on what data an app may collect, how to ask, and how not to track.",
+    "icon": "file-check",
+    "tags": [
+      "Apple rules",
+      "Privacy",
+      "Consent"
+    ],
+    "marketing": [
+      {
+        "vendor": "Apple",
+        "name": "App Review Guidelines, Privacy",
+        "pitch": "Apps must collect only what they need, say why, ask permission and respect tracking choices.",
+        "url": "https://developer.apple.com/app-store/review/guidelines/#privacy"
+      }
+    ],
+    "for_you": "You see clear permission asks, a privacy policy link and a delete button. If an app tries to track you after you said no, it can be removed from the store.",
+    "for_makers": "Reviewers check consent, purpose strings, account deletion and data sharing. Makers must plan data collection around the rules or be rejected, so design and legal teams read these lines closely.",
+    "use_cases": [
+      {
+        "type": "social",
+        "example": "A new social app is rejected until it adds a privacy policy link and a clear reason for each prompt.",
+        "apps": []
+      },
+      {
+        "type": "games",
+        "example": "A game cannot require a login or personal details just to play a single player level.",
+        "apps": [
+          "Candy Crush"
+        ]
+      },
+      {
+        "type": "ads",
+        "example": "An ad network that ignores a No on tracking risks having its apps pulled.",
+        "apps": [
+          "Meta Audience Network"
+        ]
+      },
+      {
+        "type": "kids",
+        "example": "A kids app drops behavioral ads and some analytics to qualify for the Kids category.",
+        "apps": [
+          "Duolingo ABC",
+          "PBS Kids"
+        ]
+      },
+      {
+        "type": "health",
+        "example": "A health app must clearly say it will not sell your health data to advertisers.",
+        "apps": [
+          "Flo"
+        ]
+      },
+      {
+        "type": "payments",
+        "example": "A shopping app is rejected for forcing sign up before showing prices.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Rules differ by store",
+      "Enforcement is uneven"
+    ],
+    "android_note": "Google's Play policies cover similar ground but with different forms.",
+    "ios_note": "iOS rules also ban rebuilding a hidden ID from device signals to track people who said no."
+  },
+  "technical_bounds": [
+    "Human review inconsistency",
+    "Rules evolve"
+  ],
+  "scores": {
+    "sensitivity": 3,
+    "utility": 3,
+    "fingerprint_bits": null,
+    "friction": 3
+  },
+  "value": {
+    "legit_uses": [
+      "Baseline user protection"
+    ],
+    "abuse": [
+      "Reviewer discretion"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2020-06",
+      "platform": "ios",
+      "version": "App Review",
+      "change": "Account deletion and ATT rules added in guidelines"
+    },
+    {
+      "date": "2023-12",
+      "platform": "ios",
+      "version": "App Review",
+      "change": "Privacy manifest and required reason rules referenced"
+    }
+  ],
+  "related": [
+    "mob.policy.account-deletion",
+    "mob.attrib.att"
+  ],
+  "refs": [
+    {
+      "t": "apple",
+      "label": "Apple: App Review Guidelines",
+      "url": "https://developer.apple.com/app-store/review/guidelines/#privacy"
+    }
+  ],
+  "confidence": "docs"
+}

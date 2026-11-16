@@ -1,0 +1,240 @@
+{
+  "id": "web.identity.storage-access-sso",
+  "name": "Storage Access API (for embedded SSO)",
+  "kind": "permission",
+  "group": "identity-auth",
+  "subgroup": "Cross site",
+  "tags": [
+    "cross site"
+  ],
+  "plain": "Lets an embedded iframe ask for its own cookies back on third party pages.",
+  "meaning": "Restores a login cookie inside an embed with a browser prompt. Used for SSO widgets and embedded apps.",
+  "lifecycle": [
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "document.requestStorageAccess(), hasStorageAccess(), requestStorageAccessFor()",
+      "permissions_policy": "storage-access",
+      "bcd": [
+        "api.Document.requestStorageAccess"
+      ],
+      "access": {
+        "grant": "prompt",
+        "prompt_ui": "Browser prompt to let embedded site use cookies on the host site",
+        "secure_context": true,
+        "user_gesture": true,
+        "persistence": "Per origin",
+        "revocation": "Site settings",
+        "iframe": "Same as top level; cross-origin iframes need a permissions policy where listed",
+        "steps": [
+          "Call the API",
+          "Browser applies its access rules",
+          "Page receives the result"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "119",
+          "note": "",
+          "date": "2023-10-31"
+        },
+        "edge": {
+          "s": "y",
+          "v": "85",
+          "note": "",
+          "date": "2020-08-27"
+        },
+        "firefox": {
+          "s": "y",
+          "v": "65",
+          "note": "",
+          "date": "2019-01-29"
+        },
+        "safari": {
+          "s": "y",
+          "v": "11.1",
+          "note": "Client-side storage access is granted per-page (<a href=\"https://developer.mozilla.org/docs/Web/API/Storage_Access_API#how_it_works:~:text=In%20older%20spec%20v",
+          "date": "2018-04-12"
+        },
+        "ios_safari": {
+          "s": "y",
+          "v": "11.3",
+          "note": "Client-side storage access is granted per-page (<a href=\"https://developer.mozilla.org/docs/Web/API/Storage_Access_API#how_it_works:~:text=In%20older%20spec%20v",
+          "date": "2018-03-29"
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "120",
+          "note": "",
+          "date": "2023-12-05"
+        },
+        "samsung": {
+          "s": "y",
+          "v": "25.0",
+          "note": "",
+          "date": "2024-04-24"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "object",
+    "metric": "Lets an embedded iframe ask for its own cookies back on third party pages.",
+    "update": "on demand",
+    "fields": [
+      {
+        "name": "granted",
+        "type": "boolean",
+        "range": "true or false"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can ask to get its own cookies back when shown inside another site",
+    "user_action": "You tap a sign in or sign up button inside an embedded widget",
+    "can": [
+      "Show a browser prompt asking to let the embedded site use its own cookies",
+      "Keep you signed in inside the embed after you allow it",
+      "Support sign in widgets and embedded apps"
+    ],
+    "cannot": [
+      "Use its cookies in the embed before you tap and allow",
+      "See cookies from other sites",
+      "Get the access if you tap Don't allow"
+    ],
+    "reach": 2,
+    "reach_label": "Its own cookies, on that page",
+    "differs": "Chrome, Safari and Firefox all support it, but each decides when to show the prompt or allow it automatically."
+  },
+  "story": {
+    "what_it_is": "An embedded widget on another site can ask to get its own cookies back.",
+    "icon": "cookie",
+    "tags": [
+      "Cookies",
+      "Asks first",
+      "Sign in"
+    ],
+    "marketing": [
+      {
+        "vendor": "Apple WebKit",
+        "name": "Storage Access API",
+        "pitch": "WebKit introduced it so embedded content can ask for cookie access after a person interacts, instead of tracking by default.",
+        "url": "https://webkit.org/blog/8124/introducing-storage-access-api/"
+      },
+      {
+        "vendor": "MDN (standards docs)",
+        "name": "Storage Access API",
+        "pitch": "Describes how an embedded frame can request access to its own cookies, usually after a click and sometimes a prompt.",
+        "url": "https://developer.mozilla.org/en-US/docs/Web/API/Storage_Access_API"
+      }
+    ],
+    "for_you": "A small box appears over an embedded sign in or comment widget asking if the site can use its saved cookies. You may also be asked to click inside the widget first. If you say no, the widget asks you to sign in again.",
+    "for_makers": "Browsers block third party cookies, which breaks embedded logins, comments, video players and chat. This API lets those widgets work again with consent, so a single sign on box inside another site still recognizes the person.",
+    "use_cases": [
+      {
+        "type": "video",
+        "example": "A video site embeds a player on a partner page and asks for access so a subscriber is recognized and ads are skipped.",
+        "apps": [
+          "YouTube embeds"
+        ]
+      },
+      {
+        "type": "social",
+        "example": "A comment or like widget on a news site asks to use its cookies so a person's account shows without signing in again.",
+        "apps": [
+          "Disqus",
+          "Facebook plugins"
+        ]
+      },
+      {
+        "type": "productivity",
+        "example": "A shared office app embedded inside another tool needs it to open the same signed in workspace.",
+        "apps": [
+          "Microsoft 365 embeds"
+        ]
+      },
+      {
+        "type": "games",
+        "example": "A game embedded on a portal site uses it to keep a player signed in to the game publisher's account.",
+        "apps": []
+      },
+      {
+        "type": "shopping",
+        "example": "A payment or login iframe asks for its cookies so a saved card stays available.",
+        "apps": []
+      },
+      {
+        "type": "ads",
+        "example": "Ad and measurement frames also ask for cookies, so browsers show a prompt and block the request unless the person interacts.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Embedded party can track you across sites",
+      "Prompt confusion"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "User gesture needed",
+    "Only the cookie jar of the embedded origin",
+    "Safari asks for prior first party interaction"
+  ],
+  "scores": {
+    "sensitivity": 3,
+    "utility": 4,
+    "fingerprint_bits": null,
+    "friction": 2
+  },
+  "value": {
+    "legit_uses": [
+      "Embedded login"
+    ],
+    "abuse": [
+      "Cross site tracking when granted"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2018",
+      "browser": "safari",
+      "version": "11.1",
+      "change": "Storage Access API ships in Safari"
+    },
+    {
+      "date": "2019",
+      "browser": "firefox",
+      "version": "65",
+      "change": "Firefox support"
+    },
+    {
+      "date": "2023-10",
+      "browser": "chrome",
+      "version": "119",
+      "change": "Chrome support"
+    }
+  ],
+  "refs": [
+    {
+      "t": "mdn",
+      "label": "MDN Storage Access API",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/Storage_Access_API"
+    },
+    {
+      "t": "spec",
+      "label": "Storage Access",
+      "url": "https://privacycg.github.io/storage-access/"
+    }
+  ],
+  "confidence": "verified"
+}

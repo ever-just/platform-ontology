@@ -1,0 +1,211 @@
+{
+  "id": "web.perf.cpu-benchmark",
+  "name": "CPU benchmarking and device class",
+  "kind": "tracking",
+  "group": "timing-performance",
+  "subgroup": "Compute",
+  "tags": [
+    "benchmark",
+    "cpu",
+    "hardwareConcurrency",
+    "wasm"
+  ],
+  "plain": "Runs short compute loops to estimate how fast the device is.",
+  "meaning": "A 50 to 500 ms JS or WebAssembly benchmark, plus worker scaling to test the real core count, ranks a phone or laptop into speed tiers. Used for adaptive quality, bot detection (headless VMs) and as a fingerprint component.",
+  "lifecycle": [
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "performance.now() loops; Worker pools; WebAssembly; Atomics",
+      "access": {
+        "grant": "none",
+        "prompt_ui": "",
+        "secure_context": false,
+        "user_gesture": false,
+        "persistence": "",
+        "revocation": "",
+        "iframe": "",
+        "steps": [
+          "Run fixed compute loops",
+          "Record elapsed time",
+          "Spawn workers to find parallel scaling",
+          "Compare to a device-class table"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "1",
+          "note": "",
+          "date": "2008-12-11"
+        },
+        "edge": {
+          "s": "y",
+          "v": "79",
+          "note": "",
+          "date": "2020-01-15"
+        },
+        "firefox": {
+          "s": "y",
+          "v": "1",
+          "note": "",
+          "date": "2004-11-09"
+        },
+        "safari": {
+          "s": "y",
+          "v": "1",
+          "note": "",
+          "date": "2003-06-23"
+        },
+        "ios_safari": {
+          "s": "y",
+          "v": "1",
+          "note": "",
+          "date": "2007-06-29"
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "1",
+          "note": "",
+          "date": ""
+        },
+        "samsung": {
+          "s": "y",
+          "v": "5.0",
+          "note": "",
+          "date": "2016-12-15"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "float",
+    "metric": "Elapsed ms per benchmark, noise 2 to 10%",
+    "update": "",
+    "fields": [
+      {
+        "name": "score",
+        "type": "float",
+        "unit": "ops/s",
+        "range": "1e6 to 1e9",
+        "precision": "timer and thermal noise"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can run a short speed test to guess how fast your device is",
+    "user_action": "Nothing. It happens when the page loads, and it takes about 50 to 500 ms",
+    "can": [
+      "Run a short loop and time it",
+      "Check how many processor cores really work",
+      "Sort your device into a slow, medium or fast tier",
+      "Spot bots and change video or game quality to match"
+    ],
+    "cannot": [
+      "Ask permission first",
+      "See your files",
+      "Name your exact device model",
+      "Know who you are by itself"
+    ],
+    "reach": 2,
+    "reach_label": "Silent, short speed test",
+    "differs": ""
+  },
+  "story": {
+    "what_it_is": "A script runs short math loops to estimate how fast and how powerful your device is.",
+    "icon": "gauge",
+    "tags": [
+      "Silent",
+      "Speed",
+      "Fingerprinting"
+    ],
+    "marketing": [],
+    "for_you": "You see nothing, except maybe a tiny delay. The site learns whether your device is slow or fast and may change what it sends you. A fast device may get a richer page.",
+    "for_makers": "Sites use it to serve lighter pages on weak phones. Fraud tools use it to tell a real phone from a busy cloud server. Trackers use it to sort devices into classes.",
+    "use_cases": [
+      {
+        "type": "games",
+        "example": "A browser game tests your speed once, then picks the right graphics quality.",
+        "apps": []
+      },
+      {
+        "type": "video",
+        "example": "A streaming site picks the video quality that your device can decode without stutter.",
+        "apps": []
+      },
+      {
+        "type": "shopping",
+        "example": "A big shop serves a lighter page with fewer scripts to a slow phone.",
+        "apps": []
+      },
+      {
+        "type": "security",
+        "example": "A bot detector sees that a batch of visits all run at the same unusual speed, a sign of one server farm.",
+        "apps": []
+      },
+      {
+        "type": "ads",
+        "example": "An ad tech script sorts you into a device class by speed, which helps set ad quality and price.",
+        "apps": []
+      },
+      {
+        "type": "developer",
+        "example": "A web team gathers speed classes from real visitors to learn what it must support.",
+        "apps": [
+          "Vercel Analytics",
+          "SpeedCurve"
+        ]
+      },
+      {
+        "type": "education",
+        "example": "An online exam site checks the device is fast enough to run the test without freezing.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Reveals device age",
+      "Used to sort people"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Timer coarsening adds noise",
+    "Thermal throttling and background tabs distort results"
+  ],
+  "scores": {
+    "sensitivity": 2,
+    "utility": 3,
+    "fingerprint_bits": 3,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": "Adaptive streaming and graphics quality",
+    "abuse": "Device tier, VM and bot detection, price discrimination"
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "related": [
+    "web.perf.timer-precision",
+    "web.perf.crystal-timing-fingerprint"
+  ],
+  "refs": [
+    {
+      "t": "paper",
+      "label": "Mowery et al., Heterogeneity in JS performance (W2SP 2011)",
+      "url": "https://hovav.net/ucsd/dist/jspriv.pdf"
+    },
+    {
+      "t": "github",
+      "label": "FingerprintJS",
+      "url": "https://github.com/fingerprintjs/fingerprintjs"
+    }
+  ],
+  "confidence": "docs"
+}

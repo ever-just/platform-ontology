@@ -1,0 +1,241 @@
+{
+  "id": "web.actions.drag-and-drop",
+  "name": "Drag and drop",
+  "kind": "action",
+  "group": "page-actions",
+  "subgroup": "Interaction",
+  "tags": [
+    "drag",
+    "drop",
+    "datatransfer"
+  ],
+  "plain": "Lets people drag items within or into the page, and lets the page start drags.",
+  "meaning": "A site can start a drag with text, links or files, and react when people drop things on it. Data in a drag is readable only on drop, so the page cannot spy on a drag it does not own.",
+  "lifecycle": [
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "dragstart, dragover, drop events; DataTransfer; draggable=true",
+      "bcd": [
+        "api.DataTransfer",
+        "api.HTMLElement.dragstart_event",
+        "api.DataTransferItem.getAsFileSystemHandle"
+      ],
+      "access": {
+        "grant": "none",
+        "prompt_ui": "None (no browser prompt)",
+        "secure_context": false,
+        "user_gesture": false,
+        "activation": "none",
+        "persistence": "Per drag operation",
+        "revocation": "Nothing to revoke (no permission is stored)",
+        "iframe": "Dragging across iframes allowed; dropped data readable only in the drop handler",
+        "steps": [
+          "Person drags an item over the page",
+          "dragover must call preventDefault to accept",
+          "drop fires with dataTransfer"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "3",
+          "note": "",
+          "date": "2009-09-15"
+        },
+        "edge": {
+          "s": "y",
+          "v": "12",
+          "note": "",
+          "date": "2015-07-29"
+        },
+        "firefox": {
+          "s": "y",
+          "v": "3.5",
+          "note": "",
+          "date": "2009-06-30"
+        },
+        "safari": {
+          "s": "y",
+          "v": "4",
+          "note": "",
+          "date": "2009-06-08"
+        },
+        "ios_safari": {
+          "s": "y",
+          "v": "3.2",
+          "note": "All iOS browsers use WebKit",
+          "date": "2010-04-03"
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "18",
+          "note": "",
+          "date": "2012-06-27"
+        },
+        "samsung": {
+          "s": "y",
+          "v": "1.0",
+          "note": "",
+          "date": "2013-04-27"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "none",
+    "metric": "",
+    "update": "",
+    "fields": []
+  },
+  "limits": {
+    "headline": "Can let you drag items on the page, or drop files onto it",
+    "user_action": "You drag a file, text or picture onto the page, or drag an item inside it.",
+    "can": [
+      "Accept files you drop onto the page, such as photos or documents",
+      "Let you rearrange items by dragging, like cards or lists",
+      "Start a drag so you can pull text or an image out of the page"
+    ],
+    "cannot": [
+      "See your files before you drop them",
+      "See files you did not drop",
+      "Browse your folders on its own",
+      "Take over dragging from other apps or windows"
+    ],
+    "reach": 1,
+    "reach_label": "Only what you drop",
+    "differs": ""
+  },
+  "story": {
+    "what_it_is": "People can drag things around the page, or drop files onto it.",
+    "icon": "move",
+    "tags": [
+      "Touch and mouse",
+      "No prompt",
+      "Creative"
+    ],
+    "marketing": [
+      {
+        "vendor": "Mozilla",
+        "name": "HTML Drag and Drop API",
+        "pitch": "MDN explains that pages can make items draggable and react when you drop files or text on them.",
+        "url": "https://developer.mozilla.org/en-US/docs/Web/API/HTML_Drag_and_Drop_API"
+      }
+    ],
+    "for_you": "You pick up a card, a file or a photo with your mouse or finger and drop it somewhere else. It feels natural, so you rarely think about it.",
+    "for_makers": "Makers use it to make web apps feel like real software: reordering lists, uploading by dropping a file, building layouts. It also boosts upload completion because dropping is easier than browsing folders.",
+    "use_cases": [
+      {
+        "type": "productivity",
+        "example": "You drag a task card from To Do to Done in a project board.",
+        "apps": [
+          "Trello",
+          "Notion",
+          "Jira"
+        ]
+      },
+      {
+        "type": "creative",
+        "example": "You drop a photo onto a design canvas and it appears where you let go.",
+        "apps": [
+          "Figma",
+          "Canva"
+        ]
+      },
+      {
+        "type": "games",
+        "example": "You drag pieces on a browser puzzle or card game, like moving a card in solitaire.",
+        "apps": []
+      },
+      {
+        "type": "messaging",
+        "example": "You drag a file into a chat window to send it.",
+        "apps": [
+          "Slack",
+          "Gmail"
+        ]
+      },
+      {
+        "type": "media",
+        "example": "You drag songs into a playlist order on a web music player.",
+        "apps": [
+          "Spotify web player"
+        ]
+      },
+      {
+        "type": "shopping",
+        "example": "You drag a product into a wish list or onto a compare bar.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Accidental drops",
+      "Dropped files read by the page"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "dataTransfer is in protected mode outside drop: types are visible, data is not readable until drop",
+    "Cannot start an OS file drag from the page except the Chrome only DownloadURL type trick",
+    "Dropped files expose name, size, type, lastModified; no full path",
+    "Touch support: iOS Safari 11 (iPad and iPhone); Android Chrome supports long-press drag since Chrome 96 on some devices",
+    "Drag image limited to a rendered element or image; size capped by the OS"
+  ],
+  "scores": {
+    "sensitivity": 1,
+    "utility": 4,
+    "fingerprint_bits": null,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "File upload zones",
+      "Kanban boards",
+      "Editors"
+    ],
+    "abuse": [
+      "Drop-zone social engineering (fake upload prompts)",
+      "Exfil of dropped sensitive files into the wrong site"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2017-09",
+      "browser": "safari",
+      "version": "11",
+      "change": "Touch drag and drop on iOS 11 and iPadOS"
+    },
+    {
+      "date": "2020-05",
+      "browser": "chrome",
+      "version": "86",
+      "change": "DataTransferItem.getAsFileSystemHandle for dropped files"
+    }
+  ],
+  "related": [
+    "web.files.drop-files",
+    "web.files.file-input"
+  ],
+  "refs": [
+    {
+      "t": "mdn",
+      "label": "MDN HTML Drag and Drop API",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/HTML_Drag_and_Drop_API"
+    },
+    {
+      "t": "spec",
+      "label": "HTML Standard: drag and drop",
+      "url": "https://html.spec.whatwg.org/multipage/dnd.html"
+    }
+  ],
+  "confidence": "docs"
+}

@@ -1,0 +1,230 @@
+{
+  "id": "web.actions.dialogs",
+  "name": "alert, confirm and prompt dialogs",
+  "kind": "action",
+  "group": "page-actions",
+  "subgroup": "Windows and navigation",
+  "tags": [
+    "alert",
+    "confirm",
+    "prompt",
+    "modal",
+    "scam"
+  ],
+  "plain": "Blocks the page with a modal alert, confirm or prompt box.",
+  "meaning": "A site can interrupt the person with a message or a text box. Dialogs freeze the page script, are easy to abuse, and are blocked in cross-origin iframes and background tabs.",
+  "lifecycle": [
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "window.alert(), window.confirm(), window.prompt()",
+      "bcd": [
+        "api.Window.alert",
+        "api.Window.confirm",
+        "api.Window.prompt"
+      ],
+      "access": {
+        "grant": "none",
+        "prompt_ui": "None (no browser prompt)",
+        "secure_context": false,
+        "user_gesture": false,
+        "activation": "none",
+        "persistence": "One-shot; Chrome adds Prevent this page from creating more dialogs after repeats",
+        "revocation": "Nothing to revoke (no permission is stored)",
+        "iframe": "Blocked in cross-origin iframes in Chrome 92 and later; sandboxed frames need allow-modals",
+        "steps": [
+          "Script calls alert/confirm/prompt",
+          "Browser shows modal dialog and blocks the page thread",
+          "Return value goes back to script"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "1",
+          "note": "",
+          "date": "2008-12-11"
+        },
+        "edge": {
+          "s": "y",
+          "v": "12",
+          "note": "",
+          "date": "2015-07-29"
+        },
+        "firefox": {
+          "s": "y",
+          "v": "1",
+          "note": "",
+          "date": "2004-11-09"
+        },
+        "safari": {
+          "s": "y",
+          "v": "1",
+          "note": "",
+          "date": "2003-06-23"
+        },
+        "ios_safari": {
+          "s": "y",
+          "v": "1",
+          "note": "All iOS browsers use WebKit",
+          "date": "2007-06-29"
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "18",
+          "note": "",
+          "date": "2012-06-27"
+        },
+        "samsung": {
+          "s": "y",
+          "v": "1.0",
+          "note": "",
+          "date": "2013-04-27"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "none",
+    "metric": "",
+    "update": "",
+    "fields": []
+  },
+  "limits": {
+    "headline": "Can freeze the page with a pop up message box until you answer it",
+    "user_action": "Nothing. It happens when the page runs a script, or after an action like Delete.",
+    "can": [
+      "Show an alert, a yes or no question or a box asking you to type text",
+      "Pause the page until you tap OK or Cancel",
+      "Ask Are you sure you want to leave? before you close the tab"
+    ],
+    "cannot": [
+      "Show the box on tabs you are not looking at in most browsers",
+      "Pause other tabs or other apps",
+      "Fill your screen with endless boxes; browsers let you block more from that page",
+      "See what you type into other sites"
+    ],
+    "reach": 1,
+    "reach_label": "One page, one box at a time",
+    "differs": ""
+  },
+  "story": {
+    "what_it_is": "A site can pop up a message box that freezes the page until you click.",
+    "icon": "message-square-warning",
+    "tags": [
+      "Pop ups",
+      "Annoying",
+      "Scam risk"
+    ],
+    "marketing": [],
+    "for_you": "You see a grey box that says something like 'Leave site?' or 'Are you sure?' and the page stops until you answer. Scam sites use fake versions to scare you.",
+    "for_makers": "Makers use these for the simplest possible yes or no and for quick debugging. Browsers now limit them, so serious apps build their own dialogs instead.",
+    "use_cases": [
+      {
+        "type": "productivity",
+        "example": "An online editor asks 'Discard unsaved changes?' when you try to close the tab.",
+        "apps": [
+          "Google Docs",
+          "WordPress editor"
+        ]
+      },
+      {
+        "type": "shopping",
+        "example": "A checkout page asks 'Are you sure you want to leave? Your cart will be lost.'",
+        "apps": []
+      },
+      {
+        "type": "security",
+        "example": "A fake 'Your computer is infected, call this number' alert loops on a scam site until you force quit.",
+        "apps": []
+      },
+      {
+        "type": "developer",
+        "example": "A developer drops quick alert boxes into code to see a value while testing.",
+        "apps": []
+      },
+      {
+        "type": "games",
+        "example": "A simple browser game confirms 'Restart level?' before wiping your progress.",
+        "apps": []
+      },
+      {
+        "type": "enterprise",
+        "example": "An old internal admin tool asks 'Delete 40 records?' with a plain browser confirm box.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Scareware pop ups",
+      "Trapping the tab"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Cross-origin iframe dialogs are blocked in Chrome 92 (and Safari, Firefox have similar restrictions); same-origin iframes still allowed",
+    "Dialogs from background tabs are queued until the tab is foregrounded in Chrome",
+    "Chrome shows a Prevent this page from creating more dialogs checkbox on repeated dialogs",
+    "Dialog text is plain text, no HTML; Chrome shows the origin in the title",
+    "Modal blocks the whole event loop of the tab (and other same-process tabs may freeze)"
+  ],
+  "scores": {
+    "sensitivity": 1,
+    "utility": 2,
+    "fingerprint_bits": null,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Simple debugging",
+      "Legacy confirm before delete"
+    ],
+    "abuse": [
+      "Scam warnings (fake virus alerts)",
+      "Dialog loops that trap the tab"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2021-07",
+      "browser": "chrome",
+      "version": "92",
+      "change": "Cross-origin iframe alert, confirm, prompt blocked"
+    },
+    {
+      "date": "2023-09",
+      "browser": "firefox",
+      "version": "117",
+      "change": "Dialog from background tab queued; tab-modal dialogs introduced earlier"
+    }
+  ],
+  "related": [
+    "web.actions.beforeunload"
+  ],
+  "refs": [
+    {
+      "t": "mdn",
+      "label": "MDN alert",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/Window/alert"
+    },
+    {
+      "t": "chromestatus",
+      "label": "Chrome cross-origin iframe dialog removal",
+      "url": "https://chromestatus.com/feature/5148698084376576"
+    },
+    {
+      "t": "spec",
+      "label": "HTML Standard: user prompts",
+      "url": "https://html.spec.whatwg.org/multipage/timers-and-user-prompts.html#user-prompts"
+    }
+  ],
+  "confidence": "docs"
+}

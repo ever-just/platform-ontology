@@ -1,0 +1,207 @@
+{
+  "id": "mob.telephony.call-log",
+  "name": "Call log",
+  "kind": "permission",
+  "group": "telephony-sms",
+  "subgroup": "Calls",
+  "tags": [
+    "runtime-permission",
+    "call-log",
+    "play-restricted"
+  ],
+  "plain": "Lets the app read or write the list of calls made and received.",
+  "meaning": "Shows who a person calls, when and for how long: a full social and professional graph. Google Play restricts it to default dialer apps.",
+  "lifecycle": [
+    "in-session"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "f",
+      "v": "9",
+      "api": 28,
+      "permission": "READ_CALL_LOG, WRITE_CALL_LOG, PROCESS_OUTGOING_CALLS (deprecated)",
+      "protection": "dangerous",
+      "grant": "prompt",
+      "prompt_ui": "Allow or Don't allow",
+      "persistence": "Until revoked",
+      "revocation": "Settings > Apps > Permissions > Call logs",
+      "store_policy": "Play: default handler only; a declaration form is required; exceptions are narrow",
+      "api_surface": "CallLog.Calls",
+      "note": "Moved to its own CALL_LOG group in Android 9 (API 28); Play restricted it in 2019."
+    },
+    "ios": {
+      "s": "n",
+      "v": "",
+      "permission": "",
+      "protection": "none",
+      "grant": "not-exposed",
+      "prompt_ui": "none",
+      "persistence": "none",
+      "revocation": "",
+      "store_policy": "App Review 5.1.1",
+      "api_surface": "CallKit CXCallObserver (state only)",
+      "note": "iOS has no call history API for third-party apps; CallKit gives live call state and call directory extension for blocking only."
+    }
+  },
+  "web_equivalents": [
+    "web.notexposed.call-log-sms"
+  ],
+  "data": {
+    "type": "list",
+    "metric": "Call entries",
+    "update": "on demand",
+    "fields": [
+      {
+        "name": "entries",
+        "type": "integer",
+        "unit": "calls",
+        "range": "0 to 500 on many devices",
+        "precision": "exact"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can see your call history on Android, only for apps Google approves",
+    "user_action": "You tap Allow when your dialer or calling app asks about call logs",
+    "can": [
+      "List who you called, when and for how long",
+      "Add or remove call log entries (Android)",
+      "Watch live call state on iPhone, without history",
+      "Block known numbers through a call directory extension (iPhone)"
+    ],
+    "cannot": [
+      "See your call history on iPhone",
+      "Be listed on Google Play unless it is a default dialer or similar handler",
+      "Intercept outgoing calls with the old method; it is deprecated"
+    ],
+    "reach": 4,
+    "reach_label": "Full call history, once allowed",
+    "differs": "Android has a call log permission group limited by Google Play; iPhone has no call history for apps."
+  },
+  "story": {
+    "what_it_is": "Lets the app read or write the list of calls you made and received.",
+    "icon": "phone-call",
+    "tags": [
+      "Calls",
+      "Permission",
+      "Sensitive"
+    ],
+    "marketing": [],
+    "for_you": "A prompt asks to access your call history. If you agree, the app can see who you called, when and for how long. It can also add or delete calls.",
+    "for_makers": "The call log is a map of who matters to you. Dialer and backup apps need it. Google Play limits it to apps whose main job is calls, because it was abused for growth and ads.",
+    "use_cases": [
+      {
+        "type": "utilities",
+        "example": "A dialer app shows your recent calls and lets you call back in a tap.",
+        "apps": [
+          "Google Phone"
+        ]
+      },
+      {
+        "type": "security",
+        "example": "A spam call blocker checks the log to see if you ever spoke to a number.",
+        "apps": [
+          "Truecaller"
+        ]
+      },
+      {
+        "type": "productivity",
+        "example": "A backup app saves your call history before a phone swap.",
+        "apps": [
+          "SMS Backup and Restore"
+        ]
+      },
+      {
+        "type": "enterprise",
+        "example": "A sales app logs calls to customers automatically.",
+        "apps": [
+          "Salesforce"
+        ]
+      },
+      {
+        "type": "health",
+        "example": "A family care app shows an elder's calls to a caregiver.",
+        "apps": []
+      },
+      {
+        "type": "ads",
+        "example": "An ad SDK reads calls to guess your contacts and is banned by store rules.",
+        "apps": []
+      },
+      {
+        "type": "fitness",
+        "example": "A work tracker counts hours on calls.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Shows who you talk to",
+      "Used for ads in the past",
+      "Time and duration of calls"
+    ],
+    "android_note": "Android moved the log to its own permission group in version 9, and Google Play restricted it in 2019.",
+    "ios_note": "iPhone gives apps no call history. It only shows live call state and a way to block numbers."
+  },
+  "technical_bounds": [
+    "Play default handler rule blocks most apps",
+    "iOS has no call log API"
+  ],
+  "scores": {
+    "sensitivity": 5,
+    "utility": 2,
+    "fingerprint_bits": null,
+    "friction": 3
+  },
+  "value": {
+    "legit_uses": [
+      "Dialer apps",
+      "Backup"
+    ],
+    "abuse": [
+      "Social graph harvesting"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2018-08",
+      "platform": "android",
+      "version": "9 (API 28)",
+      "change": "Call log split into its own permission group"
+    },
+    {
+      "date": "2019-03",
+      "platform": "android",
+      "version": "Play policy",
+      "change": "Google Play restricted READ_CALL_LOG and SMS permissions to default handlers"
+    }
+  ],
+  "related": [
+    "mob.telephony.sms-read",
+    "mob.telephony.phone-state"
+  ],
+  "refs": [
+    {
+      "t": "android",
+      "label": "Android 9: Call log permission group",
+      "url": "https://developer.android.com/about/versions/pie/android-9.0-changes-28#privacy-changes-all"
+    },
+    {
+      "t": "policy",
+      "label": "Google Play: Use of SMS or Call Log permission groups",
+      "url": "https://support.google.com/googleplay/android-developer/answer/10208820"
+    },
+    {
+      "t": "apple",
+      "label": "Apple: CallKit",
+      "url": "https://developer.apple.com/documentation/callkit"
+    }
+  ],
+  "confidence": "docs"
+}

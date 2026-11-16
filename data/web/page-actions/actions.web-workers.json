@@ -1,0 +1,244 @@
+{
+  "id": "web.actions.web-workers",
+  "name": "Web Workers",
+  "kind": "capability",
+  "group": "page-actions",
+  "subgroup": "Compute",
+  "tags": [
+    "worker",
+    "sharedworker",
+    "threads"
+  ],
+  "plain": "Runs scripts on background threads with no prompt.",
+  "meaning": "A site can use multiple CPU cores while the tab is open. Workers cannot touch the DOM but can run timers, network and compute, which is how miners and heavy trackers hide from the UI thread.",
+  "lifecycle": [
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "new Worker(url, {type:'module'}); SharedWorker; navigator.hardwareConcurrency",
+      "bcd": [
+        "api.Worker",
+        "api.SharedWorker",
+        "api.Navigator.hardwareConcurrency"
+      ],
+      "access": {
+        "grant": "none",
+        "prompt_ui": "None (no browser prompt)",
+        "secure_context": false,
+        "user_gesture": false,
+        "activation": "none",
+        "persistence": "Dedicated workers end with the page; shared workers end when the last client closes",
+        "revocation": "Nothing to revoke (no permission is stored)",
+        "iframe": "Same-origin script only; module workers supported; blob: workers allowed",
+        "steps": [
+          "Create Worker",
+          "Post messages",
+          "Terminate on close"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "2",
+          "note": "",
+          "date": "2009-05-21"
+        },
+        "edge": {
+          "s": "y",
+          "v": "12",
+          "note": "",
+          "date": "2015-07-29"
+        },
+        "firefox": {
+          "s": "y",
+          "v": "3.5",
+          "note": "",
+          "date": "2009-06-30"
+        },
+        "safari": {
+          "s": "y",
+          "v": "4",
+          "note": "",
+          "date": "2009-06-08"
+        },
+        "ios_safari": {
+          "s": "y",
+          "v": "5",
+          "note": "All iOS browsers use WebKit",
+          "date": "2011-10-12"
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "18",
+          "note": "",
+          "date": "2012-06-27"
+        },
+        "samsung": {
+          "s": "y",
+          "v": "1.0",
+          "note": "",
+          "date": "2013-04-27"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "none",
+    "metric": "",
+    "update": "",
+    "fields": []
+  },
+  "limits": {
+    "headline": "Can run extra code in the background while the page is open",
+    "user_action": "Nothing. It happens when the page loads or starts a heavy job.",
+    "can": [
+      "Run heavy work on a second thread so the page stays smooth",
+      "Keep a worker running while the tab is open",
+      "Run several workers at once"
+    ],
+    "cannot": [
+      "Change what is on the page directly",
+      "Keep running after you close the tab",
+      "Use unlimited power; browsers slow hidden tabs",
+      "Reach other sites' workers or data"
+    ],
+    "reach": 2,
+    "reach_label": "While the page is open",
+    "differs": ""
+  },
+  "story": {
+    "what_it_is": "A page can run extra background workers, with no prompt.",
+    "icon": "cpu",
+    "tags": [
+      "Power",
+      "Silent",
+      "Multitasking"
+    ],
+    "marketing": [
+      {
+        "vendor": "Mozilla",
+        "name": "Web Workers API",
+        "pitch": "MDN says workers let a page run scripts in background threads so the main page stays responsive.",
+        "url": "https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API"
+      }
+    ],
+    "for_you": "You never see them. Heavy tasks like photo editing run in the background so the page does not freeze while you type.",
+    "for_makers": "Makers use them to keep pages smooth while crunching data. Bad actors use the same trick to mine crypto in your tab without telling you.",
+    "use_cases": [
+      {
+        "type": "creative",
+        "example": "A photo editor applies filters in a worker so sliders stay smooth.",
+        "apps": [
+          "Photopea",
+          "Squoosh"
+        ]
+      },
+      {
+        "type": "games",
+        "example": "A browser game runs physics and AI on a worker so the frame rate does not drop.",
+        "apps": []
+      },
+      {
+        "type": "video",
+        "example": "A video call tool blurs your background in a worker.",
+        "apps": [
+          "Google Meet",
+          "Zoom web"
+        ]
+      },
+      {
+        "type": "security",
+        "example": "A hidden crypto miner runs in a worker in a shady site tab.",
+        "apps": []
+      },
+      {
+        "type": "productivity",
+        "example": "A web spreadsheet recalculates in a worker so typing stays quick.",
+        "apps": [
+          "Google Sheets"
+        ]
+      },
+      {
+        "type": "analytics",
+        "example": "Analytics tools process events in a worker to avoid slowing the page.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Hidden crypto mining",
+      "Battery drain"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Firefox limits to 512 workers per domain (dom.workers.maxPerDomain); Chrome has no fixed cap but memory limited",
+    "Background tabs throttle timers in workers just like pages; intensive throttling applies",
+    "SharedWorker returned to Android Chrome at version 148 (BCD); long absent on mobile",
+    "No access to window, document or localStorage; IndexedDB, fetch, WebSockets work",
+    "Worker script must be same origin (or data via importScripts with CORS)"
+  ],
+  "scores": {
+    "sensitivity": 1,
+    "utility": 5,
+    "fingerprint_bits": 3,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Off thread compute",
+      "Streaming parsers",
+      "Offline sync"
+    ],
+    "abuse": [
+      "In-browser miners",
+      "Parallel fingerprint probing",
+      "Background brute force"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2010-01",
+      "browser": "firefox",
+      "version": "3.5",
+      "change": "Dedicated Web Workers"
+    },
+    {
+      "date": "2021-01",
+      "browser": "chrome",
+      "version": "80",
+      "change": "Module workers ship"
+    },
+    {
+      "date": "2023-03",
+      "browser": "safari",
+      "version": "15",
+      "change": "Module workers in Safari"
+    }
+  ],
+  "related": [
+    "web.actions.service-worker-cache",
+    "web.actions.webassembly"
+  ],
+  "refs": [
+    {
+      "t": "mdn",
+      "label": "MDN Web Workers API",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API"
+    },
+    {
+      "t": "spec",
+      "label": "HTML Standard: workers",
+      "url": "https://html.spec.whatwg.org/multipage/workers.html"
+    }
+  ],
+  "confidence": "docs"
+}

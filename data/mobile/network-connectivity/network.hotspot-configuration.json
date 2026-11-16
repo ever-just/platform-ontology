@@ -1,0 +1,208 @@
+{
+  "id": "mob.network.hotspot-configuration",
+  "name": "Join or suggest a Wi-Fi network",
+  "kind": "capability",
+  "group": "network-connectivity",
+  "subgroup": "Network",
+  "tags": [
+    "wifi",
+    "entitlement",
+    "provisioning"
+  ],
+  "plain": "Adds a Wi-Fi network to the phone, usually to onboard a smart device.",
+  "meaning": "Changes network state, so both OSes ask the person. Apple needs a capability and Android needs a normal permission.",
+  "lifecycle": [
+    "in-session"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "y",
+      "v": "10",
+      "api": 29,
+      "permission": "CHANGE_WIFI_STATE (normal), NEARBY_WIFI_DEVICES for P2P (API 33)",
+      "protection": "normal",
+      "grant": "prompt",
+      "prompt_ui": "Network suggestion approval notification or specifier dialog",
+      "persistence": "Until removed",
+      "revocation": "Settings > Network > Wi-Fi",
+      "store_policy": "",
+      "api_surface": "WifiNetworkSuggestion, WifiNetworkSpecifier",
+      "note": "Specifier is temporary and local only"
+    },
+    "ios": {
+      "s": "f",
+      "v": "11",
+      "permission": "com.apple.developer.networking.HotspotConfiguration",
+      "protection": "entitlement",
+      "grant": "entitlement",
+      "prompt_ui": "Join Wi-Fi Network prompt",
+      "persistence": "Until removed",
+      "revocation": "Settings > Wi-Fi",
+      "store_policy": "",
+      "api_surface": "NEHotspotConfigurationManager.apply",
+      "note": "Can join SSIDs with a joinOnce option"
+    }
+  },
+  "web_equivalents": [
+    "web.notexposed.wifi-ssid"
+  ],
+  "data": {
+    "type": "object",
+    "metric": "Configuration result",
+    "update": "once",
+    "fields": [
+      {
+        "name": "ssid",
+        "type": "string",
+        "unit": "",
+        "range": "up to 32 bytes",
+        "precision": ""
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can add a Wi-Fi network to your phone, usually to set up a smart device",
+    "user_action": "You tap Connect or Set up device and approve the Wi-Fi join prompt",
+    "can": [
+      "Suggest or add a Wi-Fi network by name and password",
+      "Join a device's setup Wi-Fi once, such as a speaker or camera",
+      "Connect to a temporary local network on Android",
+      "Join then leave the network on iPhone with the join once option"
+    ],
+    "cannot": [
+      "Add a network on iPhone without the Apple Hotspot entitlement",
+      "See the networks you saved before",
+      "Keep the temporary Android network after the app is done",
+      "Join without your approval at the prompt"
+    ],
+    "reach": 2,
+    "reach_label": "One network, with your approval",
+    "differs": "iPhone needs a special Apple entitlement. Android suggestions are temporary and local to the app."
+  },
+  "story": {
+    "what_it_is": "An app adds a Wi-Fi network to your phone, often to set up a smart device.",
+    "icon": "wifi",
+    "tags": [
+      "Wi-Fi",
+      "Asks first",
+      "Setup"
+    ],
+    "marketing": [
+      {
+        "vendor": "Apple",
+        "name": "Hotspot Configuration",
+        "pitch": "Apple lets apps add a Wi-Fi network after you approve, which makes smart device setup faster.",
+        "url": "https://developer.apple.com/documentation/networkextension/nehotspotconfiguration"
+      },
+      {
+        "vendor": "Google",
+        "name": "Wi-Fi suggestions",
+        "pitch": "Android lets apps suggest Wi-Fi networks to join after you approve.",
+        "url": "https://developer.android.com/develop/connectivity/wifi/wifi-suggest"
+      }
+    ],
+    "for_you": "You see a prompt asking whether to join a network. You tap Join and the phone connects. It is how a new smart plug or speaker gets onto your Wi-Fi without typing a long password.",
+    "for_makers": "Makers use it to make setup of smart devices feel like magic. A bad app could try to push your phone onto a rogue network, so both platforms ask first and show the network name.",
+    "use_cases": [
+      {
+        "type": "smart-home",
+        "example": "A smart plug app joins the plug's setup network, then sends your home Wi-Fi to it.",
+        "apps": [
+          "TP-Link Kasa",
+          "Wyze"
+        ]
+      },
+      {
+        "type": "smart-home",
+        "example": "A smart speaker app connects your phone to the new speaker during setup.",
+        "apps": [
+          "Sonos",
+          "Google Home"
+        ]
+      },
+      {
+        "type": "travel",
+        "example": "A hotel app adds the hotel Wi-Fi so you connect on arrival.",
+        "apps": []
+      },
+      {
+        "type": "automotive",
+        "example": "A car app joins your car's Wi-Fi to download maps and updates.",
+        "apps": []
+      },
+      {
+        "type": "wearables",
+        "example": "A camera or drone app joins the device's own network to stream the video.",
+        "apps": [
+          "DJI Fly",
+          "GoPro Quik"
+        ]
+      },
+      {
+        "type": "security",
+        "example": "A bad app tries to add a rogue network, which is why a prompt shows the name.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Forced join of a rogue network",
+      "Phone drops its normal Wi-Fi"
+    ],
+    "android_note": "Android uses suggestions or a connect request that the person must approve.",
+    "ios_note": "iPhone needs the Hotspot Configuration capability and shows a join prompt."
+  },
+  "technical_bounds": [
+    "Prompt shown for every join"
+  ],
+  "scores": {
+    "sensitivity": 3,
+    "utility": 3,
+    "fingerprint_bits": null,
+    "friction": 2
+  },
+  "value": {
+    "legit_uses": [
+      "Smart device onboarding"
+    ],
+    "abuse": [
+      "Forcing rogue network join"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2019-09",
+      "platform": "android",
+      "version": "10 (API 29)",
+      "change": "Network suggestions and specifier"
+    },
+    {
+      "date": "2017-09",
+      "platform": "ios",
+      "version": "iOS 11",
+      "change": "NEHotspotConfiguration introduced"
+    }
+  ],
+  "related": [
+    "mob.network.wifi-info"
+  ],
+  "refs": [
+    {
+      "t": "apple",
+      "label": "Apple: NEHotspotConfiguration",
+      "url": "https://developer.apple.com/documentation/networkextension/nehotspotconfiguration"
+    },
+    {
+      "t": "android",
+      "label": "Android: Wi-Fi suggestions",
+      "url": "https://developer.android.com/develop/connectivity/wifi/wifi-suggest"
+    }
+  ],
+  "confidence": "docs"
+}

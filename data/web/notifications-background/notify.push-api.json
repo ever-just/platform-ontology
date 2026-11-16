@@ -1,0 +1,355 @@
+{
+  "id": "web.notify.push-api",
+  "name": "Push API (Web Push)",
+  "kind": "permission",
+  "group": "notifications-background",
+  "subgroup": "Push",
+  "tags": [
+    "vapid",
+    "service-worker",
+    "web-push"
+  ],
+  "plain": "Lets a server wake the site in the background and show a notification.",
+  "meaning": "Reaches the person after they leave the site. Every message must show a visible notification (userVisibleOnly), but the site learns when a device is online and which browser vendor push service it uses.",
+  "lifecycle": [
+    "after-leaving"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "registration.pushManager.subscribe({userVisibleOnly: true, applicationServerKey}); push event; subscription.endpoint, getKey('p256dh'|'auth')",
+      "permission_name": "push (plus notifications)",
+      "bcd": [
+        "api.PushManager",
+        "api.PushManager.subscribe",
+        "api.PushSubscription",
+        "api.PushEvent"
+      ],
+      "access": {
+        "grant": "prompt",
+        "prompt_ui": "Same notification prompt. subscribe() requires notifications permission first (Firefox and Safari also need a gesture). Safari on iOS only works for Home Screen web apps.",
+        "secure_context": true,
+        "user_gesture": true,
+        "persistence": "Subscription persists until unsubscribe(), 404 or 410 from the endpoint, expiry, or clearing site data; permission revocation deletes it",
+        "revocation": "Site settings, unsubscribe(), pushsubscriptionchange event, 410 Gone responses",
+        "iframe": "Service worker scope only; iframes cannot subscribe",
+        "steps": [
+          "Register a service worker",
+          "Request notification permission (gesture)",
+          "pushManager.subscribe with the VAPID public key",
+          "Send endpoint, p256dh and auth to your server",
+          "Server POSTs an encrypted message (RFC 8291) with VAPID JWT (RFC 8292) to the vendor endpoint",
+          "Browser wakes the service worker and fires push; the worker must call showNotification"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "42",
+          "note": "",
+          "date": "2015-04-14"
+        },
+        "edge": {
+          "s": "y",
+          "v": "17",
+          "note": "",
+          "date": "2018-04-30"
+        },
+        "firefox": {
+          "s": "y",
+          "v": "44",
+          "note": "",
+          "date": "2016-01-26"
+        },
+        "safari": {
+          "s": "y",
+          "v": "16",
+          "note": "macOS 13 Ventura Web Push, gesture required",
+          "date": "2022-09-12"
+        },
+        "ios_safari": {
+          "s": "y",
+          "v": "16.4",
+          "note": "Home Screen web apps only",
+          "date": "2023-03-27"
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "42",
+          "note": "Needs showNotification on Android",
+          "date": "2015-04-15"
+        },
+        "samsung": {
+          "s": "y",
+          "v": "4.0",
+          "note": "",
+          "date": "2016-03-11"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "event",
+    "metric": "Encrypted push message delivered to a service worker",
+    "update": "any time while the browser runs; delivered after restart within TTL",
+    "fields": [
+      {
+        "name": "payload",
+        "type": "binary",
+        "unit": "bytes",
+        "range": "0 to 4096 encrypted; about 4078 usable plaintext",
+        "precision": "86 bytes overhead"
+      },
+      {
+        "name": "TTL",
+        "type": "header",
+        "unit": "seconds",
+        "range": "0 to 2,419,200 (4 weeks FCM maximum); messages expire",
+        "precision": "1 s"
+      },
+      {
+        "name": "Urgency",
+        "type": "header",
+        "unit": "enum",
+        "range": "very-low, low, normal, high",
+        "precision": "affects battery and delivery order"
+      },
+      {
+        "name": "Topic",
+        "type": "header",
+        "unit": "string",
+        "range": "up to 32 URL-safe base64 characters; replaces an undelivered message with the same topic",
+        "precision": "32 chars"
+      },
+      {
+        "name": "VAPID public key",
+        "type": "binary",
+        "unit": "bytes",
+        "range": "65-byte uncompressed P-256 point (87 base64url characters)",
+        "precision": "65 bytes"
+      },
+      {
+        "name": "VAPID JWT exp",
+        "type": "claim",
+        "unit": "seconds",
+        "range": "up to 24 hours from issue",
+        "precision": "1 s"
+      },
+      {
+        "name": "status codes",
+        "type": "integer",
+        "unit": "HTTP",
+        "range": "201 created, 400 bad request, 404 or 410 gone, 413 payload too large, 429 slow down with Retry-After",
+        "precision": "per endpoint"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can send you notifications after you leave, once you allow them",
+    "user_action": "You tap Allow on the notification pop up, or add the site to your iPhone Home Screen",
+    "can": [
+      "Wake the site in the background and show a notification",
+      "Send news, chat or order updates you asked for",
+      "Learn when your device is online and which vendor's push service it uses"
+    ],
+    "cannot": [
+      "Send anything before you tap Allow",
+      "Send a message without a visible notification",
+      "Work on iPhone unless the site is a Home Screen web app",
+      "Keep going once you block or unsubscribe"
+    ],
+    "reach": 3,
+    "reach_label": "Ongoing, until you block it",
+    "differs": "On iPhone, only Home Screen web apps can receive push. Chrome, Edge, Firefox and Safari on computers ask with the same prompt."
+  },
+  "story": {
+    "what_it_is": "A site's server can wake your browser in the background and show a message when something new happens.",
+    "icon": "bell-ring",
+    "tags": [
+      "Permission",
+      "Notifications",
+      "Background"
+    ],
+    "marketing": [
+      {
+        "vendor": "MDN Web Docs",
+        "name": "Push API",
+        "pitch": "Lets a web app receive messages pushed from a server, even when the app is not loaded or running.",
+        "url": "https://developer.mozilla.org/en-US/docs/Web/API/Push_API"
+      },
+      {
+        "vendor": "WebKit",
+        "name": "Web Push for iOS",
+        "pitch": "Web apps added to the Home Screen can now receive push messages on iPhone and iPad, like native apps.",
+        "url": "https://webkit.org/blog/13878/web-push-for-web-apps-on-ios-and-ipados/"
+      }
+    ],
+    "for_you": "You tap Allow on a prompt, then the site can send alerts any time, even if the tab is closed. Alerts look like those from apps. You can turn them off in browser settings.",
+    "for_makers": "Makers get a direct line to the person with no app store, no email and no ad cost. It is used for messages, news, sales and live events. The browser's own push service delivers the message.",
+    "use_cases": [
+      {
+        "type": "messaging",
+        "example": "A web chat sends a push for each new message, so you reply even when the tab is closed.",
+        "apps": [
+          "WhatsApp Web",
+          "Slack"
+        ]
+      },
+      {
+        "type": "games",
+        "example": "A browser strategy game pushes a note when an attack lands or your build ends.",
+        "apps": []
+      },
+      {
+        "type": "live",
+        "example": "A sports site pushes a goal alert in the last minute of a match.",
+        "apps": [
+          "ESPN"
+        ]
+      },
+      {
+        "type": "shopping",
+        "example": "A store pushes a flash sale or back in stock alert.",
+        "apps": [
+          "Etsy"
+        ]
+      },
+      {
+        "type": "news",
+        "example": "A news site pushes breaking stories to subscribers.",
+        "apps": [
+          "The Washington Post"
+        ]
+      },
+      {
+        "type": "rideshare",
+        "example": "A ride web app pushes your driver's arrival.",
+        "apps": []
+      },
+      {
+        "type": "ads",
+        "example": "A push ad network buys placement in alerts, and may send false alert scams.",
+        "apps": []
+      },
+      {
+        "type": "banking",
+        "example": "A bank pushes a card spend alert to confirm a payment is yours.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Spam alerts",
+      "Scam alerts"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Chrome and Safari require userVisibleOnly: true; hidden pushes are not allowed",
+    "Payload about 4 KB maximum",
+    "Firefox allows a limited number of silent pushes, quota resets when the site is visited",
+    "Subscription endpoint is a capability URL: anyone holding it can send messages (with VAPID key)",
+    "Browser closed on desktop means delivery waits until it reopens (within TTL)"
+  ],
+  "scores": {
+    "sensitivity": 4,
+    "utility": 5,
+    "fingerprint_bits": 3,
+    "friction": 2
+  },
+  "value": {
+    "legit_uses": [
+      "News alerts",
+      "Chat messages",
+      "Transactional updates"
+    ],
+    "abuse": [
+      "Marketing spam",
+      "Fake security alerts and scareware",
+      "Tracking when a device is online"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2015-04",
+      "browser": "chrome",
+      "version": "42",
+      "change": "Push API ships with GCM, later FCM"
+    },
+    {
+      "date": "2016-01",
+      "browser": "firefox",
+      "version": "44",
+      "change": "Push API ships (Mozilla autopush)"
+    },
+    {
+      "date": "2018-09",
+      "browser": "chrome",
+      "version": "70",
+      "change": "VAPID required for new FCM subscriptions in Chrome"
+    },
+    {
+      "date": "2020-01",
+      "browser": "firefox",
+      "version": "72",
+      "change": "Gesture required for notification prompt"
+    },
+    {
+      "date": "2022-09",
+      "browser": "safari",
+      "version": "16",
+      "change": "Web Push on macOS via web.push.apple.com, standards based VAPID"
+    },
+    {
+      "date": "2023-03",
+      "browser": "ios_safari",
+      "version": "16.4",
+      "change": "Web Push on Home Screen web apps"
+    },
+    {
+      "date": "2025-03",
+      "browser": "ios_safari",
+      "version": "18.4",
+      "change": "Declarative Web Push (JSON payload with web_push 8030)"
+    }
+  ],
+  "related": [
+    "web.notify.notifications",
+    "web.notify.push-declarative-safari",
+    "web.notify.push-abuse-defenses"
+  ],
+  "refs": [
+    {
+      "t": "mdn",
+      "label": "MDN Push API",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/Push_API"
+    },
+    {
+      "t": "spec",
+      "label": "W3C Push API",
+      "url": "https://www.w3.org/TR/push-api/"
+    },
+    {
+      "t": "spec",
+      "label": "RFC 8030 Generic Event Delivery Using HTTP Push",
+      "url": "https://datatracker.ietf.org/doc/html/rfc8030"
+    },
+    {
+      "t": "spec",
+      "label": "RFC 8291 Message Encryption for Web Push",
+      "url": "https://datatracker.ietf.org/doc/html/rfc8291"
+    },
+    {
+      "t": "spec",
+      "label": "RFC 8292 VAPID",
+      "url": "https://datatracker.ietf.org/doc/html/rfc8292"
+    }
+  ],
+  "confidence": "docs"
+}

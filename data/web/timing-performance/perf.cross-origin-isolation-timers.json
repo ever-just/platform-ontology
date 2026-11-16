@@ -1,0 +1,276 @@
+{
+  "id": "web.perf.cross-origin-isolation-timers",
+  "name": "Cross-origin isolation and SharedArrayBuffer clocks",
+  "kind": "signal",
+  "group": "timing-performance",
+  "subgroup": "Timers",
+  "tags": [
+    "COOP",
+    "COEP",
+    "SharedArrayBuffer",
+    "crossOriginIsolated"
+  ],
+  "plain": "Sites that send COOP and COEP headers unlock finer timers and SharedArrayBuffer.",
+  "meaning": "Gives a page a 5 microsecond clock and shared memory, both needed for wasm threads. A worker counter on SharedArrayBuffer is a high resolution clock that also powers Spectre-class attacks.",
+  "lifecycle": [
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "Cross-Origin-Opener-Policy: same-origin; Cross-Origin-Embedder-Policy: require-corp; self.crossOriginIsolated",
+      "bcd": [
+        "api.Window.crossOriginIsolated"
+      ],
+      "access": {
+        "grant": "none",
+        "prompt_ui": "",
+        "secure_context": false,
+        "user_gesture": false,
+        "persistence": "",
+        "revocation": "",
+        "iframe": "",
+        "steps": [
+          "Send COOP and COEP headers",
+          "Check crossOriginIsolated",
+          "Use SharedArrayBuffer and performance.now at finer resolution"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "92",
+          "note": "",
+          "date": "2021-07-20"
+        },
+        "edge": {
+          "s": "y",
+          "v": "92",
+          "note": "",
+          "date": "2021-07-22"
+        },
+        "firefox": {
+          "s": "y",
+          "v": "79",
+          "note": "",
+          "date": "2020-07-28"
+        },
+        "safari": {
+          "s": "y",
+          "v": "15.2",
+          "note": "",
+          "date": "2021-12-13"
+        },
+        "ios_safari": {
+          "s": "y",
+          "v": "15.2",
+          "note": "",
+          "date": "2021-12-13"
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "92",
+          "note": "",
+          "date": "2021-07-20"
+        },
+        "samsung": {
+          "s": "y",
+          "v": "16.0",
+          "note": "",
+          "date": "2021-11-25"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "boolean",
+    "metric": "crossOriginIsolated true or false",
+    "update": "",
+    "fields": [
+      {
+        "name": "crossOriginIsolated",
+        "type": "boolean",
+        "unit": "",
+        "range": "true or false",
+        "precision": "exact"
+      },
+      {
+        "name": "timer resolution",
+        "type": "float",
+        "unit": "microseconds",
+        "range": "5 (Chrome), 20 (Firefox)",
+        "precision": "fixed"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can use a very fine clock and shared memory, but only if the site opts in",
+    "user_action": "Nothing. The site sets special page headers when it loads",
+    "can": [
+      "Get a clock down to about 5 microseconds",
+      "Share memory between its own background workers",
+      "Run heavier tools such as WebAssembly threads",
+      "Use these also for very precise timing attacks"
+    ],
+    "cannot": [
+      "Get these without the special page headers",
+      "Load some outside content like ads and embeds freely",
+      "Ask permission first",
+      "Work in older browsers"
+    ],
+    "reach": 2,
+    "reach_label": "Only when the site opts in",
+    "differs": ""
+  },
+  "story": {
+    "what_it_is": "Sites that send two special headers unlock very precise timers and shared memory for heavy apps.",
+    "icon": "zap",
+    "tags": [
+      "Performance",
+      "Games",
+      "Security"
+    ],
+    "marketing": [
+      {
+        "vendor": "web.dev",
+        "name": "Cross origin isolation guide",
+        "pitch": "Google explains how to turn on isolation so a page can use powerful features like shared memory safely.",
+        "url": "https://web.dev/articles/cross-origin-isolation-guide"
+      },
+      {
+        "vendor": "web.dev",
+        "name": "Why COOP and COEP",
+        "pitch": "Explains that isolation makes powerful features safe because it blocks risky mixing with other sites.",
+        "url": "https://web.dev/articles/why-coop-coep"
+      }
+    ],
+    "for_you": "You do not choose or see this. Heavy web apps like big games or video editors run faster in a tab, because the site proved it is walled off from others.",
+    "for_makers": "Isolation unlocks threads, shared memory and finer timers, which are needed for fast code. The cost is that the site must prove all content it loads is safe, which can be hard with ads and embeds.",
+    "use_cases": [
+      {
+        "type": "games",
+        "example": "A big web game built with Unity or Unreal uses several threads in a tab, which needs isolation to run well.",
+        "apps": [
+          "Unity WebGL games"
+        ]
+      },
+      {
+        "type": "creative",
+        "example": "A browser video tool like ffmpeg.wasm runs faster with shared memory.",
+        "apps": [
+          "Clipchamp",
+          "Photopea"
+        ]
+      },
+      {
+        "type": "developer",
+        "example": "A code editor in the browser runs a whole dev server in a tab using threads.",
+        "apps": [
+          "StackBlitz",
+          "VS Code web"
+        ]
+      },
+      {
+        "type": "music",
+        "example": "A web DAW processes many audio tracks at once on several threads without crackles.",
+        "apps": [
+          "Soundtrap"
+        ]
+      },
+      {
+        "type": "productivity",
+        "example": "A design or spreadsheet app runs heavy calculations on many threads in the browser.",
+        "apps": [
+          "Figma",
+          "Google Sheets"
+        ]
+      },
+      {
+        "type": "security",
+        "example": "Researchers use finer timers to study side channel attacks, which is why browsers wall these timers off.",
+        "apps": []
+      },
+      {
+        "type": "education",
+        "example": "A browser based coding class runs Python in a tab with shared memory so lessons feel fast.",
+        "apps": [
+          "Pyodide demos"
+        ]
+      }
+    ],
+    "risks": [
+      "Embeds and ads can break",
+      "Makes timing attacks easier if misused"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Isolation blocks embedding non-CORP cross-origin content",
+    "Not available in iframes without allow and the same headers"
+  ],
+  "scores": {
+    "sensitivity": 1,
+    "utility": 3,
+    "fingerprint_bits": 1,
+    "friction": 1
+  },
+  "value": {
+    "legit_uses": "WebAssembly threads, ffmpeg.wasm, video editors",
+    "abuse": "Enables micro-timing side channels in a compromised cross-origin context"
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2018-01",
+      "browser": "all",
+      "version": "",
+      "change": "SharedArrayBuffer disabled after Spectre"
+    },
+    {
+      "date": "2020-07",
+      "browser": "chrome",
+      "version": "92",
+      "change": "SAB re-enabled for cross-origin isolated pages"
+    },
+    {
+      "date": "2021-01",
+      "browser": "firefox",
+      "version": "79",
+      "change": "SAB re-enabled for isolated pages"
+    },
+    {
+      "date": "2021-12",
+      "browser": "safari",
+      "version": "15.2",
+      "change": "Cross-origin isolation and SAB supported"
+    }
+  ],
+  "related": [
+    "web.perf.timer-precision",
+    "web.perf.microarchitectural-timing"
+  ],
+  "refs": [
+    {
+      "t": "mdn",
+      "label": "MDN crossOriginIsolated",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/Window/crossOriginIsolated"
+    },
+    {
+      "t": "vendor",
+      "label": "web.dev COOP and COEP",
+      "url": "https://web.dev/articles/coop-coep"
+    },
+    {
+      "t": "bcd",
+      "label": "BCD Window.crossOriginIsolated",
+      "url": "https://github.com/mdn/browser-compat-data"
+    }
+  ],
+  "confidence": "docs"
+}

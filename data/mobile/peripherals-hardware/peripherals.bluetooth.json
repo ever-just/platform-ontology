@@ -1,0 +1,211 @@
+{
+  "id": "mob.peripherals.bluetooth",
+  "name": "Bluetooth",
+  "kind": "permission",
+  "group": "peripherals-hardware",
+  "subgroup": "Radios",
+  "tags": [
+    "runtime-permission",
+    "ble",
+    "nearby-devices"
+  ],
+  "plain": "Scans for, connects to and advertises as Bluetooth devices.",
+  "meaning": "Nearby device scans can map a home or store and identify accessories and people. Both OSes tie it to a prompt.",
+  "lifecycle": [
+    "in-session",
+    "background"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "y",
+      "v": "12",
+      "api": 31,
+      "permission": "BLUETOOTH_SCAN, BLUETOOTH_CONNECT, BLUETOOTH_ADVERTISE (API 31); earlier ACCESS_FINE_LOCATION plus BLUETOOTH",
+      "protection": "dangerous",
+      "grant": "prompt",
+      "prompt_ui": "Nearby devices prompt; neverForLocation flag skips location tie",
+      "persistence": "Until revoked; auto reset",
+      "revocation": "Settings > Apps > Permissions > Nearby devices",
+      "store_policy": "Play: nearby device use; location inference barred when neverForLocation not declared",
+      "api_surface": "BluetoothLeScanner, BluetoothGatt",
+      "note": "Scans throttled to 5 starts per 30 seconds (Android 7)"
+    },
+    "ios": {
+      "s": "y",
+      "v": "13",
+      "permission": "NSBluetoothAlwaysUsageDescription (NSBluetoothPeripheralUsageDescription deprecated)",
+      "protection": "prompt",
+      "grant": "prompt",
+      "prompt_ui": "Allow or Don't Allow Bluetooth access",
+      "persistence": "Until revoked",
+      "revocation": "Settings > Privacy & Security > Bluetooth",
+      "store_policy": "App Review 5.1.1",
+      "api_surface": "CBCentralManager, CBPeripheralManager",
+      "note": "Background scans must filter by service UUID; advertising localName stripped in background"
+    }
+  },
+  "web_equivalents": [
+    "web.peripherals.web-bluetooth",
+    "web.notexposed.bluetooth-nearby"
+  ],
+  "data": {
+    "type": "event",
+    "metric": "Advertisements and RSSI",
+    "update": "continuous",
+    "fields": [
+      {
+        "name": "rssi",
+        "type": "integer",
+        "unit": "dBm",
+        "range": "-100 to 0",
+        "precision": "1 dB"
+      },
+      {
+        "name": "scanRate",
+        "type": "integer",
+        "unit": "starts per 30 s",
+        "range": "5 on Android",
+        "precision": ""
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can scan for, connect to and broadcast as Bluetooth devices after you tap Allow",
+    "user_action": "You tap a Bluetooth feature, then answer the Allow prompt",
+    "can": [
+      "Scan for nearby devices",
+      "Connect to devices",
+      "Advertise the phone to other devices",
+      "Map a home or store from the devices it spots"
+    ],
+    "cannot": [
+      "Do any of this before you tap Allow",
+      "Start scans more than 5 times in 30 seconds on Android",
+      "Scan freely in the background on iPhone; scans must name services",
+      "Show the phone's custom name when broadcasting in the iPhone background"
+    ],
+    "reach": 2,
+    "reach_label": "Nearby devices, while you use it",
+    "differs": "Android 12 and later splits scan, connect and advertise; iPhone has one prompt, and older Android also needed location."
+  },
+  "story": {
+    "what_it_is": "The master permission for finding, connecting to and appearing as a Bluetooth device.",
+    "icon": "bluetooth",
+    "tags": [
+      "Bluetooth",
+      "Nearby",
+      "Permission"
+    ],
+    "marketing": [],
+    "for_you": "You see a prompt asking to use Bluetooth. Say yes and the app can work with your gear. Say no and gadgets stop pairing. Android and iPhone both show an icon when it is active.",
+    "for_makers": "Nearly every smart gadget needs this. It also tells the app who and what is nearby. Platforms have tied it to a clear prompt because scans can map a home or a store.",
+    "use_cases": [
+      {
+        "type": "fitness",
+        "example": "A smart watch and running band sync workouts to the app.",
+        "apps": [
+          "Garmin"
+        ]
+      },
+      {
+        "type": "smart-home",
+        "example": "A smart lock opens as you approach the door.",
+        "apps": []
+      },
+      {
+        "type": "games",
+        "example": "A game finds nearby players, or connects a toy robot.",
+        "apps": []
+      },
+      {
+        "type": "health",
+        "example": "A medical device uploads readings.",
+        "apps": []
+      },
+      {
+        "type": "shopping",
+        "example": "A store app reads a beacon near the shelf.",
+        "apps": []
+      },
+      {
+        "type": "ads",
+        "example": "A marketing SDK counts how often a phone passes a shop.",
+        "apps": []
+      },
+      {
+        "type": "automotive",
+        "example": "A car app unlocks the car and reads status.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Maps homes and stores",
+      "Identifies gadgets",
+      "Tracking with beacons"
+    ],
+    "android_note": "Android 7 throttled scans to five starts per 30 seconds to save battery.",
+    "ios_note": "On iOS, background scans must name a service type and the device name is hidden in the background."
+  },
+  "technical_bounds": [
+    "Cannot read MAC addresses on either platform (randomized or hidden)",
+    "Background scans restricted"
+  ],
+  "scores": {
+    "sensitivity": 4,
+    "utility": 4,
+    "fingerprint_bits": 9,
+    "friction": 2
+  },
+  "value": {
+    "legit_uses": [
+      "Wearables",
+      "Smart locks"
+    ],
+    "abuse": [
+      "Beacon tracking in stores"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": true,
+      "how": "LinkedIn uses Bluetooth for nearby features"
+    }
+  },
+  "history": [
+    {
+      "date": "2019-09",
+      "platform": "ios",
+      "version": "iOS 13",
+      "change": "Bluetooth permission prompt introduced"
+    },
+    {
+      "date": "2021-10",
+      "platform": "android",
+      "version": "12 (API 31)",
+      "change": "New nearby devices permissions decouple Bluetooth from location"
+    }
+  ],
+  "related": [
+    "mob.network.local-network",
+    "mob.peripherals.uwb"
+  ],
+  "refs": [
+    {
+      "t": "apple",
+      "label": "Apple: Core Bluetooth",
+      "url": "https://developer.apple.com/documentation/corebluetooth"
+    },
+    {
+      "t": "android",
+      "label": "Android: Bluetooth permissions",
+      "url": "https://developer.android.com/develop/connectivity/bluetooth/bt-permissions"
+    },
+    {
+      "t": "apple",
+      "label": "Apple: Protected resources keys",
+      "url": "https://developer.apple.com/documentation/bundleresources/protected-resources"
+    }
+  ],
+  "confidence": "docs"
+}

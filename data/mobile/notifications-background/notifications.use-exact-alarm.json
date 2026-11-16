@@ -1,0 +1,183 @@
+{
+  "id": "mob.notifications.use-exact-alarm",
+  "name": "Auto-granted exact alarms",
+  "kind": "permission",
+  "group": "notifications-background",
+  "subgroup": "Timing",
+  "tags": [
+    "normal",
+    "exact-alarm",
+    "play-restricted"
+  ],
+  "plain": "Auto-granted exact alarm access for alarm and calendar apps.",
+  "meaning": "Same capability as the exact alarm grant but granted at install and not user-revocable. Play restricts it to alarm and calendar apps.",
+  "lifecycle": [
+    "background"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "f",
+      "v": "13",
+      "api": 33,
+      "permission": "USE_EXACT_ALARM",
+      "protection": "normal",
+      "grant": "install",
+      "prompt_ui": "None (granted at install)",
+      "persistence": "Not revocable",
+      "revocation": "n/a",
+      "store_policy": "Play: restricted to alarm clock and calendar apps; declaration required",
+      "api_surface": "AlarmManager.setExact",
+      "note": "Auto-granted; users cannot revoke."
+    },
+    "ios": {
+      "s": "p",
+      "v": "26",
+      "permission": "none",
+      "protection": "none",
+      "grant": "none",
+      "prompt_ui": "none",
+      "persistence": "n/a",
+      "revocation": "n/a",
+      "store_policy": "App Review 4.5.4",
+      "api_surface": "AlarmKit",
+      "note": "AlarmKit in iOS 26 is the nearest equivalent."
+    }
+  },
+  "data": {
+    "type": "event",
+    "metric": "Exact alarm fire",
+    "update": "per alarm",
+    "fields": []
+  },
+  "limits": {
+    "headline": "Can set exact alarms by itself on Android, if it is an alarm or calendar app",
+    "user_action": "Nothing. Alarm and calendar apps get this when you install them",
+    "can": [
+      "Fire alarms at exact times without a switch in Settings",
+      "Run alarm clock features and calendar reminders on time",
+      "Keep this access after install"
+    ],
+    "cannot": [
+      "Be turned off by you; Android auto grants it and you cannot revoke it",
+      "Be used by other kinds of apps in Google Play without review",
+      "Match this on iPhone, where AlarmKit in iOS 26 is the closest tool"
+    ],
+    "reach": 3,
+    "reach_label": "Ongoing, set at install",
+    "differs": "Android grants this at install for alarm and calendar apps. iPhone's nearest tool is AlarmKit in iOS 26."
+  },
+  "story": {
+    "what_it_is": "Exact alarm power handed out at install to alarm and calendar apps, and you cannot turn it off.",
+    "icon": "alarm-clock",
+    "tags": [
+      "Android",
+      "Reminders",
+      "Fixed"
+    ],
+    "marketing": [
+      {
+        "vendor": "Google",
+        "name": "Exact alarms",
+        "pitch": "Google describes a special permission that alarm and calendar apps get automatically for precise timing.",
+        "url": "https://developer.android.com/develop/background-work/services/alarms"
+      }
+    ],
+    "for_you": "You do nothing and your alarm clock always rings on time. You also cannot take the power away.",
+    "for_makers": "Alarm and calendar makers need it so alarms never fail. Google Play lets only those types use it.",
+    "use_cases": [
+      {
+        "type": "utilities",
+        "example": "An alarm clock app that must always wake you.",
+        "apps": [
+          "Alarmy"
+        ]
+      },
+      {
+        "type": "productivity",
+        "example": "A calendar app that rings every meeting on time.",
+        "apps": [
+          "Google Calendar"
+        ]
+      },
+      {
+        "type": "health",
+        "example": "A pill reminder that treats a missed alarm as a safety issue.",
+        "apps": []
+      },
+      {
+        "type": "education",
+        "example": "A study app with a fixed daily session alarm.",
+        "apps": []
+      },
+      {
+        "type": "fitness",
+        "example": "A workout planner that rings at the start of a class.",
+        "apps": []
+      },
+      {
+        "type": "travel",
+        "example": "A flight app that rings before boarding.",
+        "apps": []
+      },
+      {
+        "type": "games",
+        "example": "A game claiming to be an alarm app to get exact timing, which Play does not allow.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Cannot be turned off",
+      "Abuse by apps that do not qualify"
+    ],
+    "android_note": "Granted at install. You cannot revoke it.",
+    "ios_note": "iOS 26 adds AlarmKit as the nearest match."
+  },
+  "technical_bounds": [
+    "Play policy enforced by review"
+  ],
+  "scores": {
+    "sensitivity": 1,
+    "utility": 4,
+    "fingerprint_bits": null,
+    "friction": 1
+  },
+  "value": {
+    "legit_uses": [
+      "Alarm clock apps"
+    ],
+    "abuse": [
+      "Abuse by non-qualifying apps"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2022-08",
+      "platform": "android",
+      "version": "13 (API 33)",
+      "change": "USE_EXACT_ALARM introduced"
+    }
+  ],
+  "related": [
+    "mob.notifications.exact-alarm"
+  ],
+  "refs": [
+    {
+      "t": "android",
+      "label": "Android: Schedule alarms",
+      "url": "https://developer.android.com/develop/background-work/services/alarms"
+    },
+    {
+      "t": "policy",
+      "label": "Google Play: Exact alarms",
+      "url": "https://support.google.com/googleplay/android-developer/answer/13161072"
+    }
+  ],
+  "confidence": "docs"
+}

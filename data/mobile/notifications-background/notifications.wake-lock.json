@@ -1,0 +1,196 @@
+{
+  "id": "mob.notifications.wake-lock",
+  "name": "Wake lock",
+  "kind": "action",
+  "group": "notifications-background",
+  "subgroup": "Power",
+  "tags": [
+    "normal-permission",
+    "wake-lock",
+    "power"
+  ],
+  "plain": "Keeps the CPU or screen awake.",
+  "meaning": "Prevents sleep and drains battery. Android flags apps that hold long wake locks in Android vitals.",
+  "lifecycle": [
+    "in-session",
+    "background"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "y",
+      "v": "1.0",
+      "api": 1,
+      "permission": "WAKE_LOCK",
+      "protection": "normal",
+      "grant": "install",
+      "prompt_ui": "None (granted at install)",
+      "persistence": "Not revocable",
+      "revocation": "n/a",
+      "store_policy": "Play: Android vitals tracks excessive partial wake locks",
+      "api_surface": "PowerManager.WakeLock",
+      "note": "Doze and App Standby ignore wake locks in some states."
+    },
+    "ios": {
+      "s": "y",
+      "v": "2.0",
+      "permission": "none",
+      "protection": "none",
+      "grant": "none",
+      "prompt_ui": "None",
+      "persistence": "n/a",
+      "revocation": "n/a",
+      "store_policy": "none",
+      "api_surface": "UIApplication.isIdleTimerDisabled",
+      "note": "Screen wake only; no CPU wake lock."
+    }
+  },
+  "web_equivalents": [
+    "web.notify.screen-wake-lock",
+    "web.display.wake-lock"
+  ],
+  "data": {
+    "type": "event",
+    "metric": "Wake lock held",
+    "update": "duration",
+    "fields": []
+  },
+  "limits": {
+    "headline": "Can keep your phone's processor awake on Android, or the screen on iPhone",
+    "user_action": "Nothing. It happens during a download, a video, a workout or a call",
+    "can": [
+      "Keep the screen on during a video or recipe on iPhone",
+      "Keep the processor running so a task can finish on Android",
+      "Be allowed at install without a prompt on Android"
+    ],
+    "cannot": [
+      "Keep the processor awake on iPhone; it only keeps the screen on",
+      "Always beat Doze and App Standby, which ignore wake locks in some states",
+      "Hold the phone awake after the task is over without draining the battery"
+    ],
+    "reach": 2,
+    "reach_label": "While a task is running",
+    "differs": "Android has a CPU wake lock granted at install. iPhone can only keep the screen awake."
+  },
+  "story": {
+    "what_it_is": "Lets an app keep the phone's brain or screen awake instead of letting it sleep.",
+    "icon": "sun",
+    "tags": [
+      "Battery",
+      "Android",
+      "Background"
+    ],
+    "marketing": [
+      {
+        "vendor": "Google",
+        "name": "Wake locks",
+        "pitch": "Google tells developers to use wake locks sparingly and flags apps that hold them too long in Android vitals.",
+        "url": "https://developer.android.com/topic/performance/vitals/wakelock"
+      }
+    ],
+    "for_you": "You see the screen stay on while you watch a video or follow a recipe. Quietly, an app can also keep the phone awake in your pocket, which drains the battery.",
+    "for_makers": "Makers use it to keep playback, downloads and uploads from being cut off. Google watches wake lock time closely because a bad one is a top cause of battery complaints.",
+    "use_cases": [
+      {
+        "type": "video",
+        "example": "A streaming app keeps the screen on during a movie so it does not dim.",
+        "apps": [
+          "Netflix",
+          "YouTube"
+        ]
+      },
+      {
+        "type": "maps",
+        "example": "A navigation app keeps the screen and brain awake on a road trip.",
+        "apps": [
+          "Google Maps"
+        ]
+      },
+      {
+        "type": "fitness",
+        "example": "A run tracker keeps recording when the screen is off.",
+        "apps": [
+          "Strava"
+        ]
+      },
+      {
+        "type": "games",
+        "example": "A game keeps the screen awake during a match so it does not lock.",
+        "apps": [
+          "Fortnite"
+        ]
+      },
+      {
+        "type": "productivity",
+        "example": "A recipe or teleprompter app keeps the page lit.",
+        "apps": []
+      },
+      {
+        "type": "messaging",
+        "example": "A video call keeps both screen and processor awake during the call.",
+        "apps": [
+          "Zoom"
+        ]
+      },
+      {
+        "type": "developer",
+        "example": "A developer uses the Android vitals dashboard to find which apps hold wake locks too long.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Drains battery",
+      "A stuck wake lock can keep the phone warm"
+    ],
+    "android_note": "Granted at install. Doze and standby ignore wake locks in some states.",
+    "ios_note": "iOS only lets apps keep the screen awake. There is no wake lock for the processor."
+  },
+  "technical_bounds": [
+    "Doze ignores wake locks",
+    "Screen wake only on iOS"
+  ],
+  "scores": {
+    "sensitivity": 1,
+    "utility": 3,
+    "fingerprint_bits": null,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Media playback"
+    ],
+    "abuse": [
+      "Battery drain"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2015-10",
+      "platform": "android",
+      "version": "6.0 (API 23)",
+      "change": "Doze limits wake lock effect"
+    }
+  ],
+  "related": [
+    "mob.notifications.foreground-service"
+  ],
+  "refs": [
+    {
+      "t": "android",
+      "label": "Android: Wake locks",
+      "url": "https://developer.android.com/training/scheduling/wakelock"
+    },
+    {
+      "t": "android",
+      "label": "Android vitals: Excessive wake locks",
+      "url": "https://developer.android.com/topic/performance/vitals/wakelock"
+    }
+  ],
+  "confidence": "docs"
+}

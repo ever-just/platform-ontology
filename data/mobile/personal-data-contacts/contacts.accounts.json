@@ -1,0 +1,207 @@
+{
+  "id": "mob.contacts.accounts",
+  "name": "Device accounts list",
+  "kind": "permission",
+  "group": "personal-data-contacts",
+  "subgroup": "Accounts",
+  "tags": [
+    "runtime-permission",
+    "accounts",
+    "identity",
+    "get-accounts"
+  ],
+  "plain": "Lets the app list the Google and other accounts signed in on the device.",
+  "meaning": "Reveals the email addresses of accounts on the phone. Largely replaced by account pickers because the list is an easy way to build an identity profile.",
+  "lifecycle": [
+    "in-session",
+    "on-launch"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "y",
+      "v": "6.0",
+      "api": 23,
+      "permission": "GET_ACCOUNTS",
+      "protection": "dangerous",
+      "grant": "prompt",
+      "prompt_ui": "Allow or Don't allow",
+      "persistence": "Until revoked",
+      "revocation": "Settings > Apps > Permissions > Contacts",
+      "store_policy": "Play: Google sign-in should use account pickers instead",
+      "api_surface": "AccountManager.getAccounts",
+      "note": "Since Android 8.0 (API 26) apps only see accounts they own unless the account owner grants visibility; GET_ACCOUNTS alone no longer shows others."
+    },
+    "ios": {
+      "s": "n",
+      "v": "",
+      "permission": "",
+      "protection": "none",
+      "grant": "not-exposed",
+      "prompt_ui": "none",
+      "persistence": "none",
+      "revocation": "",
+      "store_policy": "App Review 5.1.1",
+      "api_surface": "none",
+      "note": "iOS exposes no account list; Sign in with Apple and Credential Provider flows return only the chosen identity."
+    }
+  },
+  "data": {
+    "type": "list",
+    "metric": "Account names and types",
+    "update": "on demand",
+    "fields": [
+      {
+        "name": "account_count",
+        "type": "integer",
+        "unit": "accounts",
+        "range": "0 to about 10",
+        "precision": "exact"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can list only its own accounts on Android; iPhone shows no account list",
+    "user_action": "You tap Choose account or Sign in with Google",
+    "can": [
+      "List the accounts the app itself owns (Android)",
+      "Learn about other accounts only when the account owner allows it (Android)",
+      "Receive the one identity you pick through Sign in with Apple or an account picker"
+    ],
+    "cannot": [
+      "See the emails of other accounts on Android 8 and later with the permission alone",
+      "See any account list on iPhone",
+      "Build a full picture of who you are from the accounts on the phone"
+    ],
+    "reach": 1,
+    "reach_label": "Own accounts, or the one you pick",
+    "differs": "Android lists accounts with a prompt but limits what it shows since Android 8; iPhone offers no account list at all."
+  },
+  "story": {
+    "what_it_is": "Lets the app see which Google and other accounts are signed in on the phone.",
+    "icon": "users",
+    "tags": [
+      "Accounts",
+      "Permission",
+      "Legacy"
+    ],
+    "marketing": [],
+    "for_you": "The app can read the email addresses of accounts on your phone. Today most apps instead show an account picker. You may see a sign in pop up with your accounts listed.",
+    "for_makers": "The list helps an app offer a quick login and spot fake accounts. It also hands over the emails of every account on a phone. Platforms have shrunk this so apps now see only accounts they own.",
+    "use_cases": [
+      {
+        "type": "social",
+        "example": "A social app offers one tap sign in with the Google account on the phone.",
+        "apps": []
+      },
+      {
+        "type": "security",
+        "example": "A fraud team compares accounts on a phone to spot one phone with hundreds of fake accounts.",
+        "apps": []
+      },
+      {
+        "type": "productivity",
+        "example": "A mail app finds your accounts to set up inboxes.",
+        "apps": [
+          "Gmail"
+        ]
+      },
+      {
+        "type": "shopping",
+        "example": "A shopping app pre fills your email at checkout.",
+        "apps": []
+      },
+      {
+        "type": "ads",
+        "example": "An older ad SDK used the account list to link a user across apps.",
+        "apps": []
+      },
+      {
+        "type": "games",
+        "example": "A game uses the Google Play Games account to save progress.",
+        "apps": [
+          "Google Play Games"
+        ]
+      },
+      {
+        "type": "enterprise",
+        "example": "A work app finds your company account.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Reveals email addresses",
+      "Cross app linking",
+      "Mostly replaced"
+    ],
+    "android_note": "Since Android 8 an app only sees accounts it owns unless the account owner grants it more.",
+    "ios_note": "iPhone has no account list. Sign in with Apple and credential flows return only the identity you choose."
+  },
+  "technical_bounds": [
+    "Android 8+ narrows visibility",
+    "iOS has no equivalent",
+    "Only user chosen sign in surfaces an account"
+  ],
+  "scores": {
+    "sensitivity": 4,
+    "utility": 2,
+    "fingerprint_bits": 4,
+    "friction": 2
+  },
+  "value": {
+    "legit_uses": [
+      "Legacy Google sign-in"
+    ],
+    "abuse": [
+      "Email harvesting for identity graphs"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2017-08",
+      "platform": "android",
+      "version": "8.0 (API 26)",
+      "change": "getAccounts limited to accounts visible to the app; account visibility APIs added"
+    },
+    {
+      "date": "2017-08",
+      "platform": "android",
+      "version": "8.0 (API 26)",
+      "change": "getAccounts only returns accounts the app can already see"
+    },
+    {
+      "date": "2015-10",
+      "platform": "android",
+      "version": "6.0 (API 23)",
+      "change": "GET_ACCOUNTS became a dangerous Contacts permission"
+    }
+  ],
+  "related": [
+    "mob.contacts.read",
+    "mob.id.sign-in-google"
+  ],
+  "refs": [
+    {
+      "t": "android",
+      "label": "Android: AccountManager",
+      "url": "https://developer.android.com/reference/android/accounts/AccountManager"
+    },
+    {
+      "t": "android",
+      "label": "Android 8.0 privacy changes",
+      "url": "https://developer.android.com/about/versions/oreo/android-8.0-changes#privacy-all"
+    },
+    {
+      "t": "android",
+      "label": "Android 8 behavior: account access",
+      "url": "https://developer.android.com/about/versions/oreo/android-8.0-changes#aaad"
+    }
+  ],
+  "confidence": "docs"
+}

@@ -1,0 +1,177 @@
+{
+  "id": "mob.install.developer-verification",
+  "name": "Developer verification",
+  "kind": "capability",
+  "group": "os-integration-install",
+  "subgroup": "Sideload",
+  "tags": [
+    "developer-verification",
+    "sideload",
+    "identity"
+  ],
+  "plain": "Android checks that sideloaded apps come from a registered developer.",
+  "meaning": "Adds identity checks for apps outside Google Play on certified devices in four markets from Sep 30, 2026; global rollout planned for 2027 and later.",
+  "lifecycle": [
+    "before-install"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "p",
+      "v": "certified devices",
+      "api": 0,
+      "permission": "n/a (developer registration in Android Developer Console)",
+      "protection": "none",
+      "grant": "install",
+      "prompt_ui": "Advanced flow: enable developer options and wait 24 hours",
+      "persistence": "Per app install",
+      "revocation": "n/a",
+      "store_policy": "Play and Console: registered developers only; ADB installs remain",
+      "api_surface": "Developer verification service",
+      "note": "Applies to Brazil, Indonesia, Singapore and Thailand from Sep 30, 2026."
+    },
+    "ios": {
+      "s": "p",
+      "v": "17.4",
+      "permission": "notarization for alternative distribution",
+      "protection": "entitlement",
+      "grant": "entitlement",
+      "prompt_ui": "Install after notarization",
+      "persistence": "n/a",
+      "revocation": "n/a",
+      "store_policy": "EU alternative distribution requires Apple notarization",
+      "api_surface": "Notarization",
+      "note": "iOS notarizes apps outside the App Store in the EU."
+    }
+  },
+  "data": {
+    "type": "event",
+    "metric": "Install check",
+    "update": "on install",
+    "fields": []
+  },
+  "limits": {
+    "headline": "Can only install on many Android phones if the developer is registered with Google",
+    "user_action": "You open an app file from outside the store and try to install it",
+    "can": [
+      "Install apps from verified developers on certified Android phones",
+      "Use the advanced flow after turning on developer options and waiting 24 hours",
+      "Install outside the App Store on iPhone in the EU, after Apple's notarization check"
+    ],
+    "cannot": [
+      "Install from an unregistered developer in the starting countries without the advanced flow",
+      "Skip the check in Brazil, Indonesia, Singapore and Thailand from September 30, 2026",
+      "Install outside the App Store on iPhone outside the EU"
+    ],
+    "reach": 1,
+    "reach_label": "A check before the install",
+    "differs": "Android adds developer checks from 2026 in four countries first. iPhone uses Apple notarization in the EU."
+  },
+  "story": {
+    "what_it_is": "Android checks that apps installed from outside Google Play come from a registered developer.",
+    "icon": "badge-check",
+    "tags": [
+      "Android",
+      "Safety",
+      "Install"
+    ],
+    "marketing": [
+      {
+        "vendor": "Google",
+        "name": "Android developer verification",
+        "pitch": "Google presents developer verification as a way to cut malware by tying sideloaded apps to a known developer.",
+        "url": "https://developer.android.com/developer-verification/guides"
+      }
+    ],
+    "for_you": "You install an app from a website or another store and it may be blocked unless its maker is registered. Experienced users can follow a longer advanced path that includes a 24 hour wait.",
+    "for_makers": "Makers outside Google Play must now register and prove who they are. Google says it cuts scams and malware, while critics worry it limits small and anonymous developers.",
+    "use_cases": [
+      {
+        "type": "banking",
+        "example": "Scammers push a fake bank app by link. Verification makes it harder to hide behind an anonymous developer.",
+        "apps": []
+      },
+      {
+        "type": "games",
+        "example": "A hobby game studio shares its game on its own site and must register as a developer first.",
+        "apps": []
+      },
+      {
+        "type": "developer",
+        "example": "A student or hobbyist gets a lighter account type to install their own tests.",
+        "apps": []
+      },
+      {
+        "type": "enterprise",
+        "example": "A company installs its own app on staff phones and registers the developer name.",
+        "apps": []
+      },
+      {
+        "type": "security",
+        "example": "A malware campaign that dropped repackaged apps is easier to trace to a real account.",
+        "apps": []
+      },
+      {
+        "type": "media",
+        "example": "A third party store lists apps and checks each developer is verified.",
+        "apps": []
+      },
+      {
+        "type": "utilities",
+        "example": "An open source tool installed by file needs its maker to be listed.",
+        "apps": [
+          "F-Droid"
+        ]
+      }
+    ],
+    "risks": [
+      "Gatekeeping concerns",
+      "Harder for small developers"
+    ],
+    "android_note": "Starts in Brazil, Indonesia, Singapore and Thailand on Sep 30, 2026, with a wider rollout planned for 2027.",
+    "ios_note": "iOS notarizes apps outside the App Store in the EU."
+  },
+  "technical_bounds": [
+    "Four markets first; global 2027 plus",
+    "Sources vary on dates"
+  ],
+  "scores": {
+    "sensitivity": 2,
+    "utility": 3,
+    "fingerprint_bits": null,
+    "friction": 3
+  },
+  "value": {
+    "legit_uses": [
+      "Reducing malware"
+    ],
+    "abuse": [
+      "Gatekeeping concerns"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2026-09",
+      "platform": "android",
+      "version": "certified devices",
+      "change": "Developer verification live in Brazil, Indonesia, Singapore and Thailand on Sep 30, 2026"
+    }
+  ],
+  "related": [
+    "mob.install.install-packages"
+  ],
+  "refs": [
+    {
+      "t": "android",
+      "label": "Android developer verification",
+      "url": "https://developer.android.com/developer-verification/guides"
+    }
+  ],
+  "confidence": "docs"
+}

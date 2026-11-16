@@ -1,0 +1,221 @@
+{
+  "id": "web.net.http3-quic-fingerprint",
+  "name": "HTTP/3 and QUIC fingerprint",
+  "kind": "tracking",
+  "group": "network-connectivity",
+  "subgroup": "HTTP",
+  "tags": [
+    "http3",
+    "quic",
+    "initial-packet",
+    "ja4"
+  ],
+  "plain": "QUIC's first packet carries a readable ClientHello, giving the same fingerprints as TLS plus transport parameters.",
+  "meaning": "The QUIC Initial packet is encrypted with a public key, so middleboxes can read the TLS ClientHello and QUIC transport parameters. JA4 has a QUIC variant (prefix q). Connection ID length and version also differ per stack.",
+  "lifecycle": [
+    "on-arrival"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "QUIC Initial packet decrypt at edge; JA4 q variant",
+      "access": {
+        "grant": "none",
+        "prompt_ui": "",
+        "secure_context": false,
+        "user_gesture": false,
+        "persistence": "",
+        "revocation": "",
+        "iframe": "",
+        "steps": [
+          "Capture Initial packet",
+          "Derive Initial keys",
+          "Parse ClientHello and transport params"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "1",
+          "note": "",
+          "date": "2008-12-11"
+        },
+        "edge": {
+          "s": "y",
+          "v": "79",
+          "note": "",
+          "date": "2020-01-15"
+        },
+        "firefox": {
+          "s": "y",
+          "v": "1",
+          "note": "",
+          "date": "2004-11-09"
+        },
+        "safari": {
+          "s": "y",
+          "v": "1",
+          "note": "",
+          "date": "2003-06-23"
+        },
+        "ios_safari": {
+          "s": "y",
+          "v": "1",
+          "note": "",
+          "date": "2007-06-29"
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "1",
+          "note": "",
+          "date": ""
+        },
+        "samsung": {
+          "s": "y",
+          "v": "5.0",
+          "note": "",
+          "date": "2016-12-15"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "string",
+    "metric": "JA4 style string",
+    "update": "",
+    "fields": [
+      {
+        "name": "quic_ja4",
+        "type": "string",
+        "unit": "",
+        "range": "q13d...",
+        "precision": "exact"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can tell which browser or tool you use from the first packet of a fast connection",
+    "user_action": "Nothing. It happens when your browser opens a new HTTP/3 connection",
+    "can": [
+      "Compare the opening packet and its settings with known browsers",
+      "Use the same kind of fingerprint as normal secure connections",
+      "Spot scripts and bots with unusual connection details"
+    ],
+    "cannot": [
+      "Know your name or account from it",
+      "Tell two people on the same browser apart",
+      "Apply to sites that do not use HTTP/3"
+    ],
+    "reach": 2,
+    "reach_label": "Every HTTP/3 connection",
+    "differs": ""
+  },
+  "story": {
+    "what_it_is": "The first packet of the newest connection type shows readable clues about your browser.",
+    "icon": "fingerprint",
+    "tags": [
+      "Fingerprint",
+      "Silent",
+      "Network"
+    ],
+    "marketing": [],
+    "for_you": "You never see it. When your browser starts a fast new type of connection, the first message has readable details that match your browser and system. A server can tell real browsers from fake ones.",
+    "for_makers": "Bot defense and fraud teams extend their older checks to the newest connection type. It gives them the same browser signature plus extra transport details. It also adds to a long term fingerprint.",
+    "use_cases": [
+      {
+        "type": "security",
+        "example": "A bot defense reads the first packet and blocks tools that fake a browser name.",
+        "apps": [
+          "Cloudflare",
+          "Akamai"
+        ]
+      },
+      {
+        "type": "games",
+        "example": "A game portal blocks cheat sellers that script account creation.",
+        "apps": []
+      },
+      {
+        "type": "shopping",
+        "example": "A retailer protects limited drops from bots.",
+        "apps": [
+          "Ticketmaster"
+        ]
+      },
+      {
+        "type": "media",
+        "example": "A video site blocks scrapers that rip its streams.",
+        "apps": [
+          "YouTube"
+        ]
+      },
+      {
+        "type": "ads",
+        "example": "An ad network filters click farms by connection pattern.",
+        "apps": []
+      },
+      {
+        "type": "analytics",
+        "example": "A researcher measures which browsers use the new connection type.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Hard to hide",
+      "Part of a fingerprint"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Less deployed than TCP fingerprints",
+    "ECH will hide inner ClientHello fields"
+  ],
+  "scores": {
+    "sensitivity": 2,
+    "utility": 3,
+    "fingerprint_bits": 3,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": "Bot detection on HTTP/3 edges",
+    "abuse": "Same as JA4"
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2022-06",
+      "browser": "rfc",
+      "version": "",
+      "change": "RFC 9114 HTTP/3 published"
+    },
+    {
+      "date": "2021-05",
+      "browser": "rfc",
+      "version": "",
+      "change": "RFC 9000 and 9001 define QUIC and its TLS binding"
+    }
+  ],
+  "related": [
+    "web.net.ja4-fingerprint-family",
+    "web.net.ech-encrypted-sni-doh"
+  ],
+  "refs": [
+    {
+      "t": "rfc",
+      "label": "RFC 9000 QUIC",
+      "url": "https://www.rfc-editor.org/rfc/rfc9000"
+    },
+    {
+      "t": "github",
+      "label": "FoxIO-LLC/ja4",
+      "url": "https://github.com/FoxIO-LLC/ja4"
+    }
+  ],
+  "confidence": "docs"
+}

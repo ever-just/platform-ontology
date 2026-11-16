@@ -1,0 +1,219 @@
+{
+  "id": "web.network.direct-sockets",
+  "name": "Direct Sockets (TCP, UDP)",
+  "kind": "permission",
+  "group": "network-connectivity",
+  "subgroup": "Network",
+  "tags": [
+    "iwa",
+    "tcp",
+    "udp"
+  ],
+  "plain": "Raw TCP and UDP sockets from a page, for installed isolated apps only.",
+  "meaning": "Lets an installed Isolated Web App open arbitrary TCP and UDP connections and servers. Not available to normal websites because it would bypass same-origin and CORS protections.",
+  "lifecycle": [
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "new TCPSocket(host, port); new UDPSocket(); new TCPServerSocket(); policies direct-sockets, direct-sockets-private",
+      "permission_name": "direct-sockets",
+      "permissions_policy": "direct-sockets",
+      "bcd": [
+        "api.TCPSocket",
+        "api.UDPSocket"
+      ],
+      "access": {
+        "grant": "install",
+        "prompt_ui": "Only inside Isolated Web Apps (signed bundles); IWA install prompt; permission policy direct-sockets, plus direct-sockets-private for LAN ranges.",
+        "secure_context": true,
+        "user_gesture": false,
+        "persistence": "Tied to the installed app",
+        "revocation": "Uninstall the app",
+        "iframe": "Via permissions policy only",
+        "steps": [
+          "User installs an Isolated Web App",
+          "App requests TCPSocket",
+          "Browser applies policy",
+          "Socket opens"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "p",
+          "v": "Chrome 126 ChromeOS IWA only",
+          "note": "",
+          "date": ""
+        },
+        "edge": {
+          "s": "p",
+          "v": "Edge follows Chromium IWA",
+          "note": "",
+          "date": ""
+        },
+        "firefox": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "safari": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "ios_safari": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "chrome_android": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "samsung": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "object",
+    "metric": "TCPSocket, UDPSocket, TCPServerSocket",
+    "update": "per connection",
+    "fields": []
+  },
+  "limits": {
+    "headline": "Can open raw network connections only inside signed, installed apps, never on normal sites",
+    "user_action": "An organization installs a signed Isolated Web App on your computer",
+    "can": [
+      "Open direct two way connections to other computers and devices",
+      "Run small servers inside the installed app",
+      "Reach local network devices if the app also has the extra network permission"
+    ],
+    "cannot": [
+      "Work on ordinary websites, ever",
+      "Work on iPhone, Firefox or Safari",
+      "Work on Chrome for Android or Samsung Internet",
+      "Run without a signed bundle and an install by you or your IT team"
+    ],
+    "reach": 3,
+    "reach_label": "Only inside installed apps",
+    "differs": "Only desktop Chromium has it, and only for signed Isolated Web Apps. Other browsers and phones do not."
+  },
+  "story": {
+    "what_it_is": "Installed special web apps can open raw network connections, like a desktop program.",
+    "icon": "network",
+    "tags": [
+      "Permission",
+      "Network",
+      "Installed apps"
+    ],
+    "marketing": [
+      {
+        "vendor": "MDN Web Docs",
+        "name": "Direct Sockets API",
+        "pitch": "A way for isolated apps to talk to devices and servers over plain TCP and UDP, as desktop apps can.",
+        "url": "https://developer.mozilla.org/en-US/docs/Web/API/Direct_Sockets_API"
+      }
+    ],
+    "for_you": "Only a few packaged apps can use this, and you install them first. You may see a permission step. If you do not install the app, nothing happens.",
+    "for_makers": "Makers get a way to bring remote desktop tools, game servers and device managers to the web without a native app. It needs strong trust, so it is limited to signed and installed apps.",
+    "use_cases": [
+      {
+        "type": "enterprise",
+        "example": "A remote desktop app in a browser window connects to office computers over their own protocol, with no plugin installed.",
+        "apps": []
+      },
+      {
+        "type": "games",
+        "example": "A web version of a game server list queries game servers directly over UDP to show player counts and ping.",
+        "apps": []
+      },
+      {
+        "type": "developer",
+        "example": "A web based terminal connects to a device over raw network ports, so a developer can manage hardware from a browser app.",
+        "apps": []
+      },
+      {
+        "type": "smart-home",
+        "example": "A web app sets up a smart light or printer by talking to its local network service directly.",
+        "apps": []
+      },
+      {
+        "type": "music",
+        "example": "A web app for music studios sends live note data to other devices on the same network using raw network messages.",
+        "apps": []
+      },
+      {
+        "type": "security",
+        "example": "A web based network tool scans office devices to find which are online, which is only allowed in an installed trusted app.",
+        "apps": []
+      },
+      {
+        "type": "education",
+        "example": "A coding class tool lets students try network programs in a browser sandbox with real connections.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Very powerful if abused",
+      "Few apps need it"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Isolated Web Apps only",
+    "Not available to regular sites"
+  ],
+  "scores": {
+    "sensitivity": 5,
+    "utility": 3,
+    "fingerprint_bits": null,
+    "friction": 3
+  },
+  "value": {
+    "legit_uses": [
+      "Remote shells",
+      "Media servers",
+      "IoT tools"
+    ],
+    "abuse": [
+      "Would enable malware-like network access if opened to the web"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2024-06",
+      "browser": "chrome",
+      "version": "126",
+      "change": "Direct Sockets for Isolated Web Apps"
+    }
+  ],
+  "related": [
+    "web.network.local-network"
+  ],
+  "refs": [
+    {
+      "t": "mdn",
+      "label": "MDN Direct Sockets",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/Direct_Sockets_API"
+    },
+    {
+      "t": "spec",
+      "label": "WICG Direct Sockets",
+      "url": "https://wicg.github.io/direct-sockets/"
+    }
+  ],
+  "confidence": "docs"
+}

@@ -1,0 +1,232 @@
+{
+  "id": "web.os.shortcuts",
+  "name": "App shortcuts",
+  "kind": "capability",
+  "group": "os-integration-install",
+  "subgroup": "Launcher",
+  "tags": [
+    "launcher"
+  ],
+  "plain": "Adds quick actions to the app icon's long press or right click menu.",
+  "meaning": "Offers up to a few deep links from the OS launcher.",
+  "lifecycle": [
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "manifest shortcuts[]",
+      "bcd": [
+        "manifests.webapp.shortcuts"
+      ],
+      "access": {
+        "grant": "install",
+        "prompt_ui": "None",
+        "secure_context": true,
+        "user_gesture": false,
+        "persistence": "Per origin",
+        "revocation": "Site settings",
+        "iframe": "Same as top level; cross-origin iframes need a permissions policy where listed",
+        "steps": [
+          "Call the API",
+          "Browser applies its access rules",
+          "Page receives the result"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "96",
+          "note": "",
+          "date": "2021-11-15"
+        },
+        "edge": {
+          "s": "y",
+          "v": "96",
+          "note": "",
+          "date": "2021-11-19"
+        },
+        "firefox": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "safari": {
+          "s": "y",
+          "v": "17.4",
+          "note": "",
+          "date": "2024-03-05"
+        },
+        "ios_safari": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "84",
+          "note": "",
+          "date": "2020-07-27"
+        },
+        "samsung": {
+          "s": "y",
+          "v": "14.0",
+          "note": "",
+          "date": "2021-04-17"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "object",
+    "metric": "Adds quick actions to the app icon's long press or right click menu.",
+    "update": "on demand",
+    "fields": [
+      {
+        "name": "shortcuts",
+        "type": "list",
+        "range": "name, url, icons",
+        "precision": "Chrome allows 4 shown on Android"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can add quick actions to an installed app icon's long press or right click menu",
+    "user_action": "You install the app, then press and hold or right click its icon",
+    "can": [
+      "Show a few links like Compose or New tab on the icon menu",
+      "Jump straight into part of the app",
+      "Use up to a handful of shortcuts"
+    ],
+    "cannot": [
+      "Add many shortcuts, since the system limits them",
+      "Work for a site that is not installed",
+      "Work in Firefox, or on iPhone Chrome",
+      "Open anything without you tapping the shortcut"
+    ],
+    "reach": 1,
+    "reach_label": "A few shortcuts on one icon",
+    "differs": "Chrome, Edge, Samsung Internet and Safari on Mac support it. iPhone and Firefox do not."
+  },
+  "story": {
+    "what_it_is": "An installed web app can add quick actions to its icon, like New message or Search.",
+    "icon": "zap",
+    "tags": [
+      "Installed apps",
+      "Shortcuts",
+      "Capability"
+    ],
+    "marketing": [
+      {
+        "vendor": "MDN Web Docs",
+        "name": "App shortcuts",
+        "pitch": "Lets an installed web app add quick actions to its icon's menu, as native apps do.",
+        "url": "https://developer.mozilla.org/en-US/docs/Web/Progressive_web_apps/Manifest/Reference/shortcuts"
+      }
+    ],
+    "for_you": "You press and hold the app icon, or right click it, and see quick actions like New post or Scan. One tap jumps you straight to that part of the app.",
+    "for_makers": "Makers shorten the path to their main features, which raises use. It makes a web app feel as polished as a native one. It only works once the app is installed.",
+    "use_cases": [
+      {
+        "type": "social",
+        "example": "Long press a social app icon and choose New post to open the compose screen.",
+        "apps": [
+          "X"
+        ]
+      },
+      {
+        "type": "messaging",
+        "example": "A web mail icon offers Compose, so you start a draft in one tap.",
+        "apps": [
+          "Gmail"
+        ]
+      },
+      {
+        "type": "music",
+        "example": "A web music icon offers Liked songs and Search.",
+        "apps": []
+      },
+      {
+        "type": "games",
+        "example": "A web game launcher icon offers Continue game and Friends.",
+        "apps": []
+      },
+      {
+        "type": "shopping",
+        "example": "A store icon offers Track order and Cart.",
+        "apps": [
+          "Starbucks"
+        ]
+      },
+      {
+        "type": "productivity",
+        "example": "A task app offers Add task, which opens a blank task.",
+        "apps": [
+          "Todoist"
+        ]
+      },
+      {
+        "type": "travel",
+        "example": "A travel icon offers My trips and Boarding pass.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Only installed apps",
+      "Little risk"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Installed PWA only"
+  ],
+  "scores": {
+    "sensitivity": 1,
+    "utility": 2,
+    "fingerprint_bits": null,
+    "friction": 1
+  },
+  "value": {
+    "legit_uses": [
+      "Compose, new tab"
+    ],
+    "abuse": [
+      "None"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2020",
+      "browser": "chrome",
+      "version": "84",
+      "change": "Android"
+    },
+    {
+      "date": "2021",
+      "browser": "chrome",
+      "version": "96",
+      "change": "Desktop"
+    },
+    {
+      "date": "2024",
+      "browser": "safari",
+      "version": "17.4",
+      "change": "Safari"
+    }
+  ],
+  "refs": [
+    {
+      "t": "mdn",
+      "label": "MDN shortcuts",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/Progressive_web_apps/Manifest/Reference/shortcuts"
+    }
+  ],
+  "confidence": "verified"
+}

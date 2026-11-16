@@ -1,0 +1,268 @@
+{
+  "id": "web.locale.accept-language",
+  "name": "Languages (Accept-Language and navigator.languages)",
+  "kind": "signal",
+  "group": "locale-preferences",
+  "subgroup": "Language",
+  "tags": [
+    "language",
+    "accept-language",
+    "http-header"
+  ],
+  "plain": "Ordered list of the person's preferred languages, sent on every request.",
+  "meaning": "Shows native language, second languages and country (en-US vs en-GB, es-419). A multilingual list narrows identity sharply: 5.9 bits in 2016. Sites localize with it; trackers fingerprint it.",
+  "lifecycle": [
+    "on-arrival",
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "navigator.language, navigator.languages; Accept-Language header",
+      "bcd": [
+        "api.Navigator.languages"
+      ],
+      "access": {
+        "grant": "none",
+        "prompt_ui": "None",
+        "secure_context": false,
+        "user_gesture": false,
+        "persistence": "read fresh on every page load; nothing stored",
+        "revocation": "none needed (no grant)",
+        "iframe": "Readable from cross-origin iframes too (same values)",
+        "steps": [
+          "Page script reads the value",
+          "No prompt is shown"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "37",
+          "note": "",
+          "date": "2014-08-26"
+        },
+        "edge": {
+          "s": "y",
+          "v": "16",
+          "note": "",
+          "date": "2017-10-17"
+        },
+        "firefox": {
+          "s": "y",
+          "v": "32",
+          "note": "",
+          "date": "2014-09-02"
+        },
+        "safari": {
+          "s": "y",
+          "v": "10.1",
+          "note": "",
+          "date": "2017-03-27"
+        },
+        "ios_safari": {
+          "s": "y",
+          "v": "10.3",
+          "note": "",
+          "date": "2017-03-27"
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "37",
+          "note": "",
+          "date": "2014-09-03"
+        },
+        "samsung": {
+          "s": "y",
+          "v": "3.0",
+          "note": "",
+          "date": "2015-04-10"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "object",
+    "metric": "",
+    "update": "static per session",
+    "fields": [
+      {
+        "name": "languages",
+        "type": "list",
+        "unit": "BCP 47",
+        "range": "1 to 10 tags e.g. [en-US, en, es]",
+        "precision": "browser UI order"
+      },
+      {
+        "name": "q-values",
+        "type": "float",
+        "unit": "",
+        "range": "0.1 to 1.0 in header",
+        "precision": ""
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can see the languages you prefer, in order, with every page request",
+    "user_action": "Nothing. Your browser sends it every time a page loads",
+    "can": [
+      "See your first language and backups, such as en-US then es",
+      "Show the page in your language",
+      "Guess your country from the language variant, such as en-GB or es-419",
+      "Add to a profile that helps recognise your browser"
+    ],
+    "cannot": [
+      "Know your exact location from it",
+      "See languages you have not set in your browser",
+      "Be turned off on its own; you change it in browser settings"
+    ],
+    "reach": 3,
+    "reach_label": "Sent with every page request",
+    "differs": ""
+  },
+  "story": {
+    "what_it_is": "Every request tells the site your preferred languages, in order.",
+    "icon": "languages",
+    "tags": [
+      "Language",
+      "Always on",
+      "Fingerprint"
+    ],
+    "marketing": [
+      {
+        "vendor": "MDN (standards docs)",
+        "name": "Accept-Language",
+        "pitch": "Describes the header where browsers list the languages a person prefers so servers can reply in the right one.",
+        "url": "https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Accept-Language"
+      }
+    ],
+    "for_you": "You open a site and it appears in your language, or offers a banner to switch. You never see the list of languages your browser sent. If you speak several, that list may be the most telling part.",
+    "for_makers": "Sites use it to pick the language and currency. Ad, fraud and tracking systems also use the exact list as a clue about who you are, since few people share the same mix of languages.",
+    "use_cases": [
+      {
+        "type": "games",
+        "example": "A game site shows the lobby and rules in your language and puts you in a regional server list.",
+        "apps": [
+          "Roblox",
+          "Miniclip"
+        ]
+      },
+      {
+        "type": "games",
+        "example": "A cloud gaming site picks the store language and subtitles without asking.",
+        "apps": [
+          "GeForce NOW",
+          "Xbox Cloud Gaming"
+        ]
+      },
+      {
+        "type": "shopping",
+        "example": "A store shows prices and sizes in your region's format.",
+        "apps": [
+          "Amazon",
+          "IKEA"
+        ]
+      },
+      {
+        "type": "media",
+        "example": "A streaming site picks audio and subtitle defaults from your language list.",
+        "apps": [
+          "Netflix",
+          "YouTube"
+        ]
+      },
+      {
+        "type": "ads",
+        "example": "An ad network targets by language and region, using the list as a profile clue.",
+        "apps": []
+      },
+      {
+        "type": "security",
+        "example": "A fraud check compares languages with the IP country, since a mismatch may mean a stolen account.",
+        "apps": []
+      },
+      {
+        "type": "analytics",
+        "example": "A fingerprinting script mixes the language list with other clues to spot a repeat visitor.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Language mix can identify you",
+      "Hints at nationality"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Browser UI language is not always system language",
+    "Single-language lists carry few bits"
+  ],
+  "scores": {
+    "sensitivity": 2,
+    "utility": 5,
+    "fingerprint_bits": 5.9,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Localize content"
+    ],
+    "abuse": [
+      "Nationality or immigrant inference",
+      "Fingerprint"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": true,
+      "how": "Collected as language. Read by the LinkedIn APFC fingerprint script (alleged by BrowserGate, partly confirmed by BleepingComputer)."
+    }
+  },
+  "history": [
+    {
+      "date": "2016-06",
+      "browser": "paper",
+      "version": "",
+      "change": "AmIUnique: content language 5.91 bits"
+    },
+    {
+      "date": "2022-01",
+      "browser": "chrome",
+      "version": "",
+      "change": "Reduce Accept-Language proposal; navigator.languages unchanged"
+    },
+    {
+      "date": "2020-01",
+      "browser": "firefox",
+      "version": "",
+      "change": "RFP forces en-US"
+    }
+  ],
+  "related": [
+    "web.locale.intl-formats"
+  ],
+  "refs": [
+    {
+      "t": "paper",
+      "label": "AmIUnique: Beauty and the Beast, Laperdrix et al. 2016 (attribute entropy)",
+      "url": "https://hal.inria.fr/hal-01285470"
+    },
+    {
+      "t": "mdn",
+      "label": "MDN navigator.languages",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/Navigator/languages"
+    },
+    {
+      "t": "github",
+      "label": "fingerprintjs source: languages",
+      "url": "https://github.com/fingerprintjs/fingerprintjs/blob/master/src/sources/languages.ts"
+    },
+    {
+      "t": "news",
+      "label": "BrowserGate: how LinkedIn's script works",
+      "url": "https://browsergate.eu/how-it-works/"
+    }
+  ],
+  "confidence": "verified"
+}

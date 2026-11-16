@@ -1,0 +1,202 @@
+{
+  "id": "web.page.adblock-detection",
+  "name": "Ad blocker detection",
+  "kind": "signal",
+  "group": "page-actions",
+  "subgroup": "Page checks",
+  "tags": [
+    "adblock",
+    "privacy-tools"
+  ],
+  "plain": "Creates bait elements to see whether an ad blocker hides them.",
+  "meaning": "Shows when someone uses content blockers, which also marks privacy tool users.",
+  "lifecycle": [
+    "on-arrival",
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "Create .adsbox style elements and read offsetHeight",
+      "access": {
+        "grant": "none",
+        "prompt_ui": "None (no browser prompt)",
+        "secure_context": false,
+        "user_gesture": false,
+        "persistence": "",
+        "revocation": "",
+        "iframe": "",
+        "steps": [
+          "Script reads the value",
+          "Value joins the fingerprint payload"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "",
+          "note": ""
+        },
+        "edge": {
+          "s": "y",
+          "v": "",
+          "note": ""
+        },
+        "firefox": {
+          "s": "y",
+          "v": "",
+          "note": ""
+        },
+        "safari": {
+          "s": "y",
+          "v": "",
+          "note": ""
+        },
+        "ios_safari": {
+          "s": "y",
+          "v": "",
+          "note": ""
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "",
+          "note": ""
+        },
+        "samsung": {
+          "s": "y",
+          "v": "",
+          "note": ""
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "boolean",
+    "metric": "Ad blocker detection",
+    "update": "per page",
+    "fields": [
+      {
+        "name": "adBlockInstalled",
+        "type": "boolean",
+        "unit": "",
+        "range": "",
+        "precision": ""
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can guess whether you use an ad blocker, by checking if its bait ads vanish",
+    "user_action": "Nothing. It happens when the page loads.",
+    "can": [
+      "Check if a hidden bait element gets hidden or blocked",
+      "Show a message asking you to turn off your blocker",
+      "Count how many visitors use blockers"
+    ],
+    "cannot": [
+      "See which blocker you use for sure",
+      "See your browser history or other add ons",
+      "Turn your blocker off for you",
+      "Be exact; privacy tools can fool the check"
+    ],
+    "reach": 1,
+    "reach_label": "A guess when the page loads",
+    "differs": ""
+  },
+  "story": {
+    "what_it_is": "A site can quietly test whether you use an ad blocker.",
+    "icon": "shield-off",
+    "tags": [
+      "Ads",
+      "Silent",
+      "Fingerprinting"
+    ],
+    "marketing": [],
+    "for_you": "You never see the test. If it finds a blocker, you may get a message asking you to turn it off, a paywall or a block on the page.",
+    "for_makers": "Publishers do it to protect ad income and to push people to subscribe. Fraud and tracking tools also use it, because a blocker marks someone as a privacy tool user and adds to a device fingerprint.",
+    "use_cases": [
+      {
+        "type": "news",
+        "example": "A news site shows 'Please turn off your ad blocker or subscribe' after the test.",
+        "apps": [
+          "Forbes",
+          "Wired"
+        ]
+      },
+      {
+        "type": "video",
+        "example": "A free video site stops playing until you allow ads.",
+        "apps": []
+      },
+      {
+        "type": "games",
+        "example": "A free browser game site shows an ad wall and counts blocked ads.",
+        "apps": [
+          "Poki",
+          "CrazyGames"
+        ]
+      },
+      {
+        "type": "ads",
+        "example": "An ad network measures how many people block ads to know its true reach.",
+        "apps": [
+          "Google Ad Manager"
+        ]
+      },
+      {
+        "type": "security",
+        "example": "A fraud tool treats a blocker as one more signal in a device profile.",
+        "apps": []
+      },
+      {
+        "type": "analytics",
+        "example": "A publisher reports how many readers block ads in its audience stats.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Singles out privacy users",
+      "Used in fingerprints"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Heuristic"
+  ],
+  "scores": {
+    "sensitivity": 2,
+    "utility": 3,
+    "fingerprint_bits": 1,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Show a paywall message"
+    ],
+    "abuse": [
+      "Singles out privacy tool users"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": true,
+      "how": "Collector key(s): signals.adBlockInstalled. "
+    }
+  },
+  "related": [
+    "web.tracking.linkedin-apfc-fingerprint"
+  ],
+  "refs": [
+    {
+      "t": "news",
+      "label": "BrowserGate: how it works (48 feature table)",
+      "url": "https://browsergate.eu/how-it-works/"
+    },
+    {
+      "t": "github",
+      "label": "mdp/linkedin-extension-fingerprinting (LinkedIn script snapshot and ID list)",
+      "url": "https://github.com/mdp/linkedin-extension-fingerprinting"
+    }
+  ],
+  "confidence": "docs"
+}

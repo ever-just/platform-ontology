@@ -1,0 +1,213 @@
+{
+  "id": "web.locale.keyboard-layout",
+  "name": "Keyboard layout map",
+  "kind": "signal",
+  "group": "locale-preferences",
+  "subgroup": "Input",
+  "tags": [
+    "keyboard",
+    "layout",
+    "chromium-only"
+  ],
+  "plain": "Which character each physical key produces, revealing QWERTY, AZERTY, QWERTZ, Dvorak etc.",
+  "meaning": "Tells native keyboard layout and so likely country and language (French AZERTY, German QWERTZ, Colemak enthusiasts). Chromium returns about 48 key codes, no prompt.",
+  "lifecycle": [
+    "on-arrival",
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "await navigator.keyboard.getLayoutMap()",
+      "permissions_policy": "keyboard-map",
+      "bcd": [
+        "api.Keyboard.getLayoutMap"
+      ],
+      "access": {
+        "grant": "none",
+        "prompt_ui": "None",
+        "secure_context": true,
+        "user_gesture": false,
+        "persistence": "read fresh on every page load; nothing stored",
+        "revocation": "none needed (no grant)",
+        "iframe": "Readable from cross-origin iframes too (same values)",
+        "steps": [
+          "Page script reads the value",
+          "No prompt is shown"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "69",
+          "note": "",
+          "date": "2018-09-04"
+        },
+        "edge": {
+          "s": "y",
+          "v": "79",
+          "note": "",
+          "date": "2020-01-15"
+        },
+        "firefox": {
+          "s": "n",
+          "v": "",
+          "note": "Standards position: harmful"
+        },
+        "safari": {
+          "s": "n",
+          "v": "",
+          "note": "Standards position: oppose"
+        },
+        "ios_safari": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "chrome_android": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "samsung": {
+          "s": "y",
+          "v": "10.0",
+          "note": "",
+          "date": "2019-08-22"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "object",
+    "metric": "",
+    "update": "static per session",
+    "fields": [
+      {
+        "name": "KeyA..KeyZ, Digit0..9, punctuation",
+        "type": "map",
+        "unit": "",
+        "range": "about 48 entries: code to character",
+        "precision": ""
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can tell your keyboard layout, such as QWERTY, AZERTY or QWERTZ",
+    "user_action": "Nothing. It happens when the page or app loads",
+    "can": [
+      "Check which letter each physical key types, about 48 keys",
+      "Guess your country and language from the layout",
+      "Match shortcuts to your keyboard"
+    ],
+    "cannot": [
+      "See what you type",
+      "Work in Firefox or Safari",
+      "Show a permission pop up; there is none"
+    ],
+    "reach": 1,
+    "reach_label": "One layout check",
+    "differs": "Only Chrome, Edge and Samsung Internet support it. Firefox and Safari do not."
+  },
+  "story": {
+    "what_it_is": "The page can tell whether your keyboard is QWERTY, AZERTY or something else.",
+    "icon": "keyboard",
+    "tags": [
+      "Keyboard",
+      "Silent",
+      "Fingerprint"
+    ],
+    "marketing": [],
+    "for_you": "You may see correct keys shown in a game or editor. You do not see that the site learned your layout. No prompt appears.",
+    "for_makers": "Makers use it to place game keys and shortcuts well. Trackers use it to guess your country and language and to tell you apart from others.",
+    "use_cases": [
+      {
+        "type": "games",
+        "example": "A browser game shows 'Z Q S D' as movement keys for a French player.",
+        "apps": [
+          "Krunker.io"
+        ]
+      },
+      {
+        "type": "creative",
+        "example": "A music web app maps its piano keys to your physical key rows.",
+        "apps": [
+          "BandLab"
+        ]
+      },
+      {
+        "type": "productivity",
+        "example": "A web editor shows the right shortcut hints for your layout.",
+        "apps": []
+      },
+      {
+        "type": "analytics",
+        "example": "A fingerprinting script adds the layout to a device profile.",
+        "apps": []
+      },
+      {
+        "type": "security",
+        "example": "A fraud tool flags a mismatch between layout and the claimed country.",
+        "apps": []
+      },
+      {
+        "type": "ads",
+        "example": "An ad profile guesses language from an uncommon layout when other signals are missing.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Hints at country",
+      "Part of a fingerprint"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Chromium desktop only",
+    "Top-level frame or allowed iframe",
+    "Reports layout, not typed text"
+  ],
+  "scores": {
+    "sensitivity": 1,
+    "utility": 2,
+    "fingerprint_bits": 3.5,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Show correct shortcut hints"
+    ],
+    "abuse": [
+      "Layout fingerprint",
+      "Region inference"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2018-09",
+      "browser": "chrome",
+      "version": "69",
+      "change": "Shipped, top-level frames and permissions-policy keyboard-map gated"
+    }
+  ],
+  "refs": [
+    {
+      "t": "mdn",
+      "label": "MDN Keyboard.getLayoutMap",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/Keyboard/getLayoutMap"
+    },
+    {
+      "t": "spec",
+      "label": "WICG Keyboard Map",
+      "url": "https://wicg.github.io/keyboard-map/"
+    }
+  ],
+  "confidence": "docs"
+}

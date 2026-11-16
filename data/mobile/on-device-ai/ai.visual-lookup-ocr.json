@@ -1,0 +1,213 @@
+{
+  "id": "mob.ai.visual-lookup-ocr",
+  "name": "Text recognition and visual look up (Live Text, Visual Look Up, ML Kit)",
+  "kind": "capability",
+  "group": "on-device-ai",
+  "subgroup": "Vision",
+  "tags": [
+    "live-text",
+    "ocr",
+    "visual-look-up",
+    "document-scanner",
+    "vision"
+  ],
+  "plain": "Reads text in images and scans documents on device.",
+  "meaning": "Apps can recognise text, scan pages and identify objects in photos. Visual Look Up and Live Text work inside the system apps with no code.",
+  "lifecycle": [
+    "in-session"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "y",
+      "v": "5.0",
+      "api": 21,
+      "permission": "CAMERA for live capture (dangerous)",
+      "protection": "dangerous",
+      "grant": "prompt",
+      "prompt_ui": "Camera permission for live; none for static images",
+      "persistence": "Until revoked",
+      "revocation": "Settings > Privacy > Camera",
+      "store_policy": "",
+      "api_surface": "ML Kit Text Recognition v2, ML Kit Document Scanner, Google Lens",
+      "note": "ML Kit Document Scanner needs no camera permission as it uses Play services UI."
+    },
+    "ios": {
+      "s": "y",
+      "v": "13.0",
+      "permission": "None for images; camera permission for live",
+      "protection": "prompt",
+      "grant": "prompt",
+      "prompt_ui": "Camera prompt for live; none for photos",
+      "persistence": "Until revoked",
+      "revocation": "Settings > Privacy > Camera",
+      "store_policy": "",
+      "api_surface": "VisionKit ImageAnalyzer, DataScannerViewController (iOS 16), VNRecognizeTextRequest",
+      "note": "Visual Look Up uses Apple models and may call servers for landmarks."
+    }
+  },
+  "web_equivalents": [
+    "web.peripherals.face-text-detection",
+    "web.peripherals.barcode-detection"
+  ],
+  "data": {
+    "type": "object",
+    "metric": "Recognised text",
+    "update": "per image",
+    "fields": [
+      {
+        "name": "text",
+        "type": "string",
+        "unit": "chars",
+        "range": "per language",
+        "precision": "good"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can pick out text in pictures and scan documents on your phone",
+    "user_action": "You tap Scan document, point the camera at text, or open a photo",
+    "can": [
+      "Pick out the words in a photo or live camera view",
+      "Scan a document without the camera permission on Android, using Google's scanner",
+      "Look up landmarks and plants on iPhone, with Apple's servers if needed"
+    ],
+    "cannot": [
+      "Use the live camera without you allowing the camera",
+      "Look at photos you did not open or share",
+      "Keep working fully offline on iPhone for landmark look up"
+    ],
+    "reach": 2,
+    "reach_label": "Only what you scan or open",
+    "differs": "Both need a camera prompt for live scanning. Android's document scanner uses Google's screen, so it needs no camera permission."
+  },
+  "story": {
+    "what_it_is": "Reads text in pictures and scans documents on the phone.",
+    "icon": "scan-text",
+    "tags": [
+      "AI",
+      "Camera",
+      "Text"
+    ],
+    "marketing": [
+      {
+        "vendor": "Apple",
+        "name": "Live Text and Visual Look Up",
+        "pitch": "Apple lets you copy text from a photo and learn about objects, plants and landmarks in pictures.",
+        "url": "https://developer.apple.com/documentation/visionkit"
+      },
+      {
+        "vendor": "Google",
+        "name": "ML Kit text recognition",
+        "pitch": "Google offers on device text recognition in ML Kit for reading text from images.",
+        "url": "https://developers.google.com/ml-kit/vision/text-recognition/v2"
+      }
+    ],
+    "for_you": "You point the camera at a page and can copy the words, or tap a plant in a photo to learn its name. It works on the phone, though some lookups ask a server.",
+    "for_makers": "Makers add scanning, receipts and ID capture without building their own system. It also turns photos into searchable data, which brings privacy questions.",
+    "use_cases": [
+      {
+        "type": "banking",
+        "example": "A bank app reads a check or card number from a photo.",
+        "apps": [
+          "Chase"
+        ]
+      },
+      {
+        "type": "productivity",
+        "example": "A scanner app turns a paper receipt into a text file.",
+        "apps": [
+          "Adobe Scan",
+          "Notes"
+        ]
+      },
+      {
+        "type": "travel",
+        "example": "A traveler copies a hotel address from a sign.",
+        "apps": []
+      },
+      {
+        "type": "shopping",
+        "example": "A shopping app reads a barcode or label.",
+        "apps": []
+      },
+      {
+        "type": "education",
+        "example": "A student scans a page into notes.",
+        "apps": []
+      },
+      {
+        "type": "accessibility",
+        "example": "A person with low vision has a sign read aloud.",
+        "apps": [
+          "Seeing AI"
+        ]
+      },
+      {
+        "type": "games",
+        "example": "An AR game reads text from a real poster to unlock a clue.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Captures documents and IDs",
+      "Some lookups call servers"
+    ],
+    "android_note": "Camera permission for live scans. The ML Kit Document Scanner needs no camera permission.",
+    "ios_note": "Camera prompt for live scans. Visual Look Up may call Apple servers for landmarks."
+  },
+  "technical_bounds": [
+    "Quality varies with language and lighting"
+  ],
+  "scores": {
+    "sensitivity": 3,
+    "utility": 4,
+    "fingerprint_bits": 1,
+    "friction": 1
+  },
+  "value": {
+    "legit_uses": [
+      "Scanning",
+      "Accessibility"
+    ],
+    "abuse": [
+      "Document capture"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2019-09",
+      "platform": "ios",
+      "version": "iOS 13",
+      "change": "Vision text recognition"
+    },
+    {
+      "date": "2022-09",
+      "platform": "ios",
+      "version": "iOS 16",
+      "change": "Live Text in apps and DataScanner"
+    }
+  ],
+  "related": [
+    "mob.ai.ml-runtime"
+  ],
+  "refs": [
+    {
+      "t": "apple",
+      "label": "Apple: VisionKit",
+      "url": "https://developer.apple.com/documentation/visionkit"
+    },
+    {
+      "t": "android",
+      "label": "ML Kit: Text recognition",
+      "url": "https://developers.google.com/ml-kit/vision/text-recognition/v2"
+    }
+  ],
+  "confidence": "docs"
+}

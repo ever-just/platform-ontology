@@ -1,0 +1,178 @@
+{
+  "id": "mob.dev.cpu-cores",
+  "name": "CPU cores and ABI",
+  "kind": "signal",
+  "group": "device-system-profile",
+  "subgroup": "Hardware capacity",
+  "tags": [
+    "cpu",
+    "abi"
+  ],
+  "plain": "Reads core count and CPU architecture with no prompt.",
+  "meaning": "Identifies chipset class (4 to 10 cores). A device-model proxy: apps pick builds and thread pools with it, trackers add it to a fingerprint.",
+  "lifecycle": [
+    "on-launch",
+    "in-session"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "y",
+      "v": "1.0",
+      "api": 1,
+      "permission": "",
+      "protection": "none",
+      "grant": "none",
+      "prompt_ui": "",
+      "persistence": "",
+      "revocation": "",
+      "store_policy": "",
+      "api_surface": "Runtime.availableProcessors(), Build.SUPPORTED_ABIS (API 21), /proc/cpuinfo (restricted per app on newer builds)",
+      "note": "Core count 4 to 10; ABI arm64-v8a on nearly all current phones"
+    },
+    "ios": {
+      "s": "y",
+      "v": "2.0",
+      "permission": "none",
+      "protection": "none",
+      "grant": "none",
+      "prompt_ui": "",
+      "persistence": "",
+      "revocation": "",
+      "store_policy": "",
+      "api_surface": "Cores 2 to 10 on iPhone; arm64 only",
+      "note": ""
+    }
+  },
+  "web_equivalents": [
+    "web.device.hardware-concurrency"
+  ],
+  "data": {
+    "type": "integer",
+    "metric": "Core count, ABI list",
+    "update": "Static",
+    "fields": [
+      {
+        "name": "cores",
+        "type": "integer",
+        "unit": "cores",
+        "range": "2 to 10",
+        "precision": "exact"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can see how many CPU cores your phone has and what chip type, with no prompt",
+    "user_action": "Nothing. The app checks when it starts, often to pick graphics or video settings",
+    "can": [
+      "See the number of cores, typically 4 to 10 on Android and 2 to 10 on iPhone",
+      "See the chip type; nearly all current phones are 64 bit ARM",
+      "Pick lighter or heavier settings to match your phone"
+    ],
+    "cannot": [
+      "See detailed chip info on newer Android, where per-app limits block parts of CPU info files",
+      "Learn who you are from core count alone",
+      "Change how fast the chip runs"
+    ],
+    "reach": 2,
+    "reach_label": "Always available, simple facts",
+    "differs": ""
+  },
+  "story": {
+    "what_it_is": "An app can see how many processor cores your phone has and what chip type.",
+    "icon": "cpu",
+    "tags": [
+      "Silent",
+      "Device",
+      "Performance"
+    ],
+    "marketing": [],
+    "for_you": "You never see this check. Apps use it to decide how hard to work your phone. It also shows how powerful or old your phone is.",
+    "for_makers": "Makers pick graphics quality and how many tasks to run at once. Trackers add core count to a device fingerprint, since it is a stable detail.",
+    "use_cases": [
+      {
+        "type": "games",
+        "example": "A 3D game picks high graphics on an eight core phone and low graphics on a four core phone.",
+        "apps": []
+      },
+      {
+        "type": "creative",
+        "example": "A video editor uses all cores to render a clip faster, and fewer on weak phones.",
+        "apps": []
+      },
+      {
+        "type": "media",
+        "example": "A streaming app picks a video decoder that fits your chip.",
+        "apps": []
+      },
+      {
+        "type": "ar-vr",
+        "example": "An AR app turns off heavy effects on phones with few cores so tracking stays smooth.",
+        "apps": []
+      },
+      {
+        "type": "ads",
+        "example": "An ad firm adds core count to a device fingerprint.",
+        "apps": []
+      },
+      {
+        "type": "developer",
+        "example": "A developer builds a different app file for each chip type to keep the download small.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Shows how new your phone is",
+      "Adds to a fingerprint"
+    ],
+    "android_note": "Read through system properties with no prompt, including the chip type.",
+    "ios_note": "Read through system calls with no prompt."
+  },
+  "technical_bounds": [
+    "Low entropy within a model"
+  ],
+  "scores": {
+    "sensitivity": 1,
+    "utility": 2,
+    "fingerprint_bits": 2,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Thread pool sizing"
+    ],
+    "abuse": [
+      "Fingerprint"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2014-11",
+      "platform": "android",
+      "version": "5.0 (API 21)",
+      "change": "SUPPORTED_ABIS list replaces CPU_ABI strings"
+    }
+  ],
+  "related": [
+    "mob.dev.ram-size"
+  ],
+  "refs": [
+    {
+      "t": "android",
+      "label": "Android: Build",
+      "url": "https://developer.android.com/reference/android/os/Build"
+    },
+    {
+      "t": "apple",
+      "label": "Apple: ProcessInfo",
+      "url": "https://developer.apple.com/documentation/foundation/processinfo"
+    }
+  ],
+  "confidence": "inferred"
+}

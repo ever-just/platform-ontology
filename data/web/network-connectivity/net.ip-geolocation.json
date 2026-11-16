@@ -1,0 +1,226 @@
+{
+  "id": "web.net.ip-geolocation",
+  "name": "IP geolocation",
+  "kind": "signal",
+  "group": "network-connectivity",
+  "subgroup": "Addressing",
+  "tags": [
+    "geoip",
+    "location",
+    "maxmind",
+    "server-side"
+  ],
+  "plain": "The server converts the visitor's IP into an approximate country, region and city.",
+  "meaning": "Commercial databases (MaxMind, IPinfo, IP2Location) map IPs to places. Vendors claim about 99.8% country accuracy, but city accuracy is much lower and mobile or VPN IPs often point to the carrier hub or exit.",
+  "lifecycle": [
+    "on-arrival"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "GeoIP lookup of the client IP (MaxMind GeoIP2, IPinfo)",
+      "access": {
+        "grant": "none",
+        "prompt_ui": "",
+        "secure_context": false,
+        "user_gesture": false,
+        "persistence": "",
+        "revocation": "",
+        "iframe": "",
+        "steps": [
+          "Read client IP",
+          "Query a local or API database",
+          "Return country, region, city, postal, lat and long"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "1",
+          "note": "",
+          "date": "2008-12-11"
+        },
+        "edge": {
+          "s": "y",
+          "v": "79",
+          "note": "",
+          "date": "2020-01-15"
+        },
+        "firefox": {
+          "s": "y",
+          "v": "1",
+          "note": "",
+          "date": "2004-11-09"
+        },
+        "safari": {
+          "s": "y",
+          "v": "1",
+          "note": "",
+          "date": "2003-06-23"
+        },
+        "ios_safari": {
+          "s": "y",
+          "v": "1",
+          "note": "",
+          "date": "2007-06-29"
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "1",
+          "note": "",
+          "date": ""
+        },
+        "samsung": {
+          "s": "y",
+          "v": "5.0",
+          "note": "",
+          "date": "2016-12-15"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "object",
+    "metric": "Country, region, city, lat and long with accuracy radius",
+    "update": "",
+    "fields": [
+      {
+        "name": "accuracy radius",
+        "type": "integer",
+        "unit": "km",
+        "range": "5 to 1000",
+        "precision": "city level in good cases, vendor reported"
+      },
+      {
+        "name": "country",
+        "type": "string",
+        "unit": "",
+        "range": "ISO 3166",
+        "precision": "about 99.8% vendor claim"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can guess your country, region and city from your IP address",
+    "user_action": "Nothing. It happens when your device connects to the site",
+    "can": [
+      "Look up a likely country, region and city from your IP",
+      "Show local content, prices and language",
+      "Spot a mismatch with your time zone, such as when you use a VPN"
+    ],
+    "cannot": [
+      "Find your street or home; city guesses are much less exact than country",
+      "Get it right on mobile and VPN connections, which often point to a carrier hub or exit",
+      "Know your name or account from it"
+    ],
+    "reach": 2,
+    "reach_label": "Country is close, city is rough",
+    "differs": ""
+  },
+  "story": {
+    "what_it_is": "A site turns your internet address into a guess of your country, region and city.",
+    "icon": "earth",
+    "tags": [
+      "Location",
+      "Always on",
+      "Network"
+    ],
+    "marketing": [],
+    "for_you": "You never have to allow anything. Sites guess your country and often your city from your internet address. It is right for countries most of the time, less for cities. A VPN changes the guess.",
+    "for_makers": "Makers use it for local prices, language, taxes and rights. Ads use it for regional targeting. Fraud teams compare it with your billing address and sign in history.",
+    "use_cases": [
+      {
+        "type": "games",
+        "example": "A game site picks your server region and shows local store prices.",
+        "apps": [
+          "Roblox",
+          "Steam"
+        ]
+      },
+      {
+        "type": "games",
+        "example": "A cloud gaming service uses it to see which data center is close to you and whether the game is licensed in your country.",
+        "apps": [
+          "GeForce NOW",
+          "Xbox Cloud Gaming"
+        ]
+      },
+      {
+        "type": "media",
+        "example": "A streaming service uses it to show only the shows allowed in your country.",
+        "apps": [
+          "Netflix",
+          "BBC iPlayer"
+        ]
+      },
+      {
+        "type": "shopping",
+        "example": "A store shows prices, taxes and delivery for your country.",
+        "apps": [
+          "Amazon",
+          "IKEA"
+        ]
+      },
+      {
+        "type": "ads",
+        "example": "An ad network shows local ads for your city, such as nearby store offers.",
+        "apps": []
+      },
+      {
+        "type": "security",
+        "example": "A bank flags a login from a country the customer has never visited.",
+        "apps": []
+      },
+      {
+        "type": "analytics",
+        "example": "A site measures where its readers live without asking them.",
+        "apps": [
+          "Google Analytics"
+        ]
+      }
+    ],
+    "risks": [
+      "Reveals rough location",
+      "Can be wrong"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "City accuracy varies widely and is often wrong for mobile and VPN users",
+    "Does not reveal street address"
+  ],
+  "scores": {
+    "sensitivity": 2,
+    "utility": 5,
+    "fingerprint_bits": 3,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": "Content localization, tax and licensing, fraud rules",
+    "abuse": "Price discrimination, geoblocking, stalking via leaked city"
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "related": [
+    "web.net.client-ip",
+    "web.net.vpn-proxy-tor-detection"
+  ],
+  "refs": [
+    {
+      "t": "vendor",
+      "label": "MaxMind GeoIP accuracy",
+      "url": "https://www.maxmind.com/en/geoip-accuracy-radius"
+    },
+    {
+      "t": "vendor",
+      "label": "IPinfo geolocation data",
+      "url": "https://ipinfo.io/"
+    }
+  ],
+  "confidence": "docs"
+}

@@ -1,0 +1,222 @@
+{
+  "id": "mob.bg.workmanager-jobs",
+  "name": "Deferrable background work (WorkManager, JobScheduler)",
+  "kind": "capability",
+  "group": "notifications-background",
+  "subgroup": "Android background limits",
+  "tags": [
+    "workmanager",
+    "jobscheduler",
+    "periodic",
+    "15-minutes"
+  ],
+  "plain": "The standard way to run background tasks; periodic work cannot repeat faster than every 15 minutes.",
+  "meaning": "Defines how often a background sync can run for an idle install. The 15 minute minimum and bucket quotas make exact timing impossible, so apps lean on push for freshness.",
+  "lifecycle": [
+    "background"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "y",
+      "v": "5.0",
+      "api": 21,
+      "permission": "RECEIVE_BOOT_COMPLETED (optional, for reschedule), WAKE_LOCK (normal)",
+      "protection": "normal",
+      "grant": "install",
+      "prompt_ui": "None",
+      "persistence": "Persisted across reboots by WorkManager; constraints decide start",
+      "revocation": "Force stop clears jobs",
+      "store_policy": "",
+      "api_surface": "WorkManager.enqueueUniquePeriodicWork, JobScheduler.schedule",
+      "note": "Periodic minimum interval 15 min (flex window 5 min); regular job quotas by bucket; Android 16 adds top state and FGS quota enforcement"
+    },
+    "ios": {
+      "s": "p",
+      "v": "7.0",
+      "permission": "BGTaskSchedulerPermittedIdentifiers (Info.plist)",
+      "protection": "none",
+      "grant": "none",
+      "prompt_ui": "None",
+      "persistence": "System decides when; earliestBeginDate is only a lower bound",
+      "revocation": "Force quit stops tasks",
+      "store_policy": "",
+      "api_surface": "BGTaskScheduler.submit(BGAppRefreshTaskRequest or BGProcessingTaskRequest)",
+      "note": "iOS has no guaranteed interval; see mob.bg.ios-refresh-processing"
+    }
+  },
+  "web_equivalents": [
+    "web.notify.periodic-background-sync",
+    "web.notify.background-sync"
+  ],
+  "data": {
+    "type": "integer",
+    "metric": "Periodic interval",
+    "update": "Scheduled",
+    "fields": [
+      {
+        "name": "min_interval",
+        "type": "integer",
+        "unit": "minutes",
+        "range": "15",
+        "precision": ""
+      },
+      {
+        "name": "flex",
+        "type": "integer",
+        "unit": "minutes",
+        "range": "5 minimum",
+        "precision": ""
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can run background jobs on Android, but not more often than every 15 minutes",
+    "user_action": "Nothing. It happens when the app sets up a sync, upload or cleanup job",
+    "can": [
+      "Run a job on a schedule, such as every 15 minutes or longer",
+      "Wait for good conditions, like Wi-Fi or charging",
+      "Retry later if a job fails"
+    ],
+    "cannot": [
+      "Repeat faster than every 15 minutes",
+      "Run at an exact second; the system picks a good time",
+      "Use up the quota for its group; jobs get fewer minutes when the app is rarely opened",
+      "Count on a guaranteed time on iPhone, which has no fixed interval"
+    ],
+    "reach": 3,
+    "reach_label": "Ongoing, but limited and delayed",
+    "differs": "Android has a standard job system with a 15 minute minimum. iPhone has no guaranteed interval."
+  },
+  "story": {
+    "what_it_is": "The standard way for Android apps to run tasks later in the background, no faster than every 15 minutes.",
+    "icon": "calendar-clock",
+    "tags": [
+      "Background",
+      "Android",
+      "Battery"
+    ],
+    "marketing": [
+      {
+        "vendor": "Google",
+        "name": "WorkManager",
+        "pitch": "Google pitches WorkManager as the recommended solution for reliable background work that must run even if the app exits.",
+        "url": "https://developer.android.com/develop/background-work/background-tasks/persistent/getting-started"
+      }
+    ],
+    "for_you": "You never see it. Photos back up, drafts send and data syncs when your phone has network or charge. It might finish late, but it should finish.",
+    "for_makers": "Makers use it for uploads, sync and cleanup that must not be lost. Since the timing is loose, they use push messages when freshness matters.",
+    "use_cases": [
+      {
+        "type": "media",
+        "example": "A photo app uploads new pictures when you are on Wi-Fi and plugged in.",
+        "apps": [
+          "Google Photos",
+          "iCloud for Android"
+        ]
+      },
+      {
+        "type": "messaging",
+        "example": "A chat app retries a message that failed to send when the signal returns.",
+        "apps": [
+          "Telegram"
+        ]
+      },
+      {
+        "type": "productivity",
+        "example": "A notes app saves your offline edits to the server when you reconnect.",
+        "apps": [
+          "Evernote"
+        ]
+      },
+      {
+        "type": "fitness",
+        "example": "A fitness app uploads your workout file after you finish and go online.",
+        "apps": [
+          "Fitbit"
+        ]
+      },
+      {
+        "type": "ads",
+        "example": "An ad or analytics SDK batches events and sends them in scheduled jobs.",
+        "apps": []
+      },
+      {
+        "type": "games",
+        "example": "A game downloads new level files in the background overnight.",
+        "apps": [
+          "Roblox"
+        ]
+      }
+    ],
+    "risks": [
+      "Can be used to poll for signals",
+      "Timing is not exact"
+    ],
+    "android_note": "Periodic work cannot repeat faster than 15 minutes. Quotas depend on the standby group.",
+    "ios_note": "iOS has no guaranteed interval. Apps use app refresh and processing tasks."
+  },
+  "technical_bounds": [
+    "Cannot run more often than every 15 minutes",
+    "Subject to standby bucket quotas"
+  ],
+  "scores": {
+    "sensitivity": 1,
+    "utility": 4,
+    "fingerprint_bits": null,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Sync",
+      "Uploads"
+    ],
+    "abuse": [
+      "Background polling harvesting signals"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2018-10",
+      "platform": "android",
+      "version": "WorkManager 1.0",
+      "change": "WorkManager stable release"
+    },
+    {
+      "date": "2025-06",
+      "platform": "android",
+      "version": "16 (API 36)",
+      "change": "Quotas also depend on top state and foreground service; STOP_REASON_TIMEOUT_ABANDONED added"
+    },
+    {
+      "date": "2024-10",
+      "platform": "android",
+      "version": "15 (API 35)",
+      "change": "Task timeouts for dataSync and mediaProcessing (see FGS timeouts)"
+    }
+  ],
+  "related": [
+    "mob.bg.standby-buckets",
+    "mob.bg.expedited-uidt",
+    "mob.bg.ios-refresh-processing"
+  ],
+  "refs": [
+    {
+      "t": "android",
+      "label": "Android: Background tasks overview",
+      "url": "https://developer.android.com/develop/background-work/background-tasks"
+    },
+    {
+      "t": "android",
+      "label": "Android: Schedule persistent work",
+      "url": "https://developer.android.com/develop/background-work/background-tasks/persistent/getting-started"
+    }
+  ],
+  "confidence": "verified"
+}

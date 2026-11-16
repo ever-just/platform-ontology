@@ -1,0 +1,206 @@
+{
+  "id": "mob.system.one-time-permission",
+  "name": "One-time permissions",
+  "kind": "capability",
+  "group": "system-control",
+  "subgroup": "Mechanics",
+  "tags": [
+    "mechanics",
+    "one-time",
+    "runtime-permission"
+  ],
+  "plain": "A prompt choice that grants access only until the user leaves the app.",
+  "meaning": "Reduces long-term exposure for location, mic and camera. Android 11 introduced Only this time; iOS offers Allow Once for location.",
+  "lifecycle": [
+    "in-session"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "y",
+      "v": "11",
+      "api": 30,
+      "permission": "n/a (system behavior)",
+      "protection": "none",
+      "grant": "prompt",
+      "prompt_ui": "Only this time",
+      "persistence": "Revoked when activity is no longer visible, with a short grace; stops after a foreground service started while visible ends",
+      "revocation": "Auto; process is killed on revoke",
+      "store_policy": "Play: apps must not re-prompt aggressively",
+      "api_surface": "Context.checkSelfPermission, revokeSelfPermissionOnKill (API 33)",
+      "note": "Applies to location, microphone and camera."
+    },
+    "ios": {
+      "s": "p",
+      "v": "13",
+      "permission": "n/a",
+      "protection": "prompt",
+      "grant": "prompt",
+      "prompt_ui": "Allow Once (location)",
+      "persistence": "Reset when app leaves for a while",
+      "revocation": "Settings > Privacy & Security > Location Services",
+      "store_policy": "App Review 5.1.1",
+      "api_surface": "CLAuthorizationStatus",
+      "note": "Only location has Allow Once; camera and mic prompts are persistent."
+    }
+  },
+  "web_equivalents": [
+    "web.meta.permissions-api"
+  ],
+  "data": {
+    "type": "none",
+    "metric": "Grant lifetime",
+    "update": "per session",
+    "fields": []
+  },
+  "limits": {
+    "headline": "Can use location, camera or mic only until you leave, if you pick one time access",
+    "user_action": "You tap Only this time (Android) or Allow Once (iPhone location)",
+    "can": [
+      "Use the sensor while the app is open",
+      "Ask again the next time you open it"
+    ],
+    "cannot": [
+      "Keep access after you leave the app",
+      "Offer Allow Once for camera or mic on iPhone",
+      "Stay allowed once you choose the one time option"
+    ],
+    "reach": 1,
+    "reach_label": "Until you leave the app",
+    "differs": "Android offers Only this time for location, mic and camera; iPhone offers Allow Once only for location."
+  },
+  "story": {
+    "what_it_is": "A choice in the prompt that gives access only until you leave the app.",
+    "icon": "timer",
+    "tags": [
+      "Permissions",
+      "Privacy",
+      "Choice"
+    ],
+    "marketing": [
+      {
+        "vendor": "Google",
+        "name": "One time permissions",
+        "pitch": "Android 11 lets you grant location, mic or camera access just for this session.",
+        "url": "https://developer.android.com/about/versions/11/privacy/permissions"
+      }
+    ],
+    "for_you": "The prompt has an Only this time button. You tap it and the app can use your location or camera right now. When you leave the app, the access ends.",
+    "for_makers": "Apps need to ask again each visit, so they must be useful every time. It also reassures cautious users, who say yes more often. Makers cannot count on permanent sensor access.",
+    "use_cases": [
+      {
+        "type": "rideshare",
+        "example": "You allow location once to find a ride, and the app asks again next time.",
+        "apps": [
+          "Uber"
+        ]
+      },
+      {
+        "type": "shopping",
+        "example": "You allow the camera once to scan a barcode in a shop.",
+        "apps": []
+      },
+      {
+        "type": "social",
+        "example": "You allow the mic once for a voice message.",
+        "apps": []
+      },
+      {
+        "type": "maps",
+        "example": "You allow location once to find a coffee shop nearby.",
+        "apps": [
+          "Google Maps"
+        ]
+      },
+      {
+        "type": "games",
+        "example": "A location game asks again each time you open it.",
+        "apps": [
+          "Pokemon GO"
+        ]
+      },
+      {
+        "type": "health",
+        "example": "A pulse reading app asks for the camera each time.",
+        "apps": []
+      },
+      {
+        "type": "travel",
+        "example": "A check in app asks for location at the hotel desk only.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Repeated prompts annoy",
+      "Apps may beg for always",
+      "Short windows break features"
+    ],
+    "android_note": "Android 11 introduced Only this time for location, microphone and camera.",
+    "ios_note": "On iPhone only location has Allow Once. Camera and mic prompts stay until you change them."
+  },
+  "technical_bounds": [
+    "Android: only 3 permissions",
+    "iOS: only location"
+  ],
+  "scores": {
+    "sensitivity": 4,
+    "utility": 3,
+    "fingerprint_bits": null,
+    "friction": 2
+  },
+  "value": {
+    "legit_uses": [
+      "Casual use"
+    ],
+    "abuse": [
+      "None"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2020-09",
+      "platform": "android",
+      "version": "11 (API 30)",
+      "change": "One-time permission added for location, mic and camera"
+    },
+    {
+      "date": "2022-08",
+      "platform": "android",
+      "version": "13 (API 33)",
+      "change": "revokeSelfPermissionOnKill added"
+    },
+    {
+      "date": "2019-09",
+      "platform": "ios",
+      "version": "iOS 13",
+      "change": "Allow Once for location"
+    }
+  ],
+  "related": [
+    "mob.system.two-denial-rule"
+  ],
+  "refs": [
+    {
+      "t": "android",
+      "label": "Android: One-time permissions",
+      "url": "https://developer.android.com/training/permissions/requesting#one-time-access"
+    },
+    {
+      "t": "android",
+      "label": "Android 11 permissions and privacy changes",
+      "url": "https://developer.android.com/about/versions/11/privacy/permissions"
+    },
+    {
+      "t": "apple",
+      "label": "Apple: Location authorization",
+      "url": "https://developer.apple.com/documentation/corelocation/requesting-authorization-to-use-location-services"
+    }
+  ],
+  "confidence": "docs"
+}

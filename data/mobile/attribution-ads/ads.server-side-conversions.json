@@ -1,0 +1,223 @@
+{
+  "id": "mob.ads.server-side-conversions",
+  "name": "Server-side conversions APIs",
+  "kind": "tracking",
+  "group": "attribution-ads",
+  "subgroup": "SDKs and measurement",
+  "tags": [
+    "capi",
+    "server-side",
+    "s2s",
+    "enhanced-conversions"
+  ],
+  "plain": "The advertiser's server sends purchase or signup events to ad platforms, with hashed email or phone.",
+  "meaning": "Bypasses on-device tracking limits: the server sends identifiers and click IDs directly, so the platform matches events to ad clicks.",
+  "lifecycle": [
+    "signed-in",
+    "background"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "y",
+      "v": "",
+      "permission": "",
+      "protection": "none",
+      "grant": "none",
+      "prompt_ui": "",
+      "persistence": "",
+      "revocation": "",
+      "store_policy": "Data safety: sharing; consent required where law demands",
+      "api_surface": "Meta Conversions API, Google Ads enhanced conversions, TikTok Events API, MMP S2S",
+      "note": "Matching uses hashed email, phone, click IDs (gclid, gbraid, fbclid) and IP/UA."
+    },
+    "ios": {
+      "s": "y",
+      "v": "",
+      "permission": "",
+      "protection": "none",
+      "grant": "none",
+      "prompt_ui": "",
+      "persistence": "",
+      "revocation": "",
+      "store_policy": "ATT counts server-side sharing as tracking when linked to third-party data; 5.1.2",
+      "api_surface": "Same APIs",
+      "note": "Apple's ATT definition covers sharing data for ads even if sent server to server."
+    }
+  },
+  "web_equivalents": [
+    "web.xsite.email-hash-identity",
+    "web.xsite.ad-click-ids"
+  ],
+  "data": {
+    "type": "object",
+    "metric": "Event + hashed identifiers",
+    "update": "per event",
+    "fields": [
+      {
+        "name": "em / ph",
+        "type": "hash",
+        "unit": "SHA-256",
+        "range": "",
+        "precision": ""
+      },
+      {
+        "name": "click ID",
+        "type": "string",
+        "unit": "",
+        "range": "",
+        "precision": ""
+      },
+      {
+        "name": "event_time",
+        "type": "integer",
+        "unit": "s",
+        "range": "",
+        "precision": ""
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can send your purchases and signups from its server to ad platforms",
+    "user_action": "You buy, sign up, or tap an ad, then the app's server reports it",
+    "can": [
+      "Send events to ad platforms with a scrambled email or phone number",
+      "Match them to your ad click with click IDs, IP address and browser details",
+      "Work around limits on the phone itself",
+      "Report even when the phone shows no tracking"
+    ],
+    "cannot": [
+      "Count as not tracking on iPhone; Apple still counts sharing for ads, even server to server",
+      "Send data without a matching ID or click",
+      "Skip the tracking prompt on iPhone if it shares for ads"
+    ],
+    "reach": 4,
+    "reach_label": "Ongoing, from the app's server",
+    "differs": "Both systems allow it. Apple counts server to server sharing for ads as tracking, so the prompt rules apply."
+  },
+  "story": {
+    "what_it_is": "A company's server tells an ad platform about your purchase, using a scrambled email, to match it to an ad.",
+    "icon": "server",
+    "tags": [
+      "Ads",
+      "Tracking",
+      "Behind the scenes"
+    ],
+    "marketing": [
+      {
+        "vendor": "Google",
+        "name": "Enhanced conversions",
+        "pitch": "Send hashed first party data like email to improve measurement while protecting privacy.",
+        "url": "https://support.google.com/google-ads/answer/9888656"
+      },
+      {
+        "vendor": "Meta",
+        "name": "Conversions API",
+        "pitch": "Share web and app events from your own server directly with Meta.",
+        "url": "https://developers.facebook.com/docs/marketing-api/conversions-api/"
+      }
+    ],
+    "for_you": "You never see it. After you buy something, the store's own server may quietly tell Meta or Google that you bought, using a scrambled version of your email.",
+    "for_makers": "Browsers and phones now block many on device signals, so makers send events from their own servers with click IDs and hashed contact data. That goes around on device limits and often gives better matching than the old way.",
+    "use_cases": [
+      {
+        "type": "shopping",
+        "example": "You buy shoes after an Instagram ad. The store's server sends the purchase and a hashed email to Meta so the ad gets credit.",
+        "apps": [
+          "Nike",
+          "Shein"
+        ]
+      },
+      {
+        "type": "games",
+        "example": "A game's server reports your first in app purchase to the ad network, no matter what you did on the device.",
+        "apps": [
+          "Supercell",
+          "Zynga"
+        ]
+      },
+      {
+        "type": "banking",
+        "example": "A bank sends 'account opened' to ad platforms, using a hashed email, to find similar customers.",
+        "apps": [
+          "Chime"
+        ]
+      },
+      {
+        "type": "ads",
+        "example": "An advertiser uploads a customer list, and the platform matches it to find lookalikes.",
+        "apps": [
+          "Meta",
+          "Google Ads"
+        ]
+      },
+      {
+        "type": "travel",
+        "example": "A travel site sends a booking event from its server after the page closes.",
+        "apps": [
+          "Booking.com"
+        ]
+      },
+      {
+        "type": "security",
+        "example": "Servers can filter fake events before they reach ad platforms, which helps fight fraud.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Gets around on device blocks",
+      "Shares hashed contact data"
+    ],
+    "android_note": "Works with Android click IDs and the advertising ID when allowed.",
+    "ios_note": "On iOS it still works when ATT is refused, as long as the email is known to the company."
+  },
+  "technical_bounds": [
+    "Needs the user's data on the advertiser's server",
+    "Consent and ATT rules still apply"
+  ],
+  "scores": {
+    "sensitivity": 4,
+    "utility": 5,
+    "fingerprint_bits": null,
+    "friction": 1
+  },
+  "value": {
+    "legit_uses": [
+      "Measurement resilient to blockers"
+    ],
+    "abuse": [
+      "Bypassing consent signals"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2021-04",
+      "platform": "ios",
+      "version": "iOS 14.5",
+      "change": "Server-side APIs grow as a response to ATT"
+    }
+  ],
+  "related": [
+    "mob.xtrack.hashed-email-identity",
+    "mob.ads.facebook-sdk"
+  ],
+  "refs": [
+    {
+      "t": "vendor",
+      "label": "Meta: Conversions API",
+      "url": "https://developers.facebook.com/docs/marketing-api/conversions-api/"
+    },
+    {
+      "t": "vendor",
+      "label": "Google Ads: enhanced conversions",
+      "url": "https://support.google.com/google-ads/answer/9888656"
+    }
+  ],
+  "confidence": "docs"
+}

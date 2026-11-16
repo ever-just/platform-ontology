@@ -1,0 +1,276 @@
+{
+  "id": "web.device.battery-status",
+  "name": "Battery Status",
+  "kind": "signal",
+  "group": "device-system-profile",
+  "subgroup": "Hardware",
+  "tags": [
+    "battery",
+    "chromium-only",
+    "removed-firefox",
+    "secure-context"
+  ],
+  "plain": "Battery level, charging state and time estimates, without a prompt on Chromium.",
+  "meaning": "Shows how drained a phone or laptop is. Researchers showed level plus charge time works as a short-term tracking ID. Site could raise prices for low battery or tell laptop from desktop.",
+  "lifecycle": [
+    "on-arrival",
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "navigator.getBattery() returning BatteryManager",
+      "bcd": [
+        "api.Navigator.getBattery",
+        "api.BatteryManager"
+      ],
+      "access": {
+        "grant": "none",
+        "prompt_ui": "None",
+        "secure_context": true,
+        "user_gesture": false,
+        "persistence": "read fresh on every page load; nothing stored",
+        "revocation": "none needed (no grant)",
+        "iframe": "Readable from cross-origin iframes too (same values)",
+        "steps": [
+          "Page script reads the value",
+          "No prompt is shown"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "38",
+          "note": "",
+          "date": "2014-10-07"
+        },
+        "edge": {
+          "s": "y",
+          "v": "79",
+          "note": "",
+          "date": "2020-01-15"
+        },
+        "firefox": {
+          "s": "r",
+          "v": "52",
+          "note": "Supported 43 to 51, removed in 52",
+          "date": "2017-03-07"
+        },
+        "safari": {
+          "s": "n",
+          "v": "",
+          "note": "Never implemented"
+        },
+        "ios_safari": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "38",
+          "note": "",
+          "date": "2014-10-08"
+        },
+        "samsung": {
+          "s": "y",
+          "v": "3.0",
+          "note": "",
+          "date": "2015-04-10"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "object",
+    "metric": "",
+    "update": "static per session",
+    "fields": [
+      {
+        "name": "level",
+        "type": "float",
+        "unit": "fraction",
+        "range": "0 to 1",
+        "precision": "0.01 steps"
+      },
+      {
+        "name": "charging",
+        "type": "boolean",
+        "unit": "",
+        "range": "true or false",
+        "precision": ""
+      },
+      {
+        "name": "chargingTime",
+        "type": "float",
+        "unit": "seconds",
+        "range": "0 to Infinity",
+        "precision": "whole seconds"
+      },
+      {
+        "name": "dischargingTime",
+        "type": "float",
+        "unit": "seconds",
+        "range": "0 to Infinity",
+        "precision": "whole seconds"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can see your battery level and charging state, with no prompt in Chrome",
+    "user_action": "Nothing. It happens when the page runs the check",
+    "can": [
+      "Check how full your battery is and whether it is charging",
+      "See estimated minutes to full or empty",
+      "Tell a laptop or phone from a desktop that has no battery",
+      "Use level plus charge time as a short term tracking clue"
+    ],
+    "cannot": [
+      "Work in Safari or on iPhone",
+      "Work in Firefox, which removed it",
+      "See battery health, make, or exact power draw",
+      "Track you for long; the level changes within minutes"
+    ],
+    "reach": 2,
+    "reach_label": "Current battery, while the page is open",
+    "differs": "Chrome, Edge, and Samsung Internet allow it. Firefox removed it and Safari never offered it."
+  },
+  "story": {
+    "what_it_is": "Battery level, charging state and time left, readable by a page without a pop-up in Chromium browsers.",
+    "icon": "battery",
+    "tags": [
+      "Battery",
+      "Silent",
+      "Chrome"
+    ],
+    "marketing": [
+      {
+        "vendor": "MDN",
+        "name": "Battery Status API",
+        "pitch": "Developer docs describe it as a way for pages to adapt behaviour to the device power state.",
+        "url": "https://developer.mozilla.org/en-US/docs/Web/API/Battery_Status_API"
+      }
+    ],
+    "for_you": "You do not get asked, and you will not notice it happening. A site may quietly decide to show a lighter page if your phone is almost empty. Or it may record your battery number as a clue about you.",
+    "for_makers": "Developers use it to be kind to batteries and to warn people before a long task. Ad and fraud teams watch it as one more detail that is hard for a bot or a fake device to get right. Privacy teams treat the combined level and timing as a risk.",
+    "use_cases": [
+      {
+        "type": "games",
+        "example": "A cloud gaming page warns you to plug in your laptop because streaming at high quality drains the battery fast.",
+        "apps": [
+          "Xbox Cloud Gaming",
+          "GeForce NOW"
+        ]
+      },
+      {
+        "type": "video",
+        "example": "A video call app suggests turning off the camera when the battery is at 5 percent.",
+        "apps": [
+          "Google Meet"
+        ]
+      },
+      {
+        "type": "fitness",
+        "example": "A web workout player lowers screen effects so a phone survives the full class.",
+        "apps": []
+      },
+      {
+        "type": "education",
+        "example": "An online exam site checks that the laptop is plugged in before a timed test begins.",
+        "apps": []
+      },
+      {
+        "type": "security",
+        "example": "A bank's fraud tool sees a device claiming to be a phone with a battery that never changes and flags it as an emulator.",
+        "apps": []
+      },
+      {
+        "type": "travel",
+        "example": "A booking site shows a lighter mobile page when a traveller's battery is low in an airport.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Hard to notice",
+      "Combines with other clues to follow you"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Absent on Safari, iOS, Firefox",
+    "Desktop without a battery reports charging true, level 1",
+    "Cannot read battery health or temperature"
+  ],
+  "scores": {
+    "sensitivity": 2,
+    "utility": 2,
+    "fingerprint_bits": 2.0,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Low-power mode for video or sync",
+      "Warn before big uploads"
+    ],
+    "abuse": [
+      "Cross-site short-term ID",
+      "Surveillance pricing on low battery"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": true,
+      "how": "Battery level, charging state, discharge estimate (BleepingComputer: battery status). Read by the LinkedIn APFC fingerprint script (48 features, alleged by BrowserGate, partly confirmed by BleepingComputer)."
+    }
+  },
+  "history": [
+    {
+      "date": "2015-08",
+      "browser": "paper",
+      "version": "",
+      "change": "Olejnik et al. show battery data can track users across sites"
+    },
+    {
+      "date": "2017-03",
+      "browser": "firefox",
+      "version": "52",
+      "change": "Removed over fingerprinting and privacy"
+    },
+    {
+      "date": "2022-06",
+      "browser": "chrome",
+      "version": "103",
+      "change": "Restricted to secure contexts"
+    },
+    {
+      "date": "2018-01",
+      "browser": "chrome",
+      "version": "",
+      "change": "Permissions-Policy battery integration discussed; Safari and Firefox refuse to ship"
+    }
+  ],
+  "refs": [
+    {
+      "t": "paper",
+      "label": "Olejnik et al. The leaking battery (2015)",
+      "url": "https://eprint.iacr.org/2015/616.pdf"
+    },
+    {
+      "t": "mdn",
+      "label": "MDN Battery Status API",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/Battery_Status_API"
+    },
+    {
+      "t": "spec",
+      "label": "W3C Battery Status",
+      "url": "https://www.w3.org/TR/battery-status/"
+    },
+    {
+      "t": "github",
+      "label": "CreepJS (abrahamjuliot)",
+      "url": "https://github.com/abrahamjuliot/creepjs"
+    }
+  ],
+  "confidence": "verified"
+}

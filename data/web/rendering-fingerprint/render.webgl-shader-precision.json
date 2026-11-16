@@ -1,0 +1,219 @@
+{
+  "id": "web.render.webgl-shader-precision",
+  "name": "WebGL shader precision formats",
+  "kind": "tracking",
+  "group": "rendering-fingerprint",
+  "subgroup": "WebGL",
+  "tags": [
+    "webgl",
+    "precision",
+    "gpu"
+  ],
+  "plain": "Reads float and integer precision ranges the GPU shader units support.",
+  "meaning": "Mobile GPUs report different mediump and highp precision, so the numbers separate desktop, Apple, Adreno, Mali and PowerVR families.",
+  "lifecycle": [
+    "on-arrival"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "gl.getShaderPrecisionFormat(shaderType, precisionType)",
+      "access": {
+        "grant": "none",
+        "prompt_ui": "",
+        "secure_context": false,
+        "user_gesture": false,
+        "persistence": "",
+        "revocation": "",
+        "iframe": "",
+        "steps": [
+          "Call getShaderPrecisionFormat for VERTEX and FRAGMENT x LOW, MEDIUM, HIGH x FLOAT, INT"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "9",
+          "note": "",
+          "date": "2011-02-03"
+        },
+        "edge": {
+          "s": "y",
+          "v": "79",
+          "note": "",
+          "date": "2020-01-15"
+        },
+        "firefox": {
+          "s": "y",
+          "v": "4",
+          "note": "",
+          "date": "2011-03-22"
+        },
+        "safari": {
+          "s": "y",
+          "v": "8",
+          "note": "",
+          "date": "2014-10-16"
+        },
+        "ios_safari": {
+          "s": "y",
+          "v": "8",
+          "note": "",
+          "date": "2014-09-17"
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "9",
+          "note": "",
+          "date": ""
+        },
+        "samsung": {
+          "s": "y",
+          "v": "5.0",
+          "note": "",
+          "date": "2016-12-15"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "list",
+    "metric": "12 triples (rangeMin, rangeMax, precision)",
+    "update": "",
+    "fields": [
+      {
+        "name": "rangeMin",
+        "type": "integer",
+        "unit": "exponent",
+        "range": "0 to 127",
+        "precision": "exact"
+      },
+      {
+        "name": "precision",
+        "type": "integer",
+        "unit": "bits",
+        "range": "0 to 23",
+        "precision": "exact"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can check how precise your graphics chip maths is, to guess your chip family",
+    "user_action": "Nothing. It happens when the page loads",
+    "can": [
+      "Check number precision limits in the graphics chip",
+      "Tell desktop, Apple, Adreno, Mali and PowerVR families apart",
+      "Add that clue to a device profile"
+    ],
+    "cannot": [
+      "Ask permission first",
+      "See your files",
+      "Show you anything on screen",
+      "Name your exact device by itself"
+    ],
+    "reach": 2,
+    "reach_label": "Silent, chip family only",
+    "differs": ""
+  },
+  "story": {
+    "what_it_is": "A script reads the number ranges your graphics chip supports for floats and integers.",
+    "icon": "microchip",
+    "tags": [
+      "Graphics",
+      "Silent",
+      "Fingerprinting"
+    ],
+    "marketing": [
+      {
+        "vendor": "MDN",
+        "name": "getShaderPrecisionFormat",
+        "pitch": "Reports the range and precision a graphics chip supports for numbers used in shaders.",
+        "url": "https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/getShaderPrecisionFormat"
+      }
+    ],
+    "for_you": "You never see it. Your browser reports how exactly your graphics chip can handle numbers. Phones and laptops differ, so the answers are a small clue about your device.",
+    "for_makers": "Game and graphics code needs this to avoid visual glitches on weaker chips. Fingerprinting tools add it to a bundle, because it cleanly separates mobile and desktop graphics.",
+    "use_cases": [
+      {
+        "type": "games",
+        "example": "A browser game uses lower precision on phones to run faster, after checking what the chip supports.",
+        "apps": []
+      },
+      {
+        "type": "creative",
+        "example": "A web photo editor with filters picks the right math so colors do not band on older phones.",
+        "apps": []
+      },
+      {
+        "type": "maps",
+        "example": "A web map draws smooth shading only if the chip supports high precision numbers.",
+        "apps": [
+          "Mapbox"
+        ]
+      },
+      {
+        "type": "security",
+        "example": "A fraud tool checks that the reported graphics type matches the device model.",
+        "apps": []
+      },
+      {
+        "type": "ads",
+        "example": "A tracker adds the precision numbers to the graphics part of a device ID.",
+        "apps": []
+      },
+      {
+        "type": "developer",
+        "example": "A graphics developer logs these numbers to understand why a shader looks broken on one phone.",
+        "apps": []
+      },
+      {
+        "type": "ar-vr",
+        "example": "A web based AR viewer checks precision before it enables advanced lighting.",
+        "apps": [
+          "Sketchfab"
+        ]
+      }
+    ],
+    "risks": [
+      "Reveals chip class",
+      "Adds to a device ID"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Low entropy alone; useful to pin GPU family"
+  ],
+  "scores": {
+    "sensitivity": 2,
+    "utility": 1,
+    "fingerprint_bits": 2,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": "Choose shader variants",
+    "abuse": "Component of composite fingerprints"
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "related": [
+    "web.render.webgl-parameters-extensions"
+  ],
+  "refs": [
+    {
+      "t": "mdn",
+      "label": "MDN getShaderPrecisionFormat",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/getShaderPrecisionFormat"
+    },
+    {
+      "t": "github",
+      "label": "FingerprintJS",
+      "url": "https://github.com/fingerprintjs/fingerprintjs"
+    }
+  ],
+  "confidence": "docs"
+}

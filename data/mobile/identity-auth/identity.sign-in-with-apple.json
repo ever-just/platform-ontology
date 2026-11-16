@@ -1,0 +1,244 @@
+{
+  "id": "mob.identity.sign-in-with-apple",
+  "name": "Sign in with Apple and Credential Manager",
+  "kind": "capability",
+  "group": "identity-auth",
+  "subgroup": "Sign in",
+  "tags": [
+    "sso",
+    "relay-email",
+    "app-review",
+    "sign-in-with-apple",
+    "hide-my-email",
+    "oauth",
+    "guideline-4.8"
+  ],
+  "plain": "Account sign in that can hide the real email behind a relay address.",
+  "meaning": "Apple required it where other social logins existed until January 2024. Android uses Credential Manager.",
+  "lifecycle": [
+    "signed-in"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "y",
+      "v": "14",
+      "api": 34,
+      "permission": "None; Credential Manager with Google ID, passkeys, passwords",
+      "protection": "none",
+      "grant": "prompt",
+      "prompt_ui": "Credential Manager bottom sheet",
+      "persistence": "Until sign out",
+      "revocation": "Google account settings",
+      "store_policy": "Play: account deletion policy",
+      "api_surface": "CredentialManager",
+      "note": "Hide My Email equivalent is Google's limited scope"
+    },
+    "ios": {
+      "s": "y",
+      "v": "13",
+      "permission": "com.apple.developer.applesignin",
+      "protection": "entitlement",
+      "grant": "prompt",
+      "prompt_ui": "Sign in with Apple sheet with Hide My Email",
+      "persistence": "Until revoked",
+      "revocation": "Settings > Apple Account > Sign in with Apple",
+      "store_policy": "App Review 4.8 login services",
+      "api_surface": "ASAuthorizationAppleIDProvider",
+      "note": "Returns stable user id; email may be a relay address; name only on first sign in"
+    }
+  },
+  "web_equivalents": [
+    "web.auth.sign-in-with-apple",
+    "web.identity.webauthn-create",
+    "web.auth.apple-hide-my-email",
+    "web.identity.fedcm"
+  ],
+  "data": {
+    "type": "object",
+    "metric": "Credential",
+    "update": "per sign in",
+    "fields": [
+      {
+        "name": "userId",
+        "type": "string",
+        "unit": "opaque",
+        "range": "stable per team",
+        "precision": ""
+      },
+      {
+        "name": "email",
+        "type": "string",
+        "unit": "address",
+        "range": "real or relay",
+        "precision": ""
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can sign you in with Apple and hide your real email if you choose",
+    "user_action": "You tap Sign in with Apple and choose Share or Hide My Email",
+    "can": [
+      "Create an account using your Apple ID with Face ID or Touch ID",
+      "Get a steady user ID for your account",
+      "Receive a private relay email instead of your real one",
+      "Learn your name on the first sign in only"
+    ],
+    "cannot": [
+      "See your Apple ID password",
+      "See your real email when you pick Hide My Email",
+      "Get your name again on later sign ins",
+      "Use your sign in on another developer's app"
+    ],
+    "reach": 2,
+    "reach_label": "Only what you choose to share",
+    "differs": "Apple offers a Hide My Email relay. On Android, Credential Manager offers Google, passkeys and passwords with a more limited scope."
+  },
+  "story": {
+    "what_it_is": "You sign in with your Apple account and can hide your real email address.",
+    "icon": "user-check",
+    "tags": [
+      "Sign in",
+      "Privacy",
+      "Convenience"
+    ],
+    "marketing": [
+      {
+        "vendor": "Apple",
+        "name": "Sign in with Apple",
+        "pitch": "A private, simple way to sign in with Face ID, with the option to hide your email address.",
+        "url": "https://developer.apple.com/sign-in-with-apple/"
+      },
+      {
+        "vendor": "Google",
+        "name": "Credential Manager",
+        "pitch": "Android's single sign in sheet for passwords, passkeys and federated sign in options.",
+        "url": "https://developer.android.com/identity/sign-in/credential-manager"
+      }
+    ],
+    "for_you": "You see a black Apple button, tap it and confirm with Face ID. You can pick Hide My Email, so the app gets a random address that forwards to your real inbox. You can switch it off later.",
+    "for_makers": "Makers get a fast sign up with a verified account, which means more finished sign ups. If you hide your email, they cannot easily link you to other data. It also means the maker must send mail to the relay and cannot simply sell your address.",
+    "use_cases": [
+      {
+        "type": "shopping",
+        "example": "A store account starts with one tap and a forwarding email, so promo mail never hits your main inbox.",
+        "apps": []
+      },
+      {
+        "type": "social",
+        "example": "A social app creates your profile from your Apple name without asking you to type it.",
+        "apps": []
+      },
+      {
+        "type": "games",
+        "example": "A game ties your save file to your Apple account so it restores on a new iPhone.",
+        "apps": []
+      },
+      {
+        "type": "media",
+        "example": "A news app uses a relay email so it can send newsletters, and you can turn them off at the source.",
+        "apps": []
+      },
+      {
+        "type": "dating",
+        "example": "A dating app signs you up faster and sees only the name you choose to share.",
+        "apps": []
+      },
+      {
+        "type": "ads",
+        "example": "A marketer finds relay emails harder to match across companies, which weakens cross app tracking.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Account linking by the maker",
+      "Lock in to an Apple account"
+    ],
+    "android_note": "Android apps show a Credential Manager sheet and may offer Sign in with Apple through the web.",
+    "ios_note": "iPhone apps get the native Apple button, with a required relay email option when it is used."
+  },
+  "technical_bounds": [
+    "Name and email are delivered once",
+    "Relay email forwards only if the developer registers sending domains"
+  ],
+  "scores": {
+    "sensitivity": 3,
+    "utility": 4,
+    "fingerprint_bits": 20,
+    "friction": 2
+  },
+  "value": {
+    "legit_uses": [
+      "Fewer passwords"
+    ],
+    "abuse": [
+      "Linking accounts across apps"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2024-01",
+      "platform": "ios",
+      "version": "App Review",
+      "change": "Guideline 4.8 revised to allow any privacy preserving login"
+    },
+    {
+      "date": "2024-01",
+      "platform": "ios",
+      "version": "App Review 4.8 update",
+      "change": "Any equivalent privacy-focused login service may satisfy 4.8"
+    },
+    {
+      "date": "2022-06",
+      "platform": "ios",
+      "version": "iOS 16",
+      "change": "Account deletion rule 5.1.1(v) requires token revocation"
+    },
+    {
+      "date": "2019-09",
+      "platform": "ios",
+      "version": "iOS 13",
+      "change": "Sign in with Apple introduced"
+    },
+    {
+      "date": "2019-09",
+      "platform": "ios",
+      "version": "iOS 13",
+      "change": "Sign in with Apple introduced; required by 4.8 if other social login is offered"
+    }
+  ],
+  "related": [
+    "mob.identity.app-attest",
+    "mob.id.sign-in-google",
+    "mob.id.passkeys-app"
+  ],
+  "refs": [
+    {
+      "t": "apple",
+      "label": "Apple: Sign in with Apple",
+      "url": "https://developer.apple.com/documentation/sign_in_with_apple"
+    },
+    {
+      "t": "android",
+      "label": "Android: Credential Manager",
+      "url": "https://developer.android.com/identity/sign-in/credential-manager"
+    },
+    {
+      "t": "policy",
+      "label": "App Review Guideline 4.8",
+      "url": "https://developer.apple.com/app-store/review/guidelines/#sign-in-with-apple"
+    },
+    {
+      "t": "apple",
+      "label": "Apple: Sign in with Apple",
+      "url": "https://developer.apple.com/sign-in-with-apple/"
+    }
+  ],
+  "confidence": "docs"
+}

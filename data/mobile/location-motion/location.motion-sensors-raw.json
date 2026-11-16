@@ -1,0 +1,243 @@
+{
+  "id": "mob.location.motion-sensors-raw",
+  "name": "Raw accelerometer and gyroscope",
+  "kind": "signal",
+  "group": "location-motion",
+  "subgroup": "Motion",
+  "tags": [
+    "no-prompt",
+    "sensors",
+    "fingerprint",
+    "no-prompt-android"
+  ],
+  "plain": "Reads raw motion sensor streams with no prompt.",
+  "meaning": "Accelerometer and gyro readings can infer taps, typing, gait and a device-specific calibration fingerprint. Both OSes cap or restrict background use.",
+  "lifecycle": [
+    "in-session",
+    "background"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "y",
+      "v": "1.0",
+      "api": 1,
+      "permission": "HIGH_SAMPLING_RATE_SENSORS (normal, API 31) above 200 Hz",
+      "protection": "normal",
+      "grant": "install",
+      "prompt_ui": "None",
+      "persistence": "Until app stops or goes to background (API 28 blocks background sensor events)",
+      "revocation": "n/a",
+      "store_policy": "",
+      "api_surface": "SensorManager, SENSOR_DELAY_FASTEST",
+      "note": "Without the permission Android 12 caps accelerometer, gyro and magnetometer at 200 Hz"
+    },
+    "ios": {
+      "s": "y",
+      "v": "4",
+      "permission": "prompt",
+      "protection": "none",
+      "grant": "none",
+      "prompt_ui": "None; NSMotionUsageDescription only for activity and pedometer APIs",
+      "persistence": "While the app runs",
+      "revocation": "n/a",
+      "store_policy": "",
+      "api_surface": "CMMotionManager, accelerometerUpdateInterval",
+      "note": "Typical device cap about 100 Hz; background updates stop when suspended"
+    }
+  },
+  "web_equivalents": [
+    "web.location.sensor-accelerometer",
+    "web.location.sensor-gyroscope"
+  ],
+  "data": {
+    "type": "stream",
+    "metric": "3 axis acceleration and rotation rate",
+    "update": "continuous",
+    "fields": [
+      {
+        "name": "rate",
+        "type": "float",
+        "unit": "Hz",
+        "range": "up to about 200 Hz Android, about 100 Hz iOS",
+        "precision": ""
+      },
+      {
+        "name": "calibration",
+        "type": "float",
+        "unit": "m/s2",
+        "range": "per device bias",
+        "precision": "enables fingerprinting"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can see how your phone moves and tilts, with no prompt",
+    "user_action": "Nothing. It happens when a game, map or app uses motion",
+    "can": [
+      "Get accelerometer and gyroscope readings (tilt and shake)",
+      "Use motion for games, steps and compass features",
+      "Sample about 100 times a second on iPhone",
+      "Sample above 200 times a second on Android if the app declares it"
+    ],
+    "cannot": [
+      "Sample above 200 Hz on Android 12 and newer without declaring it",
+      "Keep going in the background on iPhone; updates stop when the app is suspended",
+      "See your location from motion alone",
+      "Use motion in Safari on iPhone without a permission since iOS 12.2"
+    ],
+    "reach": 2,
+    "reach_label": "Motion data, while the app runs",
+    "differs": "Android 12 caps rate at 200 Hz unless declared. iPhone caps near 100 Hz and stops in the background."
+  },
+  "story": {
+    "what_it_is": "An app reads the raw accelerometer and gyroscope, which measure how your phone tilts and shakes.",
+    "icon": "waves",
+    "tags": [
+      "Motion",
+      "Silent",
+      "Fingerprint"
+    ],
+    "marketing": [
+      {
+        "vendor": "Google",
+        "name": "Motion sensors",
+        "pitch": "Android lets apps read motion sensors to detect tilt, shake and rotation.",
+        "url": "https://developer.android.com/develop/sensors-and-location/sensors/sensors_motion"
+      },
+      {
+        "vendor": "Apple",
+        "name": "Core Motion",
+        "pitch": "Apple's framework for accelerometer, gyroscope and device motion in apps.",
+        "url": "https://developer.apple.com/documentation/coremotion"
+      }
+    ],
+    "for_you": "You never see a prompt. When you tilt your phone to steer a car, or shake to undo, apps are reading these sensors. The same stream can quietly reveal how you walk, tap or hold the phone.",
+    "for_makers": "Makers use it for steering in games, AR, step counting and shake gestures. The signal can also be used to guess taps, gait and typing, and each chip has a tiny unique error that can mark one phone.",
+    "use_cases": [
+      {
+        "type": "games",
+        "example": "A racing game lets you steer by tilting the phone.",
+        "apps": [
+          "Asphalt 9",
+          "Real Racing 3"
+        ]
+      },
+      {
+        "type": "ar-vr",
+        "example": "An AR app keeps its virtual objects fixed in your room by tracking how the phone moves.",
+        "apps": [
+          "IKEA Place",
+          "Pokemon GO"
+        ]
+      },
+      {
+        "type": "creative",
+        "example": "A photo app straightens your image using the tilt of the phone.",
+        "apps": []
+      },
+      {
+        "type": "fitness",
+        "example": "A step counter finds your steps from the bounce of your walk.",
+        "apps": []
+      },
+      {
+        "type": "security",
+        "example": "A bank app checks natural hand movement to tell a person from a bot.",
+        "apps": []
+      },
+      {
+        "type": "ads",
+        "example": "A hidden script reads the sensors to build a device fingerprint or guess your taps.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Device fingerprint",
+      "Taps and typing inferred"
+    ],
+    "android_note": "Android 12 limits the speed of these sensors without a special permission, which blunts some attacks.",
+    "ios_note": "iPhone gives no prompt for raw motion on a normal app, and Safari asks for motion access on websites."
+  },
+  "technical_bounds": [
+    "Background delivery blocked on both",
+    "Browsers gate these behind a prompt on iOS Safari",
+    "Background access blocked on Android 9 and later",
+    "iOS motion activity needs a prompt"
+  ],
+  "scores": {
+    "sensitivity": 3,
+    "utility": 4,
+    "fingerprint_bits": 10,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Games",
+      "Step counters"
+    ],
+    "abuse": [
+      "Sensor fingerprinting, keylogging via motion"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2021-10",
+      "platform": "android",
+      "version": "12 (API 31)",
+      "change": "200 Hz cap unless HIGH_SAMPLING_RATE_SENSORS declared"
+    },
+    {
+      "date": "2021-10",
+      "platform": "android",
+      "version": "12 (API 31)",
+      "change": "Rate capped at 200 Hz unless HIGH_SAMPLING_RATE_SENSORS declared"
+    },
+    {
+      "date": "2018-12",
+      "platform": "android",
+      "version": "9 (API 28)",
+      "change": "Background apps stop getting sensor events"
+    },
+    {
+      "date": "2018-08",
+      "platform": "android",
+      "version": "9 (API 28)",
+      "change": "Sensor events stop for background apps"
+    }
+  ],
+  "related": [
+    "mob.location.motion-activity",
+    "mob.sensor.calibration",
+    "mob.sensor.eavesdrop"
+  ],
+  "refs": [
+    {
+      "t": "android",
+      "label": "Android: Sensors overview and rate limit",
+      "url": "https://developer.android.com/develop/sensors-and-location/sensors/sensors_overview"
+    },
+    {
+      "t": "apple",
+      "label": "Apple: CMMotionManager",
+      "url": "https://developer.apple.com/documentation/coremotion/cmmotionmanager"
+    },
+    {
+      "t": "apple",
+      "label": "Apple: Core Motion",
+      "url": "https://developer.apple.com/documentation/coremotion"
+    },
+    {
+      "t": "android",
+      "label": "Android 12 behavior changes",
+      "url": "https://developer.android.com/about/versions/12/behavior-changes-12"
+    }
+  ],
+  "confidence": "docs"
+}

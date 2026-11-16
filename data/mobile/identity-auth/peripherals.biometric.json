@@ -1,0 +1,256 @@
+{
+  "id": "mob.peripherals.biometric",
+  "name": "Biometric authentication",
+  "kind": "capability",
+  "group": "identity-auth",
+  "subgroup": "Biometrics",
+  "tags": [
+    "normal-permission",
+    "biometric",
+    "face-id",
+    "biometrics",
+    "no-template-access",
+    "fingerprint",
+    "localauthentication"
+  ],
+  "plain": "Lets the app ask the system to verify the user with fingerprint or face.",
+  "meaning": "The app never sees the biometric; it gets a pass or fail. Face ID needs a purpose string.",
+  "lifecycle": [
+    "in-session",
+    "signed-in"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "y",
+      "v": "9",
+      "api": 28,
+      "permission": "USE_BIOMETRIC",
+      "protection": "normal",
+      "grant": "install",
+      "prompt_ui": "System BiometricPrompt",
+      "persistence": "Per authentication",
+      "revocation": "Biometric enrollment in Settings",
+      "store_policy": "Play: none",
+      "api_surface": "BiometricPrompt, androidx.biometric",
+      "note": "USE_FINGERPRINT is deprecated."
+    },
+    "ios": {
+      "s": "y",
+      "v": "11",
+      "permission": "NSFaceIDUsageDescription",
+      "protection": "prompt",
+      "grant": "prompt",
+      "prompt_ui": "Face ID permission prompt on first use",
+      "persistence": "Until revoked",
+      "revocation": "Settings > Face ID & Passcode > Other apps",
+      "store_policy": "App Review 5.1.1",
+      "api_surface": "LocalAuthentication LAContext",
+      "note": "Touch ID needs no purpose string; Face ID does."
+    }
+  },
+  "web_equivalents": [
+    "web.identity.webauthn-create",
+    "web.identity.webauthn-get"
+  ],
+  "data": {
+    "type": "boolean",
+    "metric": "Authentication result",
+    "update": "per attempt",
+    "fields": []
+  },
+  "limits": {
+    "headline": "Can ask the phone to check your fingerprint or face, without seeing either",
+    "user_action": "You tap Sign in, Approve payment, or Unlock and use your fingerprint or face",
+    "can": [
+      "Show the system fingerprint or face prompt",
+      "Learn a yes or no answer after the check",
+      "Fall back to your PIN or passcode if you choose that",
+      "Unlock a stored secret after a successful check"
+    ],
+    "cannot": [
+      "See your fingerprint, face map or the scan itself",
+      "Run the check silently without showing the prompt",
+      "Get a yes when the scan fails and you did not use your passcode",
+      "Learn which finger or face matched"
+    ],
+    "reach": 1,
+    "reach_label": "A yes or no from the phone",
+    "differs": "iPhone needs a Face ID purpose message; Touch ID does not. Android shows a standard BiometricPrompt."
+  },
+  "story": {
+    "what_it_is": "An app asks the phone to confirm it is you using a face or fingerprint scan.",
+    "icon": "scan-face",
+    "tags": [
+      "Biometric",
+      "Sign in",
+      "Asks first"
+    ],
+    "marketing": [
+      {
+        "vendor": "Apple",
+        "name": "Face ID and Touch ID",
+        "pitch": "Unlock, sign in and pay securely with your face or fingerprint.",
+        "url": "https://developer.apple.com/documentation/localauthentication"
+      },
+      {
+        "vendor": "Google",
+        "name": "Biometric authentication",
+        "pitch": "Android shows a standard prompt so apps can use fingerprint or face to confirm you.",
+        "url": "https://developer.android.com/identity/sign-in/biometric-auth"
+      }
+    ],
+    "for_you": "You see a standard system prompt asking for your face or fingerprint. You scan and the app gets only yes or no. The app never sees your face or print.",
+    "for_makers": "Makers get strong proof that the right person is holding the phone, without storing biometric data. It speeds up logins and payments. It also lets them guard sensitive screens like balances or messages.",
+    "use_cases": [
+      {
+        "type": "banking",
+        "example": "You open your bank app and unlock it with Face ID instead of typing a 6 digit code.",
+        "apps": []
+      },
+      {
+        "type": "payments",
+        "example": "You approve a payment in a shop or delivery app with one fingerprint touch.",
+        "apps": [
+          "Venmo",
+          "Cash App"
+        ]
+      },
+      {
+        "type": "productivity",
+        "example": "Your notes app locks private notes and opens them with your face.",
+        "apps": [
+          "Apple Notes"
+        ]
+      },
+      {
+        "type": "messaging",
+        "example": "A secure chat app asks for biometrics when you open it, so a borrowed phone cannot read your chats.",
+        "apps": [
+          "Signal"
+        ]
+      },
+      {
+        "type": "games",
+        "example": "A game store asks for a fingerprint before it confirms a purchase, which protects kids' accounts.",
+        "apps": []
+      },
+      {
+        "type": "health",
+        "example": "A health app protects test results behind a scan.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Face unlock may be forced by others",
+      "Fallback code is weaker"
+    ],
+    "android_note": "Android offers weak and strong biometrics, and apps pick which level they need.",
+    "ios_note": "iPhone requires a short purpose text for Face ID so the app can say why it asks."
+  },
+  "technical_bounds": [
+    "App cannot read biometric data",
+    "App never receives the template",
+    "Biometry changes can invalidate bound keys",
+    "No raw biometric data crosses the app boundary"
+  ],
+  "scores": {
+    "sensitivity": 2,
+    "utility": 4,
+    "fingerprint_bits": null,
+    "friction": 1
+  },
+  "value": {
+    "legit_uses": [
+      "Login",
+      "Payment approval"
+    ],
+    "abuse": [
+      "None specific"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2019-10",
+      "platform": "android",
+      "version": "10 (API 29)",
+      "change": "Biometric classes and BiometricManager"
+    },
+    {
+      "date": "2018-08",
+      "platform": "android",
+      "version": "9 (API 28)",
+      "change": "BiometricPrompt introduced"
+    },
+    {
+      "date": "2018-08",
+      "platform": "android",
+      "version": "9 (API 28)",
+      "change": "BiometricPrompt replaces FingerprintManager"
+    },
+    {
+      "date": "2018-08",
+      "platform": "android",
+      "version": "9.0 (API 28)",
+      "change": "BiometricPrompt unified API"
+    },
+    {
+      "date": "2017-09",
+      "platform": "ios",
+      "version": "iOS 11",
+      "change": "Face ID introduced"
+    },
+    {
+      "date": "2017-09",
+      "platform": "ios",
+      "version": "iOS 11",
+      "change": "Face ID launched; NSFaceIDUsageDescription required"
+    },
+    {
+      "date": "2017-09",
+      "platform": "ios",
+      "version": "iOS 11",
+      "change": "Face ID"
+    },
+    {
+      "date": "2014-09",
+      "platform": "ios",
+      "version": "iOS 8",
+      "change": "Touch ID LocalAuthentication"
+    }
+  ],
+  "related": [
+    "mob.identity.app-attest",
+    "mob.id.hardware-keys",
+    "mob.id.passkeys-app"
+  ],
+  "refs": [
+    {
+      "t": "android",
+      "label": "Android: Biometric authentication",
+      "url": "https://developer.android.com/identity/sign-in/biometric-auth"
+    },
+    {
+      "t": "apple",
+      "label": "Apple: LocalAuthentication",
+      "url": "https://developer.apple.com/documentation/localauthentication"
+    },
+    {
+      "t": "apple",
+      "label": "Apple: Logging a user into your app with Face ID or Touch ID",
+      "url": "https://developer.apple.com/documentation/localauthentication/logging-a-user-into-your-app-with-face-id-or-touch-id"
+    },
+    {
+      "t": "apple",
+      "label": "Apple: Protected resources keys",
+      "url": "https://developer.apple.com/documentation/bundleresources/protected-resources"
+    }
+  ],
+  "confidence": "docs"
+}

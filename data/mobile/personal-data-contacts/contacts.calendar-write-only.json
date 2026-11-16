@@ -1,0 +1,200 @@
+{
+  "id": "mob.contacts.calendar-write-only",
+  "name": "Calendar, write only",
+  "kind": "permission",
+  "group": "personal-data-contacts",
+  "subgroup": "Calendar and reminders",
+  "tags": [
+    "write-only",
+    "calendar",
+    "ios17"
+  ],
+  "plain": "Adds events to the calendar without reading anything already there.",
+  "meaning": "Lets a ticketing or booking app add an event with no view of the person's schedule.",
+  "lifecycle": [
+    "in-session"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "y",
+      "v": "1.0",
+      "api": 14,
+      "permission": "None for ACTION_INSERT intent; WRITE_CALENDAR for direct writes",
+      "protection": "none",
+      "grant": "none",
+      "prompt_ui": "ACTION_INSERT opens the system calendar editor, no permission",
+      "persistence": "Per use",
+      "revocation": "n/a",
+      "store_policy": "",
+      "api_surface": "CalendarContract.Events.CONTENT_URI, Intent.ACTION_INSERT",
+      "note": "The intent path is the privacy first route"
+    },
+    "ios": {
+      "s": "y",
+      "v": "17",
+      "permission": "NSCalendarsWriteOnlyAccessUsageDescription",
+      "protection": "prompt",
+      "grant": "prompt",
+      "prompt_ui": "Allow, Don't Allow (write wording)",
+      "persistence": "Until revoked",
+      "revocation": "Settings > Privacy & Security > Calendars",
+      "store_policy": "App Review 5.1.1",
+      "api_surface": "EKEventStore.requestWriteOnlyAccessToEvents, EKEventEditViewController",
+      "note": "EKEventEditViewController needs no permission on iOS 17 (out of process)"
+    }
+  },
+  "data": {
+    "type": "event",
+    "metric": "Insert result",
+    "update": "per save",
+    "fields": [
+      {
+        "name": "eventId",
+        "type": "string",
+        "unit": "id",
+        "range": "",
+        "precision": ""
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can add events to your calendar without seeing anything already in it",
+    "user_action": "You tap Add to calendar on a ticket or booking",
+    "can": [
+      "Open the system calendar editor with the event filled in, no permission needed",
+      "Add events directly once you allow it (Android) or choose add only access (iPhone)",
+      "Show you the editor so you save the event yourself"
+    ],
+    "cannot": [
+      "See your other events",
+      "Change or delete events already there",
+      "Save the event without your tap when it uses the system editor"
+    ],
+    "reach": 1,
+    "reach_label": "Adds events, sees none",
+    "differs": "iPhone with iOS 17 and later offers a true add only choice; on Android the system editor is the privacy first route."
+  },
+  "story": {
+    "what_it_is": "Lets an app add events to your calendar without being able to read what is already there.",
+    "icon": "calendar-plus",
+    "tags": [
+      "Calendar",
+      "Privacy",
+      "Asks first"
+    ],
+    "marketing": [
+      {
+        "vendor": "Apple",
+        "name": "EventKit write only access",
+        "pitch": "Apps can add events to a calendar without seeing any of your existing events.",
+        "url": "https://developer.apple.com/documentation/eventkit"
+      }
+    ],
+    "for_you": "A prompt says the app wants to add events only. You tap Allow and the ticket lands in your calendar. The app never sees your meetings or your doctor visits.",
+    "for_makers": "A ticket or booking app only needs to drop an event on the calendar. This option gets approval from careful users and avoids a scary full access prompt. It is a smart default for most apps.",
+    "use_cases": [
+      {
+        "type": "live",
+        "example": "A ticket app puts a concert and the doors time on your calendar.",
+        "apps": [
+          "Ticketmaster",
+          "Eventbrite"
+        ]
+      },
+      {
+        "type": "travel",
+        "example": "A flight app saves your outbound and return flights as events.",
+        "apps": [
+          "Kayak"
+        ]
+      },
+      {
+        "type": "fitness",
+        "example": "A booking app adds your gym class and updates it if the time changes.",
+        "apps": []
+      },
+      {
+        "type": "delivery",
+        "example": "A grocery app adds a delivery window so you remember to be home.",
+        "apps": []
+      },
+      {
+        "type": "health",
+        "example": "A clinic app adds the visit with no view of your other plans.",
+        "apps": []
+      },
+      {
+        "type": "education",
+        "example": "A course app adds each lecture and deadline.",
+        "apps": [
+          "Coursera"
+        ]
+      },
+      {
+        "type": "games",
+        "example": "A game adds a live event or tournament start time as a reminder.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "App can still add clutter",
+      "Fake events",
+      "Update limits"
+    ],
+    "android_note": "Android has the same route through an intent that opens the calendar event screen with no permission.",
+    "ios_note": "iOS 17 added write only access. The event edit screen runs outside the app and needs no permission."
+  },
+  "technical_bounds": [
+    "Cannot read back events on iOS write-only grant"
+  ],
+  "scores": {
+    "sensitivity": 2,
+    "utility": 4,
+    "fingerprint_bits": null,
+    "friction": 1
+  },
+  "value": {
+    "legit_uses": [
+      "Add ticket to calendar"
+    ],
+    "abuse": [
+      "Spam invites"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2023-09",
+      "platform": "ios",
+      "version": "iOS 17",
+      "change": "Write-only access added; EKEventEditViewController runs without permission"
+    }
+  ],
+  "related": [
+    "mob.contacts.calendar-full"
+  ],
+  "refs": [
+    {
+      "t": "apple",
+      "label": "Apple: Accessing the event store",
+      "url": "https://developer.apple.com/documentation/eventkit/accessing-the-event-store"
+    },
+    {
+      "t": "apple",
+      "label": "Apple: Protected resources keys",
+      "url": "https://developer.apple.com/documentation/bundleresources/protected-resources"
+    },
+    {
+      "t": "android",
+      "label": "Android: Calendar intents",
+      "url": "https://developer.android.com/identity/providers/calendar-provider#intents"
+    }
+  ],
+  "confidence": "docs"
+}

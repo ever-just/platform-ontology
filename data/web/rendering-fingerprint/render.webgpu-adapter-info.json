@@ -1,0 +1,291 @@
+{
+  "id": "web.render.webgpu-adapter-info",
+  "name": "WebGPU adapter info",
+  "kind": "tracking",
+  "group": "rendering-fingerprint",
+  "subgroup": "WebGPU",
+  "tags": [
+    "webgpu",
+    "gpu",
+    "adapter",
+    "architecture"
+  ],
+  "plain": "Asks the browser which GPU vendor and architecture WebGPU will run on.",
+  "meaning": "Returns vendor, architecture and sometimes device and driver description, a cleaner GPU label than WebGL's masked string. Chrome rounds it, but features and limits still expose the hardware tier.",
+  "lifecycle": [
+    "on-arrival"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "navigator.gpu.requestAdapter(); adapter.info",
+      "bcd": [
+        "api.GPUAdapter",
+        "api.GPUAdapter.info"
+      ],
+      "access": {
+        "grant": "none",
+        "prompt_ui": "",
+        "secure_context": false,
+        "user_gesture": false,
+        "persistence": "",
+        "revocation": "",
+        "iframe": "",
+        "steps": [
+          "Call requestAdapter",
+          "Read adapter.info (vendor, architecture, device, description)"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "144",
+          "note": "",
+          "date": "2026-01-13"
+        },
+        "edge": {
+          "s": "y",
+          "v": "144",
+          "note": "",
+          "date": "2026-01-21"
+        },
+        "firefox": {
+          "s": "y",
+          "v": "141",
+          "note": "Windows first, other platforms later",
+          "date": "2025-07-22"
+        },
+        "safari": {
+          "s": "y",
+          "v": "26",
+          "note": "",
+          "date": "2025-09-15"
+        },
+        "ios_safari": {
+          "s": "y",
+          "v": "26",
+          "note": "",
+          "date": "2025-09-15"
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "121",
+          "note": "",
+          "date": "2024-01-23"
+        },
+        "samsung": {
+          "s": "y",
+          "v": "25.0",
+          "note": "",
+          "date": "2024-04-24"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "object",
+    "metric": "4 strings, often coarsened",
+    "update": "",
+    "fields": [
+      {
+        "name": "vendor",
+        "type": "string",
+        "unit": "",
+        "range": "nvidia, amd, intel, apple, qualcomm",
+        "precision": "exact"
+      },
+      {
+        "name": "architecture",
+        "type": "string",
+        "unit": "",
+        "range": "ampere, rdna3, gen-12lp, common-3",
+        "precision": "exact on Chrome desktop"
+      },
+      {
+        "name": "device",
+        "type": "string",
+        "unit": "",
+        "range": "hex id or empty",
+        "precision": "empty on most browsers"
+      },
+      {
+        "name": "description",
+        "type": "string",
+        "unit": "",
+        "range": "text",
+        "precision": "coarse"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can ask which graphics maker and design your device will use for 3D work",
+    "user_action": "Nothing. It happens when the page uses WebGPU",
+    "can": [
+      "Get the graphics maker and chip design name",
+      "Sometimes get a device or driver description",
+      "Tell phone, laptop and desktop graphics apart"
+    ],
+    "cannot": [
+      "Ask permission first",
+      "Get the exact model in Chrome, which rounds the answer",
+      "See your files",
+      "Work in browsers without WebGPU support"
+    ],
+    "reach": 3,
+    "reach_label": "Silent, hardware label",
+    "differs": "Chrome and Edge round the label. Safari and Firefox have limited or newer support for WebGPU."
+  },
+  "story": {
+    "what_it_is": "A page asks the browser which GPU vendor and architecture WebGPU will use.",
+    "icon": "cpu",
+    "tags": [
+      "Graphics",
+      "Games",
+      "Silent"
+    ],
+    "marketing": [
+      {
+        "vendor": "Google Chrome",
+        "name": "WebGPU",
+        "pitch": "Chrome describes WebGPU as a modern way to use the graphics chip for fast games and graphics on the web.",
+        "url": "https://developer.chrome.com/docs/web-platform/webgpu/overview"
+      },
+      {
+        "vendor": "MDN",
+        "name": "WebGPU API",
+        "pitch": "Gives pages high performance access to the graphics chip for drawing and for general computing.",
+        "url": "https://developer.mozilla.org/en-US/docs/Web/API/WebGPU_API"
+      }
+    ],
+    "for_you": "You see faster 3D scenes and some AI features running in the tab. The page can also see what kind of graphics chip you have, and it does not ask you.",
+    "for_makers": "Game engines and AI in the browser pick the best settings by chip type. Browsers limit the detail they give out, because the same data is a strong fingerprint.",
+    "use_cases": [
+      {
+        "type": "games",
+        "example": "A browser game using a modern engine picks high or low quality by the GPU family, so it runs smoothly.",
+        "apps": [
+          "PlayCanvas",
+          "Babylon.js demos"
+        ]
+      },
+      {
+        "type": "creative",
+        "example": "Figma and other design tools move to WebGPU for faster drawing of huge files.",
+        "apps": [
+          "Figma"
+        ]
+      },
+      {
+        "type": "productivity",
+        "example": "A web app that runs an AI model on your device checks the GPU before choosing a model size.",
+        "apps": [
+          "WebLLM demos"
+        ]
+      },
+      {
+        "type": "video",
+        "example": "A web video editor uses the GPU to apply effects while you preview.",
+        "apps": [
+          "Clipchamp"
+        ]
+      },
+      {
+        "type": "developer",
+        "example": "A game studio gathers GPU families from visitors to see which graphics chips need a fix.",
+        "apps": []
+      },
+      {
+        "type": "security",
+        "example": "A fraud engine notices a server GPU in a login that claims to be a laptop.",
+        "apps": []
+      },
+      {
+        "type": "ads",
+        "example": "A tracker adds the GPU vendor and architecture to a device ID.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Reveals your chip family",
+      "New and still growing",
+      "Adds to a device ID"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Needs a GPU the browser has allowed",
+    "Chrome may return empty device and description",
+    "No user prompt but blocked in some privacy modes"
+  ],
+  "scores": {
+    "sensitivity": 3,
+    "utility": 3,
+    "fingerprint_bits": 5,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": "Pick compute backend and model sizes",
+    "abuse": "Adds GPU-class signal, sidesteps WebGL masking"
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2023-05",
+      "browser": "chrome",
+      "version": "113",
+      "change": "WebGPU ships on Windows, macOS, ChromeOS"
+    },
+    {
+      "date": "2024-01",
+      "browser": "chrome",
+      "version": "121",
+      "change": "Android support"
+    },
+    {
+      "date": "2025-07",
+      "browser": "firefox",
+      "version": "141",
+      "change": "WebGPU on Windows"
+    },
+    {
+      "date": "2025-09",
+      "browser": "safari",
+      "version": "26",
+      "change": "WebGPU in Safari, iOS and visionOS"
+    },
+    {
+      "date": "2024-03",
+      "browser": "chrome",
+      "version": "123",
+      "change": "adapter.info replaces requestAdapterInfo(); device and description gated"
+    }
+  ],
+  "related": [
+    "web.render.webgpu-features-limits",
+    "web.render.webgl-parameters-extensions"
+  ],
+  "refs": [
+    {
+      "t": "mdn",
+      "label": "MDN GPUAdapter.info",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/GPUAdapter/info"
+    },
+    {
+      "t": "spec",
+      "label": "WebGPU spec privacy considerations",
+      "url": "https://gpuweb.github.io/gpuweb/#security-privacy"
+    },
+    {
+      "t": "chromestatus",
+      "label": "Chrome WebGPU",
+      "url": "https://developer.chrome.com/docs/web-platform/webgpu"
+    }
+  ],
+  "confidence": "docs"
+}

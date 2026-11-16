@@ -1,0 +1,175 @@
+{
+  "id": "mob.nx.sim-ids",
+  "name": "SIM identifiers (ICCID, IMSI)",
+  "kind": "not-exposed",
+  "group": "telephony-sms",
+  "subgroup": "Hardware IDs",
+  "tags": [
+    "iccid",
+    "imsi",
+    "blocked"
+  ],
+  "plain": "Blocked for normal apps on Android since 10 and never available on iOS.",
+  "meaning": "SIM IDs identify the subscriber. Only carrier-privileged apps can read them.",
+  "lifecycle": [
+    "on-launch",
+    "in-session"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "r",
+      "v": "10",
+      "api": 29,
+      "permission": "READ_PRIVILEGED_PHONE_STATE or carrier privileges",
+      "protection": "privileged",
+      "grant": "not-exposed",
+      "prompt_ui": "",
+      "persistence": "",
+      "revocation": "",
+      "store_policy": "",
+      "api_surface": "TelephonyManager.getSubscriberId(), getSimSerialNumber()",
+      "note": "SecurityException for normal apps"
+    },
+    "ios": {
+      "s": "n",
+      "v": "",
+      "permission": "none",
+      "protection": "not-exposed",
+      "grant": "not-exposed",
+      "prompt_ui": "",
+      "persistence": "",
+      "revocation": "",
+      "store_policy": "",
+      "api_surface": "No public API",
+      "note": "Carrier apps via entitlement only"
+    }
+  },
+  "data": {
+    "type": "none",
+    "metric": "None",
+    "update": "N/A",
+    "fields": []
+  },
+  "limits": {
+    "headline": "Can't see SIM identifiers like ICCID or IMSI as a normal app",
+    "user_action": "Nothing. Only carrier approved apps get these",
+    "can": [
+      "Use them if it holds carrier privileges (Android)",
+      "Get them in a carrier app with an Apple entitlement (iPhone)"
+    ],
+    "cannot": [
+      "See them on Android 10 and later as a normal app",
+      "See them on iPhone as a normal app",
+      "Unlock them with a permission prompt"
+    ],
+    "reach": 1,
+    "reach_label": "Blocked for normal apps",
+    "differs": "Android allows it for carrier privileged apps; iPhone allows it for carrier apps with an entitlement."
+  },
+  "story": {
+    "what_it_is": "Blocked: normal apps cannot read the SIM card's identifying numbers.",
+    "icon": "smartphone",
+    "tags": [
+      "Blocked",
+      "SIM",
+      "Identity"
+    ],
+    "marketing": [],
+    "for_you": "You never notice. Apps cannot read the numbers that identify your SIM card or subscriber. Only the carrier's own apps can, so your mobile line stays private.",
+    "for_makers": "A SIM ID is a strong key for a person. It was used for tracking and fraud tricks, so platforms blocked normal apps. Carrier and security teams can still use it through special rights.",
+    "use_cases": [
+      {
+        "type": "security",
+        "example": "A fraud team wanted to know if a SIM was swapped and now uses carrier checks.",
+        "apps": []
+      },
+      {
+        "type": "ads",
+        "example": "An ad network wanted a SIM ID to follow a person across phones and cannot.",
+        "apps": []
+      },
+      {
+        "type": "payments",
+        "example": "A mobile money app wanted the SIM to confirm the owner and uses a text code.",
+        "apps": []
+      },
+      {
+        "type": "enterprise",
+        "example": "A carrier app reads the SIM to show the plan.",
+        "apps": []
+      },
+      {
+        "type": "travel",
+        "example": "A travel eSIM app wanted to check the SIM and uses its own flow.",
+        "apps": [
+          "Airalo"
+        ]
+      },
+      {
+        "type": "games",
+        "example": "A game wanted to block a banned player by SIM and cannot.",
+        "apps": []
+      },
+      {
+        "type": "analytics",
+        "example": "A usage SDK wanted a lifetime SIM count and uses install IDs.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "SIM swap fraud",
+      "Identity linking",
+      "Only carriers can see"
+    ],
+    "android_note": "Since Android 10 only apps with carrier privileges can read SIM IDs, and others get an error.",
+    "ios_note": "iPhone has never exposed them to normal apps. Carrier apps need a special entitlement."
+  },
+  "technical_bounds": [
+    "Carrier privileges only"
+  ],
+  "scores": {
+    "sensitivity": 5,
+    "utility": 1,
+    "fingerprint_bits": null,
+    "friction": 3
+  },
+  "value": {
+    "legit_uses": [
+      "Carrier apps"
+    ],
+    "abuse": [
+      "Subscriber tracking"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2019-09",
+      "platform": "android",
+      "version": "10 (API 29)",
+      "change": "IMSI and ICCID restricted"
+    }
+  ],
+  "related": [
+    "mob.nx.imei-serial"
+  ],
+  "refs": [
+    {
+      "t": "android",
+      "label": "Android 10 privacy changes",
+      "url": "https://developer.android.com/about/versions/10/privacy/changes"
+    },
+    {
+      "t": "android",
+      "label": "Android: TelephonyManager",
+      "url": "https://developer.android.com/reference/android/telephony/TelephonyManager"
+    }
+  ],
+  "confidence": "docs"
+}

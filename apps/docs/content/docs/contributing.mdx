@@ -1,0 +1,72 @@
+---
+title: Contributing
+description: Fork, edit or add one JSON file, validate it, and open a pull request.
+---
+
+The best contributions are small: fix a fact, add a missing browser version, add a source, or write a new capability. You do not need to write code. You only edit JSON.
+
+<Steps>
+  <Step>
+
+### Fork and clone
+
+Fork [ever-just/platform-ontology](https://github.com/ever-just/platform-ontology) on GitHub and clone your fork.
+
+```bash
+git clone https://github.com/<you>/platform-ontology.git
+cd platform-ontology
+git checkout -b fix-camera-ptz
+```
+
+  </Step>
+  <Step>
+
+### Edit a file, or add one
+
+Every capability page on this site ends with an **Edit this data on GitHub** link that opens the exact file. To add a new capability, create a file at `data/<space>/<group>/<slug>.json` where the slug is the id without its `mob.` or `web.` prefix. The easiest start is to copy a neighbor in the same group and change the values.
+
+  </Step>
+  <Step>
+
+### Validate
+
+Run the build in strict mode. It checks the schema, ids, folders, links between capabilities and the writing rules, and it stops with an error if anything is off.
+
+```bash
+STRICT=1 node scripts/build-data.mjs
+```
+
+  </Step>
+  <Step>
+
+### Open a pull request
+
+Push your branch and open a pull request. Say what you changed and add a source link for any new fact. A reviewer will check the facts, not your formatting.
+
+  </Step>
+</Steps>
+
+## What a good capability file has
+
+- A stable `id` that starts with `mob.` or `web.` and matches the file name.
+- A `kind` and `group` from [the data model](/docs/data-model/), and a folder that matches the group.
+- Shared facts once at the top level. Per platform facts only under `platforms.android`, `platforms.ios` or `platforms.web`.
+- `limits.can` and `limits.cannot` with 2 to 5 short items each, and a `reach` from 1 to 4.
+- At least one entry in `refs`, with a link to official documentation or a spec, and an honest `confidence`.
+- Links in `related` and `web_equivalents` that point to ids that exist.
+
+## Writing rules
+
+Plain language is the point of this project. Write for someone who has never read a spec.
+
+1. Use short sentences and everyday words. Explain a term the first time you use it.
+2. Say what a person sees and what an app can do, not how the API is shaped.
+3. **Never use em dashes or en dashes.** Rewrite the sentence with a period, comma, colon or parentheses. Write ranges as "7 to 15". The build rejects dashes in data files.
+4. Use an ordinary hyphen only inside a real compound word, such as "one-click".
+5. Keep each item in `can` and `cannot` to one idea.
+6. Be neutral about abuse. Describe what is possible and what was reported, with a source.
+7. Do not copy long text from other sources. Summarize and link.
+
+## Reporting a problem
+
+Not ready to edit? [Open an issue](https://github.com/ever-just/platform-ontology/issues) with the capability id, what is wrong and a source if you have one.

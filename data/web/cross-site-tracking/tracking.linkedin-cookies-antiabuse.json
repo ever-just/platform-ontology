@@ -1,0 +1,212 @@
+{
+  "id": "web.tracking.linkedin-cookies-antiabuse",
+  "name": "LinkedIn anti-abuse cookies (li_bapfcc, li_odapfcc, li_apfcdc, spectroscopyId, fid, fcookie)",
+  "kind": "tracking",
+  "group": "cross-site-tracking",
+  "subgroup": "Cookies",
+  "tags": [
+    "cookie",
+    "anti-abuse",
+    "fingerprint",
+    "first-party-disclosure"
+  ],
+  "plain": "Cookies that control and carry the fingerprint and extension scans, disclosed in LinkedIn's own table.",
+  "meaning": "First party confirmation that LinkedIn collects 'abuse prevention features' from the member's device and checks for extensions. The Cookie Policy text itself does not mention fingerprinting or extensions.",
+  "lifecycle": [
+    "on-arrival",
+    "in-session",
+    "signed-in"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "Set-Cookie li_bapfcc, li_odapfcc, li_apfcdc, spectroscopyId, fid, fcookie, ccookie, rtc, trkInfo, trkCode, chp_token, li_cu, f_token, denial-*",
+      "access": {
+        "grant": "none",
+        "prompt_ui": "None (no browser prompt)",
+        "secure_context": false,
+        "user_gesture": false,
+        "persistence": "li_bapfcc and li_odapfcc 2 years; li_apfcdc 10 hours; spectroscopyId session",
+        "revocation": "",
+        "iframe": "",
+        "steps": [
+          "Server sets li_bapfcc to cap how many features the script collects",
+          "li_apfcdc triggers collection",
+          "spectroscopyId marks an extension scan session"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "",
+          "note": ""
+        },
+        "edge": {
+          "s": "y",
+          "v": "",
+          "note": ""
+        },
+        "firefox": {
+          "s": "y",
+          "v": "",
+          "note": ""
+        },
+        "safari": {
+          "s": "y",
+          "v": "",
+          "note": ""
+        },
+        "ios_safari": {
+          "s": "y",
+          "v": "",
+          "note": ""
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "",
+          "note": ""
+        },
+        "samsung": {
+          "s": "y",
+          "v": "",
+          "note": ""
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "string",
+    "metric": "Control flags",
+    "update": "per session",
+    "fields": [
+      {
+        "name": "li_bapfcc",
+        "type": "string",
+        "unit": "",
+        "range": "number of features",
+        "precision": "2 years"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can check your browser for bots and add a device fingerprint to your visit",
+    "user_action": "Nothing. It happens when a LinkedIn page loads",
+    "can": [
+      "Store small markers in your browser for bot and abuse checks",
+      "Carry a device fingerprint with your visits",
+      "Record the result of extension scans LinkedIn discloses in its cookie table"
+    ],
+    "cannot": [
+      "Work if you clear the cookies, though a fingerprint may rebuild",
+      "Name you without a LinkedIn login",
+      "See other tabs or your files",
+      "Be turned off with the normal cookie banner for essential security"
+    ],
+    "reach": 3,
+    "reach_label": "Your browser's traits, each visit",
+    "differs": ""
+  },
+  "story": {
+    "what_it_is": "Cookies tied to LinkedIn's checks on your device and browser extensions, listed in its own cookie table.",
+    "icon": "bug",
+    "tags": [
+      "Cookies",
+      "Fingerprinting",
+      "Silent"
+    ],
+    "marketing": [],
+    "for_you": "You never see these cookies or the checks behind them. LinkedIn's own cookie table says they support abuse prevention. A public analysis says the related scripts look at the browser and add ons on your device.",
+    "for_makers": "Fake accounts and scrapers are a big cost for a social site. Scanning for browser extensions and device traits helps LinkedIn tell bots from people. The same data can act as a device fingerprint, so critics ask whether it is used for more than safety.",
+    "use_cases": [
+      {
+        "type": "security",
+        "example": "LinkedIn spots a browser running a scraping extension that copies profiles in bulk, and limits the account.",
+        "apps": [
+          "LinkedIn"
+        ]
+      },
+      {
+        "type": "security",
+        "example": "A fake recruiter account logs in from a browser with signs of automation, so LinkedIn asks for a puzzle or blocks it.",
+        "apps": [
+          "LinkedIn"
+        ]
+      },
+      {
+        "type": "social",
+        "example": "You log in from a new laptop. The device checks run in the background and decide whether to ask you for a code.",
+        "apps": [
+          "LinkedIn"
+        ]
+      },
+      {
+        "type": "ads",
+        "example": "Ad fraud teams use device traits to throw out fake clicks, so advertisers do not pay for bots.",
+        "apps": [
+          "LinkedIn Ads"
+        ]
+      },
+      {
+        "type": "analytics",
+        "example": "A growth team counts real people, not bots, by filtering sessions that the checks flag.",
+        "apps": [
+          "LinkedIn"
+        ]
+      },
+      {
+        "type": "games",
+        "example": "LinkedIn Games such as Queens and Tango could see bots solve a puzzle in a second, and the checks help flag that.",
+        "apps": [
+          "LinkedIn Games"
+        ]
+      }
+    ],
+    "risks": [
+      "Device scans are not described in the policy text",
+      "Could work as a fingerprint"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Cookie names show intent but not exact payloads"
+  ],
+  "scores": {
+    "sensitivity": 4,
+    "utility": 3,
+    "fingerprint_bits": null,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Abuse prevention"
+    ],
+    "abuse": [
+      "Persistent device identifiers"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": true,
+      "how": "LinkedIn's cookie table describes li_bapfcc and li_odapfcc as controlling the number of abuse prevention features collected from the member's device, li_apfcdc as triggering them, spectroscopyId as catching malicious activity through browser extensions."
+    }
+  },
+  "related": [
+    "web.tracking.linkedin-apfc-fingerprint",
+    "web.tracking.linkedin-extension-probe",
+    "web.tracking.linkedin-human-px-iframe"
+  ],
+  "refs": [
+    {
+      "t": "vendor",
+      "label": "LinkedIn cookie table",
+      "url": "https://www.linkedin.com/legal/l/cookie-table"
+    },
+    {
+      "t": "news",
+      "label": "BleepingComputer: LinkedIn scans for 6,000+ Chrome extensions",
+      "url": "https://www.bleepingcomputer.com/news/security/linkedin-secretely-scans-for-6-000-plus-chrome-extensions-collects-data/"
+    }
+  ],
+  "confidence": "verified"
+}

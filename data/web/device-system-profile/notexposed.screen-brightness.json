@@ -1,0 +1,219 @@
+{
+  "id": "web.notexposed.screen-brightness",
+  "name": "Screen brightness",
+  "kind": "not-exposed",
+  "group": "device-system-profile",
+  "subgroup": "Sensors",
+  "tags": [
+    "not-exposed",
+    "brightness",
+    "ambient-light",
+    "sensors"
+  ],
+  "plain": "A site cannot read how bright your screen is set.",
+  "meaning": "No API exposes backlight level. Proxies: prefers-color-scheme, dynamic-range and Screen Wake Lock state. Ambient light sensor was removed from stable browsers (Chrome behind a flag, Firefox 122 removed it) for fingerprint and privacy risk.",
+  "lifecycle": [
+    "on-arrival",
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "none",
+      "access": {
+        "grant": "not-exposed",
+        "prompt_ui": "None",
+        "secure_context": false,
+        "user_gesture": false,
+        "persistence": "read fresh on every page load; nothing stored",
+        "revocation": "not applicable",
+        "iframe": "Readable from cross-origin iframes too (same values)",
+        "steps": [
+          "Page script reads the value",
+          "No prompt is shown"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "edge": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "firefox": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "safari": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "ios_safari": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "chrome_android": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "samsung": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "none",
+    "metric": "",
+    "update": "static per session",
+    "fields": [
+      {
+        "name": "proxy: prefers-color-scheme",
+        "type": "string",
+        "unit": "",
+        "range": "light or dark theme only",
+        "precision": ""
+      },
+      {
+        "name": "proxy: Screen Wake Lock",
+        "type": "string",
+        "unit": "",
+        "range": "request only, no readout",
+        "precision": ""
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can't see how bright your screen is set",
+    "user_action": "Nothing. Pages have no way to ask for this",
+    "can": [
+      "See if you use light or dark mode",
+      "Check HDR and color range support",
+      "Keep your screen awake with a wake lock",
+      "Use a light sensor only where a flag turns it on in Chrome"
+    ],
+    "cannot": [
+      "See the brightness level",
+      "See your battery saver or night mode",
+      "Use the ambient light sensor in Firefox, which removed it",
+      "Change your brightness"
+    ],
+    "reach": 1,
+    "reach_label": "Light or dark mode only",
+    "differs": ""
+  },
+  "story": {
+    "what_it_is": "A site cannot read how bright your screen is set.",
+    "icon": "sun",
+    "tags": [
+      "Blocked",
+      "Screen",
+      "Privacy"
+    ],
+    "marketing": [
+      {
+        "vendor": "Google",
+        "name": "Screen Wake Lock API",
+        "pitch": "Chrome describes a way for a page to keep the screen on, without any control over brightness.",
+        "url": "https://developer.chrome.com/docs/capabilities/web-apis/wake-lock"
+      }
+    ],
+    "for_you": "A site cannot see or change your screen brightness. It can only see whether you prefer a dark or light theme, and it can ask to keep the screen awake.",
+    "for_makers": "Brightness is a private device setting and a possible fingerprint. The web exposes only your theme preference and wake lock. Apps work around it with themes.",
+    "use_cases": [
+      {
+        "type": "video",
+        "example": "A video site wanted brightness to adjust the picture and uses dark or light theme instead.",
+        "apps": [
+          "YouTube"
+        ]
+      },
+      {
+        "type": "fitness",
+        "example": "A workout page keeps the screen awake during a class using wake lock.",
+        "apps": []
+      },
+      {
+        "type": "accessibility",
+        "example": "A reading site wanted brightness to adapt contrast and relies on your theme and contrast settings.",
+        "apps": []
+      },
+      {
+        "type": "games",
+        "example": "A browser game wanted brightness for a night mode and follows the system theme.",
+        "apps": []
+      },
+      {
+        "type": "maps",
+        "example": "A map in navigation mode keeps the screen on, and cannot change brightness.",
+        "apps": [
+          "Google Maps"
+        ]
+      },
+      {
+        "type": "ads",
+        "example": "An advertiser wanted brightness as a time of day clue and cannot get it.",
+        "apps": []
+      },
+      {
+        "type": "security",
+        "example": "A tracker wanted brightness as a fingerprint input and is blocked.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Theme and wake lock still hint at habits"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Side-channel risk led to removal"
+  ],
+  "scores": {
+    "sensitivity": 2,
+    "utility": 2,
+    "fingerprint_bits": 0.0,
+    "friction": 3
+  },
+  "value": {
+    "legit_uses": [
+      "None: the browser deliberately withholds it"
+    ],
+    "abuse": [
+      "Sites attempt proxies to recover it"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "related": [
+    "web.display.prefers-color-scheme"
+  ],
+  "refs": [
+    {
+      "t": "mdn",
+      "label": "MDN AmbientLightSensor",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/AmbientLightSensor"
+    },
+    {
+      "t": "spec",
+      "label": "Ambient Light Sensor spec",
+      "url": "https://www.w3.org/TR/ambient-light/"
+    }
+  ],
+  "confidence": "docs"
+}

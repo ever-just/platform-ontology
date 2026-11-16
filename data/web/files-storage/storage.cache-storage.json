@@ -1,0 +1,238 @@
+{
+  "id": "web.storage.cache-storage",
+  "name": "Cache Storage",
+  "kind": "capability",
+  "group": "files-storage",
+  "subgroup": "In session",
+  "tags": [
+    "cache-storage",
+    "service-worker",
+    "offline"
+  ],
+  "plain": "A store of HTTP responses used by service workers to serve pages offline.",
+  "meaning": "Lets a site keep its own pages, scripts and API responses on the device. Shares the origin quota with IndexedDB. Opaque cross-origin responses are padded in quota accounting so sites cannot probe sizes.",
+  "lifecycle": [
+    "in-session",
+    "after-leaving"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "caches.open(name).then(c => c.put(req, res))",
+      "bcd": [
+        "api.CacheStorage"
+      ],
+      "access": {
+        "grant": "none",
+        "prompt_ui": "None",
+        "secure_context": true,
+        "user_gesture": false,
+        "persistence": "Until cleared or evicted. Safari 7 day cap applies",
+        "revocation": "Clear site data, browser privacy settings",
+        "iframe": "",
+        "steps": []
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "43",
+          "note": "",
+          "date": "2015-05-19"
+        },
+        "edge": {
+          "s": "y",
+          "v": "16",
+          "note": "",
+          "date": "2017-10-17"
+        },
+        "firefox": {
+          "s": "y",
+          "v": "41",
+          "note": "",
+          "date": "2015-09-22"
+        },
+        "safari": {
+          "s": "y",
+          "v": "11.1",
+          "note": "",
+          "date": "2018-04-12"
+        },
+        "ios_safari": {
+          "s": "y",
+          "v": "11.3",
+          "note": "",
+          "date": "2018-03-29"
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "43",
+          "note": "",
+          "date": "2015-05-27"
+        },
+        "samsung": {
+          "s": "y",
+          "v": "4.0",
+          "note": "",
+          "date": "2016-03-11"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "binary",
+    "metric": "Cached responses",
+    "update": "any time",
+    "fields": [
+      {
+        "name": "quota",
+        "type": "integer",
+        "unit": "percent of disk",
+        "range": "10 to 60",
+        "precision": "approximate"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can keep copies of pages and files so the site opens without internet",
+    "user_action": "Nothing. It happens when you visit or install the site.",
+    "can": [
+      "Save pages, images and data for later",
+      "Serve them when you are offline",
+      "Speed up repeat visits"
+    ],
+    "cannot": [
+      "Be seen by other sites",
+      "Keep data for ever, since the browser may delete it when disk space is low",
+      "Hold more than the site's storage limit"
+    ],
+    "reach": 2,
+    "reach_label": "Its own saved copies only",
+    "differs": ""
+  },
+  "story": {
+    "what_it_is": "A store of web responses that lets a site work offline and load fast.",
+    "icon": "archive",
+    "tags": [
+      "Offline",
+      "Speed",
+      "Developer"
+    ],
+    "marketing": [
+      {
+        "vendor": "web.dev",
+        "name": "Service workers and caching",
+        "pitch": "Google pitches caching with service workers so web apps load fast and work without a connection.",
+        "url": "https://web.dev/learn/pwa/caching"
+      },
+      {
+        "vendor": "MDN",
+        "name": "CacheStorage",
+        "pitch": "Documents the store pages use to keep copies of web files for offline use.",
+        "url": "https://developer.mozilla.org/en-US/docs/Web/API/CacheStorage"
+      }
+    ],
+    "for_you": "You never see it. It is why a web app opens quickly even on a bad connection, and why some pages still work on a plane.",
+    "for_makers": "Makers use it to make web apps feel like phone apps. Fast starts keep people from leaving. It also uses your storage space and can hold old copies of a site.",
+    "use_cases": [
+      {
+        "type": "games",
+        "example": "A browser game keeps its art and sound files here, so it starts fast and can run offline.",
+        "apps": []
+      },
+      {
+        "type": "social",
+        "example": "A social web app opens its shell at once and then loads new posts.",
+        "apps": [
+          "Twitter Lite",
+          "Pinterest"
+        ]
+      },
+      {
+        "type": "shopping",
+        "example": "A coffee or store web app lets you browse the menu without a connection.",
+        "apps": [
+          "Starbucks"
+        ]
+      },
+      {
+        "type": "productivity",
+        "example": "A document or note app opens offline and syncs when you reconnect.",
+        "apps": [
+          "Google Docs"
+        ]
+      },
+      {
+        "type": "media",
+        "example": "A music or podcast web app keeps pages and covers ready for a quick start.",
+        "apps": []
+      },
+      {
+        "type": "news",
+        "example": "A news site saves recent stories so you can read them in a tunnel.",
+        "apps": []
+      },
+      {
+        "type": "travel",
+        "example": "A web boarding pass keeps working with no signal.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Stale copies",
+      "Uses storage space"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Same origin quota as IndexedDB",
+    "Needs secure context",
+    "Opaque responses are padded (Chrome pads to about 7 MB each in quota accounting)",
+    "Not shared across origins"
+  ],
+  "scores": {
+    "sensitivity": 2,
+    "utility": 4,
+    "fingerprint_bits": 0,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Offline pages, faster loads"
+    ],
+    "abuse": [
+      "Persisting tracker scripts on the device"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2023-07",
+      "browser": "chrome",
+      "version": "115",
+      "change": "Partitioned in third party contexts"
+    }
+  ],
+  "related": [
+    "web.storage.indexeddb",
+    "web.xsite.service-worker-lifetime"
+  ],
+  "refs": [
+    {
+      "t": "mdn",
+      "label": "MDN Cache API",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/CacheStorage"
+    },
+    {
+      "t": "spec",
+      "label": "Service Workers spec",
+      "url": "https://w3c.github.io/ServiceWorker/"
+    }
+  ],
+  "confidence": "docs"
+}

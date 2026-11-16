@@ -1,0 +1,205 @@
+{
+  "id": "mob.bg.ios-modes",
+  "name": "iOS background modes",
+  "kind": "capability",
+  "group": "notifications-background",
+  "subgroup": "iOS background",
+  "tags": [
+    "background-modes",
+    "entitlement",
+    "audio",
+    "voip"
+  ],
+  "plain": "Xcode background modes (audio, location, VoIP, Bluetooth, fetch, push) decide what can run while closed.",
+  "meaning": "Each mode is a narrow exemption tied to a visible use. Using one for something else is an App Review rejection, so the list shows what a company claims to need.",
+  "lifecycle": [
+    "background"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "p",
+      "v": "14",
+      "api": 34,
+      "permission": "FOREGROUND_SERVICE_<TYPE>",
+      "protection": "normal",
+      "grant": "install",
+      "prompt_ui": "See mob.bg.fgs-types",
+      "persistence": "n/a",
+      "revocation": "",
+      "store_policy": "Play: FGS type declaration",
+      "api_surface": "Foreground service types as the closest analog",
+      "note": "Android uses FGS types instead of per-mode entitlements"
+    },
+    "ios": {
+      "s": "y",
+      "v": "4.0",
+      "permission": "UIBackgroundModes: audio, location, voip, bluetooth-central, bluetooth-peripheral, fetch, remote-notification, processing, external-accessory, nearby-interaction",
+      "protection": "entitlement",
+      "grant": "entitlement",
+      "prompt_ui": "Capability in Xcode",
+      "persistence": "Declared at build time",
+      "revocation": "Not user visible except Background App Refresh",
+      "store_policy": "App Review 2.5.4: modes only for stated purpose",
+      "api_surface": "Info.plist UIBackgroundModes",
+      "note": "Modes have different run windows: audio until playback ends; location until stopped; fetch and processing as scheduled"
+    }
+  },
+  "data": {
+    "type": "list",
+    "metric": "Modes",
+    "update": "Build time",
+    "fields": [
+      {
+        "name": "modes",
+        "type": "list",
+        "unit": "",
+        "range": "10 types",
+        "precision": ""
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can run in the background on iPhone, but only for the kind of job Apple approved",
+    "user_action": "You start playback, a navigation trip, a call, or connect to a Bluetooth device",
+    "can": [
+      "Keep playing audio after you leave the app, until playback ends",
+      "Keep tracking location until the app stops it, if you allowed Always",
+      "Wake up for an incoming call or a Bluetooth event",
+      "Refresh content now and then when the system decides it is a good time"
+    ],
+    "cannot": [
+      "Run any task it likes while closed; each mode covers one kind of job",
+      "Choose when fetch and processing happen, since iOS sets the schedule",
+      "Run in the background with no capability turned on in the app's setup"
+    ],
+    "reach": 3,
+    "reach_label": "Ongoing, but only for approved jobs",
+    "differs": "Android has no per mode approval. It uses foreground service types and a visible notification instead."
+  },
+  "story": {
+    "what_it_is": "iPhone only lets closed apps keep running for a few approved reasons, like music or navigation.",
+    "icon": "layers",
+    "tags": [
+      "Background",
+      "iPhone",
+      "Review"
+    ],
+    "marketing": [
+      {
+        "vendor": "Apple",
+        "name": "Background execution modes",
+        "pitch": "Apple lets developers enable specific background capabilities such as audio, location, VoIP and Bluetooth in Xcode.",
+        "url": "https://developer.apple.com/documentation/xcode/configuring-background-execution-modes"
+      }
+    ],
+    "for_you": "You see it as the colored bar or dot showing an app is using location or audio. It is why music keeps playing and a run keeps being recorded with the screen off.",
+    "for_makers": "Makers must ask Apple for each mode and show a real need. The list tells reviewers what the app claims to do, and misuse can get an update rejected.",
+    "use_cases": [
+      {
+        "type": "music",
+        "example": "A music app keeps playing with the phone locked using the audio mode.",
+        "apps": [
+          "Spotify",
+          "Apple Music"
+        ]
+      },
+      {
+        "type": "maps",
+        "example": "A navigation app keeps giving turn by turn voice directions in your pocket.",
+        "apps": [
+          "Waze",
+          "Apple Maps"
+        ]
+      },
+      {
+        "type": "fitness",
+        "example": "A workout app records a bike ride route and heart rate while the screen is off.",
+        "apps": [
+          "Strava",
+          "Nike Run Club"
+        ]
+      },
+      {
+        "type": "messaging",
+        "example": "A calling app wakes the phone for an incoming call using the VoIP mode.",
+        "apps": [
+          "WhatsApp",
+          "FaceTime"
+        ]
+      },
+      {
+        "type": "smart-home",
+        "example": "A home app stays in touch with a Bluetooth lock so it can unlock as you arrive.",
+        "apps": [
+          "August",
+          "Yale Access"
+        ]
+      },
+      {
+        "type": "games",
+        "example": "A multiplayer game uses the audio mode for in game voice chat that keeps going when you switch apps.",
+        "apps": [
+          "Discord",
+          "Call of Duty Mobile"
+        ]
+      }
+    ],
+    "risks": [
+      "Some apps stretch a mode to stay alive",
+      "Hard to tell which apps run in the background"
+    ],
+    "android_note": "Android uses foreground service types instead of one entitlement per mode.",
+    "ios_note": "Each mode has its own run window, such as until music ends or until location is stopped."
+  },
+  "technical_bounds": [
+    "Review rejects misuse"
+  ],
+  "scores": {
+    "sensitivity": 1,
+    "utility": 3,
+    "fingerprint_bits": null,
+    "friction": 1
+  },
+  "value": {
+    "legit_uses": [
+      "Navigation",
+      "Calls"
+    ],
+    "abuse": [
+      "Abusing audio or location for keep-alive"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2010-06",
+      "platform": "ios",
+      "version": "iOS 4",
+      "change": "Multitasking and background modes introduced"
+    },
+    {
+      "date": "2019-09",
+      "platform": "ios",
+      "version": "iOS 13",
+      "change": "VoIP pushes must show a CallKit call"
+    }
+  ],
+  "related": [
+    "mob.bg.fgs-types",
+    "mob.bg.background-audio"
+  ],
+  "refs": [
+    {
+      "t": "apple",
+      "label": "Apple: Configuring background execution modes",
+      "url": "https://developer.apple.com/documentation/xcode/configuring-background-execution-modes"
+    }
+  ],
+  "confidence": "docs"
+}

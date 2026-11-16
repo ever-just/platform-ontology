@@ -1,0 +1,227 @@
+{
+  "id": "web.peripherals.compute-pressure",
+  "name": "Compute Pressure",
+  "kind": "signal",
+  "group": "peripherals-hardware",
+  "subgroup": "System load",
+  "tags": [
+    "system load"
+  ],
+  "plain": "Reports how stressed the CPU is (nominal, fair, serious, critical).",
+  "meaning": "Coarse load level; shows if the device is struggling. Can leak what else is running.",
+  "lifecycle": [
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "new PressureObserver(cb).observe('cpu',{sampleInterval:1000})",
+      "permissions_policy": "compute-pressure",
+      "bcd": [
+        "api.PressureObserver"
+      ],
+      "access": {
+        "grant": "none",
+        "prompt_ui": "None (permission policy gated)",
+        "secure_context": true,
+        "user_gesture": false,
+        "persistence": "Per origin",
+        "revocation": "Site settings",
+        "iframe": "Same as top level; cross-origin iframes need a permissions policy where listed",
+        "steps": [
+          "Call the API",
+          "Browser applies its access rules",
+          "Page receives the result"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "125",
+          "note": "",
+          "date": "2024-05-14"
+        },
+        "edge": {
+          "s": "y",
+          "v": "125",
+          "note": "",
+          "date": "2024-05-17"
+        },
+        "firefox": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "safari": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "ios_safari": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "chrome_android": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "samsung": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "object",
+    "metric": "Reports how stressed the CPU is (nominal, fair, serious, critical).",
+    "update": "on demand",
+    "fields": [
+      {
+        "name": "state",
+        "type": "enum",
+        "range": "nominal, fair, serious, critical"
+      },
+      {
+        "name": "source",
+        "type": "enum",
+        "range": "cpu"
+      },
+      {
+        "name": "sampleInterval",
+        "type": "integer",
+        "unit": "ms",
+        "range": "minimum 1000 in Chrome"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can see how busy your device's chip is, but not exact numbers",
+    "user_action": "Nothing. It happens when a heavy app or call is open, if the site is allowed.",
+    "can": [
+      "Learn if your chip is in one of four states: nominal, fair, serious or critical",
+      "Slow a video call or game when the device is hot",
+      "Check while the page is open and in front"
+    ],
+    "cannot": [
+      "See exact usage numbers or temperatures",
+      "See what other apps are doing",
+      "Work in Firefox, Safari or on iPhone",
+      "Keep checking after you close the page"
+    ],
+    "reach": 2,
+    "reach_label": "While the page is open",
+    "differs": "Only desktop Chrome and Edge support it. Firefox, Safari and Android browsers do not."
+  },
+  "story": {
+    "what_it_is": "A page can learn how busy your computer's processor is.",
+    "icon": "activity",
+    "tags": [
+      "Performance",
+      "Silent",
+      "Games"
+    ],
+    "marketing": [
+      {
+        "vendor": "Google",
+        "name": "Compute Pressure API",
+        "pitch": "Chrome's docs describe it as a way to see CPU load in simple levels so apps can adapt.",
+        "url": "https://developer.chrome.com/docs/web-platform/compute-pressure"
+      }
+    ],
+    "for_you": "You never see it. A video call or a game may lower effects when your computer is busy, so it keeps running smoothly.",
+    "for_makers": "Makers use it to adapt: drop video quality, turn off background blur, lower graphics. It also gives them a hint about how powerful and loaded your device is.",
+    "use_cases": [
+      {
+        "type": "video",
+        "example": "A call app turns off background blur when your processor is overheated.",
+        "apps": [
+          "Google Meet",
+          "Zoom web"
+        ]
+      },
+      {
+        "type": "games",
+        "example": "A browser game lowers its effects when the computer is under heavy load.",
+        "apps": []
+      },
+      {
+        "type": "creative",
+        "example": "A web editor lowers preview quality when you export in the background.",
+        "apps": []
+      },
+      {
+        "type": "live",
+        "example": "A streaming tool drops resolution before your stream stutters.",
+        "apps": [
+          "Twitch"
+        ]
+      },
+      {
+        "type": "security",
+        "example": "A fraud tool reads load changes as another hint that a device is real.",
+        "apps": []
+      },
+      {
+        "type": "ads",
+        "example": "An ad system picks lighter ads on a device that is struggling.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Device hints",
+      "Side channel risks"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Four coarse states only",
+    "Page must be visible",
+    "No Android, no Firefox, no Safari"
+  ],
+  "scores": {
+    "sensitivity": 1,
+    "utility": 3,
+    "fingerprint_bits": 0.5,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Video calls throttling quality"
+    ],
+    "abuse": [
+      "Side channel for cross-tab load"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2024-04",
+      "browser": "chrome",
+      "version": "125",
+      "change": "Compute Pressure ships on desktop"
+    }
+  ],
+  "refs": [
+    {
+      "t": "mdn",
+      "label": "MDN Compute Pressure API",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/Compute_Pressure_API"
+    },
+    {
+      "t": "spec",
+      "label": "Compute Pressure",
+      "url": "https://www.w3.org/TR/compute-pressure/"
+    }
+  ],
+  "confidence": "verified"
+}

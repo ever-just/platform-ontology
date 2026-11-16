@@ -1,0 +1,250 @@
+{
+  "id": "web.actions.webrtc-data-channel",
+  "name": "WebRTC data channels (peer to peer)",
+  "kind": "capability",
+  "group": "page-actions",
+  "subgroup": "Network channels",
+  "tags": [
+    "webrtc",
+    "data-channel",
+    "p2p",
+    "ip-leak"
+  ],
+  "plain": "Sends data directly between browsers without a server, with no prompt.",
+  "meaning": "A site can connect two people peer to peer. Setup exchanges network candidates, which can expose the person's public IP address to the other peer or to the site.",
+  "lifecycle": [
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "new RTCPeerConnection(); pc.createDataChannel('x')",
+      "bcd": [
+        "api.RTCPeerConnection",
+        "api.RTCDataChannel"
+      ],
+      "access": {
+        "grant": "none",
+        "prompt_ui": "None (no browser prompt)",
+        "secure_context": false,
+        "user_gesture": false,
+        "activation": "none",
+        "persistence": "Lives with the peer connection",
+        "revocation": "Nothing to revoke (no permission is stored)",
+        "iframe": "No iframe flag; permissions policy applies only to camera and microphone",
+        "steps": [
+          "Create RTCPeerConnection with STUN or TURN",
+          "Exchange SDP and ICE candidates via signaling",
+          "Open data channel"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "56",
+          "note": "",
+          "date": "2017-01-25"
+        },
+        "edge": {
+          "s": "y",
+          "v": "15",
+          "note": "",
+          "date": "2017-04-05"
+        },
+        "firefox": {
+          "s": "y",
+          "v": "44",
+          "note": "",
+          "date": "2016-01-26"
+        },
+        "safari": {
+          "s": "y",
+          "v": "11",
+          "note": "",
+          "date": "2017-09-19"
+        },
+        "ios_safari": {
+          "s": "y",
+          "v": "11",
+          "note": "All iOS browsers use WebKit",
+          "date": "2017-09-19"
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "56",
+          "note": "",
+          "date": "2017-02-01"
+        },
+        "samsung": {
+          "s": "y",
+          "v": "6.0",
+          "note": "",
+          "date": "2017-08-23"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "none",
+    "metric": "",
+    "update": "",
+    "fields": []
+  },
+  "limits": {
+    "headline": "Can send data straight between two browsers, with no pop up",
+    "user_action": "Nothing for data. A video call asks for camera permission only when you use it.",
+    "can": [
+      "Send text, files or game moves straight to another person's browser",
+      "Keep the connection open while the pages are open",
+      "Connect two people through a quick set up over the internet"
+    ],
+    "cannot": [
+      "Reach your camera or microphone without a separate permission",
+      "Stay connected after you close the page",
+      "Work with no server at all; a server helps the two browsers meet",
+      "Always hide your network address from the other person"
+    ],
+    "reach": 2,
+    "reach_label": "While the page is open",
+    "differs": ""
+  },
+  "story": {
+    "what_it_is": "Two browsers can send data straight to each other, with no prompt.",
+    "icon": "share-2",
+    "tags": [
+      "Peer to peer",
+      "Games",
+      "Silent"
+    ],
+    "marketing": [
+      {
+        "vendor": "Google",
+        "name": "WebRTC",
+        "pitch": "The WebRTC project says it brings real time communication to browsers through simple APIs.",
+        "url": "https://webrtc.org/"
+      }
+    ],
+    "for_you": "You never see it. In a video call or a browser game, your device may talk directly to another person's device. That can reveal your network address to the other side.",
+    "for_makers": "Makers use it for real time speed and to save server costs. It powers file sharing, games and calls. It can also expose your real network address even behind a VPN, which fraud teams use to spot you.",
+    "use_cases": [
+      {
+        "type": "games",
+        "example": "A browser multiplayer game sends player moves directly between players for low delay.",
+        "apps": [
+          "Agar.io",
+          "Krunker.io",
+          "Skribbl.io"
+        ]
+      },
+      {
+        "type": "video",
+        "example": "A video call app sends your voice and video peer to peer when it can.",
+        "apps": [
+          "Google Meet",
+          "Discord web"
+        ]
+      },
+      {
+        "type": "messaging",
+        "example": "A web file sharing tool sends a large file straight to a friend with no upload.",
+        "apps": [
+          "Snapdrop",
+          "Send Anywhere"
+        ]
+      },
+      {
+        "type": "live",
+        "example": "A live Xbox Cloud Gaming or GeForce NOW stream uses the same family of tech to send the picture.",
+        "apps": [
+          "Xbox Cloud Gaming",
+          "GeForce NOW"
+        ]
+      },
+      {
+        "type": "security",
+        "example": "A fraud tool uses it to learn a visitor's real network address and spot a VPN.",
+        "apps": []
+      },
+      {
+        "type": "developer",
+        "example": "A shared code editor syncs edits straight between teammates.",
+        "apps": [
+          "VS Code Live Share"
+        ]
+      }
+    ],
+    "risks": [
+      "Exposes network address",
+      "Used to bypass VPNs"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "No prompt for data-only connections; camera or mic needs getUserMedia",
+    "Local IP candidates hidden behind mDNS .local names (Chrome 75, Safari 11, Firefox 78) unless media permission is granted",
+    "STUN reveals the public IP to peers and to the STUN server",
+    "Max message size: Chrome about 256 KiB, Firefox up to 1 GiB (maxMessageSize)",
+    "Ordered or unordered, reliable or partially reliable; SCTP over DTLS"
+  ],
+  "scores": {
+    "sensitivity": 3,
+    "utility": 4,
+    "fingerprint_bits": 3,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Peer to peer file sharing",
+      "Games",
+      "Video calls"
+    ],
+    "abuse": [
+      "IP address leak",
+      "Peer to peer botnet or proxy networks",
+      "Local network probing"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2019-06",
+      "browser": "chrome",
+      "version": "75",
+      "change": "mDNS host candidates hide local IPs"
+    },
+    {
+      "date": "2020-06",
+      "browser": "firefox",
+      "version": "78",
+      "change": "mDNS ICE host candidates"
+    }
+  ],
+  "related": [
+    "web.network.webrtc-local-ip",
+    "web.actions.websockets"
+  ],
+  "refs": [
+    {
+      "t": "mdn",
+      "label": "MDN WebRTC API",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/WebRTC_API"
+    },
+    {
+      "t": "spec",
+      "label": "W3C WebRTC",
+      "url": "https://www.w3.org/TR/webrtc/"
+    },
+    {
+      "t": "paper",
+      "label": "RFC 8828 WebRTC IP address handling",
+      "url": "https://www.rfc-editor.org/rfc/rfc8828"
+    }
+  ],
+  "confidence": "docs"
+}

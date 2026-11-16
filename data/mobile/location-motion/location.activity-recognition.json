@@ -1,0 +1,220 @@
+{
+  "id": "mob.location.activity-recognition",
+  "name": "Activity recognition",
+  "kind": "permission",
+  "group": "location-motion",
+  "subgroup": "Motion",
+  "tags": [
+    "runtime-permission",
+    "steps",
+    "motion"
+  ],
+  "plain": "Asks to detect walking, driving, cycling and step counts.",
+  "meaning": "Motion classes reveal commutes, exercise habits and sleep schedules. On both OSes it is gated by a runtime prompt.",
+  "lifecycle": [
+    "in-session",
+    "background"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "y",
+      "v": "10",
+      "api": 29,
+      "permission": "ACTIVITY_RECOGNITION",
+      "protection": "dangerous",
+      "grant": "prompt",
+      "prompt_ui": "Allow or Don't allow",
+      "persistence": "Until revoked or auto-reset",
+      "revocation": "Settings > Apps > Permissions > Physical activity",
+      "store_policy": "Play: data-safety disclosure",
+      "api_surface": "Sensor.TYPE_STEP_COUNTER, ActivityRecognitionClient",
+      "note": "Needed for step counter and detector sensors starting with Android 10 (API 29)."
+    },
+    "ios": {
+      "s": "y",
+      "v": "7.0",
+      "permission": "NSMotionUsageDescription",
+      "protection": "prompt",
+      "grant": "prompt",
+      "prompt_ui": "Allow or Don't Allow",
+      "persistence": "Until revoked",
+      "revocation": "Settings > Privacy & Security > Motion & Fitness",
+      "store_policy": "App Review 5.1.1",
+      "api_surface": "CMMotionActivityManager, CMPedometer",
+      "note": "Raw accelerometer and gyroscope reads do not need a prompt on iOS."
+    }
+  },
+  "web_equivalents": [
+    "web.location.sensor-accelerometer",
+    "web.location.sensor-gyroscope"
+  ],
+  "data": {
+    "type": "event",
+    "metric": "Activity type and steps",
+    "update": "event driven; step counts per interval",
+    "fields": [
+      {
+        "name": "steps",
+        "type": "integer",
+        "unit": "steps",
+        "range": "0 to 100000 per day",
+        "precision": "1 step"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can tell if you walk, drive or cycle, and count steps, after you allow Motion",
+    "user_action": "You tap Allow when the app asks for physical activity or motion access",
+    "can": [
+      "Detect walking, running, cycling and driving",
+      "Count steps and walking distance",
+      "Look back about 7 days of activity on iPhone",
+      "Wake in the background through Play services on Android"
+    ],
+    "cannot": [
+      "See where you are",
+      "Record activity before you allow it",
+      "Keep going if you turn the permission off in Settings",
+      "Skip the prompt on Android 10 and newer for step counters (iPhone raw motion sensors need no prompt)"
+    ],
+    "reach": 3,
+    "reach_label": "Your movement, while allowed",
+    "differs": "Android 10 and newer needs Activity recognition permission for step sensors. iPhone asks for Motion and Fitness."
+  },
+  "story": {
+    "what_it_is": "An app asks to know if you are walking, running, cycling or in a vehicle, and to count steps.",
+    "icon": "footprints",
+    "tags": [
+      "Motion",
+      "Asks first",
+      "Fitness"
+    ],
+    "marketing": [
+      {
+        "vendor": "Google",
+        "name": "Activity recognition",
+        "pitch": "Android can detect when you walk, run or ride so apps can respond to what you are doing.",
+        "url": "https://developer.android.com/develop/sensors-and-location/sensors/sensors_motion"
+      },
+      {
+        "vendor": "Apple",
+        "name": "Motion and Fitness",
+        "pitch": "Apple lets apps show your steps, distance and activity type when you allow Motion and Fitness.",
+        "url": "https://developer.apple.com/documentation/coremotion/cmmotionactivitymanager"
+      }
+    ],
+    "for_you": "You see a prompt asking to access physical activity or Motion and Fitness. If you allow it, the app can show your steps and know when you start a run or ride. If you say no, some tracking features do not work.",
+    "for_makers": "Makers use it to start workouts on their own, count steps cheaply and know when you are driving so they do not bother you. It also builds a picture of your daily routine: commute, exercise and sleep times.",
+    "use_cases": [
+      {
+        "type": "fitness",
+        "example": "A running app starts recording the moment it senses you running, so you never forget to press start.",
+        "apps": [
+          "Strava",
+          "Nike Run Club"
+        ]
+      },
+      {
+        "type": "games",
+        "example": "A walking game turns your real steps into hatching eggs and rewards.",
+        "apps": [
+          "Pokemon GO",
+          "Pikmin Bloom"
+        ]
+      },
+      {
+        "type": "health",
+        "example": "A step counter shows daily steps and a weekly streak.",
+        "apps": [
+          "Apple Health",
+          "Google Fit"
+        ]
+      },
+      {
+        "type": "automotive",
+        "example": "A driving score app detects that you are in a car and starts to log the trip.",
+        "apps": [
+          "Life360"
+        ]
+      },
+      {
+        "type": "maps",
+        "example": "A map app switches to walking directions once it sees you step out of a car.",
+        "apps": [
+          "Google Maps"
+        ]
+      },
+      {
+        "type": "analytics",
+        "example": "An insurance or ad partner reads how much you move to guess your health.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Reveals routine",
+      "Health inference"
+    ],
+    "android_note": "Android asks for the Physical activity permission, and an app can get walking, driving and step events.",
+    "ios_note": "iPhone calls this Motion and Fitness. Apps ask once, and you can turn it off in Settings."
+  },
+  "technical_bounds": [
+    "Raw motion sensors need no prompt",
+    "Step count history limited to 7 days on iOS"
+  ],
+  "scores": {
+    "sensitivity": 3,
+    "utility": 4,
+    "fingerprint_bits": null,
+    "friction": 2
+  },
+  "value": {
+    "legit_uses": [
+      "Fitness tracking"
+    ],
+    "abuse": [
+      "Behavior profiling"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2019-09",
+      "platform": "android",
+      "version": "10 (API 29)",
+      "change": "ACTIVITY_RECOGNITION made a runtime permission"
+    },
+    {
+      "date": "2013-09",
+      "platform": "ios",
+      "version": "iOS 7",
+      "change": "M7 motion coprocessor introduced; motion access via CoreMotion"
+    }
+  ],
+  "related": [
+    "mob.health.body-sensors"
+  ],
+  "refs": [
+    {
+      "t": "android",
+      "label": "Android 10 privacy changes",
+      "url": "https://developer.android.com/about/versions/10/privacy/changes"
+    },
+    {
+      "t": "apple",
+      "label": "Apple: CMMotionActivityManager",
+      "url": "https://developer.apple.com/documentation/coremotion/cmmotionactivitymanager"
+    },
+    {
+      "t": "android",
+      "label": "Android: Manifest.permission reference",
+      "url": "https://developer.android.com/reference/android/Manifest.permission"
+    }
+  ],
+  "confidence": "docs"
+}

@@ -1,0 +1,196 @@
+{
+  "id": "mob.network.nearby-wifi",
+  "name": "Nearby Wi-Fi devices",
+  "kind": "permission",
+  "group": "network-connectivity",
+  "subgroup": "Wi-Fi",
+  "tags": [
+    "runtime-permission",
+    "nearby-devices",
+    "wifi"
+  ],
+  "plain": "Lets the app find and connect to nearby Wi-Fi devices without needing location.",
+  "meaning": "Reveals nearby access points and peers; the neverForLocation flag declares the app does not derive location. Also the interim grant for Android 16 local network protection.",
+  "lifecycle": [
+    "in-session"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "y",
+      "v": "13",
+      "api": 33,
+      "permission": "NEARBY_WIFI_DEVICES (with usesPermissionFlags neverForLocation optional)",
+      "protection": "dangerous",
+      "grant": "prompt",
+      "prompt_ui": "Nearby devices prompt",
+      "persistence": "Until revoked or auto-reset",
+      "revocation": "Settings > Apps > Permissions > Nearby devices",
+      "store_policy": "Play: data-safety disclosure",
+      "api_surface": "WifiManager, WifiAwareManager, WifiP2pManager",
+      "note": "Replaces location requirement for Wi-Fi Direct and Aware on Android 13."
+    },
+    "ios": {
+      "s": "p",
+      "v": "12",
+      "permission": "com.apple.developer.networking.wifi-info; NEHotspotConfiguration entitlements",
+      "protection": "entitlement",
+      "grant": "entitlement",
+      "prompt_ui": "Location prompt plus entitlement; join prompt for NEHotspotConfiguration",
+      "persistence": "Until revoked",
+      "revocation": "Settings > Privacy > Location Services",
+      "store_policy": "App Review 5.1.1; entitlement requires justification",
+      "api_surface": "NEHotspotNetwork.fetchCurrent, NEHotspotConfiguration, Multipeer Connectivity",
+      "note": "No Wi-Fi scan API; SSID needs location plus entitlement (iOS 13+)."
+    }
+  },
+  "web_equivalents": [
+    "web.notexposed.wifi-ssid"
+  ],
+  "data": {
+    "type": "list",
+    "metric": "Access points and peers",
+    "update": "scan throttled to 4 per 2 minutes foreground",
+    "fields": [
+      {
+        "name": "ssid",
+        "type": "string",
+        "unit": "chars",
+        "range": "0 to 32",
+        "precision": "exact"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can find and connect to nearby Wi-Fi devices without needing your location",
+    "user_action": "You tap Allow for Nearby devices when the app asks",
+    "can": [
+      "Find nearby devices for Wi-Fi Direct or Wi-Fi Aware on Android 13 and newer",
+      "Connect straight to a nearby device",
+      "Use Multipeer Connectivity on iPhone to find nearby apps"
+    ],
+    "cannot": [
+      "Scan for Wi-Fi networks on iPhone; no scan feature exists",
+      "See your Wi-Fi name on iPhone without the entitlement and location",
+      "Find your location when the app says it never uses location for this",
+      "Use it before you allow Nearby devices"
+    ],
+    "reach": 2,
+    "reach_label": "Nearby devices, while in use",
+    "differs": "Android 13 and newer split this from location. iPhone has no scan and needs entitlements for Wi-Fi names."
+  },
+  "story": {
+    "what_it_is": "An app finds and connects to nearby Wi-Fi devices without needing your location.",
+    "icon": "wifi",
+    "tags": [
+      "Wi-Fi",
+      "Asks first",
+      "Nearby"
+    ],
+    "marketing": [
+      {
+        "vendor": "Google",
+        "name": "Nearby Wi-Fi devices",
+        "pitch": "Android 13 lets apps find and connect to nearby Wi-Fi devices without location access.",
+        "url": "https://developer.android.com/develop/connectivity/wifi/wifi-scan"
+      }
+    ],
+    "for_you": "You see a prompt for Nearby devices. If you allow it, the app can find speakers, printers or direct Wi-Fi links. You do not have to give your location.",
+    "for_makers": "Makers get a cleaner permission that does not scare people with a location prompt. They promise not to use it to work out where you are. It also helps with the new local network limits on Android 16.",
+    "use_cases": [
+      {
+        "type": "smart-home",
+        "example": "A smart plug app finds a new device nearby without asking for location.",
+        "apps": [
+          "TP-Link Kasa"
+        ]
+      },
+      {
+        "type": "utilities",
+        "example": "A file share app sends photos to a nearby phone directly.",
+        "apps": []
+      },
+      {
+        "type": "games",
+        "example": "A local multiplayer game links phones with Wi-Fi Direct.",
+        "apps": []
+      },
+      {
+        "type": "music",
+        "example": "A speaker app finds a new speaker on first setup.",
+        "apps": []
+      },
+      {
+        "type": "enterprise",
+        "example": "A warehouse app connects to a handheld scanner using Wi-Fi Direct.",
+        "apps": []
+      },
+      {
+        "type": "security",
+        "example": "An app declares that it will not use the permission to work out location.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Location inference from names",
+      "Easy to over request"
+    ],
+    "android_note": "Android 13 added this permission, with a flag that says the app does not derive location.",
+    "ios_note": "iPhone has no matching permission, since it uses the local network prompt."
+  },
+  "technical_bounds": [
+    "iOS has no scan API for apps",
+    "Android throttles scans"
+  ],
+  "scores": {
+    "sensitivity": 3,
+    "utility": 3,
+    "fingerprint_bits": 3,
+    "friction": 2
+  },
+  "value": {
+    "legit_uses": [
+      "Wi-Fi Direct",
+      "IoT setup"
+    ],
+    "abuse": [
+      "Location inference from SSIDs"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2022-08",
+      "platform": "android",
+      "version": "13 (API 33)",
+      "change": "NEARBY_WIFI_DEVICES added"
+    },
+    {
+      "date": "2025-06",
+      "platform": "android",
+      "version": "16 (API 36)",
+      "change": "Local Network Protection uses NEARBY_WIFI_DEVICES as the interim grant"
+    }
+  ],
+  "related": [
+    "mob.network.local-network"
+  ],
+  "refs": [
+    {
+      "t": "android",
+      "label": "Android: Wi-Fi permissions",
+      "url": "https://developer.android.com/develop/connectivity/wifi/wifi-permissions"
+    },
+    {
+      "t": "android",
+      "label": "Android 16 behavior changes (apps targeting 16)",
+      "url": "https://developer.android.com/about/versions/16/behavior-changes-16"
+    }
+  ],
+  "confidence": "docs"
+}

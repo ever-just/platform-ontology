@@ -1,0 +1,224 @@
+{
+  "id": "mob.location.motion-activity",
+  "name": "Motion and fitness activity",
+  "kind": "permission",
+  "group": "location-motion",
+  "subgroup": "Motion",
+  "tags": [
+    "runtime-permission",
+    "activity-recognition",
+    "steps"
+  ],
+  "plain": "Reads step counts and whether the person is walking, running, driving or cycling.",
+  "meaning": "Reveals daily routine, commute mode and exercise habits, and works as a coarse movement log even without location.",
+  "lifecycle": [
+    "in-session",
+    "background"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "y",
+      "v": "10",
+      "api": 29,
+      "permission": "ACTIVITY_RECOGNITION",
+      "protection": "dangerous",
+      "grant": "prompt",
+      "prompt_ui": "Allow or Don't allow physical activity",
+      "persistence": "Until revoked; auto-reset after months unused",
+      "revocation": "Settings > Apps > Permissions > Physical activity",
+      "store_policy": "Play: sensitive health and activity data policy",
+      "api_surface": "SensorManager TYPE_STEP_COUNTER, ActivityRecognitionClient (Play services), Health Services",
+      "note": "Android 9 and lower needed no permission for step counter"
+    },
+    "ios": {
+      "s": "y",
+      "v": "11",
+      "permission": "NSMotionUsageDescription",
+      "protection": "prompt",
+      "grant": "prompt",
+      "prompt_ui": "Allow or Don't Allow motion and fitness",
+      "persistence": "Until revoked",
+      "revocation": "Settings > Privacy & Security > Motion & Fitness",
+      "store_policy": "App Review 5.1.1",
+      "api_surface": "CMMotionActivityManager, CMPedometer",
+      "note": "Historical queries reach back about 7 days"
+    }
+  },
+  "data": {
+    "type": "event",
+    "metric": "Activity class and step count",
+    "update": "continuous or historical",
+    "fields": [
+      {
+        "name": "activity",
+        "type": "enum",
+        "unit": "",
+        "range": "stationary, walking, running, automotive, cycling",
+        "precision": ""
+      },
+      {
+        "name": "history",
+        "type": "list",
+        "unit": "days",
+        "range": "about 7 days on iOS",
+        "precision": ""
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can see your steps and whether you walk, run, drive or cycle, after you allow",
+    "user_action": "You tap Allow for Motion and Fitness (iPhone) or Physical activity (Android)",
+    "can": [
+      "Count your steps and walking distance",
+      "Tell whether you walk, run, drive or cycle",
+      "Look back about 7 days of history on iPhone",
+      "Use Health Connect or Play services on Android"
+    ],
+    "cannot": [
+      "See your location",
+      "Record before you allow",
+      "Run the sensors if you turn the permission off",
+      "Use step counters on Android 10 and newer without the permission"
+    ],
+    "reach": 3,
+    "reach_label": "Your movement, while allowed",
+    "differs": "Android 9 and older needed no permission for the step counter. iPhone keeps about 7 days of motion history."
+  },
+  "story": {
+    "what_it_is": "An app reads your step counts and whether you are walking, running, driving or cycling.",
+    "icon": "activity",
+    "tags": [
+      "Motion",
+      "Asks first",
+      "Health"
+    ],
+    "marketing": [
+      {
+        "vendor": "Apple",
+        "name": "Motion and Fitness",
+        "pitch": "Apple's setting that lets apps show your steps, distance and activity from your iPhone's motion sensors.",
+        "url": "https://developer.apple.com/documentation/coremotion/cmmotionactivitymanager"
+      },
+      {
+        "vendor": "Google",
+        "name": "Physical activity",
+        "pitch": "Android lets apps know about your physical activity so they can count steps and detect workouts.",
+        "url": "https://developer.android.com/develop/sensors-and-location/sensors/sensors_motion"
+      }
+    ],
+    "for_you": "You see a prompt asking to access Motion and Fitness, or Physical activity on Android. If you agree, the app shows your steps and may start a workout when you begin to move. If you say no, those features turn off.",
+    "for_makers": "Makers use it to track steps cheaply, power fitness rewards and detect drives. It also reveals your daily routine, like when you commute, work out and sleep, even without GPS.",
+    "use_cases": [
+      {
+        "type": "fitness",
+        "example": "A step counter shows your steps and a goal ring that fills up as you walk.",
+        "apps": [
+          "Apple Fitness",
+          "Fitbit"
+        ]
+      },
+      {
+        "type": "games",
+        "example": "A game gives coins for the distance you walk in the real world.",
+        "apps": [
+          "Pokemon GO",
+          "Zombies, Run!"
+        ]
+      },
+      {
+        "type": "health",
+        "example": "A health app notes how active you are and tells your doctor if you stop moving.",
+        "apps": []
+      },
+      {
+        "type": "automotive",
+        "example": "A car insurer's app detects that you are driving and scores braking and speed.",
+        "apps": [
+          "Progressive Snapshot"
+        ]
+      },
+      {
+        "type": "shopping",
+        "example": "A rewards app pays points for steps, which keeps you coming back every day.",
+        "apps": [
+          "Sweatcoin"
+        ]
+      },
+      {
+        "type": "wearables",
+        "example": "A watch app syncs steps and activity type with the phone.",
+        "apps": [
+          "Garmin Connect"
+        ]
+      }
+    ],
+    "risks": [
+      "Reveals daily routine",
+      "Insurance scoring"
+    ],
+    "android_note": "Android calls this Physical activity, and it is a runtime permission on Android 10 and later.",
+    "ios_note": "iPhone calls this Motion and Fitness and shows a prompt the first time an app asks."
+  },
+  "technical_bounds": [
+    "History window about 7 days on iOS",
+    "No raw accelerometer data is returned by these APIs"
+  ],
+  "scores": {
+    "sensitivity": 4,
+    "utility": 3,
+    "fingerprint_bits": null,
+    "friction": 2
+  },
+  "value": {
+    "legit_uses": [
+      "Fitness trackers",
+      "Insurance telematics"
+    ],
+    "abuse": [
+      "Inferring commute and sleep patterns"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2019-09",
+      "platform": "android",
+      "version": "10 (API 29)",
+      "change": "ACTIVITY_RECOGNITION made a runtime permission"
+    },
+    {
+      "date": "2017-09",
+      "platform": "ios",
+      "version": "iOS 11",
+      "change": "Motion usage key and prompt"
+    }
+  ],
+  "related": [
+    "mob.location.motion-sensors-raw",
+    "mob.health.healthkit"
+  ],
+  "refs": [
+    {
+      "t": "apple",
+      "label": "Apple: CMMotionActivityManager",
+      "url": "https://developer.apple.com/documentation/coremotion/cmmotionactivitymanager"
+    },
+    {
+      "t": "android",
+      "label": "Android: Request activity recognition permission",
+      "url": "https://developer.android.com/develop/sensors-and-location/location/transitions"
+    },
+    {
+      "t": "apple",
+      "label": "Apple: Protected resources keys",
+      "url": "https://developer.apple.com/documentation/bundleresources/protected-resources"
+    }
+  ],
+  "confidence": "docs"
+}

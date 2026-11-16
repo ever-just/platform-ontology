@@ -1,0 +1,200 @@
+{
+  "id": "mob.notify.push-to-talk",
+  "name": "Push to Talk",
+  "kind": "capability",
+  "group": "notifications-background",
+  "subgroup": "Voice",
+  "tags": [
+    "entitlement",
+    "ptt",
+    "background-audio"
+  ],
+  "plain": "Walkie talkie voice channels that start in the background from a push.",
+  "meaning": "Gives apps a system managed channel to open the microphone from a push, with a clear UI.",
+  "lifecycle": [
+    "background"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "p",
+      "v": "14",
+      "api": 34,
+      "permission": "FOREGROUND_SERVICE_MICROPHONE (normal), RECORD_AUDIO; foreground service type microphone",
+      "protection": "dangerous",
+      "grant": "prompt",
+      "prompt_ui": "Microphone prompt, persistent notification",
+      "persistence": "While service runs",
+      "revocation": "Settings > Apps > Permissions > Microphone",
+      "store_policy": "Play: foreground service types declaration (Android 14)",
+      "api_surface": "Foreground service, AudioRecord",
+      "note": "No platform PTT framework; Android 17 hardens background audio"
+    },
+    "ios": {
+      "s": "f",
+      "v": "16",
+      "permission": "com.apple.developer.push-to-talk",
+      "protection": "entitlement",
+      "grant": "entitlement",
+      "prompt_ui": "System PTT UI and microphone prompt",
+      "persistence": "Per channel session",
+      "revocation": "Settings > Privacy & Security > Microphone",
+      "store_policy": "Apple requires entitlement",
+      "api_surface": "PushToTalk framework, PTChannelManager",
+      "note": "Apple's system UI shows channel, orange dot while active"
+    }
+  },
+  "data": {
+    "type": "stream",
+    "metric": "Audio stream",
+    "update": "continuous",
+    "fields": [
+      {
+        "name": "sessionLength",
+        "type": "integer",
+        "unit": "seconds",
+        "range": "app defined",
+        "precision": ""
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can start walkie talkie voice from the background on iPhone, with microphone consent",
+    "user_action": "You open a channel and hold to talk, or someone starts talking to you",
+    "can": [
+      "Wake the app by push to start a live voice channel on iPhone",
+      "Show a system screen that names the channel",
+      "Use the microphone while you talk, with an orange dot showing"
+    ],
+    "cannot": [
+      "Use the microphone without your allowing it",
+      "Do this on iPhone without Apple's approval for the app",
+      "Use a built in walkie talkie system on Android, which has none",
+      "Hide that the microphone is on, since the orange dot is always shown"
+    ],
+    "reach": 2,
+    "reach_label": "While you talk in a channel",
+    "differs": "iPhone has an Apple walkie talkie framework (iOS 16). Android has none, so apps use a normal microphone prompt and notification."
+  },
+  "story": {
+    "what_it_is": "A walkie talkie style feature where a push starts a voice channel in the background.",
+    "icon": "mic",
+    "tags": [
+      "Calls",
+      "Microphone",
+      "Real time"
+    ],
+    "marketing": [
+      {
+        "vendor": "Apple",
+        "name": "Push to Talk framework",
+        "pitch": "Apple provides a system framework and screen for walkie talkie style apps that talk over a push.",
+        "url": "https://developer.apple.com/documentation/pushtotalk"
+      }
+    ],
+    "for_you": "You press talk and your voice goes out instantly to a group. You see a system screen and an orange dot while the microphone is on.",
+    "for_makers": "Makers of dispatch and team apps get a trusted way to start live voice from a push. Apple adds a clear screen so it cannot be used to listen in secret.",
+    "use_cases": [
+      {
+        "type": "enterprise",
+        "example": "A warehouse team talks across the floor with one tap.",
+        "apps": [
+          "Zello"
+        ]
+      },
+      {
+        "type": "games",
+        "example": "A squad in a team game talks over a push channel in the background.",
+        "apps": [
+          "Discord"
+        ]
+      },
+      {
+        "type": "kids",
+        "example": "A family app lets kids and parents send quick voice notes in real time.",
+        "apps": []
+      },
+      {
+        "type": "live",
+        "example": "A ski patrol or event crew talks over a live group channel.",
+        "apps": []
+      },
+      {
+        "type": "automotive",
+        "example": "A fleet dispatcher speaks to every truck with one press.",
+        "apps": []
+      },
+      {
+        "type": "social",
+        "example": "A walkie talkie style social app lets friends drop in on each other.",
+        "apps": [
+          "Walkie Talkie by Apple Watch"
+        ]
+      },
+      {
+        "type": "security",
+        "example": "A guard team uses push to talk to share alerts quickly.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Microphone could be misused",
+      "Needs clear on screen signs"
+    ],
+    "android_note": "Android has no platform push to talk. Apps use microphone prompts and a notification.",
+    "ios_note": "iOS needs Apple approval, a system screen and an orange dot while active."
+  },
+  "technical_bounds": [
+    "Android has no dedicated PTT API"
+  ],
+  "scores": {
+    "sensitivity": 4,
+    "utility": 3,
+    "fingerprint_bits": null,
+    "friction": 3
+  },
+  "value": {
+    "legit_uses": [
+      "Dispatch teams"
+    ],
+    "abuse": [
+      "Covert mic start"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2022-09",
+      "platform": "ios",
+      "version": "iOS 16",
+      "change": "Push to Talk framework"
+    },
+    {
+      "date": "2023-10",
+      "platform": "android",
+      "version": "14 (API 34)",
+      "change": "Foreground service types required"
+    }
+  ],
+  "related": [
+    "mob.camera.recording-indicator"
+  ],
+  "refs": [
+    {
+      "t": "apple",
+      "label": "Apple: PushToTalk",
+      "url": "https://developer.apple.com/documentation/pushtotalk"
+    },
+    {
+      "t": "android",
+      "label": "Android: Foreground service types",
+      "url": "https://developer.android.com/develop/background-work/services/fgs/service-types"
+    }
+  ],
+  "confidence": "docs"
+}

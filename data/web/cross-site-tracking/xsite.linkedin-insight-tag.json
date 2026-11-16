@@ -1,0 +1,229 @@
+{
+  "id": "web.xsite.linkedin-insight-tag",
+  "name": "LinkedIn Insight Tag",
+  "kind": "tracking",
+  "group": "cross-site-tracking",
+  "subgroup": "Ad pixels",
+  "tags": [
+    "linkedin",
+    "insight-tag",
+    "li_fat_id",
+    "bcookie"
+  ],
+  "plain": "LinkedIn's page script that reports visits and conversions on an advertiser's site to LinkedIn.",
+  "meaning": "Sets li_fat_id (30 days) and reads bcookie (1 year) and lidc (24 hours); can match to a signed in LinkedIn member and send hashed email through its Conversions API. Safari 27 beta is reported to classify it as a fingerprinting tracker.",
+  "lifecycle": [
+    "in-session",
+    "after-leaving",
+    "before-visit"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "_linkedin_partner_id; requests to px.ads.linkedin.com/collect",
+      "access": {
+        "grant": "none",
+        "prompt_ui": "None",
+        "secure_context": false,
+        "user_gesture": false,
+        "persistence": "li_fat_id 30 days, bcookie 1 year, UserMatchHistory 30 days, lidc 24 hours",
+        "revocation": "Clear site data, browser privacy settings",
+        "iframe": "",
+        "steps": []
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "1",
+          "note": "Script runs in any browser",
+          "date": "2008-12-11"
+        },
+        "edge": {
+          "s": "y",
+          "v": "1",
+          "note": "Script runs in any browser",
+          "date": ""
+        },
+        "firefox": {
+          "s": "y",
+          "v": "1",
+          "note": "Script runs in any browser",
+          "date": "2004-11-09"
+        },
+        "safari": {
+          "s": "y",
+          "v": "1",
+          "note": "Script runs in any browser",
+          "date": "2003-06-23"
+        },
+        "ios_safari": {
+          "s": "y",
+          "v": "1",
+          "note": "Script runs in any browser",
+          "date": "2007-06-29"
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "1",
+          "note": "Script runs in any browser",
+          "date": ""
+        },
+        "samsung": {
+          "s": "y",
+          "v": "1",
+          "note": "Script runs in any browser",
+          "date": "2013-04-27"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "event",
+    "metric": "Page and conversion events",
+    "update": "per action",
+    "fields": []
+  },
+  "limits": {
+    "headline": "Can tell LinkedIn about your visits and actions on a site that uses the tag",
+    "user_action": "Nothing. It happens when you open a page with the LinkedIn tag",
+    "can": [
+      "Report page views and actions like sign ups to LinkedIn",
+      "Link the visit to your account if you are signed in to LinkedIn in that browser",
+      "Let the advertiser build ad audiences from visitors"
+    ],
+    "cannot": [
+      "Run on sites without the tag",
+      "See what you do in other apps",
+      "Work if the tag or its cookies are blocked",
+      "Know who you are if you do not use LinkedIn in that browser"
+    ],
+    "reach": 3,
+    "reach_label": "Your visits to tagged sites",
+    "differs": "Safari and Firefox block third party cookies by default, which weakens the link to your account."
+  },
+  "story": {
+    "what_it_is": "LinkedIn's script on advertisers' sites that reports your visits and actions.",
+    "icon": "radar",
+    "tags": [
+      "Ads",
+      "Cross site",
+      "Silent"
+    ],
+    "marketing": [
+      {
+        "vendor": "LinkedIn",
+        "name": "Insight Tag",
+        "pitch": "LinkedIn pitches the tag as a way to track conversions, retarget visitors and learn about site audiences.",
+        "url": "https://www.linkedin.com/help/lms/answer/a427660"
+      }
+    ],
+    "for_you": "You do not see the tag. It sets li_fat_id and reads LinkedIn cookies, and it tells LinkedIn which pages you opened. If you are logged in, LinkedIn can link it to your profile.",
+    "for_makers": "Advertisers get proof that ads work and a list of visitors to retarget. LinkedIn gets web habits tied to jobs and companies. Safari 27 beta is said to limit it as a fingerprinting tracker.",
+    "use_cases": [
+      {
+        "type": "ads",
+        "example": "You visit a cloud vendor's page, then see its ad on LinkedIn the next day.",
+        "apps": [
+          "LinkedIn Ads"
+        ]
+      },
+      {
+        "type": "analytics",
+        "example": "A marketer sees which job titles visit a pricing page.",
+        "apps": [
+          "LinkedIn Campaign Manager"
+        ]
+      },
+      {
+        "type": "enterprise",
+        "example": "A sales team sees visits from target companies and calls them.",
+        "apps": [
+          "Demandbase",
+          "6sense"
+        ]
+      },
+      {
+        "type": "media",
+        "example": "A webinar page counts signups per LinkedIn ad.",
+        "apps": [
+          "TechTarget"
+        ]
+      },
+      {
+        "type": "education",
+        "example": "A school tracks which LinkedIn ad led to a program inquiry.",
+        "apps": [
+          "Coursera"
+        ]
+      },
+      {
+        "type": "security",
+        "example": "Safari beta reportedly treats it as a fingerprinting script and strips its data.",
+        "apps": [
+          "Safari"
+        ]
+      }
+    ],
+    "risks": [
+      "Follows you across many sites",
+      "Tied to your profile when logged in"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Blocked by blockers and Safari 27 beta (reported)",
+    "Matching to member needs a LinkedIn cookie",
+    "Insight Tag collects URL, referrer, IP, user agent and timestamp"
+  ],
+  "scores": {
+    "sensitivity": 4,
+    "utility": 4,
+    "fingerprint_bits": null,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "B2B conversion tracking, website demographics"
+    ],
+    "abuse": [
+      "Matching visitors to professional identity"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": true,
+      "how": "LinkedIn Insight Tag and its ad stack use this technique on advertiser sites (see research/linkedin-case.md)."
+    }
+  },
+  "history": [
+    {
+      "date": "2026-07",
+      "browser": "safari",
+      "version": "27 beta",
+      "change": "Reported to classify LinkedIn Insight on the fingerprinting list"
+    }
+  ],
+  "related": [
+    "web.xsite.conversions-api",
+    "web.xsite.safari-27-tracker-ip-blocking"
+  ],
+  "refs": [
+    {
+      "t": "vendor",
+      "label": "LinkedIn cookie table",
+      "url": "https://www.linkedin.com/legal/l/cookie-table"
+    },
+    {
+      "t": "vendor",
+      "label": "LinkedIn Insight Tag help",
+      "url": "https://www.linkedin.com/help/lms/answer/a418880"
+    },
+    {
+      "t": "news",
+      "label": "PPC Land Safari 27 report",
+      "url": "https://ppc.land/safari-27-blocks-linkedin-and-bing-ad-trackers-by-ip-address/"
+    }
+  ],
+  "confidence": "docs"
+}

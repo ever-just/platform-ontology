@@ -1,0 +1,224 @@
+{
+  "id": "web.render.tamper-lie-detection",
+  "name": "Anti-spoof and lie detection",
+  "kind": "tracking",
+  "group": "rendering-fingerprint",
+  "subgroup": "Composite",
+  "tags": [
+    "lies",
+    "prototype",
+    "toString",
+    "spoof"
+  ],
+  "plain": "Detects when privacy tools or anti-detect browsers have replaced browser functions.",
+  "meaning": "Checks native toString, prototype descriptors and cross-signal consistency (WebGL renderer versus user agent). Finds noise injection, so being protected becomes a fingerprint of its own.",
+  "lifecycle": [
+    "on-arrival"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "Function.prototype.toString; Object.getOwnPropertyDescriptor; iframe cross-realm checks",
+      "access": {
+        "grant": "none",
+        "prompt_ui": "",
+        "secure_context": false,
+        "user_gesture": false,
+        "persistence": "",
+        "revocation": "",
+        "iframe": "",
+        "steps": [
+          "Compare function strings to native pattern",
+          "Re-read the API in a fresh iframe or worker",
+          "Flag mismatches"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "1",
+          "note": "",
+          "date": "2008-12-11"
+        },
+        "edge": {
+          "s": "y",
+          "v": "79",
+          "note": "",
+          "date": "2020-01-15"
+        },
+        "firefox": {
+          "s": "y",
+          "v": "1",
+          "note": "",
+          "date": "2004-11-09"
+        },
+        "safari": {
+          "s": "y",
+          "v": "1",
+          "note": "",
+          "date": "2003-06-23"
+        },
+        "ios_safari": {
+          "s": "y",
+          "v": "1",
+          "note": "",
+          "date": "2007-06-29"
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "1",
+          "note": "",
+          "date": ""
+        },
+        "samsung": {
+          "s": "y",
+          "v": "5.0",
+          "note": "",
+          "date": "2016-12-15"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "boolean",
+    "metric": "List of lie flags",
+    "update": "",
+    "fields": [
+      {
+        "name": "lies",
+        "type": "list",
+        "unit": "",
+        "range": "0 to 50",
+        "precision": "boolean per API"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can tell when a privacy tool or anti detect browser changed your browser's answers",
+    "user_action": "Nothing. It happens when the page loads",
+    "can": [
+      "Check if built in browser functions were replaced",
+      "Compare answers across signals to spot a mismatch, such as graphics card versus browser label",
+      "Spot random noise added by privacy tools",
+      "Treat being protected as another trait that sets you apart"
+    ],
+    "cannot": [
+      "Remove your protections",
+      "Ask permission first",
+      "See your files or messages",
+      "Know your name by itself"
+    ],
+    "reach": 3,
+    "reach_label": "Silent check on every visit",
+    "differs": ""
+  },
+  "story": {
+    "what_it_is": "A script detects when privacy tools or special browsers have replaced built in browser functions.",
+    "icon": "scan-search",
+    "tags": [
+      "Anti fraud",
+      "Silent",
+      "Fingerprinting"
+    ],
+    "marketing": [],
+    "for_you": "You never see it. The page tests whether normal browser functions have been swapped out by an add on, a privacy tool or an anti detect browser. If so, you may face more checks or be blocked.",
+    "for_makers": "Fraud teams use it to spot people hiding their identity. Fingerprint vendors use it to find users who use privacy tools. It lets a site treat a spoofer as higher risk, or target them anyway.",
+    "use_cases": [
+      {
+        "type": "security",
+        "example": "A bank spots that a login came from a tool that replaces browser values, and requires video or ID checks.",
+        "apps": []
+      },
+      {
+        "type": "payments",
+        "example": "A checkout sees a browser whose canvas function was replaced and routes the order to review.",
+        "apps": [
+          "Stripe Radar",
+          "Sift"
+        ]
+      },
+      {
+        "type": "ads",
+        "example": "An ad verifier finds bots that fake human browsers to click on ads, so the advertiser is not billed.",
+        "apps": [
+          "Integral Ad Science",
+          "DoubleVerify"
+        ]
+      },
+      {
+        "type": "games",
+        "example": "A browser game finds players using tools that fake devices to farm bonuses.",
+        "apps": []
+      },
+      {
+        "type": "shopping",
+        "example": "A sneaker or ticket site finds scalpers using anti detect browsers with many fake profiles.",
+        "apps": []
+      },
+      {
+        "type": "analytics",
+        "example": "A fingerprint library flags visitors with tampered values, so counts are cleaner.",
+        "apps": [
+          "FingerprintJS",
+          "CreepJS"
+        ]
+      },
+      {
+        "type": "dating",
+        "example": "A dating site blocks fake profile farms that use anti detect browsers.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Privacy tools get flagged",
+      "False alarms",
+      "Arms race with spoofers"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Arms race, advanced tools hide well"
+  ],
+  "scores": {
+    "sensitivity": 2,
+    "utility": 2,
+    "fingerprint_bits": 3,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": "Fraud detection",
+    "abuse": "Defeat protection tools, label privacy users"
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2021-01",
+      "browser": "github",
+      "version": "",
+      "change": "CreepJS adds extensive lie detection"
+    }
+  ],
+  "related": [
+    "web.render.countermeasure-brave-farbling",
+    "web.render.composite-fingerprint"
+  ],
+  "refs": [
+    {
+      "t": "github",
+      "label": "CreepJS lies",
+      "url": "https://github.com/abrahamjuliot/creepjs"
+    },
+    {
+      "t": "github",
+      "label": "Brave fingerprinting protections",
+      "url": "https://github.com/brave/brave-browser/wiki/Fingerprinting-Protections"
+    }
+  ],
+  "confidence": "docs"
+}

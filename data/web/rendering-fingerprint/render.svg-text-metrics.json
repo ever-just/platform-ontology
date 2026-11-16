@@ -1,0 +1,215 @@
+{
+  "id": "web.render.svg-text-metrics",
+  "name": "SVG text metrics",
+  "kind": "tracking",
+  "group": "rendering-fingerprint",
+  "subgroup": "Layout",
+  "tags": [
+    "svg",
+    "getBBox",
+    "getComputedTextLength"
+  ],
+  "plain": "Measures SVG text extents and glyph positions.",
+  "meaning": "SVG layout uses a separate text path from HTML, so metrics add fonts and rasterizer detail even under HTML-layout defenses.",
+  "lifecycle": [
+    "on-arrival"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "SVGTextContentElement.getComputedTextLength(); getSubStringLength(); getBBox()",
+      "access": {
+        "grant": "none",
+        "prompt_ui": "",
+        "secure_context": false,
+        "user_gesture": false,
+        "persistence": "",
+        "revocation": "",
+        "iframe": "",
+        "steps": [
+          "Create SVG text elements",
+          "Read lengths and boxes",
+          "Hash"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "1",
+          "note": "",
+          "date": "2008-12-11"
+        },
+        "edge": {
+          "s": "y",
+          "v": "79",
+          "note": "",
+          "date": "2020-01-15"
+        },
+        "firefox": {
+          "s": "y",
+          "v": "1.5",
+          "note": "",
+          "date": "2005-11-29"
+        },
+        "safari": {
+          "s": "y",
+          "v": "3",
+          "note": "",
+          "date": "2007-10-26"
+        },
+        "ios_safari": {
+          "s": "y",
+          "v": "3",
+          "note": "",
+          "date": "2009-06-17"
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "1",
+          "note": "",
+          "date": ""
+        },
+        "samsung": {
+          "s": "y",
+          "v": "5.0",
+          "note": "",
+          "date": "2016-12-15"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "hash",
+    "metric": "Floats per text sample",
+    "update": "",
+    "fields": [
+      {
+        "name": "computedTextLength",
+        "type": "float",
+        "unit": "user units",
+        "range": "0 to 1000",
+        "precision": "double precision"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can measure picture text sizes to learn about your fonts and system",
+    "user_action": "Nothing. It happens when the page loads",
+    "can": [
+      "Measure how wide and tall text drawn in pictures is",
+      "Learn font and drawing differences even when normal text checks are blocked",
+      "Add that number to a device profile"
+    ],
+    "cannot": [
+      "Show you anything on the screen",
+      "See your files",
+      "Ask permission first",
+      "Know who you are by itself"
+    ],
+    "reach": 3,
+    "reach_label": "Silent, repeatable device number",
+    "differs": ""
+  },
+  "story": {
+    "what_it_is": "A script measures the exact size and spacing of text drawn as an SVG graphic.",
+    "icon": "ruler",
+    "tags": [
+      "Silent",
+      "Layout",
+      "Fingerprinting"
+    ],
+    "marketing": [
+      {
+        "vendor": "MDN",
+        "name": "SVG text",
+        "pitch": "Describes how SVG text works and which measuring tools sites can use to lay it out.",
+        "url": "https://developer.mozilla.org/en-US/docs/Web/API/SVGTextContentElement"
+      }
+    ],
+    "for_you": "You never see it. The page draws text as a vector picture and measures where each letter lands. Those numbers vary with your fonts and system.",
+    "for_makers": "Chart and map makers need these numbers to place labels. Trackers use the same numbers as another way to see your fonts and rendering, even when other methods are blocked.",
+    "use_cases": [
+      {
+        "type": "analytics",
+        "example": "A charting site like a dashboard tool places labels on a graph by measuring each text label first.",
+        "apps": []
+      },
+      {
+        "type": "maps",
+        "example": "A web map measures place names to avoid overlapping labels on your screen.",
+        "apps": [
+          "Google Maps",
+          "Mapbox"
+        ]
+      },
+      {
+        "type": "creative",
+        "example": "A web drawing tool with text on curves measures each letter to place it along a path.",
+        "apps": [
+          "Figma"
+        ]
+      },
+      {
+        "type": "ads",
+        "example": "A tracker draws text in SVG and records exact widths, which works even if canvas is blocked.",
+        "apps": []
+      },
+      {
+        "type": "security",
+        "example": "A fraud tool compares SVG text size to what the device claims, to find a spoofed setup.",
+        "apps": []
+      },
+      {
+        "type": "education",
+        "example": "An interactive science page labels diagram parts and measures text to avoid overlap.",
+        "apps": []
+      },
+      {
+        "type": "games",
+        "example": "A web strategy game places unit names on a map and measures them so they do not collide.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Hard to block without breaking charts",
+      "Reveals fonts"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Same limits as DOMRect"
+  ],
+  "scores": {
+    "sensitivity": 2,
+    "utility": 1,
+    "fingerprint_bits": 3,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": "None",
+    "abuse": "Font and engine signature"
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "related": [
+    "web.render.domrect-clientrects"
+  ],
+  "refs": [
+    {
+      "t": "mdn",
+      "label": "MDN getComputedTextLength",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/SVGTextContentElement/getComputedTextLength"
+    },
+    {
+      "t": "github",
+      "label": "CreepJS",
+      "url": "https://github.com/abrahamjuliot/creepjs"
+    }
+  ],
+  "confidence": "docs"
+}

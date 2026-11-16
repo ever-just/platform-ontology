@@ -1,0 +1,263 @@
+{
+  "id": "web.files.file-system-access-pickers",
+  "name": "File System Access: open and save pickers",
+  "kind": "picker",
+  "group": "files-storage",
+  "subgroup": "Files",
+  "tags": [
+    "file-system-access",
+    "showOpenFilePicker",
+    "showSaveFilePicker",
+    "chromium-only"
+  ],
+  "plain": "Lets the person pick files and then read and write them in place; Chromium only.",
+  "meaning": "A site can open a local document, edit it and save over the original, like a desktop app. The person picks the file, and the browser asks again before write access.",
+  "lifecycle": [
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "showOpenFilePicker(); showSaveFilePicker(); FileSystemFileHandle.createWritable()",
+      "permission_name": "file-system-access",
+      "bcd": [
+        "api.Window.showOpenFilePicker",
+        "api.Window.showSaveFilePicker",
+        "api.FileSystemFileHandle"
+      ],
+      "access": {
+        "grant": "picker",
+        "prompt_ui": "Chrome file chooser, then Edit files / Save changes permission bubble",
+        "secure_context": true,
+        "user_gesture": true,
+        "activation": "transient",
+        "persistence": "Handles can be stored in IndexedDB; Chrome 122 offers Allow on every visit persistent permission",
+        "revocation": "Nothing to revoke (no permission is stored)",
+        "iframe": "Not available in cross-origin iframes (SecurityError); secure context",
+        "steps": [
+          "Person clicks",
+          "Page calls showOpenFilePicker",
+          "Chrome shows file chooser (and a Save changes prompt for write)",
+          "Page reads or writes through the handle"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "86",
+          "note": "",
+          "date": "2020-10-20"
+        },
+        "edge": {
+          "s": "y",
+          "v": "86",
+          "note": "",
+          "date": "2020-10-09"
+        },
+        "firefox": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "safari": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "ios_safari": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "132",
+          "note": "",
+          "date": "2025-01-14"
+        },
+        "samsung": {
+          "s": "y",
+          "v": "29.0",
+          "note": "",
+          "date": "2025-10-25"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "none",
+    "metric": "",
+    "update": "",
+    "fields": []
+  },
+  "limits": {
+    "headline": "Can open files you pick and save changes back to them, in Chrome and Edge",
+    "user_action": "You click Open file or Save as, pick, and later click Allow.",
+    "can": [
+      "Open the file you pick",
+      "Save changes in place, once you allow saving",
+      "Create a new file where you choose in Save as",
+      "Remember a file to reopen it later, but ask you again for permission"
+    ],
+    "cannot": [
+      "See other files in the same folder",
+      "Change the file before you allow saving",
+      "Pick sensitive locations such as system folders",
+      "Work in Firefox or Safari"
+    ],
+    "reach": 2,
+    "reach_label": "Only the files you pick",
+    "differs": "Chrome and Edge on computers only. Firefox, Safari and phones do not have it."
+  },
+  "story": {
+    "what_it_is": "Lets you pick files, then the site reads and writes them in place (Chromium only).",
+    "icon": "file-pen",
+    "tags": [
+      "Files",
+      "Asks first",
+      "Chromium"
+    ],
+    "marketing": [
+      {
+        "vendor": "web.dev",
+        "name": "File System Access API",
+        "pitch": "Google pitches it as a way for web apps to open and save files on your computer like desktop apps.",
+        "url": "https://web.dev/articles/file-system-access"
+      },
+      {
+        "vendor": "Chrome",
+        "name": "Browser FS Access",
+        "pitch": "Chrome shares a helper that gives web apps native style open and save windows when the browser allows.",
+        "url": "https://developer.chrome.com/docs/capabilities/browser-fs-access"
+      }
+    ],
+    "for_you": "A system window opens so you choose a file. Pick it, and the site can save changes back to the same file. The browser asks again after you close the tab.",
+    "for_makers": "It makes web apps feel like desktop apps, with open, save and save as. That helps web editors and tools replace installed software. It only works in Chromium browsers today.",
+    "use_cases": [
+      {
+        "type": "creative",
+        "example": "A web photo editor opens your image, lets you edit, and saves back to the same file.",
+        "apps": [
+          "Photopea"
+        ]
+      },
+      {
+        "type": "creative",
+        "example": "A web drawing tool lets you open and save sketches on your disk.",
+        "apps": [
+          "Excalidraw"
+        ]
+      },
+      {
+        "type": "games",
+        "example": "A browser game editor opens a map file and saves it back as you work.",
+        "apps": []
+      },
+      {
+        "type": "productivity",
+        "example": "A web text or code editor opens a file and saves changes in place.",
+        "apps": [
+          "VS Code for the Web"
+        ]
+      },
+      {
+        "type": "creative",
+        "example": "A music tool opens a project file and writes the changes without making a copy.",
+        "apps": []
+      },
+      {
+        "type": "security",
+        "example": "A scam page asks to save a file to a sensitive place. Browsers refuse many locations.",
+        "apps": []
+      },
+      {
+        "type": "enterprise",
+        "example": "A company web app edits spreadsheets in place on a shared drive.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Can overwrite files",
+      "Chromium only"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Needs transient user activation and a secure context",
+    "Chrome and Edge 86 only (no Firefox, no Safari); Safari and Firefox expose only OPFS",
+    "Write access prompts after the pick (Edit files? bubble); permission lasts until all tabs of the site close, or persistent in Chrome 122",
+    "Chrome blocks picking system files and some folders (for example files in system directories and executables like .exe and .bat are warned or blocked for writing)",
+    "startIn can name well known folders (desktop, documents, downloads, music, pictures, videos) or reuse an id; the page cannot read the full path"
+  ],
+  "scores": {
+    "sensitivity": 4,
+    "utility": 5,
+    "fingerprint_bits": null,
+    "friction": 2
+  },
+  "value": {
+    "legit_uses": [
+      "Text and image editors",
+      "IDE and design tools",
+      "Save as to chosen folder"
+    ],
+    "abuse": [
+      "Ransomware style bulk writes (mitigated by prompts and blocklist)",
+      "Planting a malicious file after a deceptive save prompt"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2020-10",
+      "browser": "chrome",
+      "version": "86",
+      "change": "File System Access pickers ship"
+    },
+    {
+      "date": "2024-02",
+      "browser": "chrome",
+      "version": "122",
+      "change": "Persistent permissions for handles (Allow on every visit)"
+    },
+    {
+      "date": "2023-02",
+      "browser": "chrome",
+      "version": "110",
+      "change": "Dangerous file types blocked for write in some cases"
+    }
+  ],
+  "related": [
+    "web.files.directory-picker",
+    "web.files.opfs"
+  ],
+  "refs": [
+    {
+      "t": "mdn",
+      "label": "MDN File System API",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/File_System_API"
+    },
+    {
+      "t": "spec",
+      "label": "WICG File System Access",
+      "url": "https://wicg.github.io/file-system-access/"
+    },
+    {
+      "t": "chromestatus",
+      "label": "Chrome File System Access",
+      "url": "https://developer.chrome.com/docs/capabilities/web-apis/file-system-access"
+    },
+    {
+      "t": "w3c-issue",
+      "label": "Mozilla standards position: File System Access",
+      "url": "https://github.com/mozilla/standards-positions/issues/154"
+    }
+  ],
+  "confidence": "docs"
+}

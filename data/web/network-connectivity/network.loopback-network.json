@@ -1,0 +1,221 @@
+{
+  "id": "web.network.loopback-network",
+  "name": "Loopback network access (loopback-network)",
+  "kind": "permission",
+  "group": "network-connectivity",
+  "subgroup": "Network",
+  "tags": [
+    "localhost"
+  ],
+  "plain": "Asks to let a public site talk to services on this very computer.",
+  "meaning": "Controls access to localhost services (dev servers, local agents, desktop apps). Sites used to probe localhost ports to detect installed software, so access now needs consent.",
+  "lifecycle": [
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "fetch('http://localhost:PORT', {targetAddressSpace: 'loopback'}); permission loopback-network",
+      "permission_name": "loopback-network",
+      "permissions_policy": "loopback-network",
+      "access": {
+        "grant": "prompt",
+        "prompt_ui": "Chrome prompt for requests from public sites to 127.0.0.1 or localhost. Legacy name local-network-access still accepted as an alias.",
+        "secure_context": true,
+        "user_gesture": false,
+        "persistence": "Persistent per origin",
+        "revocation": "Site settings",
+        "iframe": "Needs allow=\"loopback-network\" in iframes",
+        "steps": [
+          "Page fetches 127.0.0.1",
+          "Chrome checks address space",
+          "Prompt",
+          "Request proceeds or fails"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "142",
+          "note": "Initially shipped under local-network-access",
+          "date": "2025-10-28"
+        },
+        "edge": {
+          "s": "y",
+          "v": "142",
+          "note": "",
+          "date": "2025-10-31"
+        },
+        "firefox": {
+          "s": "p",
+          "v": "Firefox staged rollout from 147",
+          "note": "",
+          "date": ""
+        },
+        "safari": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "ios_safari": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "142",
+          "note": "",
+          "date": "2025-10-28"
+        },
+        "samsung": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "boolean",
+    "metric": "Grant state",
+    "update": "per request",
+    "fields": []
+  },
+  "limits": {
+    "headline": "Can talk to programs on your own computer, only if you allow it in Chrome",
+    "user_action": "You visit a site that pairs with a desktop app and tap Allow",
+    "can": [
+      "Connect to helper apps or developer tools running on this computer once you allow it",
+      "Check whether a companion app is running",
+      "Keep that access until you change it in site settings"
+    ],
+    "cannot": [
+      "Reach programs on your computer before you allow it",
+      "Work in Safari or on iPhone browsers",
+      "Probe your computer silently for installed apps, since the pop up blocks that",
+      "Work on Samsung Internet or Firefox the same way"
+    ],
+    "reach": 2,
+    "reach_label": "Your own device, if allowed",
+    "differs": "Chrome and Edge ask with a pop up. Firefox is partial. Safari and iPhone browsers do not offer it."
+  },
+  "story": {
+    "what_it_is": "Your browser asks if a website may talk to apps running on this very computer.",
+    "icon": "laptop",
+    "tags": [
+      "Permission",
+      "Network",
+      "Asks first"
+    ],
+    "marketing": [
+      {
+        "vendor": "Google Chrome",
+        "name": "Local Network Access",
+        "pitch": "Chrome now treats talking to your own computer as its own permission, separate from other devices on the network.",
+        "url": "https://developer.chrome.com/blog/local-network-access"
+      }
+    ],
+    "for_you": "A prompt asks if the site may connect to apps on this computer. Say yes only if you installed a companion app the site works with. Otherwise block it.",
+    "for_makers": "Makers of desktop apps with a web page front end, such as meeting, security or game launchers, use this to link the page and the app. They now need to ask and explain the benefit.",
+    "use_cases": [
+      {
+        "type": "video",
+        "example": "A meeting site asks to connect to the desktop meeting app on your computer, so clicking Join opens the app.",
+        "apps": [
+          "Zoom"
+        ]
+      },
+      {
+        "type": "games",
+        "example": "A game store page asks to talk to the launcher on your PC, so Install in the browser starts the download in the app.",
+        "apps": [
+          "Epic Games",
+          "Steam"
+        ]
+      },
+      {
+        "type": "security",
+        "example": "A password manager web page connects to its local helper, so it can fill logins in the browser.",
+        "apps": []
+      },
+      {
+        "type": "developer",
+        "example": "A docs page connects to a dev server running on your laptop, to show live output.",
+        "apps": []
+      },
+      {
+        "type": "music",
+        "example": "A web music page talks to a desktop audio app, so a play button starts the local player.",
+        "apps": [
+          "Spotify"
+        ]
+      },
+      {
+        "type": "enterprise",
+        "example": "A company portal checks for its endpoint security agent on this computer before login, with your permission.",
+        "apps": []
+      },
+      {
+        "type": "ads",
+        "example": "A site probing your own computer for apps to build a profile is stopped by the prompt, as users see it.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Easy to click allow",
+      "Probes your computer"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Exact split release version not confirmed",
+    "Prevents localhost port scanning"
+  ],
+  "scores": {
+    "sensitivity": 4,
+    "utility": 3,
+    "fingerprint_bits": null,
+    "friction": 2
+  },
+  "value": {
+    "legit_uses": [
+      "Companion desktop apps",
+      "Local dev tools"
+    ],
+    "abuse": [
+      "Port scanning to detect installed apps"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2025-10",
+      "browser": "chrome",
+      "version": "142",
+      "change": "Local network permission ships; later split into local-network and loopback-network"
+    }
+  ],
+  "related": [
+    "web.network.local-network"
+  ],
+  "refs": [
+    {
+      "t": "mdn",
+      "label": "MDN Permissions API names",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/Permissions_API"
+    },
+    {
+      "t": "spec",
+      "label": "WICG Local Network Access",
+      "url": "https://wicg.github.io/local-network-access/"
+    }
+  ],
+  "confidence": "docs"
+}

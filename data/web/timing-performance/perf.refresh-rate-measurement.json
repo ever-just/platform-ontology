@@ -1,0 +1,226 @@
+{
+  "id": "web.perf.refresh-rate-measurement",
+  "name": "Display refresh rate measurement",
+  "kind": "signal",
+  "group": "timing-performance",
+  "subgroup": "Device",
+  "tags": [
+    "requestAnimationFrame",
+    "refresh-rate",
+    "display",
+    "vsync"
+  ],
+  "plain": "Counts animation frames per second to find the monitor's refresh rate.",
+  "meaning": "requestAnimationFrame timing reveals 60, 90, 120, 144 or 165 Hz displays, and variable refresh. Combined with devicePixelRatio and screen size it narrows the device model (e.g. ProMotion iPads and iPhones at 120 Hz).",
+  "lifecycle": [
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "requestAnimationFrame deltas; matchMedia('(update: fast)')",
+      "bcd": [
+        "api.Window.requestAnimationFrame"
+      ],
+      "access": {
+        "grant": "none",
+        "prompt_ui": "",
+        "secure_context": false,
+        "user_gesture": false,
+        "persistence": "",
+        "revocation": "",
+        "iframe": "",
+        "steps": [
+          "Run rAF for 500 ms",
+          "Compute mean frame delta",
+          "Round to a common refresh rate"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "24",
+          "note": "",
+          "date": "2013-01-10"
+        },
+        "edge": {
+          "s": "y",
+          "v": "12",
+          "note": "",
+          "date": "2015-07-29"
+        },
+        "firefox": {
+          "s": "y",
+          "v": "23",
+          "note": "",
+          "date": "2013-08-06"
+        },
+        "safari": {
+          "s": "y",
+          "v": "7",
+          "note": "",
+          "date": "2013-10-22"
+        },
+        "ios_safari": {
+          "s": "y",
+          "v": "7",
+          "note": "",
+          "date": "2013-09-18"
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "25",
+          "note": "",
+          "date": "2013-02-27"
+        },
+        "samsung": {
+          "s": "y",
+          "v": "1.5",
+          "note": "",
+          "date": "2013-09-25"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "float",
+    "metric": "Hz, about 1 Hz accuracy",
+    "update": "",
+    "fields": [
+      {
+        "name": "frame interval",
+        "type": "float",
+        "unit": "ms",
+        "range": "4 to 33",
+        "precision": "timer limited; rounded to 1 Hz bins"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can count frames to find your screen's refresh rate",
+    "user_action": "Nothing. It happens when the page loads, or when animations run",
+    "can": [
+      "Learn if your screen runs at 60, 90, 120, 144 or 165 Hz",
+      "Spot variable refresh screens",
+      "Combine it with screen size to narrow your device model"
+    ],
+    "cannot": [
+      "Know the exact screen model",
+      "Ask permission first",
+      "See your files",
+      "Know who you are by itself"
+    ],
+    "reach": 2,
+    "reach_label": "Silent, screen traits only",
+    "differs": ""
+  },
+  "story": {
+    "what_it_is": "A script counts animation frames per second to find out if your screen runs at 60, 120 or more Hz.",
+    "icon": "monitor",
+    "tags": [
+      "Display",
+      "Silent",
+      "Games"
+    ],
+    "marketing": [
+      {
+        "vendor": "MDN",
+        "name": "requestAnimationFrame",
+        "pitch": "Lets a page draw smooth animation in time with your screen refresh.",
+        "url": "https://developer.mozilla.org/en-US/docs/Web/API/Window/requestAnimationFrame"
+      }
+    ],
+    "for_you": "You never see it. A game or animation tests how fast your screen updates, and then runs smoothly at that speed. A fast gaming screen gets smoother motion.",
+    "for_makers": "Games and animation apps need the refresh rate to avoid stutter and to match speed to the screen. The same number is a clue about your hardware, which helps fraud and tracking tools.",
+    "use_cases": [
+      {
+        "type": "games",
+        "example": "A browser game finds that your screen is 144 Hz and runs its motion at that rate for a smoother feel.",
+        "apps": [
+          "Krunker.io",
+          "Shell Shockers"
+        ]
+      },
+      {
+        "type": "games",
+        "example": "A cloud gaming page matches the stream frame rate to your display so there is no judder.",
+        "apps": [
+          "Xbox Cloud Gaming",
+          "GeForce NOW"
+        ]
+      },
+      {
+        "type": "video",
+        "example": "A video player matches playback to the screen to avoid uneven motion in fast scenes.",
+        "apps": [
+          "YouTube"
+        ]
+      },
+      {
+        "type": "creative",
+        "example": "A web animation tool shows a smooth preview at the exact refresh rate of your display.",
+        "apps": [
+          "Figma"
+        ]
+      },
+      {
+        "type": "security",
+        "example": "A fraud tool sees that a device claims to be a phone but shows a refresh rate only found on a desktop monitor.",
+        "apps": []
+      },
+      {
+        "type": "ads",
+        "example": "A tracker adds refresh rate to a device ID, as it differs by screen.",
+        "apps": []
+      },
+      {
+        "type": "accessibility",
+        "example": "A page lowers animation speed when the screen is slow, to prevent motion that makes some people dizzy.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Reveals your screen",
+      "Adds to a device ID"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Background tabs run rAF at 0",
+    "Battery saver caps to 30 or 60 Hz",
+    "Safari 17 and Firefox clamp rAF to timer resolution"
+  ],
+  "scores": {
+    "sensitivity": 2,
+    "utility": 3,
+    "fingerprint_bits": 3,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": "Animation pacing",
+    "abuse": "Device class (120 Hz is iPhone Pro, iPad Pro, flagship Android)"
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "related": [
+    "web.perf.timer-precision"
+  ],
+  "refs": [
+    {
+      "t": "mdn",
+      "label": "MDN requestAnimationFrame",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/Window/requestAnimationFrame"
+    },
+    {
+      "t": "github",
+      "label": "CreepJS",
+      "url": "https://github.com/abrahamjuliot/creepjs"
+    }
+  ],
+  "confidence": "docs"
+}

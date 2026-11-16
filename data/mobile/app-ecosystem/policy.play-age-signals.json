@@ -1,0 +1,218 @@
+{
+  "id": "mob.policy.play-age-signals",
+  "name": "Google Play Age Signals API",
+  "kind": "capability",
+  "group": "app-ecosystem",
+  "subgroup": "Kids and teens",
+  "tags": [
+    "age-signals",
+    "age-verification",
+    "play-integrity",
+    "utah",
+    "texas"
+  ],
+  "plain": "A Play API that tells an app whether a user is verified as an adult or in an age band, to help meet state laws.",
+  "meaning": "Beta from late 2025. Google supplies age verification status for users in places with age laws (Texas SB2420, Utah). It returns a status and an age range, not a birth date. Law dates were contested in court.",
+  "lifecycle": [
+    "on-launch",
+    "signed-in"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "p",
+      "v": "",
+      "permission": "none",
+      "protection": "none",
+      "grant": "none",
+      "prompt_ui": "",
+      "persistence": "",
+      "revocation": "",
+      "store_policy": "Beta; developers in affected states can request access; terms in Play Console",
+      "api_surface": "Play Age Signals API (Play services)",
+      "note": "Status values include verified adult, supervised, unknown."
+    },
+    "ios": {
+      "s": "n",
+      "v": "",
+      "permission": "",
+      "protection": "none",
+      "grant": "not-exposed",
+      "prompt_ui": "",
+      "persistence": "",
+      "revocation": "",
+      "store_policy": "",
+      "api_surface": "",
+      "note": "Apple's equivalent is Declared Age Range."
+    }
+  },
+  "data": {
+    "type": "object",
+    "metric": "Age status and range",
+    "update": "on request",
+    "fields": [
+      {
+        "name": "userStatus",
+        "type": "string",
+        "unit": "",
+        "range": "",
+        "precision": ""
+      },
+      {
+        "name": "ageLower",
+        "type": "integer",
+        "unit": "",
+        "range": "",
+        "precision": ""
+      },
+      {
+        "name": "ageUpper",
+        "type": "integer",
+        "unit": "",
+        "range": "",
+        "precision": ""
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can learn if you are a verified adult, or your age range, not your birthday",
+    "user_action": "Nothing. The app asks Google Play, usually when you open it in a place with an age law",
+    "can": [
+      "Find out if Google says you are a verified adult, supervised or unknown",
+      "Learn an age range instead of a birth date",
+      "Change what you see to match laws such as Texas and Utah rules"
+    ],
+    "cannot": [
+      "Get your exact birth date",
+      "Use it on iPhone; Apple has its own Declared Age Range tool",
+      "Count on every date, since law deadlines were contested in court"
+    ],
+    "reach": 2,
+    "reach_label": "An age band, on Android only",
+    "differs": "Android has this in beta from late 2025. iPhone uses a separate Apple tool called Declared Age Range."
+  },
+  "story": {
+    "what_it_is": "A Google Play tool that tells an app if a user is a verified adult or in an age band.",
+    "icon": "user-round-check",
+    "tags": [
+      "Age",
+      "Kids",
+      "Play rules"
+    ],
+    "marketing": [
+      {
+        "vendor": "Google",
+        "name": "Play Age Signals API",
+        "pitch": "Lets apps get age verification status from Play to meet state laws on age.",
+        "url": "https://developer.android.com/google/play/age-signals/overview"
+      }
+    ],
+    "for_you": "You may be asked to verify your age once with Google. After that, apps learn only your status or age range, not your birthday or ID.",
+    "for_makers": "Laws in Texas and Utah ask app stores and apps to handle age. The API gives a ready answer so makers do not run their own ID checks or store sensitive documents.",
+    "use_cases": [
+      {
+        "type": "games",
+        "example": "A game gates mature chat or loot boxes unless the player is verified as an adult.",
+        "apps": [
+          "Roblox",
+          "Fortnite"
+        ]
+      },
+      {
+        "type": "social",
+        "example": "A social app limits messages from adults to teens when it sees an age band.",
+        "apps": [
+          "Instagram",
+          "Snapchat"
+        ]
+      },
+      {
+        "type": "dating",
+        "example": "A dating app uses the signal to confirm users are 18 or older before showing profiles.",
+        "apps": [
+          "Tinder"
+        ]
+      },
+      {
+        "type": "media",
+        "example": "A streaming app unlocks mature titles only for verified adults.",
+        "apps": [
+          "Netflix"
+        ]
+      },
+      {
+        "type": "kids",
+        "example": "A children's app confirms the user is under 13 and switches off ads and tracking.",
+        "apps": [
+          "YouTube Kids"
+        ]
+      },
+      {
+        "type": "shopping",
+        "example": "A retailer blocks sales of age restricted goods for users not verified as adults.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Age data is sensitive",
+      "Only works where laws apply"
+    ],
+    "android_note": "This is a Google Play beta feature and is not part of Android itself.",
+    "ios_note": "Apple has a separate Declared Age Range tool."
+  },
+  "technical_bounds": [
+    "Beta",
+    "Legal status in states changes quickly",
+    "Utah and Louisiana dates unverified here"
+  ],
+  "scores": {
+    "sensitivity": 3,
+    "utility": 3,
+    "fingerprint_bits": null,
+    "friction": 1
+  },
+  "value": {
+    "legit_uses": [
+      "Age gating for regulated apps"
+    ],
+    "abuse": [
+      "Collecting extra identity data"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2025-11",
+      "platform": "android",
+      "version": "Play",
+      "change": "Age Signals API beta announced"
+    },
+    {
+      "date": "2025-12",
+      "platform": "android",
+      "version": "Texas SB2420",
+      "change": "Injunction 23 Dec 2025; later Fifth Circuit stay and Supreme Court did not vacate (per press)"
+    }
+  ],
+  "related": [
+    "mob.identity.age-range"
+  ],
+  "refs": [
+    {
+      "t": "android",
+      "label": "Android: Play Age Signals API",
+      "url": "https://developer.android.com/google/play/age-signals/overview"
+    },
+    {
+      "t": "news",
+      "label": "Reuters: Texas app store age law",
+      "url": "https://developer.apple.com/news/"
+    }
+  ],
+  "confidence": "inferred"
+}

@@ -1,0 +1,201 @@
+{
+  "id": "mob.sys.device-admin",
+  "name": "Device admin and Device Policy (work profile, device owner)",
+  "kind": "capability",
+  "group": "system-control",
+  "subgroup": "Enterprise",
+  "tags": [
+    "device-admin",
+    "device-owner",
+    "work-profile",
+    "dpc",
+    "android-enterprise"
+  ],
+  "plain": "Lets a company app enforce policies and wipe a phone.",
+  "meaning": "Controls passwords, app installs, wiping and cameras. Device admin is deprecated; device owner and work profile are the supported routes.",
+  "lifecycle": [
+    "background"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "y",
+      "v": "2.2",
+      "api": 8,
+      "permission": "BIND_DEVICE_ADMIN (deprecated); device owner via provisioning",
+      "protection": "signature",
+      "grant": "enterprise",
+      "prompt_ui": "QR or zero touch provisioning; admin warning dialog",
+      "persistence": "Until removed",
+      "revocation": "Settings > Security > Device admin apps",
+      "store_policy": "Play: device admin deprecated; DPC policy",
+      "api_surface": "DevicePolicyManager, DeviceAdminReceiver, Android Management API",
+      "note": "Device admin APIs deprecated in Android 9 and many removed in 14 for non device owners."
+    },
+    "ios": {
+      "s": "y",
+      "v": "6.0",
+      "permission": "MDM enrollment (managed)",
+      "protection": "managed",
+      "grant": "enterprise",
+      "prompt_ui": "Enrollment profile install; supervised device wizard",
+      "persistence": "Until profile removed",
+      "revocation": "Settings > General > VPN & Device Management",
+      "store_policy": "",
+      "api_surface": "MDM protocol, Device Management profiles, Declarative Device Management",
+      "note": "iOS controls via MDM payloads rather than an app API."
+    }
+  },
+  "data": {
+    "type": "none",
+    "metric": "Management",
+    "update": "n/a",
+    "fields": [
+      {
+        "name": "policy",
+        "type": "object",
+        "unit": "settings",
+        "range": "n/a",
+        "precision": "n/a"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can enforce rules and wipe a phone only when a company manages it",
+    "user_action": "Your company has you scan a QR code or enroll the phone and accept a warning",
+    "can": [
+      "Set password rules",
+      "Control app installs and cameras",
+      "Wipe the phone",
+      "Keep work data apart in a work profile"
+    ],
+    "cannot": [
+      "Do any of this without enrollment or provisioning",
+      "Use the old device admin tools on newer Android; many were removed in Android 14",
+      "See personal data in an Android work profile"
+    ],
+    "reach": 4,
+    "reach_label": "Broad, on managed phones",
+    "differs": "Android uses device owner and work profile; iPhone uses MDM payloads rather than an app programming interface."
+  },
+  "story": {
+    "what_it_is": "Lets a company app enforce rules on a phone, such as password strength, and wipe it if it is lost.",
+    "icon": "building-2",
+    "tags": [
+      "Work phone",
+      "Control",
+      "Android"
+    ],
+    "marketing": [
+      {
+        "vendor": "Google",
+        "name": "Android Enterprise",
+        "pitch": "Android Enterprise lets companies manage work apps and data on phones, from work profiles to fully managed devices.",
+        "url": "https://developer.android.com/work"
+      }
+    ],
+    "for_you": "At work you may be asked to install a management app. After you accept, your boss can set a password rule or wipe the work part of the phone. A work profile keeps personal photos apart.",
+    "for_makers": "Companies need to protect customer data on staff phones. Device admin and the newer device owner and work profile tools let them enforce locks, block installs and remotely wipe. Old device admin is deprecated for new apps.",
+    "use_cases": [
+      {
+        "type": "enterprise",
+        "example": "A company makes staff use a strong PIN on work phones and wipes the phone if it is lost.",
+        "apps": []
+      },
+      {
+        "type": "security",
+        "example": "A bank locks a work phone's camera in secure areas.",
+        "apps": []
+      },
+      {
+        "type": "kids",
+        "example": "A school sets up shared tablets with only approved apps.",
+        "apps": []
+      },
+      {
+        "type": "travel",
+        "example": "An airline gives crew work phones that cannot install games.",
+        "apps": []
+      },
+      {
+        "type": "health",
+        "example": "A hospital limits a phone to approved clinical apps.",
+        "apps": []
+      },
+      {
+        "type": "delivery",
+        "example": "A delivery company controls courier phones and updates the app remotely.",
+        "apps": []
+      },
+      {
+        "type": "utilities",
+        "example": "A lost phone service locks and wipes your own phone.",
+        "apps": [
+          "Find My Device"
+        ]
+      }
+    ],
+    "risks": [
+      "Employer power over the phone",
+      "Remote wipe",
+      "Could see work usage"
+    ],
+    "android_note": "Device admin APIs are deprecated since Android 9 and many were removed in Android 14 for apps that are not device owners. Work profile keeps personal data separate.",
+    "ios_note": "iPhone does not use an app API. Control comes through mobile device management profiles."
+  },
+  "technical_bounds": [
+    "Only for enrolled devices"
+  ],
+  "scores": {
+    "sensitivity": 5,
+    "utility": 3,
+    "fingerprint_bits": 1,
+    "friction": 3
+  },
+  "value": {
+    "legit_uses": [
+      "Corporate control",
+      "Lost phone wipe"
+    ],
+    "abuse": [
+      "Stalkerware via device admin"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2018-08",
+      "platform": "android",
+      "version": "9",
+      "change": "Device admin deprecated"
+    },
+    {
+      "date": "2021-06",
+      "platform": "ios",
+      "version": "iOS 15",
+      "change": "Declarative management introduced (DDM from iOS 15)"
+    }
+  ],
+  "related": [
+    "mob.sys.mdm",
+    "mob.sys.restricted-settings"
+  ],
+  "refs": [
+    {
+      "t": "android",
+      "label": "Android: Device administration",
+      "url": "https://developer.android.com/work/device-admin"
+    },
+    {
+      "t": "apple",
+      "label": "Apple: Device management",
+      "url": "https://developer.apple.com/documentation/devicemanagement"
+    }
+  ],
+  "confidence": "docs"
+}

@@ -1,0 +1,215 @@
+{
+  "id": "mob.policy.privacy-manifests",
+  "name": "Privacy manifests (PrivacyInfo.xcprivacy)",
+  "kind": "capability",
+  "group": "app-ecosystem",
+  "subgroup": "Store transparency",
+  "tags": [
+    "privacy-manifest",
+    "xcprivacy",
+    "tracking-domains",
+    "sdk-signature"
+  ],
+  "plain": "A file in each app and listed SDK that states what data it collects and why, checked by Apple at upload.",
+  "meaning": "Apple turned self-declared privacy into machine-readable files. Xcode merges them into a privacy report, and tracking domains get blocked for ATT-denied users.",
+  "lifecycle": [
+    "before-install"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "n",
+      "v": "",
+      "permission": "",
+      "protection": "none",
+      "grant": "not-exposed",
+      "prompt_ui": "",
+      "persistence": "",
+      "revocation": "",
+      "store_policy": "",
+      "api_surface": "",
+      "note": "No manifest file. Play uses the Data safety form and the SDK Index instead."
+    },
+    "ios": {
+      "s": "y",
+      "v": "17.0",
+      "permission": "",
+      "protection": "none",
+      "grant": "none",
+      "prompt_ui": "",
+      "persistence": "",
+      "revocation": "",
+      "store_policy": "Required in new submissions that use listed SDKs or required reason APIs since 1 May 2024; signed SDK requirement for listed third party SDKs",
+      "api_surface": "PrivacyInfo.xcprivacy: NSPrivacyTracking, NSPrivacyTrackingDomains, NSPrivacyCollectedDataTypes, NSPrivacyAccessedAPITypes",
+      "note": "Upload warnings started March 2024; rejection for missing reasons started 1 May 2024. Domains in NSPrivacyTrackingDomains are blocked when ATT is denied."
+    }
+  },
+  "data": {
+    "type": "object",
+    "metric": "Plist of declarations",
+    "update": "static per build",
+    "fields": [
+      {
+        "name": "NSPrivacyTracking",
+        "type": "boolean",
+        "unit": "",
+        "range": "",
+        "precision": ""
+      },
+      {
+        "name": "NSPrivacyTrackingDomains",
+        "type": "list",
+        "unit": "",
+        "range": "",
+        "precision": ""
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can list what the app and its add on tools collect, in a file Apple checks",
+    "user_action": "Nothing. It is checked when the developer uploads the app, and shown in a privacy report",
+    "can": [
+      "Show what data each tool says it collects and why",
+      "Block tracking sites for people who said no to tracking",
+      "Flag missing reasons so Apple can reject the upload"
+    ],
+    "cannot": [
+      "Prove the file is complete without Apple's checks",
+      "Apply on Android; Google uses the Data safety form and SDK Index",
+      "Skip warnings: rejection for missing reasons began 1 May 2024"
+    ],
+    "reach": 1,
+    "reach_label": "A file checked at upload",
+    "differs": "Only iPhone (iOS 17 and later) has these files. Android has no such file."
+  },
+  "story": {
+    "what_it_is": "A file inside each iOS app that states what data it collects and why, checked by Apple.",
+    "icon": "file-text",
+    "tags": [
+      "Apple rules",
+      "Labels",
+      "Tracking"
+    ],
+    "marketing": [
+      {
+        "vendor": "Apple",
+        "name": "Privacy manifest files",
+        "pitch": "Apps and SDKs describe the data they collect and the reasons they use certain APIs.",
+        "url": "https://developer.apple.com/documentation/bundleresources/privacy-manifest-files"
+      }
+    ],
+    "for_you": "You never read it, but it helps. Xcode can merge the files into a privacy report, and tracking domains can be blocked for people who said no to tracking.",
+    "for_makers": "It turns promises into a file Apple can check at upload. Makers must keep a manifest for the app and each popular SDK, and update it whenever an SDK changes what it collects.",
+    "use_cases": [
+      {
+        "type": "ads",
+        "example": "An ad SDK ships a manifest that lists its tracking domains, so iOS can block them if the user said no.",
+        "apps": [
+          "Google AdMob",
+          "AppLovin"
+        ]
+      },
+      {
+        "type": "games",
+        "example": "A game studio adds manifests for four SDKs before upload, or App Store Connect rejects the build.",
+        "apps": [
+          "Supercell"
+        ]
+      },
+      {
+        "type": "analytics",
+        "example": "An analytics tool states that it collects device IDs for analytics only, not ads.",
+        "apps": [
+          "Firebase",
+          "Amplitude"
+        ]
+      },
+      {
+        "type": "social",
+        "example": "A social app generates a privacy report to compare with its nutrition label.",
+        "apps": [
+          "Snapchat"
+        ]
+      },
+      {
+        "type": "security",
+        "example": "Researchers read manifests to find SDKs that quietly collect more than the app says.",
+        "apps": []
+      },
+      {
+        "type": "developer",
+        "example": "A developer explains in the manifest that a file timestamp API is only used to show file dates.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Self declared",
+      "Can lag behind code"
+    ],
+    "android_note": "Android has no matching file. Google uses the Data safety form and the SDK Index.",
+    "ios_note": "Required for new apps and listed SDKs from spring 2024."
+  },
+  "technical_bounds": [
+    "iOS only",
+    "Self declared; Apple spot checks",
+    "Apps with unlisted reasons get rejected"
+  ],
+  "scores": {
+    "sensitivity": 3,
+    "utility": 3,
+    "fingerprint_bits": null,
+    "friction": 1
+  },
+  "value": {
+    "legit_uses": [
+      "Auditable data use"
+    ],
+    "abuse": [
+      "Wrong or empty declarations"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2023-06",
+      "platform": "ios",
+      "version": "WWDC23",
+      "change": "Privacy manifests announced"
+    },
+    {
+      "date": "2024-03",
+      "platform": "ios",
+      "version": "Xcode 15.3",
+      "change": "App Store Connect begins emailing warnings"
+    },
+    {
+      "date": "2024-05",
+      "platform": "ios",
+      "version": "App Store",
+      "change": "Required reason API declarations enforced from 1 May 2024"
+    }
+  ],
+  "related": [
+    "mob.policy.required-reason-apis",
+    "mob.policy.privacy-labels",
+    "mob.ads.sdk-data-sharing"
+  ],
+  "refs": [
+    {
+      "t": "apple",
+      "label": "Apple: Privacy manifest files",
+      "url": "https://developer.apple.com/documentation/bundleresources/privacy-manifest-files"
+    },
+    {
+      "t": "apple",
+      "label": "Apple: Upcoming requirements (May 2024)",
+      "url": "https://developer.apple.com/news/upcoming-requirements/?id=04012024a"
+    }
+  ],
+  "confidence": "docs"
+}

@@ -1,0 +1,222 @@
+{
+  "id": "web.display.window-position-multimonitor",
+  "name": "Window position and multi-screen flag",
+  "kind": "signal",
+  "group": "display-window",
+  "subgroup": "Window",
+  "tags": [
+    "screenX",
+    "isExtended",
+    "multi-monitor"
+  ],
+  "plain": "Window position on the desktop and whether more than one monitor is attached.",
+  "meaning": "screenX and screenY can reveal monitor layout; screen.isExtended says if a second display exists, without a prompt. Detailed monitor list (getScreenDetails) does need a permission.",
+  "lifecycle": [
+    "on-arrival",
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "window.screenX, screenY, screen.isExtended",
+      "bcd": [
+        "api.Screen.isExtended"
+      ],
+      "access": {
+        "grant": "none",
+        "prompt_ui": "None",
+        "secure_context": false,
+        "user_gesture": false,
+        "persistence": "read fresh on every page load; nothing stored",
+        "revocation": "none needed (no grant)",
+        "iframe": "Readable from cross-origin iframes too (same values)",
+        "steps": [
+          "Page script reads the value",
+          "No prompt is shown"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "100",
+          "note": "isExtended in Chrome 100",
+          "date": "2022-03-29"
+        },
+        "edge": {
+          "s": "y",
+          "v": "100",
+          "note": "",
+          "date": "2022-04-01"
+        },
+        "firefox": {
+          "s": "y",
+          "v": "1",
+          "note": "BCD lists no support; agent research says otherwise",
+          "date": "2004-11-09"
+        },
+        "safari": {
+          "s": "y",
+          "v": "3",
+          "note": "BCD lists no support; agent research says otherwise",
+          "date": "2007-10-26"
+        },
+        "ios_safari": {
+          "s": "y",
+          "v": "3.2",
+          "note": "BCD lists no support; agent research says otherwise",
+          "date": "2010-04-03"
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "100",
+          "note": "",
+          "date": "2022-03-29"
+        },
+        "samsung": {
+          "s": "y",
+          "v": "19.0",
+          "note": "",
+          "date": "2022-11-01"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "object",
+    "metric": "",
+    "update": "static per session",
+    "fields": [
+      {
+        "name": "screenX, screenY",
+        "type": "integer",
+        "unit": "CSS px",
+        "range": "negative or above width if second monitor",
+        "precision": "exact"
+      },
+      {
+        "name": "isExtended",
+        "type": "boolean",
+        "unit": "",
+        "range": "true or false",
+        "precision": ""
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can see where your browser window sits and whether you have two or more screens",
+    "user_action": "Nothing. It happens when the page loads.",
+    "can": [
+      "Check the window's position on the desktop",
+      "Check whether more than one screen is attached",
+      "Guess a dual monitor setup"
+    ],
+    "cannot": [
+      "See the size or contents of your other screens without permission",
+      "Move your window",
+      "See other windows on your computer"
+    ],
+    "reach": 1,
+    "reach_label": "Position and a yes or no",
+    "differs": ""
+  },
+  "story": {
+    "what_it_is": "Reports where your window sits on the desktop and whether you have more than one monitor.",
+    "icon": "layout-panel-left",
+    "tags": [
+      "Screens",
+      "Silent",
+      "Fingerprint"
+    ],
+    "marketing": [
+      {
+        "vendor": "MDN",
+        "name": "Window.screenX",
+        "pitch": "Documents how a page can read the position of the browser window on the screen.",
+        "url": "https://developer.mozilla.org/en-US/docs/Web/API/Window/screenX"
+      }
+    ],
+    "for_you": "You never see it. The page reads the window position and can tell if it sits on a second monitor or off the main one.",
+    "for_makers": "Makers use it to open popups on the right screen. Trackers use it because window positions and a second monitor are a strong mark of a real desk setup. It also reveals how people work.",
+    "use_cases": [
+      {
+        "type": "games",
+        "example": "A browser game opens its menu on the same screen where the game sits.",
+        "apps": []
+      },
+      {
+        "type": "productivity",
+        "example": "A web app opens its pop out tool on the same monitor as the main window.",
+        "apps": []
+      },
+      {
+        "type": "security",
+        "example": "A fraud check sees a window at a position that no real desktop uses, which hints at a virtual machine.",
+        "apps": []
+      },
+      {
+        "type": "ads",
+        "example": "A fingerprint script uses a multi monitor flag as one more bit of the device ID.",
+        "apps": []
+      },
+      {
+        "type": "analytics",
+        "example": "A team learns what share of its users use two screens when designing pop out tools.",
+        "apps": []
+      },
+      {
+        "type": "enterprise",
+        "example": "A call center app notes that agents with two screens use the knowledge panel more.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Fingerprint clue",
+      "Reveals work setup"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "isExtended only in Chromium",
+    "getScreenDetails needs window-management permission"
+  ],
+  "scores": {
+    "sensitivity": 1,
+    "utility": 3,
+    "fingerprint_bits": 1.5,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Open popups on right screen"
+    ],
+    "abuse": [
+      "Setup fingerprint"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2022-03",
+      "browser": "chrome",
+      "version": "100",
+      "change": "screen.isExtended shipped; details need permission"
+    }
+  ],
+  "related": [
+    "web.display.screen-size"
+  ],
+  "refs": [
+    {
+      "t": "mdn",
+      "label": "MDN Screen.isExtended",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/Screen/isExtended"
+    }
+  ],
+  "confidence": "docs"
+}

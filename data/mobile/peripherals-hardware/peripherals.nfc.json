@@ -1,0 +1,266 @@
+{
+  "id": "mob.peripherals.nfc",
+  "name": "NFC",
+  "kind": "permission",
+  "group": "peripherals-hardware",
+  "subgroup": "NFC",
+  "tags": [
+    "normal-permission",
+    "nfc",
+    "entitlement",
+    "ndef",
+    "tags",
+    "reader-mode",
+    "id-verification",
+    "biometric-document"
+  ],
+  "plain": "Lets the app read or emulate NFC tags and cards.",
+  "meaning": "Reads tags, payment-style cards and badges. Android grants it at install; iOS uses a capability and purpose string.",
+  "lifecycle": [
+    "in-session"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "y",
+      "v": "2.3",
+      "api": 9,
+      "permission": "NFC",
+      "protection": "normal",
+      "grant": "install",
+      "prompt_ui": "None (granted at install)",
+      "persistence": "Not revocable",
+      "revocation": "n/a",
+      "store_policy": "Play: none",
+      "api_surface": "NfcAdapter, HostApduService",
+      "note": "Host card emulation since Android 4.4."
+    },
+    "ios": {
+      "s": "y",
+      "v": "11",
+      "permission": "NFCReaderUsageDescription; Core NFC capability",
+      "protection": "entitlement",
+      "grant": "entitlement",
+      "prompt_ui": "System NFC scan sheet",
+      "persistence": "Per scan",
+      "revocation": "n/a",
+      "store_policy": "App Review 5.1.1; some uses need Apple entitlements",
+      "api_surface": "Core NFC, NFC and SE entitlement",
+      "note": "Reader mode on iPhone 7 and later; background tag reading iOS 12; third-party card emulation is regionally limited."
+    }
+  },
+  "web_equivalents": [
+    "web.hardware.nfc",
+    "web.peripherals.web-nfc"
+  ],
+  "data": {
+    "type": "event",
+    "metric": "Tag data",
+    "update": "per tap",
+    "fields": []
+  },
+  "limits": {
+    "headline": "Can scan NFC tags and cards that you hold to the phone",
+    "user_action": "You tap Scan tag and hold the phone near an NFC tag or card",
+    "can": [
+      "Scan tags, badges and similar cards",
+      "Scan tags in the background on iPhone (iOS 12 and later)",
+      "Act as a contactless card on Android"
+    ],
+    "cannot": [
+      "Scan on iPhone without the system scan sheet for standard scanning",
+      "Act as a card on iPhone in most regions",
+      "Work on iPhone 6 and older; scanning starts with iPhone 7"
+    ],
+    "reach": 2,
+    "reach_label": "Tags you hold close",
+    "differs": "Android grants NFC at install with no prompt; iPhone shows a system scan sheet and limits card emulation by region."
+  },
+  "story": {
+    "what_it_is": "Lets an app read tags and cards you tap on the phone, and sometimes act as a card.",
+    "icon": "nfc",
+    "tags": [
+      "NFC",
+      "Tap",
+      "Permission"
+    ],
+    "marketing": [
+      {
+        "vendor": "Apple",
+        "name": "Core NFC",
+        "pitch": "Read NFC tags in your app, including in the background, for fast tap based experiences.",
+        "url": "https://developer.apple.com/documentation/corenfc"
+      },
+      {
+        "vendor": "Google",
+        "name": "NFC on Android",
+        "pitch": "Use NFC to read tags and talk to cards from your app.",
+        "url": "https://developer.android.com/develop/connectivity/nfc/hce"
+      }
+    ],
+    "for_you": "You hold the phone near a tag on a poster, a smart card, a door or a product. The phone buzzes and the app opens. It usually needs no prompt on Android and a system sheet on iPhone.",
+    "for_makers": "A tap is the fastest way to start a task, such as paying, checking in or pairing. Makers use tags for marketing, access control and proof that an item is genuine. A tag can start an app with a link.",
+    "use_cases": [
+      {
+        "type": "payments",
+        "example": "You tap a card against a phone to pay a small seller.",
+        "apps": [
+          "Square"
+        ]
+      },
+      {
+        "type": "travel",
+        "example": "You tap a transit pass or hotel key at a gate.",
+        "apps": []
+      },
+      {
+        "type": "games",
+        "example": "A toy figure or card tapped on the phone unlocks a character.",
+        "apps": [
+          "Nintendo amiibo"
+        ]
+      },
+      {
+        "type": "shopping",
+        "example": "You tap a tag on a poster to open a coupon or product page.",
+        "apps": []
+      },
+      {
+        "type": "health",
+        "example": "A medical alert tag lets a first responder see your allergies.",
+        "apps": []
+      },
+      {
+        "type": "smart-home",
+        "example": "A tag by the door turns on a night scene.",
+        "apps": []
+      },
+      {
+        "type": "security",
+        "example": "A passport or ID card is read to prove who you are.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Rogue tags can open links",
+      "Skimming of cards",
+      "Tracking by tag"
+    ],
+    "android_note": "Android grants NFC at install and has supported emulating a card since Android 4.4.",
+    "ios_note": "Reader mode works on iPhone 7 and later, and background tag reading works since iOS 12. Third party card emulation is limited by region."
+  },
+  "technical_bounds": [
+    "iOS uses a system scan sheet",
+    "Card emulation limited on iOS",
+    "iOS shows a system scan sheet; Android reads silently while the app is on screen",
+    "Android 10+ blocks reading from the background",
+    "Needs touch distance of a few centimeters"
+  ],
+  "scores": {
+    "sensitivity": 3,
+    "utility": 3,
+    "fingerprint_bits": null,
+    "friction": 1
+  },
+  "value": {
+    "legit_uses": [
+      "Payments",
+      "Access"
+    ],
+    "abuse": [
+      "Skimming"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": true,
+      "how": "LinkedIn passport verification, run with Persona, needs the LinkedIn mobile app, the phone's NFC scanner and the camera for the photo page and a live selfie. Persona deletes face geometry right after processing and keeps ID and selfie for up to 30 days (third-party write-ups)."
+    }
+  },
+  "history": [
+    {
+      "date": "2020-09",
+      "platform": "ios",
+      "version": "iOS 14",
+      "change": "Passport chip reading support improved"
+    },
+    {
+      "date": "2019-09",
+      "platform": "ios",
+      "version": "iOS 13",
+      "change": "Tag writing and native tag access"
+    },
+    {
+      "date": "2019-09",
+      "platform": "ios",
+      "version": "iOS 13",
+      "change": "Core NFC tag reading and ISO 7816 added"
+    },
+    {
+      "date": "2018-09",
+      "platform": "ios",
+      "version": "iOS 12",
+      "change": "Background tag reading on iPhone XS and later"
+    },
+    {
+      "date": "2017-09",
+      "platform": "ios",
+      "version": "iOS 11",
+      "change": "Core NFC introduced"
+    },
+    {
+      "date": "2017-09",
+      "platform": "ios",
+      "version": "iOS 11",
+      "change": "Core NFC NDEF reading on iPhone 7"
+    },
+    {
+      "date": "2013-10",
+      "platform": "android",
+      "version": "4.4 (API 19)",
+      "change": "Host card emulation"
+    },
+    {
+      "date": "2010-12",
+      "platform": "android",
+      "version": "2.3 (API 9)",
+      "change": "NFC reading and writing"
+    }
+  ],
+  "related": [
+    "mob.payments.nfc-secure-element",
+    "mob.hw.nfc-hce",
+    "mob.hw.nfc-secure-element",
+    "mob.id.digital-credentials-verify",
+    "mob.camera.camera",
+    "mob.linkedin.id-verification"
+  ],
+  "refs": [
+    {
+      "t": "android",
+      "label": "Android: NFC basics",
+      "url": "https://developer.android.com/develop/connectivity/nfc"
+    },
+    {
+      "t": "apple",
+      "label": "Apple: Core NFC",
+      "url": "https://developer.apple.com/documentation/corenfc"
+    },
+    {
+      "t": "android",
+      "label": "Android: NFC basics",
+      "url": "https://developer.android.com/develop/connectivity/nfc/nfc"
+    },
+    {
+      "t": "apple",
+      "label": "Apple: Core NFC reader entitlements",
+      "url": "https://developer.apple.com/documentation/bundleresources/entitlements/com.apple.developer.nfc.readersession.formats"
+    },
+    {
+      "t": "news",
+      "label": "Straits Times: LinkedIn rolls out passport verification (mobile only)",
+      "url": "https://straitstimes.com.sg/tech/linkedin-rolls-out-passport-verification-feature-to-combat-scams"
+    }
+  ],
+  "confidence": "docs"
+}

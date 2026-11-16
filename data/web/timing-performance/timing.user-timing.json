@@ -1,0 +1,262 @@
+{
+  "id": "web.timing.user-timing",
+  "name": "User Timing marks and measures",
+  "kind": "capability",
+  "group": "timing-performance",
+  "subgroup": "Measurement",
+  "tags": [
+    "performance.mark",
+    "user-timing",
+    "rum",
+    "performance-observer"
+  ],
+  "plain": "Lets a page stamp named points in time and measure the gaps between them.",
+  "meaning": "A site can time its own code in detail and send the numbers home, so it learns how fast the person's device and network really are. The marks live only in this tab and are not shared across sites.",
+  "lifecycle": [
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "performance.mark('a'); performance.measure('m','a','b'); PerformanceObserver",
+      "bcd": [
+        "api.Performance.mark",
+        "api.Performance.measure",
+        "api.PerformanceMark"
+      ],
+      "access": {
+        "grant": "none",
+        "prompt_ui": "None (no browser prompt)",
+        "secure_context": false,
+        "user_gesture": false,
+        "activation": "none",
+        "persistence": "Per page; entries are in memory until the page closes or clearMarks is called",
+        "revocation": "Nothing to revoke (no permission is stored)",
+        "iframe": "Per frame; Timing is same-origin only for the page's own entries",
+        "steps": [
+          "Page calls performance.mark(name)",
+          "Browser records a timestamp with sub millisecond precision (subject to coarsening)",
+          "Page calls performance.measure(name, a, b)",
+          "Page reads entries or sends them to a server"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "28",
+          "note": "",
+          "date": "2013-07-09"
+        },
+        "edge": {
+          "s": "y",
+          "v": "12",
+          "note": "",
+          "date": "2015-07-29"
+        },
+        "firefox": {
+          "s": "y",
+          "v": "38",
+          "note": "",
+          "date": "2015-05-12"
+        },
+        "safari": {
+          "s": "y",
+          "v": "11",
+          "note": "",
+          "date": "2017-09-19"
+        },
+        "ios_safari": {
+          "s": "y",
+          "v": "11",
+          "note": "All iOS browsers use WebKit",
+          "date": "2017-09-19"
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "28",
+          "note": "",
+          "date": "2013-07-10"
+        },
+        "samsung": {
+          "s": "y",
+          "v": "1.5",
+          "note": "",
+          "date": "2013-09-25"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "none",
+    "metric": "",
+    "update": "",
+    "fields": []
+  },
+  "limits": {
+    "headline": "Can mark points in time and measure gaps between them inside the page",
+    "user_action": "Nothing. It happens as the page runs",
+    "can": [
+      "Stamp named moments in its own code",
+      "Measure how long each part took",
+      "Send the timings home to the site",
+      "Learn how fast your device and network really are"
+    ],
+    "cannot": [
+      "Share marks between tabs, since they live in this tab only",
+      "Ask permission first",
+      "See your files",
+      "Keep the marks after you close the tab"
+    ],
+    "reach": 2,
+    "reach_label": "While the page is open",
+    "differs": ""
+  },
+  "story": {
+    "what_it_is": "A page can mark named points in time and measure the gaps between them.",
+    "icon": "timer",
+    "tags": [
+      "Timing",
+      "Debugging",
+      "Everyday"
+    ],
+    "marketing": [
+      {
+        "vendor": "MDN",
+        "name": "User Timing",
+        "pitch": "Lets developers add their own timing marks, so they can measure how long key steps take.",
+        "url": "https://developer.mozilla.org/en-US/docs/Web/API/Performance_API/User_timing"
+      }
+    ],
+    "for_you": "You never see it. Teams use it to label steps like Search started and Results shown, then measure from real visitors. That is how they find what slows you down.",
+    "for_makers": "It is the standard way to time what matters to your product, such as time to first video frame or time to checkout. Teams send the results to dashboards to compare releases.",
+    "use_cases": [
+      {
+        "type": "shopping",
+        "example": "A shop marks Add to cart clicked and Cart updated, then watches the gap by device.",
+        "apps": [
+          "Shopify stores"
+        ]
+      },
+      {
+        "type": "video",
+        "example": "A video site marks play pressed and first frame shown to measure start up time.",
+        "apps": [
+          "YouTube",
+          "Netflix"
+        ]
+      },
+      {
+        "type": "games",
+        "example": "A game portal times the gap between game page load and the first playable frame.",
+        "apps": [
+          "Poki",
+          "CrazyGames"
+        ]
+      },
+      {
+        "type": "productivity",
+        "example": "A web editor times how long a file takes to open and become editable.",
+        "apps": [
+          "Figma",
+          "Notion"
+        ]
+      },
+      {
+        "type": "analytics",
+        "example": "A monitoring tool collects all custom marks and charts them by release.",
+        "apps": [
+          "Datadog RUM",
+          "New Relic",
+          "SpeedCurve"
+        ]
+      },
+      {
+        "type": "maps",
+        "example": "A web map times how long the first map tiles take to show after a search.",
+        "apps": [
+          "Google Maps"
+        ]
+      },
+      {
+        "type": "travel",
+        "example": "A booking site times from Search to first results, to watch speed on slow phones.",
+        "apps": [
+          "Booking.com"
+        ]
+      }
+    ],
+    "risks": [
+      "Reports sent to vendors",
+      "Rarely harmful on its own"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Entries are per document and are not shared across origins",
+    "Timer resolution is coarsened: Chrome uses 100 microseconds (5 microseconds on cross-origin isolated pages); Firefox rounds more coarsely by default",
+    "No hard entry limit in the spec; browsers hold them in memory until cleared",
+    "detail object lets a page attach arbitrary data to a mark",
+    "Entries do not survive navigation"
+  ],
+  "scores": {
+    "sensitivity": 1,
+    "utility": 4,
+    "fingerprint_bits": 1,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Performance monitoring (RUM)",
+      "A/B and perf test harnesses",
+      "Profiling in DevTools Performance panel"
+    ],
+    "abuse": [
+      "Timing side channels",
+      "Device speed fingerprinting"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2013-07",
+      "browser": "chrome",
+      "version": "28",
+      "change": "User Timing Level 1 ships"
+    },
+    {
+      "date": "2015-05",
+      "browser": "firefox",
+      "version": "38",
+      "change": "Firefox ships User Timing"
+    },
+    {
+      "date": "2017-09",
+      "browser": "safari",
+      "version": "11",
+      "change": "Safari ships User Timing"
+    }
+  ],
+  "related": [
+    "web.perf.timer-precision",
+    "web.perf.navigation-resource-timing"
+  ],
+  "refs": [
+    {
+      "t": "mdn",
+      "label": "MDN mark",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/Performance/mark"
+    },
+    {
+      "t": "spec",
+      "label": "W3C User Timing",
+      "url": "https://www.w3.org/TR/user-timing/"
+    }
+  ],
+  "confidence": "docs"
+}

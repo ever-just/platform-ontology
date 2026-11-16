@@ -1,0 +1,197 @@
+{
+  "id": "mob.network.wifi-state",
+  "name": "Wi-Fi state",
+  "kind": "signal",
+  "group": "network-connectivity",
+  "subgroup": "Wi-Fi",
+  "tags": [
+    "normal-permission",
+    "wifi",
+    "ssid"
+  ],
+  "plain": "Lets the app see Wi-Fi status; the network name needs location permission.",
+  "meaning": "SSID and BSSID can place a person at home or work. Android 8.1 and later hide them without location permission.",
+  "lifecycle": [
+    "in-session"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "y",
+      "v": "1.0",
+      "api": 1,
+      "permission": "ACCESS_WIFI_STATE (plus ACCESS_FINE_LOCATION for SSID, API 27+)",
+      "protection": "normal",
+      "grant": "install",
+      "prompt_ui": "None for state; location prompt for SSID",
+      "persistence": "Not revocable (normal)",
+      "revocation": "n/a",
+      "store_policy": "Play: none",
+      "api_surface": "WifiManager.getConnectionInfo",
+      "note": "Android 8.1 (API 27) requires location for SSID; Android 13 allows NEARBY_WIFI_DEVICES for scan results."
+    },
+    "ios": {
+      "s": "p",
+      "v": "12",
+      "permission": "com.apple.developer.networking.wifi-info plus Location",
+      "protection": "entitlement",
+      "grant": "entitlement",
+      "prompt_ui": "Location prompt",
+      "persistence": "Until revoked",
+      "revocation": "Settings > Privacy > Location Services",
+      "store_policy": "App Review 5.1.1",
+      "api_surface": "NEHotspotNetwork.fetchCurrent",
+      "note": "SSID needs entitlement and location grant on iOS 13+."
+    }
+  },
+  "web_equivalents": [
+    "web.notexposed.wifi-ssid"
+  ],
+  "data": {
+    "type": "object",
+    "metric": "Wi-Fi state and SSID",
+    "update": "on demand",
+    "fields": [
+      {
+        "name": "ssid",
+        "type": "string",
+        "unit": "chars",
+        "range": "0 to 32",
+        "precision": "exact"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can see if Wi-Fi is on, and its name only with location access",
+    "user_action": "Nothing for on or off. You tap Allow Location for the Wi-Fi name",
+    "can": [
+      "Check whether Wi-Fi is connected",
+      "See the network name after Location is allowed (Android 8.1 and newer)",
+      "Use Nearby devices permission for scan results on Android 13 and newer"
+    ],
+    "cannot": [
+      "See the Wi-Fi name on Android without Location",
+      "See the name on iPhone without the Apple entitlement plus Location",
+      "Switch Wi-Fi on or off for you on newer versions"
+    ],
+    "reach": 1,
+    "reach_label": "Wi-Fi status, name needs location",
+    "differs": "Android 8.1 and newer needs Location for the name. iPhone 13 and newer needs an entitlement plus location."
+  },
+  "story": {
+    "what_it_is": "An app can see if Wi-Fi is on or off and if you are connected.",
+    "icon": "wifi",
+    "tags": [
+      "Wi-Fi",
+      "Automatic",
+      "Silent"
+    ],
+    "marketing": [
+      {
+        "vendor": "Google",
+        "name": "Wi-Fi state",
+        "pitch": "Android lets apps check Wi-Fi status with a normal permission.",
+        "url": "https://developer.android.com/develop/connectivity/wifi"
+      }
+    ],
+    "for_you": "You do not see it. An app may say 'turn on Wi-Fi to download'. The network name stays hidden unless you allow location.",
+    "for_makers": "Makers use it to guide you and to choose downloads or sync. It is a low risk signal and adds a little to a profile. The name and ID are the sensitive parts and need location permission.",
+    "use_cases": [
+      {
+        "type": "media",
+        "example": "A podcast app waits until Wi-Fi is on before it downloads new episodes.",
+        "apps": [
+          "Pocket Casts"
+        ]
+      },
+      {
+        "type": "games",
+        "example": "A game suggests turning on Wi-Fi before a big patch download.",
+        "apps": []
+      },
+      {
+        "type": "smart-home",
+        "example": "A smart device app asks you to turn on Wi-Fi before setup.",
+        "apps": []
+      },
+      {
+        "type": "productivity",
+        "example": "A backup app only uploads photos when Wi-Fi is connected.",
+        "apps": [
+          "Google Photos"
+        ]
+      },
+      {
+        "type": "analytics",
+        "example": "A tracker records Wi-Fi on or off times to learn when you are home.",
+        "apps": []
+      },
+      {
+        "type": "utilities",
+        "example": "A battery app tells you that Wi-Fi scanning drains power.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Low risk alone",
+      "Reveals home pattern over time"
+    ],
+    "android_note": "Android apps see Wi-Fi status with a normal permission, and the network name needs location permission.",
+    "ios_note": "iPhone apps can see whether the connection is Wi-Fi but not read the setting directly."
+  },
+  "technical_bounds": [
+    "Both OSes gate SSID behind location",
+    "MAC randomization default since Android 10"
+  ],
+  "scores": {
+    "sensitivity": 3,
+    "utility": 3,
+    "fingerprint_bits": 6,
+    "friction": 2
+  },
+  "value": {
+    "legit_uses": [
+      "Wi-Fi settings"
+    ],
+    "abuse": [
+      "Location inference via SSIDs"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2018-03",
+      "platform": "android",
+      "version": "8.1 (API 27)",
+      "change": "SSID access requires location permission"
+    },
+    {
+      "date": "2019-09",
+      "platform": "ios",
+      "version": "iOS 13",
+      "change": "SSID access requires location plus entitlement"
+    }
+  ],
+  "related": [
+    "mob.network.network-state",
+    "mob.network.nearby-wifi"
+  ],
+  "refs": [
+    {
+      "t": "android",
+      "label": "Android: Wi-Fi permissions",
+      "url": "https://developer.android.com/develop/connectivity/wifi/wifi-permissions"
+    },
+    {
+      "t": "apple",
+      "label": "Apple: NEHotspotNetwork",
+      "url": "https://developer.apple.com/documentation/networkextension/nehotspotnetwork"
+    }
+  ],
+  "confidence": "docs"
+}

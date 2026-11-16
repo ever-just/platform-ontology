@@ -1,0 +1,227 @@
+{
+  "id": "web.xsite.fenced-frames",
+  "name": "Fenced Frames (being phased out)",
+  "kind": "capability",
+  "group": "cross-site-tracking",
+  "subgroup": "Privacy Sandbox",
+  "tags": [
+    "fenced-frame",
+    "privacy-sandbox",
+    "isolation",
+    "phaseout"
+  ],
+  "plain": "A sandboxed ad frame that cannot talk to the page around it. Chrome is turning it into a stub in 2026.",
+  "meaning": "Embedded content that blocks communication with the embedder so ads chosen from private data cannot leak who saw them. Moved to Deprecate and remove on Aug 14 2026; stub in Chrome 156 (stable Oct 20 2026).",
+  "lifecycle": [
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "<fencedframe>, HTMLFencedFrameElement, window.fence",
+      "bcd": [
+        "api.HTMLFencedFrameElement"
+      ],
+      "access": {
+        "grant": "none",
+        "prompt_ui": "None",
+        "secure_context": false,
+        "user_gesture": false,
+        "persistence": "Per frame",
+        "revocation": "Clear site data, browser privacy settings",
+        "iframe": "",
+        "steps": []
+      },
+      "support": {
+        "chrome": {
+          "s": "p",
+          "v": "126",
+          "note": "Stub planned in 156",
+          "date": "2024-06-11"
+        },
+        "edge": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "firefox": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "safari": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "ios_safari": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "chrome_android": {
+          "s": "p",
+          "v": "126",
+          "note": "",
+          "date": "2024-06-11"
+        },
+        "samsung": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "object",
+    "metric": "Frame config",
+    "update": "per ad render",
+    "fields": []
+  },
+  "limits": {
+    "headline": "Can't fully show an ad in a sealed frame, as Chrome makes it a stub",
+    "user_action": "Nothing. It would have happened when an ad loaded on a page",
+    "can": [
+      "Show an ad in a frame that cannot talk to the page around it",
+      "Let a page display an ad without learning who you are, in tests of Protected Audience"
+    ],
+    "cannot": [
+      "Work in Edge, Firefox, Safari or Samsung Internet",
+      "Keep working in Chrome once the 2026 change makes it a stub",
+      "Share data with the page around it",
+      "Be used widely, since it was part of retired ad tests"
+    ],
+    "reach": 1,
+    "reach_label": "Being phased out",
+    "differs": "Only Chrome ever supported it, and Chrome is turning it into a stub in 2026."
+  },
+  "story": {
+    "what_it_is": "A walled off box for an ad that cannot talk to the page around it. Being phased out.",
+    "icon": "frame",
+    "tags": [
+      "Ads",
+      "Chrome",
+      "Retired"
+    ],
+    "marketing": [
+      {
+        "vendor": "Google Chrome",
+        "name": "Fenced Frames",
+        "pitch": "Chrome pitched fenced frames as a way to show ads chosen from private data without leaking to the page.",
+        "url": "https://privacysandbox.google.com/overview/status"
+      }
+    ],
+    "for_you": "You never see the box as different. An ad or embedded item loads inside a sealed frame, so the page cannot read what it shows. Chrome is turning it into a stub in 2026.",
+    "for_makers": "It was built for the Protected Audience ad auctions, so the page could not learn which interest based ad was shown. With that retired, there is less need. Makers who prepared must plan for removal.",
+    "use_cases": [
+      {
+        "type": "ads",
+        "example": "A news site shows a retargeted ad in a fenced frame, so the page owner cannot see which shop it is for.",
+        "apps": [
+          "Google Ad Manager"
+        ]
+      },
+      {
+        "type": "analytics",
+        "example": "A test measured clicks inside a fenced frame without sharing page data to the ad.",
+        "apps": []
+      },
+      {
+        "type": "games",
+        "example": "A game site tried sealed ads, so an ad for a rival game would not leak your play history.",
+        "apps": []
+      },
+      {
+        "type": "shopping",
+        "example": "A shop's ad in a frame did not let the host page see which product you looked at before.",
+        "apps": [
+          "Criteo"
+        ]
+      },
+      {
+        "type": "media",
+        "example": "A video site tried sealed ad slots to protect viewer interests from the publisher.",
+        "apps": []
+      },
+      {
+        "type": "security",
+        "example": "Sealed frames block clickjacking style tricks where a page reads or overlays an ad.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Being turned off in Chrome",
+      "Little real world use"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "No postMessage to the embedder",
+    "URL is an opaque config object",
+    "Chrome only"
+  ],
+  "scores": {
+    "sensitivity": 2,
+    "utility": 2,
+    "fingerprint_bits": null,
+    "friction": 3
+  },
+  "value": {
+    "legit_uses": [
+      "Embedding private-audience ads (historical)"
+    ],
+    "abuse": [
+      "Hiding tracking beacons inside opaque frames"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2024-06",
+      "browser": "chrome",
+      "version": "126",
+      "change": "Shipped for Protected Audience and Shared Storage (verify milestone)"
+    },
+    {
+      "date": "2026-08",
+      "browser": "chrome",
+      "version": "155",
+      "change": "Aug 14 2026 status changed to Deprecate and remove"
+    },
+    {
+      "date": "2026-10",
+      "browser": "chrome",
+      "version": "156",
+      "change": "Becomes a stub in stable scheduled Oct 20 2026; stub-removal experiments from 157"
+    }
+  ],
+  "related": [
+    "web.xsite.protected-audience",
+    "web.xsite.shared-storage"
+  ],
+  "refs": [
+    {
+      "t": "vendor",
+      "label": "Privacy Sandbox feature status page (updated Aug 14, 2026)",
+      "url": "https://privacysandbox.google.com/overview/status"
+    },
+    {
+      "t": "news",
+      "label": "Privacy Sandbox history and removal timeline (checked Oct 2, 2026)",
+      "url": "https://hidekazu-konishi.com/entry/privacy_sandbox_history_and_timeline.html"
+    },
+    {
+      "t": "spec",
+      "label": "Fenced Frame spec",
+      "url": "https://wicg.github.io/fenced-frame/"
+    }
+  ],
+  "confidence": "verified"
+}

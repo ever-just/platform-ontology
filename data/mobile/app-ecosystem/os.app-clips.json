@@ -1,0 +1,230 @@
+{
+  "id": "mob.os.app-clips",
+  "name": "App Clips and Instant Apps",
+  "kind": "capability",
+  "group": "app-ecosystem",
+  "subgroup": "Try before install",
+  "tags": [
+    "app-clip",
+    "instant-app",
+    "before-install",
+    "size-limit"
+  ],
+  "plain": "App Clips run a small part of an app without installing; Google shut Instant Apps down in December 2025.",
+  "meaning": "A lightweight launch from a link, QR or NFC tag, before any install. App Clips are limited to 15 MB (50 MB for digital only launches) and lose most background and sensor access.",
+  "lifecycle": [
+    "before-install",
+    "in-session"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "r",
+      "v": "8.0",
+      "api": 26,
+      "permission": "",
+      "protection": "none",
+      "grant": "not-exposed",
+      "prompt_ui": "Play Instant discontinued",
+      "persistence": "n/a",
+      "revocation": "",
+      "store_policy": "Google Play shut down Instant Apps in December 2025",
+      "api_surface": "Play Instant (removed)",
+      "note": "Instant Apps no longer available; use web links or Play 'try now' streaming"
+    },
+    "ios": {
+      "s": "y",
+      "v": "14.0",
+      "permission": "Associated Domains (appclips: entitlement); ephemeral notifications permission via NSAppClipRequestEphemeralUserNotification",
+      "protection": "entitlement",
+      "grant": "entitlement",
+      "prompt_ui": "Invocation card from link, QR, NFC, Maps or Safari banner",
+      "persistence": "Removed after a period of disuse; data migrates to the full app on install via shared app group",
+      "revocation": "Deleted by the system or the user",
+      "store_policy": "App Review 5.1.1 and App Clip guidelines",
+      "api_surface": "App Clip target, NSUserActivity, appClip invocation URL",
+      "note": "Size 15 MB (iOS 16+) or 50 MB digital only (iOS 17+); no background URLSession, no background modes; ephemeral notifications for about 8 hours (unverified)"
+    }
+  },
+  "web_equivalents": [
+    "web.os.install-prompt"
+  ],
+  "data": {
+    "type": "event",
+    "metric": "Invocation URL",
+    "update": "On launch",
+    "fields": [
+      {
+        "name": "size_cap_mb",
+        "type": "integer",
+        "unit": "MB",
+        "range": "15 or 50",
+        "precision": "system"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can run a tiny part of an app from a link or tag, iPhone only",
+    "user_action": "You scan a QR code, tap an NFC tag, or tap a link or banner",
+    "can": [
+      "Run a small part of an app without installing it (iPhone)",
+      "Start from a QR code, NFC tag, Maps card or Safari banner",
+      "Send you notifications for about 8 hours after launch"
+    ],
+    "cannot": [
+      "Go past 15 MB, or 50 MB for digital only launches",
+      "Keep running tasks in the background",
+      "Work on Android, since Instant Apps were shut down in December 2025",
+      "Use the full set of sensors and permissions of the whole app"
+    ],
+    "reach": 2,
+    "reach_label": "Only while you use the clip",
+    "differs": "iPhone has App Clips. Android Instant Apps are discontinued; use web links instead."
+  },
+  "story": {
+    "what_it_is": "A tiny slice of an app that opens instantly from a tap, scan or link, with no install.",
+    "icon": "qr-code",
+    "tags": [
+      "Instant",
+      "No install",
+      "Links"
+    ],
+    "marketing": [
+      {
+        "vendor": "Apple",
+        "name": "App Clips",
+        "pitch": "A small part of an app that is fast and easy to open, right when you need it.",
+        "url": "https://developer.apple.com/app-clips/"
+      },
+      {
+        "vendor": "Google",
+        "name": "Google Play Instant",
+        "pitch": "Try an app or game without installing it. Google ended Instant Apps in late 2025.",
+        "url": "https://developer.android.com/topic/google-play-instant"
+      }
+    ],
+    "for_you": "You scan a code at a scooter, parking meter or coffee shop and a small card slides up. You pay or order in seconds and never visit the App Store.",
+    "for_makers": "Makers use it to cut the steps between wanting something and doing it. A full install loses most people, so a small taste that offers the full app afterward turns more visitors into users.",
+    "use_cases": [
+      {
+        "type": "rideshare",
+        "example": "You scan a QR code on an e-scooter and a card lets you unlock and ride in seconds.",
+        "apps": [
+          "Lime",
+          "Bird"
+        ]
+      },
+      {
+        "type": "delivery",
+        "example": "You tap an NFC sticker at a coffee shop and order and pay from a card with Apple Pay.",
+        "apps": [
+          "Panera",
+          "Starbucks"
+        ]
+      },
+      {
+        "type": "travel",
+        "example": "A parking meter sign gives you a code. You scan it and pay for time without making an account.",
+        "apps": [
+          "ParkMobile",
+          "PayByPhone"
+        ]
+      },
+      {
+        "type": "games",
+        "example": "A playable demo opens from a link in a message so you can try a level before you install.",
+        "apps": []
+      },
+      {
+        "type": "shopping",
+        "example": "A store tag opens a card that shows the size and color options and checks out with Apple Pay.",
+        "apps": [
+          "Etsy"
+        ]
+      },
+      {
+        "type": "ads",
+        "example": "An ad for a game opens a short taste, and the ad network counts how many people then install the full app.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Small data gets sent before install",
+      "Push of the full install"
+    ],
+    "android_note": "Google shut down Instant Apps in December 2025, so on Android this is now mostly web based.",
+    "ios_note": "iOS App Clips are limited to 15 MB (50 MB for digital only launches) and delete after a time."
+  },
+  "technical_bounds": [
+    "No persistent background access",
+    "Location needs confirmation each use"
+  ],
+  "scores": {
+    "sensitivity": 2,
+    "utility": 4,
+    "fingerprint_bits": null,
+    "friction": 1
+  },
+  "value": {
+    "legit_uses": [
+      "Try before install"
+    ],
+    "abuse": [
+      "Pre install profiling by link"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2020-09",
+      "platform": "ios",
+      "version": "iOS 14",
+      "change": "App Clips introduced (10 MB limit)"
+    },
+    {
+      "date": "2022-09",
+      "platform": "ios",
+      "version": "iOS 16",
+      "change": "Size limit raised to 15 MB"
+    },
+    {
+      "date": "2023-09",
+      "platform": "ios",
+      "version": "iOS 17",
+      "change": "50 MB for digital only invocations"
+    },
+    {
+      "date": "2025-12",
+      "platform": "android",
+      "version": "Play",
+      "change": "Google Play Instant shut down"
+    }
+  ],
+  "related": [
+    "mob.attr.install-referrer",
+    "mob.os.app-archiving"
+  ],
+  "refs": [
+    {
+      "t": "apple",
+      "label": "Apple: Creating an App Clip with Xcode",
+      "url": "https://developer.apple.com/documentation/appclip/creating-an-app-clip-with-xcode"
+    },
+    {
+      "t": "apple",
+      "label": "Apple: Choosing the right functionality for your App Clip",
+      "url": "https://developer.apple.com/documentation/appclip/choosing-the-right-functionality-for-your-app-clip"
+    },
+    {
+      "t": "android",
+      "label": "Android: Google Play Instant",
+      "url": "https://developer.android.com/topic/google-play-instant"
+    }
+  ],
+  "confidence": "verified"
+}

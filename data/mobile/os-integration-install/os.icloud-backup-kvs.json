@@ -1,0 +1,209 @@
+{
+  "id": "mob.os.icloud-backup-kvs",
+  "name": "iCloud backup and key value store",
+  "kind": "capability",
+  "group": "os-integration-install",
+  "subgroup": "Backup",
+  "tags": [
+    "icloud",
+    "kvs",
+    "backup",
+    "isExcludedFromBackup",
+    "1mb"
+  ],
+  "plain": "iCloud backs up the app container and offers a 1 MB key value store that survives uninstall.",
+  "meaning": "Documents and Application Support are in iCloud backup unless excluded; NSUbiquitousKeyValueStore keeps up to 1 MB and 1024 keys that sync across the person's devices.",
+  "lifecycle": [
+    "after-uninstall",
+    "signed-in"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "n",
+      "v": "",
+      "permission": "",
+      "protection": "none",
+      "grant": "not-exposed",
+      "prompt_ui": "None",
+      "persistence": "n/a",
+      "revocation": "",
+      "store_policy": "",
+      "api_surface": "",
+      "note": "Android analog is Auto Backup and Block Store; see mob.os.auto-backup"
+    },
+    "ios": {
+      "s": "y",
+      "v": "5.0",
+      "permission": "iCloud entitlement for KVS and containers",
+      "protection": "entitlement",
+      "grant": "entitlement",
+      "prompt_ui": "Settings > Apple ID > iCloud",
+      "persistence": "Backups restore app container; KVS persists across uninstall for the same Apple ID",
+      "revocation": "Disable iCloud for the app or delete from iCloud",
+      "store_policy": "App Review 5.1.1",
+      "api_surface": "NSUbiquitousKeyValueStore (1 MB total, 1024 keys), URLResourceKey.isExcludedFromBackupKey",
+      "note": "Caches and tmp excluded; Documents and Application Support included unless flagged; KVS limit 1 MB and 1024 keys (docs, from memory)"
+    }
+  },
+  "web_equivalents": [
+    "web.storage.persistent-storage"
+  ],
+  "data": {
+    "type": "binary",
+    "metric": "iCloud data",
+    "update": "Sync or nightly backup",
+    "fields": [
+      {
+        "name": "kvs_bytes",
+        "type": "integer",
+        "unit": "binary",
+        "range": "1 MB",
+        "precision": "system"
+      },
+      {
+        "name": "kvs_keys",
+        "type": "integer",
+        "unit": "count",
+        "range": "1024",
+        "precision": "system"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can save the app's folder to iCloud and keep 1 MB of values after uninstall",
+    "user_action": "Nothing. It happens when iCloud Backup is on and the phone is charging",
+    "can": [
+      "Back up documents and settings in the app's container",
+      "Keep up to 1 MB and 1024 small values, even after you delete the app",
+      "Restore the app's data on a new iPhone"
+    ],
+    "cannot": [
+      "Back up caches and temporary files, which are left out",
+      "Keep more than 1 MB of small values",
+      "Do this on Android, which has Auto Backup and Block Store instead"
+    ],
+    "reach": 3,
+    "reach_label": "A regular copy of the app's folder",
+    "differs": "iPhone has iCloud Backup. Android uses Auto Backup and Block Store."
+  },
+  "story": {
+    "what_it_is": "Apple's iCloud saves an app's files and a tiny note pad of settings that follow you between devices.",
+    "icon": "cloud",
+    "tags": [
+      "iPhone",
+      "Backup",
+      "Sync"
+    ],
+    "marketing": [
+      {
+        "vendor": "Apple",
+        "name": "iCloud key value storage",
+        "pitch": "Apple lets apps store a small set of settings that sync across a person's devices through iCloud.",
+        "url": "https://developer.apple.com/documentation/foundation/nsubiquitouskeyvaluestore"
+      }
+    ],
+    "for_you": "You set up a new iPhone and your apps remember your settings. The same note pad also syncs between your iPhone and iPad.",
+    "for_makers": "Makers get free sync of small settings and easy restores. It can also keep an old identifier alive across reinstalls and devices.",
+    "use_cases": [
+      {
+        "type": "productivity",
+        "example": "A notes app syncs your theme and last note between iPhone and iPad.",
+        "apps": [
+          "Bear"
+        ]
+      },
+      {
+        "type": "games",
+        "example": "A game stores your level on iCloud so a new phone picks up where you were.",
+        "apps": [
+          "Monument Valley"
+        ]
+      },
+      {
+        "type": "fitness",
+        "example": "A fitness app keeps your goals on all your devices.",
+        "apps": []
+      },
+      {
+        "type": "media",
+        "example": "A reader app remembers where you stopped across devices.",
+        "apps": [
+          "Kindle"
+        ]
+      },
+      {
+        "type": "analytics",
+        "example": "A team sees a stable ID that stays after a reinstall.",
+        "apps": []
+      },
+      {
+        "type": "ads",
+        "example": "An ad SDK may store a device ID in the cloud to link installs.",
+        "apps": []
+      },
+      {
+        "type": "shopping",
+        "example": "A shopping app keeps your cart sync across devices.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Cross install identity",
+      "Old data returns"
+    ],
+    "android_note": "Android uses Auto Backup and Block Store instead.",
+    "ios_note": "Documents and Application Support are backed up unless the app excludes them. The note pad holds up to 1 MB."
+  },
+  "technical_bounds": [
+    "Tied to the Apple ID",
+    "Excluded files do not restore"
+  ],
+  "scores": {
+    "sensitivity": 3,
+    "utility": 3,
+    "fingerprint_bits": 5,
+    "friction": 1
+  },
+  "value": {
+    "legit_uses": [
+      "Cross device settings",
+      "Restore after reinstall"
+    ],
+    "abuse": [
+      "Cross install identity"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2011-10",
+      "platform": "ios",
+      "version": "iOS 5",
+      "change": "iCloud and key value store introduced"
+    }
+  ],
+  "related": [
+    "mob.os.auto-backup",
+    "mob.os.keychain-persistence",
+    "mob.os.uninstall-data-deletion"
+  ],
+  "refs": [
+    {
+      "t": "apple",
+      "label": "Apple: NSUbiquitousKeyValueStore",
+      "url": "https://developer.apple.com/documentation/foundation/nsubiquitouskeyvaluestore"
+    },
+    {
+      "t": "apple",
+      "label": "Apple: Optimizing your app's data for iCloud backup",
+      "url": "https://developer.apple.com/documentation/foundation/optimizing-your-app-s-data-for-icloud-backup"
+    }
+  ],
+  "confidence": "docs"
+}

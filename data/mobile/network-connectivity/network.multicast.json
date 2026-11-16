@@ -1,0 +1,196 @@
+{
+  "id": "mob.network.multicast",
+  "name": "Multicast networking",
+  "kind": "capability",
+  "group": "network-connectivity",
+  "subgroup": "Network",
+  "tags": [
+    "entitlement",
+    "multicast",
+    "lan"
+  ],
+  "plain": "Sends and receives multicast and broadcast traffic on the local network.",
+  "meaning": "Needed for custom device discovery; also a way to enumerate LAN devices, so Apple gates it by approval.",
+  "lifecycle": [
+    "in-session"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "y",
+      "v": "4.1",
+      "api": 1,
+      "permission": "CHANGE_WIFI_MULTICAST_STATE (normal)",
+      "protection": "normal",
+      "grant": "install",
+      "prompt_ui": "None (Android 17 local network permission also applies)",
+      "persistence": "While MulticastLock is held",
+      "revocation": "n/a",
+      "store_policy": "",
+      "api_surface": "WifiManager.MulticastLock",
+      "note": "Android 17 treats multicast and broadcast as local network traffic"
+    },
+    "ios": {
+      "s": "f",
+      "v": "14.5",
+      "permission": "com.apple.developer.networking.multicast",
+      "protection": "entitlement",
+      "grant": "entitlement",
+      "prompt_ui": "Apple request form; local network prompt also applies",
+      "persistence": "Tied to provisioning profile",
+      "revocation": "n/a",
+      "store_policy": "Apple reviews justification",
+      "api_surface": "BSD sockets, NWConnectionGroup",
+      "note": "Bonjour is exempt; raw multicast and broadcast need the entitlement"
+    }
+  },
+  "data": {
+    "type": "stream",
+    "metric": "UDP multicast datagrams",
+    "update": "continuous",
+    "fields": [
+      {
+        "name": "packetSize",
+        "type": "integer",
+        "unit": "bytes",
+        "range": "up to 1472 typical MTU",
+        "precision": ""
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can send and receive shared messages to many devices on your local network",
+    "user_action": "Nothing, or you use device discovery or casting inside the app",
+    "can": [
+      "Listen for broadcast announcements on the local network",
+      "Find devices that announce themselves (printers, TVs)",
+      "Use raw multicast on iPhone with the Apple entitlement",
+      "Use Bonjour on iPhone with no extra entitlement"
+    ],
+    "cannot": [
+      "Use raw multicast on iPhone without the Apple entitlement",
+      "Reach beyond the local network",
+      "Skip local network rules on Android 17",
+      "Listen for free on Android; a multicast lock costs battery"
+    ],
+    "reach": 2,
+    "reach_label": "Local network broadcasts",
+    "differs": "iPhone exempts Bonjour but needs an entitlement for raw multicast. Android needs a normal permission and treats multicast as local traffic in Android 17."
+  },
+  "story": {
+    "what_it_is": "An app sends and gets messages to many devices at once on your local network.",
+    "icon": "rss",
+    "tags": [
+      "Network",
+      "Entitlement",
+      "Home"
+    ],
+    "marketing": [
+      {
+        "vendor": "Apple",
+        "name": "Multicast entitlement",
+        "pitch": "Apple requires special approval before apps can use multicast and broadcast on a local network.",
+        "url": "https://developer.apple.com/documentation/bundleresources/entitlements/com.apple.developer.networking.multicast"
+      }
+    ],
+    "for_you": "You do not see it. It is how your phone finds a smart speaker or a game host without typing an address. If an app uses it for scanning, it can see devices on the whole network.",
+    "for_makers": "Makers use it for fast discovery of nearby devices. Apple limits it because it can also be used to scan every device. Apps ask for approval and explain their reason.",
+    "use_cases": [
+      {
+        "type": "media",
+        "example": "A music or TV app announces itself on the network to find speakers.",
+        "apps": [
+          "Sonos"
+        ]
+      },
+      {
+        "type": "games",
+        "example": "A local multiplayer game finds hosts on the same Wi-Fi without a server.",
+        "apps": []
+      },
+      {
+        "type": "smart-home",
+        "example": "A setup app broadcasts a message so a new device answers.",
+        "apps": [
+          "Philips Hue"
+        ]
+      },
+      {
+        "type": "enterprise",
+        "example": "A company tool finds printers and displays in the office.",
+        "apps": []
+      },
+      {
+        "type": "developer",
+        "example": "A developer uses it to find test devices on a lab network.",
+        "apps": []
+      },
+      {
+        "type": "security",
+        "example": "A bad app sends discovery packets to map every device in a house.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "LAN scanning",
+      "Device inventory"
+    ],
+    "android_note": "Android apps need a multicast lock and can use it with the normal network permissions.",
+    "ios_note": "iPhone needs a special entitlement from Apple that apps must request."
+  },
+  "technical_bounds": [
+    "Requires Apple approval",
+    "Both platforms add local network prompts"
+  ],
+  "scores": {
+    "sensitivity": 3,
+    "utility": 3,
+    "fingerprint_bits": null,
+    "friction": 3
+  },
+  "value": {
+    "legit_uses": [
+      "Media discovery",
+      "IoT onboarding"
+    ],
+    "abuse": [
+      "LAN scanning"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2021-04",
+      "platform": "ios",
+      "version": "iOS 14.5",
+      "change": "Multicast entitlement required for raw multicast and broadcast"
+    },
+    {
+      "date": "2026-06",
+      "platform": "android",
+      "version": "17 (API 37)",
+      "change": "Multicast counted as local network access"
+    }
+  ],
+  "related": [
+    "mob.network.local-network"
+  ],
+  "refs": [
+    {
+      "t": "apple",
+      "label": "Apple: Multicast networking entitlement",
+      "url": "https://developer.apple.com/documentation/bundleresources/entitlements/com.apple.developer.networking.multicast"
+    },
+    {
+      "t": "android",
+      "label": "Android: Local network permission",
+      "url": "https://developer.android.com/privacy-and-security/local-network-permission"
+    }
+  ],
+  "confidence": "docs"
+}

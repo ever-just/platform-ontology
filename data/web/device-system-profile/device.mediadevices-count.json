@@ -1,0 +1,245 @@
+{
+  "id": "web.device.mediadevices-count",
+  "name": "Media device kinds and counts",
+  "kind": "signal",
+  "group": "device-system-profile",
+  "subgroup": "Peripherals",
+  "tags": [
+    "mediadevices",
+    "enumerateDevices",
+    "camera",
+    "microphone"
+  ],
+  "plain": "Counts of cameras, microphones and speakers, without names, before any permission.",
+  "meaning": "Tells a site whether the device has a camera and mic and how many outputs. Without permission labels and device IDs are empty, but kinds and counts leak a hardware profile (laptop vs headset vs desktop).",
+  "lifecycle": [
+    "on-arrival",
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "navigator.mediaDevices.enumerateDevices()",
+      "bcd": [
+        "api.MediaDevices.enumerateDevices"
+      ],
+      "access": {
+        "grant": "none",
+        "prompt_ui": "None",
+        "secure_context": true,
+        "user_gesture": false,
+        "persistence": "read fresh on every page load; nothing stored",
+        "revocation": "none needed (no grant)",
+        "iframe": "Readable from cross-origin iframes too (same values)",
+        "steps": [
+          "Page script reads the value",
+          "No prompt is shown"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "47",
+          "note": "",
+          "date": "2015-12-01"
+        },
+        "edge": {
+          "s": "y",
+          "v": "12",
+          "note": "",
+          "date": "2015-07-29"
+        },
+        "firefox": {
+          "s": "y",
+          "v": "116",
+          "note": "",
+          "date": "2023-08-01"
+        },
+        "safari": {
+          "s": "y",
+          "v": "11",
+          "note": "",
+          "date": "2017-09-19"
+        },
+        "ios_safari": {
+          "s": "y",
+          "v": "11",
+          "note": "",
+          "date": "2017-09-19"
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "47",
+          "note": "",
+          "date": "2015-12-02"
+        },
+        "samsung": {
+          "s": "y",
+          "v": "5.0",
+          "note": "",
+          "date": "2016-12-15"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "object",
+    "metric": "",
+    "update": "static per session",
+    "fields": [
+      {
+        "name": "kind",
+        "type": "enum",
+        "unit": "",
+        "range": "audioinput, audiooutput, videoinput",
+        "precision": ""
+      },
+      {
+        "name": "count per kind",
+        "type": "integer",
+        "unit": "",
+        "range": "0 to about 10",
+        "precision": "exact"
+      },
+      {
+        "name": "deviceId, label",
+        "type": "string",
+        "unit": "",
+        "range": "empty until getUserMedia granted",
+        "precision": ""
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can count your cameras, mics, and speakers without names before you allow access",
+    "user_action": "Nothing. It happens when a page checks for a camera or mic",
+    "can": [
+      "See whether you have a camera or microphone",
+      "Count cameras, mics, and speakers",
+      "Guess a laptop, headset, or desktop setup from the counts",
+      "See full device names after you allow camera or mic"
+    ],
+    "cannot": [
+      "See device names or IDs before you allow camera or mic",
+      "Turn on your camera or microphone",
+      "See pictures or sound",
+      "See which device is in use"
+    ],
+    "reach": 2,
+    "reach_label": "Counts only, until you allow it",
+    "differs": ""
+  },
+  "story": {
+    "what_it_is": "Tells a page how many cameras, microphones and speakers you have, without names, before you give permission.",
+    "icon": "camera",
+    "tags": [
+      "Camera",
+      "Microphone",
+      "Silent"
+    ],
+    "marketing": [
+      {
+        "vendor": "MDN",
+        "name": "MediaDevices.enumerateDevices",
+        "pitch": "Docs explain it as a way to list device kinds, with names hidden until permission is given.",
+        "url": "https://developer.mozilla.org/en-US/docs/Web/API/MediaDevices/enumerateDevices"
+      }
+    ],
+    "for_you": "You never see it. Before you allow anything, a video call page can still tell that you have one camera and two microphones, so it can show the right buttons. It cannot see your name labels yet.",
+    "for_makers": "Video call and recording sites need to know whether to offer camera and microphone options. The counts also say something about your setup, such as a headset or a studio mic. Fingerprinters use it for that reason.",
+    "use_cases": [
+      {
+        "type": "video",
+        "example": "A video call page shows a camera button only when it sees a camera, before the permission pop-up.",
+        "apps": [
+          "Google Meet",
+          "Zoom"
+        ]
+      },
+      {
+        "type": "games",
+        "example": "A browser party game with voice chat shows a mic option only for devices that have one.",
+        "apps": []
+      },
+      {
+        "type": "education",
+        "example": "An online class platform checks you have a camera and mic before a live lesson starts.",
+        "apps": [
+          "Google Classroom"
+        ]
+      },
+      {
+        "type": "live",
+        "example": "A web streaming studio shows a list of inputs after you press start and offers extras if you have two cameras.",
+        "apps": []
+      },
+      {
+        "type": "health",
+        "example": "A telehealth visit checks that you can be seen and heard before the doctor joins.",
+        "apps": []
+      },
+      {
+        "type": "security",
+        "example": "A fraud tool sees a device with no audio outputs and treats it as a server or bot.",
+        "apps": []
+      },
+      {
+        "type": "enterprise",
+        "example": "An IT help page tests meeting room devices from the browser before a big call.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Hardware clue before permission",
+      "Reveals headsets and studio gear"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "No labels or hardware IDs until permission",
+    "Safari hides count until permission"
+  ],
+  "scores": {
+    "sensitivity": 2,
+    "utility": 4,
+    "fingerprint_bits": 2.0,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Hide camera button if none"
+    ],
+    "abuse": [
+      "Peripheral fingerprint",
+      "Detect headset use"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": true,
+      "how": "Media devices (cameras, mics, speakers) enumerated. Read by the LinkedIn APFC fingerprint script (48 features, alleged by BrowserGate, partly confirmed by BleepingComputer)."
+    }
+  },
+  "history": [
+    {
+      "date": "2017-06",
+      "browser": "chrome",
+      "version": "",
+      "change": "Labels blank without permission; deviceId per-origin partitioned"
+    }
+  ],
+  "refs": [
+    {
+      "t": "mdn",
+      "label": "MDN enumerateDevices",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/MediaDevices/enumerateDevices"
+    },
+    {
+      "t": "news",
+      "label": "BrowserGate: how LinkedIn's script works",
+      "url": "https://browsergate.eu/how-it-works/"
+    }
+  ],
+  "confidence": "docs"
+}

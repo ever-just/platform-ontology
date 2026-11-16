@@ -1,0 +1,289 @@
+{
+  "id": "web.device.webgpu-adapter",
+  "name": "WebGPU adapter info",
+  "kind": "signal",
+  "group": "device-system-profile",
+  "subgroup": "Hardware",
+  "tags": [
+    "webgpu",
+    "gpu",
+    "adapter-info",
+    "limits"
+  ],
+  "plain": "GPU vendor, architecture, features and limits through WebGPU.",
+  "meaning": "adapter.info gives vendor and architecture (nvidia, ampere); Chrome blanks device and description by default. Limits (maxTextureDimension2D 8192 or 16384) and the feature list still tier the GPU.",
+  "lifecycle": [
+    "on-arrival",
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "navigator.gpu.requestAdapter().info, adapter.features, adapter.limits",
+      "bcd": [
+        "api.GPUAdapter.info",
+        "api.GPUAdapter.limits"
+      ],
+      "access": {
+        "grant": "none",
+        "prompt_ui": "None",
+        "secure_context": true,
+        "user_gesture": false,
+        "persistence": "read fresh on every page load; nothing stored",
+        "revocation": "none needed (no grant)",
+        "iframe": "Readable from cross-origin iframes too (same values)",
+        "steps": [
+          "Page script reads the value",
+          "No prompt is shown"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "144",
+          "note": "Desktop; Android 121",
+          "date": "2026-01-13"
+        },
+        "edge": {
+          "s": "y",
+          "v": "144",
+          "note": "",
+          "date": "2026-01-21"
+        },
+        "firefox": {
+          "s": "y",
+          "v": "141",
+          "note": "Windows first",
+          "date": "2025-07-22"
+        },
+        "safari": {
+          "s": "y",
+          "v": "26",
+          "note": "",
+          "date": "2025-09-15"
+        },
+        "ios_safari": {
+          "s": "y",
+          "v": "26",
+          "note": "",
+          "date": "2025-09-15"
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "144",
+          "note": "",
+          "date": "2026-01-13"
+        },
+        "samsung": {
+          "s": "y",
+          "v": "28.0",
+          "note": "",
+          "date": "2025-04-02"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "object",
+    "metric": "",
+    "update": "static per session",
+    "fields": [
+      {
+        "name": "vendor",
+        "type": "string",
+        "unit": "",
+        "range": "nvidia, amd, intel, apple, qualcomm",
+        "precision": "coarse"
+      },
+      {
+        "name": "architecture",
+        "type": "string",
+        "unit": "",
+        "range": "e.g. ampere, rdna-3, common-3",
+        "precision": "coarse"
+      },
+      {
+        "name": "device, description",
+        "type": "string",
+        "unit": "",
+        "range": "empty string by default in Chrome",
+        "precision": ""
+      },
+      {
+        "name": "limits",
+        "type": "object",
+        "unit": "",
+        "range": "about 30 numeric limits",
+        "precision": "exact"
+      },
+      {
+        "name": "features",
+        "type": "list",
+        "unit": "",
+        "range": "about 25 names",
+        "precision": ""
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can see your GPU maker, design family, and graphics limits through WebGPU",
+    "user_action": "Nothing. It happens when a page checks for WebGPU",
+    "can": [
+      "See the GPU vendor and architecture, like nvidia or ampere",
+      "See supported features and limits",
+      "Sort your GPU into a performance tier",
+      "Choose heavier or lighter graphics to match"
+    ],
+    "cannot": [
+      "See exact device name or description; Chrome blanks them by default",
+      "See your files or screen contents",
+      "Work on browsers or devices without WebGPU",
+      "Tell much beyond the tier"
+    ],
+    "reach": 2,
+    "reach_label": "GPU tier, silently",
+    "differs": ""
+  },
+  "story": {
+    "what_it_is": "Tells a page your graphics chip's maker, family and limits through the newer WebGPU system.",
+    "icon": "microchip",
+    "tags": [
+      "Graphics",
+      "Games",
+      "Chrome"
+    ],
+    "marketing": [
+      {
+        "vendor": "Google",
+        "name": "WebGPU",
+        "pitch": "Chrome describes it as a modern, fast way for sites to use the graphics chip for 3D and heavy compute.",
+        "url": "https://developer.chrome.com/docs/web-platform/webgpu"
+      },
+      {
+        "vendor": "MDN",
+        "name": "WebGPU API",
+        "pitch": "Docs explain how pages access the graphics chip for rendering and computing.",
+        "url": "https://developer.mozilla.org/en-US/docs/Web/API/WebGPU_API"
+      }
+    ],
+    "for_you": "You never see it asked. A game or an AI tool in the browser quietly checks what your graphics chip can do, so the heavy work runs fast. It also tells the page your chip's maker and family.",
+    "for_makers": "WebGPU lets web apps match native games and run AI models on the graphics chip. Apps need the chip's limits to tune themselves. Chrome blanks the exact device name by default, but the maker, family and limits can still help to fingerprint.",
+    "use_cases": [
+      {
+        "type": "games",
+        "example": "A browser game engine uses WebGPU for console style graphics and picks settings based on adapter limits.",
+        "apps": [
+          "Unity WebGL games",
+          "Babylon.js demos"
+        ]
+      },
+      {
+        "type": "games",
+        "example": "A cloud gaming client uses the graphics adapter to draw video overlays with little delay.",
+        "apps": [
+          "GeForce NOW"
+        ]
+      },
+      {
+        "type": "creative",
+        "example": "A browser video editor or photo tool runs effects on the graphics chip when it sees enough power.",
+        "apps": [
+          "Photopea",
+          "Clipchamp"
+        ]
+      },
+      {
+        "type": "developer",
+        "example": "A web app runs a small AI model on the device by checking adapter limits first.",
+        "apps": [
+          "Transformers.js demos"
+        ]
+      },
+      {
+        "type": "productivity",
+        "example": "A browser notes or design tool lowers 3D effects when the adapter is weak.",
+        "apps": [
+          "Figma"
+        ]
+      },
+      {
+        "type": "security",
+        "example": "A fraud service compares adapter info with the claimed device to spot fakes.",
+        "apps": []
+      },
+      {
+        "type": "ads",
+        "example": "A fingerprint vendor adds vendor, family and limits to a device ID.",
+        "apps": [
+          "FingerprintJS"
+        ]
+      }
+    ],
+    "risks": [
+      "New fingerprint source",
+      "Hardware family revealed"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Chrome withholds exact GPU model",
+    "Secure context only"
+  ],
+  "scores": {
+    "sensitivity": 1,
+    "utility": 4,
+    "fingerprint_bits": 3.5,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Pick compute path"
+    ],
+    "abuse": [
+      "GPU tier fingerprint"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2023-04",
+      "browser": "chrome",
+      "version": "113",
+      "change": "Shipped; device and description withheld by default"
+    },
+    {
+      "date": "2025-06",
+      "browser": "firefox",
+      "version": "141",
+      "change": "Shipped on Windows"
+    },
+    {
+      "date": "2025-09",
+      "browser": "safari",
+      "version": "26",
+      "change": "Shipped on macOS and iOS 26"
+    }
+  ],
+  "related": [
+    "web.device.webgl-renderer"
+  ],
+  "refs": [
+    {
+      "t": "mdn",
+      "label": "MDN GPUAdapterInfo",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/GPUAdapterInfo"
+    },
+    {
+      "t": "spec",
+      "label": "WebGPU spec",
+      "url": "https://www.w3.org/TR/webgpu/"
+    }
+  ],
+  "confidence": "inferred"
+}

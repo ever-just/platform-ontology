@@ -1,0 +1,217 @@
+{
+  "id": "web.notexposed.disk-free-space",
+  "name": "Free disk space",
+  "kind": "not-exposed",
+  "group": "device-system-profile",
+  "subgroup": "Hardware",
+  "tags": [
+    "not-exposed",
+    "disk",
+    "storage"
+  ],
+  "plain": "Exact free disk space is hidden; a fuzzy quota estimate leaks.",
+  "meaning": "navigator.storage.estimate().quota is about 60% of disk in Chrome and Safari 17, with noise. Exact free space and total disk size are not exposed; quota gives bits of a size class (256 GB vs 512 GB vs 1 TB).",
+  "lifecycle": [
+    "on-arrival",
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "navigator.storage.estimate()",
+      "access": {
+        "grant": "not-exposed",
+        "prompt_ui": "None",
+        "secure_context": false,
+        "user_gesture": false,
+        "persistence": "read fresh on every page load; nothing stored",
+        "revocation": "not applicable",
+        "iframe": "Readable from cross-origin iframes too (same values)",
+        "steps": [
+          "Page script reads the value",
+          "No prompt is shown"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "edge": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "firefox": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "safari": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "ios_safari": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "chrome_android": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "samsung": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "none",
+    "metric": "",
+    "update": "static per session",
+    "fields": [
+      {
+        "name": "proxy: storage.estimate quota",
+        "type": "string",
+        "unit": "",
+        "range": "tens to thousands of GB, approx 60% of disk, bucketed in private mode",
+        "precision": ""
+      },
+      {
+        "name": "proxy: usage",
+        "type": "string",
+        "unit": "",
+        "range": "bytes used by this origin only",
+        "precision": ""
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can't see exact free disk space, only a fuzzy storage quota",
+    "user_action": "Nothing. It happens when a page checks how much it can store",
+    "can": [
+      "See a storage quota, about 60% of disk in Chrome and Safari 17",
+      "See how much the site has already used",
+      "Guess a disk size class, like 256 GB, 512 GB, or 1 TB"
+    ],
+    "cannot": [
+      "See exact free space",
+      "See your total disk size",
+      "See other sites' stored data",
+      "Get a clean number; noise is added"
+    ],
+    "reach": 1,
+    "reach_label": "A rough quota only",
+    "differs": ""
+  },
+  "story": {
+    "what_it_is": "Exact free disk space is hidden, but a fuzzy storage figure still leaks a rough size.",
+    "icon": "hard-drive",
+    "tags": [
+      "Blocked",
+      "Storage",
+      "Privacy"
+    ],
+    "marketing": [
+      {
+        "vendor": "Google",
+        "name": "Storage for the web",
+        "pitch": "web.dev explains the storage figure sites get, which is a rough budget rather than free space.",
+        "url": "https://web.dev/articles/storage-for-the-web"
+      }
+    ],
+    "for_you": "Sites cannot see how full your disk is. They get a rough budget for their own storage. That budget can still hint at how large your disk is.",
+    "for_makers": "Free space and exact disk size would be a valuable clue about a device. The web gives a rough quota instead. Apps use the quota to plan offline downloads.",
+    "use_cases": [
+      {
+        "type": "games",
+        "example": "A browser game wanted exact free space to plan big downloads and uses the quota.",
+        "apps": []
+      },
+      {
+        "type": "video",
+        "example": "A streaming site wanted free space before offline downloads and checks quota too.",
+        "apps": [
+          "Netflix"
+        ]
+      },
+      {
+        "type": "productivity",
+        "example": "An offline notes app wanted to avoid a full disk and handles failed saves gracefully.",
+        "apps": []
+      },
+      {
+        "type": "security",
+        "example": "A fraud team wanted disk size to spot virtual machines and uses the quota.",
+        "apps": []
+      },
+      {
+        "type": "ads",
+        "example": "An advertiser wanted disk size as a wealth signal and gets only the fuzzy quota.",
+        "apps": []
+      },
+      {
+        "type": "creative",
+        "example": "A browser editor wanted exact space for big projects and asks before caching.",
+        "apps": [
+          "Clipchamp"
+        ]
+      },
+      {
+        "type": "utilities",
+        "example": "A cleanup site wanted to show how full your disk is and cannot.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Quota still hints at disk size"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Disk class fingerprint"
+  ],
+  "scores": {
+    "sensitivity": 2,
+    "utility": 2,
+    "fingerprint_bits": 0.0,
+    "friction": 3
+  },
+  "value": {
+    "legit_uses": [
+      "None: the browser deliberately withholds it"
+    ],
+    "abuse": [
+      "Sites attempt proxies to recover it"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "related": [
+    "web.device.storage-estimate"
+  ],
+  "refs": [
+    {
+      "t": "mdn",
+      "label": "MDN StorageManager.estimate",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/StorageManager/estimate"
+    },
+    {
+      "t": "vendor",
+      "label": "Chrome storage quota docs",
+      "url": "https://web.dev/articles/storage-for-the-web"
+    }
+  ],
+  "confidence": "docs"
+}

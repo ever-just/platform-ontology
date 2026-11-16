@@ -1,0 +1,229 @@
+{
+  "id": "web.net.sec-ch-ua",
+  "name": "Sec-CH-UA low entropy hints and reduced User-Agent",
+  "kind": "signal",
+  "group": "network-connectivity",
+  "subgroup": "Headers",
+  "tags": [
+    "sec-ch-ua",
+    "user-agent",
+    "reduction",
+    "brand"
+  ],
+  "plain": "Chromium sends brand, mobile flag and platform in every request by default, with a frozen User-Agent string.",
+  "meaning": "Sec-CH-UA lists browser brands and major versions (with a GREASE brand), Sec-CH-UA-Mobile and Sec-CH-UA-Platform. The User-Agent string is frozen to a reduced form in Chrome 110 and later.",
+  "lifecycle": [
+    "on-arrival"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "Sec-CH-UA, Sec-CH-UA-Mobile, Sec-CH-UA-Platform request headers; navigator.userAgentData",
+      "bcd": [
+        "api.NavigatorUAData"
+      ],
+      "access": {
+        "grant": "none",
+        "prompt_ui": "",
+        "secure_context": false,
+        "user_gesture": false,
+        "persistence": "",
+        "revocation": "",
+        "iframe": "",
+        "steps": [
+          "Browser attaches headers by default",
+          "Server reads",
+          "Script can call getHighEntropyValues"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "90",
+          "note": "",
+          "date": "2021-04-13"
+        },
+        "edge": {
+          "s": "y",
+          "v": "90",
+          "note": "",
+          "date": "2021-04-15"
+        },
+        "firefox": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "safari": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "ios_safari": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "90",
+          "note": "",
+          "date": "2021-04-13"
+        },
+        "samsung": {
+          "s": "y",
+          "v": "23.0",
+          "note": "",
+          "date": "2023-10-18"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "list",
+    "metric": "3 headers",
+    "update": "",
+    "fields": [
+      {
+        "name": "Sec-CH-UA",
+        "type": "string",
+        "unit": "",
+        "range": "brand list with versions",
+        "precision": "exact major version"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can see your browser brand, major version, phone or computer type, and system in Chromium browsers",
+    "user_action": "Nothing. Chrome, Edge and Samsung Internet send it with every request",
+    "can": [
+      "See your browser brand and its main version number",
+      "Tell if you are on a phone or a computer",
+      "See your operating system name",
+      "Ask for more detail such as exact version or device model, which the browser may then share"
+    ],
+    "cannot": [
+      "See your exact device model or full version unless it asks and the browser agrees",
+      "Get this from Firefox or Safari, which do not send it",
+      "See your name or account",
+      "Rely on the older browser name string, which is now kept short and generic"
+    ],
+    "reach": 2,
+    "reach_label": "Browser type on every request",
+    "differs": "Chrome, Edge and Samsung Internet send it by default. Firefox and Safari, including all iPhone browsers, do not."
+  },
+  "story": {
+    "what_it_is": "Chrome based browsers tell every site your browser brand, whether you are on mobile, and your system type.",
+    "icon": "scan-search",
+    "tags": [
+      "Silent",
+      "Browser info",
+      "Tracking"
+    ],
+    "marketing": [
+      {
+        "vendor": "Google Chrome",
+        "name": "User-Agent Client Hints",
+        "pitch": "Chrome freezes the old browser string and shares details only when a site asks, to cut passive tracking.",
+        "url": "https://developer.chrome.com/docs/privacy-security/user-agent-client-hints"
+      }
+    ],
+    "for_you": "You never see it. Each page request includes a short note: your browser brand, if it is a phone, and your platform. A site asks for more detail, such as device model, only if it needs it.",
+    "for_makers": "Makers use the basic note to serve the right layout, the right app download link and the right video format. The old long browser string is frozen, so finer detail needs an extra request, which browsers can limit.",
+    "use_cases": [
+      {
+        "type": "media",
+        "example": "A video site reads the platform and mobile flag and offers a phone friendly player without any page code running first.",
+        "apps": [
+          "YouTube"
+        ]
+      },
+      {
+        "type": "games",
+        "example": "A browser game portal sees you are on a phone and loads touch controls and a lighter graphics build.",
+        "apps": []
+      },
+      {
+        "type": "ads",
+        "example": "An ad network picks banner sizes that fit mobile or desktop, and filters traffic whose claimed browser does not match its hints.",
+        "apps": []
+      },
+      {
+        "type": "shopping",
+        "example": "A store shows a link to its Android app on Android and its iPhone app on iOS using the platform hint.",
+        "apps": []
+      },
+      {
+        "type": "analytics",
+        "example": "A dashboard counts visits by browser brand and system without relying on the old, hard to read string.",
+        "apps": []
+      },
+      {
+        "type": "security",
+        "example": "A login system notes the brand and platform of a trusted device, and flags a sudden change as suspicious.",
+        "apps": []
+      },
+      {
+        "type": "developer",
+        "example": "A developer decides which older browsers to still support by reading hint counts from live traffic.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Narrows a fingerprint",
+      "Chromium only"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Platform string quantized, GREASE brand randomizes order",
+    "Firefox and Safari do not send it"
+  ],
+  "scores": {
+    "sensitivity": 2,
+    "utility": 4,
+    "fingerprint_bits": 2,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": "Compatibility detection",
+    "abuse": "Browser and OS identification"
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2022-05",
+      "browser": "chrome",
+      "version": "101",
+      "change": "Minor versions zeroed"
+    },
+    {
+      "date": "2023-06",
+      "browser": "chrome",
+      "version": "110",
+      "change": "User-Agent reduction on all platforms"
+    }
+  ],
+  "related": [
+    "web.net.client-hints"
+  ],
+  "refs": [
+    {
+      "t": "spec",
+      "label": "WICG UA Client Hints",
+      "url": "https://wicg.github.io/ua-client-hints/"
+    },
+    {
+      "t": "mdn",
+      "label": "MDN NavigatorUAData",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/NavigatorUAData"
+    }
+  ],
+  "confidence": "docs"
+}

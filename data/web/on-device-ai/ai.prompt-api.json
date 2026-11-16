@@ -1,0 +1,271 @@
+{
+  "id": "web.ai.prompt-api",
+  "name": "Prompt API (LanguageModel, Gemini Nano)",
+  "kind": "capability",
+  "group": "on-device-ai",
+  "subgroup": "Built in AI",
+  "tags": [
+    "built in ai"
+  ],
+  "plain": "Runs a local language model in Chrome and lets a page prompt it.",
+  "meaning": "Page text and the person's input stay on the device. The page can summarise, classify or chat without sending data to a server.",
+  "lifecycle": [
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "await LanguageModel.availability(); const s = await LanguageModel.create({temperature,topK,initialPrompts,expectedInputs}); s.prompt(text), promptStreaming()",
+      "permissions_policy": "language-model",
+      "bcd": [
+        "api.LanguageModel"
+      ],
+      "access": {
+        "grant": "gesture",
+        "prompt_ui": "Download progress on first use; user activation needed before create()",
+        "secure_context": true,
+        "user_gesture": true,
+        "persistence": "Model stays on disk until eviction (below 10 GB free)",
+        "revocation": "chrome://on-device-internals",
+        "iframe": "Same as top level; cross-origin iframes need a permissions policy where listed",
+        "steps": [
+          "Call the API",
+          "Browser applies its access rules",
+          "Page receives the result"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "148",
+          "note": "",
+          "date": "2026-05-05"
+        },
+        "edge": {
+          "s": "f",
+          "v": "138",
+          "note": "Behind flag"
+        },
+        "firefox": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "safari": {
+          "s": "n",
+          "v": "",
+          "note": " "
+        },
+        "ios_safari": {
+          "s": "n",
+          "v": "",
+          "note": "No iOS"
+        },
+        "chrome_android": {
+          "s": "n",
+          "v": "",
+          "note": "No Android"
+        },
+        "samsung": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "object",
+    "metric": "Runs a local language model in Chrome and lets a page prompt it.",
+    "update": "on demand",
+    "fields": [
+      {
+        "name": "availability",
+        "type": "enum",
+        "range": "unavailable, downloadable, downloading, available"
+      },
+      {
+        "name": "contextWindow",
+        "type": "integer",
+        "unit": "tokens",
+        "range": "model defined, reported at runtime",
+        "precision": "contextUsage and contextoverflow event"
+      },
+      {
+        "name": "languages",
+        "type": "list",
+        "range": "en, ja, es, de, fr",
+        "precision": "input and output"
+      },
+      {
+        "name": "input types",
+        "type": "list",
+        "range": "text, image (several element types), audio (AudioBuffer, ArrayBuffer, Blob)",
+        "precision": "output is text only"
+      },
+      {
+        "name": "temperature / topK",
+        "type": "float",
+        "range": "extensions: default topK 3, max 128; default temp 1, max 2",
+        "precision": "must be set together"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can run a small AI model on your device with text you give the page",
+    "user_action": "You tap a button like Summarize, Reply or Ask AI on the page",
+    "can": [
+      "Send the page text or your message to a local AI model",
+      "Get summaries, labels, smart replies or chat answers without a server",
+      "Download the model the first time, which can take a while"
+    ],
+    "cannot": [
+      "Start before a click or tap",
+      "Send your text to a server for this feature",
+      "Work in Firefox, Safari or on Chrome for Android",
+      "Run on computers without enough space and a capable chip"
+    ],
+    "reach": 2,
+    "reach_label": "While the page is open",
+    "differs": "Chrome on desktop supports it; Edge is in testing. Firefox, Safari and all phones do not."
+  },
+  "story": {
+    "what_it_is": "A page can talk to a small AI chat model built into Chrome, running on your own computer.",
+    "icon": "bot",
+    "tags": [
+      "AI",
+      "On device",
+      "Asks first"
+    ],
+    "marketing": [
+      {
+        "vendor": "Google Chrome",
+        "name": "Prompt API",
+        "pitch": "Lets web pages send prompts to Gemini Nano in Chrome, so AI features run locally, privately and offline.",
+        "url": "https://developer.chrome.com/docs/ai/built-in"
+      }
+    ],
+    "for_you": "A site can offer an AI helper that works without sending your words to a server. You may wait for a model download the first time. It starts after you click or tap.",
+    "for_makers": "Makers get a free, private AI that works offline and costs no cloud fees. It lets them build smart features at scale. The model is small, so results are simpler than big cloud AI.",
+    "use_cases": [
+      {
+        "type": "games",
+        "example": "A browser role play game uses the local model to make non player characters talk back, with no server bill per player.",
+        "apps": []
+      },
+      {
+        "type": "productivity",
+        "example": "A web notes app answers questions about your own notes, with the notes never leaving your device.",
+        "apps": [
+          "Notion"
+        ]
+      },
+      {
+        "type": "education",
+        "example": "A study site quizzes a student on their own text offline on a school laptop.",
+        "apps": []
+      },
+      {
+        "type": "messaging",
+        "example": "A chat app suggests replies from the conversation on device.",
+        "apps": []
+      },
+      {
+        "type": "shopping",
+        "example": "A store assistant helps pick a product from specs in the page, with no external AI service.",
+        "apps": []
+      },
+      {
+        "type": "creative",
+        "example": "A web design tool suggests names and text for a layout on the device.",
+        "apps": [
+          "Figma"
+        ]
+      },
+      {
+        "type": "accessibility",
+        "example": "A page explains hard terms in simpler words for a reader, with nothing sent out.",
+        "apps": []
+      },
+      {
+        "type": "developer",
+        "example": "A developer builds a form that extracts details from free text on the device.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Large download",
+      "Simple answers, can be wrong"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Hardware: Windows 10 or 11, macOS 13+, Linux, or ChromeOS Plus; 22 GB free disk; GPU over 4 GB VRAM or CPU with 16 GB RAM and 4 cores",
+    "Not on Android, iOS or non Plus ChromeOS",
+    "Model removed if free space drops below 10 GB",
+    "Not available in Web Workers; cross origin iframes need allow=\"language-model\"",
+    "Output can be constrained to a regex or JSON schema"
+  ],
+  "scores": {
+    "sensitivity": 2,
+    "utility": 4,
+    "fingerprint_bits": null,
+    "friction": 2
+  },
+  "value": {
+    "legit_uses": [
+      "Local summarisation",
+      "Smart replies",
+      "Offline helpers"
+    ],
+    "abuse": [
+      "Prompt fingerprinting by availability state",
+      "Heavy downloads"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2024",
+      "browser": "chrome",
+      "version": "138",
+      "change": "Prompt API stable for extensions"
+    },
+    {
+      "date": "2026-05",
+      "browser": "chrome",
+      "version": "148",
+      "change": "Prompt API stable on the web (per BCD; page text inconsistent)"
+    },
+    {
+      "date": "2025",
+      "browser": "edge",
+      "version": "138",
+      "change": "Edge behind a flag"
+    }
+  ],
+  "refs": [
+    {
+      "t": "vendor",
+      "label": "Chrome built in AI",
+      "url": "https://developer.chrome.com/docs/ai/built-in"
+    },
+    {
+      "t": "mdn",
+      "label": "MDN LanguageModel",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/LanguageModel"
+    },
+    {
+      "t": "spec",
+      "label": "Prompt API explainer",
+      "url": "https://github.com/webmachinelearning/prompt-api"
+    }
+  ],
+  "confidence": "verified"
+}

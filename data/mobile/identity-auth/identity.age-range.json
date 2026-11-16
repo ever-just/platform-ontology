@@ -1,0 +1,231 @@
+{
+  "id": "mob.identity.age-range",
+  "name": "Age range signal",
+  "kind": "signal",
+  "group": "identity-auth",
+  "subgroup": "Age",
+  "tags": [
+    "age",
+    "children",
+    "regulation",
+    "age-range",
+    "declared-age-range",
+    "age-assurance",
+    "texas",
+    "ios-26"
+  ],
+  "plain": "Asks the OS whether the user is in an age band, without giving a birth date.",
+  "meaning": "Added to meet child safety laws. Both OSes return a range and a basis, not a date of birth.",
+  "lifecycle": [
+    "in-session",
+    "on-launch",
+    "signed-in"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "y",
+      "v": "Play services",
+      "permission": "None; Play Age Signals API",
+      "protection": "none",
+      "grant": "none",
+      "prompt_ui": "None",
+      "persistence": "n/a",
+      "revocation": "n/a",
+      "store_policy": "Play: Age Signals policy",
+      "api_surface": "AgeSignalsManager",
+      "note": "Returns verified or supervised status and age lower and upper bounds"
+    },
+    "ios": {
+      "s": "y",
+      "v": "26",
+      "permission": "com.apple.developer.declared-age-range",
+      "protection": "entitlement",
+      "grant": "prompt",
+      "prompt_ui": "Share age range sheet",
+      "persistence": "Until revoked",
+      "revocation": "Settings > Apple Account",
+      "store_policy": "Apple age rating policy",
+      "api_surface": "DeclaredAgeRange, AgeRangeService",
+      "note": "Parent can approve sharing; returns bands such as 13 to 15"
+    }
+  },
+  "data": {
+    "type": "object",
+    "metric": "Age range",
+    "update": "per request",
+    "fields": [
+      {
+        "name": "lower",
+        "type": "integer",
+        "unit": "years",
+        "range": "0 to 18+",
+        "precision": ""
+      },
+      {
+        "name": "upper",
+        "type": "integer",
+        "unit": "years",
+        "range": "bands",
+        "precision": ""
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can learn your age band, such as 13 to 15, but not your birth date",
+    "user_action": "You approve sharing your age range, or a parent approves for a child",
+    "can": [
+      "Ask the phone for your age band (for example under 13, 13 to 15, or 18 and over)",
+      "Learn whether a parent supervises the account",
+      "Turn on age fitting features, like limited chat for teens"
+    ],
+    "cannot": [
+      "See your birth date or exact age",
+      "See your name, ID or address",
+      "Get an answer if you or a parent decline sharing (iPhone)",
+      "Verify your age with an ID check by itself"
+    ],
+    "reach": 1,
+    "reach_label": "An age band, not a birth date",
+    "differs": "iPhone asks you and lets a parent approve. Android gives a verified or supervised status plus lower and upper age limits."
+  },
+  "story": {
+    "what_it_is": "An app asks the phone which age group you are in, without learning your birth date.",
+    "icon": "cake",
+    "tags": [
+      "Kids",
+      "Privacy",
+      "Asks first"
+    ],
+    "marketing": [
+      {
+        "vendor": "Apple",
+        "name": "Declared Age Range",
+        "pitch": "Apps can ask for an age range that a parent or user has shared, without learning exact birth dates.",
+        "url": "https://developer.apple.com/documentation/declaredagerange"
+      },
+      {
+        "vendor": "Google",
+        "name": "Play Age Signals",
+        "pitch": "Google gives apps an age signal to help them follow child safety laws.",
+        "url": "https://developer.android.com/google/play/age-signals"
+      }
+    ],
+    "for_you": "You or a parent set your age once. An app may ask for your age group, and you may see a prompt asking whether to share it. Teens may see a more limited version of the app.",
+    "for_makers": "New laws push app makers to protect children, and a trustworthy age signal is easier than checking IDs. The rule is that the app gets a band like 13 to 15, not a date. Getting it wrong either shuts out young users or puts them in unsafe spaces.",
+    "use_cases": [
+      {
+        "type": "social",
+        "example": "A social app switches off direct messages from strangers for people in the teen band.",
+        "apps": [
+          "Instagram",
+          "Snapchat"
+        ]
+      },
+      {
+        "type": "games",
+        "example": "A game turns off open voice chat and loot box offers for under 13 players.",
+        "apps": [
+          "Roblox",
+          "Fortnite"
+        ]
+      },
+      {
+        "type": "media",
+        "example": "A video app picks a kids profile when the age signal says a child is watching.",
+        "apps": [
+          "YouTube Kids"
+        ]
+      },
+      {
+        "type": "dating",
+        "example": "A dating app keeps minors out by asking the phone for an age check instead of a typed birthday.",
+        "apps": []
+      },
+      {
+        "type": "shopping",
+        "example": "A store hides age restricted items from younger shoppers.",
+        "apps": []
+      },
+      {
+        "type": "kids",
+        "example": "A learning app asks a parent to approve a child's account when the age band says under 13.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Locks out young users unfairly",
+      "Age band can still be shared widely"
+    ],
+    "android_note": "Android apps get an age signal through Google Play for supervised accounts and in places where laws require it.",
+    "ios_note": "iPhone shows a prompt and the person or a parent decides whether to share a range with the app."
+  },
+  "technical_bounds": [
+    "Range only, not exact birth date",
+    "User or parent can decline",
+    "Law status in Texas was in court at time of writing"
+  ],
+  "scores": {
+    "sensitivity": 3,
+    "utility": 3,
+    "fingerprint_bits": 3,
+    "friction": 2
+  },
+  "value": {
+    "legit_uses": [
+      "Child safety compliance"
+    ],
+    "abuse": [
+      "Excluding young users"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2025-12",
+      "platform": "ios",
+      "version": "iOS 26.2",
+      "change": "Texas related APIs added (as announced)"
+    },
+    {
+      "date": "2025-09",
+      "platform": "ios",
+      "version": "iOS 26",
+      "change": "Declared Age Range introduced"
+    },
+    {
+      "date": "2025-06",
+      "platform": "ios",
+      "version": "iOS 26",
+      "change": "Declared Age Range framework introduced"
+    }
+  ],
+  "related": [
+    "mob.identity.sign-in-with-apple",
+    "mob.policy.play-age-signals",
+    "mob.policy.families-kids"
+  ],
+  "refs": [
+    {
+      "t": "apple",
+      "label": "Apple: Declared Age Range",
+      "url": "https://developer.apple.com/documentation/declaredagerange"
+    },
+    {
+      "t": "android",
+      "label": "Android: Play Age Signals",
+      "url": "https://developer.android.com/google/play/age-signals"
+    },
+    {
+      "t": "apple",
+      "label": "Apple: Texas age assurance update",
+      "url": "https://developer.apple.com/news/"
+    }
+  ],
+  "confidence": "inferred"
+}

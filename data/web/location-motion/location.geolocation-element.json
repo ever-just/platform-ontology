@@ -1,0 +1,264 @@
+{
+  "id": "web.location.geolocation-element",
+  "name": "HTML <geolocation> element",
+  "kind": "permission",
+  "group": "location-motion",
+  "subgroup": "Position",
+  "tags": [
+    "capability-element",
+    "chrome-only"
+  ],
+  "plain": "A browser-drawn button that asks for location; the click itself is the request.",
+  "meaning": "Same data as Geolocation, but the request starts from a trusted button the site cannot disguise, so prompts only appear when the person asked. Chrome can also re-ask after a block.",
+  "lifecycle": [
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "<geolocation autolocate accuracymode=\"precise|approximate\" watch onlocation=...>; element.position, element.error",
+      "permission_name": "geolocation",
+      "permissions_policy": "geolocation",
+      "bcd": [
+        "api.HTMLGeolocationElement"
+      ],
+      "access": {
+        "grant": "prompt",
+        "prompt_ui": "Browser-drawn button with fixed text and icon; a click opens the normal location prompt, re-reads silently if already granted, and offers a recovery path if blocked.",
+        "secure_context": true,
+        "user_gesture": true,
+        "persistence": "Same stored geolocation permission as the script API",
+        "revocation": "Same as Geolocation; element matches :granted",
+        "iframe": "Needs allow=\"geolocation\" in cross-origin iframes",
+        "steps": [
+          "Add <geolocation> to the page",
+          "Person clicks the browser-drawn button",
+          "Browser runs the permission flow",
+          "location event fires; read element.position or element.error"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "144",
+          "note": "Developer blog 2026-01-13, generic <permission> element was an origin trial in Chrome 126 to 143",
+          "date": "2026-01-13"
+        },
+        "edge": {
+          "s": "y",
+          "v": "144",
+          "note": "",
+          "date": "2026-01-21"
+        },
+        "firefox": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "safari": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "ios_safari": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "144",
+          "note": "",
+          "date": "2026-01-13"
+        },
+        "samsung": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "object",
+    "metric": "GeolocationPosition delivered through an element",
+    "update": "one-shot, or continuous with the watch attribute",
+    "fields": [
+      {
+        "name": "autolocate",
+        "type": "boolean attribute",
+        "unit": "none",
+        "range": "present or absent",
+        "precision": "only reuses an existing grant, never prompts on load"
+      },
+      {
+        "name": "accuracymode",
+        "type": "enum attribute",
+        "unit": "none",
+        "range": "precise or approximate",
+        "precision": "maps to enableHighAccuracy"
+      },
+      {
+        "name": "position",
+        "type": "object",
+        "unit": "GeolocationPosition",
+        "range": "same as navigator.geolocation",
+        "precision": "same"
+      },
+      {
+        "name": "style contrast",
+        "type": "rule",
+        "unit": "ratio",
+        "range": "about 3:1 minimum",
+        "precision": "browser refuses low-contrast or disguised styling"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can show a browser made button that asks for your location when you tap it",
+    "user_action": "You tap the Use my location button drawn by the browser",
+    "can": [
+      "Ask for your location when you tap the button",
+      "Share your position again quietly if you already allowed it",
+      "Offer a way to turn location back on if you blocked it"
+    ],
+    "cannot": [
+      "Ask in the background or without your tap",
+      "Change the button's text or icon to trick you",
+      "Work in Firefox or Safari"
+    ],
+    "reach": 2,
+    "reach_label": "Only after you tap, then while allowed",
+    "differs": "Only Chrome and Edge have it so far. Firefox and Safari use the normal location prompt."
+  },
+  "story": {
+    "what_it_is": "A button the browser draws that asks for location, so your click is the request.",
+    "icon": "navigation",
+    "tags": [
+      "Location",
+      "Asks first",
+      "Button"
+    ],
+    "marketing": [
+      {
+        "vendor": "Google Chrome",
+        "name": "HTML geolocation element",
+        "pitch": "Chrome describes a built in button for location so people can grant access with one clear click and sites avoid pop up fatigue.",
+        "url": "https://developer.chrome.com/blog/geolocation-html-element"
+      }
+    ],
+    "for_you": "You see a button such as 'Use my location' that looks like part of your browser. You press it and the browser asks once. Because you clicked it yourself, there is less chance of a pop up scam.",
+    "for_makers": "Makers get more yes answers because people trust a clear browser button. It avoids ugly pop ups that people block by reflex, which helps maps, delivery and booking funnels.",
+    "use_cases": [
+      {
+        "type": "maps",
+        "example": "A store locator shows a 'Use my location' button that finds the nearest shop.",
+        "apps": [
+          "Starbucks",
+          "Walmart"
+        ]
+      },
+      {
+        "type": "delivery",
+        "example": "A food order page uses the button so an address is filled in with one click.",
+        "apps": [
+          "DoorDash",
+          "Domino's"
+        ]
+      },
+      {
+        "type": "travel",
+        "example": "A hotel search page uses it to show stays nearby.",
+        "apps": [
+          "Booking.com"
+        ]
+      },
+      {
+        "type": "games",
+        "example": "A location based web game shows a 'Start playing here' button that unlocks nearby quests.",
+        "apps": []
+      },
+      {
+        "type": "rideshare",
+        "example": "A ride web page sets pickup using the button.",
+        "apps": [
+          "Uber"
+        ]
+      },
+      {
+        "type": "security",
+        "example": "The trusted button makes it harder for a fake page to trick people into a hidden location request.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Still shares real location",
+      "New feature, not everywhere"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Cannot be restyled to hide or disguise it (contrast, opacity, size, transform checks)",
+    "autolocate cannot trigger a prompt",
+    "Not in Firefox or Safari: feature detect with 'HTMLGeolocationElement' in window"
+  ],
+  "scores": {
+    "sensitivity": 5,
+    "utility": 4,
+    "fingerprint_bits": null,
+    "friction": 1
+  },
+  "value": {
+    "legit_uses": [
+      "Higher grant rates from clear intent (Immobiliare.it reported +20% successful flows)",
+      "Recovery after a block (ZapImoveis reported 54.4%)"
+    ],
+    "abuse": [
+      "Pushing the element everywhere to harvest location"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2024-06",
+      "browser": "chrome",
+      "version": "126",
+      "change": "Generic <permission> element origin trial begins"
+    },
+    {
+      "date": "2026-01",
+      "browser": "chrome",
+      "version": "144",
+      "change": "<geolocation> available"
+    },
+    {
+      "date": "2026-06",
+      "browser": "chrome",
+      "version": "151",
+      "change": "Sister element <usermedia> for camera and microphone announced as available"
+    }
+  ],
+  "related": [
+    "web.location.geolocation",
+    "web.camera.usermedia-element"
+  ],
+  "refs": [
+    {
+      "t": "chromestatus",
+      "label": "Chrome blog: geolocation HTML element",
+      "url": "https://developer.chrome.com/blog/geolocation-html-element"
+    },
+    {
+      "t": "github",
+      "label": "WICG PEPC explainer",
+      "url": "https://github.com/WICG/PEPC"
+    }
+  ],
+  "confidence": "verified"
+}

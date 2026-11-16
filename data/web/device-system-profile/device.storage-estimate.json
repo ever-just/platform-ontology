@@ -1,0 +1,251 @@
+{
+  "id": "web.device.storage-estimate",
+  "name": "Storage quota estimate",
+  "kind": "signal",
+  "group": "device-system-profile",
+  "subgroup": "Storage",
+  "tags": [
+    "storage",
+    "quota",
+    "disk-size",
+    "incognito"
+  ],
+  "plain": "Reports how much storage the origin may use, which tracks total disk size.",
+  "meaning": "Chrome and Safari set the quota near 60% of total disk, so quota reveals disk size within a few GB, and Incognito shows a much smaller number. Also usage shows how much the site has already stored.",
+  "lifecycle": [
+    "on-arrival",
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "navigator.storage.estimate()",
+      "bcd": [
+        "api.StorageManager.estimate"
+      ],
+      "access": {
+        "grant": "none",
+        "prompt_ui": "None",
+        "secure_context": true,
+        "user_gesture": false,
+        "persistence": "read fresh on every page load; nothing stored",
+        "revocation": "none needed (no grant)",
+        "iframe": "Readable from cross-origin iframes too (same values)",
+        "steps": [
+          "Page script reads the value",
+          "No prompt is shown"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "61",
+          "note": "",
+          "date": "2017-09-05"
+        },
+        "edge": {
+          "s": "y",
+          "v": "79",
+          "note": "",
+          "date": "2020-01-15"
+        },
+        "firefox": {
+          "s": "y",
+          "v": "57",
+          "note": "",
+          "date": "2017-11-14"
+        },
+        "safari": {
+          "s": "y",
+          "v": "17",
+          "note": "",
+          "date": "2023-09-18"
+        },
+        "ios_safari": {
+          "s": "y",
+          "v": "17",
+          "note": "",
+          "date": "2023-09-18"
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "61",
+          "note": "",
+          "date": "2017-09-05"
+        },
+        "samsung": {
+          "s": "y",
+          "v": "8.0",
+          "note": "",
+          "date": "2018-07-18"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "object",
+    "metric": "",
+    "update": "static per session",
+    "fields": [
+      {
+        "name": "quota",
+        "type": "integer",
+        "unit": "bytes",
+        "range": "about 100 MB to several TB",
+        "precision": "Chrome adds small noise and bucketing in some versions"
+      },
+      {
+        "name": "usage",
+        "type": "integer",
+        "unit": "bytes",
+        "range": "0 up to quota",
+        "precision": "padded for opaque responses"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can see how much storage the site may use, which tracks your disk size",
+    "user_action": "Nothing. It happens when the page loads",
+    "can": [
+      "See the storage quota, about 60% of total disk in Chrome and Safari",
+      "See how much the site has already stored",
+      "Guess your disk size class from the quota",
+      "Spot a private window from its smaller quota"
+    ],
+    "cannot": [
+      "See exact free disk space",
+      "See other sites' stored data",
+      "Look at your files",
+      "Be exact; numbers have noise and rounding"
+    ],
+    "reach": 2,
+    "reach_label": "A rough disk size class",
+    "differs": ""
+  },
+  "story": {
+    "what_it_is": "Tells a site how much storage it may use, which is tied to your disk size.",
+    "icon": "hard-drive",
+    "tags": [
+      "Storage",
+      "Silent",
+      "Fingerprinting"
+    ],
+    "marketing": [
+      {
+        "vendor": "Google",
+        "name": "Storage for the web",
+        "pitch": "web.dev explains how sites can ask how much space they may use and plan around it.",
+        "url": "https://web.dev/articles/storage-for-the-web"
+      }
+    ],
+    "for_you": "You never see it. A site that stores big offline files, like a game or movie, can ask how much room it has so it does not fail. The answer also says something about your disk size.",
+    "for_makers": "Apps that work offline need to know whether a download will fit. The quota is around 60 percent of the disk in some browsers, so it leaks disk size. Private windows show a smaller number, which is why some sites also use it to spot private mode.",
+    "use_cases": [
+      {
+        "type": "games",
+        "example": "A browser game with large offline assets checks storage space before downloading the next level pack.",
+        "apps": []
+      },
+      {
+        "type": "video",
+        "example": "A streaming site checks room before letting you save a movie for offline viewing.",
+        "apps": [
+          "Netflix"
+        ]
+      },
+      {
+        "type": "productivity",
+        "example": "An offline first notes or email web app checks space before saving mailbox data.",
+        "apps": []
+      },
+      {
+        "type": "creative",
+        "example": "A browser video editor checks space before caching large clips.",
+        "apps": [
+          "Clipchamp"
+        ]
+      },
+      {
+        "type": "security",
+        "example": "A fraud tool compares the quota size with the claimed device to spot mismatches.",
+        "apps": []
+      },
+      {
+        "type": "news",
+        "example": "A news site detects tiny quotas that suggest private mode and applies its free article limit.",
+        "apps": []
+      },
+      {
+        "type": "ads",
+        "example": "A fingerprint vendor uses the quota as a stable disk size hint.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Reveals disk size",
+      "Used to spot private windows"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Cannot read free disk space",
+    "Quota is per origin policy, not raw disk size"
+  ],
+  "scores": {
+    "sensitivity": 1,
+    "utility": 4,
+    "fingerprint_bits": 3.0,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Check room before caching video"
+    ],
+    "abuse": [
+      "Disk-size and incognito inference"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2023-09",
+      "browser": "safari",
+      "version": "17",
+      "change": "Origin quota up to 60% of total disk for browser apps"
+    },
+    {
+      "date": "2020-01",
+      "browser": "chrome",
+      "version": "",
+      "change": "Incognito quota reduced and disguised to hamper detection"
+    }
+  ],
+  "related": [
+    "web.device.incognito-detection",
+    "web.notexposed.disk-free-space"
+  ],
+  "refs": [
+    {
+      "t": "mdn",
+      "label": "MDN StorageManager.estimate",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/StorageManager/estimate"
+    },
+    {
+      "t": "spec",
+      "label": "Storage Standard",
+      "url": "https://storage.spec.whatwg.org/"
+    },
+    {
+      "t": "github",
+      "label": "CreepJS (abrahamjuliot)",
+      "url": "https://github.com/abrahamjuliot/creepjs"
+    }
+  ],
+  "confidence": "docs"
+}

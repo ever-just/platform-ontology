@@ -1,0 +1,280 @@
+{
+  "id": "web.input.pointer-events",
+  "name": "Pointer events (mouse, pen, touch detail)",
+  "kind": "signal",
+  "group": "input-clipboard",
+  "subgroup": "Pointer",
+  "tags": [
+    "pointer-events",
+    "mouse",
+    "pen",
+    "biometrics",
+    "behavioral"
+  ],
+  "plain": "Reports pointer position and, for pens and touch, pressure, tilt and contact size.",
+  "meaning": "Mouse paths, speed and hesitation are strong behavioral signals (bot detection, attention tracking). Pen and touch fields add pressure and tilt that can tell devices apart.",
+  "lifecycle": [
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "pointerdown/move/up; PointerEvent.pressure, tiltX, tiltY, width, height, pointerType; getCoalescedEvents(); pointerrawupdate",
+      "bcd": [
+        "api.PointerEvent",
+        "api.PointerEvent.getCoalescedEvents",
+        "api.Element.pointerrawupdate_event"
+      ],
+      "access": {
+        "grant": "none",
+        "prompt_ui": "None (no browser prompt)",
+        "secure_context": false,
+        "user_gesture": false,
+        "activation": "none",
+        "persistence": "While the pointer is over the page",
+        "revocation": "Nothing to revoke (no permission is stored)",
+        "iframe": "Events go to the frame under the pointer; no cross-origin leak across frames",
+        "steps": [
+          "Person moves the pointer or touches",
+          "pointermove events fire (usually once per frame, or at the device rate with getCoalescedEvents)",
+          "Page reads coordinates and pressure"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "55",
+          "note": "",
+          "date": "2016-12-01"
+        },
+        "edge": {
+          "s": "y",
+          "v": "12",
+          "note": "",
+          "date": "2015-07-29"
+        },
+        "firefox": {
+          "s": "y",
+          "v": "59",
+          "note": "",
+          "date": "2018-03-13"
+        },
+        "safari": {
+          "s": "y",
+          "v": "13",
+          "note": "",
+          "date": "2019-09-19"
+        },
+        "ios_safari": {
+          "s": "y",
+          "v": "13",
+          "note": "All iOS browsers use WebKit",
+          "date": "2019-09-19"
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "55",
+          "note": "",
+          "date": "2016-12-06"
+        },
+        "samsung": {
+          "s": "y",
+          "v": "6.0",
+          "note": "",
+          "date": "2017-08-23"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "event",
+    "metric": "Pointer samples",
+    "update": "per frame or device rate",
+    "fields": [
+      {
+        "name": "pressure",
+        "type": "float",
+        "unit": "",
+        "range": "0 to 1",
+        "precision": "device dependent"
+      },
+      {
+        "name": "tiltX",
+        "type": "integer",
+        "unit": "degrees",
+        "range": "-90 to 90",
+        "precision": "1 degree"
+      },
+      {
+        "name": "width",
+        "type": "float",
+        "unit": "CSS px",
+        "range": "1 to about 100",
+        "precision": "device dependent"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can see where your mouse, finger or pen is and how it moves on the page",
+    "user_action": "Nothing. It happens while you move or tap over the page",
+    "can": [
+      "Follow the path and speed of your mouse, finger or pen",
+      "Measure pen pressure, tilt and finger contact size where the device allows it",
+      "Tell humans from bots by how you move",
+      "Learn where you hesitate or hover"
+    ],
+    "cannot": [
+      "See where you point on other pages or in other apps",
+      "See movement when the page is in the background",
+      "Show a permission pop up; there is none"
+    ],
+    "reach": 3,
+    "reach_label": "Every move while the page is open",
+    "differs": ""
+  },
+  "story": {
+    "what_it_is": "The page sees where your mouse, pen or finger is, how fast it moves, and how hard you press.",
+    "icon": "mouse-pointer-2",
+    "tags": [
+      "Mouse",
+      "Silent",
+      "Behavior"
+    ],
+    "marketing": [
+      {
+        "vendor": "MDN (standards docs)",
+        "name": "Pointer events",
+        "pitch": "Describes one set of events for mouse, pen and touch, with extras like pressure and tilt for pens.",
+        "url": "https://developer.mozilla.org/en-US/docs/Web/API/Pointer_events"
+      }
+    ],
+    "for_you": "You move, click, draw or swipe and the page responds smoothly. You may not notice it also sees the path your pointer takes and how long you pause. A pen can add pressure and tilt, so lines look natural.",
+    "for_makers": "Mice and pens drive games and creative tools. Makers also study movement patterns to detect bots, find confusing parts of a page and tune ads and layouts.",
+    "use_cases": [
+      {
+        "type": "games",
+        "example": "A browser game reads mouse position and clicks many times a second for aiming and dragging.",
+        "apps": [
+          "Agar.io",
+          "Slither.io"
+        ]
+      },
+      {
+        "type": "creative",
+        "example": "A web drawing tool uses pen pressure and tilt to vary line thickness.",
+        "apps": [
+          "Figma",
+          "Excalidraw",
+          "Photopea"
+        ]
+      },
+      {
+        "type": "creative",
+        "example": "A whiteboard app shows teammates' live cursors by sending pointer positions to others.",
+        "apps": [
+          "Miro",
+          "FigJam"
+        ]
+      },
+      {
+        "type": "analytics",
+        "example": "A heatmap tool records where visitors move and click to show the busy parts of a page.",
+        "apps": [
+          "Hotjar",
+          "Microsoft Clarity"
+        ]
+      },
+      {
+        "type": "security",
+        "example": "A bot detector checks if the mouse path is a perfect straight line, a sign of a script.",
+        "apps": [
+          "reCAPTCHA",
+          "Cloudflare Turnstile"
+        ]
+      },
+      {
+        "type": "ads",
+        "example": "An ad network measures hover time over an ad as a sign of attention.",
+        "apps": []
+      },
+      {
+        "type": "banking",
+        "example": "A bank adds mouse habits to its risk score for a login.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Movement habits identify people",
+      "Used in tracking"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Sees pointer only inside its own viewport (and over its iframes' areas as the iframe's events)",
+    "pressure is 0 to 1 (0.5 for devices without pressure while a button is down); tiltX and tiltY are -90 to 90 degrees; twist 0 to 359",
+    "Coalesced events can expose input at 120 Hz or more (Chrome 58 and later, Firefox 59, Safari 18.2 per BCD)",
+    "pointerType is mouse, pen or touch; width and height reveal finger contact size (CSS px)",
+    "No pointer data while the pointer is outside the viewport, except with setPointerCapture or Pointer Lock"
+  ],
+  "scores": {
+    "sensitivity": 3,
+    "utility": 5,
+    "fingerprint_bits": 2,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Drawing apps",
+      "Gestures",
+      "Games"
+    ],
+    "abuse": [
+      "Mouse movement biometrics",
+      "Session replay heat maps",
+      "Bot detection from cursor path"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2016-12",
+      "browser": "chrome",
+      "version": "55",
+      "change": "Pointer Events ship in Chrome stable"
+    },
+    {
+      "date": "2019-09",
+      "browser": "safari",
+      "version": "13",
+      "change": "Pointer Events ship in Safari"
+    }
+  ],
+  "related": [
+    "web.input.touch-events",
+    "web.input.pointer-lock"
+  ],
+  "refs": [
+    {
+      "t": "mdn",
+      "label": "MDN Pointer events",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/Pointer_events"
+    },
+    {
+      "t": "spec",
+      "label": "W3C Pointer Events",
+      "url": "https://www.w3.org/TR/pointerevents/"
+    },
+    {
+      "t": "paper",
+      "label": "Mouse dynamics user authentication research",
+      "url": "https://dl.acm.org/doi/10.1145/2976749.2978372"
+    }
+  ],
+  "confidence": "docs"
+}

@@ -1,0 +1,227 @@
+{
+  "id": "web.render.canvas",
+  "name": "Canvas fingerprint",
+  "kind": "signal",
+  "group": "rendering-fingerprint",
+  "subgroup": "Rendering",
+  "tags": [
+    "canvas",
+    "fingerprint"
+  ],
+  "plain": "Draws text and shapes in a hidden canvas and reads back the pixels.",
+  "meaning": "Tiny differences in fonts, antialiasing and GPU drivers make the image almost unique per device and software stack.",
+  "lifecycle": [
+    "on-arrival",
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "canvas.toDataURL(), getImageData()",
+      "bcd": [
+        "api.HTMLCanvasElement.toDataURL"
+      ],
+      "access": {
+        "grant": "none",
+        "prompt_ui": "None (no browser prompt)",
+        "secure_context": false,
+        "user_gesture": false,
+        "persistence": "",
+        "revocation": "",
+        "iframe": "",
+        "steps": [
+          "Script reads the value",
+          "Value joins the fingerprint payload"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "2",
+          "note": "",
+          "date": "2009-05-21"
+        },
+        "edge": {
+          "s": "y",
+          "v": "12",
+          "note": "",
+          "date": "2015-07-29"
+        },
+        "firefox": {
+          "s": "y",
+          "v": "2",
+          "note": "",
+          "date": "2006-10-24"
+        },
+        "safari": {
+          "s": "y",
+          "v": "4",
+          "note": "",
+          "date": "2009-06-08"
+        },
+        "ios_safari": {
+          "s": "y",
+          "v": "3",
+          "note": "",
+          "date": "2009-06-17"
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "18",
+          "note": "",
+          "date": "2012-06-27"
+        },
+        "samsung": {
+          "s": "y",
+          "v": "1.0",
+          "note": "",
+          "date": "2013-04-27"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "hash",
+    "metric": "Canvas fingerprint",
+    "update": "static per setup",
+    "fields": [
+      {
+        "name": "image",
+        "type": "hash",
+        "unit": "",
+        "range": "PNG data URL or hash",
+        "precision": "pixel level"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can draw a hidden picture and use tiny pixel differences to tell devices apart",
+    "user_action": "Nothing. It happens when the page loads",
+    "can": [
+      "Draw text and shapes you never see",
+      "Check how your screen and fonts turned them into pixels",
+      "Turn that into a number that fits few other devices",
+      "Match that number again on a later visit"
+    ],
+    "cannot": [
+      "Show anything on your screen",
+      "Know who you are by itself",
+      "Get a clean result in Brave, Tor Browser or Firefox strict mode, which add noise or ask first",
+      "Ask your permission in most browsers"
+    ],
+    "reach": 3,
+    "reach_label": "Silent, repeatable device number",
+    "differs": ""
+  },
+  "story": {
+    "what_it_is": "A page draws hidden text and shapes, then reads back the pixels. Small differences identify the device.",
+    "icon": "paintbrush",
+    "tags": [
+      "Graphics",
+      "Silent",
+      "Fingerprinting"
+    ],
+    "marketing": [
+      {
+        "vendor": "MDN",
+        "name": "Canvas API",
+        "pitch": "A way to draw graphics, animation and image effects with JavaScript.",
+        "url": "https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API"
+      }
+    ],
+    "for_you": "You see nothing, since the drawing is hidden. But your graphics card, fonts and system settings leave a tiny signature that can help a site recognize you again.",
+    "for_makers": "Canvas is made for games and drawing tools. The same feature is used to build an anonymous ID with no cookie. It is cheap, works everywhere and needs no prompt.",
+    "use_cases": [
+      {
+        "type": "games",
+        "example": "A browser game like Slither.io or Agar.io draws the whole play field on a canvas many times each second.",
+        "apps": [
+          "Slither.io",
+          "Agar.io"
+        ]
+      },
+      {
+        "type": "creative",
+        "example": "A drawing app like Excalidraw or Photopea paints your sketch and exports it as an image.",
+        "apps": [
+          "Excalidraw",
+          "Photopea"
+        ]
+      },
+      {
+        "type": "analytics",
+        "example": "A chart site draws bars and lines on a canvas so thousands of points update smoothly.",
+        "apps": []
+      },
+      {
+        "type": "ads",
+        "example": "An ad tech script draws a sentence in a hidden canvas and hashes it to recognize you without cookies.",
+        "apps": []
+      },
+      {
+        "type": "security",
+        "example": "A bank's risk engine draws a hidden image at login to check the device has not changed.",
+        "apps": []
+      },
+      {
+        "type": "education",
+        "example": "A web whiteboard for class draws what the teacher writes and shares it with students live.",
+        "apps": [
+          "Miro"
+        ]
+      },
+      {
+        "type": "shopping",
+        "example": "A product page uses canvas to build a quick photo preview of a customized mug or shirt.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Hard to notice",
+      "Hard to reset",
+      "Used to track without cookies"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Brave and Firefox RFP add noise or prompts",
+    "Same hardware gives the same result"
+  ],
+  "scores": {
+    "sensitivity": 2,
+    "utility": 3,
+    "fingerprint_bits": 8,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Rendering checks"
+    ],
+    "abuse": [
+      "Fingerprint input"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": true,
+      "how": "Collector key(s): canvas. "
+    }
+  },
+  "related": [
+    "web.tracking.linkedin-apfc-fingerprint"
+  ],
+  "refs": [
+    {
+      "t": "mdn",
+      "label": "MDN toDataURL",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/HTMLCanvasElement/toDataURL"
+    },
+    {
+      "t": "github",
+      "label": "mdp/linkedin-extension-fingerprinting (LinkedIn script snapshot and ID list)",
+      "url": "https://github.com/mdp/linkedin-extension-fingerprinting"
+    }
+  ],
+  "confidence": "docs"
+}

@@ -1,0 +1,189 @@
+{
+  "id": "mob.id.idfv",
+  "name": "Identifier for Vendor (IDFV)",
+  "kind": "tracking",
+  "group": "cross-site-tracking",
+  "subgroup": "Device identifiers",
+  "tags": [
+    "idfv",
+    "vendor-scoped"
+  ],
+  "plain": "A per-vendor iOS ID that is the same across one developer's apps.",
+  "meaning": "Lets a developer link their own apps on one phone with no prompt. Resets when the last app by that vendor is deleted.",
+  "lifecycle": [
+    "on-launch",
+    "in-session"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "n",
+      "v": "",
+      "api": "",
+      "permission": "none",
+      "protection": "not-exposed",
+      "grant": "not-exposed",
+      "prompt_ui": "",
+      "persistence": "",
+      "revocation": "",
+      "store_policy": "",
+      "api_surface": "No equivalent",
+      "note": "Closest analog is Android ID"
+    },
+    "ios": {
+      "s": "y",
+      "v": "6.0",
+      "permission": "none",
+      "protection": "none",
+      "grant": "none",
+      "prompt_ui": "",
+      "persistence": "Delete all vendor apps",
+      "revocation": "App Review: not for ads or cross-vendor tracking",
+      "store_policy": "",
+      "api_surface": "UUID; may be nil before first unlock after restart; resets when all vendor apps are removed",
+      "note": "Until all apps from the vendor are deleted"
+    }
+  },
+  "data": {
+    "type": "string",
+    "metric": "UUID",
+    "update": "Static per vendor",
+    "fields": [
+      {
+        "name": "idfv",
+        "type": "string",
+        "unit": "UUID",
+        "range": "36 characters",
+        "precision": "122 bits"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can recognize you across apps from the same developer on iPhone, but not other developers",
+    "user_action": "Nothing. Any app can ask for it as soon as it opens",
+    "can": [
+      "Use one shared ID across all of one developer's apps on your iPhone",
+      "Count how many different people use the developer's apps",
+      "Keep the same ID until every app from that developer is deleted"
+    ],
+    "cannot": [
+      "Match you to apps from other developers; each developer gets a different ID",
+      "Exist on Android; there is no direct match, only Android ID",
+      "Stay the same after you delete all of that developer's apps",
+      "Be available before your first unlock after a restart"
+    ],
+    "reach": 3,
+    "reach_label": "One developer's apps, ongoing",
+    "differs": "This exists only on iPhone. Android has a similar but different ID (Android ID)."
+  },
+  "story": {
+    "what_it_is": "An iOS ID that is the same for all apps from one developer on your phone.",
+    "icon": "tag",
+    "tags": [
+      "Silent",
+      "iPhone",
+      "Tracking"
+    ],
+    "marketing": [
+      {
+        "vendor": "Apple",
+        "name": "identifierForVendor",
+        "pitch": "Developer pitch: an alphanumeric string that identifies the device to the app's vendor, shared by that vendor's apps.",
+        "url": "https://developer.apple.com/documentation/uikit/uidevice/identifierforvendor"
+      }
+    ],
+    "for_you": "You never see it and no pop up appears. It lets one company, like a game studio with several games, know the same phone runs all its apps. It resets when you delete the last app from that company.",
+    "for_makers": "Makers can link their own apps on one phone with no prompt and without Apple's tracking rules. It helps with saving progress, fraud checks and cross promotion between their own titles.",
+    "use_cases": [
+      {
+        "type": "games",
+        "example": "A studio that makes five puzzle games sees that the same phone plays all of them and offers a bonus in the new game.",
+        "apps": []
+      },
+      {
+        "type": "media",
+        "example": "A streaming company uses it to hide its trial offer from a phone that already used it in a sister app.",
+        "apps": []
+      },
+      {
+        "type": "ads",
+        "example": "A publisher builds an audience of people who play several of its own apps and sells ads to that group.",
+        "apps": []
+      },
+      {
+        "type": "analytics",
+        "example": "A developer joins crash logs from three of its apps to see that one phone is failing everywhere.",
+        "apps": []
+      },
+      {
+        "type": "security",
+        "example": "A bank app group spots many accounts that share one vendor ID and applies stricter checks.",
+        "apps": []
+      },
+      {
+        "type": "shopping",
+        "example": "A retailer with a store app and a coupon app knows both are on the same phone and syncs your points.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Links one company's apps together",
+      "Hard to turn off"
+    ],
+    "android_note": "Android has no matching ID, so this does not exist there.",
+    "ios_note": "Free to read with no prompt and it is not limited by the Ask App Not to Track choice because it stays inside one company."
+  },
+  "technical_bounds": [
+    "Scoped to one vendor"
+  ],
+  "scores": {
+    "sensitivity": 3,
+    "utility": 3,
+    "fingerprint_bits": 122,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Analytics within one company"
+    ],
+    "abuse": [
+      "Link multiple apps"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2012-09",
+      "platform": "ios",
+      "version": "iOS 6",
+      "change": "identifierForVendor introduced"
+    }
+  ],
+  "related": [
+    "mob.id.ssaid",
+    "mob.id.advertising-id"
+  ],
+  "refs": [
+    {
+      "t": "apple",
+      "label": "Apple: identifierForVendor",
+      "url": "https://developer.apple.com/documentation/uikit/uidevice/identifierforvendor"
+    },
+    {
+      "t": "apple",
+      "label": "Apple: UIDevice",
+      "url": "https://developer.apple.com/documentation/uikit/uidevice"
+    },
+    {
+      "t": "policy",
+      "label": "Apple: App Review Guidelines",
+      "url": "https://developer.apple.com/app-store/review/guidelines/"
+    }
+  ],
+  "confidence": "docs"
+}

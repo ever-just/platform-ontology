@@ -1,0 +1,195 @@
+{
+  "id": "mob.xtrack.hashed-email-identity",
+  "name": "Hashed email and phone identity graphs (UID2, RampID)",
+  "kind": "tracking",
+  "group": "cross-site-tracking",
+  "subgroup": "Identity graphs",
+  "tags": [
+    "uid2",
+    "rampid",
+    "hashed-email",
+    "identity"
+  ],
+  "plain": "Ad firms turn a hashed email or phone into a shared ID that follows people across apps and sites.",
+  "meaning": "When device IDs are blocked, a login or email is the best key. Graphs link logins to ads across publishers, and they rely on the person having signed in.",
+  "lifecycle": [
+    "signed-in"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "y",
+      "v": "",
+      "permission": "",
+      "protection": "none",
+      "grant": "none",
+      "prompt_ui": "",
+      "persistence": "",
+      "revocation": "",
+      "store_policy": "Data safety: sharing; User Data policy",
+      "api_surface": "UID2 SDK, LiveRamp ATS, ID5, server-side APIs",
+      "note": "Matching uses normalized, hashed email or phone."
+    },
+    "ios": {
+      "s": "y",
+      "v": "",
+      "permission": "",
+      "protection": "none",
+      "grant": "none",
+      "prompt_ui": "",
+      "persistence": "",
+      "revocation": "",
+      "store_policy": "Counts as tracking under ATT if sent to third parties for ads",
+      "api_surface": "UID2 SDK, LiveRamp ATS",
+      "note": "Sign in with Apple private relay emails defeat matching."
+    }
+  },
+  "web_equivalents": [
+    "web.xsite.email-hash-identity"
+  ],
+  "data": {
+    "type": "hash",
+    "metric": "SHA-256 email or phone to UID2 or RampID token",
+    "update": "on login",
+    "fields": [
+      {
+        "name": "email hash",
+        "type": "hash",
+        "unit": "SHA-256",
+        "range": "",
+        "precision": ""
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can match you across apps and sites using your email or phone, scrambled into an ID",
+    "user_action": "You sign in or give your email or phone to an app or site",
+    "can": [
+      "Turn your email or phone into a scrambled code and share that code with ad partners",
+      "Recognize you in other apps and websites that use the same system",
+      "Work on both Android and iPhone through ad SDKs and server to server links"
+    ],
+    "cannot": [
+      "Match you if you never give an email or phone to any partner",
+      "Match you when you use Hide My Email; Apple's relay address breaks the link",
+      "Use your real email directly; partners share the scrambled version",
+      "Work after you opt out where the ID provider offers an opt out"
+    ],
+    "reach": 4,
+    "reach_label": "Follows you across apps and sites",
+    "differs": "Hide My Email on iPhone can break matching. Android sign in gives apps your real email."
+  },
+  "story": {
+    "what_it_is": "Ad companies turn your email or phone into a shared scrambled ID that follows you across apps and sites.",
+    "icon": "mail",
+    "tags": [
+      "Ads",
+      "Sign in",
+      "Tracking"
+    ],
+    "marketing": [
+      {
+        "vendor": "Unified ID 2.0",
+        "name": "UID2",
+        "pitch": "Pitch: an open ID built from an email or phone that lets advertisers reach people on the open internet with privacy controls.",
+        "url": "https://unifiedid.com"
+      }
+    ],
+    "for_you": "You type your email to read an article or sign in to a shopping app. Later, ads on other apps and sites may seem to know you. You never see the scrambled ID that links them.",
+    "for_makers": "With device IDs fading, a login is the best key for ads. Publishers sell logged in audiences, and advertisers match their customer lists to them. It only works when people sign in.",
+    "use_cases": [
+      {
+        "type": "news",
+        "example": "A news site asks you to sign in with an email, then sells ad space to brands that can recognize you by a scrambled copy of it.",
+        "apps": []
+      },
+      {
+        "type": "shopping",
+        "example": "A retailer uploads its customer list to an ad network so you see its ads on other apps.",
+        "apps": []
+      },
+      {
+        "type": "media",
+        "example": "A streaming service lets advertisers reach logged in viewers across phone and TV.",
+        "apps": []
+      },
+      {
+        "type": "analytics",
+        "example": "A brand measures whether a TV ad made a known customer buy later in an app.",
+        "apps": []
+      },
+      {
+        "type": "games",
+        "example": "A game with a login shares a hashed email with an ad partner to find look alike players.",
+        "apps": []
+      },
+      {
+        "type": "security",
+        "example": "Fraud teams check if one hashed email is tied to hundreds of fake sign ups.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Follows you across apps and sites",
+      "Hard to see or delete"
+    ],
+    "android_note": "Works the same way on Android, with the ad ID as one more signal.",
+    "ios_note": "Works on iPhone too. Sign in with Apple's hidden email stops it."
+  },
+  "technical_bounds": [
+    "Needs a signed-in user",
+    "Consent regimes apply",
+    "Apple relay emails cannot be matched"
+  ],
+  "scores": {
+    "sensitivity": 5,
+    "utility": 4,
+    "fingerprint_bits": null,
+    "friction": 1
+  },
+  "value": {
+    "legit_uses": [
+      "Cross-publisher frequency capping"
+    ],
+    "abuse": [
+      "Linking users across apps without disclosure"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2021-04",
+      "platform": "ios",
+      "version": "iOS 14.5",
+      "change": "ATT pushes advertisers to log-in-based IDs"
+    },
+    {
+      "date": "2022-01",
+      "platform": "android",
+      "version": "UID2",
+      "change": "Mobile SDKs released for Android and iOS"
+    }
+  ],
+  "related": [
+    "mob.ads.server-side-conversions",
+    "mob.xtrack.hide-my-email"
+  ],
+  "refs": [
+    {
+      "t": "vendor",
+      "label": "UID2 overview",
+      "url": "https://unifiedid.com/docs/intro"
+    },
+    {
+      "t": "vendor",
+      "label": "LiveRamp RampID",
+      "url": "https://liveramp.com/"
+    }
+  ],
+  "confidence": "docs"
+}

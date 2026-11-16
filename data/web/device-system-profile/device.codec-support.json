@@ -1,0 +1,229 @@
+{
+  "id": "web.device.codec-support",
+  "name": "Codec support probing",
+  "kind": "signal",
+  "group": "device-system-profile",
+  "subgroup": "Media",
+  "tags": [
+    "media",
+    "canPlayType",
+    "isTypeSupported"
+  ],
+  "plain": "canPlayType and isTypeSupported answers across dozens of codecs.",
+  "meaning": "Pattern of supported codecs (H.264, HEVC, AV1, VP9, AC-3, Opus, FLAC) separates browser build and OS. Chrome without proprietary codecs and Chromium builds stand out.",
+  "lifecycle": [
+    "on-arrival",
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "HTMLMediaElement.canPlayType(), MediaSource.isTypeSupported(), MediaRecorder.isTypeSupported()",
+      "bcd": [
+        "api.HTMLMediaElement.canPlayType"
+      ],
+      "access": {
+        "grant": "none",
+        "prompt_ui": "None",
+        "secure_context": false,
+        "user_gesture": false,
+        "persistence": "read fresh on every page load; nothing stored",
+        "revocation": "none needed (no grant)",
+        "iframe": "Readable from cross-origin iframes too (same values)",
+        "steps": [
+          "Page script reads the value",
+          "No prompt is shown"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "3",
+          "note": "",
+          "date": "2009-09-15"
+        },
+        "edge": {
+          "s": "y",
+          "v": "12",
+          "note": "",
+          "date": "2015-07-29"
+        },
+        "firefox": {
+          "s": "y",
+          "v": "3.5",
+          "note": "",
+          "date": "2009-06-30"
+        },
+        "safari": {
+          "s": "y",
+          "v": "4",
+          "note": "",
+          "date": "2009-06-08"
+        },
+        "ios_safari": {
+          "s": "y",
+          "v": "3",
+          "note": "",
+          "date": "2009-06-17"
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "18",
+          "note": "",
+          "date": "2012-06-27"
+        },
+        "samsung": {
+          "s": "y",
+          "v": "1.0",
+          "note": "",
+          "date": "2013-04-27"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "object",
+    "metric": "",
+    "update": "static per session",
+    "fields": [
+      {
+        "name": "canPlayType result",
+        "type": "enum",
+        "unit": "",
+        "range": "empty, maybe, probably",
+        "precision": "per MIME string"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can test which video and audio formats your browser can play",
+    "user_action": "Nothing. It happens when a page checks for video or audio support",
+    "can": [
+      "Ask whether your browser plays formats like H.264, AV1, VP9, or Opus",
+      "Choose a stream that plays without trouble",
+      "Tell browser builds and operating systems apart by the pattern",
+      "Spot Chromium builds that lack some codecs"
+    ],
+    "cannot": [
+      "See your media files",
+      "See what you watched before",
+      "Learn your device model from this alone",
+      "Ask for formats the browser does not know about"
+    ],
+    "reach": 2,
+    "reach_label": "Format list, while the page runs",
+    "differs": ""
+  },
+  "story": {
+    "what_it_is": "Asks the browser which video and audio formats it can play, which paints a picture of your setup.",
+    "icon": "film",
+    "tags": [
+      "Video",
+      "Silent",
+      "Fingerprinting"
+    ],
+    "marketing": [
+      {
+        "vendor": "MDN",
+        "name": "Media Capabilities and codec checks",
+        "pitch": "Developer docs explain how pages check which media formats the browser plays.",
+        "url": "https://developer.mozilla.org/en-US/docs/Web/API/Media_Capabilities_API"
+      }
+    ],
+    "for_you": "You never see the question. What you get is a video that plays in the right format and does not stall. The same checks also show a site your browser build and operating system.",
+    "for_makers": "Streaming and calling sites must pick one of many codecs, since the wrong one fails or wastes battery. The pattern of answers also helps separate real browsers from fakes. Fingerprinters use it as a free signal.",
+    "use_cases": [
+      {
+        "type": "video",
+        "example": "A streaming site picks AV1 on a new laptop and H.264 on an old one, so you get smooth playback.",
+        "apps": [
+          "Netflix",
+          "YouTube"
+        ]
+      },
+      {
+        "type": "games",
+        "example": "A cloud gaming page picks the video format your browser can decode quickest to lower input lag.",
+        "apps": [
+          "Xbox Cloud Gaming",
+          "GeForce NOW"
+        ]
+      },
+      {
+        "type": "video",
+        "example": "A video call tool chooses VP9 or H.264 depending on what the browser supports and how hot the laptop is.",
+        "apps": [
+          "Google Meet",
+          "Jitsi"
+        ]
+      },
+      {
+        "type": "music",
+        "example": "A web music player picks the best audio format your browser handles.",
+        "apps": []
+      },
+      {
+        "type": "creative",
+        "example": "A browser video editor checks which export formats will work on your device.",
+        "apps": [
+          "Clipchamp"
+        ]
+      },
+      {
+        "type": "ads",
+        "example": "A video ad server selects the file format that your player can show without a glitch.",
+        "apps": []
+      },
+      {
+        "type": "security",
+        "example": "A fraud tool compares the codec list with the browser it claims to be.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Identifies browser build",
+      "Used as a fingerprint input"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Does not say hardware acceleration"
+  ],
+  "scores": {
+    "sensitivity": 1,
+    "utility": 3,
+    "fingerprint_bits": 2.5,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Fallback selection"
+    ],
+    "abuse": [
+      "Browser build fingerprint"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "related": [
+    "web.device.media-capabilities"
+  ],
+  "refs": [
+    {
+      "t": "github",
+      "label": "CreepJS (abrahamjuliot)",
+      "url": "https://github.com/abrahamjuliot/creepjs"
+    },
+    {
+      "t": "mdn",
+      "label": "MDN canPlayType",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/canPlayType"
+    }
+  ],
+  "confidence": "docs"
+}

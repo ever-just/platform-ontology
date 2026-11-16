@@ -1,0 +1,290 @@
+{
+  "id": "web.identity.webauthn-create",
+  "name": "WebAuthn passkey registration",
+  "kind": "capability",
+  "group": "identity-auth",
+  "subgroup": "WebAuthn",
+  "tags": [
+    "webauthn"
+  ],
+  "plain": "Creates a passkey or security key credential for the site.",
+  "meaning": "Makes a public key login bound to the site's domain. The site never sees the private key or biometrics.",
+  "lifecycle": [
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "navigator.credentials.create({publicKey:{rp,user,challenge,pubKeyCredParams,authenticatorSelection,attestation}})",
+      "permissions_policy": "publickey-credentials-create",
+      "bcd": [
+        "api.PublicKeyCredential"
+      ],
+      "access": {
+        "grant": "prompt",
+        "prompt_ui": "OS or browser sheet: use Touch ID, Face ID, Windows Hello, phone or security key",
+        "secure_context": true,
+        "user_gesture": true,
+        "persistence": "Credential persists on authenticator or cloud keychain",
+        "revocation": "Delete passkey in OS password manager; signalUnknownCredential from the site",
+        "iframe": "Same as top level; cross-origin iframes need a permissions policy where listed",
+        "steps": [
+          "Call the API",
+          "Browser applies its access rules",
+          "Page receives the result"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "67",
+          "note": "",
+          "date": "2018-05-29"
+        },
+        "edge": {
+          "s": "y",
+          "v": "18",
+          "note": "",
+          "date": "2018-10-02"
+        },
+        "firefox": {
+          "s": "y",
+          "v": "60",
+          "note": "Only supports USB U2F tokens.",
+          "date": "2018-05-09"
+        },
+        "safari": {
+          "s": "y",
+          "v": "13",
+          "note": "",
+          "date": "2019-09-19"
+        },
+        "ios_safari": {
+          "s": "y",
+          "v": "13",
+          "note": "",
+          "date": "2019-09-19"
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "70",
+          "note": "",
+          "date": "2018-10-17"
+        },
+        "samsung": {
+          "s": "y",
+          "v": "10.0",
+          "note": "",
+          "date": "2019-08-22"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "object",
+    "metric": "Creates a passkey or security key credential for the site.",
+    "update": "on demand",
+    "fields": [
+      {
+        "name": "id / rawId",
+        "type": "binary",
+        "unit": "bytes",
+        "range": "16 to 1023 bytes",
+        "precision": "credential id"
+      },
+      {
+        "name": "response.attestationObject",
+        "type": "binary",
+        "unit": "bytes",
+        "range": "format: none, packed, tpm, android-key, apple, fido-u2f",
+        "precision": "enterprise only attestation"
+      },
+      {
+        "name": "response.getPublicKey()",
+        "type": "binary",
+        "unit": "bytes",
+        "range": "COSE key (ES256 -7, RS256 -257, EdDSA -8)"
+      },
+      {
+        "name": "authenticatorAttachment",
+        "type": "enum",
+        "range": "platform or cross-platform"
+      },
+      {
+        "name": "transports",
+        "type": "list",
+        "range": "usb, nfc, ble, internal, hybrid"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can create a passkey or security key login for one site",
+    "user_action": "You tap Create a passkey and confirm with your fingerprint, face, phone or key",
+    "can": [
+      "Ask your device to make a new key pair tied to that site",
+      "Save the public half on its servers so you can sign in later",
+      "Let you use a phone or a USB security key instead"
+    ],
+    "cannot": [
+      "See the private key; it stays on your device or password manager",
+      "Get your fingerprint or face data",
+      "Use that passkey on another site",
+      "Create it without your confirmation"
+    ],
+    "reach": 1,
+    "reach_label": "One passkey, one site",
+    "differs": ""
+  },
+  "story": {
+    "what_it_is": "Makes a new passkey for a site, tied to its domain.",
+    "icon": "key-round",
+    "tags": [
+      "Passkey",
+      "Sign in",
+      "Security"
+    ],
+    "marketing": [
+      {
+        "vendor": "Apple",
+        "name": "Passkeys",
+        "pitch": "Apple presents creating a passkey as saving a Face ID or Touch ID login that syncs across devices.",
+        "url": "https://developer.apple.com/passkeys/"
+      },
+      {
+        "vendor": "Google",
+        "name": "Passkeys",
+        "pitch": "Google sells passkeys as sign in with your fingerprint, face or screen lock, saved in your account.",
+        "url": "https://developers.google.com/identity/passkeys"
+      },
+      {
+        "vendor": "MDN (standards docs)",
+        "name": "Web Authentication API",
+        "pitch": "Describes a way for sites to sign people in with public key credentials held on a device, instead of passwords.",
+        "url": "https://developer.mozilla.org/en-US/docs/Web/API/Web_Authentication_API"
+      }
+    ],
+    "for_you": "A prompt says something like 'Save a passkey for this site?' and you confirm with your face, fingerprint or PIN. After that you can skip the password. The site never sees your fingerprint or face.",
+    "for_makers": "Makers get a safe way to sign people in without a password database to leak. It cuts reset support and stops phishing, and it is a selling point for security minded customers.",
+    "use_cases": [
+      {
+        "type": "games",
+        "example": "A console or game account site invites a player to create a passkey after sign in, so a stolen password cannot take over the account.",
+        "apps": [
+          "PlayStation",
+          "Roblox",
+          "Nintendo Account"
+        ]
+      },
+      {
+        "type": "banking",
+        "example": "A bank prompts a customer to add a passkey to replace text message codes.",
+        "apps": []
+      },
+      {
+        "type": "shopping",
+        "example": "A store offers 'Create passkey' on the order confirmation page so the next purchase is faster.",
+        "apps": [
+          "Amazon",
+          "eBay"
+        ]
+      },
+      {
+        "type": "productivity",
+        "example": "A code host or work app asks a new user to create a passkey in their password manager.",
+        "apps": [
+          "GitHub",
+          "Google Workspace"
+        ]
+      },
+      {
+        "type": "payments",
+        "example": "A payments app uses a new passkey to bind the browser as a trusted device for transfers.",
+        "apps": [
+          "PayPal"
+        ]
+      },
+      {
+        "type": "security",
+        "example": "A security team grows passkey enrollment as a measure of fewer account takeovers.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Lose the device, lose the passkey if not synced",
+      "Prompt looks like others"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Credential is bound to rpId; phishing sites cannot reuse it",
+    "Cannot read private key or biometric data",
+    "Attestation shown to the site only if user consents; most browsers default to none",
+    "Needs HTTPS (or localhost) and a user gesture on most browsers"
+  ],
+  "scores": {
+    "sensitivity": 4,
+    "utility": 5,
+    "fingerprint_bits": null,
+    "friction": 2
+  },
+  "value": {
+    "legit_uses": [
+      "Passwordless login",
+      "Phishing resistant MFA"
+    ],
+    "abuse": [
+      "Attestation can fingerprint authenticator model"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2018-04",
+      "browser": "chrome",
+      "version": "67",
+      "change": "WebAuthn ships (Safari 13, Firefox 60)"
+    },
+    {
+      "date": "2022-09",
+      "browser": "safari",
+      "version": "16",
+      "change": "Passkeys sync via iCloud Keychain"
+    },
+    {
+      "date": "2024-12",
+      "browser": "chrome",
+      "version": "129",
+      "change": "PublicKeyCredential.toJSON and parse*OptionsFromJSON (Safari 18.4)"
+    },
+    {
+      "date": "2024-04",
+      "browser": "chrome",
+      "version": "133",
+      "change": "getClientCapabilities (Firefox 135, Safari 17.4)"
+    }
+  ],
+  "refs": [
+    {
+      "t": "mdn",
+      "label": "MDN Web Authentication API",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/Web_Authentication_API"
+    },
+    {
+      "t": "spec",
+      "label": "WebAuthn Level 3",
+      "url": "https://www.w3.org/TR/webauthn-3/"
+    },
+    {
+      "t": "webkit",
+      "label": "WebKit passkeys",
+      "url": "https://webkit.org/blog/"
+    }
+  ],
+  "confidence": "verified"
+}

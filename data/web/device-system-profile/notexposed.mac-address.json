@@ -1,0 +1,203 @@
+{
+  "id": "web.notexposed.mac-address",
+  "name": "MAC address",
+  "kind": "not-exposed",
+  "group": "device-system-profile",
+  "subgroup": "Hardware IDs",
+  "tags": [
+    "not-exposed",
+    "mac",
+    "hardware-id"
+  ],
+  "plain": "A page cannot read your device's network hardware address.",
+  "meaning": "MAC addresses never reach the web platform. Proxies are weak: WebRTC local candidates (mDNS now) and Bluetooth device IDs after a prompt are per-origin and randomized. iOS and Android also randomize Wi-Fi MACs per network.",
+  "lifecycle": [
+    "on-arrival",
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "none",
+      "access": {
+        "grant": "not-exposed",
+        "prompt_ui": "None",
+        "secure_context": false,
+        "user_gesture": false,
+        "persistence": "read fresh on every page load; nothing stored",
+        "revocation": "not applicable",
+        "iframe": "Readable from cross-origin iframes too (same values)",
+        "steps": [
+          "Page script reads the value",
+          "No prompt is shown"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "edge": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "firefox": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "safari": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "ios_safari": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "chrome_android": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "samsung": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "none",
+    "metric": "",
+    "update": "static per session",
+    "fields": [
+      {
+        "name": "proxy: WebRTC local ICE candidate",
+        "type": "string",
+        "unit": "",
+        "range": "formerly local IPv4, now random mDNS name",
+        "precision": ""
+      },
+      {
+        "name": "proxy: Web Bluetooth device.id",
+        "type": "string",
+        "unit": "",
+        "range": "per-origin opaque ID, only after user picks a device",
+        "precision": ""
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can't see your device's network hardware address (MAC)",
+    "user_action": "Nothing. Pages have no way to ask for this",
+    "can": [
+      "See random per site IDs from some features, such as Bluetooth after you approve",
+      "See a masked network address from WebRTC",
+      "See your IP address on the server side"
+    ],
+    "cannot": [
+      "See your real MAC address",
+      "See Wi-Fi addresses; iPhone and Android randomize them per network",
+      "Link one site to another using a MAC",
+      "Get a stable ID from Bluetooth across sites"
+    ],
+    "reach": 1,
+    "reach_label": "No hardware address",
+    "differs": ""
+  },
+  "story": {
+    "what_it_is": "A page cannot read your device's network hardware address.",
+    "icon": "network",
+    "tags": [
+      "Blocked",
+      "Network",
+      "Privacy"
+    ],
+    "marketing": [],
+    "for_you": "Your device's hardware address stays hidden from websites. It never leaves your device through the browser. That makes you harder to follow from one network to the next.",
+    "for_makers": "The hardware address is a permanent ID that trackers love. The web never exposed it. Weak stand-ins exist, but they are random or per site.",
+    "use_cases": [
+      {
+        "type": "ads",
+        "example": "An ad network wanted a permanent device ID and falls back on cookies and fingerprints.",
+        "apps": []
+      },
+      {
+        "type": "security",
+        "example": "A fraud team wanted to block known bad devices and uses a browser profile instead.",
+        "apps": [
+          "FingerprintJS"
+        ]
+      },
+      {
+        "type": "enterprise",
+        "example": "An IT portal wanted to allow only company laptops and needs a managed agent.",
+        "apps": []
+      },
+      {
+        "type": "smart-home",
+        "example": "A router setup page wanted the address of your phone and uses a sign-in on the router instead.",
+        "apps": []
+      },
+      {
+        "type": "shopping",
+        "example": "A store wanted to detect in-store visits by phone signals and cannot from a web page.",
+        "apps": []
+      },
+      {
+        "type": "games",
+        "example": "A game ban system wanted a permanent ID and bans accounts instead.",
+        "apps": []
+      },
+      {
+        "type": "analytics",
+        "example": "A measurement vendor wanted to connect two devices and uses logins.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Other signals still help tracking"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Stable cross-site identifier"
+  ],
+  "scores": {
+    "sensitivity": 5,
+    "utility": 2,
+    "fingerprint_bits": 0.0,
+    "friction": 3
+  },
+  "value": {
+    "legit_uses": [
+      "None: the browser deliberately withholds it"
+    ],
+    "abuse": [
+      "Sites attempt proxies to recover it"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "related": [
+    "web.notexposed.device-serial-imei"
+  ],
+  "refs": [
+    {
+      "t": "spec",
+      "label": "WebRTC mDNS candidates draft",
+      "url": "https://datatracker.ietf.org/doc/draft-ietf-rtcweb-mdns-ice-candidates/"
+    }
+  ],
+  "confidence": "docs"
+}

@@ -1,0 +1,225 @@
+{
+  "id": "web.tracking.linkedin-recaptcha-enterprise",
+  "name": "reCAPTCHA v3 Enterprise on every page",
+  "kind": "tracking",
+  "group": "cross-site-tracking",
+  "subgroup": "Anti-abuse vendors",
+  "tags": [
+    "captcha",
+    "google",
+    "risk-score",
+    "bot-detection"
+  ],
+  "plain": "Google reCAPTCHA v3 Enterprise scores each page load without any visible challenge.",
+  "meaning": "Sends page behavior and device signals to Google to get a bot risk score. Invisible to the person; Google sets its own cookies and receives IP and browser data.",
+  "lifecycle": [
+    "on-arrival",
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "grecaptcha.enterprise.execute(siteKey, {action: 'onPageLoad'})",
+      "access": {
+        "grant": "none",
+        "prompt_ui": "None (no browser prompt)",
+        "secure_context": false,
+        "user_gesture": false,
+        "persistence": "Per page load",
+        "revocation": "",
+        "iframe": "",
+        "steps": [
+          "LIX flag pemberly.tracking.recaptcha.v3 enables it",
+          "Token requested with action onPageLoad",
+          "Token sent with tracking payload for server verification"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "",
+          "note": ""
+        },
+        "edge": {
+          "s": "y",
+          "v": "",
+          "note": ""
+        },
+        "firefox": {
+          "s": "y",
+          "v": "",
+          "note": ""
+        },
+        "safari": {
+          "s": "y",
+          "v": "",
+          "note": ""
+        },
+        "ios_safari": {
+          "s": "y",
+          "v": "",
+          "note": ""
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "",
+          "note": ""
+        },
+        "samsung": {
+          "s": "y",
+          "v": "",
+          "note": ""
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "object",
+    "metric": "Risk token",
+    "update": "per page load",
+    "fields": [
+      {
+        "name": "token",
+        "type": "string",
+        "unit": "",
+        "range": "opaque",
+        "precision": "one use"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can score every page visit for bot behavior without showing a challenge",
+    "user_action": "Nothing. It happens each time a LinkedIn page loads",
+    "can": [
+      "Watch how the page is used to judge if you are a bot",
+      "Send a score about the visit to LinkedIn",
+      "Share device and browser signals with Google for the score"
+    ],
+    "cannot": [
+      "Show a puzzle or ask you to click anything in v3",
+      "Name you on its own",
+      "See other tabs, files or apps",
+      "Work if blocked, though blocking may stop the page from loading"
+    ],
+    "reach": 2,
+    "reach_label": "Each LinkedIn page visit",
+    "differs": ""
+  },
+  "story": {
+    "what_it_is": "An invisible Google check that scores every page load for bot risk.",
+    "icon": "shield-check",
+    "tags": [
+      "Bot checks",
+      "Google",
+      "Silent"
+    ],
+    "marketing": [
+      {
+        "vendor": "Google Cloud",
+        "name": "reCAPTCHA Enterprise",
+        "pitch": "Google pitches it as a way to detect bots and fraud with a risk score and no puzzle for real people.",
+        "url": "https://cloud.google.com/security/products/recaptcha"
+      }
+    ],
+    "for_you": "You never see a puzzle or a box. The page quietly sends signals about your browser and clicks to Google, which sends back a score. If the score is bad, the site may then ask you to prove you are real.",
+    "for_makers": "Fake logins, scraping and spam are constant. A score without a puzzle keeps real people moving fast while bots get stopped. The price is that Google gets a signal of your visit to the site, plus your IP and browser data.",
+    "use_cases": [
+      {
+        "type": "security",
+        "example": "A login page on LinkedIn gets a score for each visit, and asks for extra proof only when the score looks bot like.",
+        "apps": [
+          "LinkedIn"
+        ]
+      },
+      {
+        "type": "shopping",
+        "example": "A ticket site uses the score to push likely bots to the back of the queue.",
+        "apps": [
+          "Ticketmaster",
+          "Eventbrite"
+        ]
+      },
+      {
+        "type": "payments",
+        "example": "A checkout page asks reCAPTCHA about a card test, and blocks it when it looks like a bot testing stolen cards.",
+        "apps": [
+          "Stripe Checkout",
+          "Shopify"
+        ]
+      },
+      {
+        "type": "games",
+        "example": "A game sign up page scores each new account to stop bot farms that sell gold or cheat.",
+        "apps": [
+          "Roblox",
+          "Steam"
+        ]
+      },
+      {
+        "type": "social",
+        "example": "A comment form scores each post to stop spam bots before they add links.",
+        "apps": [
+          "Reddit"
+        ]
+      },
+      {
+        "type": "analytics",
+        "example": "A team removes bot traffic from its reports using the same score.",
+        "apps": [
+          "Google Analytics"
+        ]
+      }
+    ],
+    "risks": [
+      "Google sees the visit",
+      "Real people may be wrongly flagged"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Google decides what signals it reads",
+    "Frequency (every page) is reported by BrowserGate, 35 reCAPTCHA references in the snapshot"
+  ],
+  "scores": {
+    "sensitivity": 2,
+    "utility": 3,
+    "fingerprint_bits": null,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Cheap bot filtering with no friction"
+    ],
+    "abuse": [
+      "Third party sees every page view"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": true,
+      "how": "Action onPageLoad and the LIX flag are in the snapshot; BrowserGate says it runs on every page."
+    }
+  },
+  "related": [
+    "web.tracking.linkedin-human-px-iframe"
+  ],
+  "refs": [
+    {
+      "t": "github",
+      "label": "mdp/linkedin-extension-fingerprinting (LinkedIn script snapshot and ID list)",
+      "url": "https://github.com/mdp/linkedin-extension-fingerprinting"
+    },
+    {
+      "t": "news",
+      "label": "BrowserGate: how it works (48 feature table)",
+      "url": "https://browsergate.eu/how-it-works/"
+    },
+    {
+      "t": "vendor",
+      "label": "Google reCAPTCHA Enterprise docs",
+      "url": "https://cloud.google.com/recaptcha/docs"
+    }
+  ],
+  "confidence": "docs"
+}

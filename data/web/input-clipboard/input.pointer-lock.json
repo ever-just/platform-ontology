@@ -1,0 +1,230 @@
+{
+  "id": "web.input.pointer-lock",
+  "name": "Pointer Lock",
+  "kind": "action",
+  "group": "input-clipboard",
+  "subgroup": "Pointer",
+  "tags": [
+    "game"
+  ],
+  "plain": "Hides and captures the mouse for games and 3D views.",
+  "meaning": "Gives raw relative mouse movement with unlimited range while the cursor is hidden. With unadjustedMovement the site gets unaccelerated input, a small hardware hint.",
+  "lifecycle": [
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "element.requestPointerLock({unadjustedMovement: true}); movementX, movementY",
+      "bcd": [
+        "api.Element.requestPointerLock"
+      ],
+      "access": {
+        "grant": "gesture",
+        "prompt_ui": "Browser shows an on-screen notice and Esc to exit; some platforms prompt on re-lock. Needs a gesture.",
+        "secure_context": true,
+        "user_gesture": true,
+        "persistence": "Until Esc or unlock",
+        "revocation": "Press Escape, leave page",
+        "iframe": "Frame needs allow-pointer-lock in sandbox",
+        "steps": [
+          "Click on an element",
+          "requestPointerLock()",
+          "Browser shows exit hint",
+          "mousemove events carry movementX/Y"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "37",
+          "note": "",
+          "date": "2014-08-26"
+        },
+        "edge": {
+          "s": "y",
+          "v": "13",
+          "note": "",
+          "date": "2015-11-12"
+        },
+        "firefox": {
+          "s": "y",
+          "v": "50",
+          "note": "",
+          "date": "2016-11-15"
+        },
+        "safari": {
+          "s": "y",
+          "v": "10.1",
+          "note": "",
+          "date": "2017-03-27"
+        },
+        "ios_safari": {
+          "s": "n",
+          "v": "No mouse on iOS",
+          "note": ""
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "144",
+          "note": "",
+          "date": "2026-01-13"
+        },
+        "samsung": {
+          "s": "y",
+          "v": "3.0",
+          "note": "",
+          "date": "2015-04-10"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "event",
+    "metric": "Relative mouse deltas",
+    "update": "per mouse event (about 125 Hz or higher)",
+    "fields": [
+      {
+        "name": "movementX/Y",
+        "type": "float",
+        "unit": "pixels",
+        "range": "unbounded",
+        "precision": "1 or fractional"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can hide your mouse pointer and capture its movement for games or 3D views",
+    "user_action": "You click inside a game or 3D view",
+    "can": [
+      "Hide the pointer and track raw mouse movement",
+      "Let you turn a camera or view without hitting the screen edge",
+      "Use unaccelerated mouse input if the site asks for it"
+    ],
+    "cannot": [
+      "Start without a click, tap or key press",
+      "Trap you; Esc always gets you out",
+      "Keep control after you switch tabs or apps",
+      "Work in Safari on iPhone"
+    ],
+    "reach": 2,
+    "reach_label": "While you use that view",
+    "differs": "Chrome, Firefox, Safari on Mac and Android browsers support it. Safari on iPhone does not."
+  },
+  "story": {
+    "what_it_is": "A page hides your mouse pointer and reads your raw movement, like in a shooter game.",
+    "icon": "crosshair",
+    "tags": [
+      "Mouse",
+      "Games",
+      "Asks first"
+    ],
+    "marketing": [
+      {
+        "vendor": "MDN (standards docs)",
+        "name": "Pointer Lock API",
+        "pitch": "Describes a way for apps to capture the mouse and read how far it moves, used for games, 3D views and maps.",
+        "url": "https://developer.mozilla.org/en-US/docs/Web/API/Pointer_Lock_API"
+      }
+    ],
+    "for_you": "You click on a game and your mouse pointer disappears. You can turn endlessly with no screen edge stopping you. The browser shows a small note and Escape gives the pointer back.",
+    "for_makers": "First person games, 3D viewers and cloud gaming need unlimited relative mouse movement. Makers can offer console quality aim on the web without installing anything.",
+    "use_cases": [
+      {
+        "type": "games",
+        "example": "A browser shooter hides the pointer and uses raw mouse movement so you can spin the camera freely.",
+        "apps": [
+          "Krunker.io",
+          "Shell Shockers",
+          "Minecraft Classic"
+        ]
+      },
+      {
+        "type": "games",
+        "example": "A cloud gaming service passes your raw mouse movement to the remote PC so aim feels right.",
+        "apps": [
+          "GeForce NOW",
+          "Xbox Cloud Gaming"
+        ]
+      },
+      {
+        "type": "creative",
+        "example": "A 3D modeling web app locks the pointer while you orbit around an object.",
+        "apps": [
+          "Sketchfab"
+        ]
+      },
+      {
+        "type": "maps",
+        "example": "A 3D globe or map site lets you drag without leaving the screen edge.",
+        "apps": [
+          "Google Earth"
+        ]
+      },
+      {
+        "type": "enterprise",
+        "example": "A remote desktop in the browser shows the host's pointer rather than yours.",
+        "apps": []
+      },
+      {
+        "type": "analytics",
+        "example": "Raw mouse deltas let a game study aim patterns, which also reveals cheaters.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Can hide the cursor",
+      "Fake click traps"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Needs a gesture",
+    "Escape always exits"
+  ],
+  "scores": {
+    "sensitivity": 2,
+    "utility": 4,
+    "fingerprint_bits": 1,
+    "friction": 1
+  },
+  "value": {
+    "legit_uses": [
+      "3D games and CAD"
+    ],
+    "abuse": [
+      "Locking cursor to a scam page"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2020-08",
+      "browser": "chrome",
+      "version": "88",
+      "change": "unadjustedMovement option ships"
+    }
+  ],
+  "related": [
+    "web.input.keyboard-lock"
+  ],
+  "refs": [
+    {
+      "t": "mdn",
+      "label": "MDN Pointer Lock API",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/Pointer_Lock_API"
+    },
+    {
+      "t": "spec",
+      "label": "W3C Pointer Lock 2.0",
+      "url": "https://www.w3.org/TR/pointerlock-2/"
+    }
+  ],
+  "confidence": "docs"
+}

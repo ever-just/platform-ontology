@@ -1,0 +1,213 @@
+{
+  "id": "mob.health.healthkit",
+  "name": "Health data (HealthKit and Health Connect)",
+  "kind": "permission",
+  "group": "health-fitness",
+  "subgroup": "Health data",
+  "tags": [
+    "runtime-permission",
+    "health",
+    "per-data-type"
+  ],
+  "plain": "Reads and writes health records such as steps, heart rate and sleep, one data type at a time.",
+  "meaning": "Sleep, heart rate and cycle data show conditions and habits. Both OSes grant per data type.",
+  "lifecycle": [
+    "in-session",
+    "background"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "y",
+      "v": "14",
+      "api": 34,
+      "permission": "android.permission.health.READ_* and WRITE_* per data type; READ_HEALTH_DATA_IN_BACKGROUND; READ_HEALTH_DATA_HISTORY",
+      "protection": "dangerous",
+      "grant": "prompt",
+      "prompt_ui": "Health Connect permission sheet with per type toggles",
+      "persistence": "Until revoked; permission usage visible in Health Connect",
+      "revocation": "Settings > Health Connect",
+      "store_policy": "Play: Health apps declaration; health data not for ads",
+      "api_surface": "HealthConnectClient",
+      "note": "Reads default to 30 days before first grant; older data needs READ_HEALTH_DATA_HISTORY"
+    },
+    "ios": {
+      "s": "y",
+      "v": "8",
+      "permission": "NSHealthShareUsageDescription, NSHealthUpdateUsageDescription, HealthKit capability",
+      "protection": "prompt",
+      "grant": "prompt",
+      "prompt_ui": "Health access sheet with per type toggles",
+      "persistence": "Until revoked",
+      "revocation": "Health app > Sharing > Apps",
+      "store_policy": "App Review 5.1.3: no use for advertising or storing in iCloud",
+      "api_surface": "HKHealthStore.requestAuthorization",
+      "note": "Apps cannot tell if read access was denied; denial looks like no data"
+    }
+  },
+  "data": {
+    "type": "list",
+    "metric": "Samples by type",
+    "update": "queries and observers",
+    "fields": [
+      {
+        "name": "types",
+        "type": "list",
+        "unit": "HK types",
+        "range": "hundreds",
+        "precision": ""
+      },
+      {
+        "name": "history",
+        "type": "integer",
+        "unit": "days",
+        "range": "30 default on Health Connect",
+        "precision": ""
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can see and add health data such as steps and sleep, one type at a time",
+    "user_action": "You tap Connect health data and switch on the types you want to share",
+    "can": [
+      "See the data types you allow, such as steps, heart rate and sleep",
+      "Add new records for the types you allow",
+      "Use background access on Android with a separate permission",
+      "Check older history on Android with the history permission"
+    ],
+    "cannot": [
+      "See types you left off in the sheet",
+      "See more than the last 30 days on Android before first grant, without the history permission",
+      "Tell on iPhone if you denied; it looks like no data",
+      "Keep access after you turn the switches off"
+    ],
+    "reach": 3,
+    "reach_label": "Only the data types you allow",
+    "differs": "Android Health Connect limits old data to 30 days unless you allow history. iPhone HealthKit hides a denial."
+  },
+  "story": {
+    "what_it_is": "Lets an app read and write health records such as steps, heart rate and sleep.",
+    "icon": "heart-pulse",
+    "tags": [
+      "Health",
+      "Asks first",
+      "Sensitive"
+    ],
+    "marketing": [
+      {
+        "vendor": "Apple",
+        "name": "HealthKit",
+        "pitch": "Developer pitch: a central place for health data, with people in control of what each app can see and write.",
+        "url": "https://developer.apple.com/health-fitness/"
+      }
+    ],
+    "for_you": "A screen lists each kind of data an app wants, like steps, sleep or heart rate. You turn on only the ones you like, and you can change it later in the Health app.",
+    "for_makers": "Makers use it to read your history, write new workouts and connect with watches and other apps. It saves them from building their own sensors and gives users clear controls.",
+    "use_cases": [
+      {
+        "type": "fitness",
+        "example": "A workout app reads your steps and writes a new run so the Health app has it.",
+        "apps": []
+      },
+      {
+        "type": "health",
+        "example": "A sleep app reads your nights and shows trends.",
+        "apps": []
+      },
+      {
+        "type": "health",
+        "example": "A period tracking app writes cycle data and reads symptoms.",
+        "apps": []
+      },
+      {
+        "type": "wearables",
+        "example": "A watch app shares heart rate and activity with the phone.",
+        "apps": [
+          "Apple Watch"
+        ]
+      },
+      {
+        "type": "games",
+        "example": "A game gives rewards for steps you walked.",
+        "apps": []
+      },
+      {
+        "type": "health",
+        "example": "A diabetes app reads glucose from a sensor.",
+        "apps": []
+      },
+      {
+        "type": "ads",
+        "example": "Apple bans using HealthKit data for ads or selling it.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Reveals conditions and habits",
+      "Shared data can leak"
+    ],
+    "android_note": "Android uses Health Connect with its own list of per data permissions.",
+    "ios_note": "Granted per data type, with a bundled read and write choice in a single sheet."
+  },
+  "technical_bounds": [
+    "Read denial is hidden on iOS",
+    "Health Connect history window limited by default"
+  ],
+  "scores": {
+    "sensitivity": 5,
+    "utility": 4,
+    "fingerprint_bits": null,
+    "friction": 2
+  },
+  "value": {
+    "legit_uses": [
+      "Fitness apps",
+      "Telehealth"
+    ],
+    "abuse": [
+      "Insurance profiling"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2014-09",
+      "platform": "ios",
+      "version": "iOS 8",
+      "change": "HealthKit introduced"
+    },
+    {
+      "date": "2023-10",
+      "platform": "android",
+      "version": "14 (API 34)",
+      "change": "Health Connect built into the platform"
+    }
+  ],
+  "related": [
+    "mob.health.clinical-records",
+    "mob.location.motion-activity"
+  ],
+  "refs": [
+    {
+      "t": "apple",
+      "label": "Apple: Setting up HealthKit",
+      "url": "https://developer.apple.com/documentation/healthkit/setting-up-healthkit"
+    },
+    {
+      "t": "android",
+      "label": "Android: Health Connect",
+      "url": "https://developer.android.com/health-and-fitness/health-connect"
+    },
+    {
+      "t": "policy",
+      "label": "App Review Guideline 5.1.3",
+      "url": "https://developer.apple.com/app-store/review/guidelines/#health-and-health-research"
+    }
+  ],
+  "confidence": "docs"
+}

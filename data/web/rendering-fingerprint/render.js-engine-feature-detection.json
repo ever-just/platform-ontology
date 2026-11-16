@@ -1,0 +1,242 @@
+{
+  "id": "web.render.js-engine-feature-detection",
+  "name": "JS and Web API feature detection (version pinning)",
+  "kind": "tracking",
+  "group": "rendering-fingerprint",
+  "subgroup": "JS engine",
+  "tags": [
+    "features",
+    "version",
+    "wasm",
+    "api-surface"
+  ],
+  "plain": "Checks which JavaScript, WebAssembly and Web APIs exist to estimate the exact browser version.",
+  "meaning": "New APIs appear on known dates, so a map of 200 to 1,000 properties pins the version within 1 to 2 releases and exposes bots, spoofed user agents and privacy modes. Client Hints and UA reduction make this the main version signal.",
+  "lifecycle": [
+    "on-arrival"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "'x' in window; Object.getOwnPropertyNames(window/navigator); WebAssembly.validate(); typeof API",
+      "access": {
+        "grant": "none",
+        "prompt_ui": "",
+        "secure_context": false,
+        "user_gesture": false,
+        "persistence": "",
+        "revocation": "",
+        "iframe": "",
+        "steps": [
+          "Enumerate window and navigator properties",
+          "Test WebAssembly SIMD, threads, GC feature bytes",
+          "Match against per-version tables"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "1",
+          "note": "",
+          "date": "2008-12-11"
+        },
+        "edge": {
+          "s": "y",
+          "v": "79",
+          "note": "",
+          "date": "2020-01-15"
+        },
+        "firefox": {
+          "s": "y",
+          "v": "1",
+          "note": "",
+          "date": "2004-11-09"
+        },
+        "safari": {
+          "s": "y",
+          "v": "1",
+          "note": "",
+          "date": "2003-06-23"
+        },
+        "ios_safari": {
+          "s": "y",
+          "v": "1",
+          "note": "",
+          "date": "2007-06-29"
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "1",
+          "note": "",
+          "date": ""
+        },
+        "samsung": {
+          "s": "y",
+          "v": "5.0",
+          "note": "",
+          "date": "2016-12-15"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "list",
+    "metric": "Bit vector of 300 to 1,000 features",
+    "update": "",
+    "fields": [
+      {
+        "name": "window property count",
+        "type": "integer",
+        "unit": "",
+        "range": "900 to 1300",
+        "precision": "exact"
+      },
+      {
+        "name": "wasm features",
+        "type": "list",
+        "unit": "",
+        "range": "0 to 10",
+        "precision": "exact"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can test which web features exist to guess your exact browser version",
+    "user_action": "Nothing. It happens when the page loads",
+    "can": [
+      "Check 200 to 1,000 features that appeared on known dates",
+      "Narrow your browser version to within about 1 to 2 releases",
+      "Spot bots, privacy modes and a faked browser label"
+    ],
+    "cannot": [
+      "See your files or messages",
+      "Ask permission first",
+      "Know who you are by itself",
+      "Tell which exact device you hold"
+    ],
+    "reach": 2,
+    "reach_label": "Silent, browser version only",
+    "differs": ""
+  },
+  "story": {
+    "what_it_is": "A script checks which JavaScript and Web features exist to estimate your exact browser version.",
+    "icon": "code",
+    "tags": [
+      "Silent",
+      "Browser version",
+      "Fingerprinting"
+    ],
+    "marketing": [],
+    "for_you": "You never see it. The page asks which new features your browser knows, like newer file or graphics tools. The answers pinpoint your browser and its version, and show if it is out of date.",
+    "for_makers": "Developers use feature checks to load a safe fallback instead of breaking. Fraud and bot teams use them too, since a fake browser rarely matches every feature real versions have.",
+    "use_cases": [
+      {
+        "type": "developer",
+        "example": "A site checks whether your browser can run WebAssembly, then loads the fast engine or a simpler one.",
+        "apps": [
+          "Figma",
+          "Google Earth"
+        ]
+      },
+      {
+        "type": "games",
+        "example": "A browser game like those on Poki or CrazyGames checks for WebGL and WebGPU, then picks the best graphics path.",
+        "apps": [
+          "Poki",
+          "CrazyGames"
+        ]
+      },
+      {
+        "type": "security",
+        "example": "A bot detector sees a browser claiming a new version that lacks a feature that version always has.",
+        "apps": [
+          "Cloudflare Turnstile"
+        ]
+      },
+      {
+        "type": "video",
+        "example": "A streaming site checks for modern video features before choosing how to play.",
+        "apps": [
+          "YouTube",
+          "Netflix"
+        ]
+      },
+      {
+        "type": "ads",
+        "example": "A tracker uses a long feature list to separate you from other people using the same browser release.",
+        "apps": []
+      },
+      {
+        "type": "enterprise",
+        "example": "An internal work portal warns that your browser is too old to run the app safely.",
+        "apps": []
+      },
+      {
+        "type": "analytics",
+        "example": "A visitor tool counts which browser versions its users have to decide what to support.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Reveals if you are out of date",
+      "Hard to fake well"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Browser and version only"
+  ],
+  "scores": {
+    "sensitivity": 3,
+    "utility": 2,
+    "fingerprint_bits": 4,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": "Polyfill decisions",
+    "abuse": "Version pin, anti-detect browser and bot detection"
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2022-05",
+      "browser": "chrome",
+      "version": "101",
+      "change": "User-Agent Reduction freezes minor version, boosting feature probing"
+    },
+    {
+      "date": "2023-02",
+      "browser": "chrome",
+      "version": "110",
+      "change": "Reduced user agent string rolled out to all desktop and Android"
+    }
+  ],
+  "related": [
+    "web.render.css-feature-probing",
+    "web.render.error-stack-formats"
+  ],
+  "refs": [
+    {
+      "t": "paper",
+      "label": "Vastel et al., FP-Stalker",
+      "url": "https://hal.inria.fr/hal-01652021"
+    },
+    {
+      "t": "github",
+      "label": "CreepJS",
+      "url": "https://github.com/abrahamjuliot/creepjs"
+    },
+    {
+      "t": "vendor",
+      "label": "Chrome User-Agent Reduction",
+      "url": "https://developer.chrome.com/docs/privacy-sandbox/user-agent/"
+    }
+  ],
+  "confidence": "docs"
+}

@@ -1,0 +1,202 @@
+{
+  "id": "mob.identity.app-attest",
+  "name": "App Attest and Play Integrity",
+  "kind": "capability",
+  "group": "identity-auth",
+  "subgroup": "Attestation",
+  "tags": [
+    "attestation",
+    "anti-fraud",
+    "device-check"
+  ],
+  "plain": "Proves to a server that a request came from a genuine copy of the app on a genuine device.",
+  "meaning": "Anti fraud tool with a privacy angle: it is a device level key, not a user id.",
+  "lifecycle": [
+    "on-launch"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "y",
+      "v": "4.4",
+      "api": 19,
+      "permission": "INTERNET (normal); Play Integrity API with Play services",
+      "protection": "normal",
+      "grant": "install",
+      "prompt_ui": "None",
+      "persistence": "Per token",
+      "revocation": "n/a",
+      "store_policy": "Play: Integrity API quotas (10,000 calls per day default)",
+      "api_surface": "IntegrityManager",
+      "note": "Verdicts for device, app and account licensing"
+    },
+    "ios": {
+      "s": "y",
+      "v": "14",
+      "permission": "com.apple.developer.devicecheck.appattest-environment",
+      "protection": "entitlement",
+      "grant": "entitlement",
+      "prompt_ui": "None",
+      "persistence": "Per key",
+      "revocation": "n/a",
+      "store_policy": "",
+      "api_surface": "DCAppAttestService, DCDevice",
+      "note": "Key stays in the Secure Enclave; DeviceCheck stores 2 bits per device"
+    }
+  },
+  "web_equivalents": [
+    "web.net.private-access-tokens-pact",
+    "web.identity.private-state-tokens"
+  ],
+  "data": {
+    "type": "object",
+    "metric": "Attestation or token",
+    "update": "per request",
+    "fields": [
+      {
+        "name": "bits",
+        "type": "integer",
+        "unit": "bits",
+        "range": "2 DeviceCheck bits",
+        "precision": ""
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can prove its requests come from the real app on a genuine phone",
+    "user_action": "Nothing. It happens when you sign in, pay, or send something the app protects",
+    "can": [
+      "Get a signed statement that the app and device look genuine",
+      "Sign requests with a key held in the phone's secure chip (iPhone)",
+      "Check app license and device integrity (Android)",
+      "Reject requests from copies, emulators and tampered apps"
+    ],
+    "cannot": [
+      "See who you are or other apps on the phone",
+      "Pass on a rooted or modified device at the stronger levels",
+      "Prove the phone is completely safe",
+      "Keep a flag beyond the 2 bits DeviceCheck offers"
+    ],
+    "reach": 2,
+    "reach_label": "Proof about the app and phone",
+    "differs": "iPhone uses App Attest and DeviceCheck. Android uses Play Integrity verdicts."
+  },
+  "story": {
+    "what_it_is": "A server gets proof that a request came from the real app on a genuine phone.",
+    "icon": "shield-check",
+    "tags": [
+      "Anti fraud",
+      "Silent",
+      "Identity"
+    ],
+    "marketing": [
+      {
+        "vendor": "Apple",
+        "name": "App Attest",
+        "pitch": "Apple lets servers confirm requests come from a genuine copy of the app on Apple hardware.",
+        "url": "https://developer.apple.com/documentation/devicecheck/establishing-your-app-s-integrity"
+      },
+      {
+        "vendor": "Google",
+        "name": "Play Integrity API",
+        "pitch": "Google tells servers whether a device, app and account look real or risky.",
+        "url": "https://developer.android.com/google/play/integrity"
+      }
+    ],
+    "for_you": "You do not see it. It sits behind a sign up, a purchase or a score upload and quietly says 'this looks real'. If your phone is jailbroken or rooted, an app may stop working.",
+    "for_makers": "Makers use it to block bots, cheats and cloned apps. It is a device level proof, not a person level ID, which helps with privacy. It still decides which phones are allowed and which are turned away.",
+    "use_cases": [
+      {
+        "type": "games",
+        "example": "A game server checks that a match result came from the real game, not a modified copy.",
+        "apps": []
+      },
+      {
+        "type": "banking",
+        "example": "A bank checks that a transfer request came from its real app before it moves any money.",
+        "apps": []
+      },
+      {
+        "type": "shopping",
+        "example": "A ticket seller blocks scripts that buy up concert seats by checking each purchase.",
+        "apps": [
+          "Ticketmaster"
+        ]
+      },
+      {
+        "type": "social",
+        "example": "A social app slows fake account creation by asking new devices to prove they are real.",
+        "apps": []
+      },
+      {
+        "type": "ads",
+        "example": "An ad platform removes fake installs by confirming the app and device were genuine.",
+        "apps": []
+      },
+      {
+        "type": "developer",
+        "example": "An AI app protects its paid server by only answering the true app.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Blocks rooted or jailbroken users",
+      "Device key can act as an identifier"
+    ],
+    "android_note": "Android uses Play Integrity and gives a graded answer (basic, device, strong) about the device.",
+    "ios_note": "iPhone uses App Attest, which is a hardware key per app install plus a signed statement from Apple."
+  },
+  "technical_bounds": [
+    "Server must verify; clients cannot trust local result"
+  ],
+  "scores": {
+    "sensitivity": 2,
+    "utility": 4,
+    "fingerprint_bits": null,
+    "friction": 1
+  },
+  "value": {
+    "legit_uses": [
+      "Fraud prevention"
+    ],
+    "abuse": [
+      "Blocking rooted users"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2020-09",
+      "platform": "ios",
+      "version": "iOS 14",
+      "change": "App Attest introduced"
+    },
+    {
+      "date": "2021-05",
+      "platform": "android",
+      "version": "Play services",
+      "change": "Play Integrity API launched"
+    }
+  ],
+  "related": [
+    "mob.identity.sign-in-with-apple"
+  ],
+  "refs": [
+    {
+      "t": "apple",
+      "label": "Apple: DCAppAttestService",
+      "url": "https://developer.apple.com/documentation/devicecheck/dcappattestservice"
+    },
+    {
+      "t": "android",
+      "label": "Android: Play Integrity",
+      "url": "https://developer.android.com/google/play/integrity"
+    }
+  ],
+  "confidence": "docs"
+}

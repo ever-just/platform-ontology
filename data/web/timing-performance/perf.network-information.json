@@ -1,0 +1,250 @@
+{
+  "id": "web.perf.network-information",
+  "name": "Network Information API and Save-Data",
+  "kind": "signal",
+  "group": "timing-performance",
+  "subgroup": "Connectivity",
+  "tags": [
+    "connection",
+    "effectiveType",
+    "downlink",
+    "rtt",
+    "saveData"
+  ],
+  "plain": "Exposes estimated connection type, speed and data saver preference.",
+  "meaning": "navigator.connection returns effectiveType (4g, 3g...), rtt rounded to 25 ms, downlink rounded to 25 kbps steps (max 10 Mbps) and saveData. Chrome on Android adds type (wifi, cellular); other browsers do not support it.",
+  "lifecycle": [
+    "on-arrival"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "navigator.connection.effectiveType, rtt, downlink, saveData; Save-Data and Downlink request headers",
+      "bcd": [
+        "api.NetworkInformation"
+      ],
+      "access": {
+        "grant": "none",
+        "prompt_ui": "",
+        "secure_context": false,
+        "user_gesture": false,
+        "persistence": "",
+        "revocation": "",
+        "iframe": "",
+        "steps": [
+          "Read navigator.connection",
+          "Listen for change events"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "61",
+          "note": "",
+          "date": "2017-09-05"
+        },
+        "edge": {
+          "s": "y",
+          "v": "79",
+          "note": "",
+          "date": "2020-01-15"
+        },
+        "firefox": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "safari": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "ios_safari": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "38",
+          "note": "",
+          "date": "2014-10-08"
+        },
+        "samsung": {
+          "s": "y",
+          "v": "3.0",
+          "note": "",
+          "date": "2015-04-10"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "object",
+    "metric": "4 fields",
+    "update": "",
+    "fields": [
+      {
+        "name": "effectiveType",
+        "type": "string",
+        "unit": "",
+        "range": "slow-2g, 2g, 3g, 4g",
+        "precision": "4 buckets"
+      },
+      {
+        "name": "rtt",
+        "type": "integer",
+        "unit": "ms",
+        "range": "0 to 3000",
+        "precision": "25 ms rounding"
+      },
+      {
+        "name": "downlink",
+        "type": "float",
+        "unit": "Mbps",
+        "range": "0 to 10",
+        "precision": "0.025 steps rounded"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can see a rough guess of your connection type, speed and data saver setting",
+    "user_action": "Nothing. It happens when the page loads, or when your connection changes",
+    "can": [
+      "Get a speed class such as 4g or 3g",
+      "Get rounded delay and download speed, with speed capped at 10 Mbps",
+      "Learn if Data Saver is on",
+      "On Chrome for Android, see if you use Wi-Fi or mobile data"
+    ],
+    "cannot": [
+      "Get exact speeds, since numbers are rounded",
+      "See your Wi-Fi name or password",
+      "Work in Safari or Firefox",
+      "Ask permission first"
+    ],
+    "reach": 2,
+    "reach_label": "Silent, rough connection info",
+    "differs": "Chrome, Edge and Samsung Internet support it. Safari and Firefox do not."
+  },
+  "story": {
+    "what_it_is": "A page can see your estimated connection type and speed, and whether Data Saver is on.",
+    "icon": "wifi",
+    "tags": [
+      "Network",
+      "Silent",
+      "Data saver"
+    ],
+    "marketing": [
+      {
+        "vendor": "MDN",
+        "name": "Network Information API",
+        "pitch": "Lets a page see the type of connection and adjust, such as sending less data on a slow one.",
+        "url": "https://developer.mozilla.org/en-US/docs/Web/API/Network_Information_API"
+      },
+      {
+        "vendor": "web.dev",
+        "name": "Save-Data",
+        "pitch": "Google describes a hint that tells a site you want to use less data, so it can send lighter pages.",
+        "url": "https://web.dev/articles/optimizing-content-efficiency-save-data"
+      }
+    ],
+    "for_you": "You get no prompt. A site may quietly send smaller images or lower quality video when you are on a slow connection or have Data Saver on. Pages feel faster and use less data.",
+    "for_makers": "Makers use it to adapt quality to the network. Streaming and real time apps pick a safe level to avoid buffering. It is also a small signal for device ID and location hints.",
+    "use_cases": [
+      {
+        "type": "video",
+        "example": "A streaming site starts at lower video quality on a slow connection, then raises it.",
+        "apps": [
+          "YouTube",
+          "Netflix"
+        ]
+      },
+      {
+        "type": "games",
+        "example": "A cloud gaming page like Xbox Cloud Gaming or GeForce NOW picks stream quality based on your connection.",
+        "apps": [
+          "Xbox Cloud Gaming",
+          "GeForce NOW"
+        ]
+      },
+      {
+        "type": "video",
+        "example": "A video call site lowers video size when your network gets weak, to keep the voice clear.",
+        "apps": [
+          "Google Meet",
+          "Zoom web client"
+        ]
+      },
+      {
+        "type": "shopping",
+        "example": "A shop sends smaller product photos to people on Save Data or slow mobile.",
+        "apps": []
+      },
+      {
+        "type": "news",
+        "example": "A news site skips autoplay video for people who turned on Data Saver.",
+        "apps": []
+      },
+      {
+        "type": "ads",
+        "example": "An ad network lowers ad size on slow networks to avoid slowing the page.",
+        "apps": []
+      },
+      {
+        "type": "security",
+        "example": "A fraud tool uses connection type as a small clue that does not match the claimed device.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Chromium only",
+      "Adds to a device ID"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Chromium only (Chrome, Edge, Opera, Samsung)",
+    "Estimates, not measurements of the real line"
+  ],
+  "scores": {
+    "sensitivity": 2,
+    "utility": 3,
+    "fingerprint_bits": 2,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": "Adaptive media and prefetch",
+    "abuse": "Adds up to 2 bits of network class; mobile vs wifi"
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2020-01",
+      "browser": "chrome",
+      "version": "",
+      "change": "Values rounded and capped to reduce fingerprinting"
+    }
+  ],
+  "related": [
+    "web.net.client-hints"
+  ],
+  "refs": [
+    {
+      "t": "mdn",
+      "label": "MDN Network Information API",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/Network_Information_API"
+    },
+    {
+      "t": "spec",
+      "label": "WICG Netinfo",
+      "url": "https://wicg.github.io/netinfo/"
+    }
+  ],
+  "confidence": "docs"
+}

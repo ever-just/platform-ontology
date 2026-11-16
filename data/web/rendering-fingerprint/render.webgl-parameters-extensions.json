@@ -1,0 +1,262 @@
+{
+  "id": "web.render.webgl-parameters-extensions",
+  "name": "WebGL parameters and extensions",
+  "kind": "tracking",
+  "group": "rendering-fingerprint",
+  "subgroup": "WebGL",
+  "tags": [
+    "webgl",
+    "gpu",
+    "UNMASKED_RENDERER",
+    "extensions"
+  ],
+  "plain": "Reads the GPU vendor and model string, hardware limits and the list of supported WebGL extensions.",
+  "meaning": "Exposes the exact GPU model and driver family (for example 'ANGLE (Apple, M2)'), which is a strong device class signal and reveals gaming, laptop or phone hardware.",
+  "lifecycle": [
+    "on-arrival"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "gl.getParameter(); getSupportedExtensions(); WEBGL_debug_renderer_info; getContextAttributes()",
+      "bcd": [
+        "api.WebGLRenderingContext.getParameter",
+        "api.WEBGL_debug_renderer_info"
+      ],
+      "access": {
+        "grant": "none",
+        "prompt_ui": "",
+        "secure_context": false,
+        "user_gesture": false,
+        "persistence": "",
+        "revocation": "",
+        "iframe": "",
+        "steps": [
+          "Create a WebGL context on a hidden canvas",
+          "Call getParameter on 60 or more constants",
+          "Enumerate extensions",
+          "Optionally read UNMASKED_VENDOR_WEBGL and UNMASKED_RENDERER_WEBGL"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "9",
+          "note": "",
+          "date": "2011-02-03"
+        },
+        "edge": {
+          "s": "y",
+          "v": "12",
+          "note": "",
+          "date": "2015-07-29"
+        },
+        "firefox": {
+          "s": "y",
+          "v": "4",
+          "note": "",
+          "date": "2011-03-22"
+        },
+        "safari": {
+          "s": "p",
+          "v": "5.1",
+          "note": "Debug renderer returns generic 'Apple GPU' on Apple silicon since about Safari 15",
+          "date": "2011-07-20"
+        },
+        "ios_safari": {
+          "s": "y",
+          "v": "8",
+          "note": "",
+          "date": "2014-09-17"
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "25",
+          "note": "",
+          "date": "2013-02-27"
+        },
+        "samsung": {
+          "s": "y",
+          "v": "1.5",
+          "note": "",
+          "date": "2013-09-25"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "object",
+    "metric": "About 70 numeric limits plus 30 to 40 extension names",
+    "update": "",
+    "fields": [
+      {
+        "name": "MAX_TEXTURE_SIZE",
+        "type": "integer",
+        "unit": "px",
+        "range": "4096 to 32768",
+        "precision": "exact"
+      },
+      {
+        "name": "MAX_VERTEX_UNIFORM_VECTORS",
+        "type": "integer",
+        "unit": "",
+        "range": "128 to 4096",
+        "precision": "exact"
+      },
+      {
+        "name": "UNMASKED_RENDERER_WEBGL",
+        "type": "string",
+        "unit": "",
+        "range": "GPU string",
+        "precision": "full model on Chrome and Firefox desktop"
+      },
+      {
+        "name": "extensions",
+        "type": "list",
+        "unit": "",
+        "range": "30 to 40 names",
+        "precision": "exact"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can see your graphics card model, limits and which 3D features it supports",
+    "user_action": "Nothing. It happens when the page loads",
+    "can": [
+      "Get the graphics chip name, for example Apple M2",
+      "Get its hardware limits and feature list",
+      "Tell if you use a phone, laptop or gaming PC"
+    ],
+    "cannot": [
+      "Ask permission first",
+      "See your files",
+      "Show you anything on screen",
+      "Get the real chip name in browsers that mask it"
+    ],
+    "reach": 3,
+    "reach_label": "Silent, hardware model",
+    "differs": "Safari and some Android browsers hide the chip name more than Chrome and Edge on desktop."
+  },
+  "story": {
+    "what_it_is": "A script reads your GPU's vendor and model string, hardware limits and the list of supported WebGL extensions.",
+    "icon": "cpu",
+    "tags": [
+      "Graphics",
+      "Silent",
+      "Fingerprinting"
+    ],
+    "marketing": [
+      {
+        "vendor": "MDN",
+        "name": "WebGL extensions",
+        "pitch": "Describes optional graphics features a browser may offer on top of the base WebGL set.",
+        "url": "https://developer.mozilla.org/en-US/docs/Web/API/WebGL_API/Using_Extensions"
+      }
+    ],
+    "for_you": "You never see it. Your device quietly answers a long list of graphics questions. The answers are nearly the same each visit, so they help a site recognize your device.",
+    "for_makers": "Game and 3D makers read these to pick textures and effects. Fraud teams and trackers read the same list because it separates graphics chips and driver versions.",
+    "use_cases": [
+      {
+        "type": "games",
+        "example": "A browser game like those running Unity or Babylon in a tab checks supported extensions, then picks the best texture format.",
+        "apps": [
+          "Unity WebGL games",
+          "Babylon.js demos"
+        ]
+      },
+      {
+        "type": "creative",
+        "example": "A 3D editor in the browser checks which features exist, then turns on or off shadows and effects.",
+        "apps": [
+          "Figma",
+          "Spline"
+        ]
+      },
+      {
+        "type": "maps",
+        "example": "A web map checks for float textures so it can draw smooth terrain on newer chips.",
+        "apps": [
+          "Google Earth"
+        ]
+      },
+      {
+        "type": "security",
+        "example": "A fraud tool compares the list to known real devices and spots a virtual machine.",
+        "apps": []
+      },
+      {
+        "type": "ads",
+        "example": "A tracker hashes the long extension list into an ID, since few devices match exactly.",
+        "apps": []
+      },
+      {
+        "type": "analytics",
+        "example": "A visitor counting tool counts how many users have older graphics chips so a site knows what to support.",
+        "apps": []
+      },
+      {
+        "type": "developer",
+        "example": "A game studio checks the crash reports by graphics model to fix a driver bug.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Reveals your hardware",
+      "Very stable ID"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Needs GPU or SwiftShader, headless can reveal 'SwiftShader' or 'llvmpipe'",
+    "Brave and Tor return generic values",
+    "Cannot read VRAM size"
+  ],
+  "scores": {
+    "sensitivity": 4,
+    "utility": 2,
+    "fingerprint_bits": 6,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": "Pick shader quality tiers, report crashes by GPU",
+    "abuse": "Device class ID, VM and bot detection, spoof checks (renderer versus user agent mismatch)"
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2017-01",
+      "browser": "paper",
+      "version": "",
+      "change": "Cao et al. NDSS 2017 cross-browser fingerprinting via GPU features"
+    }
+  ],
+  "related": [
+    "web.render.webgl-render-hash",
+    "web.render.webgpu-adapter-info",
+    "web.render.webgl-shader-precision"
+  ],
+  "refs": [
+    {
+      "t": "mdn",
+      "label": "MDN WEBGL_debug_renderer_info",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/WEBGL_debug_renderer_info"
+    },
+    {
+      "t": "paper",
+      "label": "Cao et al., Cross-Browser Fingerprinting via OS and Hardware Level Features (NDSS 2017)",
+      "url": "https://www.ndss-symposium.org/ndss2017/ndss-2017-programme/cross-browser-fingerprinting-os-and-hardware-level-features/"
+    },
+    {
+      "t": "github",
+      "label": "BrowserLeaks WebGL",
+      "url": "https://browserleaks.com/webgl"
+    }
+  ],
+  "confidence": "docs"
+}

@@ -1,0 +1,229 @@
+{
+  "id": "web.perf.keystroke-dynamics",
+  "name": "Keystroke dynamics",
+  "kind": "tracking",
+  "group": "timing-performance",
+  "subgroup": "Behavioral biometrics",
+  "tags": [
+    "keystroke",
+    "typing",
+    "biometrics",
+    "key-events"
+  ],
+  "plain": "Records key press and release times to build a typing rhythm profile.",
+  "meaning": "Dwell times (key held) and flight times (between keys) for password and free text identify people with 1 to 5% error. Persists across devices and accounts, used for continuous authentication and fraud.",
+  "lifecycle": [
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "keydown/keyup events with event.timeStamp; InputEvent",
+      "access": {
+        "grant": "none",
+        "prompt_ui": "",
+        "secure_context": false,
+        "user_gesture": false,
+        "persistence": "",
+        "revocation": "",
+        "iframe": "",
+        "steps": [
+          "Listen to keydown and keyup on fields",
+          "Record timestamps per key class",
+          "Compute dwell and digraph latencies",
+          "Compare with enrolled profile"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "1",
+          "note": "",
+          "date": "2008-12-11"
+        },
+        "edge": {
+          "s": "y",
+          "v": "79",
+          "note": "",
+          "date": "2020-01-15"
+        },
+        "firefox": {
+          "s": "y",
+          "v": "1",
+          "note": "",
+          "date": "2004-11-09"
+        },
+        "safari": {
+          "s": "y",
+          "v": "1",
+          "note": "",
+          "date": "2003-06-23"
+        },
+        "ios_safari": {
+          "s": "y",
+          "v": "1",
+          "note": "",
+          "date": "2007-06-29"
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "1",
+          "note": "",
+          "date": ""
+        },
+        "samsung": {
+          "s": "y",
+          "v": "5.0",
+          "note": "",
+          "date": "2016-12-15"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "list",
+    "metric": "Timestamps at 0.1 to 1 ms",
+    "update": "",
+    "fields": [
+      {
+        "name": "dwell",
+        "type": "float",
+        "unit": "ms",
+        "range": "40 to 250",
+        "precision": "timer resolution (0.1 to 1 ms)"
+      },
+      {
+        "name": "flight",
+        "type": "float",
+        "unit": "ms",
+        "range": "-100 to 600",
+        "precision": "same"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can time your key presses to learn your typing rhythm",
+    "user_action": "You type in a box on the page",
+    "can": [
+      "Time how long you hold each key",
+      "Time the gap between keys",
+      "Build a typing profile that picks you out with about 1 to 5% error",
+      "Match the same person on other devices or accounts"
+    ],
+    "cannot": [
+      "Work if you paste text instead of typing it",
+      "Ask permission first",
+      "See what you type in other tabs or apps",
+      "Be switched off by clearing cookies"
+    ],
+    "reach": 4,
+    "reach_label": "Follows you across devices",
+    "differs": ""
+  },
+  "story": {
+    "what_it_is": "A script records when each key goes down and up, to build a profile of your typing rhythm.",
+    "icon": "keyboard",
+    "tags": [
+      "Keyboard",
+      "Silent",
+      "Behavior"
+    ],
+    "marketing": [],
+    "for_you": "You never see it. Everyone types with their own rhythm, like a signature. A page that can see key timing can learn yours and later tell if it is you or someone else typing.",
+    "for_makers": "Banks and fraud teams use typing rhythm as a quiet second check that you are really you. Some sites use it to spot bots that type too evenly. Critics point out it is also tracking of a body trait.",
+    "use_cases": [
+      {
+        "type": "banking",
+        "example": "A bank compares how you type your password with your usual rhythm, and asks for more proof if it looks different.",
+        "apps": []
+      },
+      {
+        "type": "security",
+        "example": "A bot detector sees login typing that is too even and fast, and blocks it as a script.",
+        "apps": [
+          "HUMAN",
+          "DataDome"
+        ]
+      },
+      {
+        "type": "education",
+        "example": "An online exam service checks that the same person who started the course is the one typing the test.",
+        "apps": [
+          "Coursera"
+        ]
+      },
+      {
+        "type": "enterprise",
+        "example": "A company portal uses typing rhythm as a hidden second factor for staff accounts.",
+        "apps": []
+      },
+      {
+        "type": "social",
+        "example": "A social site spots a bot farm because all fake accounts type with the same machine like pattern.",
+        "apps": []
+      },
+      {
+        "type": "games",
+        "example": "A browser game with chat checks for macro or script input that types perfect timing.",
+        "apps": []
+      },
+      {
+        "type": "ads",
+        "example": "A tracker could link two visits by typing style, which is why privacy groups raise concerns.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Typing style is personal",
+      "Hard to notice or avoid",
+      "Can be used for tracking"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Cannot read keys outside the page or in other iframes",
+    "Password fields still emit events to the page"
+  ],
+  "scores": {
+    "sensitivity": 3,
+    "utility": 4,
+    "fingerprint_bits": 4,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": "Fraud detection, account takeover defense, typing tests",
+    "abuse": "Cross-device identity tracking and profiling, user re-identification"
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2013-01",
+      "browser": "paper",
+      "version": "",
+      "change": "Monrose and Rubin keystroke authentication line of work; Killourhy and Maxion 2009 benchmark"
+    }
+  ],
+  "related": [
+    "web.perf.mouse-dynamics",
+    "web.perf.typing-cadence-scroll"
+  ],
+  "refs": [
+    {
+      "t": "paper",
+      "label": "Killourhy and Maxion, Comparing Anomaly Detectors for Keystroke Dynamics (DSN 2009)",
+      "url": "https://www.cs.cmu.edu/~keystroke/"
+    },
+    {
+      "t": "vendor",
+      "label": "BioCatch, typing biometrics",
+      "url": "https://www.biocatch.com/"
+    }
+  ],
+  "confidence": "docs"
+}

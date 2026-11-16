@@ -1,0 +1,263 @@
+{
+  "id": "web.display.picture-in-picture",
+  "name": "Picture in Picture (video)",
+  "kind": "action",
+  "group": "display-window",
+  "subgroup": "Floating windows",
+  "tags": [
+    "picture-in-picture",
+    "video",
+    "floating-window"
+  ],
+  "plain": "Pops a video into a small always-on-top window, usually after a click.",
+  "meaning": "A site can float a video above all other apps, which keeps attention on its content while the person works elsewhere. The person can close or resize it, and a site cannot place or hide the window.",
+  "lifecycle": [
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "video.requestPictureInPicture(); document.exitPictureInPicture()",
+      "permissions_policy": "picture-in-picture",
+      "bcd": [
+        "api.HTMLVideoElement.requestPictureInPicture",
+        "api.Document.exitPictureInPicture",
+        "api.PictureInPictureWindow"
+      ],
+      "access": {
+        "grant": "gesture",
+        "prompt_ui": "No prompt (needs a click, tap or keypress)",
+        "secure_context": false,
+        "user_gesture": true,
+        "activation": "transient",
+        "persistence": "Ends on exit, video unload or navigation; nothing is stored",
+        "revocation": "Nothing to revoke (no permission is stored)",
+        "iframe": "Cross-origin iframes need allow=\"picture-in-picture\" (Permissions Policy picture-in-picture, default self)",
+        "steps": [
+          "Person clicks",
+          "Page calls video.requestPictureInPicture()",
+          "Browser opens a floating window with the video",
+          "Page can listen to enterpictureinpicture and leavepictureinpicture"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "69",
+          "note": "",
+          "date": "2018-09-04"
+        },
+        "edge": {
+          "s": "y",
+          "v": "79",
+          "note": "",
+          "date": "2020-01-15"
+        },
+        "firefox": {
+          "s": "y",
+          "v": "153",
+          "note": "",
+          "date": "2026-07-21"
+        },
+        "safari": {
+          "s": "y",
+          "v": "13.1",
+          "note": "",
+          "date": "2020-03-24"
+        },
+        "ios_safari": {
+          "s": "y",
+          "v": "13.4",
+          "note": "All iOS browsers use WebKit",
+          "date": "2020-03-24"
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "105",
+          "note": "",
+          "date": "2022-09-02"
+        },
+        "samsung": {
+          "s": "y",
+          "v": "20.0",
+          "note": "",
+          "date": "2023-02-10"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "none",
+    "metric": "",
+    "update": "",
+    "fields": []
+  },
+  "limits": {
+    "headline": "Can pop a video into a small floating window after you tap",
+    "user_action": "You tap the Picture in Picture button on a video.",
+    "can": [
+      "Move a video into a small always-on-top window",
+      "Keep it playing while you use other tabs or apps",
+      "Return it to the page when you ask"
+    ],
+    "cannot": [
+      "Start without a click, tap or keypress",
+      "Float anything other than a video",
+      "Keep the video playing after you close the floating window"
+    ],
+    "reach": 2,
+    "reach_label": "Only after you tap",
+    "differs": ""
+  },
+  "story": {
+    "what_it_is": "Pops a video into a small always on top window, usually after you click.",
+    "icon": "picture-in-picture",
+    "tags": [
+      "Video",
+      "Window",
+      "Multitask"
+    ],
+    "marketing": [
+      {
+        "vendor": "MDN",
+        "name": "Picture-in-Picture API",
+        "pitch": "Explains how a video can float in a small window above other apps so people can keep watching.",
+        "url": "https://developer.mozilla.org/en-US/docs/Web/API/Picture-in-Picture_API"
+      }
+    ],
+    "for_you": "You click a button on a video and it floats in a small window. You can then read a different page or work in another app while it plays.",
+    "for_makers": "It helps a site keep people watching. A video that floats is a video that keeps getting watched, which matters for ads and subscriptions.",
+    "use_cases": [
+      {
+        "type": "video",
+        "example": "You pop a lecture or recipe video out and keep it above your notes.",
+        "apps": [
+          "YouTube"
+        ]
+      },
+      {
+        "type": "live",
+        "example": "A live sports or news stream floats in the corner while you answer emails.",
+        "apps": [
+          "Twitch"
+        ]
+      },
+      {
+        "type": "video",
+        "example": "A streaming site lets you watch a show in a corner window while you scroll.",
+        "apps": [
+          "Netflix"
+        ]
+      },
+      {
+        "type": "games",
+        "example": "A browser game stream floats over a walkthrough or guide page.",
+        "apps": []
+      },
+      {
+        "type": "education",
+        "example": "A course video floats next to a coding tab so students can follow along.",
+        "apps": [
+          "Coursera"
+        ]
+      },
+      {
+        "type": "ads",
+        "example": "A news site floats a small video player that follows you down the page, with an ad before the clip.",
+        "apps": []
+      },
+      {
+        "type": "video",
+        "example": "A video call app lets you float the other person while you take notes.",
+        "apps": [
+          "Google Meet",
+          "Zoom"
+        ]
+      }
+    ],
+    "risks": [
+      "Hard to close sometimes",
+      "Ad players may follow you"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Needs user activation to enter, but leaving can happen any time",
+    "Video only (document PiP is a separate API and Chromium or Firefox only)",
+    "The element needs metadata loaded and must not carry the disablePictureInPicture attribute",
+    "Window size and place are chosen by the browser; the site gets width and height through PictureInPictureWindow and a resize event",
+    "Safari before 13.1 used its own webkitSetPresentationMode; standard API from Safari 13.1 (BCD)",
+    "Chrome for Android has the API from Chrome 105"
+  ],
+  "scores": {
+    "sensitivity": 1,
+    "utility": 4,
+    "fingerprint_bits": null,
+    "friction": 1
+  },
+  "value": {
+    "legit_uses": [
+      "Video and video call players",
+      "Streaming sites",
+      "Live sport or lecture players"
+    ],
+    "abuse": [
+      "Persisting a distraction or an ad over other apps"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2018-09",
+      "browser": "chrome",
+      "version": "69",
+      "change": "Picture in Picture Web API ships on desktop"
+    },
+    {
+      "date": "2020-03",
+      "browser": "safari",
+      "version": "13.1",
+      "change": "Standard PiP API for macOS Safari"
+    },
+    {
+      "date": "2022-09",
+      "browser": "chrome_android",
+      "version": "105",
+      "change": "API on Chrome for Android"
+    },
+    {
+      "date": "2026",
+      "browser": "firefox",
+      "version": "153",
+      "change": "requestPictureInPicture API arrives (BCD), after Firefox's own PiP toggle"
+    }
+  ],
+  "related": [
+    "web.display.document-pip",
+    "web.actions.autoplay"
+  ],
+  "refs": [
+    {
+      "t": "mdn",
+      "label": "MDN Picture-in-Picture API",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/Picture-in-Picture_API"
+    },
+    {
+      "t": "spec",
+      "label": "W3C Picture-in-Picture",
+      "url": "https://www.w3.org/TR/picture-in-picture/"
+    },
+    {
+      "t": "bcd",
+      "label": "BCD HTMLVideoElement.requestPictureInPicture",
+      "url": "https://github.com/mdn/browser-compat-data/blob/main/api/HTMLVideoElement.json"
+    }
+  ],
+  "confidence": "docs"
+}

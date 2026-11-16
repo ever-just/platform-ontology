@@ -1,0 +1,232 @@
+{
+  "id": "mob.apps.usage-stats",
+  "name": "Usage access",
+  "kind": "permission",
+  "group": "app-ecosystem",
+  "subgroup": "Usage",
+  "tags": [
+    "special-access",
+    "usage-stats",
+    "screen-time",
+    "app-usage"
+  ],
+  "plain": "Lets the app see which apps are used and for how long.",
+  "meaning": "Shows habits, schedules and which apps are installed. Powers digital wellbeing, parental control and market research.",
+  "lifecycle": [
+    "background"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "y",
+      "v": "5.0",
+      "api": 21,
+      "permission": "PACKAGE_USAGE_STATS",
+      "protection": "special",
+      "grant": "settings",
+      "prompt_ui": "Settings toggle: Usage access",
+      "persistence": "Until revoked",
+      "revocation": "Settings > Special app access > Usage access",
+      "store_policy": "Play: review for sensitive access; package visibility policy applies",
+      "api_surface": "UsageStatsManager",
+      "note": "Package visibility rules since Android 11 limit app lists."
+    },
+    "ios": {
+      "s": "f",
+      "v": "15",
+      "permission": "com.apple.developer.family-controls",
+      "protection": "entitlement",
+      "grant": "entitlement",
+      "prompt_ui": "Family Controls authorization; opaque tokens",
+      "persistence": "Until revoked",
+      "revocation": "Settings > Screen Time",
+      "store_policy": "App Review 5.1.1; entitlement needs Apple approval",
+      "api_surface": "FamilyControls, DeviceActivity, ManagedSettings",
+      "note": "Apps get opaque tokens not names; only Screen Time extensions can read usage."
+    }
+  },
+  "web_equivalents": [
+    "web.notexposed.installed-apps"
+  ],
+  "data": {
+    "type": "object",
+    "metric": "App usage per interval",
+    "update": "daily buckets",
+    "fields": [
+      {
+        "name": "foreground_time",
+        "type": "integer",
+        "unit": "ms",
+        "range": "0 to 86400000",
+        "precision": "1 ms"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can see which apps you open and for how long, after you switch it on",
+    "user_action": "You open Settings and switch on Usage access for the app",
+    "can": [
+      "List which apps you used and how many minutes each",
+      "Show screen time charts and set limits for parents or wellbeing",
+      "Spot which apps are on the phone, within Android package limits"
+    ],
+    "cannot": [
+      "Turn on by itself; you must go to Settings and flip the switch",
+      "See what you did inside those apps",
+      "Get real app names on iPhone; apps receive hidden tokens and only Screen Time tools see usage"
+    ],
+    "reach": 4,
+    "reach_label": "All your app use, anytime",
+    "differs": "Android gives a Settings switch. iPhone uses Family Controls with hidden tokens and no app names for the developer."
+  },
+  "story": {
+    "what_it_is": "Lets an app see which apps you use and how long you use them.",
+    "icon": "activity",
+    "tags": [
+      "Habits",
+      "Settings toggle",
+      "Sensitive"
+    ],
+    "marketing": [
+      {
+        "vendor": "Google",
+        "name": "Digital Wellbeing",
+        "pitch": "See how much time you spend in apps and set limits to build healthier habits.",
+        "url": "https://wellbeing.google/"
+      },
+      {
+        "vendor": "Apple",
+        "name": "Screen Time",
+        "pitch": "See your daily phone use and set limits for you or your child.",
+        "url": "https://support.apple.com/guide/iphone/get-started-with-screen-time-iphbfa595995/ios"
+      }
+    ],
+    "for_you": "You must flip a special switch in Settings to allow it. After that, a tool can show you your screen time, block apps after your limit, or let a parent watch over a child's phone.",
+    "for_makers": "Wellbeing apps and parental control apps cannot work without it. Market research firms pay panelists to install it so they can measure which apps people really use, and some stalkerware abuses it.",
+    "use_cases": [
+      {
+        "type": "health",
+        "example": "A wellbeing app shows 'You spent 4 hours in social apps today' and offers a focus mode.",
+        "apps": [
+          "StayFree",
+          "Digital Wellbeing"
+        ]
+      },
+      {
+        "type": "kids",
+        "example": "A parent sees which games and videos their child opens, and gets a lock after one hour.",
+        "apps": [
+          "Google Family Link",
+          "Qustodio"
+        ]
+      },
+      {
+        "type": "games",
+        "example": "A game blocker app pauses mobile games on school nights once the daily limit is hit.",
+        "apps": [
+          "Freedom"
+        ]
+      },
+      {
+        "type": "analytics",
+        "example": "A research panel pays users to share app time so analysts can report which games are growing.",
+        "apps": [
+          "Sensor Tower panel"
+        ]
+      },
+      {
+        "type": "security",
+        "example": "A fraud app checks if a remote control tool was running during a payment and flags the risk.",
+        "apps": []
+      },
+      {
+        "type": "productivity",
+        "example": "A focus app learns your phone habits and suggests the hours you waste most.",
+        "apps": [
+          "Opal",
+          "One Sec"
+        ]
+      }
+    ],
+    "risks": [
+      "Stalkerware use",
+      "Reveals daily routine"
+    ],
+    "android_note": "Android needs a manual Usage access toggle in Settings and shows names and times.",
+    "ios_note": "iOS never hands apps usage names. Screen Time tools use opaque tokens and Apple's own tools."
+  },
+  "technical_bounds": [
+    "Opaque tokens on iOS",
+    "Visible Settings toggle",
+    "iOS reports are sandboxed"
+  ],
+  "scores": {
+    "sensitivity": 4,
+    "utility": 3,
+    "fingerprint_bits": 3,
+    "friction": 3
+  },
+  "value": {
+    "legit_uses": [
+      "Digital wellbeing",
+      "Parental controls"
+    ],
+    "abuse": [
+      "Stalkerware"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2021-09",
+      "platform": "ios",
+      "version": "iOS 15",
+      "change": "Screen Time API introduced with Family Controls"
+    },
+    {
+      "date": "2021-09",
+      "platform": "ios",
+      "version": "iOS 15",
+      "change": "Screen Time API"
+    },
+    {
+      "date": "2014-11",
+      "platform": "android",
+      "version": "5.0 (API 21)",
+      "change": "UsageStatsManager introduced"
+    },
+    {
+      "date": "2014-10",
+      "platform": "android",
+      "version": "5.0",
+      "change": "UsageStatsManager"
+    }
+  ],
+  "related": [
+    "mob.system.dnd-access",
+    "mob.system.family-controls"
+  ],
+  "refs": [
+    {
+      "t": "android",
+      "label": "Android: UsageStatsManager",
+      "url": "https://developer.android.com/reference/android/app/usage/UsageStatsManager"
+    },
+    {
+      "t": "apple",
+      "label": "Apple: Family Controls",
+      "url": "https://developer.apple.com/documentation/familycontrols"
+    },
+    {
+      "t": "apple",
+      "label": "Apple: DeviceActivity",
+      "url": "https://developer.apple.com/documentation/deviceactivity"
+    }
+  ],
+  "confidence": "docs"
+}

@@ -1,0 +1,196 @@
+{
+  "id": "mob.os.block-store",
+  "name": "Block Store and credential restore",
+  "kind": "capability",
+  "group": "os-integration-install",
+  "subgroup": "Backup",
+  "tags": [
+    "block-store",
+    "restore-credentials",
+    "play-services",
+    "new-device"
+  ],
+  "plain": "Google Play services can hold a small token that follows a person to a new phone or a reinstall.",
+  "meaning": "Lets an app restore sign-in without a password. The data is end to end encrypted when a screen lock is set and can survive a reinstall; iOS has no direct equivalent apart from iCloud Keychain.",
+  "lifecycle": [
+    "after-uninstall",
+    "signed-in"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "y",
+      "v": "6.0",
+      "api": 23,
+      "permission": "None (Play services)",
+      "protection": "none",
+      "grant": "none",
+      "prompt_ui": "Restore prompt on new device setup",
+      "persistence": "Stored by Play services; survives reinstall when end to end backup is on",
+      "revocation": "Clear via Play services or device wipe",
+      "store_policy": "",
+      "api_surface": "Google Play services Block Store API (BlockstoreClient)",
+      "note": "Small byte arrays only; limit about 16 entries of about 4 KB each (unverified)"
+    },
+    "ios": {
+      "s": "n",
+      "v": "",
+      "permission": "",
+      "protection": "none",
+      "grant": "not-exposed",
+      "prompt_ui": "None",
+      "persistence": "n/a",
+      "revocation": "",
+      "store_policy": "",
+      "api_surface": "",
+      "note": "Closest iOS analogs are iCloud Keychain and Keychain persistence"
+    }
+  },
+  "web_equivalents": [
+    "web.storage.persistent-storage"
+  ],
+  "data": {
+    "type": "binary",
+    "metric": "Restore token",
+    "update": "On demand",
+    "fields": [
+      {
+        "name": "max_bytes_per_item",
+        "type": "integer",
+        "unit": "binary",
+        "range": "about 4096 (unverified)",
+        "precision": "approx"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can keep a small sign in token that follows you to a new Android phone",
+    "user_action": "You set up a new phone or reinstall the app and approve the restore",
+    "can": [
+      "Store a few small items through Google Play services",
+      "Restore them when you set up a new phone",
+      "Let you stay signed in after a reinstall"
+    ],
+    "cannot": [
+      "Store large files; only small pieces of data fit",
+      "Work on iPhone, which has no Block Store",
+      "Restore without your device setup prompt"
+    ],
+    "reach": 3,
+    "reach_label": "A small token that follows you",
+    "differs": "Block Store is Android only. On iPhone the closest tools are iCloud Keychain and Keychain persistence."
+  },
+  "story": {
+    "what_it_is": "A tiny token Google keeps that follows you to a new phone so an app can sign you in.",
+    "icon": "key-round",
+    "tags": [
+      "Android",
+      "Sign in",
+      "Tracking"
+    ],
+    "marketing": [
+      {
+        "vendor": "Google",
+        "name": "Block Store",
+        "pitch": "Google pitches Block Store as a way to restore sign in on a new device without extra steps.",
+        "url": "https://developers.google.com/identity/blockstore/android"
+      }
+    ],
+    "for_you": "You move to a new phone and the app is already signed in. You did nothing. It feels like magic, and it needs a screen lock.",
+    "for_makers": "Makers keep users signed in across a phone change and avoid the cost of a new login. It can also keep an identity alive across reinstalls.",
+    "use_cases": [
+      {
+        "type": "banking",
+        "example": "A bank app restores your device link so you only confirm with a fingerprint.",
+        "apps": []
+      },
+      {
+        "type": "games",
+        "example": "A game keeps your account on a new phone with no login.",
+        "apps": []
+      },
+      {
+        "type": "media",
+        "example": "A streaming app signs you in after you restore.",
+        "apps": [
+          "Netflix"
+        ]
+      },
+      {
+        "type": "shopping",
+        "example": "A store app keeps you signed in after switching phones.",
+        "apps": []
+      },
+      {
+        "type": "analytics",
+        "example": "A team sees one person move devices without losing the thread.",
+        "apps": []
+      },
+      {
+        "type": "ads",
+        "example": "A marketer keeps a stable ID across reinstalls.",
+        "apps": []
+      },
+      {
+        "type": "security",
+        "example": "A fraud tool links an old device to the new one to spot account takeover.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Persistent identity across installs",
+      "Hard to see or clear"
+    ],
+    "android_note": "Holds small byte arrays. Restore happens during new phone setup.",
+    "ios_note": "iOS has no direct match. iCloud Keychain and the keychain come closest."
+  },
+  "technical_bounds": [
+    "Needs Play services",
+    "Needs end to end encryption for cross device"
+  ],
+  "scores": {
+    "sensitivity": 3,
+    "utility": 3,
+    "fingerprint_bits": 5,
+    "friction": 1
+  },
+  "value": {
+    "legit_uses": [
+      "Silent sign in after restore"
+    ],
+    "abuse": [
+      "Persistent identity across installs"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2022-05",
+      "platform": "android",
+      "version": "Play services",
+      "change": "Block Store API launched"
+    }
+  ],
+  "related": [
+    "mob.os.auto-backup",
+    "mob.os.keychain-persistence"
+  ],
+  "refs": [
+    {
+      "t": "android",
+      "label": "Android: Block Store API",
+      "url": "https://developers.google.com/identity/blockstore/android"
+    },
+    {
+      "t": "android",
+      "label": "Android: Back up user data with Auto Backup",
+      "url": "https://developer.android.com/identity/data/autobackup"
+    }
+  ],
+  "confidence": "inferred"
+}

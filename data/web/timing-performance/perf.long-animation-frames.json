@@ -1,0 +1,251 @@
+{
+  "id": "web.perf.long-animation-frames",
+  "name": "Long Animation Frames (LoAF)",
+  "kind": "signal",
+  "group": "timing-performance",
+  "subgroup": "Performance API",
+  "tags": [
+    "loaf",
+    "jank",
+    "scripts",
+    "INP"
+  ],
+  "plain": "Reports frames that took over 50 ms and which scripts caused them.",
+  "meaning": "Shows slow frames with script URLs, durations, forced layout and blocking time. Gives site owners (and third party scripts) a view of device speed and which embedded scripts exist on the page.",
+  "lifecycle": [
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "new PerformanceObserver(...).observe({type:'long-animation-frame'})",
+      "bcd": [
+        "api.PerformanceLongAnimationFrameTiming"
+      ],
+      "access": {
+        "grant": "none",
+        "prompt_ui": "",
+        "secure_context": false,
+        "user_gesture": false,
+        "persistence": "",
+        "revocation": "",
+        "iframe": "",
+        "steps": [
+          "Register observer",
+          "Receive entries >50 ms with scripts[] attribution",
+          "Report sourceURL and invoker"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "123",
+          "note": "",
+          "date": "2024-03-19"
+        },
+        "edge": {
+          "s": "y",
+          "v": "123",
+          "note": "",
+          "date": "2024-03-22"
+        },
+        "firefox": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "safari": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "ios_safari": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "123",
+          "note": "",
+          "date": "2024-03-19"
+        },
+        "samsung": {
+          "s": "y",
+          "v": "27.0",
+          "note": "",
+          "date": "2024-11-06"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "event",
+    "metric": "One entry per slow frame",
+    "update": "",
+    "fields": [
+      {
+        "name": "duration",
+        "type": "float",
+        "unit": "ms",
+        "range": "50 to 10000",
+        "precision": "1 ms (rounded)"
+      },
+      {
+        "name": "blockingDuration",
+        "type": "float",
+        "unit": "ms",
+        "range": "0 to 10000",
+        "precision": "1 ms"
+      },
+      {
+        "name": "scripts",
+        "type": "list",
+        "unit": "",
+        "range": "0 to 30",
+        "precision": "sourceURL, invoker, duration"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can see slow page frames and which scripts caused them",
+    "user_action": "Nothing. It happens as the page runs",
+    "can": [
+      "List frames that took over 50 ms",
+      "Name which script or link made them slow",
+      "Learn your device speed",
+      "See how embedded or outside scripts affect the page"
+    ],
+    "cannot": [
+      "Work in Firefox or Safari",
+      "Ask permission first",
+      "See your files",
+      "Know who you are by itself"
+    ],
+    "reach": 2,
+    "reach_label": "Silent, while the page runs",
+    "differs": "Chrome and Edge support it. Firefox and Safari do not."
+  },
+  "story": {
+    "what_it_is": "Browsers report screen updates that took over 50 milliseconds and which scripts caused them.",
+    "icon": "activity",
+    "tags": [
+      "Speed",
+      "Silent",
+      "Debugging"
+    ],
+    "marketing": [
+      {
+        "vendor": "Google Chrome",
+        "name": "Long Animation Frames API",
+        "pitch": "Chrome says it helps developers find which scripts make pages feel janky or slow to respond.",
+        "url": "https://developer.chrome.com/docs/web-platform/long-animation-frames"
+      }
+    ],
+    "for_you": "You never see it. It is a tool that points to the exact script that made a page stutter. When teams fix those scripts, your scrolling and taps feel smoother.",
+    "for_makers": "Developers use it to find slow third party scripts, such as ads and chat widgets, and push vendors to fix or remove them. It helps meet Core Web Vitals targets and keeps real time apps smooth.",
+    "use_cases": [
+      {
+        "type": "games",
+        "example": "A browser game studio finds that one script froze the frame for 120 ms during a fight, and fixes it.",
+        "apps": []
+      },
+      {
+        "type": "ads",
+        "example": "A publisher sees a slow ad script in its reports and drops that ad partner.",
+        "apps": []
+      },
+      {
+        "type": "shopping",
+        "example": "A retailer finds that a chat widget makes the checkout button feel stuck and defers it.",
+        "apps": []
+      },
+      {
+        "type": "creative",
+        "example": "A design tool traces a stutter while zooming to one heavy script and rewrites it.",
+        "apps": [
+          "Figma"
+        ]
+      },
+      {
+        "type": "video",
+        "example": "A streaming site finds a script that makes the player controls lag, and splits it up.",
+        "apps": []
+      },
+      {
+        "type": "analytics",
+        "example": "A monitoring service groups slow frames by script owner so teams can see which vendor is to blame.",
+        "apps": [
+          "Sentry",
+          "Datadog RUM"
+        ]
+      },
+      {
+        "type": "news",
+        "example": "A news site traces scroll jank on phones to a heavy ad and sets a stricter ad rule.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Exposes third party scripts",
+      "Chromium only so far"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Cross-origin script attribution limited to URL for opaque scripts only if CORS allowed",
+    "Chromium only"
+  ],
+  "scores": {
+    "sensitivity": 2,
+    "utility": 4,
+    "fingerprint_bits": 2,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": "INP debugging, third-party script audits",
+    "abuse": "Device performance class inference, script inventory"
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2024-03",
+      "browser": "chrome",
+      "version": "123",
+      "change": "LoAF ships"
+    },
+    {
+      "date": "2025-01",
+      "browser": "chrome",
+      "version": "",
+      "change": "Adds renderStart, styleAndLayoutStart and script attribution fields"
+    }
+  ],
+  "related": [
+    "web.perf.event-timing-inp"
+  ],
+  "refs": [
+    {
+      "t": "mdn",
+      "label": "MDN Long Animation Frames",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/Performance_API/Long_animation_frame_timing"
+    },
+    {
+      "t": "vendor",
+      "label": "Chrome LoAF explainer",
+      "url": "https://developer.chrome.com/docs/web-platform/long-animation-frames"
+    },
+    {
+      "t": "chromestatus",
+      "label": "Chrome Platform Status",
+      "url": "https://chromestatus.com/feature/5149787718860800"
+    }
+  ],
+  "confidence": "docs"
+}

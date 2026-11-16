@@ -1,0 +1,211 @@
+{
+  "id": "web.storage.sharedworker",
+  "name": "SharedWorker",
+  "kind": "capability",
+  "group": "files-storage",
+  "subgroup": "In session",
+  "tags": [
+    "sharedworker",
+    "worker",
+    "tabs"
+  ],
+  "plain": "A background script that all tabs of a site share, so one process keeps state across them.",
+  "meaning": "Lets a site keep one connection and a single cross-tab state, which also shows how many tabs the person has. Partitioned like other storage in modern browsers, so a tracker cannot join sites with it.",
+  "lifecycle": [
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "new SharedWorker(url)",
+      "bcd": [
+        "api.SharedWorker"
+      ],
+      "access": {
+        "grant": "none",
+        "prompt_ui": "None",
+        "secure_context": false,
+        "user_gesture": false,
+        "persistence": "While at least one connected page is alive",
+        "revocation": "Clear site data, browser privacy settings",
+        "iframe": "",
+        "steps": []
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "5",
+          "note": "",
+          "date": "2010-05-25"
+        },
+        "edge": {
+          "s": "y",
+          "v": "79",
+          "note": "",
+          "date": "2020-01-15"
+        },
+        "firefox": {
+          "s": "y",
+          "v": "29",
+          "note": "",
+          "date": "2014-04-29"
+        },
+        "safari": {
+          "s": "y",
+          "v": "16",
+          "note": "",
+          "date": "2022-09-12"
+        },
+        "ios_safari": {
+          "s": "y",
+          "v": "16",
+          "note": "",
+          "date": "2022-09-12"
+        },
+        "chrome_android": {
+          "s": "p",
+          "v": "148",
+          "note": "Support on Android arrived recently (verify)",
+          "date": "2026-05-05"
+        },
+        "samsung": {
+          "s": "p",
+          "v": "",
+          "note": "Unverified"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "event",
+    "metric": "Port messages",
+    "update": "live",
+    "fields": []
+  },
+  "limits": {
+    "headline": "Can run one background script shared by all open tabs of the site",
+    "user_action": "Nothing. It happens while you have the site open in more than one tab.",
+    "can": [
+      "Keep one connection or one copy of data for all tabs",
+      "Do work away from the page so it stays smooth",
+      "Pass messages to each open tab"
+    ],
+    "cannot": [
+      "Keep running after you close every tab of the site",
+      "Reach tabs from other sites",
+      "Change the page's content directly"
+    ],
+    "reach": 2,
+    "reach_label": "Only tabs of the same site",
+    "differs": "Most computer browsers support it. Chrome on Android and Samsung Internet only partly do."
+  },
+  "story": {
+    "what_it_is": "A background script that every tab of a site shares, so one process keeps state across them.",
+    "icon": "share-2",
+    "tags": [
+      "Tabs",
+      "Background",
+      "Developer"
+    ],
+    "marketing": [
+      {
+        "vendor": "MDN",
+        "name": "SharedWorker",
+        "pitch": "Documents a script that runs in the background and can be used by many tabs of the same site.",
+        "url": "https://developer.mozilla.org/en-US/docs/Web/API/SharedWorker"
+      }
+    ],
+    "for_you": "You never see it. It is why a chat site can keep one live connection for all your open tabs, saving battery and data.",
+    "for_makers": "It lets one connection or one heavy job serve every tab. Makers save servers and battery. It also means one hidden script can see what all tabs of the site do.",
+    "use_cases": [
+      {
+        "type": "messaging",
+        "example": "A web chat opens one live link for all tabs so you do not get duplicate messages.",
+        "apps": [
+          "Slack"
+        ]
+      },
+      {
+        "type": "games",
+        "example": "A browser game that is open in two tabs keeps one network link and one game state.",
+        "apps": []
+      },
+      {
+        "type": "productivity",
+        "example": "A web app does one background sync for all open tabs of a document.",
+        "apps": []
+      },
+      {
+        "type": "shopping",
+        "example": "A store keeps one live price feed shared across tabs.",
+        "apps": []
+      },
+      {
+        "type": "live",
+        "example": "A live score or stock page uses one feed shared across tabs.",
+        "apps": []
+      },
+      {
+        "type": "analytics",
+        "example": "A site script collects events from every tab in one place.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Hidden background code",
+      "Safari support is recent"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Same origin and partition",
+    "Ends when the last page disconnects",
+    "Chrome on Android support came late (verify)"
+  ],
+  "scores": {
+    "sensitivity": 1,
+    "utility": 3,
+    "fingerprint_bits": null,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Shared connection, cross-tab coordination"
+    ],
+    "abuse": [
+      "Cross-site state hub before partitioning"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2022-09",
+      "browser": "safari",
+      "version": "16",
+      "change": "Shipped in Safari"
+    },
+    {
+      "date": "2023-07",
+      "browser": "chrome",
+      "version": "115",
+      "change": "Partitioned by top level site"
+    }
+  ],
+  "related": [
+    "web.storage.broadcastchannel"
+  ],
+  "refs": [
+    {
+      "t": "mdn",
+      "label": "MDN SharedWorker",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/SharedWorker"
+    }
+  ],
+  "confidence": "docs"
+}

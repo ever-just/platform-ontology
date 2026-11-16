@@ -1,0 +1,253 @@
+{
+  "id": "mob.pay.iap",
+  "name": "In-app purchase (StoreKit 2, Play Billing)",
+  "kind": "capability",
+  "group": "payments-commerce",
+  "subgroup": "App store billing",
+  "tags": [
+    "iap",
+    "storekit",
+    "play-billing",
+    "subscriptions",
+    "subscription",
+    "store-billing"
+  ],
+  "plain": "Sells digital goods and subscriptions through the platform store.",
+  "meaning": "The platform handles payment, receipts and refunds, and takes a commission. The store knows who buys what in every app.",
+  "lifecycle": [
+    "in-session",
+    "signed-in"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "y",
+      "v": "4.0",
+      "api": 14,
+      "permission": "com.android.vending.BILLING (normal)",
+      "protection": "normal",
+      "grant": "install",
+      "prompt_ui": "Google Play purchase sheet with auth",
+      "persistence": "Entitlements verified by server",
+      "revocation": "Play Store > Subscriptions",
+      "store_policy": "Play: digital goods must use Play Billing unless a program allows alternatives; PBL 7 or 8 required for new releases",
+      "api_surface": "Google Play Billing Library 7 and 8, ProductDetails, BillingClient",
+      "note": "Fee 15 percent for first million dollars and subscriptions after year one; 30 percent standard. Epic settlement changes pending."
+    },
+    "ios": {
+      "s": "y",
+      "v": "15.0",
+      "permission": "com.apple.developer.in-app-purchase capability",
+      "protection": "entitlement",
+      "grant": "prompt",
+      "prompt_ui": "App Store purchase sheet with Face ID",
+      "persistence": "Verified through signed transactions (JWS)",
+      "revocation": "Settings > Apple ID > Subscriptions",
+      "store_policy": "App Review 3.1.1",
+      "api_surface": "StoreKit 2 Product, Transaction, AppTransaction (iOS 16); StoreKit Messages",
+      "note": "Small Business Program 15 percent; App Store Server API for refunds."
+    }
+  },
+  "web_equivalents": [
+    "web.payments.digital-goods",
+    "web.payments.payment-request"
+  ],
+  "data": {
+    "type": "object",
+    "metric": "Signed transaction",
+    "update": "per purchase",
+    "fields": [
+      {
+        "name": "price",
+        "type": "float",
+        "unit": "currency",
+        "range": "varies",
+        "precision": "exact"
+      },
+      {
+        "name": "expiration",
+        "type": "string",
+        "unit": "ISO date",
+        "range": "varies",
+        "precision": "exact"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can sell digital items and subscriptions, after you approve each purchase",
+    "user_action": "You tap Buy or Subscribe and confirm with Face ID, a fingerprint or a passcode",
+    "can": [
+      "Charge you through the App Store or Google Play after you confirm",
+      "Offer subscriptions that renew until you cancel",
+      "Issue refunds through the store tools on iPhone"
+    ],
+    "cannot": [
+      "Charge you without a purchase sheet and your confirmation",
+      "Skip the store's fee, which is 15 or 30 percent in most cases",
+      "Cancel your subscription for you; that happens in your store account"
+    ],
+    "reach": 2,
+    "reach_label": "One purchase at a time",
+    "differs": "iPhone uses StoreKit and Face ID. Android uses Play Billing and a Google Play purchase sheet. Store fees are 15 or 30 percent."
+  },
+  "story": {
+    "what_it_is": "The store's built in way to sell subscriptions and digital goods inside an app.",
+    "icon": "credit-card",
+    "tags": [
+      "Payments",
+      "Store",
+      "Subscriptions"
+    ],
+    "marketing": [
+      {
+        "vendor": "Apple",
+        "name": "In-App Purchase",
+        "pitch": "Apple pitches In-App Purchase as a simple, secure way to sell digital goods and subscriptions in apps.",
+        "url": "https://developer.apple.com/in-app-purchase/"
+      },
+      {
+        "vendor": "Google",
+        "name": "Google Play Billing",
+        "pitch": "Google describes Play Billing as the system for selling digital products and subscriptions in apps.",
+        "url": "https://developer.android.com/google/play/billing"
+      }
+    ],
+    "for_you": "You tap Subscribe and a store sheet asks for Face ID or a fingerprint. The charge goes on your account and you can manage or cancel it in settings.",
+    "for_makers": "Makers get payments, receipts and refunds handled for them. The store keeps a commission, usually 15 to 30 percent, and knows who buys what in every app.",
+    "use_cases": [
+      {
+        "type": "games",
+        "example": "A game sells gems and a battle pass with one tap.",
+        "apps": [
+          "Fortnite",
+          "Candy Crush"
+        ]
+      },
+      {
+        "type": "media",
+        "example": "A streaming app sells a monthly plan.",
+        "apps": [
+          "Netflix",
+          "Spotify"
+        ]
+      },
+      {
+        "type": "productivity",
+        "example": "A notes app unlocks pro features once.",
+        "apps": [
+          "Bear"
+        ]
+      },
+      {
+        "type": "dating",
+        "example": "A dating app sells boosts and premium.",
+        "apps": [
+          "Tinder"
+        ]
+      },
+      {
+        "type": "education",
+        "example": "A language app sells a yearly plan.",
+        "apps": [
+          "Duolingo"
+        ]
+      },
+      {
+        "type": "security",
+        "example": "A fraud team checks receipts to stop fake purchases.",
+        "apps": []
+      },
+      {
+        "type": "ads",
+        "example": "A growth team measures which ad led to a first purchase.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Dark pattern upsells",
+      "Fake receipts and fraud"
+    ],
+    "android_note": "Google takes 15 percent on the first million dollars and on subscriptions after year one. 30 percent is standard.",
+    "ios_note": "Apple's Small Business Program lowers the fee to 15 percent. Purchases use Face ID."
+  },
+  "technical_bounds": [
+    "Apple 3.1.1 and Play rule: digital goods need store billing except where law or programs allow external options",
+    "Store holds card data, not the app"
+  ],
+  "scores": {
+    "sensitivity": 4,
+    "utility": 5,
+    "fingerprint_bits": 1,
+    "friction": 2
+  },
+  "value": {
+    "legit_uses": [
+      "Subscriptions",
+      "Game currency"
+    ],
+    "abuse": [
+      "Dark patterns",
+      "Fraud with fake receipts"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": true,
+      "how": "Premium and Learning subscriptions are sold in app. Apple label lists Purchase History and Other Financial Info as Linked to You; Play lists purchase history and other financial info (optional)."
+    }
+  },
+  "history": [
+    {
+      "date": "2024-08",
+      "platform": "android",
+      "version": "PBL 7",
+      "change": "Required for new apps on Play from Aug 2025"
+    },
+    {
+      "date": "2022-04",
+      "platform": "android",
+      "version": "Play Billing 5",
+      "change": "Subscription offer model update"
+    },
+    {
+      "date": "2022-03",
+      "platform": "android",
+      "version": "n/a",
+      "change": "Play Billing Library 5 and later changes to subscriptions"
+    },
+    {
+      "date": "2021-06",
+      "platform": "ios",
+      "version": "iOS 15",
+      "change": "StoreKit 2"
+    }
+  ],
+  "related": [
+    "mob.pay.us-external-links",
+    "mob.pay.eu-dma",
+    "mob.pay.japan-msca"
+  ],
+  "refs": [
+    {
+      "t": "android",
+      "label": "Android: Google Play Billing",
+      "url": "https://developer.android.com/google/play/billing"
+    },
+    {
+      "t": "apple",
+      "label": "Apple: In-App Purchase",
+      "url": "https://developer.apple.com/in-app-purchase/"
+    },
+    {
+      "t": "apple",
+      "label": "Apple: In-App Purchase",
+      "url": "https://developer.apple.com/documentation/storekit/in-app_purchase"
+    },
+    {
+      "t": "vendor",
+      "label": "App Store listing and App Privacy label, LinkedIn (id288429040)",
+      "url": "https://apps.apple.com/us/app/linkedin-professional-network/id288429040"
+    }
+  ],
+  "confidence": "verified"
+}

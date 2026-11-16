@@ -1,0 +1,209 @@
+{
+  "id": "mob.nx.mac-address",
+  "name": "Device MAC address",
+  "kind": "not-exposed",
+  "group": "network-connectivity",
+  "subgroup": "Hardware IDs",
+  "tags": [
+    "mac",
+    "randomization",
+    "blocked"
+  ],
+  "plain": "Blocked: apps see a fixed placeholder; Wi-Fi uses a randomized MAC per network.",
+  "meaning": "A MAC is a permanent hardware ID. Android returns 02:00:00:00:00:00 since 6.0 and randomizes per network since 10; iOS 14 added Private Wi-Fi Address.",
+  "lifecycle": [
+    "on-launch",
+    "in-session"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "r",
+      "v": "6.0",
+      "api": 23,
+      "permission": "",
+      "protection": "none",
+      "grant": "not-exposed",
+      "prompt_ui": "",
+      "persistence": "",
+      "revocation": "",
+      "store_policy": "",
+      "api_surface": "WifiInfo.getMacAddress(), NetworkInterface.getHardwareAddress()",
+      "note": "Returns 02:00:00:00:00:00 (API 23); null (API 30); per-network randomization default since Android 10"
+    },
+    "ios": {
+      "s": "n",
+      "v": "7.0",
+      "permission": "none",
+      "protection": "not-exposed",
+      "grant": "not-exposed",
+      "prompt_ui": "",
+      "persistence": "",
+      "revocation": "",
+      "store_policy": "",
+      "api_surface": "No public API",
+      "note": "Removed in iOS 7; Private Wi-Fi Address rotates per network (iOS 14)"
+    }
+  },
+  "data": {
+    "type": "none",
+    "metric": "Placeholder",
+    "update": "N/A",
+    "fields": []
+  },
+  "limits": {
+    "headline": "Can't see your phone's real hardware address; apps get a fixed placeholder",
+    "user_action": "Nothing. Apps may try when they set up networking, but it fails",
+    "can": [
+      "See a placeholder address (02:00:00:00:00:00) on older Android",
+      "See a different random address on each Wi-Fi network",
+      "Find nothing on Android 11 and newer"
+    ],
+    "cannot": [
+      "See the real MAC address on Android 6 and newer",
+      "Use the address to track you across networks (random address per network since Android 10 and iOS 14)",
+      "Get an address on iPhone; no public way exists since iOS 7"
+    ],
+    "reach": 1,
+    "reach_label": "Blocked, a placeholder only",
+    "differs": "Android shows 02:00:00:00:00:00 and later nothing. iPhone has had no way since iOS 7."
+  },
+  "story": {
+    "what_it_is": "Apps cannot read your phone's permanent hardware ID for Wi-Fi.",
+    "icon": "ban",
+    "tags": [
+      "Blocked",
+      "Network",
+      "Privacy"
+    ],
+    "marketing": [
+      {
+        "vendor": "Apple",
+        "name": "Private Wi-Fi Address",
+        "pitch": "iPhone uses a different Wi-Fi address for each network so people cannot track it from place to place.",
+        "url": "https://support.apple.com/en-us/102509"
+      },
+      {
+        "vendor": "Google",
+        "name": "MAC randomization",
+        "pitch": "Android uses a random MAC address for each Wi-Fi network by default to protect privacy.",
+        "url": "https://source.android.com/docs/core/connect/wifi-mac-randomization-behavior"
+      }
+    ],
+    "for_you": "You never see it. The phone simply uses a random Wi-Fi ID for each network, so shops and airports cannot follow you from place to place. You can turn this off for a network, but it is not needed.",
+    "for_makers": "Makers used to read the hardware address as a perfect device ID, and ad firms used it to track phones. Now they must use other IDs that you can reset. Wi-Fi companies still try to use signal patterns.",
+    "use_cases": [
+      {
+        "type": "ads",
+        "example": "Marketers wanted to use a permanent hardware ID to match one phone across all apps.",
+        "apps": []
+      },
+      {
+        "type": "shopping",
+        "example": "Shopping malls used Wi-Fi hardware IDs to count visitors and see which shops they visited.",
+        "apps": []
+      },
+      {
+        "type": "analytics",
+        "example": "Analytics firms wanted a stable ID that survived a factory reset.",
+        "apps": []
+      },
+      {
+        "type": "security",
+        "example": "Network admins used MAC lists to allow only known phones, which now needs other checks.",
+        "apps": []
+      },
+      {
+        "type": "enterprise",
+        "example": "Companies that locked Wi-Fi to MAC addresses must now use certificates or passwords.",
+        "apps": []
+      },
+      {
+        "type": "developer",
+        "example": "Developers now use a resettable app ID or sign in instead.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Cross network tracking if exposed",
+      "Placeholder value returned"
+    ],
+    "android_note": "Since Android 6 apps see a fixed placeholder, and Android 10 randomizes the real one for each network.",
+    "ios_note": "iPhone shows a private address per network since iOS 14 and apps cannot read the hardware ID."
+  },
+  "technical_bounds": [
+    "Randomization applies per network"
+  ],
+  "scores": {
+    "sensitivity": 4,
+    "utility": 1,
+    "fingerprint_bits": null,
+    "friction": 3
+  },
+  "value": {
+    "legit_uses": [
+      "None"
+    ],
+    "abuse": [
+      "Cross-network tracking"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2015-10",
+      "platform": "android",
+      "version": "6.0 (API 23)",
+      "change": "Fixed placeholder MAC returned"
+    },
+    {
+      "date": "2019-09",
+      "platform": "android",
+      "version": "10 (API 29)",
+      "change": "Per-network randomized MAC default"
+    },
+    {
+      "date": "2020-09",
+      "platform": "ios",
+      "version": "iOS 14",
+      "change": "Private Wi-Fi Address introduced"
+    },
+    {
+      "date": "2020-09",
+      "platform": "android",
+      "version": "11 (API 30)",
+      "change": "getHardwareAddress returns null"
+    }
+  ],
+  "related": [
+    "mob.nx.imei-serial"
+  ],
+  "refs": [
+    {
+      "t": "android",
+      "label": "Android 10 privacy changes",
+      "url": "https://developer.android.com/about/versions/10/privacy/changes"
+    },
+    {
+      "t": "android",
+      "label": "Android 11 privacy features",
+      "url": "https://developer.android.com/about/versions/11/privacy"
+    },
+    {
+      "t": "policy",
+      "label": "Apple Support: Control access to Wi-Fi information and Private Wi-Fi addresses",
+      "url": "https://support.apple.com/en-us/102509"
+    },
+    {
+      "t": "paper",
+      "label": "Martin et al.: A study of MAC address randomization in mobile devices",
+      "url": "https://arxiv.org/abs/1703.02874"
+    }
+  ],
+  "confidence": "verified"
+}

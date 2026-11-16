@@ -1,0 +1,220 @@
+{
+  "id": "web.render.domrect-clientrects",
+  "name": "DOMRect and getClientRects metrics",
+  "kind": "tracking",
+  "group": "rendering-fingerprint",
+  "subgroup": "Layout",
+  "tags": [
+    "getBoundingClientRect",
+    "getClientRects",
+    "subpixel",
+    "layout"
+  ],
+  "plain": "Measures element boxes at subpixel precision, including text, emoji and ranges.",
+  "meaning": "Sizes of text and emoji boxes depend on installed fonts, text shaping, zoom and OS, giving a hash that works even when canvas is blocked.",
+  "lifecycle": [
+    "on-arrival"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "element.getBoundingClientRect(); getClientRects(); Range.getClientRects()",
+      "bcd": [
+        "api.Element.getClientRects",
+        "api.Element.getBoundingClientRect"
+      ],
+      "access": {
+        "grant": "none",
+        "prompt_ui": "",
+        "secure_context": false,
+        "user_gesture": false,
+        "persistence": "",
+        "revocation": "",
+        "iframe": "",
+        "steps": [
+          "Insert off-screen elements with odd fonts and emoji",
+          "Read rects with float precision",
+          "Hash widths and heights"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "2",
+          "note": "",
+          "date": "2009-05-21"
+        },
+        "edge": {
+          "s": "y",
+          "v": "12",
+          "note": "",
+          "date": "2015-07-29"
+        },
+        "firefox": {
+          "s": "y",
+          "v": "3",
+          "note": "",
+          "date": "2008-06-17"
+        },
+        "safari": {
+          "s": "y",
+          "v": "4",
+          "note": "",
+          "date": "2009-06-08"
+        },
+        "ios_safari": {
+          "s": "y",
+          "v": "3.2",
+          "note": "",
+          "date": "2010-04-03"
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "18",
+          "note": "",
+          "date": "2012-06-27"
+        },
+        "samsung": {
+          "s": "y",
+          "v": "1.0",
+          "note": "",
+          "date": "2013-04-27"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "hash",
+    "metric": "Floats with up to 10 decimal places per measurement",
+    "update": "",
+    "fields": [
+      {
+        "name": "width",
+        "type": "float",
+        "unit": "CSS px",
+        "range": "0 to viewport",
+        "precision": "double precision"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can measure text and emoji boxes to spot your fonts and system",
+    "user_action": "Nothing. It happens when the page loads",
+    "can": [
+      "Measure the size of hidden text and emoji down to tiny fractions",
+      "Turn the sizes into a number that depends on your fonts, zoom and system",
+      "Work even when canvas checks are blocked"
+    ],
+    "cannot": [
+      "Show you anything on the screen",
+      "Know your name",
+      "Ask permission first",
+      "Give a clear result if the browser adds noise or rounds the sizes"
+    ],
+    "reach": 3,
+    "reach_label": "Silent, repeatable device number",
+    "differs": ""
+  },
+  "story": {
+    "what_it_is": "A script measures the exact size of text and boxes on the page, down to tiny fractions of a pixel.",
+    "icon": "ruler",
+    "tags": [
+      "Silent",
+      "Layout",
+      "Fingerprinting"
+    ],
+    "marketing": [
+      {
+        "vendor": "MDN",
+        "name": "getBoundingClientRect",
+        "pitch": "Returns the size and position of an element, which sites use for layout, tooltips and animation.",
+        "url": "https://developer.mozilla.org/en-US/docs/Web/API/Element/getBoundingClientRect"
+      }
+    ],
+    "for_you": "You see nothing. The page places invisible text, measures it, and the tiny numbers depend on your fonts, zoom and screen. Together they act like a fine detail fingerprint of your setup.",
+    "for_makers": "Layout code needs these numbers all the time, for menus, tooltips, drag and drop and animation. Trackers reuse the same call because tiny rounding differences reveal your system.",
+    "use_cases": [
+      {
+        "type": "productivity",
+        "example": "A document editor like Google Docs measures text to decide where lines and pages break.",
+        "apps": [
+          "Google Docs"
+        ]
+      },
+      {
+        "type": "creative",
+        "example": "A design tool such as Figma measures shapes and text boxes to snap them neatly to each other.",
+        "apps": [
+          "Figma"
+        ]
+      },
+      {
+        "type": "games",
+        "example": "A browser game checks where UI boxes sit so a click lands on the right button.",
+        "apps": []
+      },
+      {
+        "type": "security",
+        "example": "A fraud tool measures the same emoji at many sizes and compares to known real devices, to spot an emulator.",
+        "apps": []
+      },
+      {
+        "type": "ads",
+        "example": "A tracker measures the same text across fonts and adds the result to a device ID.",
+        "apps": []
+      },
+      {
+        "type": "shopping",
+        "example": "A product page measures a size chart to show a hover zoom exactly over the right part of the image.",
+        "apps": []
+      },
+      {
+        "type": "accessibility",
+        "example": "A screen magnifier extension reads boxes to move focus accurately around a page.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Reveals fonts and zoom level",
+      "Hard to block without breaking layout"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Deterministic per font and zoom stack, so entropy is bounded by fonts and DPR"
+  ],
+  "scores": {
+    "sensitivity": 3,
+    "utility": 1,
+    "fingerprint_bits": 4,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": "None beyond layout",
+    "abuse": "Canvas fallback fingerprint, zoom and DPR detection"
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "related": [
+    "web.render.font-enumeration-metrics",
+    "web.render.svg-text-metrics"
+  ],
+  "refs": [
+    {
+      "t": "mdn",
+      "label": "MDN getClientRects",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/Element/getClientRects"
+    },
+    {
+      "t": "github",
+      "label": "CreepJS client rects",
+      "url": "https://github.com/abrahamjuliot/creepjs"
+    }
+  ],
+  "confidence": "docs"
+}

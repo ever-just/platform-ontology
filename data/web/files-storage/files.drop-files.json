@@ -1,0 +1,248 @@
+{
+  "id": "web.files.drop-files",
+  "name": "Dropping files and folders onto the page",
+  "kind": "capability",
+  "group": "files-storage",
+  "subgroup": "Files",
+  "tags": [
+    "drag-and-drop",
+    "files",
+    "folders"
+  ],
+  "plain": "Receives files and whole folders the person drags onto the page, with no prompt.",
+  "meaning": "Dropping is consent for exactly what is dropped, including folder trees. The site can read file contents and, in Chrome, ask for write access to the dropped items.",
+  "lifecycle": [
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "drop event; dataTransfer.files; items; webkitGetAsEntry(); getAsFileSystemHandle()",
+      "bcd": [
+        "api.DataTransferItem.webkitGetAsEntry",
+        "api.DataTransferItem.getAsFileSystemHandle",
+        "api.DataTransfer.files"
+      ],
+      "access": {
+        "grant": "none",
+        "prompt_ui": "None (no browser prompt)",
+        "secure_context": false,
+        "user_gesture": false,
+        "activation": "none",
+        "persistence": "Per drop",
+        "revocation": "Nothing to revoke (no permission is stored)",
+        "iframe": "Drops go to the document under the pointer; dropped items are same-origin readable only in that document",
+        "steps": [
+          "Person drags files from the OS",
+          "Page handles dragover and drop",
+          "Page reads files and walks directory entries"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "13",
+          "note": "",
+          "date": "2011-08-02"
+        },
+        "edge": {
+          "s": "y",
+          "v": "14",
+          "note": "",
+          "date": "2016-08-02"
+        },
+        "firefox": {
+          "s": "y",
+          "v": "50",
+          "note": "",
+          "date": "2016-11-15"
+        },
+        "safari": {
+          "s": "y",
+          "v": "11.1",
+          "note": "",
+          "date": "2018-04-12"
+        },
+        "ios_safari": {
+          "s": "y",
+          "v": "11.3",
+          "note": "All iOS browsers use WebKit",
+          "date": "2018-03-29"
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "18",
+          "note": "",
+          "date": "2012-06-27"
+        },
+        "samsung": {
+          "s": "y",
+          "v": "1.0",
+          "note": "",
+          "date": "2013-04-27"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "none",
+    "metric": "",
+    "update": "",
+    "fields": []
+  },
+  "limits": {
+    "headline": "Can receive files or whole folders you drag onto the page",
+    "user_action": "You drag files from your desktop onto the page and let go.",
+    "can": [
+      "Receive the files and folders you drop",
+      "Open the contents of what you dropped",
+      "Include folders with subfolders",
+      "Do it with no prompt"
+    ],
+    "cannot": [
+      "See the file names before you drop",
+      "Take files without a drag and drop",
+      "Change the original files, unless you also allow saving in Chrome",
+      "Get them again later without another drop"
+    ],
+    "reach": 1,
+    "reach_label": "Only what you drop",
+    "differs": ""
+  },
+  "story": {
+    "what_it_is": "Receives files and folders you drag onto the page, with no prompt.",
+    "icon": "file-up",
+    "tags": [
+      "Files",
+      "Drag and drop",
+      "Silent"
+    ],
+    "marketing": [
+      {
+        "vendor": "MDN",
+        "name": "File drag and drop",
+        "pitch": "Documents how a page can accept files dragged from a computer onto it.",
+        "url": "https://developer.mozilla.org/en-US/docs/Web/API/HTML_Drag_and_Drop_API/File_drag_and_drop"
+      }
+    ],
+    "for_you": "You drag a file from your desktop onto the page and let go. It is the act of dropping that gives the page the file. No prompt appears because you did it yourself.",
+    "for_makers": "It is the easiest way to add files and feels natural. Makers get fast uploads and fewer clicks. Because the drop is the consent, no extra prompt is needed.",
+    "use_cases": [
+      {
+        "type": "messaging",
+        "example": "You drop a picture or document into a chat window to send it.",
+        "apps": [
+          "Slack",
+          "Discord",
+          "WhatsApp Web"
+        ]
+      },
+      {
+        "type": "creative",
+        "example": "You drop a photo into a web editor to start work.",
+        "apps": [
+          "Canva",
+          "Photopea"
+        ]
+      },
+      {
+        "type": "productivity",
+        "example": "You drop files into a cloud folder in your browser.",
+        "apps": [
+          "Google Drive",
+          "Dropbox"
+        ]
+      },
+      {
+        "type": "games",
+        "example": "You drop a save file or custom map onto a browser game to load it.",
+        "apps": []
+      },
+      {
+        "type": "productivity",
+        "example": "You drag a file onto an email to attach it.",
+        "apps": [
+          "Gmail"
+        ]
+      },
+      {
+        "type": "video",
+        "example": "You drop a video onto an online converter or editor.",
+        "apps": []
+      },
+      {
+        "type": "developer",
+        "example": "You drop a folder of files onto a web deploy tool.",
+        "apps": [
+          "Netlify Drop"
+        ]
+      }
+    ],
+    "risks": [
+      "Easy to drop the wrong file",
+      "Large drag in"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Contents readable only inside the drop handler (protected mode otherwise)",
+    "Dropped folders: webkitGetAsEntry returns the full tree, readEntries returns at most 100 entries per call in Chrome (loop until empty)",
+    "getAsFileSystemHandle (Chrome 86) can request write access to the dropped file with a prompt",
+    "Cannot start a drag from OS file locations; cannot read drag data before drop",
+    "Dropped item paths are hidden; only names and relative paths"
+  ],
+  "scores": {
+    "sensitivity": 3,
+    "utility": 5,
+    "fingerprint_bits": null,
+    "friction": 1
+  },
+  "value": {
+    "legit_uses": [
+      "Drag and drop uploaders",
+      "Folder imports",
+      "Media editors"
+    ],
+    "abuse": [
+      "Surprise folder uploads",
+      "Fake drop zones"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2020-10",
+      "browser": "chrome",
+      "version": "86",
+      "change": "getAsFileSystemHandle on dropped items"
+    }
+  ],
+  "related": [
+    "web.actions.drag-and-drop",
+    "web.files.file-input"
+  ],
+  "refs": [
+    {
+      "t": "mdn",
+      "label": "MDN File drag and drop",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/HTML_Drag_and_Drop_API/File_drag_and_drop"
+    },
+    {
+      "t": "spec",
+      "label": "HTML Standard: drag and drop",
+      "url": "https://html.spec.whatwg.org/multipage/dnd.html"
+    },
+    {
+      "t": "mdn",
+      "label": "MDN DataTransferItem.webkitGetAsEntry",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/DataTransferItem/webkitGetAsEntry"
+    }
+  ],
+  "confidence": "docs"
+}

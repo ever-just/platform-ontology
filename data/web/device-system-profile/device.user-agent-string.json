@@ -1,0 +1,293 @@
+{
+  "id": "web.device.user-agent-string",
+  "name": "User-Agent string",
+  "kind": "signal",
+  "group": "device-system-profile",
+  "subgroup": "Browser identity",
+  "tags": [
+    "ua",
+    "http-header",
+    "fingerprint",
+    "ua-reduction"
+  ],
+  "plain": "The browser's self-description sent on every request and readable in JavaScript.",
+  "meaning": "Tells the site browser brand and major version, OS family, and CPU family. Used for compatibility and bot filtering. Since UA reduction the string is coarse, so finer detail moved to opt-in Client Hints.",
+  "lifecycle": [
+    "on-arrival",
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "navigator.userAgent, navigator.appVersion, User-Agent request header",
+      "bcd": [
+        "api.Navigator.userAgent",
+        "api.Navigator.appVersion"
+      ],
+      "access": {
+        "grant": "none",
+        "prompt_ui": "None",
+        "secure_context": false,
+        "user_gesture": false,
+        "persistence": "read fresh on every page load; nothing stored",
+        "revocation": "none needed (no grant)",
+        "iframe": "Readable from cross-origin iframes too (same values)",
+        "steps": [
+          "Page script reads the value",
+          "No prompt is shown"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "1",
+          "note": "",
+          "date": "2008-12-11"
+        },
+        "edge": {
+          "s": "y",
+          "v": "12",
+          "note": "",
+          "date": "2015-07-29"
+        },
+        "firefox": {
+          "s": "y",
+          "v": "1",
+          "note": "",
+          "date": "2004-11-09"
+        },
+        "safari": {
+          "s": "y",
+          "v": "1",
+          "note": "",
+          "date": "2003-06-23"
+        },
+        "ios_safari": {
+          "s": "y",
+          "v": "1",
+          "note": "",
+          "date": "2007-06-29"
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "18",
+          "note": "",
+          "date": "2012-06-27"
+        },
+        "samsung": {
+          "s": "y",
+          "v": "1.0",
+          "note": "",
+          "date": "2013-04-27"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "object",
+    "metric": "",
+    "update": "static per session",
+    "fields": [
+      {
+        "name": "userAgent",
+        "type": "string",
+        "unit": "chars",
+        "range": "about 70 to 200 chars",
+        "precision": "Chromium reduced: major version only, minor zeroed"
+      },
+      {
+        "name": "OS token",
+        "type": "string",
+        "unit": "",
+        "range": "Windows NT 10.0; Win64; x64 | Macintosh; Intel Mac OS X 10_15_7 | X11; Linux x86_64 | Android 10; K | iPhone OS 18_x",
+        "precision": "frozen since Chrome 107 desktop, Chrome 110 Android"
+      },
+      {
+        "name": "Firefox rv",
+        "type": "string",
+        "unit": "",
+        "range": "rv:109.0 on Firefox 110 and later",
+        "precision": "frozen at 109"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can see your browser brand, version, OS family, and chip family on every request",
+    "user_action": "Nothing. Your browser sends it with every page request",
+    "can": [
+      "See the browser brand and major version",
+      "See the OS family and chip family",
+      "Choose a layout or fix that suits it",
+      "Block or flag likely bots"
+    ],
+    "cannot": [
+      "See finer detail; Chrome now keeps that in opt in hints",
+      "See your exact device model",
+      "Be sure it is true; tools can fake it",
+      "See your name, location, or accounts"
+    ],
+    "reach": 2,
+    "reach_label": "Browser and OS, on every request",
+    "differs": ""
+  },
+  "story": {
+    "what_it_is": "The browser's own description of itself, sent on every request and readable by scripts.",
+    "icon": "app-window",
+    "tags": [
+      "Browser",
+      "Operating system",
+      "Silent"
+    ],
+    "marketing": [
+      {
+        "vendor": "MDN",
+        "name": "User-Agent header",
+        "pitch": "Docs explain the header and note that browsers now send less detail for privacy.",
+        "url": "https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/User-Agent"
+      }
+    ],
+    "for_you": "You never see it. It rides along every time you open a page. It lets the site pick the right version, like a phone layout or a desktop layout, and sort out bots.",
+    "for_makers": "Compatibility, bot filtering and basic analytics all start here. With reduction, the string is coarse, so more people look the same. Makers often combine it with other signals to check whether a visitor is who they claim to be.",
+    "use_cases": [
+      {
+        "type": "developer",
+        "example": "A web app shows a banner for a browser version that is too old to run it.",
+        "apps": []
+      },
+      {
+        "type": "security",
+        "example": "A web firewall blocks traffic from strings known to belong to scrapers.",
+        "apps": [
+          "Cloudflare"
+        ]
+      },
+      {
+        "type": "ads",
+        "example": "An ad server filters out crawlers by their strings so advertisers are not charged for them.",
+        "apps": [
+          "Google Ad Manager"
+        ]
+      },
+      {
+        "type": "analytics",
+        "example": "A product team reads strings to decide which browsers still deserve support.",
+        "apps": []
+      },
+      {
+        "type": "games",
+        "example": "A browser game shows a message to people on a browser with no WebGL.",
+        "apps": []
+      },
+      {
+        "type": "media",
+        "example": "A video player picks the right format for Safari versus Chrome.",
+        "apps": [
+          "YouTube"
+        ]
+      },
+      {
+        "type": "enterprise",
+        "example": "An IT team blocks company logins from unapproved browsers.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Easy to fake",
+      "Combines with other signals"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Cannot reliably state exact OS minor version on Chromium, Safari or Firefox",
+    "Can be spoofed trivially by extensions or DevTools",
+    "iPadOS 13+ reports Macintosh, not iPad"
+  ],
+  "scores": {
+    "sensitivity": 2,
+    "utility": 4,
+    "fingerprint_bits": 10.0,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Serve right code path",
+      "Block outdated browsers",
+      "Bot scoring"
+    ],
+    "abuse": [
+      "Combined with other signals for tracking",
+      "Unmasking version for exploit targeting"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": true,
+      "how": "Collected as userAgent, appName, appCodeName, appVersion, product, productSub, vendor. Read by the LinkedIn APFC fingerprint script (48 features, alleged by BrowserGate, partly confirmed by BleepingComputer)."
+    }
+  },
+  "history": [
+    {
+      "date": "2022-05",
+      "browser": "chrome",
+      "version": "101",
+      "change": "Minor, build and patch version zeroed in UA string (101.0.0.0)"
+    },
+    {
+      "date": "2022-10",
+      "browser": "chrome",
+      "version": "107",
+      "change": "Desktop OS and CPU frozen to Windows NT 10.0, Intel Mac OS X 10_15_7, Linux x86_64"
+    },
+    {
+      "date": "2023-02",
+      "browser": "chrome",
+      "version": "110",
+      "change": "Android version frozen to 10 and device model replaced by K; phase complete by Chrome 113"
+    },
+    {
+      "date": "2023-02",
+      "browser": "firefox",
+      "version": "110",
+      "change": "Gecko rv version frozen at 109.0"
+    },
+    {
+      "date": "2020-09",
+      "browser": "safari",
+      "version": "14",
+      "change": "macOS token already frozen at 10_15_7 (Big Sur and later still report it)"
+    }
+  ],
+  "related": [
+    "web.device.ua-client-hints-low",
+    "web.device.navigator-platform"
+  ],
+  "refs": [
+    {
+      "t": "paper",
+      "label": "AmIUnique: Beauty and the Beast, Laperdrix et al. 2016 (attribute entropy)",
+      "url": "https://hal.inria.fr/hal-01285470"
+    },
+    {
+      "t": "mdn",
+      "label": "MDN Navigator.userAgent",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/Navigator/userAgent"
+    },
+    {
+      "t": "chromestatus",
+      "label": "Chrome UA reduction",
+      "url": "https://www.chromium.org/updates/ua-reduction/"
+    },
+    {
+      "t": "github",
+      "label": "fingerprintjs source: vendor",
+      "url": "https://github.com/fingerprintjs/fingerprintjs/blob/master/src/sources/vendor.ts"
+    },
+    {
+      "t": "paper",
+      "label": "Hiding in the Crowd, Gomez-Boix et al. 2018 (2M fingerprints)",
+      "url": "https://hal.inria.fr/hal-01718234"
+    }
+  ],
+  "confidence": "verified"
+}

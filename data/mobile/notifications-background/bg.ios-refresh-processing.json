@@ -1,0 +1,214 @@
+{
+  "id": "mob.bg.ios-refresh-processing",
+  "name": "iOS app refresh and processing tasks",
+  "kind": "capability",
+  "group": "notifications-background",
+  "subgroup": "iOS background",
+  "tags": [
+    "bgtaskscheduler",
+    "app-refresh",
+    "processing",
+    "30s"
+  ],
+  "plain": "iOS lets apps request short refreshes (about 30 s) or longer idle processing; timing is up to the system.",
+  "meaning": "The only system scheduled background work on iOS. Timing follows how often the person uses the app; dormant installs may never run.",
+  "lifecycle": [
+    "background"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "p",
+      "v": "5.0",
+      "api": 21,
+      "permission": "",
+      "protection": "none",
+      "grant": "none",
+      "prompt_ui": "None",
+      "persistence": "WorkManager is the Android analog",
+      "revocation": "n/a",
+      "store_policy": "",
+      "api_surface": "See mob.bg.workmanager-jobs",
+      "note": "Android periodic work min interval 15 min"
+    },
+    "ios": {
+      "s": "y",
+      "v": "13.0",
+      "permission": "BGTaskSchedulerPermittedIdentifiers (Info.plist), fetch or processing UIBackgroundModes",
+      "protection": "entitlement",
+      "grant": "none",
+      "prompt_ui": "None",
+      "persistence": "System decides; earliestBeginDate is a lower bound; tasks do not run after a force quit",
+      "revocation": "Background App Refresh off; Low Power Mode; force quit",
+      "store_policy": "App Review 2.5.4",
+      "api_surface": "BGAppRefreshTask (about 30 s), BGProcessingTask (minutes, idle, optional network or power), BGHealthResearchTask (iOS 17)",
+      "note": "App refresh about 30 s; processing minutes when idle and charging; pending request cap about 10 (unverified)"
+    }
+  },
+  "web_equivalents": [
+    "web.notify.periodic-background-sync"
+  ],
+  "data": {
+    "type": "integer",
+    "metric": "Run time",
+    "update": "System scheduled",
+    "fields": [
+      {
+        "name": "app_refresh",
+        "type": "integer",
+        "unit": "seconds",
+        "range": "about 30",
+        "precision": "approx"
+      },
+      {
+        "name": "processing",
+        "type": "integer",
+        "unit": "minutes",
+        "range": "several, idle",
+        "precision": "approx"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can ask iPhone for short refreshes of about 30 seconds, but the system picks the time",
+    "user_action": "Nothing. It happens when iOS decides to wake the app, often after you use it a lot",
+    "can": [
+      "Refresh content for about 30 seconds so it is fresh when you open the app",
+      "Run longer jobs, like cleanup or a sync, for a few minutes when the phone is idle and charging",
+      "Schedule up to about 10 pending requests"
+    ],
+    "cannot": [
+      "Choose the exact time; iOS can delay or skip a request",
+      "Run longer jobs while you are using the phone on battery",
+      "Repeat faster than every 15 minutes on Android, where that is the minimum"
+    ],
+    "reach": 2,
+    "reach_label": "Short bursts, timed by the system",
+    "differs": "Android periodic work repeats at most every 15 minutes. iPhone gives no guaranteed interval."
+  },
+  "story": {
+    "what_it_is": "iPhone lets apps ask for short refreshes or longer idle jobs, but the system picks the timing.",
+    "icon": "refresh-cw",
+    "tags": [
+      "Background",
+      "iPhone",
+      "Battery"
+    ],
+    "marketing": [
+      {
+        "vendor": "Apple",
+        "name": "Background Tasks",
+        "pitch": "Apple describes BGTaskScheduler as the way to refresh content and run longer jobs when the system judges it a good time.",
+        "url": "https://developer.apple.com/documentation/backgroundtasks/bgtaskscheduler"
+      }
+    ],
+    "for_you": "You never see it. Your news or email app has fresh content when you open it because iOS ran a short refresh earlier. If you rarely open an app, it may never get a turn.",
+    "for_makers": "Makers use it to prefetch content and sync data so the app feels instant. They cannot control the timing, so they pair it with push messages for urgent updates.",
+    "use_cases": [
+      {
+        "type": "news",
+        "example": "A news app downloads the morning headlines in a short refresh so the front page is ready when you wake.",
+        "apps": [
+          "Apple News",
+          "NYT"
+        ]
+      },
+      {
+        "type": "media",
+        "example": "A podcast app fetches new episodes while your phone charges overnight in a longer processing task.",
+        "apps": [
+          "Overcast",
+          "Apple Podcasts"
+        ]
+      },
+      {
+        "type": "productivity",
+        "example": "A notes app syncs your edits to the cloud in the background so another device is up to date.",
+        "apps": [
+          "Notion",
+          "Bear"
+        ]
+      },
+      {
+        "type": "shopping",
+        "example": "A store app refreshes your order status so the screen is already current when you open it.",
+        "apps": [
+          "Amazon"
+        ]
+      },
+      {
+        "type": "health",
+        "example": "A health app processes a day of sensor data while you sleep and charge your phone.",
+        "apps": []
+      },
+      {
+        "type": "ads",
+        "example": "An ad and measurement tool uses the short window to upload queued events from the day.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Can be used to poll for signals",
+      "Little control over timing"
+    ],
+    "android_note": "Android periodic work has a 15 minute minimum interval.",
+    "ios_note": "App refresh is about 30 seconds. Idle processing runs for minutes when charging."
+  },
+  "technical_bounds": [
+    "No guaranteed timing",
+    "Not run after force quit"
+  ],
+  "scores": {
+    "sensitivity": 1,
+    "utility": 4,
+    "fingerprint_bits": null,
+    "friction": 1
+  },
+  "value": {
+    "legit_uses": [
+      "Prefetch",
+      "Sync"
+    ],
+    "abuse": [
+      "Background polling for signals"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2019-09",
+      "platform": "ios",
+      "version": "iOS 13",
+      "change": "BGTaskScheduler replaced setMinimumBackgroundFetchInterval"
+    },
+    {
+      "date": "2023-09",
+      "platform": "ios",
+      "version": "iOS 17",
+      "change": "BGHealthResearchTask added"
+    }
+  ],
+  "related": [
+    "mob.bg.workmanager-jobs",
+    "mob.bg.expedited-uidt",
+    "mob.notif.apns-silent-push"
+  ],
+  "refs": [
+    {
+      "t": "apple",
+      "label": "Apple: BGTaskScheduler",
+      "url": "https://developer.apple.com/documentation/backgroundtasks/bgtaskscheduler"
+    },
+    {
+      "t": "apple",
+      "label": "Apple: Background Tasks",
+      "url": "https://developer.apple.com/documentation/backgroundtasks"
+    }
+  ],
+  "confidence": "verified"
+}

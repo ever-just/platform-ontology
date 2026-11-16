@@ -1,0 +1,195 @@
+{
+  "id": "mob.network.wifi-aware",
+  "name": "Wi-Fi Aware peer discovery",
+  "kind": "capability",
+  "group": "network-connectivity",
+  "subgroup": "Network",
+  "tags": [
+    "wifi-aware",
+    "p2p",
+    "nearby"
+  ],
+  "plain": "Finds and talks to nearby devices directly over Wi-Fi, with no router.",
+  "meaning": "A broad nearby radio. Android treats it as a nearby devices permission and iOS 26 adds a system pairing flow.",
+  "lifecycle": [
+    "in-session"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "y",
+      "v": "8.0",
+      "api": 26,
+      "permission": "NEARBY_WIFI_DEVICES (API 33), ACCESS_FINE_LOCATION before",
+      "protection": "dangerous",
+      "grant": "prompt",
+      "prompt_ui": "Nearby devices prompt",
+      "persistence": "Until revoked",
+      "revocation": "Settings > Apps > Permissions > Nearby devices",
+      "store_policy": "",
+      "api_surface": "WifiAwareManager",
+      "note": "Needs hardware support; Android 16 adds ranging"
+    },
+    "ios": {
+      "s": "y",
+      "v": "26",
+      "permission": "com.apple.developer.wifi-aware; Wi-Fi Aware pairing UI",
+      "protection": "entitlement",
+      "grant": "entitlement",
+      "prompt_ui": "System pairing UI per device",
+      "persistence": "Until unpaired",
+      "revocation": "Settings > Privacy & Security",
+      "store_policy": "Apple entitlement",
+      "api_surface": "WiFiAware framework",
+      "note": "Supports the Wi-Fi Alliance spec; pairing handled by the system"
+    }
+  },
+  "data": {
+    "type": "object",
+    "metric": "Peers",
+    "update": "event driven",
+    "fields": [
+      {
+        "name": "peers",
+        "type": "list",
+        "unit": "devices",
+        "range": "paired only on iOS",
+        "precision": ""
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can find and talk to nearby devices directly over Wi-Fi, with no router",
+    "user_action": "You tap Allow for Nearby devices or approve pairing in the system sheet",
+    "can": [
+      "Find nearby phones and gadgets directly",
+      "Pair through a system pairing screen on iPhone",
+      "Measure distance to a peer on Android 16",
+      "Send data without a router"
+    ],
+    "cannot": [
+      "Work on phones without the hardware support",
+      "Use the feature on iPhone without Apple's Wi-Fi Aware entitlement",
+      "Find devices before you allow Nearby devices on Android",
+      "Pair without your approval"
+    ],
+    "reach": 2,
+    "reach_label": "Nearby devices, with approval",
+    "differs": "Android needs Nearby devices permission (13 and newer, location before). iPhone needs an Apple entitlement and uses a system pairing sheet."
+  },
+  "story": {
+    "what_it_is": "Two phones find each other and talk directly over Wi-Fi, with no router.",
+    "icon": "antenna",
+    "tags": [
+      "Wi-Fi",
+      "Nearby",
+      "Peer to peer"
+    ],
+    "marketing": [
+      {
+        "vendor": "Google",
+        "name": "Wi-Fi Aware",
+        "pitch": "Android lets nearby devices find each other and share data over Wi-Fi without internet or an access point.",
+        "url": "https://developer.android.com/develop/connectivity/wifi/wifi-aware"
+      }
+    ],
+    "for_you": "You may see a prompt to allow nearby devices. After that, two phones can swap files or play a game together with no router. It feels like sharing by magic, even on a plane.",
+    "for_makers": "Makers get fast, offline sharing and local multiplayer. It can also be used to find people nearby and track the local area. Platforms gate it behind a nearby devices step.",
+    "use_cases": [
+      {
+        "type": "games",
+        "example": "Two friends play a head to head game on a train with no signal.",
+        "apps": []
+      },
+      {
+        "type": "messaging",
+        "example": "A chat app sends messages through nearby phones in a crowd with no internet, like at a festival.",
+        "apps": [
+          "Bridgefy"
+        ]
+      },
+      {
+        "type": "utilities",
+        "example": "A file share app sends a big video to a nearby phone directly.",
+        "apps": [
+          "Quick Share"
+        ]
+      },
+      {
+        "type": "education",
+        "example": "A classroom app links tablets to the teacher's device with no school Wi-Fi.",
+        "apps": []
+      },
+      {
+        "type": "smart-home",
+        "example": "A device setup app finds a new gadget directly, with no network yet.",
+        "apps": []
+      },
+      {
+        "type": "security",
+        "example": "A tracker app could use it to spot who is nearby, which is why a prompt is needed.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Tracking people nearby",
+      "Fake nearby offers"
+    ],
+    "android_note": "Android treats it as a nearby devices permission and needs support from the phone's chip.",
+    "ios_note": "iPhone 26 adds a system pairing flow for Wi-Fi Aware, so the person approves each device."
+  },
+  "technical_bounds": [
+    "Hardware dependent"
+  ],
+  "scores": {
+    "sensitivity": 3,
+    "utility": 3,
+    "fingerprint_bits": null,
+    "friction": 3
+  },
+  "value": {
+    "legit_uses": [
+      "Offline sharing",
+      "Gaming"
+    ],
+    "abuse": [
+      "Local tracking"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2017-08",
+      "platform": "android",
+      "version": "8.0 (API 26)",
+      "change": "Wi-Fi Aware API"
+    },
+    {
+      "date": "2025-09",
+      "platform": "ios",
+      "version": "iOS 26",
+      "change": "Wi-Fi Aware framework"
+    }
+  ],
+  "related": [
+    "mob.network.local-network"
+  ],
+  "refs": [
+    {
+      "t": "apple",
+      "label": "Apple: Wi-Fi Aware",
+      "url": "https://developer.apple.com/documentation/wifiaware"
+    },
+    {
+      "t": "android",
+      "label": "Android: Wi-Fi Aware",
+      "url": "https://developer.android.com/develop/connectivity/wifi/wifi-aware"
+    }
+  ],
+  "confidence": "inferred"
+}

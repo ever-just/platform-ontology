@@ -1,0 +1,261 @@
+{
+  "id": "web.locale.timezone",
+  "name": "Time zone and UTC offset",
+  "kind": "signal",
+  "group": "locale-preferences",
+  "subgroup": "Time",
+  "tags": [
+    "timezone",
+    "intl",
+    "date"
+  ],
+  "plain": "IANA time zone name plus UTC offset from Intl and Date.",
+  "meaning": "Narrows physical location to a region (about 400 IANA zones; America/Chicago). Mismatch with IP location is a VPN tell. 3 bits at the offset level, more with the full zone name.",
+  "lifecycle": [
+    "on-arrival",
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "Intl.DateTimeFormat().resolvedOptions().timeZone, new Date().getTimezoneOffset()",
+      "bcd": [
+        "api.Intl.DateTimeFormat.resolvedOptions"
+      ],
+      "access": {
+        "grant": "none",
+        "prompt_ui": "None",
+        "secure_context": false,
+        "user_gesture": false,
+        "persistence": "read fresh on every page load; nothing stored",
+        "revocation": "none needed (no grant)",
+        "iframe": "Readable from cross-origin iframes too (same values)",
+        "steps": [
+          "Page script reads the value",
+          "No prompt is shown"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "24",
+          "note": "",
+          "date": "2013-01-10"
+        },
+        "edge": {
+          "s": "y",
+          "v": "12",
+          "note": "",
+          "date": "2015-07-29"
+        },
+        "firefox": {
+          "s": "y",
+          "v": "52",
+          "note": "",
+          "date": "2017-03-07"
+        },
+        "safari": {
+          "s": "y",
+          "v": "10",
+          "note": "",
+          "date": "2016-09-20"
+        },
+        "ios_safari": {
+          "s": "y",
+          "v": "10",
+          "note": "",
+          "date": "2016-09-13"
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "24",
+          "note": "",
+          "date": ""
+        },
+        "samsung": {
+          "s": "y",
+          "v": "2.0",
+          "note": "",
+          "date": "2014-10-17"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "object",
+    "metric": "",
+    "update": "static per session",
+    "fields": [
+      {
+        "name": "timeZone",
+        "type": "string",
+        "unit": "IANA name",
+        "range": "about 420 zones",
+        "precision": "exact"
+      },
+      {
+        "name": "getTimezoneOffset",
+        "type": "integer",
+        "unit": "minutes",
+        "range": "-720 to 840",
+        "precision": "exact incl. DST history"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can tell your time zone, roughly which region you are in",
+    "user_action": "Nothing. It happens when the page or app loads",
+    "can": [
+      "See your time zone name, such as America/Chicago, and its offset from UTC",
+      "Show times in your local time",
+      "Spot a VPN when the time zone and the network location disagree"
+    ],
+    "cannot": [
+      "Find your street or city; it narrows you to a region",
+      "Find your exact position",
+      "Show a permission pop up; there is none"
+    ],
+    "reach": 1,
+    "reach_label": "A region, not a place",
+    "differs": ""
+  },
+  "story": {
+    "what_it_is": "The page can tell your time zone, so it knows roughly where in the world you are.",
+    "icon": "clock",
+    "tags": [
+      "Time",
+      "Silent",
+      "Location"
+    ],
+    "marketing": [
+      {
+        "vendor": "Mozilla",
+        "name": "Fingerprinting protection",
+        "pitch": "Mozilla describes a Firefox option that makes browsers look alike, for example by reporting the same time zone.",
+        "url": "https://support.mozilla.org/en-US/kb/firefox-protection-against-fingerprinting"
+      }
+    ],
+    "for_you": "Times show in your local time, like a game event starting at 8 PM for you. You do not see that the page also learned your region. No prompt appears.",
+    "for_makers": "Makers need your time zone to show times, schedule events and reset daily rewards. Fraud systems compare it to your IP location, since a mismatch is a classic sign of a VPN or fake location.",
+    "use_cases": [
+      {
+        "type": "games",
+        "example": "A browser game resets daily rewards at midnight your time and shows events in your clock.",
+        "apps": []
+      },
+      {
+        "type": "live",
+        "example": "A live stream or webinar shows 'starts at 7 PM your time' for each viewer.",
+        "apps": [
+          "YouTube Live",
+          "Zoom Webinars"
+        ]
+      },
+      {
+        "type": "travel",
+        "example": "A booking site shows flight times in the right local time.",
+        "apps": []
+      },
+      {
+        "type": "security",
+        "example": "A fraud engine flags a user whose time zone is New York but whose IP is in Vietnam.",
+        "apps": []
+      },
+      {
+        "type": "ads",
+        "example": "An ad network schedules ads for evening hours in your region.",
+        "apps": []
+      },
+      {
+        "type": "analytics",
+        "example": "A fingerprinting script adds time zone to a unique ID with language and fonts.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Reveals your region",
+      "Mismatch exposes VPN use"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Region only, not city precision",
+    "VPN users show mismatch with IP"
+  ],
+  "scores": {
+    "sensitivity": 3,
+    "utility": 5,
+    "fingerprint_bits": 3.0,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Schedule display",
+      "Calendars"
+    ],
+    "abuse": [
+      "Location inference",
+      "VPN detection"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": true,
+      "how": "Collector key(s): timezone, timezoneOffset. BleepingComputer confirms timezone."
+    }
+  },
+  "history": [
+    {
+      "date": "2016-06",
+      "browser": "paper",
+      "version": "",
+      "change": "AmIUnique: timezone 3.04 bits"
+    },
+    {
+      "date": "2020-01",
+      "browser": "firefox",
+      "version": "",
+      "change": "RFP reports UTC"
+    },
+    {
+      "date": "2025-11",
+      "browser": "firefox",
+      "version": "145",
+      "change": "Mozilla states timezone and language are deliberately preserved"
+    }
+  ],
+  "refs": [
+    {
+      "t": "github",
+      "label": "fingerprintjs source: timezone",
+      "url": "https://github.com/fingerprintjs/fingerprintjs/blob/master/src/sources/timezone.ts"
+    },
+    {
+      "t": "paper",
+      "label": "AmIUnique: Beauty and the Beast, Laperdrix et al. 2016 (attribute entropy)",
+      "url": "https://hal.inria.fr/hal-01285470"
+    },
+    {
+      "t": "mozilla",
+      "label": "Mozilla Security Blog 2026-11-10: harder to fingerprint",
+      "url": "https://blog.mozilla.org/security/2026/11/10/open-research-stronger-privacy-making-firefox-users-harder-to-fingerprint/"
+    },
+    {
+      "t": "mdn",
+      "label": "MDN resolvedOptions",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/DateTimeFormat/resolvedOptions"
+    },
+    {
+      "t": "news",
+      "label": "BleepingComputer: LinkedIn scans for 6,000+ Chrome extensions",
+      "url": "https://www.bleepingcomputer.com/news/security/linkedin-secretely-scans-for-6-000-plus-chrome-extensions-collects-data/"
+    },
+    {
+      "t": "github",
+      "label": "mdp/linkedin-extension-fingerprinting (LinkedIn script snapshot and ID list)",
+      "url": "https://github.com/mdp/linkedin-extension-fingerprinting"
+    }
+  ],
+  "confidence": "verified"
+}

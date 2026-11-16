@@ -1,0 +1,233 @@
+{
+  "id": "web.render.countermeasure-safari-afp",
+  "name": "Safari Advanced Fingerprinting Protection",
+  "kind": "tracking",
+  "group": "rendering-fingerprint",
+  "subgroup": "Countermeasures",
+  "tags": [
+    "countermeasure",
+    "safari",
+    "webkit",
+    "noise"
+  ],
+  "plain": "Safari limits what known fingerprinting scripts can read and perturbs canvas and audio readback.",
+  "meaning": "Safari 17 enabled it in Private Browsing. Safari 26 (iOS 26, macOS 26) extends it to all browsing by default, restricting known fingerprinting scripts from reading screen size, core count, voices, Web Audio and 2D canvas.",
+  "lifecycle": [
+    "on-arrival"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "Safari Settings > Advanced > Advanced fingerprinting protection",
+      "access": {
+        "grant": "none",
+        "prompt_ui": "",
+        "secure_context": false,
+        "user_gesture": false,
+        "persistence": "",
+        "revocation": "",
+        "iframe": "",
+        "steps": [
+          "WebKit identifies known fingerprinting scripts",
+          "Restricts or perturbs high-entropy APIs for those scripts",
+          "Stops them setting long-lived cookies or localStorage"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "edge": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "firefox": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "safari": {
+          "s": "y",
+          "v": "17",
+          "note": "Private Browsing; default for all browsing in 26",
+          "date": "2023-09-18"
+        },
+        "ios_safari": {
+          "s": "y",
+          "v": "17",
+          "note": "Same on iOS; default for all browsing in 26",
+          "date": "2023-09-18"
+        },
+        "chrome_android": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "samsung": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "none",
+    "metric": "Applied only to scripts on WebKit's known-fingerprinter lists, plus noise in Private mode",
+    "update": "",
+    "fields": [
+      {
+        "name": "scope",
+        "type": "enum",
+        "unit": "",
+        "range": "Private only (17 to 25), all browsing (26)",
+        "precision": "by setting"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can't use many device traits in Safari to tell you apart",
+    "user_action": "Nothing. Safari does it by default, in all browsing in Safari 26",
+    "can": [
+      "Limit what known fingerprinting scripts can see",
+      "Add noise to canvas and audio results",
+      "Keep pages working as normal"
+    ],
+    "cannot": [
+      "Stop every fingerprinting script, since the limits aim at known ones",
+      "Hide that you use Safari",
+      "Protect older iOS and macOS versions that came before 26 outside Private Browsing"
+    ],
+    "reach": 1,
+    "reach_label": "Built in protection",
+    "differs": "Safari 17 to 25 protect only in Private Browsing. Safari 26 on iOS and macOS protects all browsing."
+  },
+  "story": {
+    "what_it_is": "Safari limits what known fingerprinting scripts can read and adds small noise to canvas and audio readback.",
+    "icon": "shield-check",
+    "tags": [
+      "Privacy",
+      "Defense",
+      "Browser"
+    ],
+    "marketing": [
+      {
+        "vendor": "Apple",
+        "name": "Advanced Fingerprinting Protection",
+        "pitch": "Apple says Safari's stronger tracking defense makes it harder for sites to build a profile from your device details.",
+        "url": "https://www.apple.com/newsroom/2023/06/apple-announces-powerful-new-privacy-and-security-features/"
+      },
+      {
+        "vendor": "WebKit",
+        "name": "Tracking Prevention",
+        "pitch": "WebKit describes its policy of stopping cross site tracking and limiting fingerprinting surface.",
+        "url": "https://webkit.org/tracking-prevention/"
+      }
+    ],
+    "for_you": "You turn nothing on and pages mostly look the same. Safari quietly makes your device look more like other Apple devices, so ad scripts have a harder time telling you apart.",
+    "for_makers": "Apple uses privacy as a major pitch for iPhone and Mac. Makers who use fingerprints for fraud or ad measurement get less detail from Safari and must rely on logins, first party data or Apple's own attribution tools.",
+    "use_cases": [
+      {
+        "type": "ads",
+        "example": "An ad network that tries to hash your canvas in Safari gets a slightly scrambled answer, so it cannot follow you around the web.",
+        "apps": []
+      },
+      {
+        "type": "security",
+        "example": "A bank cannot count on device traits from Safari, so it leans more on login history and Face ID passkeys.",
+        "apps": []
+      },
+      {
+        "type": "games",
+        "example": "A WebGL game in Safari still renders normally because the noise only touches fingerprint style readbacks.",
+        "apps": []
+      },
+      {
+        "type": "analytics",
+        "example": "A site that counts unique visitors sees blurrier numbers from Safari and uses first party cookies or logins instead.",
+        "apps": []
+      },
+      {
+        "type": "shopping",
+        "example": "A retailer measuring ad clicks uses Safari's built in attribution, not a fingerprint, to see which ad led to a sale.",
+        "apps": []
+      },
+      {
+        "type": "social",
+        "example": "A social network cannot easily link a Safari visitor to a logged out profile, so it nudges people to sign in.",
+        "apps": []
+      },
+      {
+        "type": "news",
+        "example": "A news site's paywall counts articles by login in Safari, because device matching is less steady.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Can still miss new tricks",
+      "Some site features may break"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Targets known scripts, so new or first-party scripts may not be restricted",
+    "Secondary sources disagree on how much noise is applied outside Private mode"
+  ],
+  "scores": {
+    "sensitivity": 1,
+    "utility": 3,
+    "fingerprint_bits": null,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": "Privacy by default for Safari users",
+    "abuse": "Hardest iOS desktop fingerprinting, still measurable via fonts and coarse hardware"
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2023-09",
+      "browser": "safari",
+      "version": "17",
+      "change": "Advanced Tracking and Fingerprinting Protection in Private Browsing, canvas and audio noise"
+    },
+    {
+      "date": "2025-09",
+      "browser": "safari",
+      "version": "26",
+      "change": "Extended to all browsing by default, with targeted API limits and storage limits for known fingerprinters"
+    }
+  ],
+  "related": [
+    "web.render.canvas-2d-fingerprint",
+    "web.render.audio-offline-fingerprint",
+    "web.render.speechsynthesis-voices"
+  ],
+  "refs": [
+    {
+      "t": "webkit",
+      "label": "WebKit features in Safari 26",
+      "url": "https://webkit.org/blog/17333/webkit-features-in-safari-26-0/"
+    },
+    {
+      "t": "vendor",
+      "label": "Safari 17 release notes",
+      "url": "https://developer.apple.com/documentation/safari-release-notes/safari-17-release-notes"
+    },
+    {
+      "t": "news",
+      "label": "9to5Mac iOS 26 hidden Safari features",
+      "url": "https://9to5mac.com/2025/08/16/ios-26-hidden-safari-features/"
+    }
+  ],
+  "confidence": "verified"
+}

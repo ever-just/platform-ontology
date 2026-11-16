@@ -1,0 +1,240 @@
+{
+  "id": "web.auth.fedcm",
+  "name": "Federated Credential Management (FedCM)",
+  "kind": "permission",
+  "group": "identity-auth",
+  "subgroup": "Federated login",
+  "tags": [
+    "fedcm",
+    "federated-login",
+    "identity",
+    "third-party-cookies"
+  ],
+  "plain": "A browser mediated sign in that works without third party cookies or hidden redirects.",
+  "meaning": "The browser asks the identity provider for account data, shows a prompt, and only after consent shares the ID token with the site. Stops identity providers from tracking silently. Google is moving its sign in to FedCM.",
+  "lifecycle": [
+    "signed-in"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "navigator.credentials.get({identity: {providers: [...]}})",
+      "permission_name": "identity-credentials-get",
+      "permissions_policy": "identity-credentials-get",
+      "bcd": [
+        "api.IdentityCredential"
+      ],
+      "access": {
+        "grant": "prompt",
+        "prompt_ui": "Browser account chooser dialog",
+        "secure_context": true,
+        "user_gesture": false,
+        "persistence": "Browser remembers sign in state per account; revocable in site settings",
+        "revocation": "Clear site data, browser privacy settings",
+        "iframe": "",
+        "steps": [
+          "Site calls credentials.get with identity",
+          "Browser contacts IdP, shows chooser",
+          "Person consents",
+          "Site receives token"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "108",
+          "note": "",
+          "date": "2022-11-29"
+        },
+        "edge": {
+          "s": "y",
+          "v": "108",
+          "note": "",
+          "date": "2022-12-05"
+        },
+        "firefox": {
+          "s": "n",
+          "v": "",
+          "note": "No public ship found, verify"
+        },
+        "safari": {
+          "s": "n",
+          "v": "",
+          "note": "No public ship found, verify"
+        },
+        "ios_safari": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "108",
+          "note": "",
+          "date": "2022-11-29"
+        },
+        "samsung": {
+          "s": "y",
+          "v": "21.0",
+          "note": "",
+          "date": "2023-05-19"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "object",
+    "metric": "ID token after consent",
+    "update": "per sign in",
+    "fields": []
+  },
+  "limits": {
+    "headline": "Can sign you in with the account you pick in a browser prompt",
+    "user_action": "You tap Sign in with Google (or similar) and choose an account in the browser box",
+    "can": [
+      "Show a browser account picker listing accounts you already have with the sign in provider",
+      "Receive a sign in token for the one account you choose",
+      "Sign you in without third party cookies or a pop up window"
+    ],
+    "cannot": [
+      "Get your account details before you approve in the prompt",
+      "Work in Firefox or Safari; only Chrome, Edge and Samsung Internet support it",
+      "Pick an account for you; the prompt always asks first"
+    ],
+    "reach": 1,
+    "reach_label": "One account, one sign in",
+    "differs": "Chrome, Edge and Samsung Internet support it. Firefox and Safari do not, so sites there fall back to pop ups or redirects."
+  },
+  "story": {
+    "what_it_is": "The browser itself runs a sign in with Google style prompt, so no hidden cookies are needed.",
+    "icon": "log-in",
+    "tags": [
+      "Sign in",
+      "Asks first",
+      "Privacy"
+    ],
+    "marketing": [
+      {
+        "vendor": "Google Chrome",
+        "name": "Federated Credential Management",
+        "pitch": "Chrome pitches it as keeping one click sign in alive as third party cookies fade, with the browser running the prompt.",
+        "url": "https://developer.chrome.com/docs/identity/fedcm/overview"
+      },
+      {
+        "vendor": "MDN (standards docs)",
+        "name": "FedCM API",
+        "pitch": "Describes a browser mediated way for people to sign in to sites using an identity provider, without tracking by cookies or redirects.",
+        "url": "https://developer.mozilla.org/en-US/docs/Web/API/FedCM_API"
+      }
+    ],
+    "for_you": "You see a small box from your browser saying something like 'Continue as Sam' with your account picture. It appears before you type anything. You tap once and you are in.",
+    "for_makers": "Sites keep one click social login alive even when browsers block third party cookies. The browser, not the site, controls the prompt, so sign in rates stay high without sneaky redirects.",
+    "use_cases": [
+      {
+        "type": "games",
+        "example": "A browser game portal shows a 'Continue as Sam' box so a player can sign in and load saved progress in one tap, before the game even starts.",
+        "apps": [
+          "Poki",
+          "CrazyGames"
+        ]
+      },
+      {
+        "type": "media",
+        "example": "A news site lets a returning reader sign in with Google in one tap so a paywall opens and their saved articles appear.",
+        "apps": [
+          "The New York Times"
+        ]
+      },
+      {
+        "type": "shopping",
+        "example": "A store shows the account chooser at checkout so a shopper skips typing an address and card details.",
+        "apps": []
+      },
+      {
+        "type": "productivity",
+        "example": "A design or notes web app offers a one tap sign in the moment the page loads, so the team can jump straight into a shared board.",
+        "apps": [
+          "Figma",
+          "Notion"
+        ]
+      },
+      {
+        "type": "security",
+        "example": "A site checks that the sign in came through the browser prompt, which makes fake pop up login pages harder to pass off.",
+        "apps": []
+      },
+      {
+        "type": "ads",
+        "example": "Identity providers can no longer quietly learn every site you visit, because the browser asks you first and hides your visit until you agree.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Identity provider learns you visited",
+      "Prompt fatigue"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Needs HTTPS and a well known file at the provider",
+    "Shows browser UI before any data is shared",
+    "Chrome ships it; other browsers vary"
+  ],
+  "scores": {
+    "sensitivity": 4,
+    "utility": 4,
+    "fingerprint_bits": null,
+    "friction": 2
+  },
+  "value": {
+    "legit_uses": [
+      "Third-party-cookie free federated login"
+    ],
+    "abuse": [
+      "Identity providers learning relying sites"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2022-11",
+      "browser": "chrome",
+      "version": "108",
+      "change": "FedCM shipped"
+    },
+    {
+      "date": "2024-06",
+      "browser": "chrome",
+      "version": "126",
+      "change": "Updates: multiple IdP and button mode (verify milestone)"
+    }
+  ],
+  "related": [
+    "web.auth.sign-in-with-google",
+    "web.xsite.third-party-cookies-status"
+  ],
+  "refs": [
+    {
+      "t": "mdn",
+      "label": "MDN FedCM API",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/FedCM_API"
+    },
+    {
+      "t": "spec",
+      "label": "W3C FedCM",
+      "url": "https://www.w3.org/TR/fedcm/"
+    },
+    {
+      "t": "vendor",
+      "label": "Privacy Sandbox status: FedCM continues",
+      "url": "https://privacysandbox.google.com/overview/status"
+    }
+  ],
+  "confidence": "verified"
+}

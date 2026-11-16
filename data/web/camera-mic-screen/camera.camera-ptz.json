@@ -1,0 +1,251 @@
+{
+  "id": "web.camera.camera-ptz",
+  "name": "Camera pan, tilt and zoom control",
+  "kind": "permission",
+  "group": "camera-mic-screen",
+  "subgroup": "Capture",
+  "tags": [
+    "ptz",
+    "camera"
+  ],
+  "plain": "Lets a site move or zoom a PTZ-capable camera.",
+  "meaning": "Gives the site physical control of camera direction and zoom on conferencing cameras, so it can aim at people and rooms. Gated by a separate permission on top of camera access.",
+  "lifecycle": [
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "getUserMedia({video: {pan: true, tilt: true, zoom: true}}); track.applyConstraints({advanced: [{pan, tilt, zoom}]}); getCapabilities()",
+      "permission_name": "camera (with panTiltZoom: true)",
+      "permissions_policy": "camera",
+      "bcd": [
+        "api.MediaTrackSettings.pan",
+        "api.MediaTrackSettings.tilt",
+        "api.MediaTrackSettings.zoom"
+      ],
+      "access": {
+        "grant": "prompt",
+        "prompt_ui": "Chrome shows a distinct prompt when constraints request pan, tilt or zoom: Allow control of camera movements. Granting unlocks all three on that device.",
+        "secure_context": true,
+        "user_gesture": false,
+        "persistence": "Stored with the camera permission per origin",
+        "revocation": "Site settings > Camera, padlock icon",
+        "iframe": "Needs allow=\"camera\" in cross-origin iframes",
+        "steps": [
+          "Request video with panTiltZoom permission descriptor",
+          "Browser shows PTZ prompt",
+          "Read getCapabilities() ranges",
+          "applyConstraints with new values"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "87",
+          "note": "",
+          "date": "2020-11-17"
+        },
+        "edge": {
+          "s": "y",
+          "v": "87",
+          "note": "",
+          "date": "2020-11-19"
+        },
+        "firefox": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "safari": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "ios_safari": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "87",
+          "note": "",
+          "date": "2020-11-17"
+        },
+        "samsung": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "object",
+    "metric": "Camera pan, tilt and zoom settings",
+    "update": "on request",
+    "fields": [
+      {
+        "name": "pan",
+        "type": "float",
+        "unit": "arc seconds",
+        "range": "device range (often about -648000 to 648000)",
+        "precision": "device step"
+      },
+      {
+        "name": "tilt",
+        "type": "float",
+        "unit": "arc seconds",
+        "range": "device range",
+        "precision": "device step"
+      },
+      {
+        "name": "zoom",
+        "type": "float",
+        "unit": "ratio",
+        "range": "1 to device max (often 1 to 10)",
+        "precision": "device step"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can move or zoom a motorized camera, once the site already has camera access",
+    "user_action": "You use pan or zoom controls on a video call or monitoring page and approve the extra prompt",
+    "can": [
+      "Pan, tilt and zoom a camera that has those motors or lenses",
+      "Change the framing during a call or while watching a feed",
+      "Use all three movements on that camera after one approval"
+    ],
+    "cannot": [
+      "Move a camera that has no motor or zoom",
+      "Control the camera without the separate camera movement prompt in Chrome",
+      "Grant only zoom and keep pan locked; the approval covers all three",
+      "Work in Firefox, Safari or iPhone browsers, which do not offer it"
+    ],
+    "reach": 2,
+    "reach_label": "One camera, while you use the site",
+    "differs": "Works in Chrome and Edge (desktop and Android). Firefox, Safari and iPhone browsers do not support it."
+  },
+  "story": {
+    "what_it_is": "Lets a site tilt, turn and zoom a motorized camera, not only look through it.",
+    "icon": "webcam",
+    "tags": [
+      "Camera",
+      "Asks first",
+      "Hardware"
+    ],
+    "marketing": [
+      {
+        "vendor": "Google Chrome",
+        "name": "Camera pan, tilt and zoom",
+        "pitch": "Chrome explains that web apps can steer PTZ webcams for conferencing, with a separate permission from plain camera access.",
+        "url": "https://developer.chrome.com/docs/capabilities/web-apis/camera-pan-tilt-zoom"
+      }
+    ],
+    "for_you": "If you have a camera that can move, such as a conference room camera, a second prompt asks whether the site may point and zoom it. If you say yes, you may see the camera swing toward a speaker without anyone touching it.",
+    "for_makers": "Meeting and telehealth sites want to frame people well and follow whoever talks, without a separate control app. A web page can then run a whole room camera system. It also saves support calls about camera setup.",
+    "use_cases": [
+      {
+        "type": "video",
+        "example": "A web based room system in a boardroom zooms in on whoever is talking, so remote staff can see faces and not a wide table shot.",
+        "apps": []
+      },
+      {
+        "type": "health",
+        "example": "A doctor on a telehealth site zooms the patient camera onto a rash or a wound so the care team can see detail from far away.",
+        "apps": [
+          "Teladoc",
+          "Doxy.me"
+        ]
+      },
+      {
+        "type": "education",
+        "example": "A lecture hall camera follows the teacher around the room while students watch the stream in a browser tab.",
+        "apps": [
+          "Panopto",
+          "Echo360"
+        ]
+      },
+      {
+        "type": "live",
+        "example": "A church or school streams a service on the web, and the volunteer pans the camera from a browser page on a laptop.",
+        "apps": [
+          "Boxcast",
+          "Vimeo Live"
+        ]
+      },
+      {
+        "type": "security",
+        "example": "A shop owner opens a web page that lets them aim a motorized store camera at the door or the till from home.",
+        "apps": []
+      },
+      {
+        "type": "smart-home",
+        "example": "A pet camera page lets you swivel and zoom to find your cat, using a plain browser tab on your phone.",
+        "apps": []
+      },
+      {
+        "type": "games",
+        "example": "A tabletop board game stream lets the host steer an overhead camera to show the cards on the table to remote players.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Camera aimed at people without their notice",
+      "Gives a site physical control of hardware"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Only works on cameras that advertise PTZ",
+    "Requires camera permission first",
+    "Not in Firefox or Safari"
+  ],
+  "scores": {
+    "sensitivity": 4,
+    "utility": 2,
+    "fingerprint_bits": null,
+    "friction": 2
+  },
+  "value": {
+    "legit_uses": [
+      "Remote classrooms and surgery cameras",
+      "Conferencing rooms with auto-framing"
+    ],
+    "abuse": [
+      "Remotely aiming a camera at people after capture is granted"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2020-11",
+      "browser": "chrome",
+      "version": "87",
+      "change": "Camera PTZ control ships behind a permission"
+    }
+  ],
+  "related": [
+    "web.camera.camera"
+  ],
+  "refs": [
+    {
+      "t": "chromestatus",
+      "label": "Chrome: Camera pan, tilt, zoom",
+      "url": "https://developer.chrome.com/docs/capabilities/web-apis/camera-pan-tilt-zoom"
+    },
+    {
+      "t": "spec",
+      "label": "W3C MediaStream Image Capture",
+      "url": "https://www.w3.org/TR/image-capture/"
+    }
+  ],
+  "confidence": "docs"
+}

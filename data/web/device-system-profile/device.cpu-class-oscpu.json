@@ -1,0 +1,212 @@
+{
+  "id": "web.device.cpu-class-oscpu",
+  "name": "Legacy cpuClass and oscpu",
+  "kind": "signal",
+  "group": "device-system-profile",
+  "subgroup": "Hardware",
+  "tags": [
+    "navigator",
+    "legacy",
+    "fingerprint"
+  ],
+  "plain": "Old non-standard strings naming the CPU class and operating system CPU.",
+  "meaning": "cpuClass (old Internet Explorer) and oscpu (Firefox) mostly return nothing in Chrome, which is itself a signal for which browser engine runs.",
+  "lifecycle": [
+    "on-arrival",
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "navigator.cpuClass, navigator.oscpu",
+      "bcd": [
+        "api.Navigator.oscpu"
+      ],
+      "access": {
+        "grant": "none",
+        "prompt_ui": "None (no browser prompt)",
+        "secure_context": false,
+        "user_gesture": false,
+        "persistence": "",
+        "revocation": "",
+        "iframe": "",
+        "steps": [
+          "Script reads the value",
+          "Value joins the fingerprint payload"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "edge": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "firefox": {
+          "s": "y",
+          "v": "1",
+          "note": "oscpu",
+          "date": "2004-11-09"
+        },
+        "safari": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "ios_safari": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "chrome_android": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "samsung": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "string",
+    "metric": "Legacy cpuClass and oscpu",
+    "update": "static",
+    "fields": [
+      {
+        "name": "cpuClass",
+        "type": "string",
+        "unit": "",
+        "range": "x86 or undefined",
+        "precision": ""
+      },
+      {
+        "name": "oscpu",
+        "type": "string",
+        "unit": "",
+        "range": "e.g. Intel Mac OS X 10.15 or undefined",
+        "precision": ""
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can sometimes see an old CPU and OS string, mostly in Firefox",
+    "user_action": "Nothing. It happens when a page checks the old browser fields",
+    "can": [
+      "Get the oscpu text in Firefox",
+      "Notice when Chrome returns nothing, which hints at the engine",
+      "Use the answer to guess the browser and OS"
+    ],
+    "cannot": [
+      "See anything useful in Chrome, Safari, or Edge",
+      "See your exact chip or speed",
+      "Get the old cpuClass value outside very old Internet Explorer",
+      "Learn your name or location from it"
+    ],
+    "reach": 1,
+    "reach_label": "One old text string",
+    "differs": "Only Firefox returns the oscpu value. Chrome, Safari, and Edge return nothing."
+  },
+  "story": {
+    "what_it_is": "Old strings that name your processor and system, mostly empty now, which itself hints at your browser.",
+    "icon": "cpu",
+    "tags": [
+      "Browser",
+      "Silent",
+      "Fraud"
+    ],
+    "marketing": [],
+    "for_you": "You never see these. Most return nothing. The fact that one is empty and another is filled in is what reveals which browser engine you use.",
+    "for_makers": "These came from the 1990s and 2000s browser wars. Today they are mostly a consistency test: a bot that pretends to be Firefox but returns the wrong answer gets caught. They add a few bits to a device profile.",
+    "use_cases": [
+      {
+        "type": "security",
+        "example": "A bot defence service tests whether Firefox-only strings exist when a visitor claims to be Firefox, and challenges those that fail.",
+        "apps": [
+          "DataDome",
+          "Akamai Bot Manager"
+        ]
+      },
+      {
+        "type": "analytics",
+        "example": "An old analytics script still reads the strings to label visitors by browser family.",
+        "apps": []
+      },
+      {
+        "type": "ads",
+        "example": "An ad fraud vendor checks that the strings match the claimed browser before counting an ad view as real.",
+        "apps": [
+          "DoubleVerify",
+          "Integral Ad Science"
+        ]
+      },
+      {
+        "type": "developer",
+        "example": "A compatibility test page prints these values to show what an unusual browser reports.",
+        "apps": []
+      },
+      {
+        "type": "games",
+        "example": "A browser games portal uses them to hide a feature in browsers that never supported it.",
+        "apps": []
+      },
+      {
+        "type": "banking",
+        "example": "A bank's login risk engine adds a point when old strings and the user agent disagree.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Tiny fingerprint piece",
+      "Mismatch can wrongly flag a person"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Undefined in most browsers"
+  ],
+  "scores": {
+    "sensitivity": 1,
+    "utility": 3,
+    "fingerprint_bits": 1,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "None modern"
+    ],
+    "abuse": [
+      "Engine and OS detection"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": true,
+      "how": "Collector key(s): cpuClass, oscpu. "
+    }
+  },
+  "related": [
+    "web.tracking.linkedin-apfc-fingerprint"
+  ],
+  "refs": [
+    {
+      "t": "mdn",
+      "label": "MDN oscpu",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/Navigator/oscpu"
+    },
+    {
+      "t": "github",
+      "label": "mdp/linkedin-extension-fingerprinting (LinkedIn script snapshot and ID list)",
+      "url": "https://github.com/mdp/linkedin-extension-fingerprinting"
+    }
+  ],
+  "confidence": "docs"
+}

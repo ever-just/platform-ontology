@@ -1,0 +1,172 @@
+---
+title: Data model
+description: Every field, the 7 kinds, 24 groups, lifecycle stages, reach levels, scores and status codes.
+---
+
+Every capability is one JSON object checked by `schema/capability.schema.json`. This page explains each field and every fixed list of values.
+
+## Fields
+
+| Field | What it holds |
+| --- | --- |
+| `id` | Stable id. `mob.*` for native apps (Android and iPhone), `web.*` for websites. Never reused. |
+| `name` | A short plain name. |
+| `plain` | One plain sentence about what it is. |
+| `meaning` | Why it matters, in a few sentences. |
+| `kind` | One of the 7 kinds below. |
+| `group`, `subgroup` | One of the 24 groups below, plus a finer label inside it. |
+| `space` | `mobile` or `web`. Matches the folder. |
+| `tags` | Short search words. |
+| `lifecycle` | When it happens. A list of stages from the table below. |
+| `platforms` | The facts that differ per platform. See below. |
+| `data` | What comes back: `type`, `metric`, `update` rate and a `fields` list with name, type, unit, range and precision. |
+| `limits` | The plain bounds: `headline`, `user_action`, `can`, `cannot`, `reach`, `reach_label`, `differs`. |
+| `story` | Reader friendly text: `what_it_is`, a Lucide `icon` name, `for_you`, `for_makers`, `use_cases`, `risks`, vendor `marketing` links and short `android_note` and `ios_note`. |
+| `technical_bounds` | Hard technical limits, for example "Only works on cameras that advertise it". |
+| `scores` | `sensitivity`, `utility`, `friction` and `fingerprint_bits`. |
+| `value` | `legit_uses` and known `abuse`. |
+| `case_study` | A real example. Currently a LinkedIn note when the capability is used there. |
+| `history` | Dated platform changes, each with `date`, the OS or browser, `version` and `change`. |
+| `related` | Ids of related capabilities. |
+| `web_equivalents` | Ids of the same idea on the other side (native or web). |
+| `refs` | Sources, each with a type `t`, a `label` and a `url`. |
+| `confidence` | `verified`, `docs` or `inferred`. How well the facts were checked. |
+
+### Native platform block
+
+For `mob.*` capabilities, `platforms.android` and `platforms.ios` hold:
+
+| Field | Meaning |
+| --- | --- |
+| `s` | Status code, see below. |
+| `v` | First OS version that has it. |
+| `api` | Android API level (Android only). |
+| `permission` | The permission string, entitlement or Info.plist key. |
+| `protection` | The protection level, for example `normal`, `dangerous`, `signature` or `entitlement`. |
+| `grant` | How access is granted: `none`, `install`, `prompt`, `settings`, `picker`, `role`, `enterprise`, `system-only` or `not-exposed`. |
+| `prompt_ui` | What the user sees. |
+| `persistence` | How long the grant lasts. |
+| `revocation` | Where the user takes it back. |
+| `store_policy` | Any App Store or Google Play rule that applies. |
+| `api_surface` | The API or file involved. |
+| `note` | Anything else worth knowing. |
+
+### Web platform block
+
+For `web.*` capabilities, `platforms.web` holds:
+
+| Field | Meaning |
+| --- | --- |
+| `api` | The API call or feature a site uses. |
+| `permission_name` | The name used by the Permissions API, when there is one. |
+| `permissions_policy` | The Permissions Policy directive that controls it in iframes. |
+| `bcd` | Keys in the MDN browser compatibility data. |
+| `access` | `grant`, `prompt_ui`, `secure_context`, `user_gesture`, `activation`, `persistence`, `revocation`, `iframe` and a list of `steps`. |
+| `support` | One record per browser, each with `s`, `v`, `note` and sometimes `date`. |
+
+## The 7 kinds
+
+Kinds say how a capability behaves for the person using the device.
+
+| Label | Key | Meaning |
+| --- | --- | --- |
+| **Asks you first** | `permission` | A pop up asks for your OK before the app gets it. |
+| **You pick what to share** | `picker` | You choose the exact items (a photo, a file, a contact). |
+| **Works without asking** | `capability` | A useful feature apps can just use. No pop up. |
+| **Does something on your device** | `action` | Makes the device act: vibrate, share, keep the screen on. |
+| **Gets silently** | `signal` | A detail about you or your device that apps can get with no prompt. |
+| **Used to track you** | `tracking` | Mostly used to follow you across apps, sites or ads. |
+| **Blocked for apps** | `not-exposed` | Apps can't get this, or it was taken away from them. |
+
+## The 24 groups
+
+Groups sort capabilities by topic. Native apps use 22 of them and the web uses 19.
+
+| Label | Key | Covers |
+| --- | --- | --- |
+| Location and motion | `location-motion` | Where you are and how you move |
+| Camera, mic and screen | `camera-mic-screen` | Seeing, hearing and recording |
+| Contacts and personal data | `personal-data-contacts` | Your people, photos, calendar and more |
+| Health and fitness | `health-fitness` | Steps, heart rate, workouts, health records |
+| Sign in and identity | `identity-auth` | Face ID, passkeys, accounts and logins |
+| Payments and shopping | `payments-commerce` | Paying, wallets and purchases |
+| Notifications and background | `notifications-background` | Alerts and work that runs when the app is closed |
+| Files and storage | `files-storage` | Saving, opening and keeping data |
+| Hardware and accessories | `peripherals-hardware` | Bluetooth, USB, NFC, controllers, sensors |
+| Network and connection | `network-connectivity` | Wi-Fi, cell signal, internet speed |
+| Device details | `device-system-profile` | Model, memory, battery and other facts about the device |
+| Screen and windows | `display-window` | Screen size, brightness, full screen, windows |
+| Typing and clipboard | `input-clipboard` | Keyboard, copy and paste, touch and mouse |
+| Language and settings | `locale-preferences` | Language, time zone, dark mode, text size |
+| Speed and timing | `timing-performance` | How fast things load and run |
+| On-device AI | `on-device-ai` | AI that runs right on your device |
+| Home screen and system links | `os-integration-install` | Installing, widgets, shortcuts, sharing |
+| System control | `system-control` | Changing device settings and controlling other apps |
+| Calls and texts | `telephony-sms` | Phone calls, SMS and carrier details |
+| Other apps on the phone | `app-ecosystem` | Seeing and talking to other installed apps |
+| Ads and install tracking | `attribution-ads` | Measuring which ad led to an install or sale |
+| Tracking across apps and sites | `cross-site-tracking` | IDs and tricks that follow you around |
+| Graphics and fingerprinting | `rendering-fingerprint` | Drawing and the hidden device clues it leaks |
+| Things a page can do | `page-actions` | Actions a website can take for you |
+
+## Lifecycle stages
+
+Lifecycle says when a capability can happen. A capability can have more than one stage.
+
+| Key | Label |
+| --- | --- |
+| `before-install` | Before you install |
+| `before-visit` | Before you visit |
+| `on-launch` | When the app opens |
+| `on-arrival` | When the page loads |
+| `in-session` | While you use it |
+| `background` | In the background |
+| `signed-in` | When you are signed in |
+| `after-leaving` | After you leave the site |
+| `after-uninstall` | After you uninstall |
+
+## Reach
+
+Reach is a 1 to 4 scale for how much a capability can touch.
+
+| Level | Meaning |
+| --- | --- |
+| 1 | One thing, one moment |
+| 2 | While you use it, or only what you choose |
+| 3 | Ongoing or in the background, one kind of data |
+| 4 | Broad: everything of that type, anytime |
+
+Pages show it as a four step meter next to a plain label such as "One camera, while you use the site".
+
+## Scores
+
+| Score | Scale | Meaning |
+| --- | --- | --- |
+| `sensitivity` | 1 to 5 | How revealing the data is |
+| `utility` | 1 to 5 | How useful it is to honest apps |
+| `friction` | 0 to 5 | How much the user has to do. 0 means nothing at all. |
+| `fingerprint_bits` | number or empty | Rough bits of identifying information, when known |
+
+## Status codes
+
+Status is used per platform (`s`) and per browser (`support.<browser>.s`).
+
+| Code | Meaning |
+| --- | --- |
+| `y` | Supported |
+| `p` | Partial or behind a flag |
+| `n` | Not supported |
+| `r` | Removed |
+| `f` | Behind a preference flag only (a few web records use this) |
+
+## Platforms and browsers
+
+The platform keys are `android` (Android), `ios` (iPhone) and `web`. Browser keys inside web support are `chrome`, `edge`, `firefox`, `safari`, `ios_safari` (Safari on iPhone), `chrome_android` (Chrome on Android) and `samsung` (Samsung Internet).
+
+## Confidence
+
+| Value | Meaning |
+| --- | --- |
+| `verified` | Checked against real behavior |
+| `docs` | Based on official documentation |
+| `inferred` | Inferred from related behavior; welcome for review |

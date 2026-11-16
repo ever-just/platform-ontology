@@ -1,0 +1,206 @@
+{
+  "id": "web.identity.webauthn-signal-api",
+  "name": "WebAuthn Signal API",
+  "kind": "action",
+  "group": "identity-auth",
+  "subgroup": "WebAuthn",
+  "tags": [
+    "webauthn"
+  ],
+  "plain": "Lets a site tell the passkey manager a credential is gone or its name changed.",
+  "meaning": "Keeps the passkey list clean. Shows no data back to the site.",
+  "lifecycle": [
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "PublicKeyCredential.signalUnknownCredential(), signalAllAcceptedCredentials(), signalCurrentUserDetails()",
+      "bcd": [
+        "api.PublicKeyCredential.signalUnknownCredential"
+      ],
+      "access": {
+        "grant": "none",
+        "prompt_ui": "None",
+        "secure_context": true,
+        "user_gesture": false,
+        "persistence": "Per origin",
+        "revocation": "Site settings",
+        "iframe": "Same as top level; cross-origin iframes need a permissions policy where listed",
+        "steps": [
+          "Call the API",
+          "Browser applies its access rules",
+          "Page receives the result"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "132",
+          "note": ""
+        },
+        "edge": {
+          "s": "y",
+          "v": "132",
+          "note": ""
+        },
+        "firefox": {
+          "s": "n",
+          "v": "",
+          "note": "not shipped"
+        },
+        "safari": {
+          "s": "y",
+          "v": "26",
+          "note": ""
+        },
+        "ios_safari": {
+          "s": "y",
+          "v": "26",
+          "note": ""
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "132",
+          "note": "verify on Android"
+        },
+        "samsung": {
+          "s": "n",
+          "v": "",
+          "note": "not confirmed"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "object",
+    "metric": "Lets a site tell the passkey manager a credential is gone or its name changed.",
+    "update": "on demand",
+    "fields": [
+      {
+        "name": "rpId, credentialId",
+        "type": "string",
+        "range": "base64url"
+      },
+      {
+        "name": "name, displayName",
+        "type": "string",
+        "range": "user visible"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can tell your passkey manager that a passkey is gone or renamed",
+    "user_action": "Nothing extra. It happens after you delete an account or change your username",
+    "can": [
+      "Send a note that a passkey no longer works so the manager can hide it",
+      "Send a new username or display name so your passkey list stays tidy"
+    ],
+    "cannot": [
+      "See what passkeys your manager holds; it sends nothing back",
+      "Delete a passkey on its own; the manager decides",
+      "Work in Firefox, or in Safari before version 26"
+    ],
+    "reach": 1,
+    "reach_label": "One note, nothing sent back",
+    "differs": "Chrome and Edge support it from version 132 and Safari from version 26; Firefox does not yet."
+  },
+  "story": {
+    "what_it_is": "Lets a site tell your passkey manager that a passkey was removed or renamed.",
+    "icon": "list-ordered",
+    "tags": [
+      "Passkey",
+      "Housekeeping"
+    ],
+    "marketing": [
+      {
+        "vendor": "Google Chrome",
+        "name": "Passkeys Signal API",
+        "pitch": "Chrome describes it as a way to keep passkey lists up to date when an account or name changes.",
+        "url": "https://developer.chrome.com/blog/passkeys-signal-api"
+      }
+    ],
+    "for_you": "You never see a prompt. When you delete a passkey on a site, your phone or password manager quietly removes it from its list too. The list stays tidy.",
+    "for_makers": "Makers keep users from seeing stale or broken passkeys that cause failed sign ins. Fewer failures mean fewer help requests and cleaner security records.",
+    "use_cases": [
+      {
+        "type": "games",
+        "example": "A game account page removes a deleted passkey from the player's list, so they are not offered a broken one at login.",
+        "apps": [
+          "Roblox"
+        ]
+      },
+      {
+        "type": "banking",
+        "example": "A bank cleans up passkeys after a customer closes an account or changes their username.",
+        "apps": []
+      },
+      {
+        "type": "shopping",
+        "example": "A shop updates the name of a passkey when a person changes their email, so the list still makes sense.",
+        "apps": []
+      },
+      {
+        "type": "productivity",
+        "example": "A work app tells the manager to remove passkeys for a former employee's departed device.",
+        "apps": []
+      },
+      {
+        "type": "security",
+        "example": "A security team uses it to remove old keys after a suspected break in.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Little, mostly housekeeping"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Provider may ignore",
+    "No Firefox"
+  ],
+  "scores": {
+    "sensitivity": 1,
+    "utility": 3,
+    "fingerprint_bits": null,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Remove deleted accounts' passkeys"
+    ],
+    "abuse": [
+      "None"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2024-11",
+      "browser": "chrome",
+      "version": "132",
+      "change": "Signal API ships"
+    },
+    {
+      "date": "2025-09",
+      "browser": "safari",
+      "version": "26",
+      "change": "Safari support"
+    }
+  ],
+  "refs": [
+    {
+      "t": "spec",
+      "label": "WebAuthn Level 3 signal",
+      "url": "https://www.w3.org/TR/webauthn-3/#sctn-signal-methods"
+    }
+  ],
+  "confidence": "verified"
+}

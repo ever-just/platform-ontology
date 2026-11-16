@@ -1,0 +1,196 @@
+{
+  "id": "mob.contacts.calendar-full",
+  "name": "Calendar, full access",
+  "kind": "permission",
+  "group": "personal-data-contacts",
+  "subgroup": "Calendar and reminders",
+  "tags": [
+    "runtime-permission",
+    "calendar"
+  ],
+  "plain": "Reads and edits every event in the person's calendars.",
+  "meaning": "Calendars show meetings, attendees, travel, doctor visits and routines.",
+  "lifecycle": [
+    "in-session",
+    "background"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "y",
+      "v": "6.0",
+      "api": 23,
+      "permission": "READ_CALENDAR, WRITE_CALENDAR",
+      "protection": "dangerous",
+      "grant": "prompt",
+      "prompt_ui": "Allow or Don't allow",
+      "persistence": "Until revoked; auto-reset after months unused",
+      "revocation": "Settings > Apps > Permissions > Calendar",
+      "store_policy": "Play: sensitive data policy",
+      "api_surface": "CalendarContract",
+      "note": ""
+    },
+    "ios": {
+      "s": "y",
+      "v": "17",
+      "permission": "NSCalendarsFullAccessUsageDescription (iOS 17); NSCalendarsUsageDescription earlier",
+      "protection": "prompt",
+      "grant": "prompt",
+      "prompt_ui": "Allow Full Access, Don't Allow",
+      "persistence": "Until revoked",
+      "revocation": "Settings > Privacy & Security > Calendars",
+      "store_policy": "App Review 5.1.1",
+      "api_surface": "EKEventStore.requestFullAccessToEvents",
+      "note": "requestAccess(to:) is deprecated in iOS 17; read and write are split"
+    }
+  },
+  "data": {
+    "type": "list",
+    "metric": "Events",
+    "update": "on request, EKEventStoreChanged notification",
+    "fields": [
+      {
+        "name": "events",
+        "type": "list",
+        "unit": "events",
+        "range": "0 to thousands",
+        "precision": "to the minute"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can see, add and change every event in all your calendars once you allow full access",
+    "user_action": "You tap Allow Full Access when the app asks about your calendar",
+    "can": [
+      "List meetings, places and attendees",
+      "Change or delete events that already exist",
+      "Add new events",
+      "Check your calendar again later without asking each time"
+    ],
+    "cannot": [
+      "Reach any event before you tap Allow Full Access",
+      "Use the old single request on iPhone; iOS 17 split it",
+      "Keep access after you turn it off in Settings"
+    ],
+    "reach": 4,
+    "reach_label": "All your events, anytime",
+    "differs": "iPhone shows Allow Full Access or Don't Allow; Android shows Allow or Don't allow."
+  },
+  "story": {
+    "what_it_is": "Lets the app read and change every event in all your calendars.",
+    "icon": "calendar-days",
+    "tags": [
+      "Calendar",
+      "Permission",
+      "Sensitive"
+    ],
+    "marketing": [],
+    "for_you": "The prompt says the app wants full access to your calendar. If you allow it, the app can see meetings, locations and guests, and edit or delete them.",
+    "for_makers": "Full access lets a smart assistant plan your day, find clashes and join calls. It is powerful and sensitive, since the calendar shows where you are, who you meet and your appointments.",
+    "use_cases": [
+      {
+        "type": "productivity",
+        "example": "A meeting assistant joins your calls and writes notes from your calendar.",
+        "apps": [
+          "Zoom",
+          "Otter.ai"
+        ]
+      },
+      {
+        "type": "productivity",
+        "example": "A day planner shows calendar and tasks in one view.",
+        "apps": [
+          "Fantastical"
+        ]
+      },
+      {
+        "type": "travel",
+        "example": "A travel app finds flights that fit between meetings.",
+        "apps": []
+      },
+      {
+        "type": "health",
+        "example": "A wellness app finds time for breaks.",
+        "apps": []
+      },
+      {
+        "type": "analytics",
+        "example": "A work tool measures how much time you spend in meetings.",
+        "apps": []
+      },
+      {
+        "type": "enterprise",
+        "example": "A sales app logs customer meetings automatically.",
+        "apps": [
+          "Salesforce"
+        ]
+      },
+      {
+        "type": "ads",
+        "example": "An ad SDK could read events to guess interests, which store policies forbid.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Reveals where you are and who you meet",
+      "Edits or deletes events",
+      "Health visits visible"
+    ],
+    "android_note": "Android has a calendar permission group for read and write.",
+    "ios_note": "iOS 17 split read and write, and the older request call is deprecated."
+  },
+  "technical_bounds": [
+    "iOS 17 and later require the new keys; old key stops working for new targets"
+  ],
+  "scores": {
+    "sensitivity": 4,
+    "utility": 3,
+    "fingerprint_bits": null,
+    "friction": 2
+  },
+  "value": {
+    "legit_uses": [
+      "Scheduling",
+      "Meeting assistants"
+    ],
+    "abuse": [
+      "Inferring locations and relationships"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2023-09",
+      "platform": "ios",
+      "version": "iOS 17",
+      "change": "Full access key and write-only option introduced"
+    },
+    {
+      "date": "2015-10",
+      "platform": "android",
+      "version": "6.0 (API 23)",
+      "change": "Runtime calendar permission"
+    }
+  ],
+  "related": [
+    "mob.contacts.calendar-write-only"
+  ],
+  "refs": [
+    {
+      "t": "apple",
+      "label": "Apple: Accessing the event store",
+      "url": "https://developer.apple.com/documentation/eventkit/accessing-the-event-store"
+    },
+    {
+      "t": "android",
+      "label": "Android: Calendar provider",
+      "url": "https://developer.android.com/identity/providers/calendar-provider"
+    }
+  ],
+  "confidence": "docs"
+}

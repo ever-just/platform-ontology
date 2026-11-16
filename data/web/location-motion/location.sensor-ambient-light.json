@@ -1,0 +1,234 @@
+{
+  "id": "web.location.sensor-ambient-light",
+  "name": "AmbientLightSensor",
+  "kind": "permission",
+  "group": "location-motion",
+  "subgroup": "Generic Sensor API",
+  "tags": [
+    "generic-sensor",
+    "secure-context"
+  ],
+  "plain": "Reads the light level (lux) around the device; not shipped by default anywhere.",
+  "meaning": "Shows whether the person is indoors, outdoors or in a dark room. Research showed it can leak visited links and cross-origin pixels, so Chrome keeps it behind a flag and Firefox removed it.",
+  "lifecycle": [
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "new AmbientLightSensor({frequency}); sensor.illuminance; legacy 'devicelight' event",
+      "permission_name": "ambient-light-sensor",
+      "permissions_policy": "ambient-light-sensor",
+      "bcd": [
+        "api.AmbientLightSensor"
+      ],
+      "access": {
+        "grant": "prompt",
+        "prompt_ui": "Chromium shows no bubble: access follows the Motion sensors site setting (default Allow) plus the Permissions API name. Safari and Firefox do not ship the API.",
+        "secure_context": true,
+        "user_gesture": false,
+        "persistence": "Site setting Allow or Block per origin",
+        "revocation": "chrome://settings/content/sensors; Permissions API 'change' event",
+        "iframe": "Cross-origin iframes blocked unless allow=\"ambient-light-sensor\"; page must be focused and visible",
+        "steps": [
+          "Check isSecureContext and Permissions Policy",
+          "Construct the sensor with {frequency: 60}",
+          "sensor.start()",
+          "'reading' events fire; 'error' event on NotAllowedError or NotReadableError"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "f",
+          "v": "67",
+          "note": "Needs chrome://flags generic-sensor-extra-classes"
+        },
+        "edge": {
+          "s": "f",
+          "v": "79",
+          "note": ""
+        },
+        "firefox": {
+          "s": "r",
+          "v": "62",
+          "note": "devicelight events removed from release builds",
+          "date": "2018-09-05"
+        },
+        "safari": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "ios_safari": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "chrome_android": {
+          "s": "f",
+          "v": "67",
+          "note": ""
+        },
+        "samsung": {
+          "s": "f",
+          "v": "9.0",
+          "note": ""
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "event",
+    "metric": "Sensor readings at the requested frequency",
+    "update": "up to 60 Hz (Chrome caps frequency)",
+    "fields": [
+      {
+        "name": "illuminance",
+        "type": "float",
+        "unit": "lux",
+        "range": "0 to about 100000",
+        "precision": "coarse rounding in flag builds"
+      },
+      {
+        "name": "frequency",
+        "type": "float",
+        "unit": "Hz",
+        "range": "1 to 10",
+        "precision": "1 Hz"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can't use your device's light sensor in most browsers today",
+    "user_action": "Nothing. Chrome keeps it off by default behind a setting, and Firefox removed it",
+    "can": [
+      "Measure the light level (lux) if you turn the browser flag on",
+      "Hint whether you are outside, indoors or in a dark room",
+      "Dim or brighten a page when it works"
+    ],
+    "cannot": [
+      "Run by default in Chrome, Edge or Samsung Internet; it sits behind a flag",
+      "Run in Firefox, which removed it, or in Safari, which never had it",
+      "Avoid privacy risks; research found it can leak visited links and screen pixels"
+    ],
+    "reach": 1,
+    "reach_label": "Off by default almost everywhere",
+    "differs": "Chrome-based browsers have it only behind a flag. Firefox removed it and Safari never added it."
+  },
+  "story": {
+    "what_it_is": "Reads how bright it is around your device. Not available by default in browsers.",
+    "icon": "sun",
+    "tags": [
+      "Sensors",
+      "Light",
+      "Rare"
+    ],
+    "marketing": [],
+    "for_you": "Almost no one will see this. If it were on, a page could dim itself in a dark room. It is not turned on in browsers by default, because it was found to leak information.",
+    "for_makers": "Makers wanted it for auto dark mode and for reading light for photos. It was held back after research showed it could leak links you visited and pixels from another site.",
+    "use_cases": [
+      {
+        "type": "media",
+        "example": "A reading or video page could switch to dark mode when your room goes dark.",
+        "apps": []
+      },
+      {
+        "type": "accessibility",
+        "example": "A web app could raise contrast in bright sunlight to help low vision readers.",
+        "apps": []
+      },
+      {
+        "type": "ar-vr",
+        "example": "A web AR scene could match virtual lighting to the room.",
+        "apps": []
+      },
+      {
+        "type": "games",
+        "example": "A browser game could change its look at night to match your room light.",
+        "apps": []
+      },
+      {
+        "type": "analytics",
+        "example": "Trackers would see if you are indoors or outside, and a screen reflection could leak details.",
+        "apps": []
+      },
+      {
+        "type": "security",
+        "example": "Researchers showed it could guess visited links and cross site pixels, so browsers held it back.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Leaks what is on screen",
+      "Hardly shipped"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Unusable on stable by default in major browsers",
+    "Secure context and policy still apply when flagged on"
+  ],
+  "scores": {
+    "sensitivity": 2,
+    "utility": 2,
+    "fingerprint_bits": 2,
+    "friction": 3
+  },
+  "value": {
+    "legit_uses": [
+      "Auto dark mode",
+      "Reading apps"
+    ],
+    "abuse": [
+      "Cross-origin link and pixel leaks via light reflection"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2018-05",
+      "browser": "chrome",
+      "version": "67",
+      "change": "Implemented but disabled by default"
+    },
+    {
+      "date": "2018-09",
+      "browser": "firefox",
+      "version": "62",
+      "change": "devicelight and lightlevel events disabled after privacy findings"
+    },
+    {
+      "date": "2017",
+      "browser": "paper",
+      "version": "n/a",
+      "change": "Olejnik analysis of light sensor leaks (links, pixels)"
+    }
+  ],
+  "related": [
+    "web.location.device-orientation"
+  ],
+  "refs": [
+    {
+      "t": "mdn",
+      "label": "MDN AmbientLightSensor",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/AmbientLightSensor"
+    },
+    {
+      "t": "spec",
+      "label": "W3C Ambient Light Sensor",
+      "url": "https://www.w3.org/TR/ambient-light/"
+    },
+    {
+      "t": "paper",
+      "label": "Olejnik on the light sensor API",
+      "url": "https://blog.lukaszolejnik.com/stealing-sensitive-browser-data-with-the-w3c-ambient-light-sensor-api/"
+    }
+  ],
+  "confidence": "docs"
+}

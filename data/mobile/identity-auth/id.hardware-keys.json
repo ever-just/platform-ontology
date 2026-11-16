@@ -1,0 +1,217 @@
+{
+  "id": "mob.id.hardware-keys",
+  "name": "Hardware backed keys (Keystore and Secure Enclave)",
+  "kind": "capability",
+  "group": "identity-auth",
+  "subgroup": "Keys",
+  "tags": [
+    "keystore",
+    "strongbox",
+    "secure-enclave",
+    "keychain",
+    "attestation"
+  ],
+  "plain": "Creates cryptographic keys that never leave the phone's secure chip.",
+  "meaning": "A device-bound key proves that a request comes from one specific phone. The iOS Keychain can survive app deletion, which lets services recognise a returning device.",
+  "lifecycle": [
+    "signed-in",
+    "after-uninstall"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "y",
+      "v": "6.0",
+      "api": 23,
+      "permission": "None",
+      "protection": "none",
+      "grant": "none",
+      "prompt_ui": "Key is deleted on app uninstall; user auth binding optional",
+      "persistence": "Until uninstall",
+      "revocation": "Uninstall app; factory reset",
+      "store_policy": "",
+      "api_surface": "KeyGenParameterSpec, StrongBox (API 28), setUserAuthenticationRequired, key attestation, Play Integrity",
+      "note": "Hardware attestation certificates prove device model and OS patch level."
+    },
+    "ios": {
+      "s": "y",
+      "v": "9.0",
+      "permission": "None",
+      "protection": "none",
+      "grant": "none",
+      "prompt_ui": "None",
+      "persistence": "Keychain items can survive uninstall",
+      "revocation": "Delete data via Settings; erase device",
+      "store_policy": "",
+      "api_surface": "Keychain Services, kSecAttrTokenIDSecureEnclave, SecAccessControl .biometryCurrentSet, App Attest",
+      "note": "Items without a data protection class limit survive reinstall; Secure Enclave keys are only P-256."
+    }
+  },
+  "web_equivalents": [
+    "web.identity.webauthn-create"
+  ],
+  "data": {
+    "type": "object",
+    "metric": "Key handle",
+    "update": "per use",
+    "fields": [
+      {
+        "name": "key size",
+        "type": "integer",
+        "unit": "bits",
+        "range": "256 (EC), 2048 or more (RSA)",
+        "precision": "exact"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can make secret keys that stay locked inside your phone's security chip",
+    "user_action": "Nothing, or you confirm with fingerprint or face when the app sets up secure sign in",
+    "can": [
+      "Create a key in the phone's secure chip",
+      "Sign data or log in with that key without exposing it",
+      "Require your fingerprint or face each time the key is used",
+      "Prove which phone model and security patch level it is on (Android)"
+    ],
+    "cannot": [
+      "Take the key out of the chip or copy it to a server",
+      "Use the key after you remove the screen lock, when set to require one",
+      "Use other key types in the iPhone Secure Enclave; it only supports P-256",
+      "Move the key to a new phone"
+    ],
+    "reach": 2,
+    "reach_label": "Keys only usable on this phone",
+    "differs": "Android can prove the model and patch level. iPhone Secure Enclave keys are limited to one key type and are checked by Face ID or Touch ID."
+  },
+  "story": {
+    "what_it_is": "An app makes a secret key that is stored in a locked chip and never leaves your phone.",
+    "icon": "lock-keyhole",
+    "tags": [
+      "Security",
+      "Silent",
+      "Chip"
+    ],
+    "marketing": [
+      {
+        "vendor": "Google",
+        "name": "Android Keystore",
+        "pitch": "Keys live in protected hardware so even malware cannot copy them out of the phone.",
+        "url": "https://developer.android.com/privacy-and-security/keystore"
+      },
+      {
+        "vendor": "Apple",
+        "name": "Secure Enclave",
+        "pitch": "A separate chip that holds keys and checks Face ID or Touch ID without sharing them with the app.",
+        "url": "https://developer.apple.com/documentation/security/protecting-keys-with-the-secure-enclave"
+      }
+    ],
+    "for_you": "You never see the key. What you notice is smooth, safe actions like approving a payment with a face scan, and a login that does not need a password. The secret stays on the phone.",
+    "for_makers": "Makers can prove that a login or payment came from one specific phone, which is strong protection against stolen passwords. The key can also tie an account to a device, and on iPhone some keychain items survive an uninstall, which helps services recognize a returning phone.",
+    "use_cases": [
+      {
+        "type": "banking",
+        "example": "A bank signs each money transfer with a hardware key so a stolen password alone cannot move funds.",
+        "apps": []
+      },
+      {
+        "type": "payments",
+        "example": "A wallet app approves a tap to pay with a key that only unlocks after you scan your face.",
+        "apps": [
+          "Apple Pay",
+          "Google Pay"
+        ]
+      },
+      {
+        "type": "games",
+        "example": "A game uses a device key to sign purchase requests and block fake receipts.",
+        "apps": []
+      },
+      {
+        "type": "enterprise",
+        "example": "A company ties staff logins to company phones with keys, so a copied password is useless on another device.",
+        "apps": []
+      },
+      {
+        "type": "security",
+        "example": "A cryptocurrency app keeps its signing key inside the chip so malware cannot read it.",
+        "apps": [
+          "Coinbase Wallet"
+        ]
+      },
+      {
+        "type": "automotive",
+        "example": "A digital car key stores a key in the chip so your phone can unlock and start the car.",
+        "apps": [
+          "BMW Digital Key"
+        ]
+      }
+    ],
+    "risks": [
+      "Reinstall linking on iPhone",
+      "Key tied to one device"
+    ],
+    "android_note": "Android may keep keys in the main secure chip or a separate StrongBox chip, depending on the phone model.",
+    "ios_note": "iPhone keychain items can survive deleting an app, so a service may still recognise a returning phone."
+  },
+  "technical_bounds": [
+    "Key material is never extractable"
+  ],
+  "scores": {
+    "sensitivity": 3,
+    "utility": 5,
+    "fingerprint_bits": 3,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Device bound login",
+      "Payments"
+    ],
+    "abuse": [
+      "Reinstall linking after uninstall (iOS Keychain)"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2015-10",
+      "platform": "android",
+      "version": "6.0 (API 23)",
+      "change": "Android Keystore keys"
+    },
+    {
+      "date": "2018-08",
+      "platform": "android",
+      "version": "9 (API 28)",
+      "change": "StrongBox Keymaster"
+    },
+    {
+      "date": "2015-09",
+      "platform": "ios",
+      "version": "iOS 9",
+      "change": "Secure Enclave keys"
+    }
+  ],
+  "related": [
+    "mob.peripherals.biometric",
+    "mob.id.passkeys-app"
+  ],
+  "refs": [
+    {
+      "t": "android",
+      "label": "Android: Keystore system",
+      "url": "https://developer.android.com/privacy-and-security/keystore"
+    },
+    {
+      "t": "apple",
+      "label": "Apple: Protecting keys with the Secure Enclave",
+      "url": "https://developer.apple.com/documentation/security/protecting-keys-with-the-secure-enclave"
+    }
+  ],
+  "confidence": "docs"
+}

@@ -1,0 +1,233 @@
+{
+  "id": "web.perf.compute-pressure",
+  "name": "Compute Pressure API",
+  "kind": "signal",
+  "group": "timing-performance",
+  "subgroup": "Device",
+  "tags": [
+    "pressure",
+    "cpu",
+    "thermal",
+    "throttling"
+  ],
+  "plain": "Reports the device CPU load as nominal, fair, serious or critical.",
+  "meaning": "A PressureObserver reports coarse CPU state and thermal throttling (four levels), limited to secure contexts and top level or permission policy frames. Replaces CPU benchmarking for adaptive apps, but exposes load state.",
+  "lifecycle": [
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "new PressureObserver(cb).observe('cpu',{sampleInterval})",
+      "bcd": [
+        "api.PressureObserver"
+      ],
+      "access": {
+        "grant": "none",
+        "prompt_ui": "",
+        "secure_context": true,
+        "user_gesture": false,
+        "persistence": "",
+        "revocation": "",
+        "iframe": "",
+        "steps": [
+          "Create PressureObserver",
+          "Observe cpu",
+          "Receive state changes at 1 Hz at most"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "125",
+          "note": "",
+          "date": "2024-05-14"
+        },
+        "edge": {
+          "s": "y",
+          "v": "125",
+          "note": "",
+          "date": "2024-05-17"
+        },
+        "firefox": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "safari": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "ios_safari": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "125",
+          "note": "BCD lists no support; agent research says otherwise",
+          "date": "2024-05-14"
+        },
+        "samsung": {
+          "s": "y",
+          "v": "27.0",
+          "note": "BCD lists no support; agent research says otherwise",
+          "date": "2024-11-06"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "event",
+    "metric": "state: nominal, fair, serious, critical",
+    "update": "",
+    "fields": [
+      {
+        "name": "state",
+        "type": "string",
+        "unit": "",
+        "range": "nominal, fair, serious, critical",
+        "precision": "4 levels"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can see how busy your device's processor is, in four coarse levels",
+    "user_action": "Nothing. It happens when the page asks, on a secure page",
+    "can": [
+      "Learn if CPU load is nominal, fair, serious or critical",
+      "Learn when the device slows down from heat",
+      "Lower its own work when your device is stressed"
+    ],
+    "cannot": [
+      "See which apps are running",
+      "See exact CPU numbers",
+      "Work in Firefox or Safari",
+      "Work inside embedded frames unless allowed"
+    ],
+    "reach": 2,
+    "reach_label": "While the page is open",
+    "differs": "Works in Chrome, Edge and Samsung Internet. Firefox and Safari do not support it."
+  },
+  "story": {
+    "what_it_is": "A page learns how busy your processor is, shown as nominal, fair, serious or critical.",
+    "icon": "gauge",
+    "tags": [
+      "CPU",
+      "Silent",
+      "Performance"
+    ],
+    "marketing": [
+      {
+        "vendor": "Google Chrome",
+        "name": "Compute Pressure API",
+        "pitch": "Chrome says it helps video calls and games adapt when the device is too busy, before things lag.",
+        "url": "https://developer.chrome.com/docs/web-platform/compute-pressure"
+      }
+    ],
+    "for_you": "You will not see a prompt. A video call or game may quietly turn off a fancy effect when your computer is overloaded, so the sound and picture stay smooth.",
+    "for_makers": "Real time apps need to know when the processor is struggling. They can then reduce quality before the app lags. The same level is a small hint about your device load.",
+    "use_cases": [
+      {
+        "type": "video",
+        "example": "A video call turns off background blur and drops video size when the laptop gets hot and busy.",
+        "apps": [
+          "Google Meet",
+          "Zoom web client"
+        ]
+      },
+      {
+        "type": "games",
+        "example": "A browser game lowers physics detail and effects when the processor is under heavy load.",
+        "apps": []
+      },
+      {
+        "type": "games",
+        "example": "A cloud gaming page like Xbox Cloud Gaming lowers decoding work when the device gets too hot.",
+        "apps": [
+          "Xbox Cloud Gaming",
+          "GeForce NOW"
+        ]
+      },
+      {
+        "type": "live",
+        "example": "A live streaming studio in the browser lowers encode quality when the processor hits critical.",
+        "apps": [
+          "Restream",
+          "StreamYard"
+        ]
+      },
+      {
+        "type": "creative",
+        "example": "A web video editor pauses previews or lowers detail when the computer is struggling.",
+        "apps": [
+          "Clipchamp"
+        ]
+      },
+      {
+        "type": "music",
+        "example": "A browser music studio lowers the number of live effects when the processor is overloaded to avoid crackles.",
+        "apps": [
+          "Soundtrap"
+        ]
+      },
+      {
+        "type": "security",
+        "example": "A fraud tool may use odd load patterns as a signal for a server farm of fake browsers.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Reveals what else you run",
+      "Only in Chromium"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Only when the page is visible and focused (or permitted)",
+    "Rate limited and levels deliberately coarse"
+  ],
+  "scores": {
+    "sensitivity": 2,
+    "utility": 3,
+    "fingerprint_bits": 2,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": "Video conferencing quality adaptation",
+    "abuse": "Load side channel and device inference"
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2024-05",
+      "browser": "chrome",
+      "version": "125",
+      "change": "Compute Pressure ships (CPU only)"
+    }
+  ],
+  "related": [
+    "web.perf.cpu-benchmark"
+  ],
+  "refs": [
+    {
+      "t": "mdn",
+      "label": "MDN Compute Pressure API",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/Compute_Pressure_API"
+    },
+    {
+      "t": "vendor",
+      "label": "Chrome Compute Pressure",
+      "url": "https://developer.chrome.com/docs/web-platform/compute-pressure"
+    }
+  ],
+  "confidence": "docs"
+}

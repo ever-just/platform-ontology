@@ -1,0 +1,216 @@
+{
+  "id": "web.payments.digital-goods",
+  "name": "Digital Goods API (Play Billing in a TWA)",
+  "kind": "capability",
+  "group": "payments-commerce",
+  "subgroup": "In app",
+  "tags": [
+    "in app"
+  ],
+  "plain": "Lets a Play Store web app sell in app items through Google Play.",
+  "meaning": "Lists products and past purchases of the account inside a TWA; needs Play account.",
+  "lifecycle": [
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "const svc = await window.getDigitalGoodsService('https://play.google.com/billing'); svc.getDetails(), svc.listPurchases()",
+      "bcd": [
+        "api.DigitalGoodsService"
+      ],
+      "access": {
+        "grant": "install",
+        "prompt_ui": "Play Billing sheet",
+        "secure_context": true,
+        "user_gesture": false,
+        "persistence": "Per origin",
+        "revocation": "Site settings",
+        "iframe": "Same as top level; cross-origin iframes need a permissions policy where listed",
+        "steps": [
+          "Call the API",
+          "Browser applies its access rules",
+          "Page receives the result"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "p",
+          "v": "101",
+          "note": "ChromeOS TWA only",
+          "date": "2022-04-26"
+        },
+        "edge": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "firefox": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "safari": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "ios_safari": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "101",
+          "note": "TWA only",
+          "date": "2022-04-26"
+        },
+        "samsung": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "object",
+    "metric": "Lets a Play Store web app sell in app items through Google Play.",
+    "update": "on demand",
+    "fields": [
+      {
+        "name": "itemDetails.price",
+        "type": "object",
+        "range": "currency and value"
+      },
+      {
+        "name": "purchases[].purchaseToken",
+        "type": "string",
+        "range": "from PaymentRequest details",
+        "precision": "acknowledge on the backend"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can sell in app items in a Play Store web app through Google Play",
+    "user_action": "You tap Buy on an in app item inside a Play Store web app.",
+    "can": [
+      "Show the items for sale and their prices from Google Play",
+      "Open the Google Play payment sheet",
+      "Check which items you already own"
+    ],
+    "cannot": [
+      "Charge you without the Play Billing sheet",
+      "Work in Safari, Firefox, Edge or on iPhone",
+      "Work in a plain web page that is not installed from the Play Store",
+      "See your card number"
+    ],
+    "reach": 1,
+    "reach_label": "One purchase, once you approve",
+    "differs": "Only Android Chrome inside a Play Store app (a TWA) supports it. iPhone has nothing like it for web apps."
+  },
+  "story": {
+    "what_it_is": "A Play Store web app can sell items and subscriptions through Google Play.",
+    "icon": "shopping-bag",
+    "tags": [
+      "Payments",
+      "Google Play",
+      "Android"
+    ],
+    "marketing": [
+      {
+        "vendor": "Google",
+        "name": "Digital Goods API",
+        "pitch": "Chrome's docs explain how Trusted Web Activity apps can take payments with Play Billing.",
+        "url": "https://developer.chrome.com/docs/android/trusted-web-activity/receive-payments-play-billing"
+      }
+    ],
+    "for_you": "You buy a subscription in an Android app that is secretly a website, and Google Play handles the payment and bill.",
+    "for_makers": "Makers who put a web app on the Play Store must use Play Billing for digital goods. This API lets the web code do it without a separate native app.",
+    "use_cases": [
+      {
+        "type": "games",
+        "example": "A casual web game sold on Google Play adds coins and removes ads with in app purchases.",
+        "apps": []
+      },
+      {
+        "type": "media",
+        "example": "A news PWA sells monthly subscriptions through Play.",
+        "apps": []
+      },
+      {
+        "type": "music",
+        "example": "A music practice app sells premium lessons.",
+        "apps": []
+      },
+      {
+        "type": "education",
+        "example": "A language learning PWA sells a yearly plan.",
+        "apps": []
+      },
+      {
+        "type": "productivity",
+        "example": "A notes app unlocks pro features with a one time purchase.",
+        "apps": []
+      },
+      {
+        "type": "ads",
+        "example": "A free app sells 'remove ads' as a one time item.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Store lock in",
+      "Only some Android apps"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Only inside a TWA published on Google Play",
+    "Play refunds unacknowledged purchases after 3 days",
+    "Requires Play Developer and Google Payments accounts and Digital Asset Links"
+  ],
+  "scores": {
+    "sensitivity": 3,
+    "utility": 3,
+    "fingerprint_bits": null,
+    "friction": 1
+  },
+  "value": {
+    "legit_uses": [
+      "Subscriptions in a PWA"
+    ],
+    "abuse": [
+      "None notable"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2021-10",
+      "browser": "chrome",
+      "version": "101",
+      "change": "Digital Goods API on Android and ChromeOS in a TWA"
+    }
+  ],
+  "refs": [
+    {
+      "t": "spec",
+      "label": "Digital Goods API",
+      "url": "https://wicg.github.io/digital-goods/"
+    },
+    {
+      "t": "vendor",
+      "label": "Chrome Play Billing",
+      "url": "https://developer.chrome.com/docs/android/trusted-web-activity/play-billing"
+    }
+  ],
+  "confidence": "verified"
+}

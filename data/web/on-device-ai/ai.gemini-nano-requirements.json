@@ -1,0 +1,223 @@
+{
+  "id": "web.ai.gemini-nano-requirements",
+  "name": "Built in AI model download and local data",
+  "kind": "signal",
+  "group": "on-device-ai",
+  "subgroup": "Built in AI",
+  "tags": [
+    "built in ai"
+  ],
+  "plain": "The browser downloads a Gemini Nano model and keeps prompts on the device.",
+  "meaning": "The model needs about 22 GB free space and a capable GPU or CPU; availability states hint at hardware class.",
+  "lifecycle": [
+    "on-arrival",
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "chrome://on-device-internals; availability() states",
+      "access": {
+        "grant": "none",
+        "prompt_ui": "Download progress; unmetered network needed",
+        "secure_context": true,
+        "user_gesture": true,
+        "persistence": "Per origin",
+        "revocation": "Site settings",
+        "iframe": "Same as top level; cross-origin iframes need a permissions policy where listed",
+        "steps": [
+          "Call the API",
+          "Browser applies its access rules",
+          "Page receives the result"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "138",
+          "note": "",
+          "date": "2025-06-24"
+        },
+        "edge": {
+          "s": "y",
+          "v": "138",
+          "note": "",
+          "date": "2025-06-26"
+        },
+        "firefox": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "safari": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "ios_safari": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "chrome_android": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "samsung": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "object",
+    "metric": "The browser downloads a Gemini Nano model and keeps prompts on the device.",
+    "update": "on demand",
+    "fields": [
+      {
+        "name": "storage",
+        "type": "integer",
+        "unit": "GB",
+        "range": "at least 22 free; evicted below 10",
+        "precision": "model size varies"
+      },
+      {
+        "name": "network",
+        "type": "enum",
+        "range": "unmetered, initial download only"
+      },
+      {
+        "name": "data sent to Google",
+        "type": "boolean",
+        "range": "false",
+        "precision": "inference runs on device"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can tell that your browser downloaded a local AI model, which hints at your hardware",
+    "user_action": "You use a page feature that asks Chrome to download its local AI model",
+    "can": [
+      "Check if the local model is ready, downloading or not available",
+      "Guess how strong your computer is from that answer",
+      "Run text tasks on the device once the model is ready"
+    ],
+    "cannot": [
+      "See anything about your computer if the browser does not have the model feature",
+      "Start a download over a metered connection, since Chrome needs an unmetered network",
+      "Work in Firefox or Safari, or on Chrome for Android or Samsung Internet",
+      "Run on weak hardware without enough space, about 22 GB free"
+    ],
+    "reach": 2,
+    "reach_label": "One hint about your hardware",
+    "differs": "Chrome and Edge on computers only. Phones, Firefox and Safari do not offer it."
+  },
+  "story": {
+    "what_it_is": "Chrome downloads a small AI model to your computer, and prompts stay on your device.",
+    "icon": "cpu",
+    "tags": [
+      "AI",
+      "On device",
+      "Downloads"
+    ],
+    "marketing": [
+      {
+        "vendor": "Google Chrome",
+        "name": "Built-in AI",
+        "pitch": "Chrome ships AI models in the browser so sites can add AI features that run on your device with no server calls.",
+        "url": "https://developer.chrome.com/docs/ai/built-in"
+      }
+    ],
+    "for_you": "You may see Chrome download a large model in the background, using several gigabytes of space. After that, some AI features run on your device without sending text out. It needs a capable computer.",
+    "for_makers": "Makers get free AI that works offline and keeps user text private. It saves server cost. They must handle devices that cannot run it, and wait for the download.",
+    "use_cases": [
+      {
+        "type": "productivity",
+        "example": "A web writing app offers a summary button that runs on your computer, so your private notes do not leave it.",
+        "apps": [
+          "Google Docs"
+        ]
+      },
+      {
+        "type": "messaging",
+        "example": "A web chat app checks language and suggests replies on device, so it sends nothing to a server.",
+        "apps": []
+      },
+      {
+        "type": "games",
+        "example": "A browser game uses the local model for talkative characters, with no cloud cost per player.",
+        "apps": []
+      },
+      {
+        "type": "education",
+        "example": "A learning site gives writing feedback offline on a school laptop.",
+        "apps": []
+      },
+      {
+        "type": "shopping",
+        "example": "A store summarizes long reviews on device, which saves money on AI calls.",
+        "apps": []
+      },
+      {
+        "type": "security",
+        "example": "A site checks for the model first, and falls back to server AI on devices that do not have it.",
+        "apps": []
+      },
+      {
+        "type": "accessibility",
+        "example": "A page simplifies hard text on device for a reader who needs plain language.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Large download",
+      "Only on some devices"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "No Android or iOS",
+    "Audio input needs a GPU",
+    "Windows 10 or 11, macOS 13+, Linux, ChromeOS Plus"
+  ],
+  "scores": {
+    "sensitivity": 1,
+    "utility": 2,
+    "fingerprint_bits": 1,
+    "friction": 2
+  },
+  "value": {
+    "legit_uses": [
+      "Offline AI"
+    ],
+    "abuse": [
+      "Availability as a hardware fingerprint"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2025",
+      "browser": "chrome",
+      "version": "138",
+      "change": "Model download model first used"
+    }
+  ],
+  "refs": [
+    {
+      "t": "vendor",
+      "label": "Chrome built in AI",
+      "url": "https://developer.chrome.com/docs/ai/built-in"
+    }
+  ],
+  "confidence": "verified"
+}

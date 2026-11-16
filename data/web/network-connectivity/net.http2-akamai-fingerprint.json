@@ -1,0 +1,203 @@
+{
+  "id": "web.net.http2-akamai-fingerprint",
+  "name": "HTTP/2 connection fingerprint (Akamai)",
+  "kind": "tracking",
+  "group": "network-connectivity",
+  "subgroup": "HTTP",
+  "tags": [
+    "http2",
+    "settings",
+    "priority",
+    "akamai"
+  ],
+  "plain": "HTTP/2 settings, window updates and header order differ by browser and are readable by the server.",
+  "meaning": "Akamai's fingerprint (Black Hat EU 2017) joins SETTINGS values, WINDOW_UPDATE, PRIORITY frames and pseudo-header order. Chrome sends m,a,s,p, Firefox m,p,a,s and Safari m,s,p,a; Go and Python clients differ visibly.",
+  "lifecycle": [
+    "on-arrival"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "HTTP/2 frame capture at the edge",
+      "access": {
+        "grant": "none",
+        "prompt_ui": "",
+        "secure_context": false,
+        "user_gesture": false,
+        "persistence": "",
+        "revocation": "",
+        "iframe": "",
+        "steps": [
+          "Capture first HTTP/2 frames",
+          "Format SETTINGS|WINDOW_UPDATE|PRIORITY|order",
+          "Compare to known list"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "1",
+          "note": "",
+          "date": "2008-12-11"
+        },
+        "edge": {
+          "s": "y",
+          "v": "79",
+          "note": "",
+          "date": "2020-01-15"
+        },
+        "firefox": {
+          "s": "y",
+          "v": "1",
+          "note": "",
+          "date": "2004-11-09"
+        },
+        "safari": {
+          "s": "y",
+          "v": "1",
+          "note": "",
+          "date": "2003-06-23"
+        },
+        "ios_safari": {
+          "s": "y",
+          "v": "1",
+          "note": "",
+          "date": "2007-06-29"
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "1",
+          "note": "",
+          "date": ""
+        },
+        "samsung": {
+          "s": "y",
+          "v": "5.0",
+          "note": "",
+          "date": "2016-12-15"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "string",
+    "metric": "Pipe separated string",
+    "update": "",
+    "fields": [
+      {
+        "name": "akamai_h2",
+        "type": "string",
+        "unit": "",
+        "range": "SETTINGS|WINDOW|PRIORITY|ORDER",
+        "precision": "exact"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can tell which browser or tool you use from how your connection starts up",
+    "user_action": "Nothing. It happens as your browser connects to the site",
+    "can": [
+      "Compare connection settings and header order with known browsers",
+      "Tell Chrome, Firefox and Safari apart from each other",
+      "Spot scripts and bots whose settings look different"
+    ],
+    "cannot": [
+      "Know your name or account from it",
+      "Tell two people on the same browser apart",
+      "Apply to old HTTP/1.1 connections"
+    ],
+    "reach": 2,
+    "reach_label": "Every secure connection",
+    "differs": ""
+  },
+  "story": {
+    "what_it_is": "The way your browser opens a modern web connection leaves a signature the site can read.",
+    "icon": "fingerprint",
+    "tags": [
+      "Fingerprint",
+      "Silent",
+      "Network"
+    ],
+    "marketing": [],
+    "for_you": "You never see it. When you connect, your browser sends settings in a pattern that is almost the same for every copy of Chrome, Safari or Firefox. A site can tell the real thing from a lookalike script.",
+    "for_makers": "Security vendors like Akamai and Cloudflare use it to tell real browsers from bots that fake a browser name. It catches many scrapers and card testing tools. It also adds to a fingerprint that is hard to change.",
+    "use_cases": [
+      {
+        "type": "security",
+        "example": "A bot defense compares the connection pattern with the claimed browser and challenges mismatches.",
+        "apps": [
+          "Akamai",
+          "Cloudflare"
+        ]
+      },
+      {
+        "type": "shopping",
+        "example": "A retailer stops price scrapers that pretend to be Chrome.",
+        "apps": []
+      },
+      {
+        "type": "games",
+        "example": "A game launcher site blocks automated tools that buy limited items.",
+        "apps": []
+      },
+      {
+        "type": "ads",
+        "example": "An ad platform removes fake traffic from automation tools.",
+        "apps": []
+      },
+      {
+        "type": "banking",
+        "example": "A bank adds the connection pattern to its fraud score at login.",
+        "apps": []
+      },
+      {
+        "type": "analytics",
+        "example": "A traffic analyst uses it to name the real browser share.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Hard to change",
+      "Can flag privacy tools"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Spoofable by custom HTTP stacks",
+    "Same fingerprint across browser versions sharing an engine"
+  ],
+  "scores": {
+    "sensitivity": 2,
+    "utility": 4,
+    "fingerprint_bits": 3,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": "Bot detection at CDNs",
+    "abuse": "Cross-session client identification"
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "related": [
+    "web.net.http-header-order",
+    "web.net.ja4-fingerprint-family"
+  ],
+  "refs": [
+    {
+      "t": "paper",
+      "label": "Shuster et al., Passive Fingerprinting of HTTP/2 Clients (Black Hat EU 2017)",
+      "url": "https://blackhat.com/docs/eu-17/materials/eu-17-Shuster-Passive-Fingerprinting-Of-HTTP2-Clients-wp.pdf"
+    },
+    {
+      "t": "github",
+      "label": "lwthiker/curl-impersonate",
+      "url": "https://github.com/lwthiker/curl-impersonate"
+    }
+  ],
+  "confidence": "docs"
+}

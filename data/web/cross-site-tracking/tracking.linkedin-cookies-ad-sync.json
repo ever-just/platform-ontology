@@ -1,0 +1,209 @@
+{
+  "id": "web.tracking.linkedin-cookies-ad-sync",
+  "name": "LinkedIn ad sync cookies (UserMatchHistory, AnalyticsSyncHistory, lms_ads, li_sugr, _guid)",
+  "kind": "tracking",
+  "group": "cross-site-tracking",
+  "subgroup": "Cookies",
+  "tags": [
+    "cookie",
+    "advertising",
+    "id-sync",
+    "probabilistic-matching"
+  ],
+  "plain": "Cookies that sync LinkedIn IDs with ad partners and match visitors by probability.",
+  "meaning": "Keep identifier matches between LinkedIn and ad tech partners. li_sugr (90 days) is a probabilistic match for visitors who are not logged in; _guid (90 days) links to Google Ads.",
+  "lifecycle": [
+    "before-visit",
+    "on-arrival",
+    "after-leaving"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "Set-Cookie UserMatchHistory, AnalyticsSyncHistory, lms_ads, lms_analytics, li_sugr, _guid, li_giant, ln_or",
+      "access": {
+        "grant": "none",
+        "prompt_ui": "None (no browser prompt)",
+        "secure_context": false,
+        "user_gesture": false,
+        "persistence": "UserMatchHistory 30 days, AnalyticsSyncHistory 30 days, lms_ads 30 days, lms_analytics 30 days, li_sugr 90 days, _guid 90 days, li_giant 7 days, ln_or 1 day",
+        "revocation": "",
+        "iframe": "",
+        "steps": [
+          "Ad pixel loads on a partner or LinkedIn page",
+          "Sync cookies are written",
+          "Partners exchange IDs through redirect syncs"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "",
+          "note": ""
+        },
+        "edge": {
+          "s": "y",
+          "v": "",
+          "note": ""
+        },
+        "firefox": {
+          "s": "y",
+          "v": "",
+          "note": ""
+        },
+        "safari": {
+          "s": "y",
+          "v": "",
+          "note": ""
+        },
+        "ios_safari": {
+          "s": "y",
+          "v": "",
+          "note": ""
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "",
+          "note": ""
+        },
+        "samsung": {
+          "s": "y",
+          "v": "",
+          "note": ""
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "string",
+    "metric": "Partner match IDs",
+    "update": "every 30 days or per sync",
+    "fields": [
+      {
+        "name": "li_sugr",
+        "type": "string",
+        "unit": "",
+        "range": "UUID",
+        "precision": "90 days"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can match your browser to ad partners' records so ads can follow you",
+    "user_action": "Nothing. It happens when you visit LinkedIn or a site that uses LinkedIn ads",
+    "can": [
+      "Store IDs in your browser that link LinkedIn with ad partners",
+      "Match your visit to ad partner records by probability",
+      "Keep the match for weeks or months until the cookie expires",
+      "Help show targeted ads on other sites"
+    ],
+    "cannot": [
+      "Work if you block third party cookies or clear cookies",
+      "Know who you are without a LinkedIn login or a match from a partner",
+      "See inside other apps or your device",
+      "Cross over to a browser or device where the cookie is missing, unless a login links them"
+    ],
+    "reach": 4,
+    "reach_label": "A stable ID across sites",
+    "differs": "Safari and Firefox block many of these cookies by default; Chrome currently allows them unless you choose otherwise."
+  },
+  "story": {
+    "what_it_is": "Cookies that help LinkedIn match you with ad partners, even when you are not logged in.",
+    "icon": "cookie",
+    "tags": [
+      "Cookies",
+      "Ads",
+      "Silent"
+    ],
+    "marketing": [],
+    "for_you": "You never see these tiny files. They sit in your browser for about three months and help LinkedIn and ad partners agree that a visitor is the same person. They are why an ad can seem to follow you.",
+    "for_makers": "LinkedIn needs to link its IDs to those of Google and other ad partners to sell and measure ads across sites. A probabilistic match for visitors who are not logged in means it guesses at who you are from device clues. That widens the audience a campaign can reach.",
+    "use_cases": [
+      {
+        "type": "ads",
+        "example": "You read a news site, then see a LinkedIn ad for a tool you looked at, because sync cookies helped match you across sites.",
+        "apps": [
+          "LinkedIn Ads",
+          "Google Ads"
+        ]
+      },
+      {
+        "type": "analytics",
+        "example": "An advertiser sees one person counted across LinkedIn and Google ads, instead of two people, which cleans up reports.",
+        "apps": [
+          "Google Ads",
+          "LinkedIn Campaign Manager"
+        ]
+      },
+      {
+        "type": "shopping",
+        "example": "A shopper looked at a pair of shoes at work, and sees a related ad on a LinkedIn feed later that day.",
+        "apps": [
+          "LinkedIn Ads"
+        ]
+      },
+      {
+        "type": "security",
+        "example": "The same ID helps spot one browser acting in ways no real person would, like thousands of page views.",
+        "apps": []
+      },
+      {
+        "type": "games",
+        "example": "A person plays LinkedIn Games like Queens or Zip logged out, and the ad sync cookies still tag the browser for ad matching.",
+        "apps": [
+          "LinkedIn Games"
+        ]
+      },
+      {
+        "type": "media",
+        "example": "A publisher with a LinkedIn tag sells its audience to advertisers, using the synced IDs to prove the readers are real.",
+        "apps": [
+          "Forbes",
+          "Business Insider"
+        ]
+      }
+    ],
+    "risks": [
+      "Follows you across sites",
+      "Guess based matching for logged out visitors"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "ln_or is from Oribi, 1 day",
+    "Cookie durations are from the cookie table summary"
+  ],
+  "scores": {
+    "sensitivity": 4,
+    "utility": 3,
+    "fingerprint_bits": null,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Ad measurement"
+    ],
+    "abuse": [
+      "Cross-site profile joins"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": true,
+      "how": "All listed in LinkedIn's cookie table."
+    }
+  },
+  "related": [
+    "web.tracking.linkedin-insight-tag",
+    "web.tracking.linkedin-third-party-id-sync"
+  ],
+  "refs": [
+    {
+      "t": "vendor",
+      "label": "LinkedIn cookie table",
+      "url": "https://www.linkedin.com/legal/l/cookie-table"
+    }
+  ],
+  "confidence": "docs"
+}

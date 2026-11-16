@@ -1,0 +1,240 @@
+{
+  "id": "web.actions.downloads",
+  "name": "Trigger file downloads",
+  "kind": "action",
+  "group": "page-actions",
+  "subgroup": "Files",
+  "tags": [
+    "download",
+    "blob",
+    "content-disposition",
+    "multiple-downloads"
+  ],
+  "plain": "Saves a file to the device; repeated automatic downloads ask permission.",
+  "meaning": "A site can drop files into Downloads (reports, exports, installers). Browsers guard with multi-download prompts and safe browsing checks because a downloaded file is how malware arrives.",
+  "lifecycle": [
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "<a download href=blob:...>; Content-Disposition: attachment; fetch+Blob",
+      "bcd": [
+        "html.elements.a.download",
+        "api.HTMLAnchorElement.download"
+      ],
+      "access": {
+        "grant": "none",
+        "prompt_ui": "None (no browser prompt)",
+        "secure_context": false,
+        "user_gesture": false,
+        "activation": "none",
+        "persistence": "Chrome stores Automatic downloads permission per origin after the person allows it",
+        "revocation": "Nothing to revoke (no permission is stored)",
+        "iframe": "Sandboxed frames need allow-downloads (Chrome 83); downloads from cross-origin iframes without activation are blocked",
+        "steps": [
+          "Page creates anchor or sends Content-Disposition",
+          "Browser starts download",
+          "Safe Browsing may warn or block"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "14",
+          "note": "",
+          "date": "2011-09-16"
+        },
+        "edge": {
+          "s": "y",
+          "v": "18",
+          "note": "",
+          "date": "2018-10-02"
+        },
+        "firefox": {
+          "s": "y",
+          "v": "20",
+          "note": "",
+          "date": "2013-04-02"
+        },
+        "safari": {
+          "s": "y",
+          "v": "10.1",
+          "note": "",
+          "date": "2017-03-27"
+        },
+        "ios_safari": {
+          "s": "y",
+          "v": "13",
+          "note": "All iOS browsers use WebKit",
+          "date": "2019-09-19"
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "18",
+          "note": "",
+          "date": "2012-06-27"
+        },
+        "samsung": {
+          "s": "y",
+          "v": "1.0",
+          "note": "",
+          "date": "2013-04-27"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "none",
+    "metric": "",
+    "update": "",
+    "fields": []
+  },
+  "limits": {
+    "headline": "Can save a file to your device, but repeated automatic downloads ask first",
+    "user_action": "Nothing for the first one. It happens when the page runs a download or you tap a link.",
+    "can": [
+      "Save a file to your Downloads folder when you tap a download link",
+      "Make a file on the spot, such as a receipt or a report, and save it",
+      "Start one download without asking in most browsers"
+    ],
+    "cannot": [
+      "Save many files in a row without a second prompt asking you to allow it",
+      "Open or run the file for you; you still have to open it",
+      "Save the file anywhere except the browser's download location",
+      "Skip the browser's warning for risky file types"
+    ],
+    "reach": 2,
+    "reach_label": "One file, then it asks again",
+    "differs": "Chrome, Edge and Firefox ask before several automatic downloads. Safari on iPhone shows a download button for each file."
+  },
+  "story": {
+    "what_it_is": "A site can save a file to your device, and the browser asks if it keeps doing it.",
+    "icon": "download",
+    "tags": [
+      "Files",
+      "Asks sometimes",
+      "Silent"
+    ],
+    "marketing": [],
+    "for_you": "You click a button and a file lands in your Downloads folder. If a page tries to download many files by itself, the browser asks whether to allow that.",
+    "for_makers": "Makers build files in the page (a report, an image, an export) and hand them over with one click. It saves server work and lets apps feel like desktop programs.",
+    "use_cases": [
+      {
+        "type": "productivity",
+        "example": "You hit Export on a spreadsheet web app and it makes the CSV file right inside your browser.",
+        "apps": [
+          "Google Sheets",
+          "Airtable"
+        ]
+      },
+      {
+        "type": "creative",
+        "example": "A design tool saves your finished artwork as a PNG or PDF straight from the page.",
+        "apps": [
+          "Figma",
+          "Canva"
+        ]
+      },
+      {
+        "type": "banking",
+        "example": "Your bank offers a statement as a PDF download for your tax records.",
+        "apps": []
+      },
+      {
+        "type": "games",
+        "example": "A browser game lets you download your save file so you can move it to another computer.",
+        "apps": []
+      },
+      {
+        "type": "security",
+        "example": "A malicious site tries to push a file you did not ask for, which is why browsers warn on repeated automatic downloads.",
+        "apps": []
+      },
+      {
+        "type": "video",
+        "example": "A web video editor renders your clip and downloads the MP4 when it is done.",
+        "apps": [
+          "Clipchamp"
+        ]
+      }
+    ],
+    "risks": [
+      "Unwanted files",
+      "Disguised malware"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "download attribute is ignored for cross-origin URLs (Chrome 65, Firefox); filename comes from the response then",
+    "Second and later downloads without a click trigger Chrome's Automatic downloads prompt (Firefox shows a similar download panel)",
+    "Chrome blocks downloads from sandboxed iframes without allow-downloads (Chrome 83) and insecure (HTTP) downloads on HTTPS pages (Chrome 86 to 88)",
+    "Cannot choose the download folder; cannot open the file; dangerous file types get a warning",
+    "Blob URLs and data: URIs for large files are limited by memory (Chrome about 2 GB single Blob); stream with FSA or Streams for bigger files"
+  ],
+  "scores": {
+    "sensitivity": 2,
+    "utility": 4,
+    "fingerprint_bits": null,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Export CSV",
+      "Save generated files"
+    ],
+    "abuse": [
+      "Drive-by download",
+      "Multiple download spam",
+      "Unwanted installers"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2018-03",
+      "browser": "chrome",
+      "version": "65",
+      "change": "download attribute ignored for cross-origin URLs"
+    },
+    {
+      "date": "2020-06",
+      "browser": "chrome",
+      "version": "83",
+      "change": "Downloads in sandboxed iframes need allow-downloads"
+    },
+    {
+      "date": "2020-10",
+      "browser": "chrome",
+      "version": "86",
+      "change": "Mixed-content downloads blocked in phases (executables first in Chrome 88)"
+    }
+  ],
+  "related": [
+    "web.files.file-system-access-pickers"
+  ],
+  "refs": [
+    {
+      "t": "mdn",
+      "label": "MDN a#download",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/a#download"
+    },
+    {
+      "t": "chromestatus",
+      "label": "Chrome download restrictions in sandboxed iframes",
+      "url": "https://chromestatus.com/feature/5706745674465280"
+    },
+    {
+      "t": "spec",
+      "label": "WHATWG HTML downloading resources",
+      "url": "https://html.spec.whatwg.org/multipage/links.html#downloading-resources"
+    }
+  ],
+  "confidence": "docs"
+}

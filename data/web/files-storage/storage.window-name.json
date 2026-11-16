@@ -1,0 +1,203 @@
+{
+  "id": "web.storage.window-name",
+  "name": "window.name carry over",
+  "kind": "tracking",
+  "group": "files-storage",
+  "subgroup": "In session",
+  "tags": [
+    "window-name",
+    "cross-site",
+    "legacy"
+  ],
+  "plain": "A string on the tab that survives page loads and was once used to carry data between sites.",
+  "meaning": "Browsers now clear or partition it on cross-site navigation, so trackers can no longer hand an ID from one site to the next in a tab. Same-site use for session state still works. Large strings (MBs) were a legacy storage trick.",
+  "lifecycle": [
+    "in-session",
+    "after-leaving"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "window.name = value",
+      "bcd": [
+        "api.Window.name"
+      ],
+      "access": {
+        "grant": "none",
+        "prompt_ui": "None",
+        "secure_context": false,
+        "user_gesture": false,
+        "persistence": "Lives with the tab's browsing context",
+        "revocation": "Clear site data, browser privacy settings",
+        "iframe": "",
+        "steps": []
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "1",
+          "note": "Cleared on cross-site navigation in current versions",
+          "date": "2008-12-11"
+        },
+        "edge": {
+          "s": "y",
+          "v": "12",
+          "note": "",
+          "date": "2015-07-29"
+        },
+        "firefox": {
+          "s": "y",
+          "v": "1",
+          "note": "",
+          "date": "2004-11-09"
+        },
+        "safari": {
+          "s": "y",
+          "v": "1",
+          "note": "",
+          "date": "2003-06-23"
+        },
+        "ios_safari": {
+          "s": "y",
+          "v": "1",
+          "note": "",
+          "date": "2007-06-29"
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "18",
+          "note": "",
+          "date": "2012-06-27"
+        },
+        "samsung": {
+          "s": "y",
+          "v": "1.0",
+          "note": "",
+          "date": "2013-04-27"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "string",
+    "metric": "Tab scoped string",
+    "update": "any time",
+    "fields": []
+  },
+  "limits": {
+    "headline": "Can carry a short text string in the tab from one page to the next",
+    "user_action": "Nothing. It happens as you click through pages in the same tab.",
+    "can": [
+      "Keep a short text string while you move between pages in the tab",
+      "Pass it to the next page, which was once a way to carry data between sites",
+      "Store a tracking ID in it"
+    ],
+    "cannot": [
+      "Pass it reliably between sites, since modern browsers now clear or limit it",
+      "Hold large amounts of data",
+      "Keep it after you close the tab"
+    ],
+    "reach": 1,
+    "reach_label": "One short string, per tab",
+    "differs": ""
+  },
+  "story": {
+    "what_it_is": "A text string on your tab that survives page loads and was once used to carry data between sites.",
+    "icon": "tag",
+    "tags": [
+      "Tracking",
+      "Tabs",
+      "Silent"
+    ],
+    "marketing": [],
+    "for_you": "You never see it. It is a note stuck to the tab. Modern browsers clear it when you move to a new site, so it matters less than it used to.",
+    "for_makers": "It used to be a trick for carrying an ID from one site to another with no cookies. Browsers now wipe or isolate it across sites. It still works within one site and can carry small state.",
+    "use_cases": [
+      {
+        "type": "ads",
+        "example": "An old tracker wrote an ID into the tab name so the next site could read it and link the visits.",
+        "apps": []
+      },
+      {
+        "type": "security",
+        "example": "Some login popups use it to pass a result back to the opener on the same site.",
+        "apps": []
+      },
+      {
+        "type": "games",
+        "example": "A browser game on one site uses it to hand a score to the next page.",
+        "apps": []
+      },
+      {
+        "type": "shopping",
+        "example": "A store carries a short promo code between its own pages through the tab name.",
+        "apps": []
+      },
+      {
+        "type": "analytics",
+        "example": "A measurement script keeps a session mark in it to survive reloads.",
+        "apps": []
+      },
+      {
+        "type": "developer",
+        "example": "Developers once used it to store data for single page tools before better options existed.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Old tracking trick",
+      "Mostly blocked cross site"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Cleared on cross-site top level navigation in current browsers",
+    "Only strings",
+    "No access to another tab's value"
+  ],
+  "scores": {
+    "sensitivity": 2,
+    "utility": 1,
+    "fingerprint_bits": null,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Legacy cross-window messaging"
+    ],
+    "abuse": [
+      "Pass identifiers between sites"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2020-11",
+      "browser": "chrome",
+      "version": "88",
+      "change": "Chromium started clearing on cross-site navigation (verify milestone)"
+    }
+  ],
+  "related": [
+    "web.xsite.navigational-tracking"
+  ],
+  "refs": [
+    {
+      "t": "mdn",
+      "label": "MDN Window.name",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/Window/name"
+    },
+    {
+      "t": "webkit",
+      "label": "WebKit Tracking Prevention",
+      "url": "https://webkit.org/tracking-prevention/"
+    }
+  ],
+  "confidence": "inferred"
+}

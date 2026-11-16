@@ -1,0 +1,226 @@
+{
+  "id": "web.ai.writer-api",
+  "name": "Writer API",
+  "kind": "capability",
+  "group": "on-device-ai",
+  "subgroup": "Built in AI",
+  "tags": [
+    "built in ai"
+  ],
+  "plain": "Writes new text from a prompt on the device.",
+  "meaning": "Generates drafts locally; the page controls tone and length.",
+  "lifecycle": [
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "Writer.create({tone,format,length,sharedContext}); w.write(prompt)",
+      "permissions_policy": "writer",
+      "access": {
+        "grant": "origin-trial",
+        "prompt_ui": "Joint origin trial with Rewriter; flag chrome://flags/#writer-api",
+        "secure_context": true,
+        "user_gesture": true,
+        "persistence": "Per origin",
+        "revocation": "Site settings",
+        "iframe": "Same as top level; cross-origin iframes need a permissions policy where listed",
+        "steps": [
+          "Call the API",
+          "Browser applies its access rules",
+          "Page receives the result"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "f",
+          "v": "137",
+          "note": "Developer origin trial"
+        },
+        "edge": {
+          "s": "f",
+          "v": "137",
+          "note": "Flag"
+        },
+        "firefox": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "safari": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "ios_safari": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "chrome_android": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "samsung": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "object",
+    "metric": "Writes new text from a prompt on the device.",
+    "update": "on demand",
+    "fields": [
+      {
+        "name": "tone",
+        "type": "enum",
+        "range": "formal, neutral, casual"
+      },
+      {
+        "name": "format",
+        "type": "enum",
+        "range": "markdown or plain-text"
+      },
+      {
+        "name": "length",
+        "type": "enum",
+        "range": "short, medium, long"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can draft new text from a prompt on your device, only in Chrome and Edge testing",
+    "user_action": "You type a short instruction and tap a button like Draft for me",
+    "can": [
+      "Draft new text from a prompt you give the page",
+      "Match a tone and length the page sets",
+      "Keep the text on your device"
+    ],
+    "cannot": [
+      "Work for normal visitors yet, since it is an origin trial",
+      "Work in Firefox, Safari or on phones",
+      "Draft anything without a prompt from the page or you",
+      "Send your prompt to a server for this feature"
+    ],
+    "reach": 1,
+    "reach_label": "One draft, in testing only",
+    "differs": "Only a Chrome and Edge testing trial today. Not in Firefox, Safari or on phones."
+  },
+  "story": {
+    "what_it_is": "A page can write new text from your prompt using an AI model on your device.",
+    "icon": "pen-line",
+    "tags": [
+      "AI",
+      "On device",
+      "Writing"
+    ],
+    "marketing": [
+      {
+        "vendor": "Google Chrome",
+        "name": "Writer API",
+        "pitch": "Lets sites draft new text from a short prompt with Chrome's built in on device AI.",
+        "url": "https://developer.chrome.com/docs/ai/writer-api"
+      }
+    ],
+    "for_you": "You type a short request, like a thank you note, and a draft appears. It runs on your device, so your request stays with you. Only some browsers have it for now.",
+    "for_makers": "Makers add drafting tools with no cloud costs and no data sharing. It helps users start writing faster. It is in testing, so it is not for everyone.",
+    "use_cases": [
+      {
+        "type": "messaging",
+        "example": "A web email app drafts a reply when you type three words of what to say.",
+        "apps": [
+          "Gmail"
+        ]
+      },
+      {
+        "type": "shopping",
+        "example": "A seller tool drafts a product listing from a few bullet points.",
+        "apps": [
+          "Etsy"
+        ]
+      },
+      {
+        "type": "social",
+        "example": "A post box drafts a caption from a short idea.",
+        "apps": []
+      },
+      {
+        "type": "productivity",
+        "example": "A web editor writes a first outline of a doc.",
+        "apps": [
+          "Google Docs"
+        ]
+      },
+      {
+        "type": "education",
+        "example": "A study site drafts practice questions from your notes.",
+        "apps": []
+      },
+      {
+        "type": "enterprise",
+        "example": "A support tool drafts a first reply to a customer, ready for the agent to edit.",
+        "apps": []
+      },
+      {
+        "type": "games",
+        "example": "A game tool writes character backstories from a few traits for a story game.",
+        "apps": []
+      },
+      {
+        "type": "accessibility",
+        "example": "A page helps a person write a message when typing is hard, by turning a few words into a full note.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "In testing",
+      "May state wrong things"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Not stable",
+    "Gemini Nano hardware: Windows 10 or 11, macOS 13+, Linux, or ChromeOS Plus; 22 GB free disk; GPU over 4 GB VRAM or CPU with 16 GB RAM and 4 cores"
+  ],
+  "scores": {
+    "sensitivity": 1,
+    "utility": 3,
+    "fingerprint_bits": null,
+    "friction": 3
+  },
+  "value": {
+    "legit_uses": [
+      "Compose helpers"
+    ],
+    "abuse": [
+      "None notable"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2025",
+      "browser": "chrome",
+      "version": "137",
+      "change": "Developer origin trial starts (137 to 148)"
+    }
+  ],
+  "refs": [
+    {
+      "t": "vendor",
+      "label": "Chrome Writer and Rewriter",
+      "url": "https://developer.chrome.com/docs/ai/writer-api"
+    }
+  ],
+  "confidence": "docs"
+}

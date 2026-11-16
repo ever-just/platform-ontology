@@ -1,0 +1,197 @@
+{
+  "id": "mob.loc.keyboards",
+  "name": "Active keyboards and input languages",
+  "kind": "signal",
+  "group": "locale-preferences",
+  "subgroup": "Input",
+  "tags": [
+    "keyboards",
+    "required-reason-api"
+  ],
+  "plain": "Lists enabled keyboards: open on Android, a Required Reason API on iOS.",
+  "meaning": "Third-party keyboards and extra input languages identify bilingual or non-native users and are a strong personalization fingerprint (Kurtz et al.).",
+  "lifecycle": [
+    "on-launch",
+    "in-session"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "y",
+      "v": "3.0",
+      "api": 11,
+      "permission": "",
+      "protection": "none",
+      "grant": "none",
+      "prompt_ui": "",
+      "persistence": "",
+      "revocation": "",
+      "store_policy": "",
+      "api_surface": "InputMethodManager.getEnabledInputMethodList(), InputMethodSubtype",
+      "note": "List of IME package IDs and subtypes"
+    },
+    "ios": {
+      "s": "f",
+      "v": "17.0",
+      "permission": "entitlement",
+      "protection": "entitlement",
+      "grant": "none",
+      "prompt_ui": "",
+      "persistence": "",
+      "revocation": "Fingerprinting banned",
+      "store_policy": "",
+      "api_surface": "Reason codes 3EC4.1 (custom keyboard app), 54BD.1 (adjust UI for active keyboards); no off-device use",
+      "note": ""
+    }
+  },
+  "web_equivalents": [
+    "web.locale.keyboard-layout",
+    "web.input.keyboard-map"
+  ],
+  "data": {
+    "type": "list",
+    "metric": "Keyboard IDs",
+    "update": "On change",
+    "fields": [
+      {
+        "name": "input_modes",
+        "type": "list",
+        "unit": "BCP 47",
+        "range": "1 to 8",
+        "precision": "exact"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can see which keyboards and input languages you turned on",
+    "user_action": "Nothing. It happens when the app checks your keyboard setup",
+    "can": [
+      "List enabled keyboards and their languages on Android",
+      "Check for a custom keyboard app, with a reason, on iPhone",
+      "Show text or tips that fit the keyboard in use"
+    ],
+    "cannot": [
+      "See what you type on the keyboard",
+      "Use the list on iPhone without an approved reason code",
+      "Switch your keyboard for you"
+    ],
+    "reach": 1,
+    "reach_label": "A list of installed keyboards",
+    "differs": "Android lists them with no gate. iPhone requires a declared reason code (3EC4.1 or 54BD.1)."
+  },
+  "story": {
+    "what_it_is": "An app can see which keyboards and input languages you turned on.",
+    "icon": "keyboard",
+    "tags": [
+      "Keyboard",
+      "Silent",
+      "Fingerprint"
+    ],
+    "marketing": [],
+    "for_you": "You never see it. Apps may show the right layout for your language. But two keyboards say more about you than you might think, like a second language or a custom one.",
+    "for_makers": "Makers use it to show the right input screen. Ad and fraud tools also treat the keyboard list as a fingerprint, since a third party keyboard or a second language makes you stand out. It also hints at origin and language skills.",
+    "use_cases": [
+      {
+        "type": "messaging",
+        "example": "A chat app shows a right to left layout when you add an Arabic or Hebrew keyboard.",
+        "apps": [
+          "WhatsApp"
+        ]
+      },
+      {
+        "type": "education",
+        "example": "A language app notices you have a Japanese keyboard and offers kana practice.",
+        "apps": [
+          "Duolingo"
+        ]
+      },
+      {
+        "type": "social",
+        "example": "A social app suggests posts in your second language.",
+        "apps": []
+      },
+      {
+        "type": "utilities",
+        "example": "A keyboard app checks if it is enabled so it can show a setup guide.",
+        "apps": [
+          "SwiftKey",
+          "Gboard"
+        ]
+      },
+      {
+        "type": "ads",
+        "example": "An ad company infers that you are bilingual or an expat from the keyboard list.",
+        "apps": []
+      },
+      {
+        "type": "security",
+        "example": "A fraud tool compares keyboards with the account's claimed country to catch fake sign ups.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Language profiling",
+      "Fingerprint bit"
+    ],
+    "android_note": "Android apps can list enabled input methods with few limits.",
+    "ios_note": "iPhone apps can read this only with an approved Apple reason, and the list is meant to stay on device."
+  },
+  "technical_bounds": [
+    "iOS keyboard info needs a declared reason"
+  ],
+  "scores": {
+    "sensitivity": 3,
+    "utility": 2,
+    "fingerprint_bits": 5,
+    "friction": 1
+  },
+  "value": {
+    "legit_uses": [
+      "Show matching input UI"
+    ],
+    "abuse": [
+      "Language profiling",
+      "Fingerprint"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2024-05",
+      "platform": "ios",
+      "version": "iOS 17.x",
+      "change": "Active keyboards declared Required Reason API"
+    }
+  ],
+  "related": [
+    "mob.rr.active-keyboards"
+  ],
+  "refs": [
+    {
+      "t": "android",
+      "label": "Android: InputMethodManager",
+      "url": "https://developer.android.com/reference/android/view/inputmethod/InputMethodManager"
+    },
+    {
+      "t": "apple",
+      "label": "Apple: UITextInputMode",
+      "url": "https://developer.apple.com/documentation/uikit/uitextinputmode"
+    },
+    {
+      "t": "apple",
+      "label": "Apple: Describing use of required reason API",
+      "url": "https://developer.apple.com/documentation/bundleresources/describing-use-of-required-reason-api"
+    },
+    {
+      "t": "paper",
+      "label": "Kurtz et al.: Fingerprinting Mobile Devices Using Personalized Configurations (PoPETs 2016)",
+      "url": "https://petsymposium.org/popets/2016/popets-2015-0027.php"
+    }
+  ],
+  "confidence": "docs"
+}

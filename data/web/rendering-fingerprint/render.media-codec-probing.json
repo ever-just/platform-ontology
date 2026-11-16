@@ -1,0 +1,257 @@
+{
+  "id": "web.render.media-codec-probing",
+  "name": "Media codec and capability probing",
+  "kind": "tracking",
+  "group": "rendering-fingerprint",
+  "subgroup": "Media",
+  "tags": [
+    "codecs",
+    "MediaSource",
+    "MediaCapabilities",
+    "DRM"
+  ],
+  "plain": "Asks which audio and video codecs, containers and DRM systems the browser supports.",
+  "meaning": "Hardware decoders for HEVC, AV1 and DRM (Widevine, FairPlay, PlayReady) differ by OS and chip, so the map reveals device class and licensing.",
+  "lifecycle": [
+    "on-arrival"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "MediaSource.isTypeSupported(); canPlayType(); navigator.mediaCapabilities.decodingInfo(); requestMediaKeySystemAccess(); RTCRtpSender.getCapabilities()",
+      "bcd": [
+        "api.MediaSource.isTypeSupported_static",
+        "api.MediaCapabilities.decodingInfo"
+      ],
+      "access": {
+        "grant": "none",
+        "prompt_ui": "",
+        "secure_context": false,
+        "user_gesture": false,
+        "persistence": "",
+        "revocation": "",
+        "iframe": "",
+        "steps": [
+          "Test 50 to 200 MIME and codec strings",
+          "Query MediaCapabilities for smooth and powerEfficient flags",
+          "Probe key systems"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "23",
+          "note": "",
+          "date": "2012-11-06"
+        },
+        "edge": {
+          "s": "y",
+          "v": "12",
+          "note": "",
+          "date": "2015-07-29"
+        },
+        "firefox": {
+          "s": "y",
+          "v": "42",
+          "note": "",
+          "date": "2015-11-03"
+        },
+        "safari": {
+          "s": "y",
+          "v": "8",
+          "note": "macOS first, iPhone MSE from 17.1 via ManagedMediaSource",
+          "date": "2014-10-16"
+        },
+        "ios_safari": {
+          "s": "y",
+          "v": "13",
+          "note": "",
+          "date": "2019-09-19"
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "25",
+          "note": "",
+          "date": "2013-02-27"
+        },
+        "samsung": {
+          "s": "y",
+          "v": "1.5",
+          "note": "",
+          "date": "2013-09-25"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "list",
+    "metric": "Bit vector plus power efficiency flags",
+    "update": "",
+    "fields": [
+      {
+        "name": "supported",
+        "type": "boolean",
+        "unit": "",
+        "range": "true or false",
+        "precision": "exact"
+      },
+      {
+        "name": "powerEfficient",
+        "type": "boolean",
+        "unit": "",
+        "range": "true or false",
+        "precision": "hardware decode hint"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can ask which video, audio and copy protection formats your device supports",
+    "user_action": "Nothing. It happens when the page loads",
+    "can": [
+      "Ask if your device plays formats such as HEVC and AV1",
+      "Check for copy protection systems such as Widevine, FairPlay and PlayReady",
+      "Guess your system, chip and device type from the answers"
+    ],
+    "cannot": [
+      "Play or record anything",
+      "Ask permission first",
+      "See what you watch on other sites",
+      "Know who you are by itself"
+    ],
+    "reach": 2,
+    "reach_label": "Silent, device capability list",
+    "differs": ""
+  },
+  "story": {
+    "what_it_is": "A page asks which audio and video formats and copy protection systems your browser can play.",
+    "icon": "film",
+    "tags": [
+      "Video",
+      "Silent",
+      "Fingerprinting"
+    ],
+    "marketing": [
+      {
+        "vendor": "MDN",
+        "name": "Media Capabilities API",
+        "pitch": "Lets a site ask whether the device can decode a video smoothly and efficiently before it picks a stream.",
+        "url": "https://developer.mozilla.org/en-US/docs/Web/API/Media_Capabilities_API"
+      }
+    ],
+    "for_you": "You never see it. When you press play, the site first asks your browser which formats it can handle, then picks the best one. You get smoother video and fewer stalls.",
+    "for_makers": "Streaming and cloud gaming services need it to send the right stream, such as H.264, HEVC or AV1, without wasting data or battery. The same answers also work as a device clue for fraud and tracking tools.",
+    "use_cases": [
+      {
+        "type": "video",
+        "example": "Netflix checks which video formats and copy protection your browser supports, then streams you the best picture it can.",
+        "apps": [
+          "Netflix",
+          "Disney+"
+        ]
+      },
+      {
+        "type": "games",
+        "example": "Xbox Cloud Gaming and GeForce NOW in a browser check which video formats your device can decode, so the game stream is sharp and has low delay.",
+        "apps": [
+          "Xbox Cloud Gaming",
+          "GeForce NOW",
+          "Amazon Luna"
+        ]
+      },
+      {
+        "type": "live",
+        "example": "A live sports or concert stream picks a format your phone decodes in hardware, to save battery.",
+        "apps": [
+          "Twitch",
+          "YouTube Live"
+        ]
+      },
+      {
+        "type": "video",
+        "example": "A video call site checks codecs before it starts, to use the one your device runs best.",
+        "apps": [
+          "Google Meet",
+          "Zoom web client"
+        ]
+      },
+      {
+        "type": "security",
+        "example": "A fraud tool compares the format list to the device's claimed model, to catch emulators.",
+        "apps": []
+      },
+      {
+        "type": "ads",
+        "example": "A tracker adds the format list to a device ID, since it differs by browser, chip and system.",
+        "apps": []
+      },
+      {
+        "type": "education",
+        "example": "A web class platform picks smaller video for older laptops so lessons still play.",
+        "apps": [
+          "Khan Academy"
+        ]
+      }
+    ],
+    "risks": [
+      "Reveals your hardware and OS",
+      "Adds to a device ID"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "No codec data for media the person plays",
+    "Entropy is mostly browser and OS"
+  ],
+  "scores": {
+    "sensitivity": 2,
+    "utility": 3,
+    "fingerprint_bits": 3,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": "Pick best stream format",
+    "abuse": "Device and hardware decoder inference"
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2018-04",
+      "browser": "chrome",
+      "version": "66",
+      "change": "MediaCapabilities decodingInfo ships; exposes hardware decode hints"
+    },
+    {
+      "date": "2023-10",
+      "browser": "safari",
+      "version": "17.1",
+      "change": "ManagedMediaSource on iPhone"
+    }
+  ],
+  "related": [
+    "web.render.webgl-parameters-extensions"
+  ],
+  "refs": [
+    {
+      "t": "mdn",
+      "label": "MDN MediaSource.isTypeSupported",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/MediaSource/isTypeSupported_static"
+    },
+    {
+      "t": "mdn",
+      "label": "MDN MediaCapabilities",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/Media_Capabilities_API"
+    },
+    {
+      "t": "github",
+      "label": "CreepJS",
+      "url": "https://github.com/abrahamjuliot/creepjs"
+    }
+  ],
+  "confidence": "docs"
+}

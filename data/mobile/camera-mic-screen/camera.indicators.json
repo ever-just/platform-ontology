@@ -1,0 +1,198 @@
+{
+  "id": "mob.camera.indicators",
+  "name": "Camera and microphone indicators",
+  "kind": "signal",
+  "group": "camera-mic-screen",
+  "subgroup": "Indicators",
+  "tags": [
+    "mechanics",
+    "indicator",
+    "status-bar"
+  ],
+  "plain": "A dot or chip that shows the camera or mic is active.",
+  "meaning": "Warns the user in real time. Android 12 shows a green chip; iOS 14 shows green and orange dots.",
+  "lifecycle": [
+    "in-session",
+    "background"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "y",
+      "v": "12",
+      "api": 31,
+      "permission": "n/a (system feature)",
+      "protection": "none",
+      "grant": "system-only",
+      "prompt_ui": "Green chip in status bar; tap for app name",
+      "persistence": "While active",
+      "revocation": "Quick Settings toggles",
+      "store_policy": "Play: none",
+      "api_surface": "System UI",
+      "note": "Android 12 only camera and mic have indicators."
+    },
+    "ios": {
+      "s": "y",
+      "v": "14",
+      "permission": "n/a",
+      "protection": "none",
+      "grant": "system-only",
+      "prompt_ui": "Green dot for camera, orange dot for mic; Control Center shows recent access",
+      "persistence": "While active",
+      "revocation": "Control Center",
+      "store_policy": "none",
+      "api_surface": "System UI",
+      "note": "iOS 14 introduced the dots."
+    }
+  },
+  "data": {
+    "type": "none",
+    "metric": "Indicator state",
+    "update": "live",
+    "fields": []
+  },
+  "limits": {
+    "headline": "Can't use the camera or mic without a dot or chip showing",
+    "user_action": "Nothing. The dot or chip shows when an app uses the camera or microphone",
+    "can": [
+      "Show a green chip for the camera on Android 12 and later; tap it for the app name",
+      "Show a green dot for the camera and orange dot for the mic on iPhone (iOS 14)",
+      "Show recent access in Control Center on iPhone"
+    ],
+    "cannot": [
+      "Hide the dot, since the system draws it",
+      "Cover location or other sensors on Android 12; the dot is for the camera and mic only",
+      "Show before iOS 14 or Android 12"
+    ],
+    "reach": 1,
+    "reach_label": "Shown while in use",
+    "differs": "Android 12 and later uses a green chip. iPhone (iOS 14 and later) uses green and orange dots."
+  },
+  "story": {
+    "what_it_is": "A dot or chip on the screen that shows when the camera or microphone is on.",
+    "icon": "circle-dot",
+    "tags": [
+      "Camera",
+      "Microphone",
+      "Warning"
+    ],
+    "marketing": [
+      {
+        "vendor": "Apple",
+        "name": "Recording indicators",
+        "pitch": "A green or orange dot shows when an app uses your camera or microphone.",
+        "url": "https://www.apple.com/privacy/features/"
+      },
+      {
+        "vendor": "Google",
+        "name": "Privacy indicators",
+        "pitch": "Android 12 shows icons in the status bar when apps use the camera or mic.",
+        "url": "https://source.android.com/docs/security/features/privacy-indicators"
+      }
+    ],
+    "for_you": "You see a small green or orange dot in a corner. Tap Control Center or the chip to learn which app is using the camera or mic.",
+    "for_makers": "Apps cannot hide it, so makers must be careful. Turning on the camera for no clear reason leads to angry reviews, so teams keep camera use short and clear.",
+    "use_cases": [
+      {
+        "type": "video",
+        "example": "A video call app turns on the green dot only while you are in a call.",
+        "apps": [
+          "Zoom",
+          "FaceTime"
+        ]
+      },
+      {
+        "type": "social",
+        "example": "A camera effect app shows the dot while you preview and removes it when you leave.",
+        "apps": [
+          "Instagram"
+        ]
+      },
+      {
+        "type": "games",
+        "example": "An AR game shows the dot while the camera feeds the scene.",
+        "apps": [
+          "Pokemon GO"
+        ]
+      },
+      {
+        "type": "security",
+        "example": "A user sees an orange dot at 2 a.m. and finds an app listening in the background.",
+        "apps": []
+      },
+      {
+        "type": "smart-home",
+        "example": "A baby monitor app shows the dot while it streams the nursery.",
+        "apps": [
+          "Nanit"
+        ]
+      },
+      {
+        "type": "enterprise",
+        "example": "A company checks that screen sharing apps never show the dot unexpectedly.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Easy to miss",
+      "Cannot show what is saved"
+    ],
+    "android_note": "Android 12 shows a green chip in the status bar.",
+    "ios_note": "iOS 14 and later shows green for camera and orange for microphone."
+  },
+  "technical_bounds": [
+    "Cannot be hidden by apps"
+  ],
+  "scores": {
+    "sensitivity": 4,
+    "utility": 3,
+    "fingerprint_bits": null,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Transparency"
+    ],
+    "abuse": [
+      "None"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2020-09",
+      "platform": "ios",
+      "version": "iOS 14",
+      "change": "Camera and microphone indicators added"
+    },
+    {
+      "date": "2021-10",
+      "platform": "android",
+      "version": "12 (API 31)",
+      "change": "Camera and mic indicators added"
+    }
+  ],
+  "related": [
+    "mob.camera.camera",
+    "mob.camera.microphone",
+    "mob.camera.global-toggles"
+  ],
+  "refs": [
+    {
+      "t": "android",
+      "label": "Android 12 behavior changes",
+      "url": "https://developer.android.com/about/versions/12/behavior-changes-12"
+    },
+    {
+      "t": "apple",
+      "label": "Apple: iOS 14 privacy",
+      "url": "https://www.apple.com/privacy/features/"
+    }
+  ],
+  "confidence": "docs"
+}

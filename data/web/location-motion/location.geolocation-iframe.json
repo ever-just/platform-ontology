@@ -1,0 +1,232 @@
+{
+  "id": "web.location.geolocation-iframe",
+  "name": "Geolocation in iframes",
+  "kind": "permission",
+  "group": "location-motion",
+  "subgroup": "Position",
+  "tags": [
+    "iframe",
+    "delegation",
+    "third-party"
+  ],
+  "plain": "Lets an embedded frame ask for location only if the parent page allows it.",
+  "meaning": "Controls whether ad, map or widget frames can see where the person is. The default blocks cross-origin frames so third parties cannot request location through a host page.",
+  "lifecycle": [
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "<iframe allow=\"geolocation\">; Permissions-Policy: geolocation=(self \"https://maps.example\")",
+      "permission_name": "geolocation",
+      "permissions_policy": "geolocation",
+      "bcd": [
+        "api.Geolocation"
+      ],
+      "access": {
+        "grant": "prompt",
+        "prompt_ui": "Same prompt as top-level, worded for the top-level site; the grant is delegated to the iframe origin.",
+        "secure_context": true,
+        "user_gesture": false,
+        "persistence": "Per top-level origin; delegated frames share the top-level grant",
+        "revocation": "Same site settings entry as the top-level origin",
+        "iframe": "Default allowlist is self. Cross-origin frames need allow on the tag; a header of geolocation=() disables it for everyone.",
+        "steps": [
+          "Parent sets allow=\"geolocation\"",
+          "Frame calls getCurrentPosition",
+          "Browser checks the policy chain then the permission",
+          "Prompt or silent result per stored decision"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "5",
+          "note": "Feature Policy 60, allow attribute 64, header renamed Permissions-Policy in 88",
+          "date": "2010-05-25"
+        },
+        "edge": {
+          "s": "y",
+          "v": "12",
+          "note": "",
+          "date": "2015-07-29"
+        },
+        "firefox": {
+          "s": "y",
+          "v": "3.5",
+          "note": "",
+          "date": "2009-06-30"
+        },
+        "safari": {
+          "s": "p",
+          "v": "5",
+          "note": "allow attribute honored, header support partial",
+          "date": "2010-06-07"
+        },
+        "ios_safari": {
+          "s": "p",
+          "v": "3",
+          "note": "",
+          "date": "2009-06-17"
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "18",
+          "note": "",
+          "date": "2012-06-27"
+        },
+        "samsung": {
+          "s": "y",
+          "v": "1.0",
+          "note": "",
+          "date": "2013-04-27"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "object",
+    "metric": "Same GeolocationPosition as top-level",
+    "update": "same as Geolocation",
+    "fields": []
+  },
+  "limits": {
+    "headline": "Can let an embedded map ask for your location, only if the host page allows",
+    "user_action": "You tap Find me or Use my location inside an embedded map or widget",
+    "can": [
+      "Ask for location from inside an embedded frame, if the host page lets it",
+      "Show a prompt that names the main site",
+      "Give the embedded map your position after you allow it"
+    ],
+    "cannot": [
+      "Ask for location by default when it comes from a different site; that is blocked",
+      "Skip your Allow",
+      "Get location without the host page's permission setting"
+    ],
+    "reach": 2,
+    "reach_label": "While the page is open",
+    "differs": "Chrome, Edge and Firefox support it fully. Safari support is partial."
+  },
+  "story": {
+    "what_it_is": "Decides whether an embedded ad, map or widget on a page may see your location.",
+    "icon": "frame",
+    "tags": [
+      "Location",
+      "Embeds",
+      "Control"
+    ],
+    "marketing": [
+      {
+        "vendor": "MDN (standards docs)",
+        "name": "Permissions Policy",
+        "pitch": "Describes a way for a page to allow or block features like location for embedded frames.",
+        "url": "https://developer.mozilla.org/en-US/docs/Web/HTTP/Permissions_Policy"
+      }
+    ],
+    "for_you": "You may see a location prompt that names the main site, not the embedded widget. By default, third party frames cannot ask at all. You usually never notice this protection working.",
+    "for_makers": "Maps, store finders and ads are often embedded from another company. The page owner must explicitly allow location for them, which keeps other companies from watching you through an ad frame.",
+    "use_cases": [
+      {
+        "type": "maps",
+        "example": "A restaurant page embeds a map from Google and allows location so it can show your route.",
+        "apps": [
+          "Google Maps embed"
+        ]
+      },
+      {
+        "type": "shopping",
+        "example": "A retailer allows its own store finder frame to use location, but not an ad frame.",
+        "apps": []
+      },
+      {
+        "type": "ads",
+        "example": "An ad network frame would love to know your location, but is blocked unless the site says yes.",
+        "apps": []
+      },
+      {
+        "type": "travel",
+        "example": "A booking page allows a map widget to use location for 'near me' listings.",
+        "apps": []
+      },
+      {
+        "type": "games",
+        "example": "A game on a portal page in an embedded frame cannot see location unless the portal lets it.",
+        "apps": []
+      },
+      {
+        "type": "security",
+        "example": "A site blocks location in all embeds to keep ad fraud and spying away.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Embeds can overreach if allowed",
+      "Often misconfigured"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Cross-origin frames cannot request location by default",
+    "Policy cannot grant more than the person granted",
+    "Sandboxed frames without allow-same-origin may fail"
+  ],
+  "scores": {
+    "sensitivity": 5,
+    "utility": 4,
+    "fingerprint_bits": null,
+    "friction": 2
+  },
+  "value": {
+    "legit_uses": [
+      "Embedded store locators",
+      "Map widgets"
+    ],
+    "abuse": [
+      "Hidden ad frames requesting location when a publisher sets allow=\"geolocation *\""
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2017-07",
+      "browser": "chrome",
+      "version": "60",
+      "change": "Feature Policy header introduced with a geolocation feature"
+    },
+    {
+      "date": "2018-01",
+      "browser": "chrome",
+      "version": "64",
+      "change": "iframe allow attribute ships"
+    },
+    {
+      "date": "2021-01",
+      "browser": "chrome",
+      "version": "88",
+      "change": "Header renamed from Feature-Policy to Permissions-Policy"
+    }
+  ],
+  "related": [
+    "web.location.geolocation",
+    "web.meta.permissions-policy"
+  ],
+  "refs": [
+    {
+      "t": "mdn",
+      "label": "MDN Permissions-Policy geolocation",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/Permissions-Policy/geolocation"
+    },
+    {
+      "t": "spec",
+      "label": "W3C Permissions Policy",
+      "url": "https://www.w3.org/TR/permissions-policy/"
+    }
+  ],
+  "confidence": "docs"
+}

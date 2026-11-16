@@ -1,0 +1,253 @@
+{
+  "id": "web.xsite.attribution-reporting",
+  "name": "Attribution Reporting API (retired)",
+  "kind": "tracking",
+  "group": "cross-site-tracking",
+  "subgroup": "Privacy Sandbox",
+  "tags": [
+    "attribution-reporting",
+    "conversion-measurement",
+    "privacy-sandbox",
+    "retired"
+  ],
+  "plain": "Browser measured which ad click led to a purchase. Deprecated Chrome 144; removal under way in 2026.",
+  "meaning": "Matched ad clicks or views to later conversions with noised event reports (3 bits click data for views) or encrypted aggregate reports. Google retired it in Oct 2025 and plans a W3C PATWG attribution standard instead.",
+  "lifecycle": [
+    "before-visit",
+    "after-leaving"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "Attribution-Reporting-Eligible / Attribution-Reporting-Register-Source headers; <a attributionsrc>",
+      "permissions_policy": "attribution-reporting",
+      "bcd": [
+        "api.HTMLAnchorElement.attributionSrc"
+      ],
+      "access": {
+        "grant": "none",
+        "prompt_ui": "None",
+        "secure_context": false,
+        "user_gesture": false,
+        "persistence": "Source lifetimes up to 30 days; reports delayed 2 days to 30 days",
+        "revocation": "Clear site data, browser privacy settings",
+        "iframe": "",
+        "steps": []
+      },
+      "support": {
+        "chrome": {
+          "s": "r",
+          "v": "153",
+          "note": "Deprecated 144, removal per 153 notes",
+          "date": "2026-09-08"
+        },
+        "edge": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "firefox": {
+          "s": "p",
+          "v": "1",
+          "note": "Firefox shipped a different PPA attribution experiment",
+          "date": "2004-11-09"
+        },
+        "safari": {
+          "s": "p",
+          "v": "15.4",
+          "note": "Private Click Measurement is Safari's separate API",
+          "date": "2022-03-14"
+        },
+        "ios_safari": {
+          "s": "p",
+          "v": "15.4",
+          "note": "Private Click Measurement",
+          "date": "2022-03-14"
+        },
+        "chrome_android": {
+          "s": "r",
+          "v": "153",
+          "note": "",
+          "date": "2026-09-08"
+        },
+        "samsung": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "event",
+    "metric": "Noised conversion report",
+    "update": "delayed by hours to days",
+    "fields": [
+      {
+        "name": "trigger data",
+        "type": "integer",
+        "unit": "bits",
+        "range": "1 to 3 bits",
+        "precision": "noised"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can't measure which ad click led to a purchase in Chrome anymore",
+    "user_action": "Nothing. It used to happen after an ad click and a later purchase",
+    "can": [
+      "Have linked an ad click to a later purchase in Chrome, without a cookie",
+      "Have sent a report with limited detail after a delay"
+    ],
+    "cannot": [
+      "Run in Chrome 144 or later, where it is deprecated and being removed in 2026",
+      "Run in Edge or Samsung Internet",
+      "Name you in the report; it was built to be limited",
+      "Link a click to a purchase on a device without the feature"
+    ],
+    "reach": 1,
+    "reach_label": "Retired, one click and one report",
+    "differs": "Chrome is removing it. Safari and Firefox have their own partial versions."
+  },
+  "story": {
+    "what_it_is": "A Chrome tool that measured which ad led to a sale, with some noise added. Being removed.",
+    "icon": "chart-line",
+    "tags": [
+      "Ads",
+      "Chrome",
+      "Retired"
+    ],
+    "marketing": [
+      {
+        "vendor": "Google Chrome",
+        "name": "Attribution Reporting",
+        "pitch": "Chrome pitched it as ad measurement without cross site IDs, with noisy event reports and encrypted summaries.",
+        "url": "https://privacysandbox.google.com/blog/update-on-plans-for-privacy-sandbox-technologies"
+      }
+    ],
+    "for_you": "You never saw it work. When you clicked an ad and bought, Chrome could send a fuzzy report instead of a name. It is now being removed, so most ad measurement goes back to cookies and server events.",
+    "for_makers": "It was Google's answer to counting sales without following people. Fuzzy numbers kept identity out. Advertisers disliked the noise and the work, and Google retired it in 2025 and plans a new standard through a web group.",
+    "use_cases": [
+      {
+        "type": "ads",
+        "example": "An ad network counted sales from a banner on a news site, with random noise, so no single buyer was named.",
+        "apps": [
+          "Criteo",
+          "Google Ads"
+        ]
+      },
+      {
+        "type": "analytics",
+        "example": "A shop got a daily total of clicks that led to purchases for each ad, instead of a person by person list.",
+        "apps": []
+      },
+      {
+        "type": "shopping",
+        "example": "A fashion brand learned which ad format drove sales, with privacy noise added to small groups.",
+        "apps": []
+      },
+      {
+        "type": "games",
+        "example": "A mobile game maker's web ads could report installs and sign ups tied to a campaign, without a device ID.",
+        "apps": []
+      },
+      {
+        "type": "media",
+        "example": "A publisher showed advertisers proof that an ad on its site led to a sale, in aggregate only.",
+        "apps": [
+          "Washington Post"
+        ]
+      },
+      {
+        "type": "security",
+        "example": "Fraud teams worried that noisy reports hid fake clicks, one reason many advertisers did not adopt it.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Was never widely adopted",
+      "Being removed, so measurement moves elsewhere"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Event reports carry 1 bit (views) or 3 bits (clicks) of conversion data",
+    "Reports delayed by hours to days",
+    "Chrome and Android only",
+    "Cannot link to a cross-site identity"
+  ],
+  "scores": {
+    "sensitivity": 3,
+    "utility": 2,
+    "fingerprint_bits": null,
+    "friction": 3
+  },
+  "value": {
+    "legit_uses": [
+      "Privacy preserving ad measurement (historical)"
+    ],
+    "abuse": [
+      "Cross-site conversion linkage"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2023-07",
+      "browser": "chrome",
+      "version": "115",
+      "change": "Shipped (Chrome)"
+    },
+    {
+      "date": "2025-10",
+      "browser": "chrome",
+      "version": "141",
+      "change": "Retirement announced"
+    },
+    {
+      "date": "2026-01",
+      "browser": "chrome",
+      "version": "144",
+      "change": "Deprecation per blink-dev"
+    },
+    {
+      "date": "2026-08",
+      "browser": "chrome",
+      "version": "152",
+      "change": "Stub in 152; removal per Chrome 153 release notes; no blink-dev update since 2026-07-02 as of Oct 2026 review"
+    }
+  ],
+  "related": [
+    "web.xsite.private-aggregation",
+    "web.xsite.ad-click-ids"
+  ],
+  "refs": [
+    {
+      "t": "vendor",
+      "label": "Privacy Sandbox: Update on plans (Oct 17, 2025)",
+      "url": "https://privacysandbox.google.com/blog/update-on-plans-for-privacy-sandbox-technologies"
+    },
+    {
+      "t": "vendor",
+      "label": "Privacy Sandbox feature status page (updated Aug 14, 2026)",
+      "url": "https://privacysandbox.google.com/overview/status"
+    },
+    {
+      "t": "news",
+      "label": "Privacy Sandbox history and removal timeline (checked Oct 2, 2026)",
+      "url": "https://hidekazu-konishi.com/entry/privacy_sandbox_history_and_timeline.html"
+    },
+    {
+      "t": "spec",
+      "label": "Attribution Reporting spec",
+      "url": "https://wicg.github.io/attribution-reporting-api/"
+    }
+  ],
+  "confidence": "verified"
+}

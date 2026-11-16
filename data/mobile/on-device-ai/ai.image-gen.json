@@ -1,0 +1,188 @@
+{
+  "id": "mob.ai.image-gen",
+  "name": "Image generation (Image Playground)",
+  "kind": "capability",
+  "group": "on-device-ai",
+  "subgroup": "Generative AI",
+  "tags": [
+    "image-playground",
+    "image-generation",
+    "emoji"
+  ],
+  "plain": "Creates stylised images on device from prompts.",
+  "meaning": "iOS offers Image Playground and Genmoji through a system sheet. Android has no equivalent first party app API for images.",
+  "lifecycle": [
+    "in-session"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "n",
+      "v": "",
+      "permission": "None for third party apps",
+      "protection": "none",
+      "grant": "not-exposed",
+      "prompt_ui": "",
+      "persistence": "",
+      "revocation": "",
+      "store_policy": "",
+      "api_surface": "ML Kit Image Description only",
+      "note": "Gemini app and Pixel Studio are first party apps, not APIs for developers."
+    },
+    "ios": {
+      "s": "y",
+      "v": "18.2",
+      "permission": "None; ImagePlayground framework",
+      "protection": "none",
+      "grant": "none",
+      "prompt_ui": "ImagePlaygroundViewController sheet; Apple Intelligence required",
+      "persistence": "Per request",
+      "revocation": "Settings > Apple Intelligence & Siri",
+      "store_policy": "Apple usage rules",
+      "api_surface": "ImagePlayground ImagePlaygroundViewController, Genmoji (NSAdaptiveImageGlyph)",
+      "note": "Image created in system UI; the app gets the result only."
+    }
+  },
+  "data": {
+    "type": "object",
+    "metric": "Generated image",
+    "update": "per request",
+    "fields": [
+      {
+        "name": "image",
+        "type": "binary",
+        "unit": "PNG",
+        "range": "n/a",
+        "precision": "n/a"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can offer picture creation through Apple's Image Playground sheet, and sees only the result",
+    "user_action": "You tap a button like Create image, then describe what you want in the Apple sheet",
+    "can": [
+      "Open Apple's Image Playground sheet inside the app",
+      "Receive the finished picture you choose",
+      "Work on iPhones with Apple Intelligence turned on"
+    ],
+    "cannot": [
+      "See your prompt text or the other ideas you rejected, only the final picture",
+      "Run on iPhones without Apple Intelligence",
+      "Use Pixel Studio or the Gemini app on Android as a developer tool; they are not offered to apps"
+    ],
+    "reach": 1,
+    "reach_label": "One picture you choose",
+    "differs": "iPhone apps can use Image Playground from iOS 18.2. Android has no tool for developers to do this."
+  },
+  "story": {
+    "what_it_is": "Makes stylized pictures on the phone from a text prompt, through a system screen.",
+    "icon": "palette",
+    "tags": [
+      "AI",
+      "Creative",
+      "iPhone"
+    ],
+    "marketing": [
+      {
+        "vendor": "Apple",
+        "name": "Image Playground",
+        "pitch": "Apple pitches Image Playground as a fun way to create images from a description inside Apple Intelligence.",
+        "url": "https://developer.apple.com/documentation/imageplayground"
+      }
+    ],
+    "for_you": "You type an idea in a system sheet and get a picture in a few styles. The app only gets the finished picture, not your prompt history.",
+    "for_makers": "Makers add creative features without building their own image model. It keeps data on the device and under Apple rules, but they get no control over the model.",
+    "use_cases": [
+      {
+        "type": "messaging",
+        "example": "A chat app lets you make a quick cartoon to send to a friend.",
+        "apps": [
+          "Messages"
+        ]
+      },
+      {
+        "type": "creative",
+        "example": "A notes or design app adds a sketch from a prompt.",
+        "apps": [
+          "Notes",
+          "Freeform"
+        ]
+      },
+      {
+        "type": "social",
+        "example": "A social app lets you build a stylized avatar.",
+        "apps": []
+      },
+      {
+        "type": "kids",
+        "example": "A kids story app makes a picture for a page.",
+        "apps": []
+      },
+      {
+        "type": "education",
+        "example": "A school app creates a picture for a project cover.",
+        "apps": []
+      },
+      {
+        "type": "games",
+        "example": "A game could let you make a custom avatar or sticker.",
+        "apps": []
+      },
+      {
+        "type": "productivity",
+        "example": "A presentation app makes art for a slide.",
+        "apps": [
+          "Keynote"
+        ]
+      }
+    ],
+    "risks": [
+      "Fake images and deepfakes",
+      "Needs Apple Intelligence hardware"
+    ],
+    "android_note": "No developer API. Gemini and Pixel Studio are Google's own apps.",
+    "ios_note": "Needs Apple Intelligence. The picture is made in the system sheet."
+  },
+  "technical_bounds": [
+    "No Android developer API"
+  ],
+  "scores": {
+    "sensitivity": 2,
+    "utility": 3,
+    "fingerprint_bits": 0,
+    "friction": 1
+  },
+  "value": {
+    "legit_uses": [
+      "Creative apps"
+    ],
+    "abuse": [
+      "Deepfakes"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2024-12",
+      "platform": "ios",
+      "version": "iOS 18.2",
+      "change": "Image Playground and Genmoji"
+    }
+  ],
+  "related": [
+    "mob.ai.llm-prompt"
+  ],
+  "refs": [
+    {
+      "t": "apple",
+      "label": "Apple: ImagePlayground",
+      "url": "https://developer.apple.com/documentation/imageplayground"
+    }
+  ],
+  "confidence": "docs"
+}

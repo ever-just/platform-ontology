@@ -1,0 +1,219 @@
+{
+  "id": "mob.health.health-connect",
+  "name": "Health Connect permissions",
+  "kind": "permission",
+  "group": "health-fitness",
+  "subgroup": "Records",
+  "tags": [
+    "runtime-permission",
+    "health-connect",
+    "data-types"
+  ],
+  "plain": "A set of per-data-type read and write permissions for the health data store.",
+  "meaning": "Each Health Connect data type (steps, heart rate, sleep, weight and more) has its own read and write grant plus background and history options. A privacy policy rationale page is mandatory.",
+  "lifecycle": [
+    "in-session",
+    "background",
+    "signed-in"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "y",
+      "v": "14",
+      "api": 34,
+      "permission": "android.permission.health.READ_STEPS, READ_HEART_RATE, WRITE_*, READ_HEALTH_DATA_IN_BACKGROUND, READ_HEALTH_DATA_HISTORY",
+      "protection": "dangerous",
+      "grant": "prompt",
+      "prompt_ui": "Health Connect permission screen with per-type toggles",
+      "persistence": "Until revoked; Android 14+ is part of the system",
+      "revocation": "Settings > Health Connect > App permissions",
+      "store_policy": "Play: Health Connect declaration form and policy review",
+      "api_surface": "HealthConnectClient.permissionController, ActivityResultContracts",
+      "note": "Built into the framework on Android 14 (API 34); a Play download on Android 13 and earlier."
+    },
+    "ios": {
+      "s": "y",
+      "v": "8.0",
+      "permission": "NSHealthShareUsageDescription, NSHealthUpdateUsageDescription, HealthKit entitlement",
+      "protection": "entitlement",
+      "grant": "prompt",
+      "prompt_ui": "Health permission sheet with per-type toggles",
+      "persistence": "Until revoked",
+      "revocation": "Health app > Sharing > Apps",
+      "store_policy": "App Review 5.1.3",
+      "api_surface": "HKHealthStore",
+      "note": "Clinical records need an additional capability and prompt."
+    }
+  },
+  "data": {
+    "type": "object",
+    "metric": "Typed health records",
+    "update": "on demand and background sync",
+    "fields": [
+      {
+        "name": "record_type",
+        "type": "enum",
+        "unit": "type",
+        "range": "about 50 record types",
+        "precision": "per type"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can see and add health data, one type at a time, from Health Connect or Health",
+    "user_action": "You tap Connect to Health Connect (Android) or Allow in the Health sheet (iPhone)",
+    "can": [
+      "See steps, heart rate or other data types you switch on",
+      "Add new health data, such as a workout, for types you allow",
+      "Ask for background access and older history as separate permissions on Android",
+      "Use switches that you can turn off per type"
+    ],
+    "cannot": [
+      "See data types you left off",
+      "See older history on Android without the history permission",
+      "Tell on iPhone if you denied; it looks like no data",
+      "See medical records on iPhone without a second prompt"
+    ],
+    "reach": 3,
+    "reach_label": "Only the data types you allow",
+    "differs": "Health Connect is built in on Android 14 and an add on for Android 13 or earlier. iPhone uses Health with the HealthKit setting."
+  },
+  "story": {
+    "what_it_is": "Android's central store of health data with a permission for each kind.",
+    "icon": "heart-handshake",
+    "tags": [
+      "Health",
+      "Asks first",
+      "Android"
+    ],
+    "marketing": [
+      {
+        "vendor": "Google",
+        "name": "Health Connect",
+        "pitch": "Pitch: one place on your phone for health and fitness data, where you control which apps can read or write it.",
+        "url": "https://developer.android.com/health-and-fitness/guides/health-connect"
+      }
+    ],
+    "for_you": "Instead of one broad yes, you get a list: steps, heart rate, sleep, weight and more. You turn each on or off, and you can see which apps use them in Settings.",
+    "for_makers": "Makers get one standard way to read and write data across fitness apps and devices. They must show a privacy policy page, and each data type needs its own approval.",
+    "use_cases": [
+      {
+        "type": "fitness",
+        "example": "A running app writes your workouts so your other fitness apps see them.",
+        "apps": [
+          "Strava"
+        ]
+      },
+      {
+        "type": "health",
+        "example": "A diet app reads your steps and weight to adjust your calorie goal.",
+        "apps": []
+      },
+      {
+        "type": "wearables",
+        "example": "A watch app syncs sleep and heart rate to the phone.",
+        "apps": [
+          "Fitbit",
+          "Samsung Health"
+        ]
+      },
+      {
+        "type": "games",
+        "example": "A walking game reads your steps to power up your character.",
+        "apps": []
+      },
+      {
+        "type": "health",
+        "example": "A sleep app reads your nights and writes a score.",
+        "apps": []
+      },
+      {
+        "type": "enterprise",
+        "example": "A wellness program could read steps to give discounts if you opt in.",
+        "apps": []
+      },
+      {
+        "type": "ads",
+        "example": "Health Connect rules ban selling this data to ad firms.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Many data types to review",
+      "Some apps ask for too much"
+    ],
+    "android_note": "Built into Android 14 and later, with a rationale page required for each app.",
+    "ios_note": "iPhone uses HealthKit for the same job."
+  },
+  "technical_bounds": [
+    "Per-type grants; read and write separate",
+    "Android 16 ties sensor permission to this model"
+  ],
+  "scores": {
+    "sensitivity": 5,
+    "utility": 4,
+    "fingerprint_bits": null,
+    "friction": 3
+  },
+  "value": {
+    "legit_uses": [
+      "Aggregated fitness dashboards"
+    ],
+    "abuse": [
+      "Profiling for insurance"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2022-05",
+      "platform": "android",
+      "version": "13 (API 33)",
+      "change": "Health Connect beta as a Play download"
+    },
+    {
+      "date": "2023-10",
+      "platform": "android",
+      "version": "14 (API 34)",
+      "change": "Health Connect integrated into the framework"
+    },
+    {
+      "date": "2025-06",
+      "platform": "android",
+      "version": "16 (API 36)",
+      "change": "BODY_SENSORS replaced by granular health permissions; rationale activity required"
+    }
+  ],
+  "related": [
+    "mob.health.body-sensors"
+  ],
+  "refs": [
+    {
+      "t": "android",
+      "label": "Android: Health Connect",
+      "url": "https://developer.android.com/health-and-fitness/guides/health-connect"
+    },
+    {
+      "t": "android",
+      "label": "Android: Health Connect permissions list",
+      "url": "https://developer.android.com/health-and-fitness/guides/health-connect/develop/get-started"
+    },
+    {
+      "t": "policy",
+      "label": "Google Play: Health Connect declaration",
+      "url": "https://support.google.com/googleplay/android-developer/answer/12991134"
+    },
+    {
+      "t": "apple",
+      "label": "Apple: HealthKit",
+      "url": "https://developer.apple.com/documentation/healthkit"
+    }
+  ],
+  "confidence": "docs"
+}

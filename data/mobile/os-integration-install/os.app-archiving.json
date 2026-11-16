@@ -1,0 +1,213 @@
+{
+  "id": "mob.os.app-archiving",
+  "name": "App archiving and offloading",
+  "kind": "capability",
+  "group": "os-integration-install",
+  "subgroup": "Install lifecycle",
+  "tags": [
+    "archive",
+    "offload",
+    "unused-apps",
+    "data-kept"
+  ],
+  "plain": "Both systems can remove an unused app but keep its data, so a reinstall restores the old state.",
+  "meaning": "Android 15 archiving and iOS Offload Unused Apps free storage while keeping user data. A later reinstall looks like a returning user, not a new one.",
+  "lifecycle": [
+    "background",
+    "after-uninstall"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "y",
+      "v": "15",
+      "api": 35,
+      "permission": "REQUEST_DELETE_PACKAGES (installer apps), archive via PackageInstaller",
+      "protection": "normal",
+      "grant": "settings",
+      "prompt_ui": "Settings or Play Store: Archive",
+      "persistence": "User data kept; app restored from the store",
+      "revocation": "Unarchive",
+      "store_policy": "Play Store auto-archive supported on Android 15",
+      "api_surface": "PackageInstaller.requestArchive(), isArchived",
+      "note": "Archived app keeps a launcher icon with an archived mark; installer must support unarchive"
+    },
+    "ios": {
+      "s": "y",
+      "v": "11.0",
+      "permission": "",
+      "protection": "none",
+      "grant": "settings",
+      "prompt_ui": "Settings > App Store > Offload Unused Apps",
+      "persistence": "Documents and data kept; app binary removed",
+      "revocation": "Reinstall from the App Store",
+      "store_policy": "",
+      "api_surface": "ApplicationStatus, no API for the app to detect offload",
+      "note": "Triggers automatically when storage is low if enabled; app data stays until deleted"
+    }
+  },
+  "data": {
+    "type": "boolean",
+    "metric": "Archived",
+    "update": "On storage pressure",
+    "fields": [
+      {
+        "name": "archived",
+        "type": "boolean",
+        "unit": "",
+        "range": "true or false",
+        "precision": ""
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can remove an unused app but keep your data so a reinstall brings it back",
+    "user_action": "You tap Archive or Offload Unused Apps, or the phone does it when storage is low",
+    "can": [
+      "Keep your app data after the app itself is removed",
+      "Keep the icon on the home screen, marked as archived or offloaded",
+      "Restore your old state when you tap the icon again"
+    ],
+    "cannot": [
+      "Keep running; an archived or offloaded app does nothing until restored",
+      "Restore on Android unless the store that installed it supports unarchive",
+      "Keep data once you delete the app fully"
+    ],
+    "reach": 1,
+    "reach_label": "Data stays, the app is gone",
+    "differs": "iPhone calls it Offload and can do it automatically when storage is low. Android calls it Archive in Android 15."
+  },
+  "story": {
+    "what_it_is": "Removes an unused app to free space but keeps your data so a reinstall picks up where you left off.",
+    "icon": "archive",
+    "tags": [
+      "Storage",
+      "Install",
+      "Silent"
+    ],
+    "marketing": [
+      {
+        "vendor": "Apple",
+        "name": "Offload Unused Apps",
+        "pitch": "Apple lets iPhone remove unused apps and keep documents and data so you can reinstall later.",
+        "url": "https://support.apple.com/guide/iphone/free-up-storage-space-iphe5bde5f4a/ios"
+      },
+      {
+        "vendor": "Google",
+        "name": "App archiving",
+        "pitch": "Android 15 adds archiving to free storage while keeping user data.",
+        "url": "https://developer.android.com/about/versions/15/features"
+      }
+    ],
+    "for_you": "An app you have not opened in months goes grey with a small cloud icon. Tap it and it comes back with your old data. Nothing is lost.",
+    "for_makers": "Makers see a returning user, not a new one, when the app is restored. Their servers must handle this quietly and keep sign in working.",
+    "use_cases": [
+      {
+        "type": "games",
+        "example": "A big game you left for months comes back with your progress.",
+        "apps": [
+          "Genshin Impact"
+        ]
+      },
+      {
+        "type": "media",
+        "example": "A streaming app returns with your downloads list and profile.",
+        "apps": [
+          "Netflix"
+        ]
+      },
+      {
+        "type": "productivity",
+        "example": "A notes app returns with your offline notes intact.",
+        "apps": []
+      },
+      {
+        "type": "shopping",
+        "example": "A shopping app returns with your saved cart and login.",
+        "apps": [
+          "Amazon"
+        ]
+      },
+      {
+        "type": "analytics",
+        "example": "A product team must tell archived and restored users apart from real new installs.",
+        "apps": []
+      },
+      {
+        "type": "ads",
+        "example": "An attribution tool must avoid counting a restore as a new install.",
+        "apps": [
+          "AppsFlyer"
+        ]
+      },
+      {
+        "type": "fitness",
+        "example": "A fitness app returns with years of workout history.",
+        "apps": [
+          "Strava"
+        ]
+      }
+    ],
+    "risks": [
+      "Restore can look like a new install",
+      "Old data lingers"
+    ],
+    "android_note": "Archived apps keep an icon with an archived mark. The installer must support unarchive.",
+    "ios_note": "Offload Unused Apps can start on its own when storage is low."
+  },
+  "technical_bounds": [
+    "The app cannot detect it ran offloaded",
+    "Android relies on the store as installer"
+  ],
+  "scores": {
+    "sensitivity": 1,
+    "utility": 2,
+    "fingerprint_bits": null,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Free storage"
+    ],
+    "abuse": [
+      "None"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2017-09",
+      "platform": "ios",
+      "version": "iOS 11",
+      "change": "Offload Unused Apps introduced"
+    },
+    {
+      "date": "2024-10",
+      "platform": "android",
+      "version": "15 (API 35)",
+      "change": "App archiving introduced"
+    }
+  ],
+  "related": [
+    "mob.os.uninstall-data-deletion",
+    "mob.os.app-clips"
+  ],
+  "refs": [
+    {
+      "t": "android",
+      "label": "Android 15: App archiving",
+      "url": "https://developer.android.com/about/versions/15/features"
+    },
+    {
+      "t": "apple",
+      "label": "Apple: Offload unused apps",
+      "url": "https://support.apple.com/guide/iphone/free-up-storage-space-iphe5bde5f4a/ios"
+    }
+  ],
+  "confidence": "docs"
+}

@@ -1,0 +1,249 @@
+{
+  "id": "web.perf.battery-status",
+  "name": "Battery Status API and drain inference",
+  "kind": "signal",
+  "group": "timing-performance",
+  "subgroup": "Power",
+  "tags": [
+    "battery",
+    "charging",
+    "level"
+  ],
+  "plain": "Reads battery level, charging state and time estimates in Chromium browsers.",
+  "meaning": "Level and discharge time can short-term link visits across sites. Remaining time infers device load. Removed from Firefox and never added to Safari because of the tracking risk.",
+  "lifecycle": [
+    "on-arrival"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "navigator.getBattery(); BatteryManager level, charging, chargingTime, dischargingTime",
+      "permissions_policy": "battery",
+      "bcd": [
+        "api.Navigator.getBattery"
+      ],
+      "access": {
+        "grant": "none",
+        "prompt_ui": "",
+        "secure_context": true,
+        "user_gesture": false,
+        "persistence": "",
+        "revocation": "",
+        "iframe": "",
+        "steps": [
+          "Call getBattery (secure context)",
+          "Read BatteryManager fields and events"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "38",
+          "note": "Secure contexts only since 103",
+          "date": "2014-10-07"
+        },
+        "edge": {
+          "s": "y",
+          "v": "79",
+          "note": "Secure contexts only since 103",
+          "date": "2020-01-15"
+        },
+        "firefox": {
+          "s": "r",
+          "v": "52",
+          "note": "Removed in 52 (2017)",
+          "date": "2017-03-07"
+        },
+        "safari": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "ios_safari": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "38",
+          "note": "Secure contexts only since 103",
+          "date": "2014-10-08"
+        },
+        "samsung": {
+          "s": "y",
+          "v": "3.0",
+          "note": "Secure contexts only since 103",
+          "date": "2015-04-10"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "object",
+    "metric": "4 fields",
+    "update": "",
+    "fields": [
+      {
+        "name": "level",
+        "type": "float",
+        "unit": "fraction",
+        "range": "0 to 1",
+        "precision": "1% steps (bucketed to 1% on Chrome)"
+      },
+      {
+        "name": "charging",
+        "type": "boolean",
+        "unit": "",
+        "range": "true or false",
+        "precision": "exact"
+      },
+      {
+        "name": "dischargingTime",
+        "type": "float",
+        "unit": "s",
+        "range": "0 to Infinity",
+        "precision": "15 minute rounding"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can see your battery level and charging state in Chromium browsers",
+    "user_action": "Nothing. It happens when the page loads, or when a page checks power use",
+    "can": [
+      "Check your battery level and if you are charging",
+      "Check how long until it is full or empty",
+      "Use short lived numbers to link two visits close together"
+    ],
+    "cannot": [
+      "Get battery info in Firefox, which removed it, or in Safari, which never added it",
+      "Ask permission first",
+      "Know who you are by itself",
+      "Tell what apps you run"
+    ],
+    "reach": 2,
+    "reach_label": "Silent, Chromium browsers only",
+    "differs": "Chrome, Edge and Samsung Internet allow it. Firefox removed it and Safari never added it because of tracking worries."
+  },
+  "story": {
+    "what_it_is": "A page reads your battery level, whether you are charging and time left. Only some browsers allow it.",
+    "icon": "battery-charging",
+    "tags": [
+      "Battery",
+      "Silent",
+      "Chromium only"
+    ],
+    "marketing": [
+      {
+        "vendor": "MDN",
+        "name": "Battery Status API",
+        "pitch": "Lets a page see the device's battery level and charging state, so it can save power when low.",
+        "url": "https://developer.mozilla.org/en-US/docs/Web/API/Battery_Status_API"
+      }
+    ],
+    "for_you": "You get no prompt. A page might switch to a lighter mode or pause fancy effects when your battery is low. Researchers showed it could be used to track people, so Firefox and Safari left it out.",
+    "for_makers": "Makers use it to save power and avoid draining a phone in the middle of a game or video. It also works as a small device signal, which is why privacy minded browsers removed it.",
+    "use_cases": [
+      {
+        "type": "games",
+        "example": "A browser game lowers the frame rate and effects when you are under 20 percent battery.",
+        "apps": []
+      },
+      {
+        "type": "video",
+        "example": "A streaming site picks a lower resolution on low battery to let you finish the movie.",
+        "apps": [
+          "YouTube"
+        ]
+      },
+      {
+        "type": "video",
+        "example": "A video call tool turns off background blur when your laptop is unplugged and low.",
+        "apps": [
+          "Google Meet"
+        ]
+      },
+      {
+        "type": "productivity",
+        "example": "A web editor saves your work sooner when battery is about to die.",
+        "apps": []
+      },
+      {
+        "type": "ads",
+        "example": "A tracker combines battery level and time to charge as a short lived device ID.",
+        "apps": []
+      },
+      {
+        "type": "shopping",
+        "example": "Privacy researchers warned that a shop could change prices for people with a low battery, which is one reason the feature was removed.",
+        "apps": []
+      },
+      {
+        "type": "fitness",
+        "example": "A web workout player skips heavy animations on a phone that is almost out of power.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Can be used for tracking",
+      "Removed from Firefox and Safari"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Cannot read battery on iOS or Firefox",
+    "Can't see battery health, only level"
+  ],
+  "scores": {
+    "sensitivity": 2,
+    "utility": 2,
+    "fingerprint_bits": 3,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": "Low-power modes for apps",
+    "abuse": "Short-term device linking (Olejnik 2015), retail price discrimination claims"
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2016-10",
+      "browser": "firefox",
+      "version": "52",
+      "change": "Battery API removed over privacy concerns"
+    },
+    {
+      "date": "2022-08",
+      "browser": "chrome",
+      "version": "103",
+      "change": "Restricted to secure contexts and permissions policy battery"
+    }
+  ],
+  "related": [
+    "web.perf.page-visibility-focus"
+  ],
+  "refs": [
+    {
+      "t": "mdn",
+      "label": "MDN Battery Status",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/Battery_Status_API"
+    },
+    {
+      "t": "paper",
+      "label": "Olejnik et al., The Leaking Battery (2015)",
+      "url": "https://eprint.iacr.org/2015/616"
+    },
+    {
+      "t": "mozilla",
+      "label": "Mozilla removal bug",
+      "url": "https://bugzilla.mozilla.org/show_bug.cgi?id=1313580"
+    }
+  ],
+  "confidence": "docs"
+}

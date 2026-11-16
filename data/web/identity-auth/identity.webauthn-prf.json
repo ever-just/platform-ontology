@@ -1,0 +1,232 @@
+{
+  "id": "web.identity.webauthn-prf",
+  "name": "WebAuthn PRF and largeBlob extensions",
+  "kind": "capability",
+  "group": "identity-auth",
+  "subgroup": "WebAuthn",
+  "tags": [
+    "webauthn"
+  ],
+  "plain": "Derives a secret from a passkey or stores a small blob on it.",
+  "meaning": "Lets an app use the passkey as a key for end to end encryption (PRF is a 32 byte HMAC output). largeBlob stores small data on the authenticator.",
+  "lifecycle": [
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "extensions:{prf:{eval:{first}}, largeBlob:{read|write}}",
+      "bcd": [
+        "api.PublicKeyCredential"
+      ],
+      "access": {
+        "grant": "prompt",
+        "prompt_ui": "Same passkey prompt",
+        "secure_context": true,
+        "user_gesture": false,
+        "persistence": "Per origin",
+        "revocation": "Site settings",
+        "iframe": "Same as top level; cross-origin iframes need a permissions policy where listed",
+        "steps": [
+          "Call the API",
+          "Browser applies its access rules",
+          "Page receives the result"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "67",
+          "note": "",
+          "date": "2018-05-29"
+        },
+        "edge": {
+          "s": "y",
+          "v": "18",
+          "note": "",
+          "date": "2018-10-02"
+        },
+        "firefox": {
+          "s": "y",
+          "v": "60",
+          "note": "Only supports USB U2F tokens.",
+          "date": "2018-05-09"
+        },
+        "safari": {
+          "s": "y",
+          "v": "13",
+          "note": "",
+          "date": "2019-09-19"
+        },
+        "ios_safari": {
+          "s": "y",
+          "v": "13",
+          "note": "",
+          "date": "2019-09-19"
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "70",
+          "note": "",
+          "date": "2018-10-17"
+        },
+        "samsung": {
+          "s": "y",
+          "v": "10.0",
+          "note": "",
+          "date": "2019-08-22"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "object",
+    "metric": "Derives a secret from a passkey or stores a small blob on it.",
+    "update": "on demand",
+    "fields": [
+      {
+        "name": "prf.results.first",
+        "type": "binary",
+        "unit": "bytes",
+        "range": "32 bytes",
+        "precision": "deterministic per credential and salt"
+      },
+      {
+        "name": "largeBlob.blob",
+        "type": "binary",
+        "unit": "bytes",
+        "range": "typically up to about 1 KB on current authenticators"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can use your passkey to make an encryption key or store a tiny note on it",
+    "user_action": "You tap Unlock or Sign in on an app that protects your data with a passkey",
+    "can": [
+      "Ask your passkey to make a secret value, 32 bytes long, for locking your data",
+      "Lock and unlock your data on your device with that secret",
+      "Store a small piece of data on a security key that supports it"
+    ],
+    "cannot": [
+      "Get your passkey's private key",
+      "Make the secret without your passkey confirmation",
+      "Store large files on the passkey"
+    ],
+    "reach": 1,
+    "reach_label": "One secret per passkey tap",
+    "differs": ""
+  },
+  "story": {
+    "what_it_is": "Lets a site use your passkey as the key to lock and unlock your private data.",
+    "icon": "lock-keyhole",
+    "tags": [
+      "Passkey",
+      "Encryption",
+      "Privacy"
+    ],
+    "marketing": [
+      {
+        "vendor": "MDN (standards docs)",
+        "name": "WebAuthn extensions (PRF)",
+        "pitch": "Documents an extension that lets a site derive secret keys from a passkey for tasks like end to end encryption.",
+        "url": "https://developer.mozilla.org/en-US/docs/Web/API/Web_Authentication_API/WebAuthn_extensions"
+      }
+    ],
+    "for_you": "You may notice a notes or vault app that unlocks with your face or fingerprint and no extra password. The same tap that signs you in also opens your encrypted data.",
+    "for_makers": "Makers of private apps can offer end to end encryption without asking for a separate master password. It improves security and convenience, and it lets them say even they cannot read user data.",
+    "use_cases": [
+      {
+        "type": "productivity",
+        "example": "A password manager web vault unlocks with a passkey, so there is no master password to forget.",
+        "apps": [
+          "1Password",
+          "Bitwarden"
+        ]
+      },
+      {
+        "type": "messaging",
+        "example": "A secure notes or chat web app derives its encryption key from the passkey, so messages stay unreadable on its servers.",
+        "apps": []
+      },
+      {
+        "type": "health",
+        "example": "A health records web app encrypts files with a passkey derived key so a data leak exposes nothing readable.",
+        "apps": []
+      },
+      {
+        "type": "creative",
+        "example": "A cloud drafts tool encrypts unpublished writing and designs with a key that only the person's device can unlock.",
+        "apps": []
+      },
+      {
+        "type": "games",
+        "example": "A browser game launcher could encrypt saved credentials and payment tokens with the passkey, so a stolen database is useless.",
+        "apps": []
+      },
+      {
+        "type": "security",
+        "example": "A security team uses it to protect secrets in the browser without storing a key in a cookie.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Lose the passkey, lose the data",
+      "Support still maturing"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Support varies by authenticator and OS",
+    "Firefox PRF partial (macOS and Windows 139+, not Android)",
+    "Safari status unclear; largeBlob support not verified"
+  ],
+  "scores": {
+    "sensitivity": 3,
+    "utility": 4,
+    "fingerprint_bits": null,
+    "friction": 2
+  },
+  "value": {
+    "legit_uses": [
+      "Passkey based encryption keys",
+      "Zero knowledge vaults"
+    ],
+    "abuse": [
+      "Misuse is limited by origin binding"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2023",
+      "browser": "chrome",
+      "version": "116",
+      "change": "PRF in Chrome"
+    },
+    {
+      "date": "2026-02",
+      "browser": "chrome",
+      "version": "",
+      "change": "Windows Hello hmac-secret support (KB5077181) enables PRF on Windows"
+    }
+  ],
+  "refs": [
+    {
+      "t": "spec",
+      "label": "WebAuthn PRF extension",
+      "url": "https://www.w3.org/TR/webauthn-3/#prf-extension"
+    },
+    {
+      "t": "mdn",
+      "label": "MDN WebAuthn extensions",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/Web_Authentication_API/WebAuthn_extensions"
+    }
+  ],
+  "confidence": "inferred"
+}

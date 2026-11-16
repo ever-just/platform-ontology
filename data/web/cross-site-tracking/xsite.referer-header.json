@@ -1,0 +1,260 @@
+{
+  "id": "web.xsite.referer-header",
+  "name": "Referer header and Referrer-Policy default",
+  "kind": "signal",
+  "group": "cross-site-tracking",
+  "subgroup": "Before the visit",
+  "tags": [
+    "referer",
+    "referrer-policy",
+    "navigation"
+  ],
+  "plain": "Tells the site which page the person came from, trimmed to the origin for cross-site links by default.",
+  "meaning": "Reveals the previous site and, for same-origin or same-site hops, the full URL including query strings. Sites use it for attribution; it can leak search terms, IDs and private page paths when sites set weak policies.",
+  "lifecycle": [
+    "before-visit",
+    "on-arrival"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "HTTP Referer request header; Referrer-Policy header and <meta name=referrer>; rel=noreferrer",
+      "bcd": [
+        "http.headers.Referrer-Policy"
+      ],
+      "access": {
+        "grant": "none",
+        "prompt_ui": "None",
+        "secure_context": false,
+        "user_gesture": false,
+        "persistence": "Per request, no storage",
+        "revocation": "Clear site data, browser privacy settings",
+        "iframe": "",
+        "steps": [
+          "Person clicks a link on another site",
+          "Browser applies the sender's Referrer-Policy (default strict-origin-when-cross-origin)",
+          "Destination server sees the Referer header"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "56",
+          "note": "",
+          "date": "2017-01-25"
+        },
+        "edge": {
+          "s": "y",
+          "v": "79",
+          "note": "",
+          "date": "2020-01-15"
+        },
+        "firefox": {
+          "s": "y",
+          "v": "50",
+          "note": "",
+          "date": "2016-11-15"
+        },
+        "safari": {
+          "s": "y",
+          "v": "11.1",
+          "note": "Third-party referrers cut to origin by ITP",
+          "date": "2018-04-12"
+        },
+        "ios_safari": {
+          "s": "y",
+          "v": "12",
+          "note": "All iOS browsers use WebKit",
+          "date": "2018-09-17"
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "56",
+          "note": "",
+          "date": "2017-02-01"
+        },
+        "samsung": {
+          "s": "y",
+          "v": "7.2",
+          "note": "",
+          "date": "2018-06-20"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "string",
+    "metric": "Origin or full URL of previous page",
+    "update": "per navigation or subresource request",
+    "fields": [
+      {
+        "name": "Referer",
+        "type": "string",
+        "unit": "URL",
+        "range": "origin only to full URL",
+        "precision": "scheme://host[:port]/ for cross-origin"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can tell a site which page you came from, trimmed to the site name cross site",
+    "user_action": "Nothing. It happens when you click a link or a page loads a resource",
+    "can": [
+      "Tell a site which website you came from",
+      "Send the full address for links within the same site",
+      "Include the page that loaded an image or script"
+    ],
+    "cannot": [
+      "Send your full page address to other sites by default, only the site name",
+      "Work if the site sets a stricter policy",
+      "See your browsing history beyond the last page",
+      "Send anything when you type an address or use a bookmark"
+    ],
+    "reach": 1,
+    "reach_label": "The one page before",
+    "differs": ""
+  },
+  "story": {
+    "what_it_is": "A line the browser sends that tells a site which page you came from.",
+    "icon": "arrow-up-right",
+    "tags": [
+      "Referrer",
+      "Silent",
+      "Headers"
+    ],
+    "marketing": [
+      {
+        "vendor": "Mozilla",
+        "name": "Referrer-Policy",
+        "pitch": "Developer docs explain the header and the policy that controls how much of the previous address is shared.",
+        "url": "https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Referrer-Policy"
+      }
+    ],
+    "for_you": "You never see it. When you click a link, your browser tells the next site the page it came from. By default, for other sites, it shows only the site name, not the full address.",
+    "for_makers": "Sites use it to count where traffic comes from, and to block hotlinking. It can leak search words or private page paths on weak settings. Makers set a policy to say how much to share.",
+    "use_cases": [
+      {
+        "type": "analytics",
+        "example": "A blog sees which sites send readers, such as Reddit or Hacker News.",
+        "apps": [
+          "Google Analytics",
+          "Plausible"
+        ]
+      },
+      {
+        "type": "security",
+        "example": "A site blocks images that other sites load straight from it, by checking the referrer.",
+        "apps": [
+          "Cloudflare"
+        ]
+      },
+      {
+        "type": "games",
+        "example": "A game portal sees which streamers or sites send players and pays a share.",
+        "apps": [
+          "itch.io",
+          "Kongregate"
+        ]
+      },
+      {
+        "type": "shopping",
+        "example": "An affiliate store credits a sale to the blog that sent the shopper.",
+        "apps": [
+          "Amazon Associates"
+        ]
+      },
+      {
+        "type": "ads",
+        "example": "An ad network uses the referrer to place an ad on the right topic page.",
+        "apps": [
+          "Google Ad Manager"
+        ]
+      },
+      {
+        "type": "media",
+        "example": "A news paywall treats visitors from a social link differently from search visitors.",
+        "apps": [
+          "Wall Street Journal"
+        ]
+      }
+    ],
+    "risks": [
+      "Can leak private page addresses",
+      "Weak policies share too much"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Cross-origin downgrade to origin only (strict-origin-when-cross-origin) unless the sending site sets a weaker policy",
+    "Nothing is sent from HTTPS to HTTP by default",
+    "Never sent when the previous page used no-referrer or rel=noreferrer",
+    "Path and query of the previous page are hidden by default for cross-origin links"
+  ],
+  "scores": {
+    "sensitivity": 3,
+    "utility": 5,
+    "fingerprint_bits": 1.0,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Marketing attribution by source site",
+      "Fraud and hotlink checks",
+      "Analytics channel grouping"
+    ],
+    "abuse": [
+      "Leaking private URLs or tokens in paths to third parties",
+      "Reading search queries from older search engine referrers"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2020-08",
+      "browser": "chrome",
+      "version": "85",
+      "change": "Default Referrer-Policy changed from no-referrer-when-downgrade to strict-origin-when-cross-origin"
+    },
+    {
+      "date": "2021-03",
+      "browser": "firefox",
+      "version": "87",
+      "change": "Same default adopted (trim cross-origin referrers to origin)"
+    },
+    {
+      "date": "2019-03",
+      "browser": "safari",
+      "version": "12.1",
+      "change": "ITP 2.0 downgraded all cross-site request referrers to the page origin"
+    }
+  ],
+  "related": [
+    "web.xsite.document-referrer",
+    "web.xsite.search-referral-loss",
+    "web.xsite.utm-params"
+  ],
+  "refs": [
+    {
+      "t": "mdn",
+      "label": "MDN Referrer-Policy",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Referrer-Policy"
+    },
+    {
+      "t": "spec",
+      "label": "W3C Referrer Policy",
+      "url": "https://www.w3.org/TR/referrer-policy/"
+    },
+    {
+      "t": "webkit",
+      "label": "WebKit Tracking Prevention",
+      "url": "https://webkit.org/tracking-prevention/"
+    }
+  ],
+  "confidence": "verified"
+}

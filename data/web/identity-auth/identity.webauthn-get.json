@@ -1,0 +1,254 @@
+{
+  "id": "web.identity.webauthn-get",
+  "name": "WebAuthn sign in (get) and conditional mediation",
+  "kind": "capability",
+  "group": "identity-auth",
+  "subgroup": "WebAuthn",
+  "tags": [
+    "webauthn"
+  ],
+  "plain": "Signs the person in with a passkey, including autofill style suggestions.",
+  "meaning": "Proves who the person is without a password. Conditional UI shows passkeys in the username field.",
+  "lifecycle": [
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "navigator.credentials.get({publicKey:{challenge,rpId,allowCredentials},mediation:'conditional'})",
+      "permissions_policy": "publickey-credentials-get",
+      "bcd": [
+        "api.PublicKeyCredential.isConditionalMediationAvailable"
+      ],
+      "access": {
+        "grant": "prompt",
+        "prompt_ui": "Passkey sheet or autofill suggestion in the username field",
+        "secure_context": true,
+        "user_gesture": false,
+        "persistence": "Per origin",
+        "revocation": "Site settings",
+        "iframe": "Same as top level; cross-origin iframes need a permissions policy where listed",
+        "steps": [
+          "Call the API",
+          "Browser applies its access rules",
+          "Page receives the result"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "67",
+          "note": ""
+        },
+        "edge": {
+          "s": "y",
+          "v": "18",
+          "note": ""
+        },
+        "firefox": {
+          "s": "y",
+          "v": "60",
+          "note": ""
+        },
+        "safari": {
+          "s": "y",
+          "v": "13",
+          "note": ""
+        },
+        "ios_safari": {
+          "s": "y",
+          "v": "13.3",
+          "note": ""
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "70",
+          "note": ""
+        },
+        "samsung": {
+          "s": "y",
+          "v": "10",
+          "note": ""
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "object",
+    "metric": "Signs the person in with a passkey, including autofill style suggestions.",
+    "update": "on demand",
+    "fields": [
+      {
+        "name": "response.signature",
+        "type": "binary",
+        "unit": "bytes",
+        "range": "DER ECDSA about 70 to 72 bytes"
+      },
+      {
+        "name": "response.authenticatorData",
+        "type": "binary",
+        "unit": "bytes",
+        "range": "37 bytes plus extensions",
+        "precision": "flags UP, UV, BE, BS"
+      },
+      {
+        "name": "response.userHandle",
+        "type": "binary",
+        "unit": "bytes",
+        "range": "up to 64 bytes",
+        "precision": "user.id"
+      },
+      {
+        "name": "clientDataJSON",
+        "type": "binary",
+        "unit": "bytes",
+        "range": "JSON with challenge and origin"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can sign you in with a passkey, even from the username box suggestions",
+    "user_action": "You tap Sign in with a passkey, or pick one from the username box",
+    "can": [
+      "Ask your device to prove you hold the passkey for that site",
+      "Show your passkeys as suggestions in the username box",
+      "Sign you in without you typing a password"
+    ],
+    "cannot": [
+      "See passkeys for other sites",
+      "Get your fingerprint, face or private key",
+      "Sign you in without your confirmation",
+      "Show username box suggestions in browsers too old to support them"
+    ],
+    "reach": 1,
+    "reach_label": "One sign in, you approve",
+    "differs": "Passkey sign in works in current Chrome, Safari, Edge and Firefox. The username box suggestions are newer and not in every browser."
+  },
+  "story": {
+    "what_it_is": "Signs you in with a passkey, even offering it in the username box.",
+    "icon": "key-round",
+    "tags": [
+      "Passkey",
+      "Sign in",
+      "Autofill"
+    ],
+    "marketing": [
+      {
+        "vendor": "Apple",
+        "name": "Passkeys",
+        "pitch": "Apple pitches signing in by looking at your phone or touching a sensor, with no password to type.",
+        "url": "https://developer.apple.com/passkeys/"
+      },
+      {
+        "vendor": "web.dev (Google)",
+        "name": "Passkey autofill",
+        "pitch": "Google describes passkeys that show up in the username field like saved passwords, so sign in is one tap.",
+        "url": "https://web.dev/articles/passkey-form-autofill"
+      }
+    ],
+    "for_you": "You tap the username box and your account appears in the suggestions. You tap it and confirm with your face, fingerprint or PIN. You are in without typing a thing.",
+    "for_makers": "Makers see higher sign in success and fewer help tickets. Because the passkey only works on the real domain, phishing fails, which protects both the user and the brand.",
+    "use_cases": [
+      {
+        "type": "games",
+        "example": "A player opens a game account page and signs in with a tap in the username box before a big tournament sign up closes.",
+        "apps": [
+          "Roblox",
+          "PlayStation"
+        ]
+      },
+      {
+        "type": "games",
+        "example": "A cloud gaming site lets a person sign in on a smart TV browser by approving a passkey on a phone, then streams a game.",
+        "apps": [
+          "Xbox Cloud Gaming",
+          "GeForce NOW"
+        ]
+      },
+      {
+        "type": "banking",
+        "example": "A bank website offers the passkey in the login field, so a customer logs in with Touch ID.",
+        "apps": []
+      },
+      {
+        "type": "shopping",
+        "example": "A shopper signs in at checkout with the passkey suggestion, finishing before the cart expires.",
+        "apps": [
+          "Amazon",
+          "Best Buy"
+        ]
+      },
+      {
+        "type": "productivity",
+        "example": "A team member opens an online editor and logs in with a passkey from their phone or laptop.",
+        "apps": [
+          "Google Workspace",
+          "GitHub"
+        ]
+      },
+      {
+        "type": "security",
+        "example": "A fraud team treats a passkey sign in as a strong sign that the right person is present and loosens extra checks.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Prompt can be confusing",
+      "Depends on device lock"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Challenge must come from server; replay blocked",
+    "Conditional mediation is silent until the user picks",
+    "No cross site use without rpId related origin"
+  ],
+  "scores": {
+    "sensitivity": 4,
+    "utility": 5,
+    "fingerprint_bits": null,
+    "friction": 2
+  },
+  "value": {
+    "legit_uses": [
+      "Passwordless sign in"
+    ],
+    "abuse": [
+      "Username enumeration if the site is sloppy"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2022-10",
+      "browser": "chrome",
+      "version": "108",
+      "change": "isConditionalMediationAvailable (Safari 16, Firefox 119)"
+    },
+    {
+      "date": "2024",
+      "browser": "chrome",
+      "version": "",
+      "change": "Hybrid transport by phone QR code"
+    }
+  ],
+  "refs": [
+    {
+      "t": "mdn",
+      "label": "MDN PublicKeyCredential",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/PublicKeyCredential"
+    },
+    {
+      "t": "spec",
+      "label": "WebAuthn",
+      "url": "https://www.w3.org/TR/webauthn-3/"
+    }
+  ],
+  "confidence": "verified"
+}

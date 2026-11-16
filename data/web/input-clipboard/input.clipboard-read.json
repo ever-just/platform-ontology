@@ -1,0 +1,270 @@
+{
+  "id": "web.input.clipboard-read",
+  "name": "Async Clipboard read",
+  "kind": "permission",
+  "group": "input-clipboard",
+  "subgroup": "Clipboard",
+  "tags": [
+    "paste"
+  ],
+  "plain": "Asks to read what is on the clipboard.",
+  "meaning": "Can show anything the person copied: passwords, addresses, personal messages. Chromium asks permission; Firefox and Safari show a one-time Paste menu so the person approves each read.",
+  "lifecycle": [
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "navigator.clipboard.read(), readText(); clipboardchange event",
+      "permission_name": "clipboard-read",
+      "permissions_policy": "clipboard-read",
+      "bcd": [
+        "api.Clipboard.read",
+        "api.Clipboard.readText"
+      ],
+      "access": {
+        "grant": "prompt",
+        "prompt_ui": "Chromium: permission prompt when document is focused. Firefox 125+ and Safari: floating Paste menu available after 1 second, skipped for same-origin content.",
+        "secure_context": true,
+        "user_gesture": true,
+        "persistence": "Chromium: persistent per origin; Firefox and Safari: none",
+        "revocation": "Site settings; Permissions API clipboard-read",
+        "iframe": "Cross-origin iframes need allow=\"clipboard-read\"",
+        "steps": [
+          "User gesture (transient activation) or Chromium grant",
+          "navigator.clipboard.readText()",
+          "Prompt or Paste menu appears",
+          "Promise resolves with text or ClipboardItems"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "76",
+          "note": "read 66",
+          "date": "2019-07-30"
+        },
+        "edge": {
+          "s": "y",
+          "v": "79",
+          "note": "",
+          "date": "2020-01-15"
+        },
+        "firefox": {
+          "s": "y",
+          "v": "127",
+          "note": "readText with Paste menu",
+          "date": "2024-06-11"
+        },
+        "safari": {
+          "s": "y",
+          "v": "13.1",
+          "note": "Paste menu",
+          "date": "2020-03-24"
+        },
+        "ios_safari": {
+          "s": "y",
+          "v": "13.4",
+          "note": "",
+          "date": "2020-03-24"
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "76",
+          "note": "",
+          "date": "2019-07-30"
+        },
+        "samsung": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "object",
+    "metric": "Clipboard text or items",
+    "update": "on call",
+    "fields": [
+      {
+        "name": "text/plain",
+        "type": "string",
+        "unit": "text",
+        "range": "any",
+        "precision": "1 byte"
+      },
+      {
+        "name": "text/html",
+        "type": "string",
+        "unit": "html",
+        "range": "any",
+        "precision": "1 byte"
+      },
+      {
+        "name": "image/png",
+        "type": "binary",
+        "unit": "bytes",
+        "range": "any",
+        "precision": "pixels"
+      },
+      {
+        "name": "image/svg+xml",
+        "type": "binary",
+        "unit": "bytes",
+        "range": "optional type",
+        "precision": "bytes"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can see what you last copied, after you allow it or tap Paste",
+    "user_action": "You tap Paste on the page, or allow clipboard access when the browser asks",
+    "can": [
+      "See text, images or other items you copied, one request at a time",
+      "Fill a form from what you copied",
+      "Show items you copied in any app, not just on this page"
+    ],
+    "cannot": [
+      "Peek at your clipboard in the background while you are in another tab or app",
+      "Get your clipboard in Chrome or Edge when the page is not in focus",
+      "Skip the small Paste button in Firefox and Safari; you tap it each time",
+      "Change your clipboard; that is a separate permission"
+    ],
+    "reach": 2,
+    "reach_label": "Each time you allow or paste",
+    "differs": "Chrome and Edge ask once for permission. Firefox and Safari show a small Paste button you tap every time."
+  },
+  "story": {
+    "what_it_is": "A site asks to read what you last copied.",
+    "icon": "clipboard-paste",
+    "tags": [
+      "Clipboard",
+      "Asks first",
+      "Sensitive"
+    ],
+    "marketing": [
+      {
+        "vendor": "web.dev (Google)",
+        "name": "Async Clipboard API",
+        "pitch": "Google pitches modern clipboard access as a safer, asynchronous way to copy and paste images and text, with a permission prompt.",
+        "url": "https://web.dev/articles/async-clipboard"
+      }
+    ],
+    "for_you": "A prompt asks if the site may see text and images you copied. Safari and Firefox show a small Paste button instead. If you say no, the page cannot see your clipboard.",
+    "for_makers": "Makers use it for paste buttons in editors and image tools, so users do not have to press keyboard shortcuts. It also powers paste from phone to desktop style features.",
+    "use_cases": [
+      {
+        "type": "creative",
+        "example": "A web design tool lets you paste an image you copied from another app straight onto the canvas.",
+        "apps": [
+          "Figma",
+          "Canva",
+          "Photopea"
+        ]
+      },
+      {
+        "type": "productivity",
+        "example": "A notes or spreadsheet web app pastes a copied table from a doc and keeps the layout.",
+        "apps": [
+          "Google Docs",
+          "Notion"
+        ]
+      },
+      {
+        "type": "payments",
+        "example": "A payment page reads a copied address or number to fill the form, saving typing errors.",
+        "apps": []
+      },
+      {
+        "type": "developer",
+        "example": "A code editor in the browser pastes a snippet with formatting kept.",
+        "apps": [
+          "GitHub Codespaces",
+          "VS Code for the Web"
+        ]
+      },
+      {
+        "type": "messaging",
+        "example": "A chat web app lets you paste a screenshot from your clipboard to send it right away.",
+        "apps": [
+          "Slack",
+          "Discord"
+        ]
+      },
+      {
+        "type": "security",
+        "example": "Malicious pages can try to read a copied password or crypto address if a person says yes.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Could see passwords or private text",
+      "Prompt could be rushed"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Needs focus and gesture",
+    "Not in workers",
+    "Firefox and Safari do not support the clipboard-read permission name"
+  ],
+  "scores": {
+    "sensitivity": 5,
+    "utility": 4,
+    "fingerprint_bits": null,
+    "friction": 2
+  },
+  "value": {
+    "legit_uses": [
+      "Paste buttons",
+      "Image paste"
+    ],
+    "abuse": [
+      "Stealing passwords copied from a manager"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2018-12",
+      "browser": "chrome",
+      "version": "66",
+      "change": "clipboard-read permission ships"
+    },
+    {
+      "date": "2024-04",
+      "browser": "firefox",
+      "version": "125",
+      "change": "Async read via Paste menu"
+    },
+    {
+      "date": "2020-03",
+      "browser": "safari",
+      "version": "13.1",
+      "change": "Async clipboard API baseline"
+    }
+  ],
+  "related": [
+    "web.input.clipboard-write"
+  ],
+  "refs": [
+    {
+      "t": "mdn",
+      "label": "MDN Clipboard API",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/Clipboard_API"
+    },
+    {
+      "t": "spec",
+      "label": "W3C Clipboard API and events",
+      "url": "https://www.w3.org/TR/clipboard-apis/"
+    }
+  ],
+  "confidence": "verified"
+}

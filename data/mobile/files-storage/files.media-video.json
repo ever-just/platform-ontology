@@ -1,0 +1,197 @@
+{
+  "id": "mob.files.media-video",
+  "name": "Read videos",
+  "kind": "permission",
+  "group": "files-storage",
+  "subgroup": "Media",
+  "tags": [
+    "runtime-permission",
+    "video",
+    "play-restricted"
+  ],
+  "plain": "Lets the app read all videos in the shared gallery.",
+  "meaning": "Exposes recorded and downloaded videos. Same Play restrictions as photos.",
+  "lifecycle": [
+    "in-session"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "f",
+      "v": "13",
+      "api": 33,
+      "permission": "READ_MEDIA_VIDEO",
+      "protection": "dangerous",
+      "grant": "prompt",
+      "prompt_ui": "Same Photos and videos prompt as images",
+      "persistence": "Until revoked or auto-reset",
+      "revocation": "Settings > Apps > Permissions > Photos and videos",
+      "store_policy": "Play: Photo and Video Permissions declaration",
+      "api_surface": "MediaStore.Video",
+      "note": "Grouped with READ_MEDIA_IMAGES in the same dialog."
+    },
+    "ios": {
+      "s": "y",
+      "v": "14",
+      "permission": "NSPhotoLibraryUsageDescription",
+      "protection": "prompt",
+      "grant": "prompt",
+      "prompt_ui": "Photos prompt covers photos and videos",
+      "persistence": "Until revoked",
+      "revocation": "Settings > Privacy & Security > Photos",
+      "store_policy": "App Review 5.1.1",
+      "api_surface": "PHAsset mediaType video",
+      "note": "Same grant as images on iOS."
+    }
+  },
+  "web_equivalents": [
+    "web.files.file-input"
+  ],
+  "data": {
+    "type": "list",
+    "metric": "Video files",
+    "update": "on demand",
+    "fields": []
+  },
+  "limits": {
+    "headline": "Can open every video in your gallery on Android, and on iPhone with the photos permission",
+    "user_action": "You tap Allow on the Photos and videos prompt",
+    "can": [
+      "List and open videos in your shared gallery on Android",
+      "Play videos inside the app",
+      "Open videos on iPhone with the same permission as photos",
+      "Upload videos you choose for editing or backup"
+    ],
+    "cannot": [
+      "See only some videos when you pick Allow all; choose Select to limit it",
+      "Use a separate prompt on iPhone; one Photos permission covers both",
+      "Open private folders of other apps",
+      "Keep access after you turn it off in Settings"
+    ],
+    "reach": 3,
+    "reach_label": "All videos, once you allow",
+    "differs": "Android groups videos with photos in the same prompt on newer versions. iPhone uses one Photos permission for both."
+  },
+  "story": {
+    "what_it_is": "Lets an app read every video in your shared gallery.",
+    "icon": "video",
+    "tags": [
+      "Permission",
+      "Asks first",
+      "Video"
+    ],
+    "marketing": [
+      {
+        "vendor": "Google",
+        "name": "Granular media permissions",
+        "pitch": "Android 13 notes: apps ask for photos, video or audio separately instead of all storage.",
+        "url": "https://developer.android.com/about/versions/13/behavior-changes-13#granular-media-permissions"
+      }
+    ],
+    "for_you": "A pop up asks to access videos. Allow all means the app can see every clip, including recordings of kids, screen recordings and downloaded files.",
+    "for_makers": "Needed by video editors and gallery apps. Google Play now restricts it to apps where full access is truly core, and asks others to use the Photo Picker.",
+    "use_cases": [
+      {
+        "type": "creative",
+        "example": "A video editor opens your clips so you can cut and mix them.",
+        "apps": [
+          "CapCut"
+        ]
+      },
+      {
+        "type": "social",
+        "example": "A short video app lets you pick a clip from your gallery to post.",
+        "apps": [
+          "TikTok"
+        ]
+      },
+      {
+        "type": "utilities",
+        "example": "A backup app copies new videos to the cloud.",
+        "apps": [
+          "Google Photos"
+        ]
+      },
+      {
+        "type": "media",
+        "example": "A video player finds movies saved on your phone.",
+        "apps": [
+          "VLC"
+        ]
+      },
+      {
+        "type": "education",
+        "example": "A school app lets a student upload a video assignment.",
+        "apps": []
+      },
+      {
+        "type": "messaging",
+        "example": "A chat app sends a clip from your gallery.",
+        "apps": []
+      },
+      {
+        "type": "security",
+        "example": "Bad apps could look through videos for private moments.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Sees every clip",
+      "Often includes private moments"
+    ],
+    "android_note": "Needs READ_MEDIA_VIDEO, and Play restricts it like photos.",
+    "ios_note": "iOS covers videos in its Photos permission."
+  },
+  "technical_bounds": [
+    "Same limits as images"
+  ],
+  "scores": {
+    "sensitivity": 5,
+    "utility": 3,
+    "fingerprint_bits": null,
+    "friction": 2
+  },
+  "value": {
+    "legit_uses": [
+      "Video editors"
+    ],
+    "abuse": [
+      "Content scraping"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2022-08",
+      "platform": "android",
+      "version": "13 (API 33)",
+      "change": "READ_MEDIA_VIDEO introduced"
+    }
+  ],
+  "related": [
+    "mob.files.media-images"
+  ],
+  "refs": [
+    {
+      "t": "android",
+      "label": "Android 13: Granular media permissions",
+      "url": "https://developer.android.com/about/versions/13/behavior-changes-13#granular-media-permissions"
+    },
+    {
+      "t": "policy",
+      "label": "Google Play: Photo and Video Permissions policy",
+      "url": "https://support.google.com/googleplay/android-developer/answer/14115180"
+    },
+    {
+      "t": "apple",
+      "label": "Apple: Delivering an enhanced privacy experience in your photos app",
+      "url": "https://developer.apple.com/documentation/photokit/delivering-an-enhanced-privacy-experience-in-your-photos-app"
+    }
+  ],
+  "confidence": "verified"
+}

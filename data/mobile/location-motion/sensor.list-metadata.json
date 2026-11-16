@@ -1,0 +1,179 @@
+{
+  "id": "mob.sensor.list-metadata",
+  "name": "Sensor list and vendor metadata",
+  "kind": "signal",
+  "group": "location-motion",
+  "subgroup": "Motion",
+  "tags": [
+    "sensor-list",
+    "fingerprint"
+  ],
+  "plain": "Lists the sensors the phone has, with vendor, resolution and range.",
+  "meaning": "The set of sensors with vendor and power numbers differs by model and firmware and is a stable device identifier.",
+  "lifecycle": [
+    "on-launch",
+    "in-session"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "y",
+      "v": "1.5",
+      "api": 3,
+      "permission": "",
+      "protection": "none",
+      "grant": "none",
+      "prompt_ui": "",
+      "persistence": "",
+      "revocation": "",
+      "store_policy": "",
+      "api_surface": "SensorManager.getSensorList(TYPE_ALL), Sensor.getVendor(), getResolution(), getMaximumRange()",
+      "note": "Typically 20 to 60 sensors"
+    },
+    "ios": {
+      "s": "p",
+      "v": "4.0",
+      "permission": "none",
+      "protection": "none",
+      "grant": "none",
+      "prompt_ui": "",
+      "persistence": "",
+      "revocation": "",
+      "store_policy": "",
+      "api_surface": "Only availability booleans",
+      "note": ""
+    }
+  },
+  "data": {
+    "type": "list",
+    "metric": "Sensor list",
+    "update": "Static",
+    "fields": [
+      {
+        "name": "sensors",
+        "type": "list",
+        "unit": "",
+        "range": "20 to 60 on Android",
+        "precision": "exact"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can list the sensors your phone has, with maker, range and precision",
+    "user_action": "Nothing. It happens when the app or game checks what hardware it can use",
+    "can": [
+      "List all sensors on Android, often 20 to 60",
+      "See each sensor's maker, resolution and range",
+      "Check which sensors exist on iPhone as yes or no answers",
+      "Use the list as a clue in a device fingerprint"
+    ],
+    "cannot": [
+      "Get maker, range and precision details on iPhone; only yes or no answers",
+      "See your sensor data from the list itself",
+      "Change a sensor"
+    ],
+    "reach": 1,
+    "reach_label": "A list of hardware details",
+    "differs": "Android shows full details. iPhone shows only whether each sensor is available."
+  },
+  "story": {
+    "what_it_is": "An app can list your phone's sensors, with maker names and ranges, which differ by model.",
+    "icon": "list",
+    "tags": [
+      "Sensors",
+      "Silent",
+      "Fingerprint"
+    ],
+    "marketing": [
+      {
+        "vendor": "Google",
+        "name": "Sensors overview",
+        "pitch": "Android lets apps list the sensors on a device so they can use what is there.",
+        "url": "https://developer.android.com/develop/sensors-and-location/sensors/sensors_overview"
+      }
+    ],
+    "for_you": "You do not see it. Apps just check whether your phone has a gyroscope or a heart rate sensor before offering a feature. The list can also single out your model and firmware.",
+    "for_makers": "Makers use it to turn features on or off for each phone. The details, like vendor and range, also form a stable fingerprint of the model. It is more useful to trackers on Android than on iPhone.",
+    "use_cases": [
+      {
+        "type": "games",
+        "example": "A tilt controlled game checks that you have a gyroscope before it shows motion controls.",
+        "apps": []
+      },
+      {
+        "type": "ar-vr",
+        "example": "An AR app checks for the sensors it needs and tells you if your phone is too old.",
+        "apps": [
+          "Pokemon GO"
+        ]
+      },
+      {
+        "type": "fitness",
+        "example": "A fitness app checks for a step counter and heart rate sensor to decide what to show.",
+        "apps": [
+          "Samsung Health"
+        ]
+      },
+      {
+        "type": "analytics",
+        "example": "An analytics SDK reads the vendor names and ranges to tell which exact phone model you have.",
+        "apps": []
+      },
+      {
+        "type": "security",
+        "example": "An anti fraud tool sees a sensor list that looks like an emulator and blocks the sign up.",
+        "apps": []
+      },
+      {
+        "type": "developer",
+        "example": "A developer logs sensor lists in crash reports to find a bug that hits one phone model.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Fingerprint of the model",
+      "Emulator detection can block users"
+    ],
+    "android_note": "Android apps can list every sensor with vendor, resolution and range with no prompt.",
+    "ios_note": "iPhone has no public list, but apps can test sensors one by one."
+  },
+  "technical_bounds": [
+    "iOS exposes availability only"
+  ],
+  "scores": {
+    "sensitivity": 1,
+    "utility": 2,
+    "fingerprint_bits": 6,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Feature detection"
+    ],
+    "abuse": [
+      "Fingerprint"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "related": [
+    "mob.sensor.calibration"
+  ],
+  "refs": [
+    {
+      "t": "android",
+      "label": "Android: SensorManager",
+      "url": "https://developer.android.com/reference/android/hardware/SensorManager"
+    },
+    {
+      "t": "apple",
+      "label": "Apple: Core Motion",
+      "url": "https://developer.apple.com/documentation/coremotion"
+    }
+  ],
+  "confidence": "inferred"
+}

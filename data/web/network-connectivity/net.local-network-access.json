@@ -1,0 +1,242 @@
+{
+  "id": "web.net.local-network-access",
+  "name": "Local Network Access (LNA) permission",
+  "kind": "permission",
+  "group": "network-connectivity",
+  "subgroup": "Local network",
+  "tags": [
+    "lna",
+    "pna",
+    "local-network",
+    "loopback"
+  ],
+  "plain": "Chrome asks the user before a public website can reach devices on their local network.",
+  "meaning": "Chrome 142 added a prompt for requests to private IPs. Chrome 145 split it into local-network and loopback-network permissions, and 147 extended it to WebSocket and WebTransport. It replaced Private Network Access preflights.",
+  "lifecycle": [
+    "on-arrival"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "Permissions-Policy: local-network-access; fetch targetAddressSpace",
+      "permission_name": "local-network-access",
+      "permissions_policy": "local-network-access",
+      "access": {
+        "grant": "none",
+        "prompt_ui": "Look for and connect to any device on your local network",
+        "secure_context": true,
+        "user_gesture": false,
+        "persistence": "",
+        "revocation": "",
+        "iframe": "",
+        "steps": [
+          "Page requests a local address",
+          "Browser shows prompt",
+          "Request allowed or blocked"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "142",
+          "note": "",
+          "date": "2025-10-28"
+        },
+        "edge": {
+          "s": "y",
+          "v": "142",
+          "note": "",
+          "date": "2025-10-31"
+        },
+        "firefox": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "safari": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "ios_safari": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "142",
+          "note": "",
+          "date": "2025-10-28"
+        },
+        "samsung": {
+          "s": "y",
+          "v": "30.0",
+          "note": "",
+          "date": "2026-05-11"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "boolean",
+    "metric": "granted or denied",
+    "update": "",
+    "fields": [
+      {
+        "name": "permission",
+        "type": "string",
+        "unit": "",
+        "range": "granted, denied, prompt",
+        "precision": "exact"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can connect to devices on your home network, only if you allow it in Chrome",
+    "user_action": "You open a site and tap Allow on Chrome's local network pop up",
+    "can": [
+      "Look for and connect to printers, routers and smart home devices on your network once you allow it",
+      "Talk to local helper apps from a public website",
+      "Keep this access for the site until you take it back in site settings"
+    ],
+    "cannot": [
+      "Reach local devices before you tap Allow in Chrome 142 and newer",
+      "Work in Firefox or Safari, which do not offer this permission",
+      "Get around the pop up; the old silent checks were replaced by it",
+      "Reach your network from Chrome on iPhone"
+    ],
+    "reach": 2,
+    "reach_label": "Your local network, if allowed",
+    "differs": "Only Chrome and Edge ask. Firefox, Safari and every iPhone browser do not offer this permission."
+  },
+  "story": {
+    "what_it_is": "Chrome asks before a public website can talk to devices in your home or office network.",
+    "icon": "router",
+    "tags": [
+      "Permission",
+      "Network",
+      "Asks first"
+    ],
+    "marketing": [
+      {
+        "vendor": "Google Chrome",
+        "name": "Local Network Access",
+        "pitch": "Chrome now asks you first when a public website tries to reach devices on your local network, to stop sneaky probing.",
+        "url": "https://developer.chrome.com/blog/local-network-access"
+      }
+    ],
+    "for_you": "A pop up asks if the site may look for and connect to devices on your local network. If you say no, the site cannot reach your printer, speakers or router. Nothing changes if you say no and do not need that device.",
+    "for_makers": "Makers who build companion web apps for printers, smart speakers or developer tools must now ask first and explain why. It replaces older hidden checks with one clear permission. Sites that never ask lose silent access.",
+    "use_cases": [
+      {
+        "type": "smart-home",
+        "example": "A web dashboard for a smart home hub finds lights and thermostats on your network. Chrome asks first, then the page controls them from the browser.",
+        "apps": [
+          "Home Assistant"
+        ]
+      },
+      {
+        "type": "music",
+        "example": "A web player offers to send music to speakers in your living room. Chrome asks to find local devices before the speaker list shows up.",
+        "apps": [
+          "Sonos web controller"
+        ]
+      },
+      {
+        "type": "developer",
+        "example": "A developer opens a public docs site that talks to a tool running on their own network. They approve once so the page can reach it.",
+        "apps": []
+      },
+      {
+        "type": "enterprise",
+        "example": "A company's cloud admin page connects to an office printer or card reader by its local address, after a one time allow.",
+        "apps": []
+      },
+      {
+        "type": "games",
+        "example": "A browser game party site lists consoles or PCs on your Wi-Fi so you can start streaming a game to the web page.",
+        "apps": []
+      },
+      {
+        "type": "video",
+        "example": "A web casting page searches for TVs on your network and asks first, then shows your nearby TVs.",
+        "apps": [
+          "Chromecast"
+        ]
+      },
+      {
+        "type": "security",
+        "example": "A malicious ad tries to poke your router login. Chrome shows a prompt, which warns you that something odd is happening.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Easy to click allow",
+      "Exposes home devices if granted"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Only Chromium; Firefox and Safari have no equivalent prompt",
+    "Users can accept for the site persistently"
+  ],
+  "scores": {
+    "sensitivity": 1,
+    "utility": 3,
+    "fingerprint_bits": 1,
+    "friction": 2
+  },
+  "value": {
+    "legit_uses": "Local helper apps, smart home dashboards",
+    "abuse": "Local device probing if granted"
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2025-10",
+      "browser": "chrome",
+      "version": "142",
+      "change": "LNA prompt ships"
+    },
+    {
+      "date": "2026-02",
+      "browser": "chrome",
+      "version": "145",
+      "change": "Split into local-network and loopback-network (secondary sources)"
+    },
+    {
+      "date": "2026-04",
+      "browser": "chrome",
+      "version": "147",
+      "change": "Extended to WebSocket and WebTransport (secondary sources)"
+    }
+  ],
+  "related": [
+    "web.net.localhost-port-scanning"
+  ],
+  "refs": [
+    {
+      "t": "vendor",
+      "label": "Chrome Local Network Access",
+      "url": "https://developer.chrome.com/blog/local-network-access"
+    },
+    {
+      "t": "spec",
+      "label": "WICG Local Network Access",
+      "url": "https://wicg.github.io/local-network-access/"
+    },
+    {
+      "t": "chromestatus",
+      "label": "Chrome Platform Status",
+      "url": "https://chromestatus.com/features"
+    }
+  ],
+  "confidence": "verified"
+}

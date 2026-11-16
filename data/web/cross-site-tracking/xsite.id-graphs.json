@@ -1,0 +1,231 @@
+{
+  "id": "web.xsite.id-graphs",
+  "name": "Universal IDs: UID2, ID5, RampID",
+  "kind": "tracking",
+  "group": "cross-site-tracking",
+  "subgroup": "Before the visit",
+  "tags": [
+    "uid2",
+    "id5",
+    "rampid",
+    "identity-graph",
+    "email-based"
+  ],
+  "plain": "Shared advertising IDs derived from login email so ad partners can match people without cookies.",
+  "meaning": "A publisher sends a hashed or encrypted email at login; the ID vendor returns a token that ad platforms accept. UID2 (The Trade Desk, open source), ID5 and LiveRamp RampID let a person be recognised across sites and apps whenever they log in.",
+  "lifecycle": [
+    "signed-in",
+    "before-visit"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "Publisher JS SDK (UID2 SDK, ID5 API, LiveRamp ATS) and server APIs",
+      "access": {
+        "grant": "none",
+        "prompt_ui": "None",
+        "secure_context": false,
+        "user_gesture": false,
+        "persistence": "Tokens rotate; UID2 advertising tokens are short lived with refresh tokens valid for days to weeks (verify per vendor docs)",
+        "revocation": "Clear site data, browser privacy settings",
+        "iframe": "",
+        "steps": []
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "1",
+          "note": "Server and script based; independent of browser privacy features once the person signs in",
+          "date": "2008-12-11"
+        },
+        "edge": {
+          "s": "y",
+          "v": "1",
+          "note": "Server and script based; independent of browser privacy features once the person signs in",
+          "date": ""
+        },
+        "firefox": {
+          "s": "y",
+          "v": "1",
+          "note": "Server and script based; independent of browser privacy features once the person signs in",
+          "date": "2004-11-09"
+        },
+        "safari": {
+          "s": "y",
+          "v": "1",
+          "note": "Server and script based; independent of browser privacy features once the person signs in",
+          "date": "2003-06-23"
+        },
+        "ios_safari": {
+          "s": "y",
+          "v": "1",
+          "note": "Server and script based; independent of browser privacy features once the person signs in",
+          "date": "2007-06-29"
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "1",
+          "note": "Server and script based; independent of browser privacy features once the person signs in",
+          "date": ""
+        },
+        "samsung": {
+          "s": "y",
+          "v": "1",
+          "note": "Server and script based; independent of browser privacy features once the person signs in",
+          "date": "2013-04-27"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "string",
+    "metric": "Opaque token derived from email or phone",
+    "update": "refreshed on sign in and periodically",
+    "fields": []
+  },
+  "limits": {
+    "headline": "Can give you a shared ad ID based on your login email, with no cookie",
+    "user_action": "You sign in or give your email on a site that joins the system",
+    "can": [
+      "Turn your email into a shared ad ID",
+      "Let many ad partners recognize you with the same ID",
+      "Keep recognizing you after you clear cookies"
+    ],
+    "cannot": [
+      "Create an ID without you giving an email or logging in",
+      "Reach you on sites that do not take part",
+      "Stay the same if you use a different email",
+      "Give out your plain email; it uses a scrambled version, and some systems let you opt out"
+    ],
+    "reach": 4,
+    "reach_label": "A stable ID across many sites",
+    "differs": ""
+  },
+  "story": {
+    "what_it_is": "Shared ad IDs built from your login email so ad partners can match you without cookies.",
+    "icon": "network",
+    "tags": [
+      "Ads",
+      "Email",
+      "Identity"
+    ],
+    "marketing": [
+      {
+        "vendor": "The Trade Desk",
+        "name": "Unified ID 2.0",
+        "pitch": "UID2 is pitched as an open, email based ID for ad targeting after cookies, with opt out for people.",
+        "url": "https://unifiedid.com/docs/intro"
+      }
+    ],
+    "for_you": "You log in to a site with your email. The site may turn it into a token that ad partners accept. You do not see it, and it can follow you across sites and apps each time you log in.",
+    "for_makers": "Cookies are fading, so ad buyers want a stable login based ID. A publisher sends a hashed email, gets a token and sells it to ad buyers. Logged in audiences earn higher ad prices.",
+    "use_cases": [
+      {
+        "type": "ads",
+        "example": "A news site shares a UID2 token at login so advertisers can find you again on a streaming service.",
+        "apps": [
+          "UID2",
+          "The Washington Post"
+        ]
+      },
+      {
+        "type": "media",
+        "example": "A streaming service uses a login email token to match viewers to ads on TV and phones.",
+        "apps": [
+          "Hulu",
+          "Roku"
+        ]
+      },
+      {
+        "type": "games",
+        "example": "A game portal with logins sends a token so ad buyers can reach the same player on web and mobile.",
+        "apps": [
+          "LiveRamp RampID"
+        ]
+      },
+      {
+        "type": "analytics",
+        "example": "An advertiser measures reach across publishers using one ID, instead of counting the same person twice.",
+        "apps": [
+          "ID5",
+          "LiveRamp"
+        ]
+      },
+      {
+        "type": "shopping",
+        "example": "A retailer matches its customer list to an ID graph, to find them on other sites.",
+        "apps": [
+          "Walmart Connect"
+        ]
+      },
+      {
+        "type": "security",
+        "example": "People can opt out on the vendor site, but few know of it.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Follows you across sites and apps",
+      "Hard to opt out of"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Requires a user supplied email or phone",
+    "Opt-out portals exist (for example UID2 transparency and controls at transparentadvertising.org)",
+    "Raw email is not in the token but hashing is reversible by dictionary attack on guessable emails"
+  ],
+  "scores": {
+    "sensitivity": 5,
+    "utility": 4,
+    "fingerprint_bits": null,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Publisher monetisation on cookieless traffic",
+      "Cross device frequency control"
+    ],
+    "abuse": [
+      "Stable lifetime identifier tied to a real email",
+      "Matching offline data to online browsing"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2025-04",
+      "browser": "chrome",
+      "version": "135",
+      "change": "Google confirmed third-party cookies stay, so email based IDs complement rather than replace cookies"
+    }
+  ],
+  "related": [
+    "web.xsite.email-hash-identity",
+    "web.auth.cross-device-linking"
+  ],
+  "refs": [
+    {
+      "t": "vendor",
+      "label": "UID2 documentation",
+      "url": "https://unifiedid.com/docs/intro"
+    },
+    {
+      "t": "vendor",
+      "label": "ID5 documentation",
+      "url": "https://wiki.id5.io/"
+    },
+    {
+      "t": "vendor",
+      "label": "LiveRamp RampID",
+      "url": "https://docs.liveramp.com/"
+    }
+  ],
+  "confidence": "docs"
+}

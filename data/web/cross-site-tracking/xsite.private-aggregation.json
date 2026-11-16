@@ -1,0 +1,237 @@
+{
+  "id": "web.xsite.private-aggregation",
+  "name": "Private Aggregation API (removed)",
+  "kind": "tracking",
+  "group": "cross-site-tracking",
+  "subgroup": "Privacy Sandbox",
+  "tags": [
+    "private-aggregation",
+    "aggregation-service",
+    "privacy-sandbox",
+    "removed"
+  ],
+  "plain": "Noisy aggregate reports from Protected Audience and Shared Storage. Removed in Chrome 152 (Aug 2026).",
+  "meaning": "Worklet code could contribute values to histograms that a server summed with differential privacy noise. Retired Oct 2025, deprecated Chrome 144, removed in Chrome 152 (released Aug 25 2026). The Aggregation Service is scheduled for phaseout.",
+  "lifecycle": [
+    "after-leaving"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "privateAggregation.contributeToHistogram()",
+      "permissions_policy": "private-aggregation",
+      "bcd": [
+        "api.PrivateAggregation"
+      ],
+      "access": {
+        "grant": "none",
+        "prompt_ui": "None",
+        "secure_context": false,
+        "user_gesture": false,
+        "persistence": "Reports delayed 10 min to hours; budget per 10 min and 24 hours",
+        "revocation": "Clear site data, browser privacy settings",
+        "iframe": "",
+        "steps": []
+      },
+      "support": {
+        "chrome": {
+          "s": "r",
+          "v": "152",
+          "note": "Removed 2026-08-25",
+          "date": "2026-08-25"
+        },
+        "edge": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "firefox": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "safari": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "ios_safari": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "chrome_android": {
+          "s": "r",
+          "v": "152",
+          "note": "",
+          "date": "2026-08-25"
+        },
+        "samsung": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "event",
+    "metric": "Histogram contribution",
+    "update": "delayed batch",
+    "fields": [
+      {
+        "name": "budget",
+        "type": "integer",
+        "unit": "units per 10 min",
+        "range": "0 to 65536",
+        "precision": "exact"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can't send noisy ad totals from Chrome anymore, since it was removed in August 2026",
+    "user_action": "Nothing. It used to happen inside ad tests",
+    "can": [
+      "Have sent grouped reports with added noise from ad auctions",
+      "Have helped measure ads without naming you"
+    ],
+    "cannot": [
+      "Run in Chrome 152 or later",
+      "Name an individual in a report",
+      "Work in Edge, Firefox or Safari",
+      "Replace other ad measurement tools"
+    ],
+    "reach": 1,
+    "reach_label": "Removed",
+    "differs": ""
+  },
+  "story": {
+    "what_it_is": "A Chrome tool for adding up noisy ad numbers in secret. It has been removed.",
+    "icon": "chart-bar",
+    "tags": [
+      "Ads",
+      "Chrome",
+      "Retired"
+    ],
+    "marketing": [
+      {
+        "vendor": "Google Chrome",
+        "name": "Private Aggregation API",
+        "pitch": "Chrome pitched it as a way to measure ad results with summed, noised reports that hide any one person.",
+        "url": "https://privacysandbox.google.com/blog/update-on-plans-for-privacy-sandbox-technologies"
+      }
+    ],
+    "for_you": "You never saw it work. Ad code in a locked box could add a value to a tally that a server read only with random noise. It was removed in Chrome 152, so you will not meet it.",
+    "for_makers": "It was the reporting arm of Protected Audience and Shared Storage. Advertisers got totals without person level data. With those tools retired, the reports lost their reason to exist.",
+    "use_cases": [
+      {
+        "type": "ads",
+        "example": "An ad network counted how many people saw an ad in a group, with random noise so no single person showed.",
+        "apps": [
+          "Google Ads",
+          "Criteo"
+        ]
+      },
+      {
+        "type": "analytics",
+        "example": "A publisher tallied reach and frequency across sites without sharing a person level list.",
+        "apps": []
+      },
+      {
+        "type": "games",
+        "example": "A game ad campaign got a daily total of ad views and installs, in noisy form.",
+        "apps": []
+      },
+      {
+        "type": "media",
+        "example": "A video site reported how many viewers watched each ad past 50 percent, in aggregate.",
+        "apps": []
+      },
+      {
+        "type": "shopping",
+        "example": "A retailer measured the effect of a retargeting ad without a list of shoppers.",
+        "apps": [
+          "Criteo"
+        ]
+      },
+      {
+        "type": "security",
+        "example": "Fraud teams disliked the noise, because it made fake traffic harder to find.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Removed in Chrome",
+      "Noise made small campaigns hard to measure"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Contribution budget of 2^16 units per 10 min and per day per origin",
+    "Reports are encrypted to an Aggregation Service",
+    "Chrome only"
+  ],
+  "scores": {
+    "sensitivity": 2,
+    "utility": 2,
+    "fingerprint_bits": null,
+    "friction": 3
+  },
+  "value": {
+    "legit_uses": [
+      "Aggregate measurement (historical)"
+    ],
+    "abuse": [
+      "Not meaningful abuse; limited by noise"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2022-11",
+      "browser": "chrome",
+      "version": "107",
+      "change": "Shipped"
+    },
+    {
+      "date": "2026-01",
+      "browser": "chrome",
+      "version": "144",
+      "change": "Deprecated"
+    },
+    {
+      "date": "2026-08",
+      "browser": "chrome",
+      "version": "152",
+      "change": "Removed (stable Aug 25 2026)"
+    }
+  ],
+  "related": [
+    "web.xsite.shared-storage",
+    "web.xsite.attribution-reporting"
+  ],
+  "refs": [
+    {
+      "t": "vendor",
+      "label": "Privacy Sandbox feature status page (updated Aug 14, 2026)",
+      "url": "https://privacysandbox.google.com/overview/status"
+    },
+    {
+      "t": "news",
+      "label": "Privacy Sandbox history and removal timeline (checked Oct 2, 2026)",
+      "url": "https://hidekazu-konishi.com/entry/privacy_sandbox_history_and_timeline.html"
+    },
+    {
+      "t": "spec",
+      "label": "Private Aggregation spec",
+      "url": "https://patcg-individual-drafts.github.io/private-aggregation-api/"
+    }
+  ],
+  "confidence": "verified"
+}

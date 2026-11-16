@@ -1,0 +1,215 @@
+{
+  "id": "mob.os.app-shortcuts",
+  "name": "Launcher shortcuts and App Intents",
+  "kind": "capability",
+  "group": "os-integration-install",
+  "subgroup": "OS integration",
+  "tags": [
+    "shortcuts",
+    "app-intents",
+    "quick-actions",
+    "siri"
+  ],
+  "plain": "Apps add quick actions to the icon menu and expose actions to voice and automation.",
+  "meaning": "A long press on the icon shows a few actions; iOS App Intents also let Siri, Spotlight and Shortcuts run app actions. This puts app features into system surfaces.",
+  "lifecycle": [
+    "in-session",
+    "background"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "y",
+      "v": "7.1",
+      "api": 25,
+      "permission": "None",
+      "protection": "none",
+      "grant": "none",
+      "prompt_ui": "Long press on app icon",
+      "persistence": "Dynamic shortcuts reset on data clear; pinned shortcuts need user consent",
+      "revocation": "Remove from launcher",
+      "store_policy": "",
+      "api_surface": "ShortcutManager (dynamic, static, pinned); Capabilities for assistant",
+      "note": "Launcher shows about 4 to 5 shortcuts; per activity limit from getMaxShortcutCountPerActivity (typically 15)"
+    },
+    "ios": {
+      "s": "y",
+      "v": "9.0",
+      "permission": "None; Siri requires usage description for SiriKit",
+      "protection": "none",
+      "grant": "prompt",
+      "prompt_ui": "Siri and Shortcuts suggestions",
+      "persistence": "Persists with the app",
+      "revocation": "Settings > Siri and Search",
+      "store_policy": "",
+      "api_surface": "App Intents, SiriKit, UIApplicationShortcutItem (quick actions, iOS 9, up to 4 shown)",
+      "note": "Home Screen quick actions show at most 4 items (docs, from memory)"
+    }
+  },
+  "web_equivalents": [
+    "web.os.web-share-target"
+  ],
+  "data": {
+    "type": "list",
+    "metric": "Shortcuts",
+    "update": "Static or dynamic",
+    "fields": [
+      {
+        "name": "shown",
+        "type": "integer",
+        "unit": "count",
+        "range": "about 4 to 5",
+        "precision": "approx"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can add quick actions to the icon menu, and offer actions to voice and automation",
+    "user_action": "You long press the app icon, or use Siri and Shortcuts suggestions",
+    "can": [
+      "Show about 4 or 5 quick actions when you long press the icon",
+      "Offer Siri and Shortcuts suggestions on iPhone",
+      "Add up to about 15 shortcuts per screen of the app on Android"
+    ],
+    "cannot": [
+      "Show more than about 4 on iPhone's Home Screen menu",
+      "Run an action without you tapping it",
+      "Add shortcuts on Android before version 7.1"
+    ],
+    "reach": 1,
+    "reach_label": "Only taps you choose",
+    "differs": "Android launchers show about 4 or 5 shortcuts. iPhone Home Screen quick actions show at most 4."
+  },
+  "story": {
+    "what_it_is": "Quick actions on an app's icon menu and in voice and automation.",
+    "icon": "layout-grid",
+    "tags": [
+      "Home screen",
+      "Shortcuts",
+      "Speed"
+    ],
+    "marketing": [
+      {
+        "vendor": "Google",
+        "name": "App shortcuts",
+        "pitch": "Google lets apps add quick actions to the launcher icon menu.",
+        "url": "https://developer.android.com/develop/ui/views/launch/shortcuts"
+      },
+      {
+        "vendor": "Apple",
+        "name": "App Intents",
+        "pitch": "Apple lets apps share actions to Siri, Spotlight and Shortcuts.",
+        "url": "https://developer.apple.com/documentation/appintents"
+      }
+    ],
+    "for_you": "You press and hold an app icon and see quick choices like New message or Start run. Siri may also suggest actions at the right time.",
+    "for_makers": "Makers get their best features closer to the home screen. A shortcut saves a tap and raises daily use.",
+    "use_cases": [
+      {
+        "type": "messaging",
+        "example": "A long press on a chat app shows New message and Scan code.",
+        "apps": [
+          "WhatsApp"
+        ]
+      },
+      {
+        "type": "fitness",
+        "example": "A fitness icon offers Start workout.",
+        "apps": [
+          "Strava"
+        ]
+      },
+      {
+        "type": "maps",
+        "example": "A maps app offers Go home or Go to work.",
+        "apps": [
+          "Google Maps"
+        ]
+      },
+      {
+        "type": "music",
+        "example": "A music app offers Play shuffle.",
+        "apps": [
+          "Spotify"
+        ]
+      },
+      {
+        "type": "productivity",
+        "example": "A notes app offers New note.",
+        "apps": [
+          "Notes"
+        ]
+      },
+      {
+        "type": "banking",
+        "example": "A bank app offers Pay or Deposit a check.",
+        "apps": []
+      },
+      {
+        "type": "games",
+        "example": "A game offers Continue or Daily reward.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Clutter",
+      "Suggestions can reveal habits"
+    ],
+    "android_note": "The launcher shows about 4 to 5 shortcuts per app.",
+    "ios_note": "Home screen quick actions show up to 4 items."
+  },
+  "technical_bounds": [
+    "Small count",
+    "User can remove"
+  ],
+  "scores": {
+    "sensitivity": 1,
+    "utility": 3,
+    "fingerprint_bits": null,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Fast access"
+    ],
+    "abuse": [
+      "None"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2016-10",
+      "platform": "android",
+      "version": "7.1 (API 25)",
+      "change": "App shortcuts introduced"
+    },
+    {
+      "date": "2015-09",
+      "platform": "ios",
+      "version": "iOS 9",
+      "change": "Home Screen quick actions introduced"
+    }
+  ],
+  "related": [
+    "mob.os.widgets"
+  ],
+  "refs": [
+    {
+      "t": "android",
+      "label": "Android: App shortcuts",
+      "url": "https://developer.android.com/develop/ui/views/launch/shortcuts"
+    },
+    {
+      "t": "apple",
+      "label": "Apple: App Intents",
+      "url": "https://developer.apple.com/documentation/appintents"
+    }
+  ],
+  "confidence": "docs"
+}

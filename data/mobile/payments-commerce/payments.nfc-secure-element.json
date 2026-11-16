@@ -1,0 +1,207 @@
+{
+  "id": "mob.payments.nfc-secure-element",
+  "name": "Contactless payments and NFC secure element",
+  "kind": "capability",
+  "group": "payments-commerce",
+  "subgroup": "Tap to pay",
+  "tags": [
+    "entitlement",
+    "nfc",
+    "hce",
+    "secure-element"
+  ],
+  "plain": "Lets an app act as a contactless card or key. Open on Android, entitlement gated on iOS.",
+  "meaning": "Android has allowed host card emulation since 2013. Apple opened it first in the EU in 2024.",
+  "lifecycle": [
+    "in-session",
+    "background"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "y",
+      "v": "4.4",
+      "api": 19,
+      "permission": "BIND_NFC_SERVICE (service), NFC (normal)",
+      "protection": "normal",
+      "grant": "install",
+      "prompt_ui": "Default payment app chooser in Settings",
+      "persistence": "Until changed",
+      "revocation": "Settings > Connected devices > Contactless payments",
+      "store_policy": "Play: payments policy",
+      "api_surface": "HostApduService, CardEmulation",
+      "note": "Host card emulation; no Google approval needed"
+    },
+    "ios": {
+      "s": "f",
+      "v": "17.4",
+      "permission": "com.apple.developer.nfc.hce (EU), com.apple.developer.secure-element-credential",
+      "protection": "entitlement",
+      "grant": "entitlement",
+      "prompt_ui": "Default contactless app setting; Face ID to pay",
+      "persistence": "Until changed",
+      "revocation": "Settings > Wallet & Apple Pay > Contactless Payments",
+      "store_policy": "Apple approves; originally EU only",
+      "api_surface": "CardSession, SecureElement APIs",
+      "note": "Opened in the EU with iOS 17.4; NFC and SE APIs in more regions from iOS 18.1"
+    }
+  },
+  "web_equivalents": [
+    "web.peripherals.web-nfc"
+  ],
+  "data": {
+    "type": "event",
+    "metric": "Payment tap",
+    "update": "per tap",
+    "fields": [
+      {
+        "name": "aid",
+        "type": "string",
+        "unit": "hex",
+        "range": "5 to 16 bytes",
+        "precision": ""
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can act as a contactless card or key on Android freely, but iPhone needs Apple approval",
+    "user_action": "You choose the app as your default payment app, then tap a reader",
+    "can": [
+      "Answer a payment terminal as a virtual card (Android, once you pick it as default)",
+      "Hold transit, access or loyalty credentials without the system wallet",
+      "Ask for Face ID to pay on iPhone where Apple allows it"
+    ],
+    "cannot": [
+      "Become the default payment app without you picking it",
+      "Work on iPhone without Apple's entitlement",
+      "Work on iPhone in every region; it began in the EU and grew from iOS 18.1"
+    ],
+    "reach": 3,
+    "reach_label": "Ongoing once you choose it",
+    "differs": "Android has allowed this since 2013 with no approval; iPhone opened it first in the EU in 2024 and in more regions from iOS 18.1."
+  },
+  "story": {
+    "what_it_is": "Lets an app act as a contactless card or key, held in the phone's secure chip or in software.",
+    "icon": "smartphone-nfc",
+    "tags": [
+      "Payments",
+      "NFC",
+      "Keys"
+    ],
+    "marketing": [
+      {
+        "vendor": "Apple",
+        "name": "NFC and SE Platform",
+        "pitch": "Apple opened the phone's secure tap hardware so approved apps can offer in app tap to pay and keys.",
+        "url": "https://developer.apple.com/support/nfc-se-platform/"
+      }
+    ],
+    "for_you": "You hold your phone near a reader at a shop, a train gate or a car door. It works if the bank or key app has been allowed to do it. You do not need to open Apple Wallet or Google Wallet.",
+    "for_makers": "A bank or car maker can run its own tap experience and brand it. This avoids sharing the experience with the system wallet. Apple only opened this widely after European law and later in more countries.",
+    "use_cases": [
+      {
+        "type": "payments",
+        "example": "A bank wallet app takes a tap at a shop without using Apple Pay.",
+        "apps": []
+      },
+      {
+        "type": "travel",
+        "example": "A city transit app lets riders tap through the gate with a pass held in the app.",
+        "apps": []
+      },
+      {
+        "type": "automotive",
+        "example": "A car maker's app unlocks a vehicle when you hold your phone to the door handle.",
+        "apps": []
+      },
+      {
+        "type": "enterprise",
+        "example": "An office badge in a company app opens doors and checks you in.",
+        "apps": []
+      },
+      {
+        "type": "shopping",
+        "example": "A store app holds loyalty and payment in one tap.",
+        "apps": []
+      },
+      {
+        "type": "education",
+        "example": "A student ID opens dorm doors.",
+        "apps": []
+      },
+      {
+        "type": "security",
+        "example": "A hotel app holds a room key that expires at check out.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Stolen phone could open doors",
+      "Fraud with cloned cards",
+      "Rules differ by country"
+    ],
+    "android_note": "Android has let apps emulate a card in software (host card emulation) since 2013, with no approval from Google needed.",
+    "ios_note": "Apple first opened this in the EU with iOS 17.4 and added the NFC and secure chip APIs in more countries from iOS 18.1."
+  },
+  "technical_bounds": [
+    "Apple review and entitlement needed",
+    "Regional rollout on iOS"
+  ],
+  "scores": {
+    "sensitivity": 4,
+    "utility": 4,
+    "fingerprint_bits": null,
+    "friction": 3
+  },
+  "value": {
+    "legit_uses": [
+      "Wallets",
+      "Transit and keys"
+    ],
+    "abuse": [
+      "Relay attacks"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2013-10",
+      "platform": "android",
+      "version": "4.4 (API 19)",
+      "change": "Host card emulation"
+    },
+    {
+      "date": "2024-03",
+      "platform": "ios",
+      "version": "iOS 17.4",
+      "change": "HCE for contactless payments in the EU"
+    },
+    {
+      "date": "2024-10",
+      "platform": "ios",
+      "version": "iOS 18.1",
+      "change": "NFC and SE APIs in more regions"
+    }
+  ],
+  "related": [
+    "mob.peripherals.nfc"
+  ],
+  "refs": [
+    {
+      "t": "apple",
+      "label": "Apple: Core NFC",
+      "url": "https://developer.apple.com/documentation/corenfc"
+    },
+    {
+      "t": "android",
+      "label": "Android: Host based card emulation",
+      "url": "https://developer.android.com/develop/connectivity/nfc/hce"
+    }
+  ],
+  "confidence": "docs"
+}

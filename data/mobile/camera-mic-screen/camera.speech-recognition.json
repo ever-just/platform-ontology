@@ -1,0 +1,253 @@
+{
+  "id": "mob.camera.speech-recognition",
+  "name": "Speech recognition",
+  "kind": "permission",
+  "group": "camera-mic-screen",
+  "subgroup": "Audio",
+  "tags": [
+    "runtime-permission",
+    "speech",
+    "on-device",
+    "speech-recognition",
+    "dictation",
+    "speechanalyzer"
+  ],
+  "plain": "Turns the person's speech or audio files into text, possibly on Apple servers.",
+  "meaning": "Reveals what is said near the phone. iOS warns that audio may go to Apple servers; on-device modes avoid that.",
+  "lifecycle": [
+    "in-session"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "y",
+      "v": "1.0",
+      "api": 1,
+      "permission": "RECORD_AUDIO (no separate speech permission)",
+      "protection": "dangerous",
+      "grant": "prompt",
+      "prompt_ui": "Allow microphone while using, only this time, or don't allow",
+      "persistence": "Until revoked",
+      "revocation": "Settings > Apps > Permissions > Microphone",
+      "store_policy": "Play: microphone foreground service rules",
+      "api_surface": "SpeechRecognizer, createOnDeviceSpeechRecognizer (API 33)",
+      "note": "Android 13 added an on-device recognizer; Android 17 tightens background audio"
+    },
+    "ios": {
+      "s": "y",
+      "v": "10",
+      "permission": "NSSpeechRecognitionUsageDescription (plus NSMicrophoneUsageDescription for live audio)",
+      "protection": "prompt",
+      "grant": "prompt",
+      "prompt_ui": "Allow or Don't Allow speech recognition",
+      "persistence": "Until revoked",
+      "revocation": "Settings > Privacy & Security > Speech Recognition",
+      "store_policy": "App Review 5.1.1",
+      "api_surface": "SFSpeechRecognizer, SpeechAnalyzer (iOS 26)",
+      "note": "Server mode limited to about 1 minute per request and a daily quota; SpeechAnalyzer is on device"
+    }
+  },
+  "web_equivalents": [
+    "web.camera.speech-recognition"
+  ],
+  "data": {
+    "type": "stream",
+    "metric": "Transcription with confidence",
+    "update": "streaming",
+    "fields": [
+      {
+        "name": "maxDuration",
+        "type": "integer",
+        "unit": "seconds",
+        "range": "about 60 per server request on iOS",
+        "precision": ""
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can turn your speech into text, sometimes on Apple's servers",
+    "user_action": "You tap the microphone button and tap Allow for speech recognition",
+    "can": [
+      "Turn your speech or audio files into text",
+      "Use on device recognition on Android 13 and later, which stays on the phone",
+      "Use Apple's server mode, with a limit of about 1 minute per request and a daily quota (iPhone)"
+    ],
+    "cannot": [
+      "Use it after you tap Don't Allow",
+      "Listen in the background on Android 17 under tighter rules",
+      "Keep the audio on the phone when server mode is used on iPhone"
+    ],
+    "reach": 2,
+    "reach_label": "While you speak, per request",
+    "differs": "Both ask first. iPhone warns that audio may go to Apple's servers. Android 13 and later offers an on device mode."
+  },
+  "story": {
+    "what_it_is": "Turns your speech or an audio file into text, sometimes by sending it to Apple's servers.",
+    "icon": "ear",
+    "tags": [
+      "Voice",
+      "Asks first",
+      "Privacy"
+    ],
+    "marketing": [
+      {
+        "vendor": "Apple",
+        "name": "Speech framework",
+        "pitch": "Convert audio to text with on device or server based recognition, after the person agrees.",
+        "url": "https://developer.apple.com/documentation/speech/asking-permission-to-use-speech-recognition"
+      }
+    ],
+    "for_you": "A pop up says speech might be sent to Apple. After you allow it, you can dictate notes or search with your voice.",
+    "for_makers": "It offers dictation, captions and voice commands without building models. Server mode is stronger but sends audio off device, while on device mode keeps it private.",
+    "use_cases": [
+      {
+        "type": "productivity",
+        "example": "You dictate a note and see text appear as you talk.",
+        "apps": [
+          "Notes",
+          "Otter"
+        ]
+      },
+      {
+        "type": "video",
+        "example": "A video app adds live captions for a hard of hearing viewer.",
+        "apps": [
+          "Zoom",
+          "YouTube"
+        ]
+      },
+      {
+        "type": "games",
+        "example": "A word game lets you speak your guess.",
+        "apps": [
+          "Heads Up"
+        ]
+      },
+      {
+        "type": "education",
+        "example": "A language app listens to your accent and scores it.",
+        "apps": [
+          "Duolingo",
+          "Babbel"
+        ]
+      },
+      {
+        "type": "accessibility",
+        "example": "Voice control types and taps for someone who cannot use their hands.",
+        "apps": [
+          "Voice Control"
+        ]
+      },
+      {
+        "type": "smart-home",
+        "example": "You say a command and the app turns it into an action.",
+        "apps": [
+          "Apple Home"
+        ]
+      },
+      {
+        "type": "messaging",
+        "example": "You dictate a text message while driving.",
+        "apps": [
+          "Messages"
+        ]
+      }
+    ],
+    "risks": [
+      "Reveals what is said near the phone",
+      "Audio may go to servers"
+    ],
+    "android_note": "Android's SpeechRecognizer may use Google servers, and offline packs can be downloaded.",
+    "ios_note": "iOS warns that audio may go to Apple, and on device mode avoids that."
+  },
+  "technical_bounds": [
+    "Separate mic permission is also required for live audio",
+    "Server limits about 1 minute per request",
+    "Language pack limits"
+  ],
+  "scores": {
+    "sensitivity": 4,
+    "utility": 4,
+    "fingerprint_bits": null,
+    "friction": 2
+  },
+  "value": {
+    "legit_uses": [
+      "Dictation",
+      "Voice commands"
+    ],
+    "abuse": [
+      "Covert transcription"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2025-09",
+      "platform": "ios",
+      "version": "iOS 26",
+      "change": "SpeechAnalyzer for on device long form transcription"
+    },
+    {
+      "date": "2025-09",
+      "platform": "ios",
+      "version": "iOS 26",
+      "change": "SpeechAnalyzer"
+    },
+    {
+      "date": "2022-08",
+      "platform": "android",
+      "version": "13 (API 33)",
+      "change": "On device speech recognizer added"
+    },
+    {
+      "date": "2022-08",
+      "platform": "android",
+      "version": "13",
+      "change": "On device speech recognizer API"
+    },
+    {
+      "date": "2016-09",
+      "platform": "ios",
+      "version": "iOS 10",
+      "change": "Speech framework and prompt"
+    }
+  ],
+  "related": [
+    "mob.camera.recording-indicator",
+    "mob.ai.translation"
+  ],
+  "refs": [
+    {
+      "t": "apple",
+      "label": "Apple: Asking permission to use speech recognition",
+      "url": "https://developer.apple.com/documentation/speech/asking-permission-to-use-speech-recognition"
+    },
+    {
+      "t": "android",
+      "label": "Android: SpeechRecognizer",
+      "url": "https://developer.android.com/reference/android/speech/SpeechRecognizer"
+    },
+    {
+      "t": "apple",
+      "label": "Apple: Protected resources keys",
+      "url": "https://developer.apple.com/documentation/bundleresources/protected-resources"
+    },
+    {
+      "t": "apple",
+      "label": "Apple: SpeechAnalyzer",
+      "url": "https://developer.apple.com/documentation/speech/speechanalyzer"
+    },
+    {
+      "t": "android",
+      "label": "Android: createOnDeviceSpeechRecognizer",
+      "url": "https://developer.android.com/reference/android/speech/SpeechRecognizer#createOnDeviceSpeechRecognizer(android.content.Context)"
+    }
+  ],
+  "confidence": "docs"
+}

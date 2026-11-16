@@ -1,0 +1,226 @@
+{
+  "id": "web.xsite.a-ping",
+  "name": "Hyperlink ping attribute",
+  "kind": "tracking",
+  "group": "cross-site-tracking",
+  "subgroup": "After leaving",
+  "tags": [
+    "ping",
+    "anchor",
+    "click-tracking",
+    "hyperlink-auditing"
+  ],
+  "plain": "A link attribute that makes the browser send a POST to extra URLs when the link is clicked.",
+  "meaning": "Lets a site or ad network count clicks without a redirect or script. Body is the text PING, with Ping-From and Ping-To headers. Firefox ships it disabled by default, and blockers and Brave drop it.",
+  "lifecycle": [
+    "after-leaving"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "<a href=... ping=\"https://track.example/\">",
+      "bcd": [
+        "html.elements.a.ping"
+      ],
+      "access": {
+        "grant": "none",
+        "prompt_ui": "None",
+        "secure_context": false,
+        "user_gesture": false,
+        "persistence": "Fire and forget on click",
+        "revocation": "Clear site data, browser privacy settings",
+        "iframe": "",
+        "steps": []
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "12",
+          "note": "",
+          "date": "2011-06-07"
+        },
+        "edge": {
+          "s": "y",
+          "v": "17",
+          "note": "",
+          "date": "2018-04-30"
+        },
+        "firefox": {
+          "s": "f",
+          "v": "",
+          "note": "Off by default, browser.send_pings"
+        },
+        "safari": {
+          "s": "y",
+          "v": "6",
+          "note": "",
+          "date": "2012-07-25"
+        },
+        "ios_safari": {
+          "s": "y",
+          "v": "6",
+          "note": "",
+          "date": "2012-09-10"
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "18",
+          "note": "",
+          "date": "2012-06-27"
+        },
+        "samsung": {
+          "s": "y",
+          "v": "1.0",
+          "note": "",
+          "date": "2013-04-27"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "event",
+    "metric": "Ping POST",
+    "update": "per click",
+    "fields": []
+  },
+  "limits": {
+    "headline": "Can tell extra web addresses when you click a link, without you noticing",
+    "user_action": "You click a link that has a ping address attached",
+    "can": [
+      "Send a small message to extra addresses the moment you click",
+      "Report which link you clicked and which page you were on",
+      "Work even when the link opens a new page right away"
+    ],
+    "cannot": [
+      "Run unless you click that specific link",
+      "See what you do after the click on the next site",
+      "Work in Firefox by default, where it is switched off",
+      "Show a prompt or any sign that it happened"
+    ],
+    "reach": 1,
+    "reach_label": "One click at a time",
+    "differs": "Chrome, Edge, Safari and Samsung Internet send it. Firefox has it turned off by default."
+  },
+  "story": {
+    "what_it_is": "A link tag that makes the browser quietly tell another address when you click the link.",
+    "icon": "mouse-pointer-click",
+    "tags": [
+      "Links",
+      "Silent",
+      "Ads"
+    ],
+    "marketing": [
+      {
+        "vendor": "Mozilla",
+        "name": "a ping attribute",
+        "pitch": "Developer docs describe ping as a list of addresses that get a short POST when a link is followed.",
+        "url": "https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/a#ping"
+      }
+    ],
+    "for_you": "You click a link and go where you expected. You do not see that a tiny note was sent to a counting server as you left. It only happens in browsers that allow it, and Firefox keeps it off by default.",
+    "for_makers": "It lets a site count clicks with no redirect and no script, so the link feels fast. Search and ad systems like it for outbound click counts. It is easy for blockers to drop, so makers trust it less than scripts.",
+    "use_cases": [
+      {
+        "type": "ads",
+        "example": "You click a sponsored result and the browser pings the ad system to count the click, while you go straight to the advertiser page.",
+        "apps": [
+          "Google Search"
+        ]
+      },
+      {
+        "type": "analytics",
+        "example": "A news site counts how many readers click out to a partner article without adding any slow redirect.",
+        "apps": []
+      },
+      {
+        "type": "shopping",
+        "example": "A coupon site counts clicks to each store link so it can bill stores for traffic.",
+        "apps": [
+          "RetailMeNot"
+        ]
+      },
+      {
+        "type": "social",
+        "example": "A forum counts outbound clicks on shared links to show which posts send people away.",
+        "apps": [
+          "Reddit"
+        ]
+      },
+      {
+        "type": "games",
+        "example": "A game portal counts clicks on Play now links to partner game sites, so it can pay a revenue share.",
+        "apps": [
+          "CrazyGames",
+          "Poki"
+        ]
+      },
+      {
+        "type": "security",
+        "example": "A security team can spot odd ping targets in a page, which is a sign a link is being used for hidden counting.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Silent click counting",
+      "Not blockable by the person without a setting"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Only on link clicks, not on form submit",
+    "Disabled by default in Firefox",
+    "Cookies for the ping origin are sent",
+    "No response readable"
+  ],
+  "scores": {
+    "sensitivity": 3,
+    "utility": 2,
+    "fingerprint_bits": null,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Click counting without redirects"
+    ],
+    "abuse": [
+      "Hidden click tracking"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2011-06",
+      "browser": "chrome",
+      "version": "12",
+      "change": "Shipped"
+    },
+    {
+      "date": "2013-01",
+      "browser": "safari",
+      "version": "6",
+      "change": "Shipped in Safari"
+    }
+  ],
+  "related": [
+    "web.xsite.sendbeacon"
+  ],
+  "refs": [
+    {
+      "t": "mdn",
+      "label": "MDN a element ping",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/a#ping"
+    },
+    {
+      "t": "spec",
+      "label": "HTML Standard hyperlink auditing",
+      "url": "https://html.spec.whatwg.org/multipage/links.html#hyperlink-auditing"
+    }
+  ],
+  "confidence": "docs"
+}

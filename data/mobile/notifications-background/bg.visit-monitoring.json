@@ -1,0 +1,205 @@
+{
+  "id": "mob.bg.visit-monitoring",
+  "name": "Visit monitoring",
+  "kind": "capability",
+  "group": "notifications-background",
+  "subgroup": "Location in background",
+  "tags": [
+    "visits",
+    "places",
+    "dwell",
+    "ios"
+  ],
+  "plain": "iOS reports the places a person stays at (arrival and departure) without constant GPS.",
+  "meaning": "Infers home, work and frequent stops with low power. The app gets coarse arrival and departure times and places, a daily routine map.",
+  "lifecycle": [
+    "background"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "p",
+      "v": "10",
+      "api": 29,
+      "permission": "ACCESS_BACKGROUND_LOCATION",
+      "protection": "dangerous",
+      "grant": "prompt",
+      "prompt_ui": "Allow all the time",
+      "persistence": "Until revoked",
+      "revocation": "Settings > Location",
+      "store_policy": "Play: background location review",
+      "api_surface": "Activity Recognition Transition API (ACTIVITY_RECOGNITION) and geofence dwell transitions",
+      "note": "No place level visit API for third parties; dwell via geofence loitering delay"
+    },
+    "ios": {
+      "s": "y",
+      "v": "8.0",
+      "permission": "NSLocationAlwaysAndWhenInUseUsageDescription",
+      "protection": "prompt",
+      "grant": "prompt",
+      "prompt_ui": "Always authorization",
+      "persistence": "Delivered after the fact, relaunches app",
+      "revocation": "Settings > Privacy > Location",
+      "store_policy": "App Review 5.1.1",
+      "api_surface": "CLLocationManager.startMonitoringVisits(), CLVisit",
+      "note": "Visits delivered with arrival and departure dates and a coordinate with horizontal accuracy; delay minutes to hours"
+    }
+  },
+  "data": {
+    "type": "event",
+    "metric": "Visit",
+    "update": "On arrival or departure",
+    "fields": [
+      {
+        "name": "arrivalDate",
+        "type": "datetime",
+        "unit": "",
+        "range": "",
+        "precision": "1 s"
+      },
+      {
+        "name": "departureDate",
+        "type": "datetime",
+        "unit": "",
+        "range": "",
+        "precision": "1 s"
+      },
+      {
+        "name": "horizontalAccuracy",
+        "type": "float",
+        "unit": "m",
+        "range": "tens to hundreds",
+        "precision": "coarse"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can learn which places you stay at, with arrival and leave times, on iPhone",
+    "user_action": "You allow Always location for a feature that keeps a place history or journal",
+    "can": [
+      "Learn about stops, like home, work or a cafe, without constant tracking",
+      "Get arrival and departure times plus a rough spot on the map",
+      "Wake up in the background when a visit is noticed"
+    ],
+    "cannot": [
+      "Report a visit right away; delays can run from minutes to hours",
+      "Work at all without Always location",
+      "Know what you did there, only where and when",
+      "Match this on Android, which has no visit service for apps; it must guess with geofences"
+    ],
+    "reach": 3,
+    "reach_label": "Ongoing, but only places you stay",
+    "differs": "iPhone has a built in visit service. Android has none for outside apps and has to guess from geofences."
+  },
+  "story": {
+    "what_it_is": "iPhone can tell an app when you arrived at and left a place you stay, without constant GPS.",
+    "icon": "map-pin",
+    "tags": [
+      "Location",
+      "Asks first",
+      "Background"
+    ],
+    "marketing": [
+      {
+        "vendor": "Apple",
+        "name": "Visit monitoring",
+        "pitch": "Apple offers a low power way to be told when a person arrives at or leaves a place where they spend time.",
+        "url": "https://developer.apple.com/documentation/corelocation/cllocationmanager/startmonitoringvisits()"
+      }
+    ],
+    "for_you": "You never see it. An app quietly learns that you spend nights at one place and days at another, which can power helpful suggestions or a very detailed routine map.",
+    "for_makers": "Makers can learn home, work and frequent stops cheaply. It powers place memory and context features, and it is sensitive because routine shows who you are.",
+    "use_cases": [
+      {
+        "type": "maps",
+        "example": "A map app builds a timeline of places you visited today.",
+        "apps": [
+          "Apple Maps",
+          "Google Maps"
+        ]
+      },
+      {
+        "type": "productivity",
+        "example": "A journaling app adds the cafe where you wrote an entry.",
+        "apps": [
+          "Day One"
+        ]
+      },
+      {
+        "type": "ads",
+        "example": "An ad company infers which stores you visit most for audience groups.",
+        "apps": []
+      },
+      {
+        "type": "fitness",
+        "example": "A fitness app notices you are at the gym and offers to start a workout.",
+        "apps": []
+      },
+      {
+        "type": "shopping",
+        "example": "A loyalty app counts a visit to the store without any check in.",
+        "apps": []
+      },
+      {
+        "type": "analytics",
+        "example": "A research app measures how long people spend at parks.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Reveals home, work and routine",
+      "Sensitive places can be inferred"
+    ],
+    "android_note": "No exact match for third party apps. Apps use geofences with a dwell delay.",
+    "ios_note": "Visits come with arrival and departure times and a spot, but delivery can lag by minutes to hours."
+  },
+  "technical_bounds": [
+    "Delayed delivery",
+    "Only on iOS"
+  ],
+  "scores": {
+    "sensitivity": 5,
+    "utility": 3,
+    "fingerprint_bits": null,
+    "friction": 3
+  },
+  "value": {
+    "legit_uses": [
+      "Place based suggestions"
+    ],
+    "abuse": [
+      "Inferring home and work"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2014-09",
+      "platform": "ios",
+      "version": "iOS 8",
+      "change": "CLVisit monitoring introduced"
+    }
+  ],
+  "related": [
+    "mob.bg.significant-location",
+    "mob.bg.region-monitoring"
+  ],
+  "refs": [
+    {
+      "t": "apple",
+      "label": "Apple: startMonitoringVisits",
+      "url": "https://developer.apple.com/documentation/corelocation/cllocationmanager/startmonitoringvisits()"
+    },
+    {
+      "t": "android",
+      "label": "Android: Activity recognition transition",
+      "url": "https://developer.android.com/develop/sensors-and-location/location/transitions"
+    }
+  ],
+  "confidence": "docs"
+}

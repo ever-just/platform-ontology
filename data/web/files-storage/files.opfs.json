@@ -1,0 +1,257 @@
+{
+  "id": "web.files.opfs",
+  "name": "Origin Private File System (OPFS)",
+  "kind": "capability",
+  "group": "files-storage",
+  "subgroup": "Storage",
+  "tags": [
+    "opfs",
+    "storage",
+    "sqlite-wasm",
+    "quota"
+  ],
+  "plain": "Gives the page a private, fast file system inside the browser, with no prompt.",
+  "meaning": "A site can store large files and databases on disk invisibly to the person. It is sandboxed per site, but it can fill gigabytes of disk and survives until site data is cleared.",
+  "lifecycle": [
+    "in-session",
+    "after-leaving"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "await navigator.storage.getDirectory(); createSyncAccessHandle() in a worker",
+      "bcd": [
+        "api.StorageManager.getDirectory",
+        "api.FileSystemSyncAccessHandle"
+      ],
+      "access": {
+        "grant": "none",
+        "prompt_ui": "None (no browser prompt)",
+        "secure_context": true,
+        "user_gesture": false,
+        "activation": "none",
+        "persistence": "Persists until site data is cleared; best effort eviction until persist() is granted",
+        "revocation": "Nothing to revoke (no permission is stored)",
+        "iframe": "Same origin; storage partitioned by top level site in third party frames",
+        "steps": [
+          "Page calls navigator.storage.getDirectory()",
+          "Browser returns the root handle",
+          "Page creates files and opens sync handles in a worker"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "86",
+          "note": "",
+          "date": "2020-10-20"
+        },
+        "edge": {
+          "s": "y",
+          "v": "86",
+          "note": "",
+          "date": "2020-10-09"
+        },
+        "firefox": {
+          "s": "y",
+          "v": "111",
+          "note": "",
+          "date": "2023-03-14"
+        },
+        "safari": {
+          "s": "y",
+          "v": "15.2",
+          "note": "",
+          "date": "2021-12-13"
+        },
+        "ios_safari": {
+          "s": "y",
+          "v": "15.2",
+          "note": "All iOS browsers use WebKit",
+          "date": "2021-12-13"
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "109",
+          "note": "",
+          "date": "2023-01-10"
+        },
+        "samsung": {
+          "s": "y",
+          "v": "21.0",
+          "note": "",
+          "date": "2023-05-19"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "none",
+    "metric": "",
+    "update": "",
+    "fields": []
+  },
+  "limits": {
+    "headline": "Can keep large private files in the browser that you cannot browse yourself",
+    "user_action": "Nothing. It happens when the app stores data such as a database or editor project.",
+    "can": [
+      "Store files quickly in a private area inside the browser",
+      "Hold large data, up to the site's storage limit",
+      "Work offline with it",
+      "Do all this with no prompt"
+    ],
+    "cannot": [
+      "See your real files or folders on the computer",
+      "Be seen by other sites",
+      "Show up in your file manager",
+      "Keep data after you clear site data"
+    ],
+    "reach": 2,
+    "reach_label": "Its own private area only",
+    "differs": ""
+  },
+  "story": {
+    "what_it_is": "Gives a site its own private, fast file area inside the browser, with no prompt.",
+    "icon": "hard-drive",
+    "tags": [
+      "Files",
+      "Silent",
+      "Developer"
+    ],
+    "marketing": [
+      {
+        "vendor": "web.dev",
+        "name": "Origin Private File System",
+        "pitch": "Google pitches it as fast file storage inside the browser, used for databases, editors and large files.",
+        "url": "https://web.dev/articles/origin-private-file-system"
+      },
+      {
+        "vendor": "MDN",
+        "name": "Origin private file system",
+        "pitch": "Documents the private file area each site gets that is not visible to the user.",
+        "url": "https://developer.mozilla.org/en-US/docs/Web/API/File_System_API/Origin_private_file_system"
+      }
+    ],
+    "for_you": "You never see this area and never get asked. It is a private shelf the site uses to keep big files and databases. It is why some web apps open fast on the second visit.",
+    "for_makers": "It gives web apps fast, real file access without a prompt. That makes serious tools possible, such as databases and editors in the browser. It counts toward your storage quota.",
+    "use_cases": [
+      {
+        "type": "games",
+        "example": "A browser game keeps its large levels and save files here so loading is fast.",
+        "apps": []
+      },
+      {
+        "type": "creative",
+        "example": "A web photo or video editor keeps its working files here so edits are quick.",
+        "apps": [
+          "Photopea"
+        ]
+      },
+      {
+        "type": "developer",
+        "example": "A web database like SQLite runs in the browser and stores its data here.",
+        "apps": [
+          "SQLite Wasm"
+        ]
+      },
+      {
+        "type": "productivity",
+        "example": "A note app keeps a full offline copy of your notes in this space.",
+        "apps": []
+      },
+      {
+        "type": "video",
+        "example": "A video tool keeps a big clip here while you edit it.",
+        "apps": []
+      },
+      {
+        "type": "security",
+        "example": "A malicious site could fill this space with junk. Browsers limit the size.",
+        "apps": []
+      },
+      {
+        "type": "ads",
+        "example": "A tracking script could keep a hidden ID file here that cookie clearing may not remove.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Hidden storage",
+      "Can persist an ID"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Not visible in the person's file manager; cannot exchange files with the OS without pickers or downloads",
+    "Sync access handles only in dedicated workers (Chrome 102, Safari 15.2, Firefox 111)",
+    "Quota: Chrome up to about 60 percent of disk per origin; Firefox up to about 10 percent of disk (max 10 GiB per group, more with persist()); Safari about 60 percent in browser (docs, approximate)",
+    "navigator.storage.estimate() returns usage and quota (disk size hint; padded for privacy in Chrome)",
+    "Support: Chrome 86, Safari 15.2, Firefox 111; Safari write support through createWritable arrived in Safari 26 per BCD"
+  ],
+  "scores": {
+    "sensitivity": 2,
+    "utility": 5,
+    "fingerprint_bits": 2,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "SQLite and Wasm databases",
+      "Video editors",
+      "Offline first apps"
+    ],
+    "abuse": [
+      "Hiding large data on the device",
+      "Persistent tracking storage that survives cookie clearing"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2020-10",
+      "browser": "chrome",
+      "version": "86",
+      "change": "OPFS getDirectory ships"
+    },
+    {
+      "date": "2021-12",
+      "browser": "safari",
+      "version": "15.2",
+      "change": "OPFS ships in Safari"
+    },
+    {
+      "date": "2023-03",
+      "browser": "firefox",
+      "version": "111",
+      "change": "OPFS ships in Firefox"
+    }
+  ],
+  "related": [
+    "web.files.file-system-access-pickers",
+    "web.storage.storage-quota"
+  ],
+  "refs": [
+    {
+      "t": "mdn",
+      "label": "MDN Origin private file system",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/File_System_API/Origin_private_file_system"
+    },
+    {
+      "t": "spec",
+      "label": "WHATWG File System Standard",
+      "url": "https://fs.spec.whatwg.org/"
+    },
+    {
+      "t": "webkit",
+      "label": "WebKit storage policy updates",
+      "url": "https://webkit.org/blog/14403/updates-to-storage-policy/"
+    }
+  ],
+  "confidence": "docs"
+}

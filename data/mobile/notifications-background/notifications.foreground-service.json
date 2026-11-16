@@ -1,0 +1,234 @@
+{
+  "id": "mob.notifications.foreground-service",
+  "name": "Foreground service",
+  "kind": "capability",
+  "group": "notifications-background",
+  "subgroup": "Background work",
+  "tags": [
+    "normal-permission",
+    "foreground-service",
+    "play-declaration",
+    "fgs",
+    "declaration",
+    "ongoing-notification"
+  ],
+  "plain": "Lets the app run long tasks with a visible notification.",
+  "meaning": "A visible, user-aware background task such as navigation or a call. Types and time limits keep abuse in check.",
+  "lifecycle": [
+    "background"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "y",
+      "v": "9",
+      "api": 28,
+      "permission": "FOREGROUND_SERVICE plus FOREGROUND_SERVICE_<TYPE> (API 34)",
+      "protection": "normal",
+      "grant": "install",
+      "prompt_ui": "None; notification shown",
+      "persistence": "Not revocable; user can stop from Task Manager",
+      "revocation": "Settings > Task Manager or notification",
+      "store_policy": "Play: Foreground service types declaration required for apps targeting 14+; April 2026 preview removes geofencing as approved use effective Aug 26, 2026",
+      "api_surface": "Service.startForeground with type",
+      "note": "Android 14 requires a type; Android 15 dataSync and mediaProcessing limited to about 6 hours in 24; starting from background restricted since Android 12."
+    },
+    "ios": {
+      "s": "p",
+      "v": "13",
+      "permission": "UIBackgroundModes, BGTaskScheduler, ActivityKit",
+      "protection": "none",
+      "grant": "none",
+      "prompt_ui": "None",
+      "persistence": "n/a",
+      "revocation": "n/a",
+      "store_policy": "App Review 2.5.4: background modes only for relevant features",
+      "api_surface": "BGTaskScheduler, BGContinuedProcessingTask (iOS 26), Live Activities",
+      "note": "iOS limits background execution to defined modes; iOS 26 adds user-initiated continued processing."
+    }
+  },
+  "data": {
+    "type": "event",
+    "metric": "Foreground service run",
+    "update": "duration",
+    "fields": [
+      {
+        "name": "timeout",
+        "type": "integer",
+        "unit": "hours",
+        "range": "6 for dataSync",
+        "precision": "per 24 hours"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can run long tasks on Android with a visible notification, but only for a stated purpose",
+    "user_action": "You start something long, like a download, a workout or a file sync",
+    "can": [
+      "Keep a long task going while the app is closed, with a notification showing",
+      "Declare a type such as media, location or data sync, as Android 14 requires",
+      "Use a new user started task on iPhone in iOS 26"
+    ],
+    "cannot": [
+      "Run a data sync or media processing service past about 6 hours in 24 on Android 15",
+      "Start one from the background in many cases; Android restricts that",
+      "Run freely on iPhone, which allows only set background modes"
+    ],
+    "reach": 3,
+    "reach_label": "Long tasks with a notification",
+    "differs": "Android has foreground services with a notification. iPhone limits background work to set modes, plus user started processing in iOS 26."
+  },
+  "story": {
+    "what_it_is": "Lets an app run a long task in the background while showing a visible notification.",
+    "icon": "play",
+    "tags": [
+      "Android",
+      "Background",
+      "Transparency"
+    ],
+    "marketing": [
+      {
+        "vendor": "Google",
+        "name": "Foreground services",
+        "pitch": "Google describes foreground services as work the user is aware of, shown with a notification.",
+        "url": "https://developer.android.com/develop/background-work/services/fgs/service-types"
+      }
+    ],
+    "for_you": "You see a notification while an app is doing something long, like navigating or recording. It is the sign the app is allowed to keep going.",
+    "for_makers": "Makers use it for calls, navigation and fitness. Android requires a type and limits time so it is not a hiding place.",
+    "use_cases": [
+      {
+        "type": "maps",
+        "example": "A navigation app keeps giving directions with the screen off.",
+        "apps": [
+          "Google Maps",
+          "Waze"
+        ]
+      },
+      {
+        "type": "fitness",
+        "example": "A run tracker keeps recording your route while you check messages.",
+        "apps": [
+          "Strava"
+        ]
+      },
+      {
+        "type": "messaging",
+        "example": "A call keeps going after you leave the app.",
+        "apps": [
+          "WhatsApp"
+        ]
+      },
+      {
+        "type": "music",
+        "example": "A player keeps playing in your pocket.",
+        "apps": [
+          "Spotify"
+        ]
+      },
+      {
+        "type": "games",
+        "example": "A game download or a cloud stream continues while you do something else.",
+        "apps": [
+          "Xbox Cloud Gaming"
+        ]
+      },
+      {
+        "type": "smart-home",
+        "example": "A security app keeps a camera feed ready for alerts.",
+        "apps": []
+      },
+      {
+        "type": "media",
+        "example": "A screen recorder keeps capturing a live stream.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Can hide long running work",
+      "Battery drain"
+    ],
+    "android_note": "Android 14 needs a type. Android 15 limits data sync to about 6 hours in 24.",
+    "ios_note": "iOS only allows background modes. iOS 26 adds user started continued processing."
+  },
+  "technical_bounds": [
+    "Visible notification required",
+    "Types gate use cases"
+  ],
+  "scores": {
+    "sensitivity": 2,
+    "utility": 4,
+    "fingerprint_bits": null,
+    "friction": 1
+  },
+  "value": {
+    "legit_uses": [
+      "Navigation",
+      "Calls",
+      "Fitness"
+    ],
+    "abuse": [
+      "Hidden persistence"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": true,
+      "how": "Exodus snippets show FOREGROUND_SERVICE (4.1.637) and FOREGROUND_SERVICE_MICROPHONE (4.1.995) in the LinkedIn manifest. What feature drives it is not documented; voice recording in messages is the likely driver (inferred)."
+    }
+  },
+  "history": [
+    {
+      "date": "2024-09",
+      "platform": "android",
+      "version": "15 (API 35)",
+      "change": "Time limits for dataSync and mediaProcessing"
+    },
+    {
+      "date": "2023-10",
+      "platform": "android",
+      "version": "14 (API 34)",
+      "change": "Foreground service types and matching permissions required"
+    },
+    {
+      "date": "2023-10",
+      "platform": "android",
+      "version": "14 (API 34)",
+      "change": "Typed foreground services required with matching permission"
+    },
+    {
+      "date": "2021-10",
+      "platform": "android",
+      "version": "12 (API 31)",
+      "change": "Foreground services cannot be started from background with exceptions"
+    }
+  ],
+  "related": [
+    "mob.notifications.wake-lock",
+    "mob.notifications.boot-completed",
+    "mob.camera.microphone"
+  ],
+  "refs": [
+    {
+      "t": "android",
+      "label": "Android: Foreground service types",
+      "url": "https://developer.android.com/develop/background-work/services/fgs/service-types"
+    },
+    {
+      "t": "android",
+      "label": "Android 14 behavior changes (all apps)",
+      "url": "https://developer.android.com/about/versions/14/behavior-changes-all"
+    },
+    {
+      "t": "android",
+      "label": "Android 15 behavior changes (all apps)",
+      "url": "https://developer.android.com/about/versions/15/behavior-changes-all"
+    },
+    {
+      "t": "vendor",
+      "label": "Exodus Privacy report, com.linkedin.android 4.1.995 (Oct 2024)",
+      "url": "https://reports.exodus-privacy.eu.org/en/reports/513380/"
+    }
+  ],
+  "confidence": "docs"
+}

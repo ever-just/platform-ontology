@@ -1,0 +1,196 @@
+{
+  "id": "mob.sys.network-filter-dns",
+  "name": "Content filters and DNS proxy",
+  "kind": "capability",
+  "group": "system-control",
+  "subgroup": "Network",
+  "tags": [
+    "content-filter",
+    "dns",
+    "nefilter",
+    "ad-blocker"
+  ],
+  "plain": "Filters or blocks network traffic and domains system wide.",
+  "meaning": "Lets an app block ads, malware and categories. iOS content filters see flows but not content on unsupervised devices; DNS settings are encrypted.",
+  "lifecycle": [
+    "background"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "y",
+      "v": "9.0",
+      "api": 28,
+      "permission": "Private DNS setting; VpnService for local filters",
+      "protection": "none",
+      "grant": "settings",
+      "prompt_ui": "Settings > Network > Private DNS",
+      "persistence": "Until changed",
+      "revocation": "Settings",
+      "store_policy": "Play: VpnService policy",
+      "api_surface": "Private DNS, VpnService based blockers",
+      "note": "Many ad blockers use a local VPN."
+    },
+    "ios": {
+      "s": "y",
+      "v": "9.0",
+      "permission": "NEFilterDataProvider (supervised only), NEDNSProxyProvider, NEDNSSettingsManager",
+      "protection": "entitlement",
+      "grant": "prompt",
+      "prompt_ui": "Install filter prompt",
+      "persistence": "Until removed",
+      "revocation": "Settings > General > VPN & Device Management",
+      "store_policy": "",
+      "api_surface": "NEFilterDataProvider, NEDNSSettingsManager (iOS 14), Safari Content Blocker",
+      "note": "Safari Content Blocker works unsupervised; data filter needs supervision."
+    }
+  },
+  "data": {
+    "type": "stream",
+    "metric": "Flows",
+    "update": "continuous",
+    "fields": [
+      {
+        "name": "host",
+        "type": "string",
+        "unit": "name",
+        "range": "all DNS",
+        "precision": "exact"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can filter or block internet traffic and domains across the phone once you set it up",
+    "user_action": "You turn on a blocker app, pick a Private DNS, or tap Allow on the filter prompt",
+    "can": [
+      "Block ads, malware and categories of sites",
+      "Route traffic through a local VPN to filter it (Android)",
+      "Use Safari content blockers on iPhone without supervision"
+    ],
+    "cannot": [
+      "See page content with an iPhone content filter unless the phone is supervised",
+      "Work before you turn it on in Settings or accept the prompt",
+      "Use the iPhone data filter on an unsupervised phone"
+    ],
+    "reach": 4,
+    "reach_label": "All traffic, once enabled",
+    "differs": "Android uses Private DNS or a local VPN; iPhone uses Safari blockers, DNS settings and supervised only data filters."
+  },
+  "story": {
+    "what_it_is": "Filters or blocks network traffic and websites across the whole phone.",
+    "icon": "filter",
+    "tags": [
+      "Network",
+      "Blocking",
+      "Control"
+    ],
+    "marketing": [],
+    "for_you": "You install an app that blocks ads, trackers or bad sites in every app and browser. Pages load faster and fewer ads show. A key or lock icon may appear in the status bar.",
+    "for_makers": "Ad blockers, parental filters and malware guards need to see where traffic goes. The tool can block whole lists of domains. It also sees the sites you visit, so trust in the maker matters.",
+    "use_cases": [
+      {
+        "type": "security",
+        "example": "A DNS blocker stops phishing and malware sites for the whole phone.",
+        "apps": [
+          "NextDNS",
+          "Cloudflare 1.1.1.1 for Families"
+        ]
+      },
+      {
+        "type": "kids",
+        "example": "A parent blocks adult sites and social apps on a child's phone.",
+        "apps": []
+      },
+      {
+        "type": "ads",
+        "example": "A blocker removes ads and trackers inside games and news apps.",
+        "apps": [
+          "AdGuard"
+        ]
+      },
+      {
+        "type": "enterprise",
+        "example": "A company blocks risky categories on staff phones.",
+        "apps": []
+      },
+      {
+        "type": "media",
+        "example": "A news reader loads faster with ads stripped.",
+        "apps": []
+      },
+      {
+        "type": "games",
+        "example": "A filter blocks game ad networks so free games play with fewer interruptions.",
+        "apps": []
+      },
+      {
+        "type": "analytics",
+        "example": "A privacy app shows which apps call which tracker domains.",
+        "apps": [
+          "Lockdown Privacy"
+        ]
+      }
+    ],
+    "risks": [
+      "Maker can see your sites",
+      "Breaks some apps",
+      "Trust in the filter"
+    ],
+    "android_note": "Many ad blockers use a local VPN on Android.",
+    "ios_note": "Safari content blockers work on any iPhone. A full network data filter needs a supervised device."
+  },
+  "technical_bounds": [
+    "iOS flow filter limited to supervised devices"
+  ],
+  "scores": {
+    "sensitivity": 4,
+    "utility": 3,
+    "fingerprint_bits": 1,
+    "friction": 2
+  },
+  "value": {
+    "legit_uses": [
+      "Ad blocking",
+      "Parental control"
+    ],
+    "abuse": [
+      "Browsing history capture"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2020-09",
+      "platform": "ios",
+      "version": "iOS 14",
+      "change": "Encrypted DNS settings API"
+    },
+    {
+      "date": "2018-08",
+      "platform": "android",
+      "version": "9",
+      "change": "Private DNS"
+    }
+  ],
+  "related": [
+    "mob.system.network-extension"
+  ],
+  "refs": [
+    {
+      "t": "apple",
+      "label": "Apple: NetworkExtension filters",
+      "url": "https://developer.apple.com/documentation/networkextension/filtering-network-traffic"
+    },
+    {
+      "t": "android",
+      "label": "Android: Private DNS",
+      "url": "https://developer.android.com/privacy-and-security/security-config"
+    }
+  ],
+  "confidence": "docs"
+}

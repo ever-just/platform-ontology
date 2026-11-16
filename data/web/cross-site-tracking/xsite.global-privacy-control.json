@@ -1,0 +1,248 @@
+{
+  "id": "web.xsite.global-privacy-control",
+  "name": "Global Privacy Control (GPC)",
+  "kind": "signal",
+  "group": "cross-site-tracking",
+  "subgroup": "Consent",
+  "tags": [
+    "gpc",
+    "sec-gpc",
+    "opt-out",
+    "ccpa"
+  ],
+  "plain": "A browser setting that tells every site the person opts out of sale and sharing.",
+  "meaning": "Sent as Sec-GPC: 1 and navigator.globalPrivacyControl. Legally binding opt out in California, Colorado (Jul 2024), Connecticut and Texas (2025). California fined Sephora $1.2M in 2022 and Healthline $1.55M in 2025 for ignoring it.",
+  "lifecycle": [
+    "on-arrival",
+    "before-visit"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "Sec-GPC: 1 header; navigator.globalPrivacyControl",
+      "bcd": [
+        "api.Navigator.globalPrivacyControl",
+        "http.headers.Sec-GPC"
+      ],
+      "access": {
+        "grant": "settings",
+        "prompt_ui": "None",
+        "secure_context": false,
+        "user_gesture": false,
+        "persistence": "Sent on every request while the setting is on",
+        "revocation": "Clear site data, browser privacy settings",
+        "iframe": "",
+        "steps": []
+      },
+      "support": {
+        "chrome": {
+          "s": "n",
+          "v": "",
+          "note": "Needs extension"
+        },
+        "edge": {
+          "s": "n",
+          "v": "",
+          "note": "Unverified"
+        },
+        "firefox": {
+          "s": "f",
+          "v": "120",
+          "note": "Settings toggle"
+        },
+        "safari": {
+          "s": "n",
+          "v": "",
+          "note": "Extensions only"
+        },
+        "ios_safari": {
+          "s": "n",
+          "v": "",
+          "note": "Extensions only"
+        },
+        "chrome_android": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "samsung": {
+          "s": "p",
+          "v": "",
+          "note": "Unverified"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "boolean",
+    "metric": "Opt out flag",
+    "update": "every request",
+    "fields": [
+      {
+        "name": "Sec-GPC",
+        "type": "boolean",
+        "unit": "none",
+        "range": "1 or absent",
+        "precision": "exact"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can tell every site that you opt out of sale and sharing of your data",
+    "user_action": "You turn on Global Privacy Control in your browser or a privacy extension",
+    "can": [
+      "Send a signal to each site you visit",
+      "Tell sites to treat you as opted out of sale and sharing",
+      "Apply to every site without clicking a banner on each one"
+    ],
+    "cannot": [
+      "Force a site to obey, though some laws such as California's require it",
+      "Block trackers by itself",
+      "Work in Chrome or Safari without an extension",
+      "Delete data already collected"
+    ],
+    "reach": 4,
+    "reach_label": "Every site, if turned on",
+    "differs": "Firefox and Brave have it built in. Chrome, Safari and iPhone browsers need an extension."
+  },
+  "story": {
+    "what_it_is": "A browser switch that tells every site you want to opt out of data sale and sharing.",
+    "icon": "shield-check",
+    "tags": [
+      "Privacy",
+      "Opt out",
+      "Browser setting"
+    ],
+    "marketing": [
+      {
+        "vendor": "W3C",
+        "name": "Global Privacy Control",
+        "pitch": "The standard describes a signal that lets people tell sites to stop selling or sharing their data, in one setting.",
+        "url": "https://www.w3.org/TR/gpc/"
+      }
+    ],
+    "for_you": "You turn it on once in your browser or an add on. Then you do not have to click opt out on each site. You will not see it work, but you may see fewer personal ads.",
+    "for_makers": "In several US states, honoring GPC is the law, and fines have hit sites that ignore it. Makers must read the signal and turn off sale and sharing tags. Doing it well also builds trust.",
+    "use_cases": [
+      {
+        "type": "ads",
+        "example": "A retailer reads the GPC signal and stops sending your visit to ad networks that would use it for targeting.",
+        "apps": [
+          "Sephora",
+          "Healthline"
+        ]
+      },
+      {
+        "type": "analytics",
+        "example": "A tag manager rule turns off ad tags for visitors who send GPC, while basic counting stays on.",
+        "apps": [
+          "Google Tag Manager",
+          "OneTrust"
+        ]
+      },
+      {
+        "type": "media",
+        "example": "A news site shows no personalized ads to you when GPC is on.",
+        "apps": [
+          "The Guardian",
+          "DuckDuckGo"
+        ]
+      },
+      {
+        "type": "games",
+        "example": "A game portal reads GPC and does not share a player's data with ad partners.",
+        "apps": [
+          "Poki"
+        ]
+      },
+      {
+        "type": "enterprise",
+        "example": "A privacy team tests every year that GPC visitors do not trigger ad tags, to avoid fines.",
+        "apps": [
+          "TrustArc"
+        ]
+      },
+      {
+        "type": "security",
+        "example": "A regulator tests sites with a browser that sends GPC, and checks the cookies that appear.",
+        "apps": [
+          "California Attorney General"
+        ]
+      }
+    ],
+    "risks": [
+      "Only works if the site honors it",
+      "Not on by default in all browsers"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Default on in Brave and DuckDuckGo",
+    "Firefox offers it in settings (120+)",
+    "No native Chrome or Safari setting found",
+    "A site may ignore it where no law applies"
+  ],
+  "scores": {
+    "sensitivity": 2,
+    "utility": 3,
+    "fingerprint_bits": 1.0,
+    "friction": 3
+  },
+  "value": {
+    "legit_uses": [
+      "Legally recognised opt out"
+    ],
+    "abuse": [
+      "Not applicable, but a fingerprinting bit"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2020-10",
+      "browser": "firefox",
+      "version": "",
+      "change": "Firefox begins support in Nightly (verify)"
+    },
+    {
+      "date": "2022-08",
+      "browser": "all",
+      "version": "",
+      "change": "California AG fines Sephora $1.2M"
+    },
+    {
+      "date": "2025-07",
+      "browser": "all",
+      "version": "",
+      "change": "California AG fines Healthline $1.55M"
+    }
+  ],
+  "related": [
+    "web.xsite.california-privacy-law",
+    "web.xsite.gpp"
+  ],
+  "refs": [
+    {
+      "t": "spec",
+      "label": "W3C Global Privacy Control",
+      "url": "https://www.w3.org/TR/gpc/"
+    },
+    {
+      "t": "vendor",
+      "label": "California AG Sephora settlement",
+      "url": "https://oag.ca.gov/news/press-releases/attorney-general-bonta-announces-settlement-sephora-part-ongoing-enforcement"
+    },
+    {
+      "t": "vendor",
+      "label": "California AG Healthline settlement",
+      "url": "https://oag.ca.gov/news/press-releases/attorney-general-bonta-announces-largest-ccpa-settlement-date-healthline"
+    }
+  ],
+  "confidence": "docs"
+}

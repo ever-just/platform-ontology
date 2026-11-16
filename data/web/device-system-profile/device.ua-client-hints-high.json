@@ -1,0 +1,312 @@
+{
+  "id": "web.device.ua-client-hints-high",
+  "name": "UA Client Hints, high entropy",
+  "kind": "signal",
+  "group": "device-system-profile",
+  "subgroup": "Client Hints",
+  "tags": [
+    "ua-ch",
+    "client-hints",
+    "getHighEntropyValues",
+    "accept-ch"
+  ],
+  "plain": "Detailed device and browser versions a site can request with Accept-CH or a JavaScript call.",
+  "meaning": "Returns exact OS version, CPU, bitness, device model and full browser version. Not sent unless the site asks. The browser can decline, but Chrome currently answers without a prompt.",
+  "lifecycle": [
+    "on-arrival",
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "navigator.userAgentData.getHighEntropyValues([...]); Accept-CH response header then Sec-CH-UA-* request headers",
+      "bcd": [
+        "api.NavigatorUAData.getHighEntropyValues"
+      ],
+      "access": {
+        "grant": "none",
+        "prompt_ui": "None",
+        "secure_context": true,
+        "user_gesture": false,
+        "persistence": "read fresh on every page load; nothing stored",
+        "revocation": "none needed (no grant)",
+        "iframe": "Readable from cross-origin iframes too (same values)",
+        "steps": [
+          "Page script reads the value",
+          "No prompt is shown"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "90",
+          "note": "",
+          "date": "2021-04-13"
+        },
+        "edge": {
+          "s": "y",
+          "v": "90",
+          "note": "",
+          "date": "2021-04-15"
+        },
+        "firefox": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "safari": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "ios_safari": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "90",
+          "note": "",
+          "date": "2021-04-13"
+        },
+        "samsung": {
+          "s": "y",
+          "v": "23.0",
+          "note": "",
+          "date": "2023-10-18"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "object",
+    "metric": "",
+    "update": "static per session",
+    "fields": [
+      {
+        "name": "platformVersion",
+        "type": "string",
+        "unit": "",
+        "range": "e.g. 15.1.0 (macOS), 13.0.0 or higher for Windows 11",
+        "precision": ""
+      },
+      {
+        "name": "architecture",
+        "type": "enum",
+        "unit": "",
+        "range": "x86, arm, empty string",
+        "precision": ""
+      },
+      {
+        "name": "bitness",
+        "type": "enum",
+        "unit": "bits",
+        "range": "32, 64",
+        "precision": ""
+      },
+      {
+        "name": "model",
+        "type": "string",
+        "unit": "",
+        "range": "Android model such as Pixel 8, else empty",
+        "precision": ""
+      },
+      {
+        "name": "fullVersionList",
+        "type": "list",
+        "unit": "",
+        "range": "brand and full version, e.g. 142.0.7444.60",
+        "precision": "4-part version"
+      },
+      {
+        "name": "uaFullVersion",
+        "type": "string",
+        "unit": "",
+        "range": "deprecated",
+        "precision": ""
+      },
+      {
+        "name": "wow64",
+        "type": "boolean",
+        "unit": "",
+        "range": "32-bit browser on 64-bit Windows",
+        "precision": ""
+      },
+      {
+        "name": "formFactors",
+        "type": "list",
+        "unit": "",
+        "range": "Desktop, Mobile, Tablet, XR, Automotive, EInk, Watch",
+        "precision": ""
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can see detailed device and browser versions, but only if the site asks",
+    "user_action": "Nothing. The site asks and Chromium answers without a prompt",
+    "can": [
+      "Get your exact OS version, chip, and 32 or 64 bit",
+      "Get the Android phone model",
+      "Get your full browser version",
+      "Use the detail to serve the right app or ad"
+    ],
+    "cannot": [
+      "Work in Firefox, Safari, or on iPhone",
+      "Get anything until the site asks for it",
+      "See your name, location, or accounts",
+      "See an iPhone model"
+    ],
+    "reach": 2,
+    "reach_label": "Device detail, only when asked",
+    "differs": "Chromium browsers answer without a prompt. Firefox and Safari do not offer these hints."
+  },
+  "story": {
+    "what_it_is": "Detailed device and browser facts, like exact OS version and model, that a site can ask for.",
+    "icon": "microchip",
+    "tags": [
+      "Device details",
+      "Silent",
+      "Chrome"
+    ],
+    "marketing": [
+      {
+        "vendor": "Google",
+        "name": "User-Agent Client Hints",
+        "pitch": "Chrome says sites should ask for only the detail they need, instead of getting everything by default.",
+        "url": "https://developer.chrome.com/docs/privacy-sandbox/user-agent/"
+      }
+    ],
+    "for_you": "You never see it. If a site asks, Chrome can hand over exact versions, chip type and device model. In return you get the right installer, the right layout or fewer bugs.",
+    "for_makers": "The older user agent gave out everything. With hints, sites must ask, which gives the browser a chance to say no. Ad tech and fraud teams still ask for many hints, since together they are a rich device profile.",
+    "use_cases": [
+      {
+        "type": "developer",
+        "example": "A download page asks for CPU type and OS version to give the right installer.",
+        "apps": [
+          "Zoom",
+          "Slack"
+        ]
+      },
+      {
+        "type": "games",
+        "example": "A browser game asks for model and platform version to choose graphics settings that work on that device.",
+        "apps": []
+      },
+      {
+        "type": "ads",
+        "example": "An ad exchange asks for full device details so bidders can target by model and OS version.",
+        "apps": [
+          "Google Ad Manager"
+        ]
+      },
+      {
+        "type": "security",
+        "example": "A bank asks for the full browser version to check it against known fakes.",
+        "apps": []
+      },
+      {
+        "type": "analytics",
+        "example": "A product team logs device model and OS version to prioritise fixes.",
+        "apps": [
+          "Sentry"
+        ]
+      },
+      {
+        "type": "media",
+        "example": "A streaming site asks for platform version to pick the right DRM level.",
+        "apps": [
+          "Netflix"
+        ]
+      },
+      {
+        "type": "enterprise",
+        "example": "An IT dashboard reads exact versions to find outdated work laptops.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Rich device profile",
+      "Many sites ask for everything"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Chromium only",
+    "Site must ask: header needs Accept-CH, JS call per hint",
+    "Delegation to third parties needs Permissions-Policy",
+    "Spec lets browsers refuse or lie; Chrome does not prompt today"
+  ],
+  "scores": {
+    "sensitivity": 2,
+    "utility": 4,
+    "fingerprint_bits": 5.0,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Serve correct 64-bit installer",
+      "Debug crashes by exact version",
+      "Windows 11 detection"
+    ],
+    "abuse": [
+      "Precise device fingerprint without any prompt",
+      "Targeting by exact model on Android"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": true,
+      "how": "user_agent_data source is part of mainstream fingerprint libraries; LinkedIn's list is mostly legacy navigator.* fields (not confirmed for getHighEntropyValues)."
+    }
+  },
+  "history": [
+    {
+      "date": "2021-03",
+      "browser": "chrome",
+      "version": "89",
+      "change": "getHighEntropyValues shipped"
+    },
+    {
+      "date": "2021-05",
+      "browser": "chrome",
+      "version": "90",
+      "change": "wow64 hint added"
+    },
+    {
+      "date": "2022-10",
+      "browser": "chrome",
+      "version": "107",
+      "change": "Becomes the only way to get OS minor version, arch, model after UA reduction"
+    }
+  ],
+  "related": [
+    "web.device.ch-platform-version",
+    "web.device.ch-model",
+    "web.device.ch-form-factors"
+  ],
+  "refs": [
+    {
+      "t": "chromestatus",
+      "label": "Chrome developers: UA Client Hints",
+      "url": "https://developer.chrome.com/docs/privacy-security/user-agent-client-hints"
+    },
+    {
+      "t": "mdn",
+      "label": "MDN getHighEntropyValues",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/NavigatorUAData/getHighEntropyValues"
+    },
+    {
+      "t": "spec",
+      "label": "WICG UA Client Hints",
+      "url": "https://wicg.github.io/ua-client-hints/"
+    },
+    {
+      "t": "github",
+      "label": "CreepJS (abrahamjuliot)",
+      "url": "https://github.com/abrahamjuliot/creepjs"
+    }
+  ],
+  "confidence": "verified"
+}

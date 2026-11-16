@@ -1,0 +1,206 @@
+{
+  "id": "web.notify.notification-triggers",
+  "name": "Notification Triggers (abandoned)",
+  "kind": "capability",
+  "group": "notifications-background",
+  "subgroup": "Notifications",
+  "tags": [
+    "abandoned"
+  ],
+  "plain": "Scheduled local notifications that fire without a server; not shipped.",
+  "meaning": "Would have let a site schedule notifications for a future time without push. Chrome ran an origin trial and then dropped it, so no browser ships it.",
+  "lifecycle": [
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "new TimestampTrigger(timestamp); showNotification(title, {showTrigger})",
+      "permission_name": "notifications",
+      "access": {
+        "grant": "origin-trial",
+        "prompt_ui": "Needed notification permission plus an origin trial token.",
+        "secure_context": true,
+        "user_gesture": false,
+        "persistence": "Per scheduled notification",
+        "revocation": "n/a",
+        "iframe": "Service worker",
+        "steps": [
+          "Request notification permission",
+          "showNotification with showTrigger",
+          "Browser fires at the time"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "r",
+          "v": "80",
+          "note": "Origin trial 80 to 85, removed",
+          "date": "2020-02-04"
+        },
+        "edge": {
+          "s": "r",
+          "v": "80",
+          "note": "",
+          "date": "2020-02-07"
+        },
+        "firefox": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "safari": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "ios_safari": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "chrome_android": {
+          "s": "r",
+          "v": "80",
+          "note": "",
+          "date": "2020-02-04"
+        },
+        "samsung": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "event",
+    "metric": "Scheduled notification",
+    "update": "at timestamp",
+    "fields": []
+  },
+  "limits": {
+    "headline": "Can't schedule a notification for later without a server; no browser ships it",
+    "user_action": "Nothing. Chrome tried an experiment, then dropped it",
+    "can": [
+      "Show a normal notification when a server sends one, which is a different feature",
+      "Use a reminder style app that depends on push instead"
+    ],
+    "cannot": [
+      "Schedule a future notification from the page alone",
+      "Work in any browser today",
+      "Skip the notification permission, which it would still have needed",
+      "Run in Firefox or Safari"
+    ],
+    "reach": 1,
+    "reach_label": "Not available today",
+    "differs": ""
+  },
+  "story": {
+    "what_it_is": "A plan to let sites schedule alerts that fire without a server. It was dropped and not released.",
+    "icon": "bell",
+    "tags": [
+      "Notifications",
+      "Dropped"
+    ],
+    "marketing": [],
+    "for_you": "You will not see this feature. It was tested but never shipped. Scheduled alerts still need a server push or your app to be open.",
+    "for_makers": "Makers wanted to set reminders on the device without paying for a push server. Browser makers stopped the work. Developers use push messages or local checks instead.",
+    "use_cases": [
+      {
+        "type": "productivity",
+        "example": "A calendar web app wanted to schedule a reminder for a meeting an hour from now, with no server.",
+        "apps": [
+          "Google Calendar"
+        ]
+      },
+      {
+        "type": "health",
+        "example": "A medicine reminder site wanted daily alerts on the device, even when offline.",
+        "apps": []
+      },
+      {
+        "type": "games",
+        "example": "A farming browser game wanted a ping when crops finish growing, with no push server.",
+        "apps": []
+      },
+      {
+        "type": "travel",
+        "example": "A travel app wanted a boarding reminder two hours before a flight without a connection.",
+        "apps": []
+      },
+      {
+        "type": "education",
+        "example": "A language app wanted a daily practice nudge that works offline.",
+        "apps": [
+          "Duolingo"
+        ]
+      },
+      {
+        "type": "fitness",
+        "example": "A workout site wanted timers that alert you after rest periods while the tab sleeps.",
+        "apps": []
+      },
+      {
+        "type": "shopping",
+        "example": "A store wanted to remind shoppers of a sale start time without a server.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Never shipped",
+      "Could be spammy"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Not available",
+    "Replaced by calendar apps and push"
+  ],
+  "scores": {
+    "sensitivity": 2,
+    "utility": 2,
+    "fingerprint_bits": null,
+    "friction": 3
+  },
+  "value": {
+    "legit_uses": [
+      "Reminders"
+    ],
+    "abuse": [
+      "None now"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2020-02",
+      "browser": "chrome",
+      "version": "80",
+      "change": "Origin trial starts"
+    },
+    {
+      "date": "2022-01",
+      "browser": "chrome",
+      "version": "98",
+      "change": "Trial ended and the feature was abandoned"
+    }
+  ],
+  "related": [
+    "web.notify.notifications"
+  ],
+  "refs": [
+    {
+      "t": "chromestatus",
+      "label": "Chrome Platform Status: Notification Triggers",
+      "url": "https://chromestatus.com/feature/5133150283890688"
+    }
+  ],
+  "confidence": "inferred"
+}

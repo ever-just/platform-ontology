@@ -1,0 +1,190 @@
+{
+  "id": "mob.os.keychain-persistence",
+  "name": "Keychain across uninstall",
+  "kind": "signal",
+  "group": "os-integration-install",
+  "subgroup": "Uninstall behavior",
+  "tags": [
+    "keychain",
+    "after-uninstall",
+    "persistent-id",
+    "secure-storage"
+  ],
+  "plain": "On iOS, small secrets stored in the Keychain stay on the device after the app is deleted and come back on reinstall.",
+  "meaning": "Developers use this to keep an anonymous id or login across reinstalls. It is a durable device level identifier unless the person wipes or restores to a new device.",
+  "lifecycle": [
+    "after-uninstall",
+    "signed-in"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "p",
+      "v": "6.0",
+      "api": 23,
+      "permission": "None",
+      "protection": "none",
+      "grant": "none",
+      "prompt_ui": "None",
+      "persistence": "Keystore keys are deleted at uninstall; Auto Backup can restore app data but not Keystore keys",
+      "revocation": "Clear data or uninstall",
+      "store_policy": "",
+      "api_surface": "Android Keystore, EncryptedSharedPreferences",
+      "note": "Keystore entries are removed with the app"
+    },
+    "ios": {
+      "s": "y",
+      "v": "2.0",
+      "permission": "None (kSecAttrAccessGroup for sharing)",
+      "protection": "none",
+      "grant": "none",
+      "prompt_ui": "None",
+      "persistence": "Survives app deletion; migrates with encrypted backups and device to device transfer; kSecAttrSynchronizable syncs via iCloud Keychain",
+      "revocation": "Erase device or call SecItemDelete",
+      "store_policy": "",
+      "api_surface": "SecItemAdd, SecItemCopyMatching",
+      "note": "Items persist across uninstall (documented developer behavior, no explicit Apple guarantee); data protection class controls availability"
+    }
+  },
+  "web_equivalents": [
+    "web.storage.persistent-storage"
+  ],
+  "data": {
+    "type": "string",
+    "metric": "Stored item",
+    "update": "Persistent",
+    "fields": [
+      {
+        "name": "item",
+        "type": "binary",
+        "unit": "",
+        "range": "small secrets",
+        "precision": ""
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can keep small secrets on your iPhone that survive after you delete the app",
+    "user_action": "Nothing. It happens when you delete the app and install it again",
+    "can": [
+      "Store tokens or IDs in the Keychain that stay after you delete the app",
+      "Find them again after you reinstall on the same phone",
+      "Treat you as a returning user after a reinstall"
+    ],
+    "cannot": [
+      "Keep them on Android, where deleting the app removes its keystore entries",
+      "Count on it as an Apple promise; it is documented developer behavior, not guaranteed",
+      "Be available while the phone is locked, if their protection class says so"
+    ],
+    "reach": 4,
+    "reach_label": "A stable ID that follows reinstalls",
+    "differs": "iPhone Keychain items usually survive uninstall. Android keystore entries are removed with the app."
+  },
+  "story": {
+    "what_it_is": "Small secrets stored in the iPhone keychain can stay after an app is deleted and return on reinstall.",
+    "icon": "key-round",
+    "tags": [
+      "iPhone",
+      "Tracking",
+      "Silent"
+    ],
+    "marketing": [],
+    "for_you": "You delete an app and reinstall it, and you are still signed in. You never see why. It feels convenient, but it also means you cannot easily start fresh.",
+    "for_makers": "Makers keep an anonymous ID or login across reinstalls for fraud checks and returning user care. It is a durable device level ID until the phone is wiped.",
+    "use_cases": [
+      {
+        "type": "security",
+        "example": "A bank app keeps a device ID across reinstalls to spot account takeovers.",
+        "apps": []
+      },
+      {
+        "type": "games",
+        "example": "A free to play game gives the same trial bonus once, even after you delete and reinstall.",
+        "apps": []
+      },
+      {
+        "type": "ads",
+        "example": "An attribution tool counts a returning device as the same person instead of a new install.",
+        "apps": [
+          "AppsFlyer"
+        ]
+      },
+      {
+        "type": "shopping",
+        "example": "A store keeps you signed in after a reinstall.",
+        "apps": []
+      },
+      {
+        "type": "media",
+        "example": "A streaming app limits free trials per device, even after you delete the app.",
+        "apps": []
+      },
+      {
+        "type": "analytics",
+        "example": "A product team joins sessions before and after a reinstall.",
+        "apps": []
+      },
+      {
+        "type": "dating",
+        "example": "A dating app blocks someone banned from rejoining with the same phone.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Tracking across reinstalls",
+      "Hard to reset"
+    ],
+    "android_note": "Android deletes keystore entries with the app.",
+    "ios_note": "Items stay after uninstall on the same device, and come back with a restored backup."
+  },
+  "technical_bounds": [
+    "Not guaranteed by Apple",
+    "Lost on erase or new device unless in encrypted backup"
+  ],
+  "scores": {
+    "sensitivity": 3,
+    "utility": 4,
+    "fingerprint_bits": 7,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Keep login across reinstall",
+      "Fraud checks"
+    ],
+    "abuse": [
+      "Tracking across reinstalls"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2008-07",
+      "platform": "ios",
+      "version": "iOS 2",
+      "change": "Keychain Services available to apps"
+    }
+  ],
+  "related": [
+    "mob.os.uninstall-data-deletion",
+    "mob.os.reinstall-identifiers"
+  ],
+  "refs": [
+    {
+      "t": "apple",
+      "label": "Apple: Keychain data protection",
+      "url": "https://support.apple.com/guide/security/keychain-data-protection-secb0694df1a/web"
+    },
+    {
+      "t": "apple",
+      "label": "Apple: Keychain services",
+      "url": "https://developer.apple.com/documentation/security/keychain-services"
+    }
+  ],
+  "confidence": "docs"
+}

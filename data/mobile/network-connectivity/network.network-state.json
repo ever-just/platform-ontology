@@ -1,0 +1,234 @@
+{
+  "id": "mob.network.network-state",
+  "name": "Network state",
+  "kind": "signal",
+  "group": "network-connectivity",
+  "subgroup": "Connectivity",
+  "tags": [
+    "normal-permission",
+    "connectivity",
+    "no-prompt",
+    "rum",
+    "cdn-measurement"
+  ],
+  "plain": "Lets the app see whether the device is online and what kind of network.",
+  "meaning": "Shows online status and network type; slightly useful for fingerprinting. Auto-granted.",
+  "lifecycle": [
+    "in-session",
+    "background"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "y",
+      "v": "1.0",
+      "api": 1,
+      "permission": "ACCESS_NETWORK_STATE",
+      "protection": "normal",
+      "grant": "install",
+      "prompt_ui": "None (granted at install)",
+      "persistence": "Not revocable",
+      "revocation": "n/a",
+      "store_policy": "Play: none",
+      "api_surface": "ConnectivityManager, NetworkCallback",
+      "note": "Provides transport type, metered state and bandwidth estimates."
+    },
+    "ios": {
+      "s": "y",
+      "v": "12",
+      "permission": "none",
+      "protection": "none",
+      "grant": "none",
+      "prompt_ui": "None",
+      "persistence": "n/a",
+      "revocation": "n/a",
+      "store_policy": "none",
+      "api_surface": "NWPathMonitor",
+      "note": "Reports path status, interface type and Low Data Mode."
+    }
+  },
+  "web_equivalents": [
+    "web.network.network-information",
+    "web.network.online-offline",
+    "web.network.connection-info"
+  ],
+  "data": {
+    "type": "object",
+    "metric": "Connectivity state",
+    "update": "on change",
+    "fields": [
+      {
+        "name": "transport",
+        "type": "enum",
+        "unit": "type",
+        "range": "Wi-Fi, cellular, ethernet, VPN",
+        "precision": "exact"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can see if your phone is online and what kind of network it uses",
+    "user_action": "Nothing. It happens when the app loads or the network changes",
+    "can": [
+      "Check if the phone is online",
+      "See the network type, metered state and rough speed estimate",
+      "Notice Low Data Mode on iPhone",
+      "React when the network changes"
+    ],
+    "cannot": [
+      "See which Wi-Fi name you are on without location permission",
+      "See what you send or receive",
+      "Turn Wi-Fi on or off"
+    ],
+    "reach": 1,
+    "reach_label": "Online status and type",
+    "differs": "Android needs a normal permission granted at install. iPhone needs none."
+  },
+  "story": {
+    "what_it_is": "An app can see whether your phone is online and what kind of network it is on.",
+    "icon": "signal",
+    "tags": [
+      "Network",
+      "Automatic",
+      "Silent"
+    ],
+    "marketing": [
+      {
+        "vendor": "Google",
+        "name": "Connectivity status",
+        "pitch": "Android lets apps check if you are online and on what kind of network.",
+        "url": "https://developer.android.com/training/monitoring-device-state/connectivity-status-type"
+      },
+      {
+        "vendor": "Apple",
+        "name": "Network framework",
+        "pitch": "Apple lets apps watch whether a connection is up and what type it is.",
+        "url": "https://developer.apple.com/documentation/network/nwpathmonitor"
+      }
+    ],
+    "for_you": "You do not see it. You notice an offline banner or an app that retries when the signal returns. Apps get this without asking.",
+    "for_makers": "Makers use it to avoid errors, save data and switch between online and offline mode. It adds a small amount to a device profile, but the value is low.",
+    "use_cases": [
+      {
+        "type": "messaging",
+        "example": "A chat app shows 'Connecting' and sends your queued messages the moment you are online.",
+        "apps": [
+          "WhatsApp",
+          "Telegram"
+        ]
+      },
+      {
+        "type": "media",
+        "example": "A music app switches to offline mode and plays downloaded songs when you lose signal.",
+        "apps": [
+          "Spotify"
+        ]
+      },
+      {
+        "type": "games",
+        "example": "A mobile game pauses a match and tries to reconnect when the network drops.",
+        "apps": [
+          "Clash Royale"
+        ]
+      },
+      {
+        "type": "live",
+        "example": "A live stream app lowers quality when your network becomes weaker.",
+        "apps": [
+          "Twitch"
+        ]
+      },
+      {
+        "type": "productivity",
+        "example": "A notes app saves changes on the phone and syncs when you are back online.",
+        "apps": [
+          "Notion",
+          "Evernote"
+        ]
+      },
+      {
+        "type": "analytics",
+        "example": "A tracker logs when your connection changes, which hints at your daily path.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Slight fingerprint value",
+      "Reveals home or away"
+    ],
+    "android_note": "Android grants this as a normal permission at install, with no prompt.",
+    "ios_note": "iPhone needs no permission for this, and apps can watch changes live."
+  },
+  "technical_bounds": [
+    "No prompt on either OS",
+    "No access to nearby networks without location permission"
+  ],
+  "scores": {
+    "sensitivity": 1,
+    "utility": 4,
+    "fingerprint_bits": 2,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Adapting streams"
+    ],
+    "abuse": [
+      "Fingerprinting"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": true,
+      "how": "Exodus lists Cedexis Radar in LinkedIn Android reports (4.1.1012 snippet). Radar is a real-user network measurement SDK used to pick CDNs; purpose in LinkedIn's app is inferred."
+    }
+  },
+  "history": [
+    {
+      "date": "2019-09",
+      "platform": "ios",
+      "version": "iOS 13",
+      "change": "SSID needs location permission"
+    },
+    {
+      "date": "2018-08",
+      "platform": "android",
+      "version": "9 (API 28)",
+      "change": "Network request APIs refined; NetworkCallback preferred"
+    },
+    {
+      "date": "2018-03",
+      "platform": "android",
+      "version": "8.1 (API 27)",
+      "change": "SSID reads gated behind location"
+    }
+  ],
+  "related": [
+    "mob.network.internet",
+    "mob.network.wifi-state",
+    "mob.linkedin.cedexis-radar"
+  ],
+  "refs": [
+    {
+      "t": "android",
+      "label": "Android: Monitor connectivity",
+      "url": "https://developer.android.com/training/monitoring-device-state/connectivity-status-type"
+    },
+    {
+      "t": "apple",
+      "label": "Apple: NWPathMonitor",
+      "url": "https://developer.apple.com/documentation/network/nwpathmonitor"
+    },
+    {
+      "t": "android",
+      "label": "Android: Reading network state",
+      "url": "https://developer.android.com/training/basics/network-ops/reading-network-state"
+    },
+    {
+      "t": "vendor",
+      "label": "Exodus Privacy report, com.linkedin.android 4.1.995 (Oct 2024)",
+      "url": "https://reports.exodus-privacy.eu.org/en/reports/513380/"
+    }
+  ],
+  "confidence": "docs"
+}

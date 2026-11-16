@@ -1,0 +1,184 @@
+{
+  "id": "mob.notifications.battery-optimization",
+  "name": "Ignore battery optimization",
+  "kind": "permission",
+  "group": "notifications-background",
+  "subgroup": "Power",
+  "tags": [
+    "special-access",
+    "doze",
+    "battery"
+  ],
+  "plain": "Asks to be exempt from Doze and app standby.",
+  "meaning": "Lets the app run in the background more freely at the cost of battery. The user confirms with a dialog.",
+  "lifecycle": [
+    "background"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "y",
+      "v": "6.0",
+      "api": 23,
+      "permission": "REQUEST_IGNORE_BATTERY_OPTIMIZATIONS",
+      "protection": "normal",
+      "grant": "settings",
+      "prompt_ui": "System dialog: Allow app to run in background",
+      "persistence": "Until revoked",
+      "revocation": "Settings > Apps > Battery > Unrestricted",
+      "store_policy": "Play: restricted; allowed only when core function breaks under Doze",
+      "api_surface": "PowerManager.isIgnoringBatteryOptimizations",
+      "note": "Declared as a normal permission; the exemption needs user confirmation."
+    },
+    "ios": {
+      "s": "n",
+      "v": "",
+      "permission": "",
+      "protection": "none",
+      "grant": "not-exposed",
+      "prompt_ui": "none",
+      "persistence": "none",
+      "revocation": "",
+      "store_policy": "App Review 2.5.4",
+      "api_surface": "BGTaskScheduler",
+      "note": "iOS gives no such exemption; use Background Modes or push."
+    }
+  },
+  "data": {
+    "type": "event",
+    "metric": "Exemption state",
+    "update": "on change",
+    "fields": []
+  },
+  "limits": {
+    "headline": "Can ask to keep running in the background on Android, only if you agree",
+    "user_action": "A system box asks if the app may run in the background and you tap Allow",
+    "can": [
+      "Ask you to turn off battery limits for the app",
+      "Stay awake longer in the background once you allow it",
+      "Use less strict Doze and standby rules after you agree"
+    ],
+    "cannot": [
+      "Turn off battery limits without your yes",
+      "Get this exemption on iPhone, which has none",
+      "Use it forever if you later change your battery setting"
+    ],
+    "reach": 3,
+    "reach_label": "Ongoing, but only after your OK",
+    "differs": "Android shows a system confirmation. iPhone has no such exemption; apps use background modes or push."
+  },
+  "story": {
+    "what_it_is": "Asks to be excused from Android's rules that put idle apps to sleep.",
+    "icon": "battery-charging",
+    "tags": [
+      "Android",
+      "Battery",
+      "Asks first"
+    ],
+    "marketing": [
+      {
+        "vendor": "Google",
+        "name": "Doze and App Standby",
+        "pitch": "Google describes Doze and standby as ways to save battery by putting idle apps to sleep, with some exceptions.",
+        "url": "https://developer.android.com/training/monitoring-device-state/doze-standby"
+      }
+    ],
+    "for_you": "You see a pop up asking Allow app to always run in the background. If you say yes, the app works more reliably but may cost more battery.",
+    "for_makers": "Makers want reliable alerts and syncing for chats, health and tracking. Google limits who may ask, because it hurts battery life.",
+    "use_cases": [
+      {
+        "type": "messaging",
+        "example": "A chat app asks to stay awake so messages are never late.",
+        "apps": [
+          "Signal"
+        ]
+      },
+      {
+        "type": "health",
+        "example": "A medical sensor app asks for it so alerts are never missed.",
+        "apps": [
+          "Dexcom"
+        ]
+      },
+      {
+        "type": "fitness",
+        "example": "A fitness tracker asks for it to record a full ride without gaps.",
+        "apps": [
+          "Strava"
+        ]
+      },
+      {
+        "type": "smart-home",
+        "example": "A home security app asks for it so door alerts are instant.",
+        "apps": []
+      },
+      {
+        "type": "games",
+        "example": "A game asks for it to keep a multiplayer match alive in the background.",
+        "apps": []
+      },
+      {
+        "type": "enterprise",
+        "example": "A field work app asks for it to keep location checks running on a shift.",
+        "apps": []
+      },
+      {
+        "type": "utilities",
+        "example": "A VPN or file sync app asks for it so it does not disconnect.",
+        "apps": [
+          "Proton VPN",
+          "Syncthing"
+        ]
+      }
+    ],
+    "risks": [
+      "Drains battery",
+      "Apps may nag you to allow it"
+    ],
+    "android_note": "You confirm in a system dialog. It is a standard permission with a user check.",
+    "ios_note": "iOS has no such exemption. Apps use background modes or push messages."
+  },
+  "technical_bounds": [
+    "Play restricted",
+    "No iOS equivalent"
+  ],
+  "scores": {
+    "sensitivity": 1,
+    "utility": 3,
+    "fingerprint_bits": null,
+    "friction": 3
+  },
+  "value": {
+    "legit_uses": [
+      "Messaging, health apps"
+    ],
+    "abuse": [
+      "Aggressive background drain"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2015-10",
+      "platform": "android",
+      "version": "6.0 (API 23)",
+      "change": "Doze and app standby introduced"
+    }
+  ],
+  "related": [
+    "mob.notifications.foreground-service"
+  ],
+  "refs": [
+    {
+      "t": "android",
+      "label": "Android: Doze and App Standby",
+      "url": "https://developer.android.com/training/monitoring-device-state/doze-standby"
+    }
+  ],
+  "confidence": "docs"
+}

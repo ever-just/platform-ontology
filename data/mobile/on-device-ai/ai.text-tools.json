@@ -1,0 +1,213 @@
+{
+  "id": "mob.ai.text-tools",
+  "name": "System writing tools (Writing Tools, ML Kit Summarization and Rewriting)",
+  "kind": "capability",
+  "group": "on-device-ai",
+  "subgroup": "Generative AI",
+  "tags": [
+    "writing-tools",
+    "summarization",
+    "proofreading",
+    "rewriting"
+  ],
+  "plain": "Offers rewrite, proofread and summarise inside any text field.",
+  "meaning": "Writing Tools appear automatically in standard text views on iOS. On Android, apps call task APIs for summarize, proofread, rewrite and describe image.",
+  "lifecycle": [
+    "in-session"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "p",
+      "v": "14",
+      "api": 34,
+      "permission": "None; ML Kit GenAI Summarization, Proofreading, Rewriting, Image Description APIs",
+      "protection": "none",
+      "grant": "none",
+      "prompt_ui": "Model download by system",
+      "persistence": "Per request",
+      "revocation": "AICore settings",
+      "store_policy": "",
+      "api_surface": "ML Kit GenAI task APIs",
+      "note": "Android has no automatic system wide writing tools in all text fields; apps integrate APIs."
+    },
+    "ios": {
+      "s": "y",
+      "v": "18.0",
+      "permission": "None; UITextView supports by default; opt out via writingToolsBehavior",
+      "protection": "none",
+      "grant": "none",
+      "prompt_ui": "Writing Tools menu in selection; Apple Intelligence required",
+      "persistence": "Per request",
+      "revocation": "Settings > Apple Intelligence & Siri",
+      "store_policy": "",
+      "api_surface": "UIWritingToolsBehavior, WritingToolsCoordinator",
+      "note": "Handled in system; may use Private Cloud Compute for longer text."
+    }
+  },
+  "data": {
+    "type": "object",
+    "metric": "Rewritten text",
+    "update": "per request",
+    "fields": [
+      {
+        "name": "text",
+        "type": "string",
+        "unit": "chars",
+        "range": "n/a",
+        "precision": "n/a"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can offer rewrite, proofread and summarize inside text boxes, if Apple Intelligence is on",
+    "user_action": "You select text and tap Writing Tools, or an app's own rewrite button",
+    "can": [
+      "Rewrite, proofread or summarize text you select on iPhone",
+      "Use Apple's private cloud for longer text, when needed",
+      "Call on Android's own tools through the app, like Summarization and Rewriting"
+    ],
+    "cannot": [
+      "Work on every iPhone; Apple Intelligence is needed",
+      "Work in all text fields on Android automatically; apps must add support",
+      "Change your text unless you tap to accept the suggestion"
+    ],
+    "reach": 2,
+    "reach_label": "Only the text you select",
+    "differs": "iPhone has a system wide Writing Tools menu. Android has no automatic system tools in every text field."
+  },
+  "story": {
+    "what_it_is": "Built in rewrite, proofread and summarize tools that appear in text fields.",
+    "icon": "pen-line",
+    "tags": [
+      "AI",
+      "Writing",
+      "Private"
+    ],
+    "marketing": [
+      {
+        "vendor": "Apple",
+        "name": "Writing Tools",
+        "pitch": "Apple pitches Writing Tools as a way to rewrite, proofread and summarize text anywhere you write.",
+        "url": "https://developer.apple.com/documentation/uikit/writing-tools"
+      },
+      {
+        "vendor": "Google",
+        "name": "ML Kit GenAI Summarization",
+        "pitch": "Google offers on device summarization for apps through ML Kit.",
+        "url": "https://developers.google.com/ml-kit/genai/summarization/android"
+      }
+    ],
+    "for_you": "You select text and a menu offers Rewrite, Proofread or Summarize. On iPhone it works in most apps automatically. On Android it depends on the app.",
+    "for_makers": "Makers get smart text help with little work on iOS, and must add the API on Android. Long text may go to Apple's private cloud, so privacy rules matter.",
+    "use_cases": [
+      {
+        "type": "messaging",
+        "example": "You fix a typo ridden message before sending it.",
+        "apps": [
+          "Messages",
+          "WhatsApp"
+        ]
+      },
+      {
+        "type": "productivity",
+        "example": "You summarize a long email thread in one tap.",
+        "apps": [
+          "Mail",
+          "Gmail"
+        ]
+      },
+      {
+        "type": "education",
+        "example": "A student proofreads an essay.",
+        "apps": [
+          "Pages"
+        ]
+      },
+      {
+        "type": "social",
+        "example": "You rewrite a post to sound friendlier.",
+        "apps": []
+      },
+      {
+        "type": "enterprise",
+        "example": "A manager makes a message more professional.",
+        "apps": [
+          "Slack"
+        ]
+      },
+      {
+        "type": "creative",
+        "example": "A writing app offers a shorter version.",
+        "apps": [
+          "Notes"
+        ]
+      },
+      {
+        "type": "accessibility",
+        "example": "A reader gets a short summary of a hard page.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Longer text may leave the phone",
+      "Can change meaning"
+    ],
+    "android_note": "No automatic system wide tools. Apps add ML Kit task APIs.",
+    "ios_note": "Needs Apple Intelligence. It may use Private Cloud Compute for longer text."
+  },
+  "technical_bounds": [
+    "Device eligibility"
+  ],
+  "scores": {
+    "sensitivity": 2,
+    "utility": 4,
+    "fingerprint_bits": 1,
+    "friction": 1
+  },
+  "value": {
+    "legit_uses": [
+      "Proofreading",
+      "Summaries"
+    ],
+    "abuse": [
+      "Leaking text to cloud for large input on iOS"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2024-09",
+      "platform": "ios",
+      "version": "iOS 18.1",
+      "change": "Writing Tools"
+    },
+    {
+      "date": "2025-05",
+      "platform": "android",
+      "version": "ML Kit GenAI",
+      "change": "Summarization, Proofreading, Rewriting"
+    }
+  ],
+  "related": [
+    "mob.ai.llm-prompt"
+  ],
+  "refs": [
+    {
+      "t": "apple",
+      "label": "Apple: Writing Tools",
+      "url": "https://developer.apple.com/documentation/uikit/writing-tools"
+    },
+    {
+      "t": "android",
+      "label": "ML Kit GenAI summarization",
+      "url": "https://developers.google.com/ml-kit/genai/summarization/android"
+    }
+  ],
+  "confidence": "docs"
+}

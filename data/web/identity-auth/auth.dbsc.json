@@ -1,0 +1,220 @@
+{
+  "id": "web.auth.dbsc",
+  "name": "Device Bound Session Credentials",
+  "kind": "capability",
+  "group": "identity-auth",
+  "subgroup": "Session security",
+  "tags": [
+    "dbsc",
+    "session-cookies",
+    "token-theft",
+    "tpm"
+  ],
+  "plain": "A device held key that stops stolen session cookies from working on another computer.",
+  "meaning": "The site gets short lived cookies refreshed with a signature from a key kept in the TPM or secure hardware. Reveals that the session is tied to one device. Chrome 146 on Windows (Apr 2026); GA for Google Workspace on May 25 2026.",
+  "lifecycle": [
+    "signed-in"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "Secure-Session-Registration and Secure-Session-Response headers; bound session cookie",
+      "access": {
+        "grant": "none",
+        "prompt_ui": "None",
+        "secure_context": true,
+        "user_gesture": false,
+        "persistence": "Cookie lifetime in minutes, refreshed by key proof until session ends",
+        "revocation": "Clear site data, browser privacy settings",
+        "iframe": "",
+        "steps": []
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "146",
+          "note": ":Windows first, macOS later (verify)",
+          "date": "2026-03-10"
+        },
+        "edge": {
+          "s": "y",
+          "v": "146",
+          "note": "",
+          "date": "2026-03-13"
+        },
+        "firefox": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "safari": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "ios_safari": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "chrome_android": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "samsung": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "none",
+    "metric": "Cookie refresh signature",
+    "update": "every few minutes",
+    "fields": []
+  },
+  "limits": {
+    "headline": "Can tie your sign in to this device so copied cookies stop working elsewhere",
+    "user_action": "Nothing. It happens when you sign in on a site that uses it.",
+    "can": [
+      "Create a key that stays on your device when you sign in",
+      "Check regularly that the session comes from your device",
+      "Refresh short lived cookies, while your device keeps proving itself",
+      "Cut off a session copied to another computer"
+    ],
+    "cannot": [
+      "Stop someone using your device while you are signed in",
+      "Move the key to another device",
+      "Work in Firefox or Safari"
+    ],
+    "reach": 2,
+    "reach_label": "Your device and your sign in",
+    "differs": "Chrome and Edge on computers only. Firefox, Safari and phones do not support it."
+  },
+  "story": {
+    "what_it_is": "A device held key that stops stolen login cookies from working on another computer.",
+    "icon": "shield-check",
+    "tags": [
+      "Security",
+      "Login",
+      "Silent"
+    ],
+    "marketing": [
+      {
+        "vendor": "Chrome",
+        "name": "Device Bound Session Credentials",
+        "pitch": "Chrome pitches it as protection that ties a login session to your device, so stolen cookies are useless.",
+        "url": "https://developer.chrome.com/docs/web-platform/device-bound-session-credentials"
+      }
+    ],
+    "for_you": "You see nothing. In the background your device proves it is the same one that signed in. If malware steals your cookie, it will not work elsewhere.",
+    "for_makers": "It fights account takeover by cookie theft, a growing problem for banks, email and work tools. Makers keep users safer with no extra steps. It also ties a session to a specific device.",
+    "use_cases": [
+      {
+        "type": "security",
+        "example": "Malware steals your email session cookie, but the attacker cannot use it on their own computer.",
+        "apps": []
+      },
+      {
+        "type": "banking",
+        "example": "A bank keeps your session tied to your laptop so a stolen cookie cannot move money.",
+        "apps": []
+      },
+      {
+        "type": "social",
+        "example": "A social site stops account takeovers where hackers reuse stolen sessions.",
+        "apps": []
+      },
+      {
+        "type": "enterprise",
+        "example": "A company ties staff sessions to company laptops so stolen sessions are useless.",
+        "apps": []
+      },
+      {
+        "type": "games",
+        "example": "A game store account protects your items and wallet from hijacked sessions.",
+        "apps": []
+      },
+      {
+        "type": "payments",
+        "example": "A payment site keeps the session tied to your device to block fraud.",
+        "apps": []
+      },
+      {
+        "type": "ads",
+        "example": "An ad account dashboard stays safe, since stolen sessions are a common way to hijack ad budgets.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Ties session to device",
+      "Chrome only for now"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Needs hardware key support (TPM on Windows)",
+    "Chrome only so far, macOS later (verify version)",
+    "Short lived cookie must refresh often"
+  ],
+  "scores": {
+    "sensitivity": 3,
+    "utility": 4,
+    "fingerprint_bits": null,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Defence against cookie theft malware"
+    ],
+    "abuse": [
+      "Device pinning of sessions"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2024-04",
+      "browser": "chrome",
+      "version": "126",
+      "change": "Origin trial begins"
+    },
+    {
+      "date": "2026-04",
+      "browser": "chrome",
+      "version": "146",
+      "change": "Shipped on Windows"
+    },
+    {
+      "date": "2026-05",
+      "browser": "all",
+      "version": "",
+      "change": "May 25 2026 GA for Google Workspace"
+    }
+  ],
+  "related": [
+    "web.auth.session-cookies"
+  ],
+  "refs": [
+    {
+      "t": "vendor",
+      "label": "Chrome DBSC",
+      "url": "https://developer.chrome.com/docs/web-platform/device-bound-session-credentials"
+    },
+    {
+      "t": "spec",
+      "label": "W3C DBSC explainer",
+      "url": "https://github.com/w3c/webappsec-dbsc"
+    }
+  ],
+  "confidence": "docs"
+}

@@ -1,0 +1,247 @@
+{
+  "id": "web.auth.sign-in-with-apple",
+  "name": "Sign in with Apple",
+  "kind": "capability",
+  "group": "identity-auth",
+  "subgroup": "Social login",
+  "tags": [
+    "apple",
+    "oidc",
+    "private-relay",
+    "real-user-status"
+  ],
+  "plain": "A login where Apple confirms identity and can hide the person's real email address.",
+  "meaning": "Site gets a sub ID, email (real or relay) and email_verified; name only on first sign in. is_private_email and real_user_status (0 unsupported, 1 unknown, 2 likely real) are returned. Required in App Store apps that offer other social logins.",
+  "lifecycle": [
+    "signed-in"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "AppleID JS or redirect; OIDC id_token",
+      "access": {
+        "grant": "prompt",
+        "prompt_ui": "None",
+        "secure_context": false,
+        "user_gesture": false,
+        "persistence": "Authorisation lasts until the person revokes it in Apple Account settings",
+        "revocation": "Clear site data, browser privacy settings",
+        "iframe": "",
+        "steps": []
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "1",
+          "note": ":Redirect or JS flow, works in all browsers",
+          "date": "2008-12-11"
+        },
+        "edge": {
+          "s": "y",
+          "v": "1",
+          "note": ":Redirect or JS flow, works in all browsers",
+          "date": ""
+        },
+        "firefox": {
+          "s": "y",
+          "v": "1",
+          "note": ":Redirect or JS flow, works in all browsers",
+          "date": "2004-11-09"
+        },
+        "safari": {
+          "s": "y",
+          "v": "1",
+          "note": ":Redirect or JS flow, works in all browsers",
+          "date": "2003-06-23"
+        },
+        "ios_safari": {
+          "s": "y",
+          "v": "1",
+          "note": ":Redirect or JS flow, works in all browsers",
+          "date": "2007-06-29"
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "1",
+          "note": ":Redirect or JS flow, works in all browsers",
+          "date": ""
+        },
+        "samsung": {
+          "s": "y",
+          "v": "1",
+          "note": ":Redirect or JS flow, works in all browsers",
+          "date": "2013-04-27"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "object",
+    "metric": "ID token claims",
+    "update": "at sign in",
+    "fields": [
+      {
+        "name": "real_user_status",
+        "type": "integer",
+        "unit": "enum",
+        "range": "0, 1 or 2",
+        "precision": "exact"
+      },
+      {
+        "name": "is_private_email",
+        "type": "boolean",
+        "unit": "none",
+        "range": "true or false",
+        "precision": "exact"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can sign you in with Apple and get a real or hidden email address",
+    "user_action": "You tap Sign in with Apple and confirm with Face ID, Touch ID or your Apple password",
+    "can": [
+      "Receive a stable ID for you on that app or site",
+      "Get your real email or a private relay address you choose",
+      "Learn whether the email is verified and whether you look like a real person",
+      "Get your name, but only the first time you sign in"
+    ],
+    "cannot": [
+      "Get your real email if you pick Hide My Email",
+      "See your Apple purchases, photos or contacts",
+      "Get your name again on later sign ins",
+      "Skip the Apple confirmation screen"
+    ],
+    "reach": 2,
+    "reach_label": "Name and email you allow",
+    "differs": "On iPhone the sign in is one tap with Face ID. On Android and other browsers it opens an Apple web page."
+  },
+  "story": {
+    "what_it_is": "Sign in using your Apple account, with an option to hide your real email.",
+    "icon": "badge-check",
+    "tags": [
+      "Sign in",
+      "Hide email",
+      "Apple"
+    ],
+    "marketing": [
+      {
+        "vendor": "Apple",
+        "name": "Sign in with Apple",
+        "pitch": "Apple sells it as a fast, private way to sign in to apps and sites, with Face ID and the choice to hide your email.",
+        "url": "https://developer.apple.com/sign-in-with-apple/"
+      },
+      {
+        "vendor": "Apple",
+        "name": "Hide My Email",
+        "pitch": "Apple describes a random email address that forwards to your inbox so you do not share your real one.",
+        "url": "https://support.apple.com/en-us/105078"
+      }
+    ],
+    "for_you": "You tap a black Apple button and confirm with Face ID or Touch ID. You choose to share your real email or a random one that forwards to you. The site never gets your Apple password.",
+    "for_makers": "Makers get quick sign ups with a confirmed identity and fewer fake accounts. They must offer it if they offer other social logins on iPhone apps, and they get a relay email they can still send to.",
+    "use_cases": [
+      {
+        "type": "games",
+        "example": "A game's web page lets players create an account with Apple, so progress follows them from iPhone to browser.",
+        "apps": [
+          "Roblox"
+        ]
+      },
+      {
+        "type": "shopping",
+        "example": "A shopper signs up at a new store with a hidden email and later cuts off the store's marketing by turning off the relay.",
+        "apps": [
+          "Shopify stores"
+        ]
+      },
+      {
+        "type": "media",
+        "example": "A streaming or news site gets a verified account in two taps, with less password reset support.",
+        "apps": [
+          "Spotify",
+          "Medium"
+        ]
+      },
+      {
+        "type": "ads",
+        "example": "Because the site only sees a relay address, email ad matching across sites gets harder, so marketers lean on first party data.",
+        "apps": []
+      },
+      {
+        "type": "security",
+        "example": "A site treats the Apple signal that this looks like a real person as extra proof against bot sign ups.",
+        "apps": []
+      },
+      {
+        "type": "productivity",
+        "example": "A work or notes web app lets Mac and iPhone users sign in without a new password.",
+        "apps": [
+          "Notion",
+          "Todoist"
+        ]
+      }
+    ],
+    "risks": [
+      "Apple sees where you sign in",
+      "Name only shared once"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Name and email shared only on first authorisation",
+    "Relay address can be turned off by the person",
+    "Sender domains must be registered to reach the relay"
+  ],
+  "scores": {
+    "sensitivity": 5,
+    "utility": 5,
+    "fingerprint_bits": null,
+    "friction": 2
+  },
+  "value": {
+    "legit_uses": [
+      "Low friction login with privacy"
+    ],
+    "abuse": [
+      "Covert linking of accounts if users reuse the real email"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2019-06",
+      "browser": "safari",
+      "version": "13",
+      "change": "Sign in with Apple announced"
+    },
+    {
+      "date": "2021-09",
+      "browser": "safari",
+      "version": "15",
+      "change": "Hide My Email in iCloud+"
+    }
+  ],
+  "related": [
+    "web.auth.apple-hide-my-email",
+    "web.auth.sign-in-with-google"
+  ],
+  "refs": [
+    {
+      "t": "vendor",
+      "label": "Apple: Sign in with Apple REST API (ID token fields)",
+      "url": "https://developer.apple.com/documentation/signinwithapplerestapi/authenticating-users-with-sign-in-with-apple"
+    },
+    {
+      "t": "vendor",
+      "label": "Apple private email relay",
+      "url": "https://developer.apple.com/help/account/capabilities/communicate-with-users-who-use-private-email-relay-service/"
+    }
+  ],
+  "confidence": "docs"
+}

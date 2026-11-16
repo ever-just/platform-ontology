@@ -1,0 +1,285 @@
+{
+  "id": "web.os.install-prompt",
+  "name": "Install prompt (beforeinstallprompt) and manifest install",
+  "kind": "capability",
+  "group": "os-integration-install",
+  "subgroup": "Install",
+  "tags": [
+    "install"
+  ],
+  "plain": "Lets a site offer to install itself as an app on the device.",
+  "meaning": "An installed app gets its own window and icon, and unlocks install only features (badging, file handling, shortcuts).",
+  "lifecycle": [
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "window.addEventListener('beforeinstallprompt', e=>e.prompt()); manifest.webmanifest with name, icons, start_url, display, id",
+      "bcd": [
+        "manifests.webapp.display"
+      ],
+      "access": {
+        "grant": "gesture",
+        "prompt_ui": "Browser install dialog; Add to Home Screen sheet on iOS",
+        "secure_context": true,
+        "user_gesture": true,
+        "persistence": "Per origin",
+        "revocation": "Site settings",
+        "iframe": "Same as top level; cross-origin iframes need a permissions policy where listed",
+        "steps": [
+          "Call the API",
+          "Browser applies its access rules",
+          "Page receives the result"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "39",
+          "note": "<code>display</code> and/or <code>display_override</code> are required for a web app to be installable.",
+          "date": "2014-11-18"
+        },
+        "edge": {
+          "s": "y",
+          "v": "79",
+          "note": "<code>display</code> and/or <code>display_override</code> are required for a web app to be installable.",
+          "date": "2020-01-15"
+        },
+        "firefox": {
+          "s": "n",
+          "v": "",
+          "note": "No installable PWAs on desktop"
+        },
+        "safari": {
+          "s": "p",
+          "v": "17",
+          "note": "Add to Dock on macOS; no beforeinstallprompt",
+          "date": "2023-09-18"
+        },
+        "ios_safari": {
+          "s": "p",
+          "v": "11.3",
+          "note": "Add to Home Screen via Share sheet",
+          "date": "2018-03-29"
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "39",
+          "note": "<code>display</code> and/or <code>display_override</code> are required for a web app to be installable.",
+          "date": "2014-11-12"
+        },
+        "samsung": {
+          "s": "y",
+          "v": "4.0",
+          "note": "<code>display</code> and/or <code>display_override</code> are required for a web app to be installable.",
+          "date": "2016-03-11"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "object",
+    "metric": "Lets a site offer to install itself as an app on the device.",
+    "update": "on demand",
+    "fields": [
+      {
+        "name": "manifest.display",
+        "type": "enum",
+        "range": "fullscreen, standalone, minimal-ui, browser"
+      },
+      {
+        "name": "manifest.display_override",
+        "type": "list",
+        "range": "window-controls-overlay, tabbed, ..."
+      },
+      {
+        "name": "manifest.id",
+        "type": "string",
+        "range": "stable app identity",
+        "precision": "Chrome 96, Safari 17"
+      },
+      {
+        "name": "icons",
+        "type": "list",
+        "unit": "pixels",
+        "range": "192 and 512 recommended"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can offer to install the site as an app, but only you can accept",
+    "user_action": "You tap Install app, or Add to Home Screen on iPhone",
+    "can": [
+      "Show an install offer after you tap a button on the page",
+      "Give the site its own window and icon once you accept",
+      "Unlock install only features like badges, file opening and shortcuts"
+    ],
+    "cannot": [
+      "Install anything without your say so",
+      "Skip the browser's own install dialog",
+      "Show an install button on Safari, where you add the site from the Share menu",
+      "Install in Firefox on computers, which has no install"
+    ],
+    "reach": 1,
+    "reach_label": "One install, if you say yes",
+    "differs": "Chrome, Edge and Samsung Internet offer a prompt. On iPhone you add the site from the Share menu. Firefox on computers has no install."
+  },
+  "story": {
+    "what_it_is": "A site can offer to install itself as an app on your device, with its own icon and window.",
+    "icon": "app-window",
+    "tags": [
+      "Installed apps",
+      "Asks first",
+      "Capability"
+    ],
+    "marketing": [
+      {
+        "vendor": "MDN Web Docs",
+        "name": "Making PWAs installable",
+        "pitch": "Sites that meet some rules can be installed from the browser like an app, without an app store.",
+        "url": "https://developer.mozilla.org/en-US/docs/Web/Progressive_web_apps/Guides/Making_PWAs_installable"
+      },
+      {
+        "vendor": "WebKit",
+        "name": "Add to Dock in Safari",
+        "pitch": "Safari 17 lets any website be added to the Mac Dock as a web app.",
+        "url": "https://webkit.org/blog/14445/webkit-features-in-safari-17-0/"
+      }
+    ],
+    "for_you": "You may see an Install button or banner. After you tap it, the site gets its own icon and window and feels like an app. You can remove it any time.",
+    "for_makers": "Makers skip app stores and fees, ship one codebase and get an icon on the home screen. Installed apps get more features like push and badging. Install rates are a growth metric for them.",
+    "use_cases": [
+      {
+        "type": "social",
+        "example": "Instagram or X offers an Install button, and the site becomes an icon with a full screen window.",
+        "apps": [
+          "X",
+          "Pinterest"
+        ]
+      },
+      {
+        "type": "games",
+        "example": "A browser game offers to install, so it opens full screen and loads offline from the home screen.",
+        "apps": [
+          "Poki"
+        ]
+      },
+      {
+        "type": "music",
+        "example": "A web music player installs as its own app with media keys.",
+        "apps": []
+      },
+      {
+        "type": "shopping",
+        "example": "A store installs as an app and sends push alerts for deals.",
+        "apps": [
+          "AliExpress",
+          "Starbucks"
+        ]
+      },
+      {
+        "type": "productivity",
+        "example": "A web design or office tool installs to feel like a desktop program.",
+        "apps": [
+          "Figma",
+          "Google Docs"
+        ]
+      },
+      {
+        "type": "video",
+        "example": "A web cloud gaming service installs so it runs full screen with controller support.",
+        "apps": [
+          "Xbox Cloud Gaming"
+        ]
+      },
+      {
+        "type": "travel",
+        "example": "A travel site installs for offline boarding passes and trip details.",
+        "apps": [
+          "Uber"
+        ]
+      },
+      {
+        "type": "news",
+        "example": "A news site installs as an app, to get push alerts and an icon.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Prompts can nag",
+      "Looks like a real app"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "beforeinstallprompt is Chromium only",
+    "iOS needs manual Share > Add to Home Screen",
+    "In the EU, non WebKit engines may not support install on iOS"
+  ],
+  "scores": {
+    "sensitivity": 1,
+    "utility": 4,
+    "fingerprint_bits": null,
+    "friction": 1
+  },
+  "value": {
+    "legit_uses": [
+      "Native-like PWA"
+    ],
+    "abuse": [
+      "Fake install prompts"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2015",
+      "browser": "chrome",
+      "version": "44",
+      "change": "beforeinstallprompt ships (Edge 79, Samsung 5)"
+    },
+    {
+      "date": "2023-09",
+      "browser": "safari",
+      "version": "17",
+      "change": "Safari 17 adds Add to Dock on macOS"
+    },
+    {
+      "date": "2025-09",
+      "browser": "ios_safari",
+      "version": "26",
+      "change": "Every Home Screen site opens as a web app by default"
+    },
+    {
+      "date": "2023-07",
+      "browser": "chrome",
+      "version": "",
+      "change": "Chrome on iOS gets Add to Home Screen after iOS 16.4"
+    }
+  ],
+  "refs": [
+    {
+      "t": "mdn",
+      "label": "MDN Making PWAs installable",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/Progressive_web_apps/Guides/Making_PWAs_installable"
+    },
+    {
+      "t": "bcd",
+      "label": "MDN BCD manifests.webapp",
+      "url": "https://github.com/mdn/browser-compat-data"
+    },
+    {
+      "t": "webkit",
+      "label": "WebKit Safari 17",
+      "url": "https://webkit.org/blog/14445/webkit-features-in-safari-17-0/"
+    }
+  ],
+  "confidence": "verified"
+}

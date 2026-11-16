@@ -1,0 +1,187 @@
+{
+  "id": "mob.sensor.magnetometer",
+  "name": "Magnetometer and compass heading",
+  "kind": "signal",
+  "group": "location-motion",
+  "subgroup": "Motion",
+  "tags": [
+    "compass",
+    "magnetometer"
+  ],
+  "plain": "Reads magnetic field and heading; iOS true heading uses location services.",
+  "meaning": "Reveals orientation and nearby magnetic objects (cars, metal), and is used for indoor positioning.",
+  "lifecycle": [
+    "in-session"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "y",
+      "v": "1.5",
+      "api": 3,
+      "permission": "",
+      "protection": "none",
+      "grant": "none",
+      "prompt_ui": "",
+      "persistence": "",
+      "revocation": "",
+      "store_policy": "",
+      "api_surface": "Sensor.TYPE_MAGNETIC_FIELD, TYPE_ROTATION_VECTOR",
+      "note": "Field strength 25 to 65 microtesla typical"
+    },
+    "ios": {
+      "s": "p",
+      "v": "4.0",
+      "permission": "prompt",
+      "protection": "prompt",
+      "grant": "none",
+      "prompt_ui": "",
+      "persistence": "",
+      "revocation": "",
+      "store_policy": "",
+      "api_surface": "Magnetic heading raw; true north needs location",
+      "note": ""
+    }
+  },
+  "web_equivalents": [
+    "web.location.sensor-magnetometer"
+  ],
+  "data": {
+    "type": "stream",
+    "metric": "Field vector, heading",
+    "update": "Up to 50 Hz",
+    "fields": [
+      {
+        "name": "field",
+        "type": "float",
+        "unit": "microtesla",
+        "range": "-2000 to 2000",
+        "precision": "about 0.1"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can use your phone's compass and magnetic field, with a location link for true north",
+    "user_action": "Nothing, or you allow location when a compass wants true north on iPhone",
+    "can": [
+      "Measure the magnetic field in microtesla",
+      "Show compass heading toward magnetic north",
+      "Give true north on iPhone after location is allowed",
+      "Help find nearby metal or detect a magnet case"
+    ],
+    "cannot": [
+      "Show true north on iPhone without location access",
+      "Give your location from the compass",
+      "Ask you first on Android; no prompt is used"
+    ],
+    "reach": 2,
+    "reach_label": "Compass and field, while in use",
+    "differs": "Android needs no prompt for magnetic readings. iPhone raw heading works, but true north needs location services."
+  },
+  "story": {
+    "what_it_is": "An app reads the magnetic field, which powers the compass and can show nearby metal.",
+    "icon": "compass",
+    "tags": [
+      "Sensors",
+      "Silent",
+      "Compass"
+    ],
+    "marketing": [
+      {
+        "vendor": "Google",
+        "name": "Position sensors",
+        "pitch": "Android lets apps use the magnetic field sensor for a compass and orientation.",
+        "url": "https://developer.android.com/develop/sensors-and-location/sensors/sensors_position"
+      }
+    ],
+    "for_you": "You see it as a compass needle in a map or a sky app that points to the right star. Most of the time you never notice the app reading it. It can also help place you inside a building.",
+    "for_makers": "Makers use it to turn maps to face your way, power AR and help find your spot indoors. It is a small fingerprint bit too, since each phone's compass has its own error.",
+    "use_cases": [
+      {
+        "type": "maps",
+        "example": "A map app rotates the map to point the way you face while you walk.",
+        "apps": [
+          "Google Maps",
+          "Apple Maps"
+        ]
+      },
+      {
+        "type": "ar-vr",
+        "example": "A star gazing app overlays constellations on the sky and follows your phone as you move it.",
+        "apps": [
+          "Star Walk",
+          "SkyView"
+        ]
+      },
+      {
+        "type": "games",
+        "example": "An AR treasure hunt points an arrow toward a hidden item.",
+        "apps": [
+          "Ingress"
+        ]
+      },
+      {
+        "type": "travel",
+        "example": "A pilgrim or hiking app shows true north and a direction to a landmark.",
+        "apps": [
+          "Qibla Finder"
+        ]
+      },
+      {
+        "type": "utilities",
+        "example": "A metal detector app shows spikes when the magnetic field changes near a pipe.",
+        "apps": []
+      },
+      {
+        "type": "analytics",
+        "example": "A tracker uses small magnetic quirks to tell phones apart, or maps indoor fields to find where you are.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Indoor position clues",
+      "Weak fingerprint bit"
+    ],
+    "android_note": "Android apps read the magnetic field with no prompt.",
+    "ios_note": "iPhone heading is available with no prompt, but true north needs location services."
+  },
+  "technical_bounds": [
+    "Needs calibration"
+  ],
+  "scores": {
+    "sensitivity": 2,
+    "utility": 2,
+    "fingerprint_bits": 3,
+    "friction": 1
+  },
+  "value": {
+    "legit_uses": [
+      "Compass"
+    ],
+    "abuse": [
+      "Fingerprint"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "related": [
+    "mob.location.motion-sensors-raw"
+  ],
+  "refs": [
+    {
+      "t": "android",
+      "label": "Android: Sensors overview",
+      "url": "https://developer.android.com/develop/sensors-and-location/sensors/sensors_overview"
+    },
+    {
+      "t": "apple",
+      "label": "Apple: Core Motion",
+      "url": "https://developer.apple.com/documentation/coremotion"
+    }
+  ],
+  "confidence": "docs"
+}

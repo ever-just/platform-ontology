@@ -1,0 +1,243 @@
+{
+  "id": "web.contacts.autofill-tokens",
+  "name": "Autofill and autocomplete tokens",
+  "kind": "capability",
+  "group": "personal-data-contacts",
+  "subgroup": "Autofill",
+  "tags": [
+    "autofill"
+  ],
+  "plain": "Form fields can ask the browser to fill saved name, email, phone, address and birthday.",
+  "meaning": "Browser autofill puts personal data into inputs. Pages see it only after fill (often after user interaction on Chrome).",
+  "lifecycle": [
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "<input autocomplete='name|email|tel|street-address|postal-code|cc-number|bday|sex|organization|one-time-code'>",
+      "bcd": [
+        "html.global_attributes.autocomplete"
+      ],
+      "access": {
+        "grant": "gesture",
+        "prompt_ui": "Autofill dropdown; some sites need a click before values are readable",
+        "secure_context": true,
+        "user_gesture": true,
+        "persistence": "Per origin",
+        "revocation": "Site settings",
+        "iframe": "Same as top level; cross-origin iframes need a permissions policy where listed",
+        "steps": [
+          "Call the API",
+          "Browser applies its access rules",
+          "Page receives the result"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "14",
+          "note": "",
+          "date": "2011-09-16"
+        },
+        "edge": {
+          "s": "y",
+          "v": "12",
+          "note": "",
+          "date": "2015-07-29"
+        },
+        "firefox": {
+          "s": "y",
+          "v": "4",
+          "note": "",
+          "date": "2011-03-22"
+        },
+        "safari": {
+          "s": "y",
+          "v": "6",
+          "note": "",
+          "date": "2012-07-25"
+        },
+        "ios_safari": {
+          "s": "y",
+          "v": "6",
+          "note": "",
+          "date": "2012-09-10"
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "18",
+          "note": "",
+          "date": "2012-06-27"
+        },
+        "samsung": {
+          "s": "y",
+          "v": "1.0",
+          "note": "",
+          "date": "2013-04-27"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "object",
+    "metric": "Form fields can ask the browser to fill saved name, email, phone, address and birthday.",
+    "update": "on demand",
+    "fields": [
+      {
+        "name": "name, honorific-prefix, given-name, family-name",
+        "type": "string",
+        "range": "free text"
+      },
+      {
+        "name": "email, tel, tel-national",
+        "type": "string",
+        "range": "free text"
+      },
+      {
+        "name": "street-address, address-line1, address-level1/2, postal-code, country",
+        "type": "string",
+        "range": "free text"
+      },
+      {
+        "name": "cc-name, cc-number, cc-exp, cc-csc",
+        "type": "string",
+        "range": "Chrome fills cards after confirmation; csc needs extra step"
+      },
+      {
+        "name": "bday, sex, organization, username",
+        "type": "string",
+        "range": "free text"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can ask your browser to fill saved name, email, phone and address",
+    "user_action": "You tap a form field and choose a suggestion, or click first on some sites.",
+    "can": [
+      "Fill name, email, phone, address and birthday from your saved details",
+      "Fill the fields it marks with the right label",
+      "Offer them as soon as you tap a field"
+    ],
+    "cannot": [
+      "See saved details before you pick them, on most browsers",
+      "Fill details you never saved",
+      "Fill fields in a hidden form without your tap in most cases",
+      "Ignore your turning autofill off"
+    ],
+    "reach": 2,
+    "reach_label": "What you pick at each form",
+    "differs": ""
+  },
+  "story": {
+    "what_it_is": "Forms can ask your browser to fill name, email, phone, address and more.",
+    "icon": "text-cursor-input",
+    "tags": [
+      "Autofill",
+      "Forms",
+      "Needs a tap"
+    ],
+    "marketing": [
+      {
+        "vendor": "Mozilla",
+        "name": "autocomplete attribute",
+        "pitch": "MDN says the attribute tells browsers what kind of data a form field wants, so they can autofill it.",
+        "url": "https://developer.mozilla.org/en-US/docs/Web/HTML/Attributes/autocomplete"
+      }
+    ],
+    "for_you": "You tap one form field, pick your saved info, and many fields fill at once. Some hidden fields can fill too, so check what you share.",
+    "for_makers": "Makers add the right labels so your browser can fill signup and checkout forms. It lifts signups, but hidden fields can collect more than you meant to share.",
+    "use_cases": [
+      {
+        "type": "shopping",
+        "example": "A checkout form fills name, address and phone in one tap.",
+        "apps": [
+          "Shopify stores"
+        ]
+      },
+      {
+        "type": "social",
+        "example": "A signup page fills your email and birthday.",
+        "apps": [
+          "Facebook",
+          "X"
+        ]
+      },
+      {
+        "type": "travel",
+        "example": "A booking form fills passenger details.",
+        "apps": [
+          "Expedia"
+        ]
+      },
+      {
+        "type": "ads",
+        "example": "A lead form fills fields for you, and you send more info than you thought.",
+        "apps": []
+      },
+      {
+        "type": "security",
+        "example": "A hidden field on a form collects phone or address that you never saw.",
+        "apps": []
+      },
+      {
+        "type": "banking",
+        "example": "A loan form fills name and address, but you review the rest.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Hidden field harvesting",
+      "Over sharing"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Hidden fields can be filled by some autofill; browsers mitigate",
+    "Payment fields need user confirmation",
+    "Not a read API: the site only sees what the form posts"
+  ],
+  "scores": {
+    "sensitivity": 5,
+    "utility": 4,
+    "fingerprint_bits": null,
+    "friction": 1
+  },
+  "value": {
+    "legit_uses": [
+      "Faster checkout",
+      "Sign up"
+    ],
+    "abuse": [
+      "Harvesting hidden field autofill (known abuse by ad scripts)"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2012",
+      "browser": "chrome",
+      "version": "14",
+      "change": "autocomplete tokens defined in the HTML spec (autofill honoured earlier)"
+    }
+  ],
+  "refs": [
+    {
+      "t": "mdn",
+      "label": "MDN autocomplete attribute",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/HTML/Attributes/autocomplete"
+    },
+    {
+      "t": "spec",
+      "label": "HTML autofill",
+      "url": "https://html.spec.whatwg.org/multipage/form-control-infrastructure.html#autofill"
+    }
+  ],
+  "confidence": "docs"
+}

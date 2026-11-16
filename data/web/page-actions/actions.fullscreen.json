@@ -1,0 +1,259 @@
+{
+  "id": "web.actions.fullscreen",
+  "name": "Fullscreen",
+  "kind": "action",
+  "group": "page-actions",
+  "subgroup": "Display control",
+  "tags": [
+    "fullscreen",
+    "escape-to-exit",
+    "user-activation"
+  ],
+  "plain": "Takes over the whole screen for a page element after a click.",
+  "meaning": "A site can hide the browser UI, which helps video and games but also lets a malicious page draw a fake desktop or browser bar. Esc always exits.",
+  "lifecycle": [
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "element.requestFullscreen({navigationUI}); document.exitFullscreen()",
+      "permissions_policy": "fullscreen",
+      "bcd": [
+        "api.Element.requestFullscreen",
+        "api.Document.fullscreenElement"
+      ],
+      "access": {
+        "grant": "gesture",
+        "prompt_ui": "No prompt (needs a click, tap or keypress)",
+        "secure_context": false,
+        "user_gesture": true,
+        "activation": "transient",
+        "persistence": "Ends on Esc, navigation or exitFullscreen(); no stored state",
+        "revocation": "Nothing to revoke (no permission is stored)",
+        "iframe": "Cross-origin iframe needs allow=\"fullscreen\" (Permissions Policy fullscreen defaults to self)",
+        "steps": [
+          "Person clicks",
+          "Page calls requestFullscreen within about 5 s",
+          "Browser shows Press Esc to exit message",
+          "Page receives fullscreenchange"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "71",
+          "note": "",
+          "date": "2018-12-04"
+        },
+        "edge": {
+          "s": "y",
+          "v": "79",
+          "note": "",
+          "date": "2020-01-15"
+        },
+        "firefox": {
+          "s": "y",
+          "v": "64",
+          "note": "",
+          "date": "2018-12-11"
+        },
+        "safari": {
+          "s": "y",
+          "v": "16.4",
+          "note": "",
+          "date": "2023-03-27"
+        },
+        "ios_safari": {
+          "s": "p",
+          "v": "16.4",
+          "note": "Partial implementation per MDN BCD",
+          "date": "2023-03-27"
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "71",
+          "note": "",
+          "date": "2018-12-04"
+        },
+        "samsung": {
+          "s": "y",
+          "v": "10.0",
+          "note": "",
+          "date": "2019-08-22"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "none",
+    "metric": "",
+    "update": "",
+    "fields": []
+  },
+  "limits": {
+    "headline": "Can make a video or page area fill your screen, after you tap",
+    "user_action": "You tap a Full screen button, or press a key like F on a video.",
+    "can": [
+      "Fill the screen with a video, a game or a photo after a tap or key press",
+      "Hide the browser's toolbars while it is on",
+      "Stay full screen until you press Esc or swipe out"
+    ],
+    "cannot": [
+      "Go full screen without a tap, click or key press",
+      "Block the Esc key or the swipe that gets you out",
+      "Take over the whole iPhone screen for anything other than video",
+      "Hide that you are in full screen; browsers show a short banner"
+    ],
+    "reach": 2,
+    "reach_label": "While you watch or play",
+    "differs": "iPhone Safari is limited: video can go full screen, but most other page elements cannot. Android Chrome and desktop browsers allow it for any element."
+  },
+  "story": {
+    "what_it_is": "After you click, a site can make part of the page fill your whole screen.",
+    "icon": "maximize",
+    "tags": [
+      "Needs a click",
+      "Games",
+      "Video"
+    ],
+    "marketing": [
+      {
+        "vendor": "Mozilla",
+        "name": "Fullscreen API",
+        "pitch": "MDN says the API lets a site present an element, like a video or game, filling the whole screen.",
+        "url": "https://developer.mozilla.org/en-US/docs/Web/API/Fullscreen_API"
+      }
+    ],
+    "for_you": "You tap a full screen button on a video or game. The page fills your display and a small note tells you how to leave with Escape.",
+    "for_makers": "Makers use it for immersion: video, games and slides. The click rule exists so a site cannot suddenly cover your screen with a fake desktop.",
+    "use_cases": [
+      {
+        "type": "video",
+        "example": "You hit full screen on a movie and the player hides all the browser controls.",
+        "apps": [
+          "YouTube",
+          "Netflix"
+        ]
+      },
+      {
+        "type": "games",
+        "example": "Xbox Cloud Gaming or GeForce NOW in the browser go full screen so it feels like a console.",
+        "apps": [
+          "Xbox Cloud Gaming",
+          "GeForce NOW"
+        ]
+      },
+      {
+        "type": "productivity",
+        "example": "A presenter shows slides full screen in a web deck.",
+        "apps": [
+          "Google Slides",
+          "Canva"
+        ]
+      },
+      {
+        "type": "live",
+        "example": "A live sports stream fills your screen for the match.",
+        "apps": [
+          "Twitch",
+          "DAZN"
+        ]
+      },
+      {
+        "type": "security",
+        "example": "A phishing page fakes a full screen browser window to steal passwords, which is why browsers show a warning.",
+        "apps": []
+      },
+      {
+        "type": "education",
+        "example": "A student opens a full screen exam page that locks out distractions.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Fake browser bars",
+      "Screen takeover"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Needs transient user activation; promise rejects with TypeError otherwise",
+    "Esc (or system gesture) always exits; with Keyboard Lock the person must hold Esc for about 2 s",
+    "Browser shows an exit notice for a few seconds; Safari desktop limits some keys in fullscreen",
+    "iPhone Safari supports only video fullscreen through the native player (requestFullscreen on elements is iPad only)",
+    "Cannot enter fullscreen without a gesture even when previously allowed; the F11 user fullscreen is separate",
+    "Password and sensitive prompts from the OS or browser still render above"
+  ],
+  "scores": {
+    "sensitivity": 2,
+    "utility": 5,
+    "fingerprint_bits": null,
+    "friction": 1
+  },
+  "value": {
+    "legit_uses": [
+      "Video players",
+      "Games",
+      "Slide presenters"
+    ],
+    "abuse": [
+      "Fake OS or browser UI (fullscreen spoofing)",
+      "Locking attention"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2012",
+      "browser": "chrome",
+      "version": "15",
+      "change": "Prefixed Fullscreen API"
+    },
+    {
+      "date": "2018-12",
+      "browser": "chrome",
+      "version": "71",
+      "change": "Unprefixed requestFullscreen that returns a promise"
+    },
+    {
+      "date": "2018-12",
+      "browser": "firefox",
+      "version": "64",
+      "change": "Unprefixed Fullscreen API"
+    },
+    {
+      "date": "2023-03",
+      "browser": "safari",
+      "version": "16.4",
+      "change": "Standard Fullscreen API on iPad (iPhone still video only)"
+    }
+  ],
+  "related": [
+    "web.display.keyboard-lock"
+  ],
+  "refs": [
+    {
+      "t": "mdn",
+      "label": "MDN Fullscreen API",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/Fullscreen_API"
+    },
+    {
+      "t": "spec",
+      "label": "WHATWG Fullscreen",
+      "url": "https://fullscreen.spec.whatwg.org/"
+    },
+    {
+      "t": "webkit",
+      "label": "WebKit Fullscreen API on iPad",
+      "url": "https://webkit.org/blog/13966/webkit-features-in-safari-16-4/"
+    }
+  ],
+  "confidence": "docs"
+}

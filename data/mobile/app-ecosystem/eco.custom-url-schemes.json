@@ -1,0 +1,186 @@
+{
+  "id": "mob.eco.custom-url-schemes",
+  "name": "Custom URL schemes and app discovery",
+  "kind": "capability",
+  "group": "app-ecosystem",
+  "subgroup": "Linking",
+  "tags": [
+    "url-scheme",
+    "canopenurl",
+    "app-detection"
+  ],
+  "plain": "A custom scheme (myapp://) opens an app; apps can probe which other apps are installed.",
+  "meaning": "Used for deep links and to guess which apps the person has. Both systems now limit probing.",
+  "lifecycle": [
+    "in-session"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "y",
+      "v": "",
+      "permission": "intent-filter; QUERY_ALL_PACKAGES or <queries> (Android 11)",
+      "protection": "normal",
+      "grant": "install",
+      "prompt_ui": "",
+      "persistence": "",
+      "revocation": "",
+      "store_policy": "Play: QUERY_ALL_PACKAGES declaration",
+      "api_surface": "Intent, PackageManager.queryIntentActivities",
+      "note": "Package visibility filtering since Android 11 (API 30)."
+    },
+    "ios": {
+      "s": "p",
+      "v": "9.0",
+      "permission": "LSApplicationQueriesSchemes (max 50 schemes)",
+      "protection": "none",
+      "grant": "none",
+      "prompt_ui": "",
+      "persistence": "",
+      "revocation": "",
+      "store_policy": "",
+      "api_surface": "UIApplication.canOpenURL",
+      "note": "iOS blocks canOpenURL on schemes not declared; limit 50."
+    }
+  },
+  "web_equivalents": [
+    "web.notexposed.installed-apps"
+  ],
+  "data": {
+    "type": "boolean",
+    "metric": "Scheme openable",
+    "update": "per call",
+    "fields": []
+  },
+  "limits": {
+    "headline": "Can open another app by its link name and guess which apps you have",
+    "user_action": "Nothing. It happens when the app starts or you tap a link like myapp://",
+    "can": [
+      "Open another app by its link name",
+      "Check up to 50 named apps on iPhone",
+      "Guess which apps you use from which ones answer"
+    ],
+    "cannot": [
+      "Test names it did not declare ahead of time on iPhone",
+      "See the whole app list on Android 11 and later",
+      "Take over a link that belongs to a verified web link"
+    ],
+    "reach": 2,
+    "reach_label": "Only the apps it named",
+    "differs": "iPhone allows a limit of 50 declared names. Android 11 and later filters which apps an app can see."
+  },
+  "story": {
+    "what_it_is": "Special web style addresses (myapp://) that open an app, and can be used to test whether an app exists.",
+    "icon": "link-2",
+    "tags": [
+      "Links",
+      "Installed apps",
+      "Silent"
+    ],
+    "marketing": [],
+    "for_you": "A button in one app opens another app on a certain screen. You never see the address, but you notice the jump from app to app.",
+    "for_makers": "Old school way to hand people from one app to another with data attached. It is easy to copy and spoof, so Universal Links and App Links replaced most use, but it still powers login and payment handoffs.",
+    "use_cases": [
+      {
+        "type": "payments",
+        "example": "You tap 'Pay with Venmo' and Venmo opens with the amount filled in, then returns you to the store.",
+        "apps": [
+          "Venmo",
+          "Cash App"
+        ]
+      },
+      {
+        "type": "social",
+        "example": "The login screen sends you to the Facebook app to approve, then back to the game.",
+        "apps": [
+          "Facebook",
+          "Candy Crush"
+        ]
+      },
+      {
+        "type": "music",
+        "example": "A share button opens the Spotify app on the exact song you picked.",
+        "apps": [
+          "Spotify"
+        ]
+      },
+      {
+        "type": "games",
+        "example": "A friend's invite opens a game with a code already typed into the lobby.",
+        "apps": [
+          "Among Us"
+        ]
+      },
+      {
+        "type": "ads",
+        "example": "An ad SDK tries a list of schemes to guess which apps you have, which both OSes now limit.",
+        "apps": []
+      },
+      {
+        "type": "developer",
+        "example": "Developers test deep links in the simulator by typing myapp://profile/42.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Easy to spoof",
+      "Used to guess installed apps"
+    ],
+    "android_note": "Android lets any app claim a scheme, so Android prefers verified App Links.",
+    "ios_note": "iOS allows only 50 declared schemes to be checked and prefers Universal Links."
+  },
+  "technical_bounds": [
+    "Apple 50-scheme cap",
+    "Android visibility filter"
+  ],
+  "scores": {
+    "sensitivity": 3,
+    "utility": 3,
+    "fingerprint_bits": 8,
+    "friction": 1
+  },
+  "value": {
+    "legit_uses": [
+      "Open known partner apps"
+    ],
+    "abuse": [
+      "Inferring installed-app lists for ads"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2020-09",
+      "platform": "android",
+      "version": "Android 11 (API 30)",
+      "change": "Package visibility restrictions"
+    },
+    {
+      "date": "2015-09",
+      "platform": "ios",
+      "version": "iOS 9",
+      "change": "canOpenURL limited to declared schemes (max 50)"
+    }
+  ],
+  "related": [
+    "mob.policy.query-all-packages"
+  ],
+  "refs": [
+    {
+      "t": "android",
+      "label": "Android: Package visibility",
+      "url": "https://developer.android.com/training/package-visibility"
+    },
+    {
+      "t": "apple",
+      "label": "Apple: canOpenURL",
+      "url": "https://developer.apple.com/documentation/uikit/uiapplication/canopenurl(_:)"
+    }
+  ],
+  "confidence": "verified"
+}

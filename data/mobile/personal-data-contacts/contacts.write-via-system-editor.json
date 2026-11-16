@@ -1,0 +1,193 @@
+{
+  "id": "mob.contacts.write-via-system-editor",
+  "name": "Adding contacts through the system editor",
+  "kind": "action",
+  "group": "personal-data-contacts",
+  "subgroup": "Address book",
+  "tags": [
+    "write",
+    "intent",
+    "manage-contacts"
+  ],
+  "plain": "An app creates or edits a contact by opening the system editor, not by writing silently.",
+  "meaning": "Prevents apps from planting or altering contacts in the background; the person sees and approves each change.",
+  "lifecycle": [
+    "in-session"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "p",
+      "v": "17",
+      "api": 37,
+      "permission": "MANAGE_CONTACTS (special app access, arrives Android 17 QPR2) for programmatic writes; WRITE_CONTACTS ends for apps targeting the 2027 release",
+      "protection": "special",
+      "grant": "settings",
+      "prompt_ui": "ACTION_INSERT, ACTION_EDIT, ACTION_INSERT_OR_EDIT need no permission",
+      "persistence": "Per use",
+      "revocation": "Settings > Special app access",
+      "store_policy": "Play declaration for MANAGE_CONTACTS",
+      "api_surface": "ContactsContract.Intents.Insert, ACTION_INSERT_OR_EDIT",
+      "note": "Announced 21 Oct 2026; People Directory also arrives in QPR2"
+    },
+    "ios": {
+      "s": "y",
+      "v": "9",
+      "permission": "NSContactsUsageDescription for CNSaveRequest; none for CNContactViewController UI",
+      "protection": "prompt",
+      "grant": "prompt",
+      "prompt_ui": "Full or limited access prompt for saves; editor UI needs none",
+      "persistence": "Until revoked",
+      "revocation": "Settings > Privacy & Security > Contacts",
+      "store_policy": "",
+      "api_surface": "CNSaveRequest, CNContactViewController(forNewContact:)",
+      "note": "Writing needs full access; limited access allows apps to write only contacts they created"
+    }
+  },
+  "data": {
+    "type": "event",
+    "metric": "Saved contact",
+    "update": "per save",
+    "fields": [
+      {
+        "name": "contactId",
+        "type": "string",
+        "unit": "id",
+        "range": "",
+        "precision": ""
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can open the system contact screen so you add or edit a contact yourself",
+    "user_action": "You tap Add to contacts and press Save in the system screen",
+    "can": [
+      "Open the system editor with details filled in",
+      "Insert or edit a contact with no permission (Android)",
+      "Let you review each change before it is saved"
+    ],
+    "cannot": [
+      "Change contacts in the background without the editor",
+      "Save the contact itself; you press Save",
+      "Make direct changes on Android without special access that arrives with Android 17 QPR2",
+      "Change contacts it did not create when you chose limited access (iPhone)"
+    ],
+    "reach": 1,
+    "reach_label": "One contact you approve",
+    "differs": "Android 17 QPR2 adds a special access setting for direct changes; iPhone direct saves need a prompt and limited access allows only contacts the app created."
+  },
+  "story": {
+    "what_it_is": "The app opens the phone's own contact screen to add someone, so nothing is saved without you seeing it.",
+    "icon": "user-plus",
+    "tags": [
+      "Contacts",
+      "No prompt",
+      "Privacy"
+    ],
+    "marketing": [],
+    "for_you": "A normal Add Contact screen opens with the name and number filled in. You review and tap Save. The app never gets to read your address book.",
+    "for_makers": "The app can offer save contact without a permission prompt or a review hit. The system enforces the safe route. The cost is one extra tap for the person.",
+    "use_cases": [
+      {
+        "type": "social",
+        "example": "A business card scanner turns a card into a contact with one tap to save.",
+        "apps": [
+          "CamCard"
+        ]
+      },
+      {
+        "type": "shopping",
+        "example": "A shop app lets you save a store's phone number.",
+        "apps": []
+      },
+      {
+        "type": "enterprise",
+        "example": "A sales app saves a lead as a contact you can call back.",
+        "apps": []
+      },
+      {
+        "type": "travel",
+        "example": "A hotel app saves the front desk number.",
+        "apps": []
+      },
+      {
+        "type": "health",
+        "example": "A clinic app saves its phone number into your contacts.",
+        "apps": []
+      },
+      {
+        "type": "delivery",
+        "example": "A delivery app saves your driver's contact.",
+        "apps": []
+      },
+      {
+        "type": "live",
+        "example": "A conference app saves a speaker's details.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "One tap each time",
+      "Wrong details could be saved if not read",
+      "Not for bulk"
+    ],
+    "android_note": "Google announced an in system contact editing option on 21 Oct 2026, and a People Directory arrives in QPR2.",
+    "ios_note": "On iOS, full contacts access is needed to write directly. Limited access lets an app write only contacts it created."
+  },
+  "technical_bounds": [
+    "Dated from the Android blog of 21 Oct 2026; final API names may change before release",
+    "MANAGE_CONTACTS needs a Play declaration"
+  ],
+  "scores": {
+    "sensitivity": 3,
+    "utility": 3,
+    "fingerprint_bits": null,
+    "friction": 3
+  },
+  "value": {
+    "legit_uses": [
+      "Saving a lead",
+      "Sync apps"
+    ],
+    "abuse": [
+      "Silent contact spam, spoofed caller names"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2026-10",
+      "platform": "android",
+      "version": "17 QPR2 / 2027 target",
+      "change": "Direct WRITE_CONTACTS writes end for new targets; intents and MANAGE_CONTACTS replace them"
+    },
+    {
+      "date": "2024-09",
+      "platform": "ios",
+      "version": "iOS 18",
+      "change": "Limited access allows writes for contacts the app created"
+    }
+  ],
+  "related": [
+    "mob.contacts.full-access",
+    "mob.contacts.picker"
+  ],
+  "refs": [
+    {
+      "t": "android",
+      "label": "Android: A reliable way to add and edit contacts",
+      "url": "https://developer.android.com/blog/posts/reliable-way-to-add-and-edit-contacts-android"
+    },
+    {
+      "t": "apple",
+      "label": "Apple: Accessing the contact store",
+      "url": "https://developer.apple.com/documentation/contacts/accessing-the-contact-store"
+    }
+  ],
+  "confidence": "docs"
+}

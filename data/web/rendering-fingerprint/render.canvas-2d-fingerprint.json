@@ -1,0 +1,278 @@
+{
+  "id": "web.render.canvas-2d-fingerprint",
+  "name": "Canvas 2D fingerprint",
+  "kind": "tracking",
+  "group": "rendering-fingerprint",
+  "subgroup": "Canvas",
+  "tags": [
+    "canvas",
+    "toDataURL",
+    "getImageData",
+    "hash"
+  ],
+  "plain": "Draws text and shapes to a hidden canvas, then hashes the pixels the device produced.",
+  "meaning": "GPU, driver, OS font rasterizer and anti-aliasing leave tiny pixel differences. The hash is a stable device-class identifier that works with no cookies and no prompt.",
+  "lifecycle": [
+    "on-arrival",
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "canvas.getContext('2d'); toDataURL(); getImageData(); toBlob()",
+      "bcd": [
+        "api.HTMLCanvasElement.toDataURL",
+        "api.CanvasRenderingContext2D.getImageData"
+      ],
+      "access": {
+        "grant": "none",
+        "prompt_ui": "",
+        "secure_context": false,
+        "user_gesture": false,
+        "persistence": "",
+        "revocation": "",
+        "iframe": "",
+        "steps": [
+          "Create off-screen canvas",
+          "fillText with odd fonts plus arcs and gradients",
+          "Read pixels with toDataURL or getImageData",
+          "Hash the result (murmur3 or SHA-256)"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "2",
+          "note": "",
+          "date": "2009-05-21"
+        },
+        "edge": {
+          "s": "y",
+          "v": "12",
+          "note": "",
+          "date": "2015-07-29"
+        },
+        "firefox": {
+          "s": "y",
+          "v": "2",
+          "note": "",
+          "date": "2006-10-24"
+        },
+        "safari": {
+          "s": "y",
+          "v": "4",
+          "note": "",
+          "date": "2009-06-08"
+        },
+        "ios_safari": {
+          "s": "y",
+          "v": "3",
+          "note": "",
+          "date": "2009-06-17"
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "18",
+          "note": "",
+          "date": "2012-06-27"
+        },
+        "samsung": {
+          "s": "y",
+          "v": "1.0",
+          "note": "",
+          "date": "2013-04-27"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "hash",
+    "metric": "Hash of 300x150 default canvas pixels (about 180 KB RGBA read out as a string or hash)",
+    "update": "",
+    "fields": [
+      {
+        "name": "pixels",
+        "type": "binary",
+        "unit": "RGBA bytes",
+        "range": "300x150 default",
+        "precision": "1 level per channel before noise"
+      },
+      {
+        "name": "hash",
+        "type": "hash",
+        "unit": "bits",
+        "range": "32 to 256",
+        "precision": "stable across reloads on the same stack"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can turn a hidden drawing into a device number that works without cookies",
+    "user_action": "Nothing. It happens when the page loads",
+    "can": [
+      "Draw hidden text and shapes, then check the pixels your device made",
+      "Create a number from your graphics card, fonts and software",
+      "Recognise the same device on later visits, even after cookies are cleared"
+    ],
+    "cannot": [
+      "Show the drawing to you",
+      "Tell exactly who you are by itself",
+      "Get exact results from Tor Browser, which asks first, or from Brave, which adds noise",
+      "Be turned off by a cookie banner choice"
+    ],
+    "reach": 3,
+    "reach_label": "Repeatable across visits",
+    "differs": ""
+  },
+  "story": {
+    "what_it_is": "A script draws text and shapes in a hidden canvas, then hashes the pixels the device produces.",
+    "icon": "fingerprint",
+    "tags": [
+      "Tracking",
+      "Graphics",
+      "Silent"
+    ],
+    "marketing": [
+      {
+        "vendor": "Mozilla",
+        "name": "Firefox fingerprinting protection",
+        "pitch": "Firefox says it blocks known fingerprinting scripts and makes canvas readback less unique.",
+        "url": "https://support.mozilla.org/en-US/kb/firefox-protection-against-fingerprinting"
+      }
+    ],
+    "for_you": "You do not see it. The same drawing looks a little different on different computers because of fonts and graphics chips, so your result works like a quiet ID card.",
+    "for_makers": "Ad tech and fraud vendors use it as one core signal in a bundle. Its value is that it works on most browsers with no permission and stays the same after cookies are cleared.",
+    "use_cases": [
+      {
+        "type": "ads",
+        "example": "A data broker uses the canvas hash to match your phone visit and laptop visit to the same profile.",
+        "apps": []
+      },
+      {
+        "type": "security",
+        "example": "A payments site flags a checkout when the same canvas hash shows up on hundreds of fake orders.",
+        "apps": []
+      },
+      {
+        "type": "games",
+        "example": "A game site bans a cheater and then recognizes the same device when they try to make a new account.",
+        "apps": []
+      },
+      {
+        "type": "analytics",
+        "example": "A web analytics tool without cookies uses the canvas hash to count unique visits.",
+        "apps": []
+      },
+      {
+        "type": "social",
+        "example": "A social site blocks a banned user from signing up again from the same device.",
+        "apps": []
+      },
+      {
+        "type": "shopping",
+        "example": "A ticket seller finds a single scalper using one browser behind many accounts.",
+        "apps": [
+          "Ticketmaster"
+        ]
+      },
+      {
+        "type": "banking",
+        "example": "A bank links your new login to your trusted device list without asking for a code every time.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Cookie clearing does not help",
+      "Works across sites"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Pixel output is device class level, not per-device unique: millions of identical hardware and software stacks collide",
+    "Cannot identify the person alone; best combined with WebGL, audio and fonts",
+    "Tainted cross-origin canvases refuse readback"
+  ],
+  "scores": {
+    "sensitivity": 4,
+    "utility": 1,
+    "fingerprint_bits": 7,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": "Anti-fraud device ID, bot detection, font and emoji support checks",
+    "abuse": "Cookieless cross-site tracking, fingerprint resale, covert re-identification after cookie clearing"
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2012-05",
+      "browser": "paper",
+      "version": "",
+      "change": "Mowery and Shacham 'Pixel Perfect' introduces canvas fingerprinting"
+    },
+    {
+      "date": "2014-07",
+      "browser": "paper",
+      "version": "",
+      "change": "Acar et al. find AddThis canvas fingerprinting on 5% of top 100k sites"
+    },
+    {
+      "date": "2015-09",
+      "browser": "firefox",
+      "version": "41",
+      "change": "Canvas extraction prompt added under privacy.resistFingerprinting (Tor Uplift)"
+    },
+    {
+      "date": "2023-09",
+      "browser": "safari",
+      "version": "17",
+      "change": "Canvas noise in Private Browsing (Advanced Fingerprinting Protection)"
+    },
+    {
+      "date": "2025-11",
+      "browser": "firefox",
+      "version": "145",
+      "change": "Randomized canvas readback in Private Browsing and ETP Strict"
+    },
+    {
+      "date": "2025-09",
+      "browser": "safari",
+      "version": "26",
+      "change": "Fingerprinting protection extended to all browsing for known fingerprinting scripts"
+    }
+  ],
+  "related": [
+    "web.render.webgl-render-hash",
+    "web.render.emoji-rendering",
+    "web.render.countermeasure-brave-farbling"
+  ],
+  "refs": [
+    {
+      "t": "paper",
+      "label": "Mowery and Shacham, Pixel Perfect (2012)",
+      "url": "https://hovav.net/ucsd/dist/canvas.pdf"
+    },
+    {
+      "t": "mdn",
+      "label": "MDN toDataURL",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/HTMLCanvasElement/toDataURL"
+    },
+    {
+      "t": "github",
+      "label": "FingerprintJS",
+      "url": "https://github.com/fingerprintjs/fingerprintjs"
+    },
+    {
+      "t": "paper",
+      "label": "Laperdrix et al., Beauty and the Beast (AmIUnique 2016)",
+      "url": "https://hal.inria.fr/hal-01285470v2/document"
+    }
+  ],
+  "confidence": "docs"
+}

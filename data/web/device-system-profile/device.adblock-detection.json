@@ -1,0 +1,221 @@
+{
+  "id": "web.device.adblock-detection",
+  "name": "Ad blocker detection",
+  "kind": "signal",
+  "group": "device-system-profile",
+  "subgroup": "Browser state",
+  "tags": [
+    "adblock",
+    "dom-blockers",
+    "filter-lists"
+  ],
+  "plain": "Detects ad blockers via bait elements and filter-list selectors.",
+  "meaning": "Reveals ad blocker use (about a third of desktop users) and which filter lists (EasyList, AdGuard, Fanboy, regional lists) are on. FingerprintJS probes about 20 lists; list pattern is itself identifying.",
+  "lifecycle": [
+    "on-arrival",
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "Hidden bait div with ad class names, fetch of ad script URL, selector tests",
+      "access": {
+        "grant": "none",
+        "prompt_ui": "None",
+        "secure_context": false,
+        "user_gesture": false,
+        "persistence": "read fresh on every page load; nothing stored",
+        "revocation": "none needed (no grant)",
+        "iframe": "Readable from cross-origin iframes too (same values)",
+        "steps": [
+          "Page script reads the value",
+          "No prompt is shown"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "1",
+          "note": "",
+          "date": "2008-12-11"
+        },
+        "edge": {
+          "s": "y",
+          "v": "12",
+          "note": "",
+          "date": "2015-07-29"
+        },
+        "firefox": {
+          "s": "y",
+          "v": "1",
+          "note": "",
+          "date": "2004-11-09"
+        },
+        "safari": {
+          "s": "y",
+          "v": "1",
+          "note": "",
+          "date": "2003-06-23"
+        },
+        "ios_safari": {
+          "s": "y",
+          "v": "1",
+          "note": "",
+          "date": "2007-06-29"
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "18",
+          "note": "",
+          "date": "2012-06-27"
+        },
+        "samsung": {
+          "s": "y",
+          "v": "1.0",
+          "note": "",
+          "date": "2013-04-27"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "object",
+    "metric": "",
+    "update": "static per session",
+    "fields": [
+      {
+        "name": "blocked selectors per list",
+        "type": "list",
+        "unit": "",
+        "range": "about 20 filter lists tested",
+        "precision": "present or absent"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can tell if you use an ad blocker and roughly which filter lists",
+    "user_action": "Nothing. It happens when the page loads",
+    "can": [
+      "Test whether bait ads or ad scripts get blocked",
+      "Guess which filter lists you have turned on, such as EasyList or AdGuard",
+      "Show an ask to turn off your blocker",
+      "Use the pattern of blocked items as one clue to tell you apart from other visitors"
+    ],
+    "cannot": [
+      "See which sites your blocker blocked elsewhere",
+      "Turn your blocker off",
+      "See your blocker settings directly; it only guesses from results",
+      "Be certain; privacy tools can hide the test"
+    ],
+    "reach": 2,
+    "reach_label": "A guess, while the page loads",
+    "differs": ""
+  },
+  "story": {
+    "what_it_is": "Checks whether you run an ad blocker, and sometimes which filter lists you use.",
+    "icon": "shield-off",
+    "tags": [
+      "Ads",
+      "Silent",
+      "Fingerprinting"
+    ],
+    "marketing": [],
+    "for_you": "You never see the check itself. What you may see is a pop-up that says Please turn off your ad blocker, or an article that stays blurred until you do. Some sites then show less or nothing.",
+    "for_makers": "Sites that live on ad income want to know how many readers block ads. They use the check to ask for an exception, serve a subscription offer or measure lost revenue. Fraud tools also use the exact blocker set as one more clue about a device.",
+    "use_cases": [
+      {
+        "type": "news",
+        "example": "A news site blurs the article and asks you to disable your blocker or subscribe.",
+        "apps": [
+          "Forbes",
+          "Business Insider"
+        ]
+      },
+      {
+        "type": "video",
+        "example": "A video platform detects blockers and slows or interrupts playback until ads are allowed.",
+        "apps": [
+          "YouTube"
+        ]
+      },
+      {
+        "type": "games",
+        "example": "A free browser games portal shows a polite wall asking you to whitelist the site because ads pay for the games.",
+        "apps": []
+      },
+      {
+        "type": "ads",
+        "example": "An ad recovery service injects a different, less intrusive ad format for people who block normal ads.",
+        "apps": [
+          "Admiral"
+        ]
+      },
+      {
+        "type": "analytics",
+        "example": "A publisher estimates how much revenue is lost to blockers in each country by counting detection hits.",
+        "apps": []
+      },
+      {
+        "type": "security",
+        "example": "A fingerprinting service adds the blocker and its list choices to a device profile that follows you across sites.",
+        "apps": [
+          "FingerprintJS"
+        ]
+      }
+    ],
+    "risks": [
+      "Fingerprint clue about you",
+      "Pressure to turn off privacy tools"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Cannot see which sites were blocked on",
+    "DNS blockers invisible"
+  ],
+  "scores": {
+    "sensitivity": 3,
+    "utility": 4,
+    "fingerprint_bits": 1.5,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Show whitelist notice"
+    ],
+    "abuse": [
+      "Fingerprint of filter list set"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2016-06",
+      "browser": "paper",
+      "version": "",
+      "change": "AmIUnique: ad blocker 0.99 bits"
+    }
+  ],
+  "related": [
+    "web.device.extension-probing"
+  ],
+  "refs": [
+    {
+      "t": "github",
+      "label": "fingerprintjs source: dom_blockers",
+      "url": "https://github.com/fingerprintjs/fingerprintjs/blob/master/src/sources/dom_blockers.ts"
+    },
+    {
+      "t": "paper",
+      "label": "AmIUnique: Beauty and the Beast, Laperdrix et al. 2016 (attribute entropy)",
+      "url": "https://hal.inria.fr/hal-01285470"
+    }
+  ],
+  "confidence": "verified"
+}

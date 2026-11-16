@@ -1,0 +1,229 @@
+{
+  "id": "mob.system.privacy-dashboard",
+  "name": "Privacy dashboard and report",
+  "kind": "capability",
+  "group": "system-control",
+  "subgroup": "Mechanics",
+  "tags": [
+    "mechanics",
+    "privacy-dashboard",
+    "app-privacy-report",
+    "permission-usage"
+  ],
+  "plain": "A system view that shows which apps used sensitive data and when.",
+  "meaning": "Lets users audit access to location, camera and mic. iOS also logs network contact.",
+  "lifecycle": [
+    "background",
+    "in-session"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "y",
+      "v": "12",
+      "api": 31,
+      "permission": "n/a (system feature)",
+      "protection": "none",
+      "grant": "system-only",
+      "prompt_ui": "Settings page listing access timeline",
+      "persistence": "Last 24 hours at launch; later releases extend",
+      "revocation": "Settings > Privacy > Privacy dashboard",
+      "store_policy": "Play: none",
+      "api_surface": "Attribution tags (API 31)",
+      "note": "Apps can add attribution tags to explain access."
+    },
+    "ios": {
+      "s": "y",
+      "v": "15.2",
+      "permission": "n/a",
+      "protection": "none",
+      "grant": "system-only",
+      "prompt_ui": "Settings > Privacy & Security > App Privacy Report",
+      "persistence": "Past 7 days",
+      "revocation": "Turn on in Settings",
+      "store_policy": "App privacy details in App Store Connect",
+      "api_surface": "App Privacy Report",
+      "note": "Shows data access, sensor use and domains contacted."
+    }
+  },
+  "data": {
+    "type": "list",
+    "metric": "Access log",
+    "update": "continuous",
+    "fields": [
+      {
+        "name": "window",
+        "type": "integer",
+        "unit": "days",
+        "range": "1 to 7",
+        "precision": "days"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can show you which apps used location, camera or mic, and when",
+    "user_action": "You open the Privacy dashboard in Settings, or App Privacy Report on iPhone",
+    "can": [
+      "List when apps used location, camera and microphone",
+      "Show a timeline of access",
+      "Show the explanations apps add to their access (Android)",
+      "Show the domains apps contacted (iPhone)"
+    ],
+    "cannot": [
+      "Block or stop any app on its own",
+      "List contacted domains on Android",
+      "Show access that happened before the log began"
+    ],
+    "reach": 1,
+    "reach_label": "Shows a log, changes nothing",
+    "differs": "iPhone also logs network domains contacted; Android shows an access timeline with app explanations."
+  },
+  "story": {
+    "what_it_is": "A system screen showing which apps used your location, camera or mic, and when.",
+    "icon": "layout-dashboard",
+    "tags": [
+      "Privacy",
+      "Audit",
+      "Transparency"
+    ],
+    "marketing": [
+      {
+        "vendor": "Google",
+        "name": "Privacy dashboard",
+        "pitch": "See which apps accessed your location, camera and microphone, and change access in one place.",
+        "url": "https://support.google.com/android/answer/13530434"
+      },
+      {
+        "vendor": "Apple",
+        "name": "App Privacy Report",
+        "pitch": "See how apps use the data and sensors you gave them, and which sites they contact.",
+        "url": "https://support.apple.com/en-us/102188"
+      }
+    ],
+    "for_you": "A timeline shows each app that used the camera or mic and at what time. You can tap an app and turn off its access. A green dot on screen also tells you a sensor is live.",
+    "for_makers": "Apps know they are watched, so most keep their sensor use honest. It also gives the platform a quick way to show users what happened. Makers must explain unusual use before a user spots it.",
+    "use_cases": [
+      {
+        "type": "security",
+        "example": "A person sees a flashlight app used the mic at 3 am and removes it.",
+        "apps": []
+      },
+      {
+        "type": "social",
+        "example": "A parent checks which apps used the camera on a child's phone.",
+        "apps": []
+      },
+      {
+        "type": "games",
+        "example": "A free game is found to use location every few minutes.",
+        "apps": []
+      },
+      {
+        "type": "ads",
+        "example": "A researcher shows an SDK calling home at odd hours.",
+        "apps": []
+      },
+      {
+        "type": "health",
+        "example": "A user checks that a health app does not read location all day.",
+        "apps": []
+      },
+      {
+        "type": "enterprise",
+        "example": "IT checks sensor use by work apps.",
+        "apps": []
+      },
+      {
+        "type": "developer",
+        "example": "A developer adds notes so the dashboard explains why the app uses location.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Only shows after the fact",
+      "Easy to ignore",
+      "Does not block use"
+    ],
+    "android_note": "Android apps can add attribution tags that explain access in the dashboard.",
+    "ios_note": "iOS also logs network contact, such as the domains an app talks to."
+  },
+  "technical_bounds": [
+    "iOS shows network domains",
+    "Android shows access timeline",
+    "User must look",
+    "No developer control"
+  ],
+  "scores": {
+    "sensitivity": 4,
+    "utility": 3,
+    "fingerprint_bits": null,
+    "friction": 3
+  },
+  "value": {
+    "legit_uses": [
+      "Auditing"
+    ],
+    "abuse": [
+      "None"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2021-12",
+      "platform": "ios",
+      "version": "iOS 15.2",
+      "change": "App Privacy Report introduced"
+    },
+    {
+      "date": "2021-12",
+      "platform": "ios",
+      "version": "iOS 15.2",
+      "change": "App Privacy Report"
+    },
+    {
+      "date": "2021-10",
+      "platform": "android",
+      "version": "12 (API 31)",
+      "change": "Privacy dashboard introduced"
+    },
+    {
+      "date": "2021-10",
+      "platform": "android",
+      "version": "Android 12",
+      "change": "Privacy dashboard and indicators"
+    }
+  ],
+  "related": [
+    "mob.camera.indicators",
+    "mob.policy.privacy-labels"
+  ],
+  "refs": [
+    {
+      "t": "android",
+      "label": "Android: Privacy dashboard and attribution",
+      "url": "https://developer.android.com/training/permissions/explaining-access"
+    },
+    {
+      "t": "apple",
+      "label": "Apple: App Privacy Report",
+      "url": "https://support.apple.com/en-us/HT212958"
+    },
+    {
+      "t": "android",
+      "label": "Android: Privacy dashboard",
+      "url": "https://developer.android.com/about/versions/12/behavior-changes-12"
+    },
+    {
+      "t": "apple",
+      "label": "Apple: App Privacy Report",
+      "url": "https://support.apple.com/en-us/102188"
+    }
+  ],
+  "confidence": "docs"
+}

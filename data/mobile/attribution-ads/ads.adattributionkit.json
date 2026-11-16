@@ -1,0 +1,228 @@
+{
+  "id": "mob.ads.adattributionkit",
+  "name": "AdAttributionKit (iOS 17.4)",
+  "kind": "tracking",
+  "group": "attribution-ads",
+  "subgroup": "Apple attribution",
+  "tags": [
+    "adattributionkit",
+    "aak",
+    "attribution",
+    "alt-marketplaces"
+  ],
+  "plain": "Apple's successor to SKAdNetwork that also covers re-engagement and alternative app stores.",
+  "meaning": "A privacy-preserving way for ad networks to measure installs, reopens and re-downloads. Compatible with SKAN postbacks, adds marketplaces beyond the App Store.",
+  "lifecycle": [
+    "before-install",
+    "on-launch",
+    "in-session"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "n",
+      "v": "",
+      "permission": "",
+      "protection": "none",
+      "grant": "not-exposed",
+      "prompt_ui": "",
+      "persistence": "",
+      "revocation": "",
+      "store_policy": "",
+      "api_surface": "",
+      "note": "No platform equivalent after Privacy Sandbox Attribution Reporting was retired."
+    },
+    "ios": {
+      "s": "y",
+      "v": "17.4",
+      "permission": "Info.plist AdAttributionKit keys and AdNetworkIdentifiers",
+      "protection": "none",
+      "grant": "none",
+      "prompt_ui": "",
+      "persistence": "",
+      "revocation": "",
+      "store_policy": "No ATT needed",
+      "api_surface": "AdAttributionKit (Postback.updateConversionValue, impressions, AppImpression), StoreKit",
+      "note": "Postbacks reach the ad network; a developer can configure a copy of postbacks (docs); country code and configurable windows came in 18.4."
+    }
+  },
+  "web_equivalents": [
+    "web.xsite.attribution-reporting"
+  ],
+  "data": {
+    "type": "object",
+    "metric": "Signed postback",
+    "update": "install and re-engagement windows",
+    "fields": [
+      {
+        "name": "fine conversion value",
+        "type": "integer",
+        "unit": "",
+        "range": "0 to 63",
+        "precision": ""
+      },
+      {
+        "name": "coarse value",
+        "type": "enum",
+        "unit": "",
+        "range": "low, medium, high",
+        "precision": ""
+      },
+      {
+        "name": "country code",
+        "type": "string",
+        "unit": "ISO",
+        "range": "when crowd anonymity allows (iOS 18.4)",
+        "precision": ""
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can tell an ad network an ad led to an install, on iPhone, with delays",
+    "user_action": "You tap an ad, then install or reopen the app",
+    "can": [
+      "Tell the ad network an ad led to an install, reopen or re-download",
+      "Work with alternative app stores",
+      "Send a copy of the report to the developer, if set up",
+      "Add the country code and set up windows from iOS 18.4"
+    ],
+    "cannot": [
+      "Give your name or device ID",
+      "Report right away or in detail; reports are delayed and coarse",
+      "Work on Android; the Android version was retired"
+    ],
+    "reach": 2,
+    "reach_label": "A delayed, coarse count",
+    "differs": "iPhone only (iOS 17.4 and later). Android's matching system was retired."
+  },
+  "story": {
+    "what_it_is": "Apple's newer privacy friendly ad measurement system, replacing SKAdNetwork.",
+    "icon": "chart-bar",
+    "tags": [
+      "Ads",
+      "Measurement",
+      "Apple"
+    ],
+    "marketing": [
+      {
+        "vendor": "Apple",
+        "name": "AdAttributionKit",
+        "pitch": "Measure ad conversions, with user privacy built in and support for alternative marketplaces.",
+        "url": "https://developer.apple.com/documentation/adattributionkit"
+      }
+    ],
+    "for_you": "You see nothing. Apple sends delayed, noisy reports to advertisers that an ad led to an install, without sharing your name or device ID.",
+    "for_makers": "It tells ad networks which campaign worked while hiding which person did it. It adds re-downloads, re-engagement and alternative app marketplaces, and works alongside SKAN postbacks.",
+    "use_cases": [
+      {
+        "type": "ads",
+        "example": "An ad network checks that a campaign drove 200 installs and gets the answer three days later.",
+        "apps": [
+          "Meta",
+          "Google Ads"
+        ]
+      },
+      {
+        "type": "games",
+        "example": "A studio sees which of its ads bring paying players, using a coarse value after the first day.",
+        "apps": [
+          "Zynga",
+          "Supercell"
+        ]
+      },
+      {
+        "type": "shopping",
+        "example": "A retailer measures how many app installs came from a short video ad.",
+        "apps": [
+          "Temu"
+        ]
+      },
+      {
+        "type": "ads",
+        "example": "In the EU an alternative app store uses the same kit to measure installs from ads.",
+        "apps": []
+      },
+      {
+        "type": "analytics",
+        "example": "A marketing team compares results across ad networks in one report.",
+        "apps": [
+          "Singular",
+          "Adjust"
+        ]
+      },
+      {
+        "type": "security",
+        "example": "Signed reports stop fake networks from claiming credit for installs they did not drive.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Coarse and delayed",
+      "Small campaigns see less"
+    ],
+    "android_note": "Google's matching Privacy Sandbox attribution plan was retired in October 2025.",
+    "ios_note": "Added in iOS 17.4 and compatible with SKAN postbacks."
+  },
+  "technical_bounds": [
+    "Postbacks signed by Apple",
+    "Crowd anonymity applies",
+    "Dev beta postbacks for testing"
+  ],
+  "scores": {
+    "sensitivity": 2,
+    "utility": 4,
+    "fingerprint_bits": null,
+    "friction": 1
+  },
+  "value": {
+    "legit_uses": [
+      "Install and re-engagement measurement"
+    ],
+    "abuse": [
+      "Same SKAN-style bit encoding games"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2024-03",
+      "platform": "ios",
+      "version": "iOS 17.4",
+      "change": "AdAttributionKit launched with the DMA marketplace changes"
+    },
+    {
+      "date": "2024-09",
+      "platform": "ios",
+      "version": "iOS 18",
+      "change": "Developer postback copy and enhanced configuration"
+    },
+    {
+      "date": "2025-03",
+      "platform": "ios",
+      "version": "iOS 18.4",
+      "change": "Overlapping re-engagement windows, configurable attribution windows and cooldown, country code in postbacks"
+    }
+  ],
+  "related": [
+    "mob.ads.skadnetwork",
+    "mob.ads.aak-reengagement"
+  ],
+  "refs": [
+    {
+      "t": "apple",
+      "label": "Apple: AdAttributionKit",
+      "url": "https://developer.apple.com/documentation/adattributionkit"
+    },
+    {
+      "t": "vendor",
+      "label": "InMobi: AdAttributionKit leveled up with iOS 18.4",
+      "url": "https://advertising.inmobi.com/blog/adattributionkit-leveled-up-with-ios-18.4-updates"
+    }
+  ],
+  "confidence": "docs"
+}

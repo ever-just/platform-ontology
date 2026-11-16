@@ -1,0 +1,242 @@
+{
+  "id": "web.perf.measure-user-agent-memory",
+  "name": "measureUserAgentSpecificMemory()",
+  "kind": "signal",
+  "group": "timing-performance",
+  "subgroup": "Memory",
+  "tags": [
+    "memory",
+    "cross-origin-isolated",
+    "heap"
+  ],
+  "plain": "Asks for a breakdown of memory the page and its iframes use.",
+  "meaning": "Reports total bytes and per-origin attribution in cross-origin isolated contexts. A noisy but accurate measure of memory use, useful for leaks and for inferring device memory pressure.",
+  "lifecycle": [
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "performance.measureUserAgentSpecificMemory()",
+      "bcd": [
+        "api.Performance.measureUserAgentSpecificMemory"
+      ],
+      "access": {
+        "grant": "none",
+        "prompt_ui": "",
+        "secure_context": false,
+        "user_gesture": false,
+        "persistence": "",
+        "revocation": "",
+        "iframe": "",
+        "steps": [
+          "Be cross-origin isolated",
+          "Call the method (takes 0 to 20 s, GC-aligned)",
+          "Receive bytes and breakdown"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "89",
+          "note": "",
+          "date": "2021-03-02"
+        },
+        "edge": {
+          "s": "y",
+          "v": "89",
+          "note": "",
+          "date": "2021-03-04"
+        },
+        "firefox": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "safari": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "ios_safari": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "89",
+          "note": "",
+          "date": "2021-03-02"
+        },
+        "samsung": {
+          "s": "y",
+          "v": "15.0",
+          "note": "",
+          "date": "2021-08-13"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "object",
+    "metric": "Bytes with noise, async result",
+    "update": "",
+    "fields": [
+      {
+        "name": "bytes",
+        "type": "integer",
+        "unit": "bytes",
+        "range": "0 to GB",
+        "precision": "noisy, bucketed"
+      },
+      {
+        "name": "breakdown",
+        "type": "list",
+        "unit": "",
+        "range": "entries per origin",
+        "precision": "attribution by URL"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can check how much memory the page and its embeds use",
+    "user_action": "Nothing. The site calls it while the page is open, in a protected page mode",
+    "can": [
+      "Get the total memory the page uses",
+      "Get a split by source, only in cross origin isolated pages",
+      "Find memory leaks",
+      "Guess your device's memory size from the numbers"
+    ],
+    "cannot": [
+      "See other tabs or apps",
+      "Get these numbers outside protected pages",
+      "Work in Firefox or Safari",
+      "Ask permission first"
+    ],
+    "reach": 2,
+    "reach_label": "While the page is open",
+    "differs": "Chrome and Edge only. Firefox and Safari do not support it."
+  },
+  "story": {
+    "what_it_is": "A page can ask for a breakdown of how much memory it and its frames use.",
+    "icon": "memory-stick",
+    "tags": [
+      "Memory",
+      "Silent",
+      "Chromium only"
+    ],
+    "marketing": [
+      {
+        "vendor": "web.dev",
+        "name": "Monitor total page memory usage",
+        "pitch": "Google says it lets sites measure memory across the whole page, to find leaks and bloat.",
+        "url": "https://web.dev/articles/monitor-total-page-memory-usage"
+      }
+    ],
+    "for_you": "You never see it. It helps teams find pages that hog memory and crash tabs. Fixed pages stay faster and your browser is less likely to say Aw, Snap.",
+    "for_makers": "Real time apps and long sessions can leak memory until the tab crashes. This API lets teams measure it from real visitors, but it only works on isolated pages, because it could leak data between sites.",
+    "use_cases": [
+      {
+        "type": "games",
+        "example": "A browser game studio sees tabs crash after 30 minutes and finds a memory leak in a texture loader.",
+        "apps": []
+      },
+      {
+        "type": "video",
+        "example": "A video call site tracks memory over a long meeting and fixes a leak that crashed older laptops.",
+        "apps": [
+          "Google Meet"
+        ]
+      },
+      {
+        "type": "creative",
+        "example": "A design tool checks memory growth on large files to decide when to warn you to save.",
+        "apps": [
+          "Figma"
+        ]
+      },
+      {
+        "type": "productivity",
+        "example": "A big web spreadsheet checks memory use in test runs to keep huge sheets from freezing.",
+        "apps": [
+          "Google Sheets"
+        ]
+      },
+      {
+        "type": "developer",
+        "example": "A QA team runs automated tests that fail a build if memory grows too much.",
+        "apps": []
+      },
+      {
+        "type": "analytics",
+        "example": "Monitoring tools collect page memory and show which release made it worse.",
+        "apps": [
+          "Datadog RUM",
+          "New Relic"
+        ]
+      },
+      {
+        "type": "shopping",
+        "example": "A retailer finds that an endless scroll product list uses too much memory on cheap phones.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Only in isolated Chromium pages",
+      "Rarely used"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Cross-origin isolation required",
+    "Result delayed and noised to prevent Spectre-style use"
+  ],
+  "scores": {
+    "sensitivity": 2,
+    "utility": 3,
+    "fingerprint_bits": 2,
+    "friction": 1
+  },
+  "value": {
+    "legit_uses": "Memory leak detection in apps",
+    "abuse": "Memory side channel research"
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2021-03",
+      "browser": "chrome",
+      "version": "89",
+      "change": "Ships for cross-origin isolated contexts"
+    },
+    {
+      "date": "2020-09",
+      "browser": "chrome",
+      "version": "",
+      "change": "Origin trial replaces performance.memory for precise use"
+    }
+  ],
+  "related": [
+    "web.perf.performance-memory"
+  ],
+  "refs": [
+    {
+      "t": "mdn",
+      "label": "MDN measureUserAgentSpecificMemory",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/Performance/measureUserAgentSpecificMemory"
+    },
+    {
+      "t": "vendor",
+      "label": "web.dev memory measurement",
+      "url": "https://web.dev/articles/monitor-total-page-memory-usage"
+    }
+  ],
+  "confidence": "docs"
+}

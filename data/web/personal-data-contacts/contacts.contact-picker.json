@@ -1,0 +1,264 @@
+{
+  "id": "web.contacts.contact-picker",
+  "name": "Contact Picker",
+  "kind": "picker",
+  "group": "personal-data-contacts",
+  "subgroup": "Contacts",
+  "tags": [
+    "contacts"
+  ],
+  "plain": "Lets a person choose contacts to share with a site; Chrome on Android only.",
+  "meaning": "The site gets only the names, emails, phones, addresses or icons of the contacts the person ticks. No bulk read, no desktop, no Firefox, no Safari release.",
+  "lifecycle": [
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "navigator.contacts.select(['name','email','tel','address','icon'], {multiple:true}); navigator.contacts.getProperties()",
+      "bcd": [
+        "api.ContactsManager"
+      ],
+      "access": {
+        "grant": "picker",
+        "prompt_ui": "Native Android contact chooser with search; shows which fields the page asks for",
+        "secure_context": true,
+        "user_gesture": true,
+        "persistence": "None; each call opens the picker again",
+        "revocation": "None needed; nothing persists",
+        "iframe": "Top level frame only; blocked in cross-origin iframes",
+        "steps": [
+          "Call the API",
+          "Browser applies its access rules",
+          "Page receives the result"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "n",
+          "v": "",
+          "note": "Desktop Chrome not supported"
+        },
+        "edge": {
+          "s": "n",
+          "v": "",
+          "note": "Not supported"
+        },
+        "firefox": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "safari": {
+          "s": "n",
+          "v": "",
+          "note": "Not in Safari desktop"
+        },
+        "ios_safari": {
+          "s": "f",
+          "v": "14.5",
+          "note": "Preference flag only"
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "80",
+          "note": "",
+          "date": "2020-02-04"
+        },
+        "samsung": {
+          "s": "r",
+          "v": "22",
+          "note": "Exposed in 14, broken, removed in 22",
+          "date": "2023-07-14"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "object",
+    "metric": "Lets a person choose contacts to share with a site; Chrome on Android only.",
+    "update": "on demand",
+    "fields": [
+      {
+        "name": "name",
+        "type": "list",
+        "range": "strings",
+        "precision": "as stored in the address book"
+      },
+      {
+        "name": "email",
+        "type": "list",
+        "range": "strings",
+        "precision": "every address of each picked contact"
+      },
+      {
+        "name": "tel",
+        "type": "list",
+        "range": "strings",
+        "precision": "every number"
+      },
+      {
+        "name": "address",
+        "type": "list",
+        "range": "structured postal address",
+        "precision": "country, city, postalCode, region, addressLine, recipient, organization, phone"
+      },
+      {
+        "name": "icon",
+        "type": "list",
+        "unit": "bytes",
+        "range": "Blob images",
+        "precision": "contact photo"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can see only the contacts you pick, and only the details it asks for",
+    "user_action": "You tap Choose contacts, search and select people, and press Done.",
+    "can": [
+      "Show a list of your contacts that you can search",
+      "Share the names, emails or phone numbers you pick",
+      "Share only the kinds of details the page asks for, shown before you choose"
+    ],
+    "cannot": [
+      "See contacts you did not pick",
+      "See your full address book",
+      "Work on desktop browsers, where it is not offered",
+      "Keep access after you pick, so it asks again each time"
+    ],
+    "reach": 1,
+    "reach_label": "Only the contacts you pick",
+    "differs": "Only Chrome on Android fully supports it. iPhone Safari has it behind a setting. Desktop browsers do not."
+  },
+  "story": {
+    "what_it_is": "A site can ask you to pick contacts to share, on Chrome for Android.",
+    "icon": "contact-round",
+    "tags": [
+      "Contacts",
+      "You pick",
+      "Android"
+    ],
+    "marketing": [
+      {
+        "vendor": "Google",
+        "name": "Contact Picker API",
+        "pitch": "Chrome's docs say the API lets users share chosen contacts with a web app.",
+        "url": "https://developer.chrome.com/docs/capabilities/web-apis/contact-picker"
+      }
+    ],
+    "for_you": "A list of your contacts opens. You tick the people to share and the site gets only those names, emails or numbers.",
+    "for_makers": "Makers can add 'invite friends' and 'send to a contact' without asking for your whole address book. It cuts growth friction and stays safer than bulk access.",
+    "use_cases": [
+      {
+        "type": "social",
+        "example": "A web app lets you invite friends by picking them from your contacts.",
+        "apps": []
+      },
+      {
+        "type": "payments",
+        "example": "A web payment page lets you pick the person you want to pay.",
+        "apps": [
+          "Cash App",
+          "PayPal"
+        ]
+      },
+      {
+        "type": "messaging",
+        "example": "A web chat app suggests who to message.",
+        "apps": []
+      },
+      {
+        "type": "games",
+        "example": "A browser game lets you pick friends to invite to a match.",
+        "apps": []
+      },
+      {
+        "type": "delivery",
+        "example": "A gift site picks the recipient's address from your contacts.",
+        "apps": []
+      },
+      {
+        "type": "security",
+        "example": "A scam site could repeat the picker to collect many contacts.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Contact harvesting",
+      "Spam invites"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Only picked contacts, never the whole book",
+    "Chrome Android only; not desktop Chrome or Edge, Firefox, desktop Safari",
+    "Safari iOS behind a developer flag",
+    "Needs HTTPS and a user tap; top level frame only",
+    "getProperties() reports which fields exist, not the data"
+  ],
+  "scores": {
+    "sensitivity": 5,
+    "utility": 3,
+    "fingerprint_bits": null,
+    "friction": 2
+  },
+  "value": {
+    "legit_uses": [
+      "Invite friends",
+      "Split bills",
+      "Send money to a contact"
+    ],
+    "abuse": [
+      "Harvesting contacts via repeated picks",
+      "Spam invites"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2020-02",
+      "browser": "chrome_android",
+      "version": "80",
+      "change": "Contact Picker ships on Chrome Android only"
+    },
+    {
+      "date": "2021-04",
+      "browser": "safari",
+      "version": "14.5",
+      "change": "iOS exposes it only behind a preference flag; never shipped by default"
+    },
+    {
+      "date": "2020",
+      "browser": "samsung",
+      "version": "14",
+      "change": "Samsung exposed but contact selector failed; removed in 22"
+    }
+  ],
+  "related": [
+    "web.contacts.not-exposed-address-book"
+  ],
+  "refs": [
+    {
+      "t": "mdn",
+      "label": "MDN Contact Picker API",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/Contact_Picker_API"
+    },
+    {
+      "t": "spec",
+      "label": "Contact Picker",
+      "url": "https://w3c.github.io/contact-picker/"
+    },
+    {
+      "t": "bcd",
+      "label": "MDN BCD ContactsManager",
+      "url": "https://github.com/mdn/browser-compat-data"
+    }
+  ],
+  "confidence": "verified"
+}

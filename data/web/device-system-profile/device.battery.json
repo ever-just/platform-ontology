@@ -1,0 +1,253 @@
+{
+  "id": "web.device.battery",
+  "name": "Battery status",
+  "kind": "signal",
+  "group": "device-system-profile",
+  "subgroup": "Hardware",
+  "tags": [
+    "battery",
+    "fingerprint",
+    "removed-in-firefox"
+  ],
+  "plain": "Reads charge level and charging state where the browser still offers it.",
+  "meaning": "Level and times (level, charging, chargingTime, dischargingTime) once enabled short term tracking across sites. Firefox removed it; Chrome limits it to secure contexts.",
+  "lifecycle": [
+    "on-arrival",
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "navigator.getBattery()",
+      "bcd": [
+        "api.Navigator.getBattery"
+      ],
+      "access": {
+        "grant": "none",
+        "prompt_ui": "None (no browser prompt)",
+        "secure_context": false,
+        "user_gesture": false,
+        "persistence": "",
+        "revocation": "",
+        "iframe": "",
+        "steps": [
+          "Script reads the value",
+          "Value joins the fingerprint payload"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "38",
+          "note": "Secure context since 103",
+          "date": "2014-10-07"
+        },
+        "edge": {
+          "s": "y",
+          "v": "79",
+          "note": "",
+          "date": "2020-01-15"
+        },
+        "firefox": {
+          "s": "r",
+          "v": "52",
+          "note": "Removed for web content",
+          "date": "2017-03-07"
+        },
+        "safari": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "ios_safari": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "38",
+          "note": "",
+          "date": "2014-10-08"
+        },
+        "samsung": {
+          "s": "y",
+          "v": "3.0",
+          "note": "",
+          "date": "2015-04-10"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "object",
+    "metric": "Battery status",
+    "update": "live events",
+    "fields": [
+      {
+        "name": "level",
+        "type": "float",
+        "unit": "fraction",
+        "range": "0 to 1",
+        "precision": "0.01"
+      },
+      {
+        "name": "charging",
+        "type": "boolean",
+        "unit": "",
+        "range": "",
+        "precision": ""
+      },
+      {
+        "name": "chargingTime",
+        "type": "float",
+        "unit": "seconds",
+        "range": "0 to Infinity",
+        "precision": "1 s"
+      },
+      {
+        "name": "dischargingTime",
+        "type": "float",
+        "unit": "seconds",
+        "range": "0 to Infinity",
+        "precision": "1 s"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can see your battery level and charging state in Chrome and Edge",
+    "user_action": "Nothing. No pop up is shown",
+    "can": [
+      "Check your charge level and whether you are plugged in",
+      "See time left to full or to empty",
+      "Switch to a low power mode when your battery is low",
+      "Use level and charge time together as a short term tracking clue"
+    ],
+    "cannot": [
+      "Work in Safari or on iPhone",
+      "Work in Firefox, which removed it",
+      "Work on pages that are not HTTPS",
+      "See battery health or exact power draw"
+    ],
+    "reach": 2,
+    "reach_label": "Current battery, while the page is open",
+    "differs": "Chrome, Edge, and Samsung Internet allow it. Firefox removed it and Safari never offered it."
+  },
+  "story": {
+    "what_it_is": "Reads how full your battery is and whether you are plugged in, where the browser still allows it.",
+    "icon": "battery-charging",
+    "tags": [
+      "Battery",
+      "Silent",
+      "Fingerprinting"
+    ],
+    "marketing": [
+      {
+        "vendor": "MDN",
+        "name": "Battery Status API",
+        "pitch": "Describes how a page reads charge level and charging state where browsers support it.",
+        "url": "https://developer.mozilla.org/en-US/docs/Web/API/Battery_Status_API"
+      }
+    ],
+    "for_you": "You never see it asked. If it helps, a web app might lower its animations when you are low on power. If it does not, a site could quietly note that your battery is at 43 percent and charging.",
+    "for_makers": "Web apps use it to save power on phones and laptops. Trackers once used it as a short-lived ID, because level and charge time are the same across sites for a few minutes. That is why Firefox and Safari removed it and Chrome limits it.",
+    "use_cases": [
+      {
+        "type": "games",
+        "example": "A web game drops from 60 to 30 frames a second when the phone is under 15 percent and not charging.",
+        "apps": []
+      },
+      {
+        "type": "video",
+        "example": "A streaming site starts at a lower resolution on a laptop that is unplugged and nearly flat.",
+        "apps": [
+          "YouTube"
+        ]
+      },
+      {
+        "type": "productivity",
+        "example": "A browser notes app forces an immediate save when it sees the battery is almost out.",
+        "apps": [
+          "Google Docs"
+        ]
+      },
+      {
+        "type": "maps",
+        "example": "A web map in navigation mode shows a plug-in reminder when the phone is low on charge.",
+        "apps": [
+          "Google Maps"
+        ]
+      },
+      {
+        "type": "security",
+        "example": "A fingerprinting script uses level and charge time as a short-term ID to link two visits in the same hour.",
+        "apps": []
+      },
+      {
+        "type": "shopping",
+        "example": "Researchers warned that a shop could change a price for a person who looks desperate for power; this is a risk, not a known practice.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Short-term tracking ID",
+      "Could hint at someone's situation"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Not in Safari or Firefox",
+    "Secure context only in Chrome"
+  ],
+  "scores": {
+    "sensitivity": 3,
+    "utility": 3,
+    "fingerprint_bits": 3,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Save power"
+    ],
+    "abuse": [
+      "Short term cross-site tracking",
+      "Device ID"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": true,
+      "how": "Collector key(s): battery. Collects level, charging, chargingTime, dischargingTime. BleepingComputer confirms battery is collected."
+    }
+  },
+  "history": [
+    {
+      "date": "2017",
+      "browser": "firefox",
+      "version": "52",
+      "change": "Removed for web content over fingerprinting"
+    }
+  ],
+  "related": [
+    "web.tracking.linkedin-apfc-fingerprint"
+  ],
+  "refs": [
+    {
+      "t": "mdn",
+      "label": "MDN Battery Status",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/Battery_Status_API"
+    },
+    {
+      "t": "news",
+      "label": "BleepingComputer: LinkedIn scans for 6,000+ Chrome extensions",
+      "url": "https://www.bleepingcomputer.com/news/security/linkedin-secretely-scans-for-6-000-plus-chrome-extensions-collects-data/"
+    },
+    {
+      "t": "github",
+      "label": "mdp/linkedin-extension-fingerprinting (LinkedIn script snapshot and ID list)",
+      "url": "https://github.com/mdp/linkedin-extension-fingerprinting"
+    }
+  ],
+  "confidence": "docs"
+}

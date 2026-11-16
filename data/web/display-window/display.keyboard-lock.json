@@ -1,0 +1,236 @@
+{
+  "id": "web.display.keyboard-lock",
+  "name": "Keyboard Lock",
+  "kind": "capability",
+  "group": "display-window",
+  "subgroup": "Input capture",
+  "tags": [
+    "keyboard-lock",
+    "fullscreen",
+    "chromium-only",
+    "esc-hold"
+  ],
+  "plain": "Lets a fullscreen page capture shortcut keys like Esc, Alt+Tab or Ctrl+W (Chromium only).",
+  "meaning": "A site can keep keys the browser or OS would normally take, which remote desktops, games and cloud IDEs need. It also lets a hostile fullscreen page swallow the usual escape shortcuts for a moment.",
+  "lifecycle": [
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "navigator.keyboard.lock(['Escape','KeyW']); navigator.keyboard.unlock()",
+      "bcd": [
+        "api.Keyboard.lock",
+        "api.Keyboard.unlock"
+      ],
+      "access": {
+        "grant": "gesture",
+        "prompt_ui": "No prompt (needs a click, tap or keypress)",
+        "secure_context": true,
+        "user_gesture": true,
+        "activation": "transient",
+        "persistence": "Ends on unlock(), leaving fullscreen or navigation; nothing is stored",
+        "revocation": "Nothing to revoke (no permission is stored)",
+        "iframe": "Needs the frame to be fullscreen, so cross-origin iframes need allow=\"fullscreen\"",
+        "steps": [
+          "Person clicks",
+          "Page enters fullscreen",
+          "Page calls navigator.keyboard.lock() with a list of key codes",
+          "Chosen keys go to the page instead of the browser"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "68",
+          "note": "",
+          "date": "2018-07-24"
+        },
+        "edge": {
+          "s": "y",
+          "v": "79",
+          "note": "",
+          "date": "2020-01-15"
+        },
+        "firefox": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "safari": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "ios_safari": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "68",
+          "note": "",
+          "date": "2018-07-24"
+        },
+        "samsung": {
+          "s": "y",
+          "v": "10.0",
+          "note": "",
+          "date": "2019-08-22"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "none",
+    "metric": "",
+    "update": "",
+    "fields": []
+  },
+  "limits": {
+    "headline": "Can capture shortcut keys like Esc or Ctrl+W, but only in fullscreen on Chromium",
+    "user_action": "You tap Fullscreen in a game, remote desktop or web editor.",
+    "can": [
+      "Capture chosen shortcut keys so a game or remote desktop receives them",
+      "Release them when you leave fullscreen"
+    ],
+    "cannot": [
+      "Start without a click, tap or keypress",
+      "Block system shortcuts the computer keeps for itself",
+      "Stop you leaving fullscreen, since holding Esc for about two seconds still exits",
+      "Keep capturing after you leave fullscreen"
+    ],
+    "reach": 2,
+    "reach_label": "Only while fullscreen",
+    "differs": "Chrome and Edge on computers only. Firefox and Safari do not support it."
+  },
+  "story": {
+    "what_it_is": "Lets a full screen page capture shortcut keys like Esc, Alt+Tab or Ctrl+W (Chromium only).",
+    "icon": "keyboard",
+    "tags": [
+      "Keyboard",
+      "Games",
+      "Full screen"
+    ],
+    "marketing": [
+      {
+        "vendor": "MDN",
+        "name": "Keyboard API",
+        "pitch": "Explains how a page can lock keys such as Esc and system shortcuts while in full screen.",
+        "url": "https://developer.mozilla.org/en-US/docs/Web/API/Keyboard_API"
+      }
+    ],
+    "for_you": "In full screen, keys like Esc and Alt+Tab may go to the page instead of your computer. A hint tells you to hold Esc to leave.",
+    "for_makers": "It makes cloud gaming and remote desktops feel like the real thing, because every key reaches the game or the far computer. Sites must be in full screen first.",
+    "use_cases": [
+      {
+        "type": "games",
+        "example": "A cloud gaming site sends every key to the game, including Windows and Esc, so menus and chat work.",
+        "apps": [
+          "Xbox Cloud Gaming",
+          "GeForce NOW"
+        ]
+      },
+      {
+        "type": "enterprise",
+        "example": "A remote desktop in the browser passes Ctrl+W and Alt+Tab to the far computer instead of closing your tab.",
+        "apps": [
+          "Chrome Remote Desktop"
+        ]
+      },
+      {
+        "type": "games",
+        "example": "A browser shooter keeps Esc for its own pause menu rather than letting the browser grab it.",
+        "apps": []
+      },
+      {
+        "type": "education",
+        "example": "A coding class sandbox keeps shortcuts inside the editor so students do not close the tab by mistake.",
+        "apps": []
+      },
+      {
+        "type": "security",
+        "example": "An exam site locks keys to block tab switching, which students and critics find invasive.",
+        "apps": []
+      },
+      {
+        "type": "creative",
+        "example": "A music or video editor in full screen uses every key for its own shortcuts.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Can block escape routes",
+      "Chromium only"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Chrome and Edge only (no Firefox, no Safari, no iOS)",
+    "Works only while the page is fullscreen in Chrome; locking Escape means the person must hold Esc for about 2 s to leave fullscreen",
+    "Keys are named by physical KeyboardEvent.code values, not characters",
+    "Some combinations stay with the OS or browser, such as Ctrl+Alt+Del and system shortcuts like the macOS app switcher",
+    "Cannot lock keys while the tab is in the background"
+  ],
+  "scores": {
+    "sensitivity": 3,
+    "utility": 3,
+    "fingerprint_bits": null,
+    "friction": 1
+  },
+  "value": {
+    "legit_uses": [
+      "Remote desktop and VM consoles",
+      "Browser games",
+      "Cloud IDEs and terminals"
+    ],
+    "abuse": [
+      "Trapping the person in a fullscreen spoof that eats Esc and Ctrl+W",
+      "Hiding shortcut use from the person"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2018-07",
+      "browser": "chrome",
+      "version": "68",
+      "change": "Keyboard Lock API ships on desktop"
+    },
+    {
+      "date": "2020-01",
+      "browser": "edge",
+      "version": "79",
+      "change": "Available in Chromium based Edge"
+    }
+  ],
+  "related": [
+    "web.actions.fullscreen",
+    "web.input.keyboard-events"
+  ],
+  "refs": [
+    {
+      "t": "mdn",
+      "label": "MDN lock",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/Keyboard/lock"
+    },
+    {
+      "t": "spec",
+      "label": "WICG Keyboard Lock",
+      "url": "https://wicg.github.io/keyboard-lock/"
+    },
+    {
+      "t": "bcd",
+      "label": "BCD Keyboard.lock",
+      "url": "https://github.com/mdn/browser-compat-data/blob/main/api/Keyboard.json"
+    }
+  ],
+  "confidence": "docs"
+}

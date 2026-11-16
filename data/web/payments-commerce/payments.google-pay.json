@@ -1,0 +1,211 @@
+{
+  "id": "web.payments.google-pay",
+  "name": "Google Pay for the web",
+  "kind": "capability",
+  "group": "payments-commerce",
+  "subgroup": "Checkout",
+  "tags": [
+    "checkout"
+  ],
+  "plain": "Pays with a Google Pay card through a Google button or Payment Request.",
+  "meaning": "Returns a tokenized card to the merchant's PSP after the person approves.",
+  "lifecycle": [
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "google.payments.api.PaymentsClient.loadPaymentData(), or PaymentRequest method https://google.com/pay",
+      "access": {
+        "grant": "prompt",
+        "prompt_ui": "Google Pay sheet with card selection",
+        "secure_context": true,
+        "user_gesture": true,
+        "persistence": "Per origin",
+        "revocation": "Site settings",
+        "iframe": "Same as top level; cross-origin iframes need a permissions policy where listed",
+        "steps": [
+          "Call the API",
+          "Browser applies its access rules",
+          "Page receives the result"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "",
+          "note": ""
+        },
+        "edge": {
+          "s": "y",
+          "v": "",
+          "note": ""
+        },
+        "firefox": {
+          "s": "y",
+          "v": "",
+          "note": "JS button works"
+        },
+        "safari": {
+          "s": "y",
+          "v": "",
+          "note": "JS button works"
+        },
+        "ios_safari": {
+          "s": "y",
+          "v": "",
+          "note": ""
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "",
+          "note": ""
+        },
+        "samsung": {
+          "s": "y",
+          "v": "",
+          "note": ""
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "object",
+    "metric": "Pays with a Google Pay card through a Google button or Payment Request.",
+    "update": "on demand",
+    "fields": [
+      {
+        "name": "paymentMethodData.tokenizationData.token",
+        "type": "string",
+        "range": "PSP encrypted token"
+      },
+      {
+        "name": "email, shippingAddress",
+        "type": "object",
+        "range": "per request"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can start a Google Pay payment that you pick a card for and approve",
+    "user_action": "You tap the Google Pay button at checkout and pick a card.",
+    "can": [
+      "Show the Google Pay sheet with your saved cards and addresses",
+      "Send the store a one time payment code once you approve",
+      "Share your name, email or address if you allow it"
+    ],
+    "cannot": [
+      "See your real card number in most set ups",
+      "Pay without you picking a card and approving",
+      "Use a card you did not choose to save",
+      "Keep a payment going after you close the sheet"
+    ],
+    "reach": 1,
+    "reach_label": "One payment, once you approve",
+    "differs": ""
+  },
+  "story": {
+    "what_it_is": "Pay with a card saved in your Google account in one tap.",
+    "icon": "credit-card",
+    "tags": [
+      "Payments",
+      "Asks first",
+      "Google"
+    ],
+    "marketing": [
+      {
+        "vendor": "Google",
+        "name": "Google Pay API for the web",
+        "pitch": "Google says the Google Pay API lets customers pay with cards saved to their Google Account.",
+        "url": "https://developers.google.com/pay/api/web/overview"
+      }
+    ],
+    "for_you": "You tap a Google Pay button, pick a card and confirm. The shop gets a secure token and does not see your full card number.",
+    "for_makers": "Makers use it to cut checkout steps and card typing, which lifts sales. It works across browsers, not just Chrome.",
+    "use_cases": [
+      {
+        "type": "shopping",
+        "example": "You buy a gift on a retail site in two taps.",
+        "apps": [
+          "Etsy",
+          "Shopify stores"
+        ]
+      },
+      {
+        "type": "delivery",
+        "example": "A food order site finishes checkout with Google Pay.",
+        "apps": [
+          "DoorDash"
+        ]
+      },
+      {
+        "type": "travel",
+        "example": "A booking site fills your saved card and address in one step.",
+        "apps": [
+          "Booking.com"
+        ]
+      },
+      {
+        "type": "games",
+        "example": "A web game store buys gems with Google Pay.",
+        "apps": []
+      },
+      {
+        "type": "media",
+        "example": "A streaming site signs you up for a plan in one tap.",
+        "apps": []
+      },
+      {
+        "type": "security",
+        "example": "A fraud team gets tokenized cards that are harder to steal.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Easy overspending",
+      "Shared with Google"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Needs Google account and saved card",
+    "Merchant must be approved by Google"
+  ],
+  "scores": {
+    "sensitivity": 5,
+    "utility": 4,
+    "fingerprint_bits": null,
+    "friction": 2
+  },
+  "value": {
+    "legit_uses": [
+      "Checkout"
+    ],
+    "abuse": [
+      "None notable"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2018",
+      "browser": "chrome",
+      "version": "",
+      "change": "Google Pay API for web launches"
+    }
+  ],
+  "refs": [
+    {
+      "t": "vendor",
+      "label": "Google Pay web docs",
+      "url": "https://developers.google.com/pay/api/web/overview"
+    }
+  ],
+  "confidence": "docs"
+}

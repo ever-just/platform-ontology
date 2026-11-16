@@ -1,0 +1,191 @@
+{
+  "id": "mob.dev.low-power",
+  "name": "Low Power Mode and Battery Saver",
+  "kind": "signal",
+  "group": "device-system-profile",
+  "subgroup": "Power",
+  "tags": [
+    "battery-saver",
+    "low-power"
+  ],
+  "plain": "Tells an app whether the person turned on the system power-saving mode.",
+  "meaning": "Shows the person is low on battery or conserving it. Apps use it to cut background work; it is a minor context signal.",
+  "lifecycle": [
+    "on-launch",
+    "in-session"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "y",
+      "v": "5.0",
+      "api": 21,
+      "permission": "",
+      "protection": "none",
+      "grant": "none",
+      "prompt_ui": "",
+      "persistence": "",
+      "revocation": "",
+      "store_policy": "",
+      "api_surface": "PowerManager.isPowerSaveMode() (API 21), ACTION_POWER_SAVE_MODE_CHANGED; getPowerSaveModeLevel",
+      "note": "Battery Saver on or off, plus an automatic trigger at about 15 percent in many builds"
+    },
+    "ios": {
+      "s": "y",
+      "v": "9.0",
+      "permission": "none",
+      "protection": "none",
+      "grant": "none",
+      "prompt_ui": "",
+      "persistence": "",
+      "revocation": "",
+      "store_policy": "",
+      "api_surface": "Automatic prompt at 20 percent battery; boolean only",
+      "note": ""
+    }
+  },
+  "web_equivalents": [
+    "web.device.battery-status"
+  ],
+  "data": {
+    "type": "boolean",
+    "metric": "Power saver on or off",
+    "update": "On change",
+    "fields": [
+      {
+        "name": "enabled",
+        "type": "boolean",
+        "unit": "",
+        "range": "true, false",
+        "precision": "1 bit"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can tell if Battery Saver or Low Power Mode is on, but cannot change it",
+    "user_action": "Nothing. You turn the mode on yourself, or your phone does at low battery",
+    "can": [
+      "Check if Low Power Mode (iPhone) or Battery Saver (Android) is on",
+      "Get told when you switch it on or off",
+      "Slow down or pause downloads and animations to save power"
+    ],
+    "cannot": [
+      "Turn the mode on or off for you",
+      "See why it is on; the phone starts it at about 20 percent on iPhone and often 15 percent on Android",
+      "Get more detail than on or off on iPhone"
+    ],
+    "reach": 2,
+    "reach_label": "While the app is open",
+    "differs": "Android also gives a level of saving in some versions. iPhone gives on or off only."
+  },
+  "story": {
+    "what_it_is": "An app can tell if you turned on the phone's power saving mode.",
+    "icon": "battery-low",
+    "tags": [
+      "Battery",
+      "Silent",
+      "Context"
+    ],
+    "marketing": [
+      {
+        "vendor": "Apple",
+        "name": "Low Power Mode",
+        "pitch": "Support page: reduces background activity to extend battery life when your iPhone is running low.",
+        "url": "https://support.apple.com/en-us/108935"
+      }
+    ],
+    "for_you": "When you switch on power saving, apps may slow down animations, pause syncing or lower video quality. You notice it as a quieter, simpler app. The app knows your battery is tight.",
+    "for_makers": "Makers use it to be kind to your battery and avoid bad reviews. It is a small context signal and rarely used alone for tracking.",
+    "use_cases": [
+      {
+        "type": "games",
+        "example": "A game lowers frame rate and stops background music when you turn on Low Power Mode.",
+        "apps": []
+      },
+      {
+        "type": "media",
+        "example": "A video app drops to lower quality and pauses auto play previews.",
+        "apps": []
+      },
+      {
+        "type": "fitness",
+        "example": "A tracking app samples GPS less often to last through a long run.",
+        "apps": []
+      },
+      {
+        "type": "social",
+        "example": "A feed app stops auto loading videos and refreshes less often.",
+        "apps": []
+      },
+      {
+        "type": "maps",
+        "example": "A navigation app dims the screen sooner and reduces map redraws.",
+        "apps": []
+      },
+      {
+        "type": "smart-home",
+        "example": "A home app stops live camera previews until you tap them.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Shows your battery is low",
+      "Minor context signal"
+    ],
+    "android_note": "Android calls it Battery Saver and apps can read its state.",
+    "ios_note": "iPhone calls it Low Power Mode and apps can read a simple on or off flag."
+  },
+  "technical_bounds": [
+    "Boolean only"
+  ],
+  "scores": {
+    "sensitivity": 1,
+    "utility": 2,
+    "fingerprint_bits": 1,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Reduce animation and sync"
+    ],
+    "abuse": [
+      "Little"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2014-11",
+      "platform": "android",
+      "version": "5.0 (API 21)",
+      "change": "isPowerSaveMode added"
+    },
+    {
+      "date": "2015-09",
+      "platform": "ios",
+      "version": "iOS 9",
+      "change": "Low Power Mode introduced"
+    }
+  ],
+  "related": [
+    "mob.dev.battery-level"
+  ],
+  "refs": [
+    {
+      "t": "android",
+      "label": "Android: PowerManager",
+      "url": "https://developer.android.com/reference/android/os/PowerManager"
+    },
+    {
+      "t": "apple",
+      "label": "Apple: ProcessInfo",
+      "url": "https://developer.apple.com/documentation/foundation/processinfo"
+    }
+  ],
+  "confidence": "docs"
+}

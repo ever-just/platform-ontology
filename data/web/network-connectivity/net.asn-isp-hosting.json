@@ -1,0 +1,217 @@
+{
+  "id": "web.net.asn-isp-hosting",
+  "name": "ASN, ISP and hosting type",
+  "kind": "signal",
+  "group": "network-connectivity",
+  "subgroup": "Addressing",
+  "tags": [
+    "asn",
+    "isp",
+    "datacenter",
+    "residential"
+  ],
+  "plain": "The IP maps to an ISP or hosting company, which tells if the visitor is a home, mobile or cloud user.",
+  "meaning": "ASN databases label IPs as residential, mobile, business, hosting or education. Datacenter ASNs (AWS, GCP, OVH) trigger bot and fraud rules. Residential proxies are harder to spot.",
+  "lifecycle": [
+    "on-arrival"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "BGP origin ASN lookup; IPinfo or MaxMind ASN and Anonymous IP databases",
+      "access": {
+        "grant": "none",
+        "prompt_ui": "",
+        "secure_context": false,
+        "user_gesture": false,
+        "persistence": "",
+        "revocation": "",
+        "iframe": "",
+        "steps": [
+          "Read client IP",
+          "Look up ASN and type",
+          "Score risk"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "1",
+          "note": "",
+          "date": "2008-12-11"
+        },
+        "edge": {
+          "s": "y",
+          "v": "79",
+          "note": "",
+          "date": "2020-01-15"
+        },
+        "firefox": {
+          "s": "y",
+          "v": "1",
+          "note": "",
+          "date": "2004-11-09"
+        },
+        "safari": {
+          "s": "y",
+          "v": "1",
+          "note": "",
+          "date": "2003-06-23"
+        },
+        "ios_safari": {
+          "s": "y",
+          "v": "1",
+          "note": "",
+          "date": "2007-06-29"
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "1",
+          "note": "",
+          "date": ""
+        },
+        "samsung": {
+          "s": "y",
+          "v": "5.0",
+          "note": "",
+          "date": "2016-12-15"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "object",
+    "metric": "ASN number, org name, type",
+    "update": "",
+    "fields": [
+      {
+        "name": "asn",
+        "type": "integer",
+        "unit": "",
+        "range": "1 to 4294967295",
+        "precision": "exact"
+      },
+      {
+        "name": "type",
+        "type": "string",
+        "unit": "",
+        "range": "residential, mobile, hosting, business",
+        "precision": "vendor labels"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can tell which internet company you use and if you look like a home user",
+    "user_action": "Nothing. It happens when your device connects to the site",
+    "can": [
+      "Look up your network owner from your IP address, such as a home ISP, mobile carrier or school",
+      "Label the connection as home, mobile, business or data center",
+      "Raise bot or fraud checks when it looks like a cloud server"
+    ],
+    "cannot": [
+      "Learn your name or account from it",
+      "Pinpoint your home; it shows the network, not the house",
+      "Always catch residential proxies, which look like home users"
+    ],
+    "reach": 2,
+    "reach_label": "Every connection to the site",
+    "differs": ""
+  },
+  "story": {
+    "what_it_is": "Your internet address reveals whether you are on a home, phone or cloud network.",
+    "icon": "network",
+    "tags": [
+      "Network",
+      "Silent",
+      "Fraud"
+    ],
+    "marketing": [],
+    "for_you": "You never see this. Sites can tell if you are on a home internet plan, a mobile carrier, a school, a company or a cloud server. A VPN shows up as a hosting company.",
+    "for_makers": "Fraud, ad and bot teams treat cloud and hosting addresses as higher risk. Streaming and gaming sites use it to spot VPNs and proxies, and ads use it to guess business or home.",
+    "use_cases": [
+      {
+        "type": "games",
+        "example": "A game site blocks or flags accounts that come from cloud server addresses, which are common for bots.",
+        "apps": [
+          "Roblox",
+          "Steam"
+        ]
+      },
+      {
+        "type": "games",
+        "example": "A cloud gaming service checks that your network looks like home or mobile before it routes you to a nearby server.",
+        "apps": [
+          "GeForce NOW",
+          "Xbox Cloud Gaming"
+        ]
+      },
+      {
+        "type": "media",
+        "example": "A streaming service blocks known VPN hosting networks to enforce regional rights.",
+        "apps": [
+          "Netflix",
+          "BBC iPlayer"
+        ]
+      },
+      {
+        "type": "shopping",
+        "example": "A ticket site slows down visitors from datacenters to stop scalper bots.",
+        "apps": [
+          "Ticketmaster"
+        ]
+      },
+      {
+        "type": "ads",
+        "example": "An ad network spots data center traffic and does not bill for it.",
+        "apps": []
+      },
+      {
+        "type": "security",
+        "example": "A bank adds risk when a login suddenly comes from a hosting provider.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Reveals VPN use",
+      "Can wrongly block people"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Labels lag behind IP leasing changes",
+    "Residential proxy networks defeat hosting checks"
+  ],
+  "scores": {
+    "sensitivity": 2,
+    "utility": 5,
+    "fingerprint_bits": 3,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": "Bot filtering, fraud scoring",
+    "abuse": "Network based profiling"
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "related": [
+    "web.net.vpn-proxy-tor-detection"
+  ],
+  "refs": [
+    {
+      "t": "vendor",
+      "label": "IPinfo ASN data",
+      "url": "https://ipinfo.io/products/asn-api"
+    },
+    {
+      "t": "rfc",
+      "label": "RFC 4271 BGP-4",
+      "url": "https://www.rfc-editor.org/rfc/rfc4271"
+    }
+  ],
+  "confidence": "docs"
+}

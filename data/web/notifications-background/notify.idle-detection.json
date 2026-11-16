@@ -1,0 +1,240 @@
+{
+  "id": "web.notify.idle-detection",
+  "name": "Idle Detection",
+  "kind": "permission",
+  "group": "notifications-background",
+  "subgroup": "Keep awake",
+  "tags": [
+    "presence"
+  ],
+  "plain": "Tells a site when the person is away from keyboard and mouse or the screen is locked.",
+  "meaning": "Reveals when the person is present: active or idle (at least 60 seconds) and whether the screen is locked. Useful for chat presence; also shows daily schedule, sleep and work hours.",
+  "lifecycle": [
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "IdleDetector.requestPermission(); new IdleDetector().start({threshold: 60000}); userState, screenState",
+      "permission_name": "idle-detection",
+      "permissions_policy": "idle-detection",
+      "bcd": [
+        "api.IdleDetector"
+      ],
+      "access": {
+        "grant": "prompt",
+        "prompt_ui": "Chrome prompt Know when you are actively using your device, Allow or Block; needs a user gesture.",
+        "secure_context": true,
+        "user_gesture": true,
+        "persistence": "Persistent per origin",
+        "revocation": "Site settings, padlock",
+        "iframe": "Needs allow=\"idle-detection\" in iframes",
+        "steps": [
+          "User gesture",
+          "IdleDetector.requestPermission()",
+          "Prompt shown",
+          "start({threshold}) then 'change' events fire"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "94",
+          "note": "",
+          "date": "2021-09-21"
+        },
+        "edge": {
+          "s": "y",
+          "v": "114",
+          "note": "",
+          "date": "2023-06-02"
+        },
+        "firefox": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "safari": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "ios_safari": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "94",
+          "note": "",
+          "date": "2021-09-21"
+        },
+        "samsung": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "event",
+    "metric": "User and screen state",
+    "update": "on state change",
+    "fields": [
+      {
+        "name": "userState",
+        "type": "enum",
+        "unit": "none",
+        "range": "active or idle",
+        "precision": "after threshold"
+      },
+      {
+        "name": "screenState",
+        "type": "enum",
+        "unit": "none",
+        "range": "locked or unlocked",
+        "precision": "event"
+      },
+      {
+        "name": "threshold",
+        "type": "integer",
+        "unit": "ms",
+        "range": "60,000 minimum",
+        "precision": "1 ms"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can tell when you step away or lock your screen, if you allow it",
+    "user_action": "You tap a button like Show my status and tap Allow",
+    "can": [
+      "See whether you are active or idle for at least 60 seconds",
+      "See if your screen is locked",
+      "Show presence in chat or reset a shared kiosk",
+      "Keep checking while the page is open"
+    ],
+    "cannot": [
+      "Work before you tap Allow in Chrome",
+      "Work in Firefox, Safari or on iPhone",
+      "Work on Samsung Internet",
+      "See what you are doing, only whether you are active or away"
+    ],
+    "reach": 2,
+    "reach_label": "While open, if you allow",
+    "differs": "Chrome and Edge on computers and Android ask first. Firefox, Safari and iPhone browsers do not support it."
+  },
+  "story": {
+    "what_it_is": "A site can learn when you step away from the keyboard and mouse or lock your screen.",
+    "icon": "user-x",
+    "tags": [
+      "Permission",
+      "Presence",
+      "Asks first"
+    ],
+    "marketing": [
+      {
+        "vendor": "MDN Web Docs",
+        "name": "Idle Detection API",
+        "pitch": "Lets a page know when a user is idle or the screen is locked, after the user allows it.",
+        "url": "https://developer.mozilla.org/en-US/docs/Web/API/Idle_Detection_API"
+      }
+    ],
+    "for_you": "A prompt asks to know when you are idle. If you allow it, the site can show you as away in chat or pause things. You never see the checks themselves.",
+    "for_makers": "Makers use it to show presence in chat and team tools, and to save resources. It is also a window into when you are at your desk. That is why it needs a clear allow.",
+    "use_cases": [
+      {
+        "type": "messaging",
+        "example": "A web chat shows a friend as Away after they leave their computer, so you know not to expect a reply.",
+        "apps": [
+          "Slack",
+          "Discord"
+        ]
+      },
+      {
+        "type": "enterprise",
+        "example": "A shared support desk marks agents as idle and sends new tickets to those at their desks.",
+        "apps": []
+      },
+      {
+        "type": "games",
+        "example": "A browser game lobby pauses a match search when you walk away, so teammates are not left waiting.",
+        "apps": []
+      },
+      {
+        "type": "live",
+        "example": "A live auction site logs out an idle bidder to protect their account.",
+        "apps": []
+      },
+      {
+        "type": "security",
+        "example": "A banking site locks the page when it sees the device screen is locked and idle.",
+        "apps": []
+      },
+      {
+        "type": "education",
+        "example": "A test platform notes that a student has left their screen, as a sign of cheating risk.",
+        "apps": []
+      },
+      {
+        "type": "video",
+        "example": "A video site pauses autoplay of the next episode when no one is there to watch.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Shows when you are away",
+      "Can feel like spying"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "60 second minimum threshold",
+    "Chrome only",
+    "Needs gesture"
+  ],
+  "scores": {
+    "sensitivity": 3,
+    "utility": 3,
+    "fingerprint_bits": null,
+    "friction": 2
+  },
+  "value": {
+    "legit_uses": [
+      "Chat presence",
+      "Kiosk reset"
+    ],
+    "abuse": [
+      "Learning when the person is away from the computer"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2021-09",
+      "browser": "chrome",
+      "version": "94",
+      "change": "Idle Detection ships"
+    }
+  ],
+  "refs": [
+    {
+      "t": "mdn",
+      "label": "MDN Idle Detection API",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/Idle_Detection_API"
+    },
+    {
+      "t": "spec",
+      "label": "WICG Idle Detection",
+      "url": "https://wicg.github.io/idle-detection/"
+    }
+  ],
+  "confidence": "docs"
+}

@@ -1,0 +1,211 @@
+{
+  "id": "web.locale.accessibility-inference",
+  "name": "Accessibility settings inferred",
+  "kind": "tracking",
+  "group": "locale-preferences",
+  "subgroup": "Accessibility",
+  "tags": [
+    "accessibility",
+    "inference",
+    "special-category"
+  ],
+  "plain": "Combining contrast, motion, forced colors, zoom and font size to guess a disability.",
+  "meaning": "No single API says disabled, but together prefers-contrast, forced-colors, reduced-motion, large fonts and zoom flag vision, vestibular or motor needs. Under GDPR or similar this may be special-category data.",
+  "lifecycle": [
+    "on-arrival",
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "Combination of CSS media queries, zoom and font size",
+      "access": {
+        "grant": "none",
+        "prompt_ui": "None",
+        "secure_context": false,
+        "user_gesture": false,
+        "persistence": "read fresh on every page load; nothing stored",
+        "revocation": "none needed (no grant)",
+        "iframe": "Readable from cross-origin iframes too (same values)",
+        "steps": [
+          "Page script reads the value",
+          "No prompt is shown"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "1",
+          "note": "",
+          "date": "2008-12-11"
+        },
+        "edge": {
+          "s": "y",
+          "v": "12",
+          "note": "",
+          "date": "2015-07-29"
+        },
+        "firefox": {
+          "s": "y",
+          "v": "1",
+          "note": "",
+          "date": "2004-11-09"
+        },
+        "safari": {
+          "s": "y",
+          "v": "3",
+          "note": "",
+          "date": "2007-10-26"
+        },
+        "ios_safari": {
+          "s": "y",
+          "v": "3.2",
+          "note": "",
+          "date": "2010-04-03"
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "18",
+          "note": "",
+          "date": "2012-06-27"
+        },
+        "samsung": {
+          "s": "y",
+          "v": "1.0",
+          "note": "",
+          "date": "2013-04-27"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "object",
+    "metric": "",
+    "update": "static per session",
+    "fields": [
+      {
+        "name": "signals combined",
+        "type": "list",
+        "unit": "",
+        "range": "forced-colors, prefers-contrast, prefers-reduced-motion, inverted-colors, zoom, font size",
+        "precision": ""
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can guess you may use accessibility settings by combining several browser signals",
+    "user_action": "Nothing. It happens quietly while the page loads and you use it",
+    "can": [
+      "Check settings such as high contrast, reduced motion, forced colors, zoom and large text",
+      "Guess you may have low vision or need less motion when several signals line up",
+      "Change the page design to fit those settings"
+    ],
+    "cannot": [
+      "Learn for sure that you have a disability",
+      "See your medical details or assistive tech by name",
+      "Rely on one signal alone; it takes several together"
+    ],
+    "reach": 2,
+    "reach_label": "Settings your browser reveals",
+    "differs": ""
+  },
+  "story": {
+    "what_it_is": "Sites can guess a disability from your zoom, contrast, motion and font settings.",
+    "icon": "accessibility",
+    "tags": [
+      "Accessibility",
+      "Tracking",
+      "Sensitive"
+    ],
+    "marketing": [
+      {
+        "vendor": "web.dev (Google)",
+        "name": "prefers-reduced-motion",
+        "pitch": "Google teaches pages to honor the person's reduced motion setting so animations can be turned down.",
+        "url": "https://web.dev/articles/prefers-reduced-motion"
+      }
+    ],
+    "for_you": "You never see anything. If you use high contrast, large text, big zoom or reduced motion, a site can notice. These settings help you read, but together they can hint at a health or vision condition.",
+    "for_makers": "Makers use these settings to adapt the page for the person, which is the good use. Trackers and ad systems can use the same signals as a clue about health or age, which is sensitive and a privacy risk.",
+    "use_cases": [
+      {
+        "type": "accessibility",
+        "example": "A site switches to a calmer layout without animation when it sees reduced motion is on.",
+        "apps": []
+      },
+      {
+        "type": "games",
+        "example": "A browser game turns off screen shake and flashing when it sees reduced motion, and uses stronger contrast colors.",
+        "apps": []
+      },
+      {
+        "type": "media",
+        "example": "A video site turns on captions and larger controls when contrast and zoom settings suggest low vision.",
+        "apps": []
+      },
+      {
+        "type": "ads",
+        "example": "An ad profile quietly adds 'may have low vision' as a hidden clue to target products, which is a privacy concern.",
+        "apps": []
+      },
+      {
+        "type": "analytics",
+        "example": "A fingerprint script uses font size, zoom and contrast as part of a unique ID.",
+        "apps": []
+      },
+      {
+        "type": "security",
+        "example": "A fraud tool treats odd combinations as a sign of automation or a spoofed browser.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Reveals health clues",
+      "Used for profiling"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Only probabilistic; screen reader use is not directly detectable"
+  ],
+  "scores": {
+    "sensitivity": 4,
+    "utility": 2,
+    "fingerprint_bits": 4.0,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Adapt UI"
+    ],
+    "abuse": [
+      "Disability profiling",
+      "Discriminatory pricing"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": true,
+      "how": "BrowserGate alleges extension scan infers disability and neurodivergence; separate from media queries."
+    }
+  },
+  "related": [
+    "web.display.forced-colors",
+    "web.display.prefers-contrast",
+    "web.display.prefers-reduced-motion"
+  ],
+  "refs": [
+    {
+      "t": "spec",
+      "label": "CSS Media Queries Level 5",
+      "url": "https://www.w3.org/TR/mediaqueries-5/"
+    },
+    {
+      "t": "news",
+      "label": "BrowserGate: how LinkedIn's script works",
+      "url": "https://browsergate.eu/how-it-works/"
+    }
+  ],
+  "confidence": "inferred"
+}

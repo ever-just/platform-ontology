@@ -1,0 +1,181 @@
+{
+  "id": "mob.sensor.proximity",
+  "name": "Proximity sensor",
+  "kind": "signal",
+  "group": "location-motion",
+  "subgroup": "Motion",
+  "tags": [
+    "proximity"
+  ],
+  "plain": "Android reads the distance; iOS gives only a near or far boolean.",
+  "meaning": "Shows the phone is at the ear or in a pocket. Low value as an ID.",
+  "lifecycle": [
+    "in-session"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "y",
+      "v": "1.5",
+      "api": 3,
+      "permission": "",
+      "protection": "none",
+      "grant": "none",
+      "prompt_ui": "",
+      "persistence": "",
+      "revocation": "",
+      "store_policy": "",
+      "api_surface": "Sensor.TYPE_PROXIMITY",
+      "note": "Often binary (0 or 5 cm), some devices return distance"
+    },
+    "ios": {
+      "s": "y",
+      "v": "3.0",
+      "permission": "none",
+      "protection": "none",
+      "grant": "none",
+      "prompt_ui": "",
+      "persistence": "",
+      "revocation": "",
+      "store_policy": "",
+      "api_surface": "Boolean only",
+      "note": ""
+    }
+  },
+  "data": {
+    "type": "boolean",
+    "metric": "Near or far",
+    "update": "On change",
+    "fields": [
+      {
+        "name": "near",
+        "type": "boolean",
+        "unit": "",
+        "range": "true, false",
+        "precision": "1 bit"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can tell if something is close to the screen, such as your ear",
+    "user_action": "Nothing. It happens when you hold the phone to your ear on a call or voice message",
+    "can": [
+      "Check if the phone is near your face",
+      "Turn off the screen during calls",
+      "On some Android phones, get a distance in centimeters"
+    ],
+    "cannot": [
+      "Get a distance on iPhone; only near or far",
+      "See what is near the phone",
+      "Follow you around"
+    ],
+    "reach": 1,
+    "reach_label": "Near or far",
+    "differs": "iPhone gives only near or far. Android is often near or far but some phones give a distance."
+  },
+  "story": {
+    "what_it_is": "An app can sense when something, like your face, is close to the top of the phone.",
+    "icon": "scan-line",
+    "tags": [
+      "Sensors",
+      "Silent",
+      "Calls"
+    ],
+    "marketing": [
+      {
+        "vendor": "Apple",
+        "name": "Proximity sensor",
+        "pitch": "Apple lets apps know when the phone is near your face so the screen can turn off during calls.",
+        "url": "https://developer.apple.com/documentation/uikit/uidevice/proximitystate"
+      },
+      {
+        "vendor": "Google",
+        "name": "Position sensors",
+        "pitch": "Android apps can read how close an object is to the screen to run call features.",
+        "url": "https://developer.android.com/develop/sensors-and-location/sensors/sensors_position"
+      }
+    ],
+    "for_you": "You notice it only during calls: when the phone touches your ear, the screen goes dark so your cheek cannot hang up. It can also tell that the phone is in your pocket.",
+    "for_makers": "Makers use it to switch off the screen during voice calls and voice notes. It has little value for tracking, except to guess that a phone is in a pocket or bag.",
+    "use_cases": [
+      {
+        "type": "messaging",
+        "example": "A chat app turns the screen off when you hold the phone to your ear to hear a voice note.",
+        "apps": [
+          "WhatsApp",
+          "Telegram"
+        ]
+      },
+      {
+        "type": "video",
+        "example": "A video call app turns the screen off during an audio only call.",
+        "apps": [
+          "Zoom",
+          "FaceTime"
+        ]
+      },
+      {
+        "type": "accessibility",
+        "example": "A hands free app uses a wave over the sensor to answer or silence a call.",
+        "apps": []
+      },
+      {
+        "type": "games",
+        "example": "A gesture game lets you wave a hand over the phone to trigger an action.",
+        "apps": []
+      },
+      {
+        "type": "security",
+        "example": "A phone tracker app guesses that the phone is in a pocket to decide whether to ring louder.",
+        "apps": []
+      },
+      {
+        "type": "health",
+        "example": "A sleep tracker pauses buzzing when the phone is covered under a pillow.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Low privacy risk",
+      "Pocket detection"
+    ],
+    "android_note": "Android apps can read a distance value, though many phones only give near or far.",
+    "ios_note": "iPhone apps only get a near or far yes or no, and must turn it on first."
+  },
+  "technical_bounds": [
+    "iOS has no distance"
+  ],
+  "scores": {
+    "sensitivity": 1,
+    "utility": 1,
+    "fingerprint_bits": 1,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Screen off during calls"
+    ],
+    "abuse": [
+      "Little"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "refs": [
+    {
+      "t": "android",
+      "label": "Android: Sensors overview",
+      "url": "https://developer.android.com/develop/sensors-and-location/sensors/sensors_overview"
+    },
+    {
+      "t": "apple",
+      "label": "Apple: UIDevice",
+      "url": "https://developer.apple.com/documentation/uikit/uidevice"
+    }
+  ],
+  "confidence": "docs"
+}

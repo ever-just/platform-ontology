@@ -1,0 +1,178 @@
+{
+  "id": "mob.dev.ram-size",
+  "name": "RAM size",
+  "kind": "signal",
+  "group": "device-system-profile",
+  "subgroup": "Hardware capacity",
+  "tags": [
+    "ram",
+    "device-tier"
+  ],
+  "plain": "Reads total memory in bytes with no prompt.",
+  "meaning": "Maps almost directly to device price tier (2 to 16 GB) and is a stable fingerprint bit. Apps use it to size caches.",
+  "lifecycle": [
+    "on-launch",
+    "in-session"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "y",
+      "v": "4.1",
+      "api": 16,
+      "permission": "",
+      "protection": "none",
+      "grant": "none",
+      "prompt_ui": "",
+      "persistence": "",
+      "revocation": "",
+      "store_policy": "",
+      "api_surface": "ActivityManager.MemoryInfo.totalMem (API 16), getMemoryClass(), isLowRamDevice()",
+      "note": "Exact total bytes; app heap class 128 to 512 MB"
+    },
+    "ios": {
+      "s": "y",
+      "v": "2.0",
+      "permission": "none",
+      "protection": "none",
+      "grant": "none",
+      "prompt_ui": "",
+      "persistence": "",
+      "revocation": "",
+      "store_policy": "",
+      "api_surface": "Exact bytes; iPhones range about 1 to 12 GB",
+      "note": ""
+    }
+  },
+  "web_equivalents": [
+    "web.device.device-memory"
+  ],
+  "data": {
+    "type": "integer",
+    "metric": "Total RAM bytes",
+    "update": "Static",
+    "fields": [
+      {
+        "name": "total_bytes",
+        "type": "integer",
+        "unit": "bytes",
+        "range": "1 GB to 24 GB",
+        "precision": "exact"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can see how much memory your phone has, down to the exact byte, with no prompt",
+    "user_action": "Nothing. The app checks when it starts to choose how heavy to run",
+    "can": [
+      "See total memory in bytes on Android and iPhone",
+      "See the app's Android memory class, about 128 to 512 MB",
+      "Check if your Android phone is a low memory device"
+    ],
+    "cannot": [
+      "Use more memory than the system allows for the app",
+      "See what other apps are using",
+      "Tell who you are from the memory size alone"
+    ],
+    "reach": 2,
+    "reach_label": "Always available, one number",
+    "differs": "Android also shows a memory class and a low memory flag. iPhones range from about 1 to 12 GB."
+  },
+  "story": {
+    "what_it_is": "An app can see how much memory your phone has.",
+    "icon": "memory-stick",
+    "tags": [
+      "Silent",
+      "Device",
+      "Performance"
+    ],
+    "marketing": [],
+    "for_you": "You never see it. It hints at how fast and costly your phone is. Apps use it to decide how much to keep ready in memory.",
+    "for_makers": "Makers size their caches and pick quality settings from it. It maps closely to device price and is a stable fingerprint detail.",
+    "use_cases": [
+      {
+        "type": "games",
+        "example": "A big game loads high detail textures on a 12 GB phone and small ones on a 3 GB phone.",
+        "apps": []
+      },
+      {
+        "type": "creative",
+        "example": "A video editor limits clip length on low memory phones so it does not crash.",
+        "apps": []
+      },
+      {
+        "type": "social",
+        "example": "A feed app keeps fewer videos ready in memory on small phones.",
+        "apps": []
+      },
+      {
+        "type": "ar-vr",
+        "example": "An AR app picks a lighter 3D model on phones with little memory.",
+        "apps": []
+      },
+      {
+        "type": "shopping",
+        "example": "A store app guesses your phone's price tier to decide which ads to show.",
+        "apps": []
+      },
+      {
+        "type": "ads",
+        "example": "An ad firm adds memory size to a fingerprint.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Hints at what you can afford",
+      "Adds to a fingerprint"
+    ],
+    "android_note": "Reads total memory with no prompt.",
+    "ios_note": "Reads total memory with no prompt."
+  },
+  "technical_bounds": [
+    "Static per device model, so low entropy within a model"
+  ],
+  "scores": {
+    "sensitivity": 1,
+    "utility": 3,
+    "fingerprint_bits": 3,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Choose image and model sizes"
+    ],
+    "abuse": [
+      "Fingerprint"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2012-07",
+      "platform": "android",
+      "version": "4.1 (API 16)",
+      "change": "MemoryInfo.totalMem added"
+    }
+  ],
+  "related": [
+    "mob.dev.cpu-cores"
+  ],
+  "refs": [
+    {
+      "t": "android",
+      "label": "Android: Build",
+      "url": "https://developer.android.com/reference/android/os/Build"
+    },
+    {
+      "t": "apple",
+      "label": "Apple: ProcessInfo",
+      "url": "https://developer.apple.com/documentation/foundation/processinfo"
+    }
+  ],
+  "confidence": "inferred"
+}

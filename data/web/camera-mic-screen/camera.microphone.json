@@ -1,0 +1,320 @@
+{
+  "id": "web.camera.microphone",
+  "name": "Microphone (audio capture)",
+  "kind": "permission",
+  "group": "camera-mic-screen",
+  "subgroup": "Capture",
+  "tags": [
+    "audio",
+    "getusermedia",
+    "secure-context"
+  ],
+  "plain": "Asks to turn on the microphone and receive live audio.",
+  "meaning": "Gives the site live sound from the room: voice, background talk, ambient noise. Used for calls and dictation; also usable for voice biometrics or covert listening if the tab stays open.",
+  "lifecycle": [
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "navigator.mediaDevices.getUserMedia({audio: true|constraints}); Web Audio createMediaStreamSource()",
+      "permission_name": "microphone",
+      "permissions_policy": "microphone",
+      "bcd": [
+        "api.MediaDevices.getUserMedia",
+        "api.MediaStreamTrack"
+      ],
+      "access": {
+        "grant": "prompt",
+        "prompt_ui": "Chrome: bubble with Allow while visiting, Allow this time, Don't allow. Firefox: device chooser plus Remember. Safari: Allow or Don't Allow. Tab shows a recording icon (red dot) while active.",
+        "secure_context": true,
+        "user_gesture": false,
+        "persistence": "Chrome and Edge: persistent per origin until reset; Safari and Firefox: per session unless remembered.",
+        "revocation": "Padlock icon, Site settings, OS microphone privacy settings; track.stop(); tab audio indicator.",
+        "iframe": "Cross-origin iframes need allow=\"microphone\"",
+        "steps": [
+          "Call getUserMedia({audio: true})",
+          "Browser prompts",
+          "OS microphone opens",
+          "MediaStream with an audio track; echoCancellation, noiseSuppression, autoGainControl default on"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "53",
+          "note": "Unprefixed from 53; secure context from 47",
+          "date": "2016-08-31"
+        },
+        "edge": {
+          "s": "y",
+          "v": "12",
+          "note": "",
+          "date": "2015-07-29"
+        },
+        "firefox": {
+          "s": "y",
+          "v": "36",
+          "note": "Unprefixed from 36",
+          "date": "2015-02-24"
+        },
+        "safari": {
+          "s": "y",
+          "v": "11",
+          "note": "macOS Safari 11, secure context only",
+          "date": "2017-09-19"
+        },
+        "ios_safari": {
+          "s": "y",
+          "v": "11",
+          "note": "iOS 11, all iOS browsers",
+          "date": "2017-09-19"
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "53",
+          "note": "",
+          "date": "2016-09-07"
+        },
+        "samsung": {
+          "s": "y",
+          "v": "6.0",
+          "note": "",
+          "date": "2017-08-23"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "stream",
+    "metric": "Live audio track",
+    "update": "continuous (sample rate usually 44100 or 48000 Hz)",
+    "fields": [
+      {
+        "name": "sampleRate",
+        "type": "integer",
+        "unit": "Hz",
+        "range": "8000 to 96000",
+        "precision": "device dependent"
+      },
+      {
+        "name": "channelCount",
+        "type": "integer",
+        "unit": "channels",
+        "range": "1 to 8 (typical 1 or 2)",
+        "precision": "1"
+      },
+      {
+        "name": "echoCancellation",
+        "type": "boolean",
+        "unit": "none",
+        "range": "true or false",
+        "precision": "default true"
+      },
+      {
+        "name": "noiseSuppression",
+        "type": "boolean",
+        "unit": "none",
+        "range": "true or false",
+        "precision": "default true"
+      },
+      {
+        "name": "autoGainControl",
+        "type": "boolean",
+        "unit": "none",
+        "range": "true or false",
+        "precision": "default true"
+      },
+      {
+        "name": "latency",
+        "type": "float",
+        "unit": "seconds",
+        "range": "0 to 1",
+        "precision": "about 0.01"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can hear and record live audio from your microphone while the tab is open",
+    "user_action": "You click Unmute, Record, or Join call, then choose Allow in the browser pop up",
+    "can": [
+      "Capture live audio from your microphone",
+      "Send that audio to other people on a call or to the site's servers",
+      "Record voice clips or messages",
+      "List your microphones and switch between them once you allow access"
+    ],
+    "cannot": [
+      "Turn the microphone on the first time without your Allow tap",
+      "Keep listening after you close the tab; the tab shows a recording indicator while it runs",
+      "Use the microphone if it is blocked in your device settings",
+      "Hear other apps or system sound, only what the microphone picks up"
+    ],
+    "reach": 2,
+    "reach_label": "While the tab is open",
+    "differs": "Chrome offers Allow this time, Firefox lets you pick a microphone in the pop up, and Safari asks per site."
+  },
+  "story": {
+    "what_it_is": "Lets a website listen through your microphone, live.",
+    "icon": "mic",
+    "tags": [
+      "Microphone",
+      "Asks first",
+      "Sensitive"
+    ],
+    "marketing": [
+      {
+        "vendor": "Mozilla",
+        "name": "getUserMedia",
+        "pitch": "Developer docs describe how a page asks permission, then streams live microphone audio for calls and dictation.",
+        "url": "https://developer.mozilla.org/en-US/docs/Web/API/MediaDevices/getUserMedia"
+      },
+      {
+        "vendor": "Google Chrome",
+        "name": "One-time permissions",
+        "pitch": "Chrome describes Allow this time, which gives microphone access for one visit only.",
+        "url": "https://developer.chrome.com/blog/one-time-permissions"
+      }
+    ],
+    "for_you": "A box asks to use your microphone, and you pick Allow or Block. While it is on, the tab shows a mic icon. The site hears voices and room noise until you close the tab or turn it off.",
+    "for_makers": "The microphone is the heart of web calls, voice chat in games and voice search. A maker can add voice to any web product without an app. It also opens the door to features such as live captions, voice commands and sound checks.",
+    "use_cases": [
+      {
+        "type": "games",
+        "example": "In a browser or cloud game, you press a button to talk to your squad over voice chat, and the game sends your voice to the team.",
+        "apps": [
+          "Xbox Cloud Gaming party chat",
+          "GeForce NOW",
+          "Discord web"
+        ]
+      },
+      {
+        "type": "video",
+        "example": "You join a Zoom or Google Meet call in a browser tab, allow the mic, and others hear you right away.",
+        "apps": [
+          "Google Meet",
+          "Zoom web",
+          "Microsoft Teams"
+        ]
+      },
+      {
+        "type": "music",
+        "example": "A web tuner or music app listens to your guitar or voice and shows if you are in tune or singing the right note.",
+        "apps": [
+          "Chrome Music Lab",
+          "Yousician web"
+        ]
+      },
+      {
+        "type": "messaging",
+        "example": "You hold a mic button in a web chat, speak, and the site sends the voice note.",
+        "apps": [
+          "WhatsApp Web",
+          "Messenger web"
+        ]
+      },
+      {
+        "type": "education",
+        "example": "A language site asks you to say a phrase and scores your pronunciation as you speak.",
+        "apps": [
+          "Duolingo",
+          "Google Translate web"
+        ]
+      },
+      {
+        "type": "accessibility",
+        "example": "A person who cannot type well dictates a long email by voice and sees live words appear in the text box.",
+        "apps": [
+          "Gmail dictation",
+          "Google Docs voice typing"
+        ]
+      },
+      {
+        "type": "security",
+        "example": "A phone call center site checks your voice print on a login, using a live clip of your voice as a second factor.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Covert listening from a forgotten tab",
+      "Voice used as a biometric"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Needs secure context",
+    "OS and browser show an active indicator",
+    "Background tabs on mobile stop capture",
+    "Cannot hear system audio (see display-capture systemAudio)"
+  ],
+  "scores": {
+    "sensitivity": 5,
+    "utility": 5,
+    "fingerprint_bits": null,
+    "friction": 2
+  },
+  "value": {
+    "legit_uses": [
+      "Voice and video calls",
+      "Dictation and voice search",
+      "Music tuners",
+      "Podcast recording"
+    ],
+    "abuse": [
+      "Covert listening",
+      "Voice biometrics",
+      "Ultrasonic cross-device tracking beacons (research)"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2017-09",
+      "browser": "ios_safari",
+      "version": "11",
+      "change": "iOS 11 adds getUserMedia audio"
+    },
+    {
+      "date": "2018-01",
+      "browser": "chrome",
+      "version": "60",
+      "change": "Restricted to secure contexts"
+    },
+    {
+      "date": "2023-08",
+      "browser": "chrome",
+      "version": "116",
+      "change": "Allow this time added"
+    },
+    {
+      "date": "2019-03",
+      "browser": "chrome",
+      "version": "74",
+      "change": "Tab recording indicator becomes standard in tab strip"
+    }
+  ],
+  "related": [
+    "web.camera.camera",
+    "web.camera.speech-recognition",
+    "web.camera.media-recorder",
+    "web.camera.speaker-selection"
+  ],
+  "refs": [
+    {
+      "t": "mdn",
+      "label": "MDN getUserMedia",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/MediaDevices/getUserMedia"
+    },
+    {
+      "t": "spec",
+      "label": "W3C Media Capture and Streams",
+      "url": "https://www.w3.org/TR/mediacapture-streams/"
+    }
+  ],
+  "confidence": "docs"
+}

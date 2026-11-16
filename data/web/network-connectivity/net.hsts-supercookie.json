@@ -1,0 +1,200 @@
+{
+  "id": "web.net.hsts-supercookie",
+  "name": "HSTS supercookie",
+  "kind": "tracking",
+  "group": "network-connectivity",
+  "subgroup": "Supercookies",
+  "tags": [
+    "hsts",
+    "supercookie",
+    "redirect"
+  ],
+  "plain": "A site stores an ID in which subdomains the browser has been told to load only over HTTPS.",
+  "meaning": "Each bit is a subdomain set to HSTS or not. The tracker reads it back by probing http:// URLs and seeing which upgrade (Kamkar 2015). Safari's ITP and clearing site data restrict it; HSTS is mostly cleared with history.",
+  "lifecycle": [
+    "on-arrival"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "Strict-Transport-Security on N subdomains; redirect probing",
+      "access": {
+        "grant": "none",
+        "prompt_ui": "",
+        "secure_context": false,
+        "user_gesture": false,
+        "persistence": "",
+        "revocation": "",
+        "iframe": "",
+        "steps": [
+          "Set HSTS on chosen subdomains to write bits",
+          "Request http subdomains",
+          "Check which redirect to https to read the ID"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "p",
+          "v": "",
+          "note": ":Partitioning not shipped (HSTS state is cleared with history)"
+        },
+        "edge": {
+          "s": "p",
+          "v": "",
+          "note": ":Partitioning not shipped (HSTS state is cleared with history)"
+        },
+        "firefox": {
+          "s": "p",
+          "v": "",
+          "note": ":State survives; private mode isolated"
+        },
+        "safari": {
+          "s": "r",
+          "v": "12",
+          "note": "WebKit mitigation 2018",
+          "date": "2018-09-17"
+        },
+        "ios_safari": {
+          "s": "r",
+          "v": "12",
+          "note": "WebKit mitigation 2018",
+          "date": "2018-09-17"
+        },
+        "chrome_android": {
+          "s": "p",
+          "v": "",
+          "note": ":Partitioning not shipped (HSTS state is cleared with history)"
+        },
+        "samsung": {
+          "s": "p",
+          "v": "",
+          "note": ":Partitioning not shipped (HSTS state is cleared with history)"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "integer",
+    "metric": "N bit identifier (a few dozen subdomains)",
+    "update": "",
+    "fields": [
+      {
+        "name": "id bits",
+        "type": "integer",
+        "unit": "bits",
+        "range": "up to 30 to 40",
+        "precision": "needs many requests"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can try to tag your browser with a hidden secure site ID, though it is limited",
+    "user_action": "Nothing. It happens when you visit a site that tries it",
+    "can": [
+      "Store bits by choosing which subdomains your browser forces onto https",
+      "Check them later by trying plain http web addresses",
+      "Recognise a returning visitor until you clear history or site data"
+    ],
+    "cannot": [
+      "Survive clearing history in most browsers",
+      "Work well in Safari, which limits it",
+      "Carry much data; each subdomain gives one bit"
+    ],
+    "reach": 1,
+    "reach_label": "Small ID, mostly cleared by history",
+    "differs": "Safari limits it. Chrome, Edge and Firefox allow it partly, but it is cleared with history."
+  },
+  "story": {
+    "what_it_is": "A site stores an ID in which of its sub-sites your browser forces onto secure mode.",
+    "icon": "cookie",
+    "tags": [
+      "Tracking",
+      "Hidden"
+    ],
+    "marketing": [],
+    "for_you": "You never see it. Your browser remembers secure site choices. A tracker can set many tiny secure flags like switches and read them back later to see your personal code. Many browsers now limit this trick.",
+    "for_makers": "It is an old trick to recognize people after cookie clearing, and it still shapes how browsers handle secure site lists. Trackers once used it. Privacy teams want it blocked.",
+    "use_cases": [
+      {
+        "type": "ads",
+        "example": "A tracker sets a pattern of secure site flags on a first visit and reads it back to recognize you.",
+        "apps": []
+      },
+      {
+        "type": "analytics",
+        "example": "An analytics vendor uses it as a backup ID when cookies are deleted.",
+        "apps": []
+      },
+      {
+        "type": "security",
+        "example": "A researcher shows how it could re identify private browsing users.",
+        "apps": []
+      },
+      {
+        "type": "shopping",
+        "example": "A store ad partner uses it to re identify a shopper who cleared cookies.",
+        "apps": []
+      },
+      {
+        "type": "media",
+        "example": "A publisher could match a returning reader behind a paywall.",
+        "apps": []
+      },
+      {
+        "type": "games",
+        "example": "A game site could link repeat sessions of a banned player.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Survives clearing cookies",
+      "Browsers now limit it"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Needs dozens of subdomains and many requests",
+    "Cleared when the person clears browsing data"
+  ],
+  "scores": {
+    "sensitivity": 3,
+    "utility": 1,
+    "fingerprint_bits": 4,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": "None",
+    "abuse": "Cookie-free persistent ID"
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2018-01",
+      "browser": "safari",
+      "version": "",
+      "change": "WebKit limits HSTS to prevent cross-site tracking (ITP)"
+    }
+  ],
+  "related": [
+    "web.net.etag-cache-supercookie"
+  ],
+  "refs": [
+    {
+      "t": "web",
+      "label": "Evercookie and HSTS supercookie (Kamkar)",
+      "url": "https://samy.pl/evercookie/"
+    },
+    {
+      "t": "web",
+      "label": "WebKit: Protecting Against HSTS Abuse",
+      "url": "https://webkit.org/blog/8146/protecting-against-hsts-abuse/"
+    }
+  ],
+  "confidence": "docs"
+}

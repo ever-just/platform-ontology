@@ -1,0 +1,223 @@
+{
+  "id": "web.hardware.nfc",
+  "name": "Web NFC",
+  "kind": "permission",
+  "group": "peripherals-hardware",
+  "subgroup": "Peripherals",
+  "tags": [
+    "android-only"
+  ],
+  "plain": "Asks to read or write NFC tags with your phone.",
+  "meaning": "Lets a page scan NDEF tags and write to them. Only while the page is visible and focused. Android Chrome only.",
+  "lifecycle": [
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "new NDEFReader(); reader.scan(); reader.write(); permission nfc",
+      "permission_name": "nfc",
+      "bcd": [
+        "api.NDEFReader"
+      ],
+      "access": {
+        "grant": "prompt",
+        "prompt_ui": "Chrome Android prompt: Scan NFC tags; needs a gesture to write.",
+        "secure_context": true,
+        "user_gesture": true,
+        "persistence": "Persistent per origin",
+        "revocation": "Site settings",
+        "iframe": "Top-level only (not delegated)",
+        "steps": [
+          "Click",
+          "ndef.scan()",
+          "Prompt",
+          "Reading event delivers records"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "edge": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "firefox": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "safari": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "ios_safari": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "89",
+          "note": "",
+          "date": "2021-03-02"
+        },
+        "samsung": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "event",
+    "metric": "NDEF records (url, text, mime, smart poster)",
+    "update": "per tag scan",
+    "fields": [
+      {
+        "name": "serialNumber",
+        "type": "string",
+        "unit": "hex",
+        "range": "tag UID, 4 to 10 bytes",
+        "precision": "high entropy"
+      },
+      {
+        "name": "records",
+        "type": "array",
+        "unit": "NDEF",
+        "range": "per tag",
+        "precision": "tag content"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can scan NFC tags or save to them with your phone, after you allow it",
+    "user_action": "You tap Scan tag or Save to tag, then hold your phone near it.",
+    "can": [
+      "Scan an NFC tag when your phone touches it",
+      "Save text or a link onto a tag after a tap",
+      "Scan only while the page is open and in front"
+    ],
+    "cannot": [
+      "Work in the background or when you switch apps",
+      "Save onto a tag without a tap on the page",
+      "Use your phone's wallet or payment cards",
+      "Work on iPhone, desktop or most browsers other than Chrome on Android"
+    ],
+    "reach": 2,
+    "reach_label": "While the page is open",
+    "differs": "Only Chrome on Android supports it. iPhone and other browsers do not."
+  },
+  "story": {
+    "what_it_is": "A site asks to read or write NFC tags using your phone.",
+    "icon": "nfc",
+    "tags": [
+      "NFC",
+      "Asks first",
+      "Android"
+    ],
+    "marketing": [
+      {
+        "vendor": "Google",
+        "name": "Web NFC",
+        "pitch": "Chrome's docs say Web NFC lets sites read and write NFC tags on Android.",
+        "url": "https://developer.chrome.com/docs/capabilities/nfc"
+      }
+    ],
+    "for_you": "You tap your phone to a tag or card and the page reads it. It only works while the page is open and on screen, and only on Chrome for Android.",
+    "for_makers": "Makers can build tag based tools without a native app: event check in, inventory, product info and smart posters.",
+    "use_cases": [
+      {
+        "type": "travel",
+        "example": "You tap an NFC tag at a hotel to check in on the hotel's website.",
+        "apps": []
+      },
+      {
+        "type": "shopping",
+        "example": "A tag on a shirt opens its product page with sizes.",
+        "apps": []
+      },
+      {
+        "type": "live",
+        "example": "Event staff scan NFC tickets with a phone browser to let people in.",
+        "apps": []
+      },
+      {
+        "type": "games",
+        "example": "A web based scavenger hunt reads tags hidden around a city.",
+        "apps": []
+      },
+      {
+        "type": "enterprise",
+        "example": "A warehouse worker taps a tag on a shelf to update inventory.",
+        "apps": []
+      },
+      {
+        "type": "security",
+        "example": "A cloned tag could be used to trick a page that trusts what it reads.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Tag tracking",
+      "Android only"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Android Chrome only",
+    "Page must be visible"
+  ],
+  "scores": {
+    "sensitivity": 3,
+    "utility": 2,
+    "fingerprint_bits": 5,
+    "friction": 2
+  },
+  "value": {
+    "legit_uses": [
+      "Ticketing",
+      "Inventory tags"
+    ],
+    "abuse": [
+      "Tag tracking"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2021-03",
+      "browser": "chrome",
+      "version": "89",
+      "change": "Web NFC ships on Android"
+    }
+  ],
+  "related": [
+    "web.meta.permissions-api"
+  ],
+  "refs": [
+    {
+      "t": "mdn",
+      "label": "MDN Web NFC API",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/Web_NFC_API"
+    },
+    {
+      "t": "spec",
+      "label": "W3C Web NFC",
+      "url": "https://w3c.github.io/web-nfc/"
+    }
+  ],
+  "confidence": "docs"
+}

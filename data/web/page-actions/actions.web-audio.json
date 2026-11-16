@@ -1,0 +1,250 @@
+{
+  "id": "web.actions.web-audio",
+  "name": "Web Audio playback",
+  "kind": "action",
+  "group": "page-actions",
+  "subgroup": "Media output",
+  "tags": [
+    "webaudio",
+    "audiocontext",
+    "autoplay"
+  ],
+  "plain": "Plays generated sound; the audio context stays silent until the person has interacted.",
+  "meaning": "A site can synthesize and mix sound at sample precision (games, music tools). Autoplay rules keep it quiet until a click, but once resumed it can run for as long as the tab lives.",
+  "lifecycle": [
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "new AudioContext(); ctx.resume(); AudioWorklet",
+      "bcd": [
+        "api.AudioContext",
+        "api.AudioWorklet"
+      ],
+      "access": {
+        "grant": "gesture",
+        "prompt_ui": "No prompt (needs a click, tap or keypress)",
+        "secure_context": false,
+        "user_gesture": true,
+        "activation": "sticky",
+        "persistence": "Context state suspended until resumed; lives with the page",
+        "revocation": "Nothing to revoke (no permission is stored)",
+        "iframe": "Cross-origin iframes need allow=\"autoplay\"",
+        "steps": [
+          "Create AudioContext (starts suspended)",
+          "On a click call ctx.resume()",
+          "Audio plays through the default output"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "35",
+          "note": "",
+          "date": "2014-05-20"
+        },
+        "edge": {
+          "s": "y",
+          "v": "12",
+          "note": "",
+          "date": "2015-07-29"
+        },
+        "firefox": {
+          "s": "y",
+          "v": "25",
+          "note": "",
+          "date": "2013-10-29"
+        },
+        "safari": {
+          "s": "y",
+          "v": "14.1",
+          "note": "",
+          "date": "2021-04-26"
+        },
+        "ios_safari": {
+          "s": "y",
+          "v": "14.5",
+          "note": "All iOS browsers use WebKit",
+          "date": "2021-04-26"
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "35",
+          "note": "",
+          "date": "2014-05-20"
+        },
+        "samsung": {
+          "s": "y",
+          "v": "3.0",
+          "note": "",
+          "date": "2015-04-10"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "none",
+    "metric": "",
+    "update": "",
+    "fields": []
+  },
+  "limits": {
+    "headline": "Can play and mix sound inside the page, after you have tapped",
+    "user_action": "You tap Play, Start or anything on the page before sound begins.",
+    "can": [
+      "Play sounds, music or game effects that it makes or loads",
+      "Mix and change sounds, such as echo and volume",
+      "Keep sound going while the tab is open"
+    ],
+    "cannot": [
+      "Make sound before you have tapped, clicked or pressed a key",
+      "Listen through your microphone; that needs a separate permission",
+      "Play over a tab you muted yourself",
+      "Change your device volume"
+    ],
+    "reach": 2,
+    "reach_label": "While the page is open",
+    "differs": ""
+  },
+  "story": {
+    "what_it_is": "A page can make sound, but stays silent until you click or tap.",
+    "icon": "music",
+    "tags": [
+      "Audio",
+      "Needs a click",
+      "Games"
+    ],
+    "marketing": [
+      {
+        "vendor": "Google",
+        "name": "Autoplay policy in Chrome",
+        "pitch": "Chrome explains that sound only plays after you interact with the page.",
+        "url": "https://developer.chrome.com/blog/autoplay"
+      }
+    ],
+    "for_you": "A game or music tool starts making sound only after your first tap. You are never surprised by blaring audio from a new tab.",
+    "for_makers": "Makers get full control over sound: effects, synths and mixing. The gesture rule is how browsers keep ads from shouting at you.",
+    "use_cases": [
+      {
+        "type": "games",
+        "example": "A browser game plays footsteps, music and echo effects, all built from code.",
+        "apps": [
+          "Slither.io",
+          "Krunker.io"
+        ]
+      },
+      {
+        "type": "music",
+        "example": "A web music maker lets you play synths and drums in the browser.",
+        "apps": [
+          "Chrome Music Lab",
+          "BandLab",
+          "Soundtrap"
+        ]
+      },
+      {
+        "type": "video",
+        "example": "A video call tool adds noise cancelling to your voice.",
+        "apps": [
+          "Google Meet",
+          "Discord web"
+        ]
+      },
+      {
+        "type": "education",
+        "example": "A learning site shows how a sound wave works and plays it.",
+        "apps": [
+          "Ableton Learning Synths"
+        ]
+      },
+      {
+        "type": "security",
+        "example": "Audio processing can reveal small differences between devices and is used in fingerprinting.",
+        "apps": []
+      },
+      {
+        "type": "ads",
+        "example": "An ad network tries to autoplay a video ad with sound, blocked until you tap.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Device fingerprint",
+      "Surprise sound"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "AudioContext starts suspended until user activation on the page (Chrome 71, Firefox 66, Safari since webkitAudioContext)",
+    "Chrome limits about 6 simultaneously active AudioContexts per tab in older versions; Safari limits 4 on iOS (older)",
+    "Cannot choose output device without setSinkId and a permission (selectAudioOutput)",
+    "Sample rate and output latency are readable (fingerprint)",
+    "Cannot read the system volume or other apps' audio"
+  ],
+  "scores": {
+    "sensitivity": 1,
+    "utility": 4,
+    "fingerprint_bits": 2,
+    "friction": 1
+  },
+  "value": {
+    "legit_uses": [
+      "Games",
+      "Synths and DAWs",
+      "UI sound design"
+    ],
+    "abuse": [
+      "Hidden ultrasonic beacons (cross-device tracking)",
+      "Audio fingerprinting"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2018-12",
+      "browser": "chrome",
+      "version": "71",
+      "change": "AudioContext autoplay policy enforced"
+    },
+    {
+      "date": "2019-03",
+      "browser": "firefox",
+      "version": "66",
+      "change": "AudioContext needs user gesture"
+    },
+    {
+      "date": "2023-02",
+      "browser": "chrome",
+      "version": "110",
+      "change": "AudioContext.setSinkId lets a page route output to a chosen device"
+    }
+  ],
+  "related": [
+    "web.actions.autoplay"
+  ],
+  "refs": [
+    {
+      "t": "mdn",
+      "label": "MDN Web Audio API",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/Web_Audio_API"
+    },
+    {
+      "t": "chromestatus",
+      "label": "Chrome Web Audio autoplay policy",
+      "url": "https://developer.chrome.com/blog/web-audio-autoplay/"
+    },
+    {
+      "t": "spec",
+      "label": "W3C Web Audio API",
+      "url": "https://www.w3.org/TR/webaudio/"
+    }
+  ],
+  "confidence": "docs"
+}

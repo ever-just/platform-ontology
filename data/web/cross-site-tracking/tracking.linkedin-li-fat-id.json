@@ -1,0 +1,219 @@
+{
+  "id": "web.tracking.linkedin-li-fat-id",
+  "name": "li_fat_id first party click ID",
+  "kind": "tracking",
+  "group": "cross-site-tracking",
+  "subgroup": "Click IDs",
+  "tags": [
+    "click-id",
+    "link-decoration",
+    "first-party-cookie",
+    "advertising"
+  ],
+  "plain": "A click ID added to ad landing page URLs and saved as a first party cookie.",
+  "meaning": "Survives third party cookie blocking and lets the advertiser's tag and API tie a later purchase to a LinkedIn ad click and member.",
+  "lifecycle": [
+    "before-visit",
+    "on-arrival",
+    "after-leaving"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "?li_fat_id=<uuid> on landing URL; cookie li_fat_id; firstPartyTrackingEnabled on the tag",
+      "access": {
+        "grant": "none",
+        "prompt_ui": "None (no browser prompt)",
+        "secure_context": false,
+        "user_gesture": false,
+        "persistence": "Cookie 30 days from latest ad click; member mapping stored 365 days",
+        "revocation": "",
+        "iframe": "",
+        "steps": [
+          "Enhanced conversion tracking is on (default for new tags)",
+          "LinkedIn appends li_fat_id to the ad's landing URL",
+          "Insight Tag writes it to a first party cookie",
+          "Value is sent in Insight Tag events and in the Conversions API as LINKEDIN_FIRST_PARTY_ADS_TRACKING_UUID"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "",
+          "note": ""
+        },
+        "edge": {
+          "s": "y",
+          "v": "",
+          "note": ""
+        },
+        "firefox": {
+          "s": "y",
+          "v": "",
+          "note": ""
+        },
+        "safari": {
+          "s": "y",
+          "v": "",
+          "note": ""
+        },
+        "ios_safari": {
+          "s": "y",
+          "v": "",
+          "note": ""
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "",
+          "note": ""
+        },
+        "samsung": {
+          "s": "y",
+          "v": "",
+          "note": ""
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "string",
+    "metric": "UUID",
+    "update": "each ad click",
+    "fields": [
+      {
+        "name": "li_fat_id",
+        "type": "string",
+        "unit": "UUID",
+        "range": "36 chars",
+        "precision": "unique per click"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can tag your visit from a LinkedIn ad click with an ID the site saves",
+    "user_action": "You click a LinkedIn ad and land on the advertiser's page",
+    "can": [
+      "Add a click ID to the ad link's web address",
+      "Save that ID as a cookie on the advertiser's own site",
+      "Match a later purchase or sign up back to your ad click"
+    ],
+    "cannot": [
+      "Exist unless you arrived by clicking a LinkedIn ad link",
+      "Follow you to other sites, since it is saved only on the advertiser's site",
+      "Work after you clear cookies or if the browser removes the ID",
+      "Identify you by name; it is a code linked to the click"
+    ],
+    "reach": 3,
+    "reach_label": "One ad click, kept for weeks",
+    "differs": "Some browsers strip known click IDs from links, which cuts this off."
+  },
+  "story": {
+    "what_it_is": "A click code in LinkedIn ad links, saved as a cookie to tie later actions to that click.",
+    "icon": "link",
+    "tags": [
+      "Ads",
+      "Click ID",
+      "Cookies"
+    ],
+    "marketing": [
+      {
+        "vendor": "LinkedIn",
+        "name": "First party cookies",
+        "pitch": "LinkedIn describes first party cookie tracking as a way to keep conversion measurement working with fewer third party cookies.",
+        "url": "https://learn.microsoft.com/en-us/linkedin/marketing/conversions/enabling-first-party-cookies"
+      }
+    ],
+    "for_you": "You click a LinkedIn ad and the web address has a long code in it. The site saves that code in its own cookie, so a purchase a week later can be linked back to your click.",
+    "for_makers": "Third party cookies are fading, so advertisers need another way to prove an ad worked. A click code saved on the advertiser's own domain survives most blockers. It also lets the advertiser send the code back by server for a more complete count.",
+    "use_cases": [
+      {
+        "type": "ads",
+        "example": "You click a LinkedIn ad for project software, sign up days later, and the vendor ties the signup to that ad.",
+        "apps": [
+          "LinkedIn Ads"
+        ]
+      },
+      {
+        "type": "analytics",
+        "example": "A marketing team sees the whole path from ad click to demo to deal, even when the sale takes months.",
+        "apps": [
+          "HubSpot",
+          "Salesforce"
+        ]
+      },
+      {
+        "type": "shopping",
+        "example": "A business buys office chairs after clicking an ad, and the shop credits the sale to LinkedIn.",
+        "apps": []
+      },
+      {
+        "type": "enterprise",
+        "example": "A sales system stores the click code with a lead, so reps can see which ad created each lead.",
+        "apps": [
+          "Salesforce",
+          "HubSpot"
+        ]
+      },
+      {
+        "type": "security",
+        "example": "Safari and Firefox limit such cookies or strip known click codes, so some clicks are never matched.",
+        "apps": [
+          "Safari",
+          "Firefox"
+        ]
+      },
+      {
+        "type": "media",
+        "example": "A podcast sponsor tracks signups from a LinkedIn promoted post to decide next quarter budget.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Follows a click to a later purchase",
+      "Survives third party cookie blocking"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Only set for people who arrive from a LinkedIn ad",
+    "Can be stripped by link cleaning (Safari, Brave, Firefox Strict)"
+  ],
+  "scores": {
+    "sensitivity": 3,
+    "utility": 4,
+    "fingerprint_bits": null,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Attribute conversions without third party cookies"
+    ],
+    "abuse": [
+      "Cross-site user matching"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": true,
+      "how": "Documented by Microsoft Learn enabling-first-party-cookies page."
+    }
+  },
+  "related": [
+    "web.tracking.linkedin-insight-tag",
+    "web.tracking.linkedin-conversions-api"
+  ],
+  "refs": [
+    {
+      "t": "vendor",
+      "label": "Microsoft Learn: LinkedIn first party cookies",
+      "url": "https://learn.microsoft.com/en-us/linkedin/marketing/conversions/enabling-first-party-cookies"
+    },
+    {
+      "t": "vendor",
+      "label": "LinkedIn cookie table",
+      "url": "https://www.linkedin.com/legal/l/cookie-table"
+    }
+  ],
+  "confidence": "docs"
+}

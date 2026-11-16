@@ -1,0 +1,204 @@
+{
+  "id": "mob.dev.battery-health",
+  "name": "Battery health, temperature and cycle count",
+  "kind": "signal",
+  "group": "device-system-profile",
+  "subgroup": "Power",
+  "tags": [
+    "battery-health",
+    "android-14",
+    "temperature"
+  ],
+  "plain": "Android 14 lets apps read battery cycle count and health; iOS shows none of this to apps.",
+  "meaning": "Reveals how old and worn a phone is (cycle count, capacity percent), which is a strong device-age and value signal and a stable fingerprint bit set.",
+  "lifecycle": [
+    "in-session"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "y",
+      "v": "14",
+      "api": 34,
+      "permission": "",
+      "protection": "none",
+      "grant": "none",
+      "prompt_ui": "",
+      "persistence": "",
+      "revocation": "",
+      "store_policy": "",
+      "api_surface": "BatteryManager BATTERY_PROPERTY_CHARGING_POLICY, EXTRA_CYCLE_COUNT, BATTERY_PROPERTY_STATE_OF_HEALTH; EXTRA_TEMPERATURE (older)",
+      "note": "Temperature readable since API 1 in tenths of a degree C; cycle count and health added in API 34"
+    },
+    "ios": {
+      "s": "n",
+      "v": "",
+      "permission": "none",
+      "protection": "not-exposed",
+      "grant": "not-exposed",
+      "prompt_ui": "",
+      "persistence": "",
+      "revocation": "",
+      "store_policy": "",
+      "api_surface": "No public API for cycle count, capacity or temperature",
+      "note": "Only the person can see Battery Health in Settings; thermalState is the coarse heat proxy"
+    }
+  },
+  "web_equivalents": [
+    "web.device.battery-status"
+  ],
+  "data": {
+    "type": "object",
+    "metric": "Cycle count, health percent, temperature",
+    "update": "On read",
+    "fields": [
+      {
+        "name": "cycle_count",
+        "type": "integer",
+        "unit": "cycles",
+        "range": "0 to about 2000",
+        "precision": "1 cycle"
+      },
+      {
+        "name": "state_of_health",
+        "type": "integer",
+        "unit": "percent",
+        "range": "0 to 100",
+        "precision": "1 percent"
+      },
+      {
+        "name": "temperature",
+        "type": "integer",
+        "unit": "tenths of C",
+        "range": "0 to 600",
+        "precision": "0.1 C"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can see battery health and charge cycles on Android 14 and newer, but not on iPhone",
+    "user_action": "Nothing. The app checks when it starts or on a timer",
+    "can": [
+      "See battery cycle count and health on Android 14 and newer",
+      "See battery temperature on any Android version",
+      "Use it to guess how worn your phone is"
+    ],
+    "cannot": [
+      "See battery cycle count, capacity or temperature on iPhone; there is no public tool",
+      "Guess battery health on older Android before version 14",
+      "Show more than a rough heat level on iPhone, using the thermal state"
+    ],
+    "reach": 2,
+    "reach_label": "Android 14 and newer only",
+    "differs": "Android 14 shows apps cycle count and health. iPhone shows apps none of it; only you can see it in Settings."
+  },
+  "story": {
+    "what_it_is": "Android 14 lets apps read how worn your battery is.",
+    "icon": "battery-warning",
+    "tags": [
+      "Battery",
+      "Silent",
+      "Android"
+    ],
+    "marketing": [],
+    "for_you": "You never see it. An app can learn how many times your battery has charged and how healthy it is. That can show how old the phone is and what it might be worth.",
+    "for_makers": "Trade in and resale apps use it for a fair quote. Games and utilities use it to adapt. It is also a stable detail that can help build a phone fingerprint.",
+    "use_cases": [
+      {
+        "type": "shopping",
+        "example": "A phone trade in app reads cycle count to price your used phone.",
+        "apps": []
+      },
+      {
+        "type": "utilities",
+        "example": "A battery care app shows capacity and cycle count and warns when it is worn.",
+        "apps": [
+          "AccuBattery"
+        ]
+      },
+      {
+        "type": "games",
+        "example": "A heavy game lowers quality on a worn battery to avoid sudden shutdowns.",
+        "apps": []
+      },
+      {
+        "type": "security",
+        "example": "A fraud tool uses battery wear as one more fingerprint detail.",
+        "apps": []
+      },
+      {
+        "type": "enterprise",
+        "example": "A fleet manager tracks which company phones need new batteries.",
+        "apps": []
+      },
+      {
+        "type": "wearables",
+        "example": "A watch app checks the phone battery wear before a long sync.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Reveals phone age and value",
+      "Adds to a fingerprint"
+    ],
+    "android_note": "Available on Android 14 and later to apps with no prompt.",
+    "ios_note": "iPhone shows battery health in Settings, but apps cannot read it."
+  },
+  "technical_bounds": [
+    "Not exposed on iOS",
+    "Android values can be null if the OEM does not report them"
+  ],
+  "scores": {
+    "sensitivity": 2,
+    "utility": 2,
+    "fingerprint_bits": 4,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Diagnostics and trade-in apps",
+      "Warn about worn batteries"
+    ],
+    "abuse": [
+      "Resale profiling",
+      "Stable device tag across reinstalls"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2023-10",
+      "platform": "android",
+      "version": "14 (API 34)",
+      "change": "Cycle count and state of health exposed to apps"
+    },
+    {
+      "date": "2016-12",
+      "platform": "ios",
+      "version": "iOS 10.2.1",
+      "change": "Apple added in-app battery throttling, but no app API"
+    }
+  ],
+  "related": [
+    "mob.dev.battery-level",
+    "mob.dev.thermal-state"
+  ],
+  "refs": [
+    {
+      "t": "android",
+      "label": "Android: BatteryManager",
+      "url": "https://developer.android.com/reference/android/os/BatteryManager"
+    },
+    {
+      "t": "android",
+      "label": "Android 13 behavior changes",
+      "url": "https://developer.android.com/about/versions/13/behavior-changes-13"
+    }
+  ],
+  "confidence": "docs"
+}

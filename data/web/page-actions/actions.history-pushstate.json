@@ -1,0 +1,253 @@
+{
+  "id": "web.actions.history-pushstate",
+  "name": "Push history entries (back button limits)",
+  "kind": "action",
+  "group": "page-actions",
+  "subgroup": "Windows and navigation",
+  "tags": [
+    "history",
+    "pushstate",
+    "back-button",
+    "intervention"
+  ],
+  "plain": "Adds fake history entries so Back does less than expected; browsers skip entries made without a click.",
+  "meaning": "A site can change the address bar and history without loading a page. Misused, it traps the back button and keeps the person on the site, so browsers now skip entries added with no user interaction.",
+  "lifecycle": [
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "history.pushState(), replaceState(), scrollRestoration; Navigation API",
+      "bcd": [
+        "api.History.pushState",
+        "api.History.replaceState"
+      ],
+      "access": {
+        "grant": "none",
+        "prompt_ui": "None (no browser prompt)",
+        "secure_context": false,
+        "user_gesture": false,
+        "activation": "none",
+        "persistence": "Entries live in the tab session history",
+        "revocation": "Nothing to revoke (no permission is stored)",
+        "iframe": "Same-origin URLs only; cross-origin frames affect the joint session history of the tab",
+        "steps": [
+          "Call pushState with a same-origin URL",
+          "Entry appears in session history",
+          "Back button or Navigation API fires popstate"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "5",
+          "note": "",
+          "date": "2010-05-25"
+        },
+        "edge": {
+          "s": "y",
+          "v": "12",
+          "note": "",
+          "date": "2015-07-29"
+        },
+        "firefox": {
+          "s": "y",
+          "v": "4",
+          "note": "",
+          "date": "2011-03-22"
+        },
+        "safari": {
+          "s": "y",
+          "v": "5",
+          "note": "",
+          "date": "2010-06-07"
+        },
+        "ios_safari": {
+          "s": "y",
+          "v": "4",
+          "note": "All iOS browsers use WebKit",
+          "date": "2010-06-21"
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "18",
+          "note": "",
+          "date": "2012-06-27"
+        },
+        "samsung": {
+          "s": "y",
+          "v": "1.0",
+          "note": "",
+          "date": "2013-04-27"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "none",
+    "metric": "",
+    "update": "",
+    "fields": []
+  },
+  "limits": {
+    "headline": "Can add extra Back button steps, but browsers skip steps made without a tap",
+    "user_action": "Nothing. It happens as you move around the page, or after your first tap.",
+    "can": [
+      "Change the address bar to a new page address without a full reload",
+      "Add steps so Back goes to a screen inside the app",
+      "Keep the Back button working in apps that load pages without reloading"
+    ],
+    "cannot": [
+      "Trap you for good on a page, because browsers skip steps made without a click or tap",
+      "Change the address to a different website",
+      "Hide where you actually are from the browser",
+      "Block you from leaving through the address bar or a bookmark"
+    ],
+    "reach": 2,
+    "reach_label": "Inside its own site only",
+    "differs": ""
+  },
+  "story": {
+    "what_it_is": "A site can add steps to your Back button list, and sometimes abuse it.",
+    "icon": "history",
+    "tags": [
+      "Silent",
+      "Navigation",
+      "Annoyances"
+    ],
+    "marketing": [
+      {
+        "vendor": "Mozilla",
+        "name": "History API",
+        "pitch": "MDN says pushState lets a page change the address bar and history without reloading.",
+        "url": "https://developer.mozilla.org/en-US/docs/Web/API/History_API"
+      }
+    ],
+    "for_you": "When you move around a single page app, the address changes and Back works as you would expect. On bad sites, Back may seem broken because the page piled up extra entries.",
+    "for_makers": "Single page apps use it to give each view its own link without reloading. Shady sites use it to trap people, so browsers now skip entries made without a click.",
+    "use_cases": [
+      {
+        "type": "social",
+        "example": "Scrolling a feed and tapping a post gives a new address, so Back returns you to the feed.",
+        "apps": [
+          "Instagram web",
+          "X"
+        ]
+      },
+      {
+        "type": "shopping",
+        "example": "A product filter updates the URL so you can share the filtered list.",
+        "apps": [
+          "Amazon"
+        ]
+      },
+      {
+        "type": "productivity",
+        "example": "Opening a document in a web app gives it its own link without a full page load.",
+        "apps": [
+          "Google Docs",
+          "Notion"
+        ]
+      },
+      {
+        "type": "ads",
+        "example": "Some ad pages stuff the Back list so that pressing Back leads to another ad page.",
+        "apps": []
+      },
+      {
+        "type": "media",
+        "example": "A streaming site opens a title in a panel and still lets Back close it.",
+        "apps": [
+          "Netflix"
+        ]
+      },
+      {
+        "type": "analytics",
+        "example": "Analytics tools watch history changes to count a new page view in single page apps.",
+        "apps": [
+          "Google Analytics"
+        ]
+      }
+    ],
+    "risks": [
+      "Back button traps",
+      "Messy page counts"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "URL must be same origin as the document (SecurityError otherwise); no cross-origin path spoofing",
+    "Chrome 75 history manipulation intervention: entries added by pages that had no user interaction are skipped by Back and the long-press history menu",
+    "State object serialized size limit about 16 MiB in Firefox (browser.history.maxStateObjectSize 16 MiB); Chrome has no fixed limit but is IPC bound",
+    "Rate limits: Safari throws SecurityError after about 100 calls in 30 s; Firefox after about 200 calls in 10 s; Chrome throttles flood of navigations",
+    "Page cannot read other sites' history entries or the length beyond history.length (capped at 50 in Chrome, 50 to 1000 depending on browser)"
+  ],
+  "scores": {
+    "sensitivity": 2,
+    "utility": 5,
+    "fingerprint_bits": null,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Single page app routing",
+      "Filter state in URL",
+      "Modal state"
+    ],
+    "abuse": [
+      "Back button trap",
+      "Forced exit prompt chains",
+      "Fake deep links"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2019-06",
+      "browser": "chrome",
+      "version": "75",
+      "change": "History manipulation intervention: skip entries without user activation"
+    },
+    {
+      "date": "2022-02",
+      "browser": "chrome",
+      "version": "102",
+      "change": "Navigation API ships with entries() same-origin only"
+    },
+    {
+      "date": "2025",
+      "browser": "chrome",
+      "version": "138",
+      "change": "Chrome documents back-button hijacking as a spam behavior in Search and tightens intervention coverage (verify current status)"
+    }
+  ],
+  "related": [
+    "web.actions.navigation-api",
+    "web.actions.beforeunload"
+  ],
+  "refs": [
+    {
+      "t": "mdn",
+      "label": "MDN History API",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/History_API"
+    },
+    {
+      "t": "chromestatus",
+      "label": "Chrome history manipulation intervention",
+      "url": "https://chromestatus.com/feature/5718261304188928"
+    },
+    {
+      "t": "spec",
+      "label": "HTML Standard: session history",
+      "url": "https://html.spec.whatwg.org/multipage/browsing-the-web.html#the-history-interface"
+    }
+  ],
+  "confidence": "docs"
+}

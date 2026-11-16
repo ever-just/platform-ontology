@@ -1,0 +1,244 @@
+{
+  "id": "web.actions.web-crypto",
+  "name": "Web Crypto (non-extractable keys)",
+  "kind": "capability",
+  "group": "page-actions",
+  "subgroup": "Compute",
+  "tags": [
+    "webcrypto",
+    "subtlecrypto",
+    "non-extractable"
+  ],
+  "plain": "Provides built-in cryptography; keys can be stored in the browser and marked non-exportable.",
+  "meaning": "A site can encrypt data, sign with keys it cannot export, and store them in IndexedDB. Non-extractable keys stop theft by script but do not stop a malicious page using them.",
+  "lifecycle": [
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "crypto.subtle.generateKey/importKey/sign/encrypt; extractable:false; crypto.randomUUID()",
+      "bcd": [
+        "api.SubtleCrypto",
+        "api.Crypto.getRandomValues",
+        "api.CryptoKey"
+      ],
+      "access": {
+        "grant": "none",
+        "prompt_ui": "None (no browser prompt)",
+        "secure_context": true,
+        "user_gesture": false,
+        "activation": "none",
+        "persistence": "CryptoKey objects can be stored in IndexedDB as opaque handles",
+        "revocation": "Nothing to revoke (no permission is stored)",
+        "iframe": "HTTPS only (crypto.subtle undefined on HTTP except localhost)",
+        "steps": [
+          "Generate key with extractable false",
+          "Store CryptoKey in IndexedDB",
+          "Use sign() and decrypt() later"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "37",
+          "note": "",
+          "date": "2014-08-26"
+        },
+        "edge": {
+          "s": "y",
+          "v": "12",
+          "note": "",
+          "date": "2015-07-29"
+        },
+        "firefox": {
+          "s": "y",
+          "v": "34",
+          "note": "",
+          "date": "2014-12-01"
+        },
+        "safari": {
+          "s": "y",
+          "v": "11",
+          "note": "",
+          "date": "2017-09-19"
+        },
+        "ios_safari": {
+          "s": "y",
+          "v": "11",
+          "note": "All iOS browsers use WebKit",
+          "date": "2017-09-19"
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "37",
+          "note": "",
+          "date": "2014-09-03"
+        },
+        "samsung": {
+          "s": "y",
+          "v": "3.0",
+          "note": "",
+          "date": "2015-04-10"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "none",
+    "metric": "",
+    "update": "",
+    "fields": []
+  },
+  "limits": {
+    "headline": "Can lock and unlock data inside the page, with keys it can't hand out",
+    "user_action": "Nothing. It happens when the page signs in, saves data or checks a file.",
+    "can": [
+      "Create secure keys and random numbers",
+      "Scramble and unscramble data",
+      "Check that a file has not been changed"
+    ],
+    "cannot": [
+      "Hand out a key that was made non exportable",
+      "Reach keys saved by other sites",
+      "Work on a page that is not on a secure connection (HTTPS)",
+      "Keep its saved keys after you clear that site's data"
+    ],
+    "reach": 1,
+    "reach_label": "Inside the page only",
+    "differs": ""
+  },
+  "story": {
+    "what_it_is": "The browser has built in locks and keys that a page can use and store safely.",
+    "icon": "key-round",
+    "tags": [
+      "Security",
+      "Silent",
+      "Keys"
+    ],
+    "marketing": [
+      {
+        "vendor": "Mozilla",
+        "name": "Web Crypto API",
+        "pitch": "MDN says the API gives pages tools for hashing, signing, encryption and key handling.",
+        "url": "https://developer.mozilla.org/en-US/docs/Web/API/Web_Crypto_API"
+      }
+    ],
+    "for_you": "You never see it. It quietly protects logins, chats and payments, and keeps your keys in a form that scripts cannot read out.",
+    "for_makers": "Makers use it to secure logins, sign messages and encrypt data in your browser before it leaves. Non exportable keys help stop theft even if the page is attacked.",
+    "use_cases": [
+      {
+        "type": "messaging",
+        "example": "A secure chat tool encrypts messages in your browser before sending.",
+        "apps": [
+          "WhatsApp Web",
+          "Signal Desktop"
+        ]
+      },
+      {
+        "type": "banking",
+        "example": "A bank page signs a login challenge with a key that never leaves the browser.",
+        "apps": []
+      },
+      {
+        "type": "security",
+        "example": "A password manager web app encrypts your vault locally.",
+        "apps": [
+          "1Password",
+          "Bitwarden"
+        ]
+      },
+      {
+        "type": "productivity",
+        "example": "A notes app does end to end encryption of your documents.",
+        "apps": [
+          "Proton Docs"
+        ]
+      },
+      {
+        "type": "games",
+        "example": "A browser game signs scores so cheaters cannot send fake ones.",
+        "apps": []
+      },
+      {
+        "type": "ads",
+        "example": "Ad scripts use random numbers from the same tool to create ids.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Misused by bad scripts",
+      "Ransomware style misuse"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "crypto.subtle only in secure contexts",
+    "Non-extractable keys cannot be exported via exportKey(), but any script on the origin can use them",
+    "getRandomValues fills at most 65536 bytes per call",
+    "Algorithms: AES-GCM and CBC and CTR, RSA-OAEP and PSS, ECDSA (P-256, P-384, P-521), ECDH, HMAC, HKDF, PBKDF2, SHA-1/256/384/512; Ed25519 (Chrome 137, Safari 17, Firefox 129), X25519",
+    "No hardware-backed keys (use WebAuthn for that)"
+  ],
+  "scores": {
+    "sensitivity": 2,
+    "utility": 5,
+    "fingerprint_bits": null,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Client-side encryption",
+      "Signing",
+      "Key derivation"
+    ],
+    "abuse": [
+      "Ransom-style encryption in page",
+      "Hidden persistent keys"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2015-04",
+      "browser": "chrome",
+      "version": "37",
+      "change": "Web Crypto unprefixed"
+    },
+    {
+      "date": "2024-07",
+      "browser": "firefox",
+      "version": "129",
+      "change": "Ed25519 support"
+    },
+    {
+      "date": "2025-05",
+      "browser": "chrome",
+      "version": "137",
+      "change": "Ed25519 and X25519 support"
+    }
+  ],
+  "refs": [
+    {
+      "t": "mdn",
+      "label": "MDN Web Crypto API",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/Web_Crypto_API"
+    },
+    {
+      "t": "spec",
+      "label": "W3C Web Cryptography",
+      "url": "https://www.w3.org/TR/WebCryptoAPI/"
+    },
+    {
+      "t": "spec",
+      "label": "Secure Curves in Web Crypto",
+      "url": "https://wicg.github.io/webcrypto-secure-curves/"
+    }
+  ],
+  "confidence": "docs"
+}

@@ -1,0 +1,211 @@
+{
+  "id": "mob.id.ad-id-permission",
+  "name": "AD_ID permission",
+  "kind": "permission",
+  "group": "attribution-ads",
+  "subgroup": "Advertising",
+  "tags": [
+    "ad-id",
+    "manifest",
+    "android-13",
+    "sdk"
+  ],
+  "plain": "Android 13 apps must declare AD_ID in the manifest to read the advertising ID.",
+  "meaning": "If missing, the ID reads as zeros. Cuts ad tracking in apps that did not declare it.",
+  "lifecycle": [
+    "before-install",
+    "on-launch"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "y",
+      "v": "13",
+      "api": 33,
+      "permission": "com.google.android.gms.permission.AD_ID",
+      "protection": "normal",
+      "grant": "install",
+      "prompt_ui": "",
+      "persistence": "Static in manifest; SDKs may merge it in",
+      "revocation": "Cannot be revoked per app (user can delete the ad ID)",
+      "store_policy": "Play: must declare when targeting API 33 and using ad ID",
+      "api_surface": "Manifest uses-permission",
+      "note": "Normal permission: auto-granted, no prompt"
+    },
+    "ios": {
+      "s": "n",
+      "v": "",
+      "permission": "none",
+      "protection": "not-exposed",
+      "grant": "not-exposed",
+      "prompt_ui": "",
+      "persistence": "",
+      "revocation": "",
+      "store_policy": "",
+      "api_surface": "No equivalent",
+      "note": "ATT is the iOS gate"
+    }
+  },
+  "data": {
+    "type": "none",
+    "metric": "Permission flag",
+    "update": "Static",
+    "fields": [
+      {
+        "name": "declared",
+        "type": "boolean",
+        "unit": "",
+        "range": "true, false",
+        "precision": "1 bit"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can use the Android ad ID only if the app lists the AD_ID permission",
+    "user_action": "Nothing. It is switched on automatically when the app installs",
+    "can": [
+      "Use the Google advertising ID if the app lists AD_ID",
+      "Get it with no prompt, since it is auto granted",
+      "Give zeros if the app left it out (Android 13 and later)"
+    ],
+    "cannot": [
+      "Show a prompt; none appears",
+      "Get the real ID without the permission, on apps built for Android 13",
+      "Work on iPhone; the tracking prompt guards the ID there"
+    ],
+    "reach": 3,
+    "reach_label": "Ongoing, if listed by the app",
+    "differs": "Android 13 and later only. iPhone uses the tracking prompt instead."
+  },
+  "story": {
+    "what_it_is": "A line apps must add on Android 13 and later to read your advertising ID.",
+    "icon": "key",
+    "tags": [
+      "Ads",
+      "Android",
+      "Permission"
+    ],
+    "marketing": [
+      {
+        "vendor": "Google",
+        "name": "AD_ID permission",
+        "pitch": "Apps targeting Android 13 must declare AD_ID to use the advertising ID.",
+        "url": "https://developer.android.com/about/versions/13/behavior-changes-13"
+      }
+    ],
+    "for_you": "You do not see a prompt. If an app has not declared it, its advertising ID reads as zeros, so ads cannot follow you from that app.",
+    "for_makers": "Without the line, the advertising ID returns zeros. It cuts ad tracking in apps that skip the declaration and signals to Play reviewers that an app uses ads.",
+    "use_cases": [
+      {
+        "type": "games",
+        "example": "A game with ads adds the declaration so its ad network can still see the ID.",
+        "apps": [
+          "Candy Crush"
+        ]
+      },
+      {
+        "type": "kids",
+        "example": "A kids app leaves it out on purpose, so the ID is always zeros.",
+        "apps": [
+          "PBS Kids Games"
+        ]
+      },
+      {
+        "type": "shopping",
+        "example": "A retailer declares it so install attribution works.",
+        "apps": [
+          "Walmart"
+        ]
+      },
+      {
+        "type": "ads",
+        "example": "An ad SDK checks for the permission and falls back to contextual ads.",
+        "apps": [
+          "Google AdMob"
+        ]
+      },
+      {
+        "type": "security",
+        "example": "Play checks the manifest and the Data safety form for matching claims.",
+        "apps": []
+      },
+      {
+        "type": "developer",
+        "example": "A developer finds the ID suddenly returns zeros after updating the target version.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Easy to forget",
+      "Zeros break measurement"
+    ],
+    "android_note": "Added in Android 13 as a normal permission.",
+    "ios_note": "iOS uses the ATT prompt instead."
+  },
+  "technical_bounds": [
+    "Normal permission",
+    "Zero ID without declaration",
+    "Visible to Play Console and store scanners"
+  ],
+  "scores": {
+    "sensitivity": 2,
+    "utility": 2,
+    "fingerprint_bits": null,
+    "friction": 1
+  },
+  "value": {
+    "legit_uses": [
+      "Declare ad use"
+    ],
+    "abuse": [
+      "Little"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2022-04",
+      "platform": "android",
+      "version": "13 (API 33)",
+      "change": "AD_ID permission introduced"
+    },
+    {
+      "date": "2022-04",
+      "platform": "android",
+      "version": "Android 13 (API 33)",
+      "change": "Permission introduced; zeros if undeclared when targeting 13"
+    }
+  ],
+  "related": [
+    "mob.id.advertising-id",
+    "mob.ads.aaid"
+  ],
+  "refs": [
+    {
+      "t": "android",
+      "label": "Android 13 behavior changes",
+      "url": "https://developer.android.com/about/versions/13/behavior-changes-13"
+    },
+    {
+      "t": "android",
+      "label": "Android: Advertising ID",
+      "url": "https://developer.android.com/identity/user-data-ids"
+    },
+    {
+      "t": "android",
+      "label": "Android: Advertising ID permission",
+      "url": "https://developer.android.com/about/versions/13/behavior-changes-13#ad-id"
+    },
+    {
+      "t": "policy",
+      "label": "Play Console Help: Advertising ID",
+      "url": "https://support.google.com/googleplay/android-developer/answer/6048248"
+    }
+  ],
+  "confidence": "docs"
+}

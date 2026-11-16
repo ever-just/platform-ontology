@@ -1,0 +1,209 @@
+{
+  "id": "mob.os.spotlight",
+  "name": "System search index (Core Spotlight, AppSearch)",
+  "kind": "capability",
+  "group": "os-integration-install",
+  "subgroup": "Search",
+  "tags": [
+    "spotlight",
+    "appsearch",
+    "indexing",
+    "semantic-search"
+  ],
+  "plain": "Puts app content into system search.",
+  "meaning": "Apps feed items to the OS index so people can find them outside the app. The index stays on device but can reveal what content the app holds.",
+  "lifecycle": [
+    "background"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "y",
+      "v": "12",
+      "api": 31,
+      "permission": "None",
+      "protection": "none",
+      "grant": "none",
+      "prompt_ui": "Search results show app items",
+      "persistence": "Until app removes",
+      "revocation": "Settings > Apps > Storage",
+      "store_policy": "",
+      "api_surface": "AppSearchSession, ContentProvider, Android 14 on device app search",
+      "note": "AppSearch is on device full text search; surfacing in launcher search varies by OEM."
+    },
+    "ios": {
+      "s": "y",
+      "v": "9.0",
+      "permission": "None",
+      "protection": "none",
+      "grant": "none",
+      "prompt_ui": "Spotlight results; Siri Suggestions",
+      "persistence": "Until removed",
+      "revocation": "Settings > Siri & Search > App > Show App in Search",
+      "store_policy": "",
+      "api_surface": "CoreSpotlight CSSearchableIndex, NSUserActivity",
+      "note": "iOS 18 adds semantic indexing via App Intents entities."
+    }
+  },
+  "data": {
+    "type": "object",
+    "metric": "Search item",
+    "update": "per item",
+    "fields": [
+      {
+        "name": "title",
+        "type": "string",
+        "unit": "text",
+        "range": "n/a",
+        "precision": "exact"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can add its own content to your phone's search, like items, chats or notes",
+    "user_action": "Nothing. The app adds items; you see them when you search the phone",
+    "can": [
+      "Show app items in Spotlight and Siri Suggestions on iPhone",
+      "Add searchable items through AppSearch on Android 12 or newer",
+      "Use App Intents entities for smarter search on iPhone in iOS 18"
+    ],
+    "cannot": [
+      "Force results to show up in your launcher search; Android brands differ",
+      "See what you type in the search bar",
+      "Index things you have not opened or created in the app"
+    ],
+    "reach": 2,
+    "reach_label": "Only the content the app adds",
+    "differs": "iPhone uses Core Spotlight. Android uses AppSearch, with launcher support that varies by brand."
+  },
+  "story": {
+    "what_it_is": "Puts an app's content into the phone's search so you can find it without opening the app.",
+    "icon": "search",
+    "tags": [
+      "Search",
+      "System",
+      "Private"
+    ],
+    "marketing": [
+      {
+        "vendor": "Apple",
+        "name": "Core Spotlight",
+        "pitch": "Apple lets apps add their content to Spotlight so people can find it from system search.",
+        "url": "https://developer.apple.com/documentation/corespotlight"
+      },
+      {
+        "vendor": "Google",
+        "name": "AppSearch",
+        "pitch": "Google offers AppSearch as on device full text search for app content.",
+        "url": "https://developer.android.com/develop/ui/views/search/appsearch"
+      }
+    ],
+    "for_you": "You pull down on the home screen, type a name and see a note, a contact or an order inside an app. You may not realize the app gave the phone that list.",
+    "for_makers": "Makers get another door to their app. The index stays on the device, but titles can show up in results, which can reveal private things.",
+    "use_cases": [
+      {
+        "type": "productivity",
+        "example": "You search for a meeting note and jump into the notes app.",
+        "apps": [
+          "Notes",
+          "Notion"
+        ]
+      },
+      {
+        "type": "messaging",
+        "example": "You search a friend's name and see recent chats.",
+        "apps": [
+          "Messages"
+        ]
+      },
+      {
+        "type": "shopping",
+        "example": "You search for a past order and open it.",
+        "apps": [
+          "Amazon"
+        ]
+      },
+      {
+        "type": "media",
+        "example": "You find a saved recipe or article by title.",
+        "apps": []
+      },
+      {
+        "type": "banking",
+        "example": "A bank app avoids showing account names in search.",
+        "apps": []
+      },
+      {
+        "type": "music",
+        "example": "You search a song and it opens the right playlist.",
+        "apps": [
+          "Spotify"
+        ]
+      },
+      {
+        "type": "games",
+        "example": "A game shows a quick link to your current quest.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Sensitive titles shown in results",
+      "Reveals what is in an app"
+    ],
+    "android_note": "AppSearch is on device full text search. Launcher search varies by phone brand.",
+    "ios_note": "iOS 18 adds semantic indexing using App Intents."
+  },
+  "technical_bounds": [
+    "No cross app reading; user can disable per app"
+  ],
+  "scores": {
+    "sensitivity": 2,
+    "utility": 3,
+    "fingerprint_bits": 0,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Findability"
+    ],
+    "abuse": [
+      "Sensitive titles shown in results"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2015-09",
+      "platform": "ios",
+      "version": "iOS 9",
+      "change": "Core Spotlight"
+    },
+    {
+      "date": "2021-05",
+      "platform": "android",
+      "version": "12",
+      "change": "AppSearch"
+    }
+  ],
+  "related": [
+    "mob.os.app-intents"
+  ],
+  "refs": [
+    {
+      "t": "apple",
+      "label": "Apple: Core Spotlight",
+      "url": "https://developer.apple.com/documentation/corespotlight"
+    },
+    {
+      "t": "android",
+      "label": "Android: AppSearch",
+      "url": "https://developer.android.com/develop/ui/views/search/appsearch"
+    }
+  ],
+  "confidence": "docs"
+}

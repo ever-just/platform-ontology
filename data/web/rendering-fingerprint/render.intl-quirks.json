@@ -1,0 +1,238 @@
+{
+  "id": "web.render.intl-quirks",
+  "name": "Intl and locale formatting quirks",
+  "kind": "tracking",
+  "group": "rendering-fingerprint",
+  "subgroup": "JS engine",
+  "tags": [
+    "Intl",
+    "ICU",
+    "DateTimeFormat",
+    "timezone"
+  ],
+  "plain": "Reads Intl resolved options and formatting outputs for many locales and calendars.",
+  "meaning": "Beyond timezone and language, ICU data version, supported calendars and numbering systems differ per browser build and OS, enabling version and cloak detection.",
+  "lifecycle": [
+    "on-arrival"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "Intl.DateTimeFormat().resolvedOptions(); Intl.supportedValuesOf(); toLocaleString(); Intl.DisplayNames",
+      "bcd": [
+        "javascript.builtins.Intl.DateTimeFormat.resolvedOptions"
+      ],
+      "access": {
+        "grant": "none",
+        "prompt_ui": "",
+        "secure_context": false,
+        "user_gesture": false,
+        "persistence": "",
+        "revocation": "",
+        "iframe": "",
+        "steps": [
+          "Read resolvedOptions.timeZone, locale, calendar, numberingSystem",
+          "Format a fixed date in a dozen locales",
+          "Compare ICU outputs"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "24",
+          "note": "",
+          "date": "2013-01-10"
+        },
+        "edge": {
+          "s": "y",
+          "v": "12",
+          "note": "",
+          "date": "2015-07-29"
+        },
+        "firefox": {
+          "s": "y",
+          "v": "29",
+          "note": "",
+          "date": "2014-04-29"
+        },
+        "safari": {
+          "s": "y",
+          "v": "10",
+          "note": "",
+          "date": "2016-09-20"
+        },
+        "ios_safari": {
+          "s": "y",
+          "v": "10",
+          "note": "",
+          "date": "2016-09-13"
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "25",
+          "note": "",
+          "date": "2013-02-27"
+        },
+        "samsung": {
+          "s": "y",
+          "v": "1.5",
+          "note": "",
+          "date": "2013-09-25"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "object",
+    "metric": "About 10 strings plus formatted samples",
+    "update": "",
+    "fields": [
+      {
+        "name": "timeZone",
+        "type": "string",
+        "unit": "IANA",
+        "range": "about 420 zones",
+        "precision": "exact"
+      },
+      {
+        "name": "calendar",
+        "type": "enum",
+        "unit": "",
+        "range": "gregory, buddhist, ...",
+        "precision": "exact"
+      },
+      {
+        "name": "numberingSystem",
+        "type": "enum",
+        "unit": "",
+        "range": "latn, arab, ...",
+        "precision": "exact"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can check language, calendar and number format settings to spot your browser build",
+    "user_action": "Nothing. It happens when the page loads",
+    "can": [
+      "Test how your browser formats dates, numbers and money in many languages",
+      "Learn which calendars and numbering systems it supports",
+      "Learn your browser build and system from the differences",
+      "Spot tools that fake your language or time zone"
+    ],
+    "cannot": [
+      "See what you typed or saved",
+      "Ask permission first",
+      "Know who you are by itself",
+      "Tell your exact location, only your language and time zone settings"
+    ],
+    "reach": 2,
+    "reach_label": "Silent, settings and version",
+    "differs": ""
+  },
+  "story": {
+    "what_it_is": "A script reads how your browser formats dates, numbers and languages to learn your locale and engine details.",
+    "icon": "languages",
+    "tags": [
+      "Silent",
+      "Language",
+      "Fingerprinting"
+    ],
+    "marketing": [
+      {
+        "vendor": "MDN",
+        "name": "Intl",
+        "pitch": "Built in tools that format dates, numbers and text correctly for each language and region.",
+        "url": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl"
+      }
+    ],
+    "for_you": "You never see it. Sites use it to show prices, dates and numbers the way you expect, like 1,000.50 or 1.000,50. A quieter side effect is that the output reveals your region, calendar and browser.",
+    "for_makers": "Shops and apps need it to show correct local formats. Fraud tools compare your formats with your IP location, and trackers add them to a device ID.",
+    "use_cases": [
+      {
+        "type": "shopping",
+        "example": "A store shows prices in your currency with the right commas and symbols.",
+        "apps": [
+          "Amazon",
+          "IKEA"
+        ]
+      },
+      {
+        "type": "travel",
+        "example": "A booking site shows dates in your local order, day then month or month then day.",
+        "apps": [
+          "Booking.com",
+          "Airbnb"
+        ]
+      },
+      {
+        "type": "security",
+        "example": "A bank notices a login claiming a Japanese locale from an IP in another country and asks extra questions.",
+        "apps": []
+      },
+      {
+        "type": "analytics",
+        "example": "A fingerprint library records the time zone and calendar your browser reports.",
+        "apps": [
+          "FingerprintJS"
+        ]
+      },
+      {
+        "type": "ads",
+        "example": "An ad network targets by language and region read from locale settings.",
+        "apps": []
+      },
+      {
+        "type": "games",
+        "example": "A browser game with a leaderboard shows scores and dates in your local format.",
+        "apps": []
+      },
+      {
+        "type": "news",
+        "example": "A news site picks the right language edition from locale data.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Reveals region and language",
+      "Adds to a device ID"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Timezone also available via Date, so not an extra bit alone"
+  ],
+  "scores": {
+    "sensitivity": 3,
+    "utility": 2,
+    "fingerprint_bits": 4,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": "Format dates and numbers locally",
+    "abuse": "Locale and ICU version pinning, VPN versus timezone mismatch"
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "related": [
+    "web.locale.timezone",
+    "web.render.error-stack-formats"
+  ],
+  "refs": [
+    {
+      "t": "mdn",
+      "label": "MDN Intl.DateTimeFormat resolvedOptions",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/DateTimeFormat/resolvedOptions"
+    },
+    {
+      "t": "github",
+      "label": "CreepJS",
+      "url": "https://github.com/abrahamjuliot/creepjs"
+    }
+  ],
+  "confidence": "docs"
+}

@@ -1,0 +1,173 @@
+{
+  "id": "mob.xtrack.icloud-private-relay",
+  "name": "iCloud Private Relay and in-app traffic",
+  "kind": "not-exposed",
+  "group": "cross-site-tracking",
+  "subgroup": "Network privacy",
+  "tags": [
+    "private-relay",
+    "ip-address",
+    "icloud-plus"
+  ],
+  "plain": "iCloud Private Relay hides the IP in Safari and some cleartext traffic, but not most app traffic.",
+  "meaning": "Click-side IPs from Safari differ from the app's own IP, hurting probabilistic matching. Apps still see the real IP in their own requests.",
+  "lifecycle": [
+    "before-install",
+    "in-session"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "n",
+      "v": "",
+      "permission": "",
+      "protection": "none",
+      "grant": "not-exposed",
+      "prompt_ui": "",
+      "persistence": "",
+      "revocation": "",
+      "store_policy": "",
+      "api_surface": "",
+      "note": "Android has no Private Relay equivalent; VPN or Private DNS only."
+    },
+    "ios": {
+      "s": "n",
+      "v": "15.0",
+      "permission": "",
+      "protection": "none",
+      "grant": "not-exposed",
+      "prompt_ui": "",
+      "persistence": "Setting is global in iCloud+",
+      "revocation": "",
+      "store_policy": "",
+      "api_surface": "Network stack",
+      "note": "Covers Safari, DNS queries and unencrypted app HTTP, not HTTPS app traffic."
+    }
+  },
+  "web_equivalents": [
+    "web.net.referrer-origin"
+  ],
+  "data": {
+    "type": "none",
+    "metric": "n/a",
+    "update": "n/a",
+    "fields": []
+  },
+  "limits": {
+    "headline": "Can't hide your IP in most iPhone app traffic, only in Safari and some other traffic",
+    "user_action": "Nothing. You turn iCloud Private Relay on in iPhone settings",
+    "can": [
+      "Hide your real IP in Safari browsing when you have it on",
+      "Hide DNS lookups and unencrypted app web traffic",
+      "Give you the same coverage on your iPhone, iPad and Mac with iCloud+"
+    ],
+    "cannot": [
+      "Hide your IP in most app traffic; secure app connections go direct",
+      "Work on Android; use a VPN or Private DNS there",
+      "Stop the app from seeing your account, device ID or what you type",
+      "Cover everything; Apple's own service decides what goes through"
+    ],
+    "reach": 1,
+    "reach_label": "Limited cover, mostly Safari",
+    "differs": "Private Relay is an iPhone feature with iCloud+. Android has no equivalent; people use a VPN or Private DNS."
+  },
+  "story": {
+    "what_it_is": "Apple hides your network address in Safari, but most app traffic is not covered.",
+    "icon": "shield-check",
+    "tags": [
+      "Privacy",
+      "iPhone",
+      "Network"
+    ],
+    "marketing": [
+      {
+        "vendor": "Apple",
+        "name": "iCloud Private Relay",
+        "pitch": "Pitch: when you browse in Safari, your IP address and browsing activity are protected so no one can build a profile of you.",
+        "url": "https://support.apple.com/en-us/102602"
+      }
+    ],
+    "for_you": "With Private Relay on, websites in Safari see only a rough region instead of your real address. Most apps still see your real network address, so they can still know roughly where you are.",
+    "for_makers": "Makers who count on IP addresses for ads, fraud checks and install matching find Safari clicks harder to link to app opens. Inside their own apps, they still see the real address, so most tools keep working.",
+    "use_cases": [
+      {
+        "type": "ads",
+        "example": "An install tracker wanted to match a Safari ad click to an app open by network address, but the two now show different addresses.",
+        "apps": [
+          "AppsFlyer",
+          "Adjust"
+        ]
+      },
+      {
+        "type": "security",
+        "example": "A bank wanted to flag a login from a far city using the network address. Relay hides the real one in Safari, so it relies on other checks.",
+        "apps": []
+      },
+      {
+        "type": "media",
+        "example": "A streaming site that blocks by country sees a nearby relay address and may allow or block the wrong people.",
+        "apps": []
+      },
+      {
+        "type": "games",
+        "example": "A web game with regional servers picks a server by region instead of exact location.",
+        "apps": []
+      },
+      {
+        "type": "shopping",
+        "example": "A store that sets prices by city sees only a coarse area from Safari.",
+        "apps": []
+      },
+      {
+        "type": "news",
+        "example": "A news site that counts unique visitors by address sees groups, not single people.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Gives a false sense of full cover",
+      "Only covers some traffic"
+    ],
+    "android_note": "Android has no matching built in Google feature that hides your address for all browsing.",
+    "ios_note": "A paid iCloud+ feature. It covers Safari, unencrypted app traffic and some DNS, not most app traffic."
+  },
+  "technical_bounds": [
+    "Real IP visible to HTTPS app traffic",
+    "Safari click and app IP mismatch"
+  ],
+  "scores": {
+    "sensitivity": 3,
+    "utility": 3,
+    "fingerprint_bits": null,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [],
+    "abuse": []
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2021-09",
+      "platform": "ios",
+      "version": "iOS 15",
+      "change": "iCloud Private Relay (beta) launched with iCloud+"
+    }
+  ],
+  "related": [
+    "mob.xtrack.probabilistic-matching"
+  ],
+  "refs": [
+    {
+      "t": "apple",
+      "label": "Apple: About iCloud Private Relay",
+      "url": "https://support.apple.com/en-us/102602"
+    }
+  ],
+  "confidence": "docs"
+}

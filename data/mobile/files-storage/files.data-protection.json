@@ -1,0 +1,197 @@
+{
+  "id": "mob.files.data-protection",
+  "name": "File data protection classes",
+  "kind": "capability",
+  "group": "files-storage",
+  "subgroup": "Storage security",
+  "tags": [
+    "data-protection",
+    "file-encryption",
+    "credential-encrypted",
+    "direct-boot"
+  ],
+  "plain": "Files are encrypted at rest, and whether an app can read them while the phone is locked depends on a protection class.",
+  "meaning": "iOS has four data protection classes; Android has credential encrypted and device encrypted storage. This decides if background work can run before the first unlock.",
+  "lifecycle": [
+    "background"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "y",
+      "v": "7.0",
+      "api": 24,
+      "permission": "None (direct boot aware components)",
+      "protection": "none",
+      "grant": "none",
+      "prompt_ui": "None",
+      "persistence": "Device encrypted storage available at boot; credential encrypted storage only after first unlock",
+      "revocation": "n/a",
+      "store_policy": "",
+      "api_surface": "Context.createDeviceProtectedStorageContext(), isUserUnlocked()",
+      "note": "Boot receivers before unlock see only device protected storage"
+    },
+    "ios": {
+      "s": "y",
+      "v": "4.0",
+      "permission": "None",
+      "protection": "none",
+      "grant": "none",
+      "prompt_ui": "None",
+      "persistence": "Class A complete: locked unreadable; B complete unless open; C until first auth (default); D none",
+      "revocation": "n/a",
+      "store_policy": "",
+      "api_surface": "FileProtectionType, kSecAttrAccessible",
+      "note": "Default class is until first user authentication (C); background tasks after a reboot need C or lower"
+    }
+  },
+  "data": {
+    "type": "enum",
+    "metric": "Protection class",
+    "update": "Per file",
+    "fields": [
+      {
+        "name": "class",
+        "type": "enum",
+        "unit": "",
+        "range": "complete, completeUnlessOpen, untilFirstUserAuthentication, none",
+        "precision": ""
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can keep files locked until you unlock the phone, depending on how they are protected",
+    "user_action": "Nothing. You unlock your phone as usual",
+    "can": [
+      "Encrypt files at rest on Android and iPhone",
+      "Keep files unavailable until your first unlock after a restart on iPhone",
+      "Keep some files in device protected storage on Android for use before unlock",
+      "Run background tasks on iPhone after restart only with the lower protection class"
+    ],
+    "cannot": [
+      "Open locked files from a boot task before you unlock, on Android credential storage",
+      "Skip protection by default on iPhone; the default is until first user authentication",
+      "Share locked files with other apps",
+      "Run iPhone background tasks on the strictest protected files after a reboot"
+    ],
+    "reach": 2,
+    "reach_label": "Depends on the lock state",
+    "differs": "iPhone uses protection classes. Android uses device protected and credential protected storage."
+  },
+  "story": {
+    "what_it_is": "Decides whether an app's files can be opened while the phone is locked.",
+    "icon": "lock-keyhole",
+    "tags": [
+      "Security",
+      "Files",
+      "Encryption"
+    ],
+    "marketing": [
+      {
+        "vendor": "Apple",
+        "name": "Data Protection",
+        "pitch": "Pitch: files are encrypted with keys tied to your passcode, and some can only be opened when the phone is unlocked.",
+        "url": "https://support.apple.com/guide/security/welcome/web"
+      }
+    ],
+    "for_you": "Your files are scrambled so that someone who steals your locked phone cannot read them. You may notice that some apps cannot sync until you unlock your phone after a restart.",
+    "for_makers": "Makers pick how strongly each file is protected. Strong protection keeps data safe but stops background work while locked, so they choose per file based on need.",
+    "use_cases": [
+      {
+        "type": "messaging",
+        "example": "A chat app protects stored messages so they cannot be read from a locked phone.",
+        "apps": []
+      },
+      {
+        "type": "banking",
+        "example": "A bank app keeps tokens locked until you unlock the phone.",
+        "apps": []
+      },
+      {
+        "type": "health",
+        "example": "A health app keeps heart data under strict protection while the phone is locked.",
+        "apps": []
+      },
+      {
+        "type": "media",
+        "example": "A podcast app downloads new episodes in the background and needs a weaker protection class for that.",
+        "apps": []
+      },
+      {
+        "type": "fitness",
+        "example": "A workout app must save a run even when the screen locks, so it uses a class that works while locked.",
+        "apps": []
+      },
+      {
+        "type": "smart-home",
+        "example": "A home app lets a doorbell alert open before first unlock using only non sensitive data.",
+        "apps": []
+      },
+      {
+        "type": "security",
+        "example": "A forensic tool fails to read files from a locked phone because of these classes.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Background work may stop",
+      "Weak classes expose data"
+    ],
+    "android_note": "Uses credential encrypted and device encrypted storage with direct boot.",
+    "ios_note": "Four classes tied to the passcode, from complete protection to none."
+  },
+  "technical_bounds": [
+    "Background tasks after reboot are limited by class"
+  ],
+  "scores": {
+    "sensitivity": 1,
+    "utility": 3,
+    "fingerprint_bits": null,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Protect sensitive files"
+    ],
+    "abuse": [
+      "None"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2016-08",
+      "platform": "android",
+      "version": "7.0 (API 24)",
+      "change": "File based encryption and Direct Boot introduced"
+    },
+    {
+      "date": "2010-06",
+      "platform": "ios",
+      "version": "iOS 4",
+      "change": "Data protection classes introduced"
+    }
+  ],
+  "related": [
+    "mob.notifications.boot-completed",
+    "mob.files.scoped-storage"
+  ],
+  "refs": [
+    {
+      "t": "android",
+      "label": "Android: Direct Boot",
+      "url": "https://developer.android.com/training/articles/direct-boot"
+    },
+    {
+      "t": "apple",
+      "label": "Apple: Encrypting your app's files",
+      "url": "https://developer.apple.com/documentation/uikit/protecting_the_user_s_privacy/encrypting_your_app_s_files"
+    }
+  ],
+  "confidence": "docs"
+}

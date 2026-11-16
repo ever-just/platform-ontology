@@ -1,0 +1,182 @@
+{
+  "id": "mob.contacts.notes-field-entitlement",
+  "name": "Contact notes field",
+  "kind": "not-exposed",
+  "group": "personal-data-contacts",
+  "subgroup": "Address book",
+  "tags": [
+    "entitlement",
+    "contacts",
+    "notes"
+  ],
+  "plain": "Apps cannot read free-text notes on contacts without an Apple entitlement.",
+  "meaning": "Notes often hold passwords, door codes and medical details. Apple walled them off after reports of misuse.",
+  "lifecycle": [
+    "in-session"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "n",
+      "v": "1.0",
+      "api": 1,
+      "permission": "READ_CONTACTS (notes are a normal Data row)",
+      "protection": "dangerous",
+      "grant": "not-exposed",
+      "prompt_ui": "Same as contacts",
+      "persistence": "Until revoked",
+      "revocation": "Settings > Apps > Permissions > Contacts",
+      "store_policy": "Play contacts sensitive data policy",
+      "api_surface": "ContactsContract.CommonDataKinds.Note",
+      "note": "No separate gate on Android"
+    },
+    "ios": {
+      "s": "n",
+      "v": "13",
+      "permission": "com.apple.developer.contacts.notes",
+      "protection": "entitlement",
+      "grant": "not-exposed",
+      "prompt_ui": "No extra prompt; Apple must approve the entitlement request",
+      "persistence": "Tied to the provisioning profile",
+      "revocation": "n/a",
+      "store_policy": "App Review approves business justification",
+      "api_surface": "CNContactNoteKey",
+      "note": "Without the entitlement, fetching the note key throws an error"
+    }
+  },
+  "data": {
+    "type": "string",
+    "metric": "Free text",
+    "update": "on read",
+    "fields": [
+      {
+        "name": "note",
+        "type": "string",
+        "unit": "text",
+        "range": "any length",
+        "precision": ""
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can't see the Notes field on contacts on iPhone without Apple's special approval",
+    "user_action": "Nothing. It is blocked when the app asks for notes without the entitlement",
+    "can": [
+      "Open names, numbers and emails if you allowed contacts",
+      "See notes on Android with the normal contacts permission",
+      "See notes on iPhone only if Apple approved the entitlement"
+    ],
+    "cannot": [
+      "Get passwords, door codes or medical notes on iPhone without the entitlement",
+      "Fetch the notes field on iPhone without an error",
+      "Ask you to approve notes with an extra pop up; Apple reviews the request instead"
+    ],
+    "reach": 1,
+    "reach_label": "Blocked on iPhone without approval",
+    "differs": "Android has no separate gate for notes; iPhone needs an Apple entitlement."
+  },
+  "story": {
+    "what_it_is": "A gate that blocks apps from reading the free text notes on your contacts unless Apple approves.",
+    "icon": "lock",
+    "tags": [
+      "Contacts",
+      "Blocked",
+      "Privacy"
+    ],
+    "marketing": [],
+    "for_you": "You never notice it. Apps with contacts access see names and numbers, but not the notes you wrote, such as door codes or a friend's allergies. The notes stay private.",
+    "for_makers": "Notes often hold passwords, door codes and medical facts. Apple walled them off after reports that some apps were reading them. Apps that want them, like an enterprise CRM, must apply for an entitlement and explain why.",
+    "use_cases": [
+      {
+        "type": "enterprise",
+        "example": "A company sales app wanted notes on contacts so reps see past call details, and has to ask Apple.",
+        "apps": []
+      },
+      {
+        "type": "productivity",
+        "example": "A contact merge tool wanted to keep notes when cleaning duplicates and now has to work around the block.",
+        "apps": []
+      },
+      {
+        "type": "security",
+        "example": "A backup app wanted to copy full contacts including notes, and cannot without approval.",
+        "apps": []
+      },
+      {
+        "type": "social",
+        "example": "A growth team wanted to scrape notes for hints about friends' birthdays.",
+        "apps": []
+      },
+      {
+        "type": "health",
+        "example": "A care app wanted to read care notes you saved for a parent.",
+        "apps": []
+      },
+      {
+        "type": "analytics",
+        "example": "A data broker wanted notes as a free text signal and is stopped.",
+        "apps": []
+      },
+      {
+        "type": "developer",
+        "example": "A developer sees a crash when fetching the notes key and has to apply.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Backups may miss notes",
+      "Notes stay in plain text",
+      "Approval bar for CRMs"
+    ],
+    "android_note": "Android has no separate gate for notes.",
+    "ios_note": "Without the entitlement, asking for the notes field throws an error."
+  },
+  "technical_bounds": [
+    "Apple review needed for each app",
+    "No Android equivalent"
+  ],
+  "scores": {
+    "sensitivity": 5,
+    "utility": 2,
+    "fingerprint_bits": null,
+    "friction": 3
+  },
+  "value": {
+    "legit_uses": [
+      "Enterprise CRM"
+    ],
+    "abuse": [
+      "Stealing secrets stored in notes"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2019-09",
+      "platform": "ios",
+      "version": "iOS 13",
+      "change": "Notes field requires com.apple.developer.contacts.notes"
+    }
+  ],
+  "related": [
+    "mob.contacts.full-access"
+  ],
+  "refs": [
+    {
+      "t": "apple",
+      "label": "Apple: Accessing the contact store",
+      "url": "https://developer.apple.com/documentation/contacts/accessing-the-contact-store"
+    },
+    {
+      "t": "apple",
+      "label": "Apple: Contacts notes entitlement",
+      "url": "https://developer.apple.com/documentation/bundleresources/entitlements/com.apple.developer.contacts.notes"
+    }
+  ],
+  "confidence": "docs"
+}

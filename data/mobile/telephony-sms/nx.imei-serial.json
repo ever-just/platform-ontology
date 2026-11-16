@@ -1,0 +1,210 @@
+{
+  "id": "mob.nx.imei-serial",
+  "name": "IMEI, MEID and serial number",
+  "kind": "not-exposed",
+  "group": "telephony-sms",
+  "subgroup": "Hardware IDs",
+  "tags": [
+    "imei",
+    "serial",
+    "blocked",
+    "privileged"
+  ],
+  "plain": "Blocked for normal apps: Android needs a privileged permission since 10; iOS has never exposed them.",
+  "meaning": "These IDs are permanent and unique, so platforms closed them to stop tracking. Only carrier, MDM or system apps can read them.",
+  "lifecycle": [
+    "on-launch",
+    "in-session"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "r",
+      "v": "10",
+      "api": 29,
+      "permission": "READ_PRIVILEGED_PHONE_STATE (privileged) or device owner",
+      "protection": "privileged",
+      "grant": "not-exposed",
+      "prompt_ui": "Not available",
+      "persistence": "n/a",
+      "revocation": "n/a",
+      "store_policy": "Play: not allowed",
+      "api_surface": "TelephonyManager.getImei(), Build.getSerial()",
+      "note": "SecurityException or unknown for normal apps; API 29 and later"
+    },
+    "ios": {
+      "s": "n",
+      "v": "7",
+      "permission": "none",
+      "protection": "not-exposed",
+      "grant": "not-exposed",
+      "prompt_ui": "Not available",
+      "persistence": "n/a",
+      "revocation": "n/a",
+      "store_policy": "",
+      "api_surface": "No public API",
+      "note": "UDID removed from the API by iOS 7; vendor ID and ad ID are the proxies"
+    }
+  },
+  "web_equivalents": [
+    "web.notexposed.device-serial-imei"
+  ],
+  "data": {
+    "type": "none",
+    "metric": "None",
+    "update": "N/A",
+    "fields": []
+  },
+  "limits": {
+    "headline": "Can't see the phone's IMEI, MEID or serial number as a normal app",
+    "user_action": "Nothing. These permanent IDs are blocked from normal apps",
+    "can": [
+      "Use other IDs instead, such as the vendor ID or advertising ID (iPhone)",
+      "Get them if it is a carrier, company device owner or system app (Android)"
+    ],
+    "cannot": [
+      "See the IMEI or serial number on Android 10 and later",
+      "Get any permanent device ID on iPhone; the old UDID is gone since iOS 7",
+      "Unlock them with a permission prompt"
+    ],
+    "reach": 1,
+    "reach_label": "Blocked for normal apps",
+    "differs": "Android allows it for carrier and company apps; iPhone never exposes it."
+  },
+  "story": {
+    "what_it_is": "Blocked: normal apps cannot read the phone's permanent hardware ID numbers.",
+    "icon": "hash",
+    "tags": [
+      "Blocked",
+      "Device ID",
+      "Tracking"
+    ],
+    "marketing": [],
+    "for_you": "You never see it. Apps cannot read your phone's IMEI or serial number, so they cannot tie your phone to you for life. Apps use softer IDs that you can reset.",
+    "for_makers": "These IDs never change, which made them perfect for tracking. Ad networks and fraud teams wanted them. Platforms closed the door, and apps now use resettable IDs and server checks instead.",
+    "use_cases": [
+      {
+        "type": "ads",
+        "example": "An ad network wanted a permanent phone ID to follow people across apps and now uses a resettable ad ID.",
+        "apps": []
+      },
+      {
+        "type": "security",
+        "example": "A fraud team wanted a permanent ID to ban cheaters and now uses account and attestation signals.",
+        "apps": []
+      },
+      {
+        "type": "games",
+        "example": "A game studio wanted to stop a banned player from returning with a new account.",
+        "apps": []
+      },
+      {
+        "type": "shopping",
+        "example": "A coupon app wanted one deal per phone and now limits per account.",
+        "apps": []
+      },
+      {
+        "type": "analytics",
+        "example": "An analytics SDK wanted a lifetime device count and uses install IDs.",
+        "apps": []
+      },
+      {
+        "type": "enterprise",
+        "example": "A company needs serial numbers and gets them through management tools.",
+        "apps": [
+          "Microsoft Intune"
+        ]
+      },
+      {
+        "type": "payments",
+        "example": "A payment app wanted a hard ID to spot stolen phones and now uses device checks.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "IDs used to track for life",
+      "Workarounds like fingerprints",
+      "Only carriers and MDM can read"
+    ],
+    "android_note": "Since Android 10 reading these needs a privileged permission. Normal apps get an error or unknown.",
+    "ios_note": "iPhone removed the UDID in iOS 7. The vendor ID and ad ID are the only IDs apps get."
+  },
+  "technical_bounds": [
+    "Device owner or carrier apps only",
+    "Proxies: app-scoped IDs only"
+  ],
+  "scores": {
+    "sensitivity": 5,
+    "utility": 1,
+    "fingerprint_bits": null,
+    "friction": 3
+  },
+  "value": {
+    "legit_uses": [
+      "Carrier and MDM apps"
+    ],
+    "abuse": [
+      "Permanent tracking"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2019-09",
+      "platform": "android",
+      "version": "10 (API 29)",
+      "change": "IMEI and serial no longer available to normal apps"
+    },
+    {
+      "date": "2019-09",
+      "platform": "android",
+      "version": "10 (API 29)",
+      "change": "IMEI and serial require privileged access"
+    },
+    {
+      "date": "2013-09",
+      "platform": "ios",
+      "version": "iOS 7",
+      "change": "uniqueIdentifier (UDID) removed"
+    },
+    {
+      "date": "2013-09",
+      "platform": "ios",
+      "version": "iOS 7",
+      "change": "MAC address returns constant 02:00:00:00:00:00"
+    }
+  ],
+  "related": [
+    "mob.nx.mac-address",
+    "mob.device.identifiers",
+    "mob.telephony.phone-state"
+  ],
+  "refs": [
+    {
+      "t": "android",
+      "label": "Android 10 privacy changes",
+      "url": "https://developer.android.com/about/versions/10/privacy/changes"
+    },
+    {
+      "t": "android",
+      "label": "Android: Best practices for unique identifiers",
+      "url": "https://developer.android.com/training/articles/user-data-ids"
+    },
+    {
+      "t": "apple",
+      "label": "Apple: UIDevice",
+      "url": "https://developer.apple.com/documentation/uikit/uidevice"
+    },
+    {
+      "t": "android",
+      "label": "Android: Best practices for unique identifiers",
+      "url": "https://developer.android.com/identity/user-data-ids"
+    }
+  ],
+  "confidence": "verified"
+}

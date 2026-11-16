@@ -1,0 +1,285 @@
+{
+  "id": "web.peripherals.web-bluetooth",
+  "name": "Web Bluetooth (GATT)",
+  "kind": "permission",
+  "group": "peripherals-hardware",
+  "subgroup": "Bluetooth",
+  "tags": [
+    "ble",
+    "gatt",
+    "chooser"
+  ],
+  "plain": "Lets a site connect to a nearby Bluetooth LE device the person picks.",
+  "meaning": "Reads sensors (heart rate, battery, thermometers) and controls BLE gadgets. Reveals device names and service data; used for fitness, IoT setup and beacons.",
+  "lifecycle": [
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "navigator.bluetooth.requestDevice({filters|acceptAllDevices, optionalServices}), device.gatt.connect(), getPrimaryService(), characteristic.readValue()/writeValue()/startNotifications()",
+      "permission_name": "bluetooth",
+      "permissions_policy": "bluetooth",
+      "bcd": [
+        "api.Bluetooth",
+        "api.BluetoothDevice",
+        "api.BluetoothRemoteGATTCharacteristic"
+      ],
+      "access": {
+        "grant": "picker",
+        "prompt_ui": "Chooser showing nearby BLE devices that match filters, with Pair button",
+        "secure_context": true,
+        "user_gesture": true,
+        "persistence": "Per session by default; per device with getDevices() behind a flag or recent Chrome",
+        "revocation": "Site settings, device.forget(), disconnect",
+        "iframe": "Needs allow=\"bluetooth\"",
+        "steps": [
+          "Click",
+          "requestDevice() with service UUID filter",
+          "gatt.connect()",
+          "Read, write or subscribe to characteristics"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "p",
+          "v": "70",
+          "note": "Linux support is not enabled by default.",
+          "date": "2018-10-16"
+        },
+        "edge": {
+          "s": "p",
+          "v": "79",
+          "note": "Linux support is not enabled by default.",
+          "date": "2020-01-15"
+        },
+        "firefox": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "safari": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "ios_safari": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "56",
+          "note": "",
+          "date": "2017-02-01"
+        },
+        "samsung": {
+          "s": "y",
+          "v": "6.0",
+          "note": "",
+          "date": "2017-08-23"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "object",
+    "metric": "GATT services and characteristic values",
+    "update": "on demand and notifications",
+    "fields": [
+      {
+        "name": "device.name / id",
+        "type": "string",
+        "range": "device defined",
+        "precision": "id is per origin"
+      },
+      {
+        "name": "service UUID",
+        "type": "string",
+        "range": "16, 32 or 128 bit"
+      },
+      {
+        "name": "characteristic.value",
+        "type": "binary",
+        "unit": "bytes",
+        "range": "max 512 bytes per attribute"
+      },
+      {
+        "name": "rssi (in advertisements)",
+        "type": "integer",
+        "unit": "dBm",
+        "range": "about -100 to 0",
+        "precision": "only via scanning or watchAdvertisements"
+      },
+      {
+        "name": "txPower",
+        "type": "integer",
+        "unit": "dBm",
+        "range": "-127 to 127",
+        "precision": "advertisement"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can connect to one nearby Bluetooth device you pick from a list",
+    "user_action": "You tap Connect device and choose a gadget in the list, then press Pair.",
+    "can": [
+      "Show nearby Bluetooth LE devices that match what the site looks for",
+      "Connect to the one you pick",
+      "Get data from and send commands to that device, such as a heart monitor"
+    ],
+    "cannot": [
+      "See devices you did not pick or other devices nearby",
+      "Connect without you picking from the list",
+      "Work in Firefox, Safari, or on iPhone",
+      "Work with old Bluetooth devices, since it uses only Bluetooth LE"
+    ],
+    "reach": 2,
+    "reach_label": "One device you pick",
+    "differs": "Chrome and Edge support it, with some limits. Safari and iPhone do not."
+  },
+  "story": {
+    "what_it_is": "A site asks to connect to a nearby Bluetooth gadget that you choose.",
+    "icon": "bluetooth",
+    "tags": [
+      "Bluetooth",
+      "You pick",
+      "Hardware"
+    ],
+    "marketing": [
+      {
+        "vendor": "Google",
+        "name": "Web Bluetooth",
+        "pitch": "Chrome's docs say the API lets a page talk to nearby Bluetooth Low Energy devices, with a picker.",
+        "url": "https://developer.chrome.com/docs/capabilities/bluetooth"
+      }
+    ],
+    "for_you": "A picker shows nearby devices. You choose one, and the page can talk to just that one, like a heart rate band or a fitness gadget.",
+    "for_makers": "Makers can set up and control gadgets from a web page, with no app to install. The page only sees the one device you pick.",
+    "use_cases": [
+      {
+        "type": "fitness",
+        "example": "A web page reads your heart rate band during a workout.",
+        "apps": [
+          "Polar",
+          "Wahoo"
+        ]
+      },
+      {
+        "type": "smart-home",
+        "example": "A web page sets up a smart bulb or sensor over Bluetooth.",
+        "apps": []
+      },
+      {
+        "type": "games",
+        "example": "A browser game uses a Bluetooth controller or a toy robot.",
+        "apps": [
+          "micro:bit"
+        ]
+      },
+      {
+        "type": "education",
+        "example": "A coding class controls a micro:bit board from the browser.",
+        "apps": [
+          "micro:bit",
+          "LEGO"
+        ]
+      },
+      {
+        "type": "health",
+        "example": "A glucose or blood pressure monitor sends readings to a web dashboard.",
+        "apps": []
+      },
+      {
+        "type": "security",
+        "example": "A bad site could tempt you to pick a device and then read its data.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Picking the wrong device",
+      "Tracking by device id"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Cannot scan silently: requestLEScan is behind a flag and not shipped",
+    "Block list excludes security sensitive GATT services and characteristics",
+    "Only filtered device types unless acceptAllDevices",
+    "No Firefox, no Safari, no iOS browsers",
+    "Needs HTTPS and a user gesture"
+  ],
+  "scores": {
+    "sensitivity": 3,
+    "utility": 4,
+    "fingerprint_bits": null,
+    "friction": 2
+  },
+  "value": {
+    "legit_uses": [
+      "Fitness sensors",
+      "IoT onboarding",
+      "Retail BLE beacons"
+    ],
+    "abuse": [
+      "Proximity detection",
+      "Sensor reads leaking health data"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2017-02",
+      "browser": "chrome",
+      "version": "56",
+      "change": "Web Bluetooth ships on Chrome Android"
+    },
+    {
+      "date": "2017-09",
+      "browser": "chrome",
+      "version": "70",
+      "change": "Desktop Chrome on Windows, macOS, Linux, ChromeOS"
+    },
+    {
+      "date": "2019",
+      "browser": "chrome",
+      "version": "78",
+      "change": "getAvailability()"
+    },
+    {
+      "date": "2020",
+      "browser": "chrome",
+      "version": "85",
+      "change": "getDevices() and watchAdvertisements behind flag; still experimental in 2026"
+    }
+  ],
+  "related": [
+    "web.peripherals.web-serial",
+    "web.peripherals.webusb"
+  ],
+  "refs": [
+    {
+      "t": "mdn",
+      "label": "MDN Web Bluetooth API",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/Web_Bluetooth_API"
+    },
+    {
+      "t": "spec",
+      "label": "Web Bluetooth spec",
+      "url": "https://webbluetoothcg.github.io/web-bluetooth/"
+    },
+    {
+      "t": "vendor",
+      "label": "Chrome Web Bluetooth guide",
+      "url": "https://developer.chrome.com/docs/capabilities/bluetooth"
+    }
+  ],
+  "confidence": "verified"
+}

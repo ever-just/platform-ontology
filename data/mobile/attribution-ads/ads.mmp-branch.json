@@ -1,0 +1,214 @@
+{
+  "id": "mob.ads.mmp-branch",
+  "name": "Branch SDK",
+  "kind": "tracking",
+  "group": "attribution-ads",
+  "subgroup": "Mobile measurement partners",
+  "tags": [
+    "branch",
+    "deep-link",
+    "mmp",
+    "sdk"
+  ],
+  "plain": "A SDK known for deferred deep links that also does attribution and clipboard-based matching.",
+  "meaning": "Creates links that open the right in-app screen after install. Uses IDs, IP, device signals; on iOS it reads clipboard if the link was copied.",
+  "lifecycle": [
+    "before-install",
+    "on-launch",
+    "in-session",
+    "after-uninstall"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "y",
+      "v": "",
+      "permission": "INTERNET, ACCESS_NETWORK_STATE; AD_ID for GAID; Install Referrer library",
+      "protection": "normal",
+      "grant": "install",
+      "prompt_ui": "",
+      "persistence": "",
+      "revocation": "",
+      "store_policy": "Data safety must list SDK data; Families: certified ad SDK rules",
+      "api_surface": "MMP SDK + Play Install Referrer + GAID",
+      "note": "Install Referrer plus Branch link params."
+    },
+    "ios": {
+      "s": "y",
+      "v": "",
+      "permission": "NSUserTrackingUsageDescription if IDFA used; privacy manifest from SDK",
+      "protection": "prompt",
+      "grant": "prompt",
+      "prompt_ui": "",
+      "persistence": "",
+      "revocation": "",
+      "store_policy": "Privacy manifest and signature required for listed SDKs; ATT 5.1.2(i)",
+      "api_surface": "MMP SDK + SKAdNetwork/AdAttributionKit + ATT",
+      "note": "Uses universal links, clipboard check (with iOS paste prompts since 16), SKAN."
+    }
+  },
+  "web_equivalents": [
+    "web.xsite.ad-click-ids"
+  ],
+  "data": {
+    "type": "object",
+    "metric": "Install, session and event records tied to an MMP ID",
+    "update": "continuous via SDK",
+    "fields": [
+      {
+        "name": "device ID",
+        "type": "string",
+        "unit": "",
+        "range": "GAID, IDFA or IDFV, MMP-specific ID",
+        "precision": ""
+      },
+      {
+        "name": "attribution source",
+        "type": "string",
+        "unit": "",
+        "range": "",
+        "precision": ""
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can open the right screen after install and link the install to an ad",
+    "user_action": "You tap a Branch link, install the app, then open it",
+    "can": [
+      "Open the right screen after install from a saved link",
+      "Match installs to ads using link data, IP address and device clues",
+      "Check what you copied on iPhone, with a paste notice since iOS 16",
+      "Use Apple's delayed install reports"
+    ],
+    "cannot": [
+      "Check your clipboard on iPhone without the paste notice from iOS 16",
+      "Use the iPhone ad ID after you said no to tracking",
+      "See what you copied in apps outside its own link flow"
+    ],
+    "reach": 3,
+    "reach_label": "A link and an install, then ongoing",
+    "differs": "Android uses the Play install referrer. iPhone checks the clipboard with a paste notice and uses Apple's reports."
+  },
+  "story": {
+    "what_it_is": "An install tracking SDK best known for links that open the right screen even after installing.",
+    "icon": "link",
+    "tags": [
+      "Links",
+      "Attribution",
+      "Tracking"
+    ],
+    "marketing": [],
+    "for_you": "You tap a friend's link, install the app and it opens on the exact page your friend meant. You may never realize a company stood in the middle.",
+    "for_makers": "Branch creates deferred deep links, plus attribution. It matches by IDs, IP and device signals, and on iOS it can read the clipboard if a link was copied. That match is why a link can work across an install.",
+    "use_cases": [
+      {
+        "type": "shopping",
+        "example": "You tap a shared product link, install the store app and land on the same product.",
+        "apps": [
+          "Instacart",
+          "Poshmark"
+        ]
+      },
+      {
+        "type": "social",
+        "example": "A friend invites you to a group and the app opens on that group after install.",
+        "apps": [
+          "Reddit"
+        ]
+      },
+      {
+        "type": "games",
+        "example": "A tournament invite link takes you to the right lobby after the game downloads.",
+        "apps": []
+      },
+      {
+        "type": "ads",
+        "example": "An ad link carries a campaign tag so the advertiser knows which ad worked.",
+        "apps": []
+      },
+      {
+        "type": "fitness",
+        "example": "A challenge link from a friend opens the right workout challenge after install.",
+        "apps": [
+          "Strava"
+        ]
+      },
+      {
+        "type": "analytics",
+        "example": "A growth team measures how many invites a user sends and how many join.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Reads the clipboard in some cases",
+      "Uses IP and device signals to match"
+    ],
+    "android_note": "On Android it also uses the Play install referrer to connect the install to the click.",
+    "ios_note": "iOS 14 added clipboard warnings that make this match more visible."
+  },
+  "technical_bounds": [
+    "Data flows to the vendor's cloud",
+    "Needs ATT for IDFA matching on iOS",
+    "Privacy manifest and required reasons apply"
+  ],
+  "scores": {
+    "sensitivity": 4,
+    "utility": 5,
+    "fingerprint_bits": 12,
+    "friction": 1
+  },
+  "value": {
+    "legit_uses": [
+      "Attribution, fraud detection, deep links, ROAS"
+    ],
+    "abuse": [
+      "Cross-customer device graph",
+      "Fingerprint-style matching on non-consenting iOS"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2021-04",
+      "platform": "ios",
+      "version": "iOS 14.5",
+      "change": "MMPs shift to SKAN and consent-gated IDFA for iOS"
+    },
+    {
+      "date": "2024-05",
+      "platform": "ios",
+      "version": "iOS 17.5",
+      "change": "Privacy manifests and signatures required for the SDK"
+    },
+    {
+      "date": "2025-10",
+      "platform": "android",
+      "version": "Android 16",
+      "change": "Privacy Sandbox wind-down: Install Referrer plus GAID remain the Android core"
+    }
+  ],
+  "related": [
+    "mob.xtrack.probabilistic-matching",
+    "mob.attr.install-referrer",
+    "mob.ads.skadnetwork",
+    "mob.ads.sdk-data-sharing"
+  ],
+  "refs": [
+    {
+      "t": "vendor",
+      "label": "Branch documentation",
+      "url": "https://www.branch.io/"
+    },
+    {
+      "t": "apple",
+      "label": "Apple: UIPasteboard detectPatterns",
+      "url": "https://developer.apple.com/documentation/uikit/uipasteboard"
+    }
+  ],
+  "confidence": "docs"
+}

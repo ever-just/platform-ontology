@@ -1,0 +1,178 @@
+{
+  "id": "mob.bg.oem-killers",
+  "name": "OEM background killers",
+  "kind": "not-exposed",
+  "group": "notifications-background",
+  "subgroup": "Platform quirks",
+  "tags": [
+    "oem",
+    "battery-optimizer",
+    "dontkillmyapp",
+    "reliability"
+  ],
+  "plain": "Many Android makers add extra killers that stop apps beyond what Google's rules allow.",
+  "meaning": "Explains why push and alarms fail on some phones: aggressive task killers, autostart lists and battery managers. Developers ask users to whitelist; no API can force it.",
+  "lifecycle": [
+    "background"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "n",
+      "v": "6.0",
+      "api": 23,
+      "permission": "REQUEST_IGNORE_BATTERY_OPTIMIZATIONS (Play-restricted)",
+      "protection": "normal",
+      "grant": "not-exposed",
+      "prompt_ui": "Vendor specific settings: autostart, protected apps, battery manager",
+      "persistence": "Until the user changes it",
+      "revocation": "Vendor settings app",
+      "store_policy": "Play: battery opt-out prompts limited",
+      "api_surface": "dontkillmyapp.com lists vendors (Xiaomi, Huawei, Oppo, Vivo, Samsung and others)",
+      "note": "Behavior varies by vendor; no portable detection"
+    },
+    "ios": {
+      "s": "n",
+      "v": "",
+      "permission": "",
+      "protection": "none",
+      "grant": "not-exposed",
+      "prompt_ui": "",
+      "persistence": "",
+      "revocation": "",
+      "store_policy": "",
+      "api_surface": "",
+      "note": "iOS has one consistent background policy; no OEM variation"
+    }
+  },
+  "data": {
+    "type": "none",
+    "metric": "Vendor behavior",
+    "update": "n/a",
+    "fields": []
+  },
+  "limits": {
+    "headline": "Can't count on running in the background on some Android phones, since brands add extra killers",
+    "user_action": "Nothing. The phone's maker stops the app on its own after you leave it",
+    "can": [
+      "Run normally while you have the app open",
+      "Ask you to switch on autostart or remove battery limits in the phone's own settings",
+      "Keep working in the background if you turn off the maker's limits for it"
+    ],
+    "cannot": [
+      "Check from inside the app whether the maker's killer is on; there is no common way",
+      "Turn off the maker's battery limits by itself",
+      "Behave the same on every Android phone; each brand differs",
+      "Face this on iPhone, which has one background rule for everyone"
+    ],
+    "reach": 1,
+    "reach_label": "Varies by phone brand",
+    "differs": "Many Android brands stop apps beyond Google's rules. iPhone has a single consistent background policy."
+  },
+  "story": {
+    "what_it_is": "Some Android phone makers add extra app killers that stop apps beyond Google's rules.",
+    "icon": "skull",
+    "tags": [
+      "Android",
+      "Background",
+      "Reliability"
+    ],
+    "marketing": [],
+    "for_you": "You may miss alarms, chat alerts or fitness tracking on some brands, even with every setting on. You may be told to dig through battery menus and allow the app to autostart.",
+    "for_makers": "Makers lose reliable alerts and reminders on these phones and cannot detect or fix it with code. They write help pages and in app guides that ask people to whitelist the app.",
+    "use_cases": [
+      {
+        "type": "messaging",
+        "example": "A chat app on some phones stops delivering message alerts after the screen is off, so the app shows a guide to turn off the battery manager.",
+        "apps": [
+          "WhatsApp",
+          "Telegram"
+        ]
+      },
+      {
+        "type": "health",
+        "example": "A medication reminder app fails to ring at night because the phone maker killed it, so it asks to be put on a protected list.",
+        "apps": []
+      },
+      {
+        "type": "fitness",
+        "example": "A run tracker on certain phones stops recording mid run, so the app links to a help page for that brand.",
+        "apps": [
+          "Strava"
+        ]
+      },
+      {
+        "type": "smart-home",
+        "example": "A security camera app misses a motion alert because the phone maker shut the app down.",
+        "apps": []
+      },
+      {
+        "type": "games",
+        "example": "A game that sends a timer alert for a finished build gets silenced, so players miss the reminder.",
+        "apps": []
+      },
+      {
+        "type": "developer",
+        "example": "Developers check a public list of phone brands to see which ones kill apps and adjust their guide.",
+        "apps": [
+          "Don't kill my app"
+        ]
+      }
+    ],
+    "risks": [
+      "Missed alerts and alarms",
+      "Hard for apps to detect or fix"
+    ],
+    "android_note": "This is Android only. It depends on the phone brand and has no standard way to check.",
+    "ios_note": "iOS has one background policy for every iPhone, so this problem does not exist."
+  },
+  "technical_bounds": [
+    "No API; vendor specific",
+    "Google CTS does not cover vendor killers"
+  ],
+  "scores": {
+    "sensitivity": 1,
+    "utility": 3,
+    "fingerprint_bits": null,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Reliable reminders"
+    ],
+    "abuse": [
+      "None"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2015-10",
+      "platform": "android",
+      "version": "6.0 (API 23)",
+      "change": "Doze gave vendors a template; vendor killers grew after"
+    }
+  ],
+  "related": [
+    "mob.bg.restricted-battery-ui",
+    "mob.bg.doze"
+  ],
+  "refs": [
+    {
+      "t": "vendor",
+      "label": "Don't kill my app",
+      "url": "https://dontkillmyapp.com/"
+    },
+    {
+      "t": "android",
+      "label": "Android: Optimize for Doze and App Standby",
+      "url": "https://developer.android.com/training/monitoring-device-state/doze-standby"
+    }
+  ],
+  "confidence": "docs"
+}

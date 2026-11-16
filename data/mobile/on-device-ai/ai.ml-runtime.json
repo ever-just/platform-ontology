@@ -1,0 +1,217 @@
+{
+  "id": "mob.ai.ml-runtime",
+  "name": "On-device ML runtime (Core ML, LiteRT)",
+  "kind": "capability",
+  "group": "on-device-ai",
+  "subgroup": "ML infrastructure",
+  "tags": [
+    "coreml",
+    "litert",
+    "tflite",
+    "nnapi",
+    "npu"
+  ],
+  "plain": "Runs trained models on the phone's neural hardware.",
+  "meaning": "Developers ship models with the app and run them on CPU, GPU or the neural chip. NNAPI is deprecated in favour of LiteRT, which targets vendor accelerators.",
+  "lifecycle": [
+    "in-session"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "y",
+      "v": "8.1",
+      "api": 27,
+      "permission": "None",
+      "protection": "none",
+      "grant": "none",
+      "prompt_ui": "None",
+      "persistence": "n/a",
+      "revocation": "n/a",
+      "store_policy": "",
+      "api_surface": "LiteRT (formerly TensorFlow Lite), LiteRT NPU delegate, NNAPI (deprecated in Android 15), MediaPipe",
+      "note": "LiteRT Next adds vendor NPU accelerators (Qualcomm, MediaTek)."
+    },
+    "ios": {
+      "s": "y",
+      "v": "11.0",
+      "permission": "None",
+      "protection": "none",
+      "grant": "none",
+      "prompt_ui": "None",
+      "persistence": "n/a",
+      "revocation": "n/a",
+      "store_policy": "",
+      "api_surface": "Core ML, MLX (macOS), Core ML Tools, BNNS Graph",
+      "note": "Core ML uses the Neural Engine automatically."
+    }
+  },
+  "data": {
+    "type": "object",
+    "metric": "Model output",
+    "update": "per run",
+    "fields": [
+      {
+        "name": "tensor",
+        "type": "array",
+        "unit": "float",
+        "range": "n/a",
+        "precision": "n/a"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can run trained AI models on your phone's own chip",
+    "user_action": "Nothing. It happens inside the app when you use a smart feature",
+    "can": [
+      "Run models for photos, speech or text using the phone's neural hardware",
+      "Work offline",
+      "Use faster chips on some Android phones, like Qualcomm and MediaTek"
+    ],
+    "cannot": [
+      "Use the Neural Engine on iPhone by choice; the system handles it automatically",
+      "Run without a model the app brought along",
+      "Send your data to a server just because it uses this tool"
+    ],
+    "reach": 2,
+    "reach_label": "While the feature runs",
+    "differs": "iPhone uses Core ML, which picks the Neural Engine automatically. Android uses LiteRT, with extra support for some chip makers."
+  },
+  "story": {
+    "what_it_is": "The built in engine that runs trained AI models on the phone's chips.",
+    "icon": "cpu",
+    "tags": [
+      "AI",
+      "Speed",
+      "Private"
+    ],
+    "marketing": [
+      {
+        "vendor": "Apple",
+        "name": "Core ML",
+        "pitch": "Apple describes Core ML as the way to run machine learning models on device with the Neural Engine.",
+        "url": "https://developer.apple.com/documentation/coreml"
+      },
+      {
+        "vendor": "Google",
+        "name": "LiteRT",
+        "pitch": "Google positions LiteRT as its on device runtime for fast, private machine learning.",
+        "url": "https://ai.google.dev/edge/litert"
+      }
+    ],
+    "for_you": "You never see it. Face unlock, photo search and live camera effects run quickly and privately because a model is running on your phone.",
+    "for_makers": "Makers ship a model inside the app and run it fast on special chips. This keeps data local and avoids server costs, though a model in the app can be copied.",
+    "use_cases": [
+      {
+        "type": "games",
+        "example": "A game runs a smart opponent or upscaling model on the phone.",
+        "apps": []
+      },
+      {
+        "type": "creative",
+        "example": "A photo app removes a background in real time.",
+        "apps": [
+          "Lightroom",
+          "Snapseed"
+        ]
+      },
+      {
+        "type": "health",
+        "example": "A fitness app counts reps from the camera with no upload.",
+        "apps": []
+      },
+      {
+        "type": "security",
+        "example": "A banking app checks for face spoofing on device.",
+        "apps": []
+      },
+      {
+        "type": "music",
+        "example": "A music app recognizes a song or splits vocals.",
+        "apps": [
+          "Shazam"
+        ]
+      },
+      {
+        "type": "ar-vr",
+        "example": "An AR app tracks your hands and face live.",
+        "apps": [
+          "Snapchat"
+        ]
+      },
+      {
+        "type": "ads",
+        "example": "An ad model on the phone ranks which ads to show without sending data out.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Model theft from the app",
+      "Hidden to the person"
+    ],
+    "android_note": "LiteRT replaces NNAPI and adds chips from Qualcomm and MediaTek.",
+    "ios_note": "Core ML uses the Neural Engine automatically."
+  },
+  "technical_bounds": [
+    "Model size and memory limits"
+  ],
+  "scores": {
+    "sensitivity": 1,
+    "utility": 5,
+    "fingerprint_bits": 0,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Vision",
+      "Audio",
+      "Recommendation"
+    ],
+    "abuse": [
+      "Model theft from the app bundle"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2017-06",
+      "platform": "ios",
+      "version": "iOS 11",
+      "change": "Core ML"
+    },
+    {
+      "date": "2024-09",
+      "platform": "android",
+      "version": "15",
+      "change": "NNAPI deprecated"
+    },
+    {
+      "date": "2024-11",
+      "platform": "android",
+      "version": "LiteRT",
+      "change": "TFLite renamed to LiteRT"
+    }
+  ],
+  "related": [
+    "mob.ai.llm-prompt",
+    "mob.ai.visual-lookup-ocr"
+  ],
+  "refs": [
+    {
+      "t": "android",
+      "label": "Google AI Edge: LiteRT",
+      "url": "https://ai.google.dev/edge/litert"
+    },
+    {
+      "t": "apple",
+      "label": "Apple: Core ML",
+      "url": "https://developer.apple.com/documentation/coreml"
+    }
+  ],
+  "confidence": "docs"
+}

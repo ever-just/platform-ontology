@@ -1,0 +1,239 @@
+{
+  "id": "web.net.private-access-tokens-pact",
+  "name": "Private Access Tokens and PACT",
+  "kind": "signal",
+  "group": "network-connectivity",
+  "subgroup": "Anti-bot",
+  "tags": [
+    "privacy-pass",
+    "pat",
+    "pact",
+    "attestation"
+  ],
+  "plain": "A signed token proves the visitor is probably a real device without revealing who they are.",
+  "meaning": "Privacy Pass (RFC 9576 to 9578) tokens issued after device or account attestation. Apple PAT ships in Safari and Cloudflare Turnstile consumes tokens. PACT was announced on 2026-06-22 by Cloudflare, Google, Microsoft, Mozilla and Shopify; Apple was not listed.",
+  "lifecycle": [
+    "on-arrival"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "Privacy Pass PrivateToken challenge in WWW-Authenticate; PAT",
+      "access": {
+        "grant": "none",
+        "prompt_ui": "",
+        "secure_context": false,
+        "user_gesture": false,
+        "persistence": "",
+        "revocation": "",
+        "iframe": "",
+        "steps": [
+          "Server sends challenge",
+          "Client contacts issuer",
+          "Issuer attests device",
+          "Client redeems unlinkable token"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "edge": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "firefox": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "safari": {
+          "s": "y",
+          "v": "16.4",
+          "note": "Private Access Tokens for iOS 16 and macOS 13",
+          "date": "2023-03-27"
+        },
+        "ios_safari": {
+          "s": "y",
+          "v": "16",
+          "note": "",
+          "date": "2022-09-12"
+        },
+        "chrome_android": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "samsung": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "string",
+    "metric": "Token",
+    "update": "",
+    "fields": [
+      {
+        "name": "token",
+        "type": "string",
+        "unit": "",
+        "range": "base64",
+        "precision": "unlinkable"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can check that you are probably a real device without learning who you are",
+    "user_action": "Nothing. It happens when a site asks your browser to prove it is genuine",
+    "can": [
+      "Receive a signed token showing a real Apple device or account vouched for you",
+      "Skip a CAPTCHA or other challenge for you",
+      "Accept the same token without knowing which device made it"
+    ],
+    "cannot": [
+      "Learn your name, device model or account from the token",
+      "Track you from token to token, since they are made to be unlinkable",
+      "Work in Chrome, Edge, Firefox or Samsung Internet today",
+      "Prove you are human with certainty, only that a trusted device vouched"
+    ],
+    "reach": 1,
+    "reach_label": "One check, no identity",
+    "differs": "Only Safari on Mac and iPhone issues these tokens today. A cross vendor version called PACT was announced in June 2026."
+  },
+  "story": {
+    "what_it_is": "A signed token that proves you are probably a real device, without telling the site who you are.",
+    "icon": "badge-check",
+    "tags": [
+      "Privacy",
+      "Anti bot",
+      "Silent"
+    ],
+    "marketing": [
+      {
+        "vendor": "Apple",
+        "name": "Private Access Tokens",
+        "pitch": "Lets sites skip CAPTCHAs by checking quietly that a real Apple device is visiting, without learning who you are.",
+        "url": "https://developer.apple.com/news/?id=huqjyh7k"
+      },
+      {
+        "vendor": "Cloudflare",
+        "name": "Private Access Tokens",
+        "pitch": "Cloudflare says these tokens remove CAPTCHAs on iPhones and Macs while keeping visitors private.",
+        "url": "https://blog.cloudflare.com/eliminating-captchas-on-iphones-and-macs-using-new-standard/"
+      }
+    ],
+    "for_you": "On supported Apple devices you see fewer puzzles asking you to pick traffic lights. Your phone proves itself in the background. You never see the check.",
+    "for_makers": "Makers get a strong sign that the visitor is a real device, and not a bot farm, with no extra data to store. It cuts fraud and friction. Sites need a provider such as Cloudflare to issue and check tokens.",
+    "use_cases": [
+      {
+        "type": "shopping",
+        "example": "A shop behind Cloudflare skips the puzzle for iPhone shoppers, so more people finish checkout and bots still have to solve harder tests.",
+        "apps": []
+      },
+      {
+        "type": "games",
+        "example": "A browser game's sign up page checks for a real device token, so one person cannot make hundreds of free accounts for cheating.",
+        "apps": []
+      },
+      {
+        "type": "social",
+        "example": "A social site lets verified devices post and follow right away, and challenges unverified ones with extra steps.",
+        "apps": []
+      },
+      {
+        "type": "ads",
+        "example": "An ad network discounts clicks that come without a token on devices that normally have one, which reduces click fraud.",
+        "apps": []
+      },
+      {
+        "type": "security",
+        "example": "A login page uses the token to lower friction for real devices and raise it for scripts that try thousands of passwords.",
+        "apps": []
+      },
+      {
+        "type": "media",
+        "example": "A news site limits scraping by asking for a token before it serves full articles to automated visitors.",
+        "apps": []
+      },
+      {
+        "type": "accessibility",
+        "example": "A person who finds image puzzles hard to solve gets in with no puzzle, because the device proves itself in the background.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Limited to some devices",
+      "Shifts power to big platforms"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Issuers can see attestation requests; issuer collusion is the main risk",
+    "PACT is only announced; shipping status unverified"
+  ],
+  "scores": {
+    "sensitivity": 1,
+    "utility": 4,
+    "fingerprint_bits": 1,
+    "friction": 1
+  },
+  "value": {
+    "legit_uses": "Reducing CAPTCHAs",
+    "abuse": "Attestation could exclude minority browsers or devices"
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2022-06",
+      "browser": "safari",
+      "version": "16",
+      "change": "Apple Private Access Tokens"
+    },
+    {
+      "date": "2024-06",
+      "browser": "rfc",
+      "version": "",
+      "change": "RFC 9576 to 9578 Privacy Pass published (Jun 2024 per IETF)"
+    },
+    {
+      "date": "2026-06",
+      "browser": "all",
+      "version": "",
+      "change": "PACT announced by Cloudflare, Google, Microsoft, Mozilla, Shopify"
+    }
+  ],
+  "related": [
+    "web.net.bot-detection-signals"
+  ],
+  "refs": [
+    {
+      "t": "rfc",
+      "label": "RFC 9576 Privacy Pass architecture",
+      "url": "https://www.rfc-editor.org/rfc/rfc9576"
+    },
+    {
+      "t": "vendor",
+      "label": "Apple Private Access Tokens",
+      "url": "https://developer.apple.com/news/?id=huqjyh7k"
+    },
+    {
+      "t": "web",
+      "label": "Cloudflare Privacy Pass",
+      "url": "https://blog.cloudflare.com/eliminating-captchas-on-iphones-and-macs-using-new-standard/"
+    }
+  ],
+  "confidence": "verified"
+}

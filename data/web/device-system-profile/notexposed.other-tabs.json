@@ -1,0 +1,226 @@
+{
+  "id": "web.notexposed.other-tabs",
+  "name": "Other tabs and windows content",
+  "kind": "not-exposed",
+  "group": "device-system-profile",
+  "subgroup": "Browser state",
+  "tags": [
+    "not-exposed",
+    "tabs",
+    "isolation"
+  ],
+  "plain": "A page cannot see what other tabs show, only whether its own tab is visible.",
+  "meaning": "Same-origin policy and site isolation block it. Proxies: Page Visibility and focus say if this tab is hidden, BroadcastChannel talks to same-origin tabs, and Window Management lists screens (prompt). Number of open tabs is unknown.",
+  "lifecycle": [
+    "on-arrival",
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "none",
+      "access": {
+        "grant": "not-exposed",
+        "prompt_ui": "None",
+        "secure_context": false,
+        "user_gesture": false,
+        "persistence": "read fresh on every page load; nothing stored",
+        "revocation": "not applicable",
+        "iframe": "Readable from cross-origin iframes too (same values)",
+        "steps": [
+          "Page script reads the value",
+          "No prompt is shown"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "edge": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "firefox": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "safari": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "ios_safari": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "chrome_android": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "samsung": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "none",
+    "metric": "",
+    "update": "static per session",
+    "fields": [
+      {
+        "name": "proxy: document.visibilityState",
+        "type": "string",
+        "unit": "",
+        "range": "visible or hidden for this tab",
+        "precision": ""
+      },
+      {
+        "name": "proxy: BroadcastChannel and storage events",
+        "type": "string",
+        "unit": "",
+        "range": "same-origin tabs only",
+        "precision": ""
+      },
+      {
+        "name": "proxy: document.hasFocus()",
+        "type": "string",
+        "unit": "",
+        "range": "whether this tab is active",
+        "precision": ""
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can't see what other tabs or windows show",
+    "user_action": "Nothing. Pages have no way to ask for this",
+    "can": [
+      "Tell if its own tab is visible or hidden",
+      "Talk to other tabs of the same site",
+      "List your screens after you allow it in Chrome or Edge",
+      "Pause itself when the tab is in the background"
+    ],
+    "cannot": [
+      "See other sites' content",
+      "Count how many tabs you have open",
+      "See titles or links of other tabs",
+      "Break the walls between sites"
+    ],
+    "reach": 1,
+    "reach_label": "Only its own tabs",
+    "differs": ""
+  },
+  "story": {
+    "what_it_is": "A page cannot see what your other tabs show. It can only tell whether its own tab is visible.",
+    "icon": "panel-top",
+    "tags": [
+      "Blocked",
+      "Tabs",
+      "Privacy"
+    ],
+    "marketing": [
+      {
+        "vendor": "Chromium",
+        "name": "Site Isolation",
+        "pitch": "Chrome puts pages from different sites in separate processes so one site cannot read another's data.",
+        "url": "https://www.chromium.org/Home/chromium-security/site-isolation/"
+      },
+      {
+        "vendor": "MDN",
+        "name": "Page Visibility API",
+        "pitch": "Docs describe how a page learns whether its own tab is visible.",
+        "url": "https://developer.mozilla.org/en-US/docs/Web/API/Page_Visibility_API"
+      }
+    ],
+    "for_you": "Your banking tab cannot be read by a shopping tab, even if they are open side by side. A site can only tell whether you are looking at it or have switched away.",
+    "for_makers": "Reading other tabs would expose logins and private data, so browsers wall them off. Sites can still see their own tab's visibility to pause video or count attention time. Same-site tabs can talk to each other.",
+    "use_cases": [
+      {
+        "type": "video",
+        "example": "A video site pauses playback when you switch tabs, but cannot see what you switched to.",
+        "apps": [
+          "YouTube"
+        ]
+      },
+      {
+        "type": "games",
+        "example": "A browser game pauses when the tab is hidden and has no view of other tabs.",
+        "apps": []
+      },
+      {
+        "type": "ads",
+        "example": "An ad vendor measures if its ad was in view and cannot see other tabs.",
+        "apps": []
+      },
+      {
+        "type": "security",
+        "example": "A malicious page wanted to read your bank tab and is blocked by site isolation.",
+        "apps": []
+      },
+      {
+        "type": "productivity",
+        "example": "A web email app syncs across its own open tabs using a shared channel.",
+        "apps": [
+          "Gmail"
+        ]
+      },
+      {
+        "type": "education",
+        "example": "An exam site detects that you left its tab and records that, but not what you opened.",
+        "apps": []
+      },
+      {
+        "type": "analytics",
+        "example": "A news site counts how long its tab was visible to measure attention.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Can still see that you switched away"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Cross-origin isolation"
+  ],
+  "scores": {
+    "sensitivity": 4,
+    "utility": 2,
+    "fingerprint_bits": 0.0,
+    "friction": 3
+  },
+  "value": {
+    "legit_uses": [
+      "None: the browser deliberately withholds it"
+    ],
+    "abuse": [
+      "Sites attempt proxies to recover it"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "related": [
+    "web.notexposed.browsing-history"
+  ],
+  "refs": [
+    {
+      "t": "mdn",
+      "label": "MDN Page Visibility API",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/Page_Visibility_API"
+    }
+  ],
+  "confidence": "docs"
+}

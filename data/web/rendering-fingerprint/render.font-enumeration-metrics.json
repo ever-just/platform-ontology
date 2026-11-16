@@ -1,0 +1,240 @@
+{
+  "id": "web.render.font-enumeration-metrics",
+  "name": "Font enumeration by text metrics",
+  "kind": "tracking",
+  "group": "rendering-fingerprint",
+  "subgroup": "Fonts",
+  "tags": [
+    "fonts",
+    "measureText",
+    "offsetWidth"
+  ],
+  "plain": "Tests hundreds of font names by comparing text width against a fallback font.",
+  "meaning": "Installed fonts reveal OS, Office or Adobe apps, languages and sometimes profession (design, dev). The list is stable and shared by few people, one of the strongest fingerprint inputs.",
+  "lifecycle": [
+    "on-arrival"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "canvas measureText(); element.offsetWidth; getBoundingClientRect(); document.fonts.check()",
+      "access": {
+        "grant": "none",
+        "prompt_ui": "",
+        "secure_context": false,
+        "user_gesture": false,
+        "persistence": "",
+        "revocation": "",
+        "iframe": "",
+        "steps": [
+          "Render a test string in 'monospace', record width",
+          "For each candidate font render 'font, monospace' and compare widths",
+          "A mismatch means the font is installed"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "4",
+          "note": "",
+          "date": "2010-01-25"
+        },
+        "edge": {
+          "s": "y",
+          "v": "79",
+          "note": "",
+          "date": "2020-01-15"
+        },
+        "firefox": {
+          "s": "y",
+          "v": "3.6",
+          "note": "",
+          "date": "2010-01-21"
+        },
+        "safari": {
+          "s": "y",
+          "v": "4",
+          "note": "",
+          "date": "2009-06-08"
+        },
+        "ios_safari": {
+          "s": "y",
+          "v": "4",
+          "note": "",
+          "date": "2010-06-21"
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "4",
+          "note": "",
+          "date": ""
+        },
+        "samsung": {
+          "s": "y",
+          "v": "5.0",
+          "note": "",
+          "date": "2016-12-15"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "list",
+    "metric": "Probe 100 to 1,000 font names, 1 bit each (installed or not)",
+    "update": "",
+    "fields": [
+      {
+        "name": "installed fonts",
+        "type": "list",
+        "unit": "",
+        "range": "0 to 500 of those probed",
+        "precision": "exact names for the probe list"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can test hundreds of font names to learn which fonts are on your device",
+    "user_action": "Nothing. It happens when the page loads",
+    "can": [
+      "Measure text width for each font name against a plain fallback font",
+      "Build a list of fonts you have installed",
+      "Guess your system, apps like Office or Adobe, and sometimes your job",
+      "Use the list to recognise you later, since few people share it"
+    ],
+    "cannot": [
+      "Open your font files or see your files",
+      "Ask permission first",
+      "Get a clean list in Tor Browser or Safari 26, which limit this",
+      "Know your name by itself"
+    ],
+    "reach": 3,
+    "reach_label": "Silent, repeatable device number",
+    "differs": "Safari 26 and Tor Browser limit font checks. Chrome, Edge and Firefox allow them in normal browsing."
+  },
+  "story": {
+    "what_it_is": "A script tests hundreds of font names by comparing text width with a fallback font to see which are installed.",
+    "icon": "type",
+    "tags": [
+      "Silent",
+      "Fonts",
+      "Fingerprinting"
+    ],
+    "marketing": [
+      {
+        "vendor": "Google Chrome",
+        "name": "Local Font Access API",
+        "pitch": "Chrome offers a permission based way for design apps to list your fonts, instead of guessing by measuring.",
+        "url": "https://developer.chrome.com/docs/capabilities/web-apis/local-fonts"
+      }
+    ],
+    "for_you": "You never see it. The page writes a word in each font name and measures how wide it is. If the width changes, that font is on your device, and your font list works like a signature.",
+    "for_makers": "Design and document tools need to know which fonts you have. Trackers use the same trick because few people have the same font set, especially people who install apps like Office or Adobe.",
+    "use_cases": [
+      {
+        "type": "creative",
+        "example": "A web design tool lists fonts you own so your mockups match what you will print.",
+        "apps": [
+          "Figma",
+          "Canva"
+        ]
+      },
+      {
+        "type": "productivity",
+        "example": "A web document editor warns that a font in a file is missing on your computer.",
+        "apps": [
+          "Google Docs",
+          "Microsoft 365 web"
+        ]
+      },
+      {
+        "type": "ads",
+        "example": "A tracker checks 500 font names and uses the list as a strong part of a device ID.",
+        "apps": []
+      },
+      {
+        "type": "security",
+        "example": "A fraud tool sees a device with no common fonts and suspects a cloud server or bot.",
+        "apps": []
+      },
+      {
+        "type": "shopping",
+        "example": "A custom print shop shows a preview using fonts you already have so the look matches.",
+        "apps": []
+      },
+      {
+        "type": "games",
+        "example": "A browser game with a creator mode asks which fonts to offer for custom signs.",
+        "apps": []
+      },
+      {
+        "type": "accessibility",
+        "example": "A reading site checks for dyslexia friendly fonts on your device before loading its own.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Font list is very unique",
+      "No prompt needed",
+      "Hard to stop"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Cannot list font names directly without Local Font Access permission",
+    "Probe lists are finite",
+    "Firefox RFP and Tor expose only a bundled set"
+  ],
+  "scores": {
+    "sensitivity": 4,
+    "utility": 1,
+    "fingerprint_bits": 7,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": "Detect CJK and emoji coverage",
+    "abuse": "Cookieless ID, profession or OS inference"
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2013-01",
+      "browser": "paper",
+      "version": "",
+      "change": "Nikiforakis et al. Cookieless Monster documents font fingerprinting"
+    },
+    {
+      "date": "2016-01",
+      "browser": "paper",
+      "version": "",
+      "change": "AmIUnique reports fonts about 8 bits (Flash era)"
+    }
+  ],
+  "related": [
+    "web.render.svg-text-metrics",
+    "web.render.emoji-rendering"
+  ],
+  "refs": [
+    {
+      "t": "paper",
+      "label": "Nikiforakis et al., Cookieless Monster (S&P 2013)",
+      "url": "https://seclab.cs.ucsb.edu/media/uploads/papers/sp2013_cookieless.pdf"
+    },
+    {
+      "t": "github",
+      "label": "FingerprintJS fonts",
+      "url": "https://github.com/fingerprintjs/fingerprintjs"
+    },
+    {
+      "t": "github",
+      "label": "BrowserLeaks fonts",
+      "url": "https://browserleaks.com/fonts"
+    }
+  ],
+  "confidence": "docs"
+}

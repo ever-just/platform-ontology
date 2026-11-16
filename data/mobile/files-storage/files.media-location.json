@@ -1,0 +1,191 @@
+{
+  "id": "mob.files.media-location",
+  "name": "Media location metadata",
+  "kind": "permission",
+  "group": "files-storage",
+  "subgroup": "Media",
+  "tags": [
+    "runtime-permission",
+    "exif",
+    "location"
+  ],
+  "plain": "Lets the app read the GPS location stored inside photos.",
+  "meaning": "Photo EXIF reveals where and when images were taken, including home and holiday locations.",
+  "lifecycle": [
+    "in-session"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "y",
+      "v": "10",
+      "api": 29,
+      "permission": "ACCESS_MEDIA_LOCATION",
+      "protection": "dangerous",
+      "grant": "prompt",
+      "prompt_ui": "Location in media prompt",
+      "persistence": "Until revoked",
+      "revocation": "Settings > Apps > Permissions > Media location",
+      "store_policy": "Play: data-safety disclosure",
+      "api_surface": "MediaStore.setRequireOriginal, ExifInterface",
+      "note": "Without it EXIF GPS is redacted for media the app reads (Android 10+)."
+    },
+    "ios": {
+      "s": "p",
+      "v": "8.0",
+      "permission": "NSPhotoLibraryUsageDescription",
+      "protection": "prompt",
+      "grant": "prompt",
+      "prompt_ui": "Photos prompt",
+      "persistence": "Until revoked",
+      "revocation": "Settings > Privacy & Security > Photos",
+      "store_policy": "App Review 5.1.1",
+      "api_surface": "PHAsset.location",
+      "note": "Location is returned with photo access; shares can strip location via share sheet Options."
+    }
+  },
+  "data": {
+    "type": "object",
+    "metric": "EXIF GPS coordinates",
+    "update": "per image",
+    "fields": [
+      {
+        "name": "lat_lon",
+        "type": "float",
+        "unit": "degrees",
+        "range": "-90 to 90",
+        "precision": "about 5 m"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can see where your photos were taken, if you allow location info in media",
+    "user_action": "You tap Allow on the Location in media prompt, often in a gallery or editing app",
+    "can": [
+      "See the GPS place saved inside photos, on Android once you allow it",
+      "Ask for the original photo with its location, not the hidden version",
+      "See photo locations on iPhone along with photo access",
+      "Use the place to sort photos on a map"
+    ],
+    "cannot": [
+      "See the location of Android photos without this permission; GPS is removed from the copy the app sees",
+      "Keep location in shared photos on iPhone if you pick Options and turn off Location",
+      "Track where you are now from photos alone",
+      "See photos you did not allow the app to open"
+    ],
+    "reach": 3,
+    "reach_label": "Where photos were taken",
+    "differs": "On iPhone, location comes with photo access. On Android it is a separate permission."
+  },
+  "story": {
+    "what_it_is": "Lets an app read the place stored inside your photos.",
+    "icon": "map-pin",
+    "tags": [
+      "Permission",
+      "Asks first",
+      "Location"
+    ],
+    "marketing": [
+      {
+        "vendor": "Google",
+        "name": "Media location",
+        "pitch": "Developer guide: apps must ask separately to see the GPS location saved in photos.",
+        "url": "https://developer.android.com/training/data-storage/shared/media"
+      }
+    ],
+    "for_you": "A pop up asks to access location in your photos. If you allow it, the app can see where each photo was taken, which can show your home, work and trips.",
+    "for_makers": "Makers use it to sort photos by place, build maps and tag albums. It is very sensitive because it puts a pin on your private life.",
+    "use_cases": [
+      {
+        "type": "travel",
+        "example": "A photo album app places your holiday pictures on a world map.",
+        "apps": [
+          "Google Photos"
+        ]
+      },
+      {
+        "type": "social",
+        "example": "A social app suggests a place tag when you post a photo.",
+        "apps": []
+      },
+      {
+        "type": "creative",
+        "example": "A photo editor shows the location data and offers to remove it before you share.",
+        "apps": []
+      },
+      {
+        "type": "security",
+        "example": "A privacy tool strips location from photos before you send them.",
+        "apps": []
+      },
+      {
+        "type": "shopping",
+        "example": "A real estate app reads where a photo was taken to check a listing is real.",
+        "apps": []
+      },
+      {
+        "type": "maps",
+        "example": "A map app builds a heat map of places you have photographed.",
+        "apps": []
+      },
+      {
+        "type": "ads",
+        "example": "An ad firm could use photo places to guess your home and work.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Shows home and travel places",
+      "Can leak when you share photos"
+    ],
+    "android_note": "Needs ACCESS_MEDIA_LOCATION on top of photo access.",
+    "ios_note": "iOS apps with photo access can read location unless you share without it."
+  },
+  "technical_bounds": [
+    "iOS gives location with library access"
+  ],
+  "scores": {
+    "sensitivity": 5,
+    "utility": 2,
+    "fingerprint_bits": null,
+    "friction": 2
+  },
+  "value": {
+    "legit_uses": [
+      "Photo maps"
+    ],
+    "abuse": [
+      "Location harvesting"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2019-09",
+      "platform": "android",
+      "version": "10 (API 29)",
+      "change": "EXIF GPS redacted unless ACCESS_MEDIA_LOCATION granted"
+    }
+  ],
+  "related": [
+    "mob.files.media-images"
+  ],
+  "refs": [
+    {
+      "t": "android",
+      "label": "Android 10 privacy changes",
+      "url": "https://developer.android.com/about/versions/10/privacy/changes"
+    },
+    {
+      "t": "android",
+      "label": "Android: Media location",
+      "url": "https://developer.android.com/training/data-storage/shared/media#location-info-photos"
+    }
+  ],
+  "confidence": "docs"
+}

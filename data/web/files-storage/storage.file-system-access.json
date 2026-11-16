@@ -1,0 +1,243 @@
+{
+  "id": "web.storage.file-system-access",
+  "name": "File System Access (read and write handles)",
+  "kind": "permission",
+  "group": "files-storage",
+  "subgroup": "Files",
+  "tags": [
+    "files",
+    "persistent-permissions"
+  ],
+  "plain": "Lets a site open files and folders and save changes back in place.",
+  "meaning": "Gives a site read and write access to specific files or directories the person picks. Since Chrome 122 a grant can persist across visits, so the site keeps access to your folder until revoked.",
+  "lifecycle": [
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "showOpenFilePicker(), showSaveFilePicker(), showDirectoryPicker(); handle.requestPermission({mode:'readwrite'}); IndexedDB stored handles",
+      "bcd": [
+        "api.FileSystemHandle",
+        "api.Window.showOpenFilePicker",
+        "api.FileSystemFileHandle"
+      ],
+      "access": {
+        "grant": "picker",
+        "prompt_ui": "Picker chooses what to share; a write prompt appears; Chrome 122 adds three-way prompt: Allow this time, Allow on every visit, Don't allow. Installed apps skip the prompt.",
+        "secure_context": true,
+        "user_gesture": true,
+        "persistence": "One-time until tabs close, or persistent across visits in Chrome 122+ after Allow on every visit",
+        "revocation": "Address bar icon Remove access, Site settings per-handle trashcan; auto-revoked after a background period",
+        "iframe": "Not allowed in cross-origin iframes",
+        "steps": [
+          "User gesture",
+          "showOpenFilePicker()",
+          "Person picks file or folder",
+          "Get FileSystemHandle",
+          "queryPermission / requestPermission for readwrite",
+          "Store handle in IndexedDB to reuse"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "86",
+          "note": "",
+          "date": "2020-10-20"
+        },
+        "edge": {
+          "s": "y",
+          "v": "86",
+          "note": "",
+          "date": "2020-10-09"
+        },
+        "firefox": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "safari": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "ios_safari": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "chrome_android": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "samsung": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "object",
+    "metric": "FileSystemFileHandle or FileSystemDirectoryHandle",
+    "update": "per handle",
+    "fields": [
+      {
+        "name": "mode",
+        "type": "enum",
+        "unit": "none",
+        "range": "read or readwrite",
+        "precision": "2 values"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can open files and folders you pick and save changes back in place",
+    "user_action": "You click Open or Save, pick, then click Allow.",
+    "can": [
+      "Open the files or folders you pick",
+      "Save changes back after you allow it",
+      "Keep access on later visits if you choose Allow on every visit (Chrome 122 and newer)",
+      "Skip the prompt when installed as an app"
+    ],
+    "cannot": [
+      "See files or folders you did not pick",
+      "Reach system folders",
+      "Work in Firefox or Safari"
+    ],
+    "reach": 2,
+    "reach_label": "Only what you pick",
+    "differs": "Chrome and Edge on computers only. Firefox, Safari and phones do not have it."
+  },
+  "story": {
+    "what_it_is": "Lets a site open files and folders and save changes back to them, once you allow it.",
+    "icon": "folder-pen",
+    "tags": [
+      "Files",
+      "Asks first",
+      "Chromium"
+    ],
+    "marketing": [
+      {
+        "vendor": "web.dev",
+        "name": "File System Access API",
+        "pitch": "Google pitches it as letting web apps read and save files on your device, like native apps.",
+        "url": "https://web.dev/articles/file-system-access"
+      }
+    ],
+    "for_you": "You pick a file or folder in a system window. The site may ask again later to keep editing it. If you say no, it cannot touch the file.",
+    "for_makers": "It lets web apps replace installed software, so a person can use a browser tool instead of a download. Browsers remind the person and block sensitive folders.",
+    "use_cases": [
+      {
+        "type": "creative",
+        "example": "A web code editor opens a project folder and saves changes straight to it.",
+        "apps": [
+          "VS Code for the Web"
+        ]
+      },
+      {
+        "type": "creative",
+        "example": "A web photo editor edits a picture and saves it where it came from.",
+        "apps": [
+          "Photopea"
+        ]
+      },
+      {
+        "type": "games",
+        "example": "A browser game creator opens a level file and saves it back as you build.",
+        "apps": []
+      },
+      {
+        "type": "productivity",
+        "example": "A web note app keeps notes as normal files you can open elsewhere.",
+        "apps": []
+      },
+      {
+        "type": "enterprise",
+        "example": "A company web tool opens a spreadsheet from a shared drive and saves changes in place.",
+        "apps": []
+      },
+      {
+        "type": "developer",
+        "example": "A web build tool writes the finished site to a folder you pick.",
+        "apps": []
+      },
+      {
+        "type": "security",
+        "example": "A phishing page asks for folder access to look like a document tool. Browsers refuse many system folders.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Can change your files",
+      "Chromium only"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Cannot enumerate disk silently",
+    "System folders blocked (e.g. home, Downloads root)",
+    "Chromium only for pickers; OPFS elsewhere"
+  ],
+  "scores": {
+    "sensitivity": 4,
+    "utility": 4,
+    "fingerprint_bits": null,
+    "friction": 2
+  },
+  "value": {
+    "legit_uses": [
+      "Editors and IDEs",
+      "Photo and video tools"
+    ],
+    "abuse": [
+      "Ransomware-style bulk edits if a folder is granted"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2020-10",
+      "browser": "chrome",
+      "version": "86",
+      "change": "File System Access ships"
+    },
+    {
+      "date": "2024-02",
+      "browser": "chrome",
+      "version": "122",
+      "change": "Persistent permissions via handles in IndexedDB"
+    },
+    {
+      "date": "2025-09",
+      "browser": "safari",
+      "version": "26",
+      "change": "FileSystemWritableFileStream support (OPFS only)"
+    }
+  ],
+  "related": [
+    "web.storage.persistent-storage"
+  ],
+  "refs": [
+    {
+      "t": "mdn",
+      "label": "MDN File System API",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/File_System_API"
+    },
+    {
+      "t": "chromestatus",
+      "label": "Chrome: persistent permissions for File System Access",
+      "url": "https://developer.chrome.com/blog/persistent-permissions-for-the-file-system-access-api"
+    }
+  ],
+  "confidence": "verified"
+}

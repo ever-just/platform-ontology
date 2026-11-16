@@ -1,0 +1,171 @@
+{
+  "id": "mob.nx.processes",
+  "name": "Other running processes",
+  "kind": "not-exposed",
+  "group": "app-ecosystem",
+  "subgroup": "Sandbox",
+  "tags": [
+    "processes",
+    "blocked"
+  ],
+  "plain": "Blocked: apps cannot list what else is running.",
+  "meaning": "The foreground app list reveals habits. Android narrowed process lists from 5.0; a Usage Access special permission is the only broad proxy.",
+  "lifecycle": [
+    "on-launch",
+    "in-session"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "r",
+      "v": "5.0",
+      "api": 21,
+      "permission": "PACKAGE_USAGE_STATS (special) for usage stats",
+      "protection": "special",
+      "grant": "not-exposed",
+      "prompt_ui": "",
+      "persistence": "",
+      "revocation": "",
+      "store_policy": "",
+      "api_surface": "ActivityManager.getRunningAppProcesses() returns only own",
+      "note": "Usage Access gives per-app foreground time, not a process list"
+    },
+    "ios": {
+      "s": "n",
+      "v": "",
+      "permission": "none",
+      "protection": "not-exposed",
+      "grant": "not-exposed",
+      "prompt_ui": "",
+      "persistence": "",
+      "revocation": "",
+      "store_policy": "",
+      "api_surface": "No process list API",
+      "note": "Sandbox hides it"
+    }
+  },
+  "data": {
+    "type": "none",
+    "metric": "None",
+    "update": "N/A",
+    "fields": []
+  },
+  "limits": {
+    "headline": "Can't list the other apps running on your phone",
+    "user_action": "Nothing. It is blocked by the phone itself",
+    "can": [
+      "See how long each app was in front, if you switched on Usage access on Android",
+      "See its own running tasks"
+    ],
+    "cannot": [
+      "List other running apps on iPhone",
+      "List other running apps on Android 5 and later",
+      "Learn which app is open without the Usage access switch"
+    ],
+    "reach": 1,
+    "reach_label": "Blocked, apart from Usage access on Android",
+    "differs": "iPhone hides it fully. Android 5 and later removed the list, but a Usage access switch shows per app foreground time."
+  },
+  "story": {
+    "what_it_is": "Blocked: an app cannot see which other apps are running on your phone.",
+    "icon": "eye-off",
+    "tags": [
+      "Blocked",
+      "Privacy",
+      "Habits"
+    ],
+    "marketing": [],
+    "for_you": "You do not notice anything. Apps simply cannot spy on what you are doing in other apps in the background.",
+    "for_makers": "Makers once used the running app list to measure rivals and tune ads. Android shut it down in version 5, so the only broad stand-in is the special Usage access permission.",
+    "use_cases": [
+      {
+        "type": "games",
+        "example": "A game wanted to know if you had a rival game open to send a 'come back' push. It cannot.",
+        "apps": []
+      },
+      {
+        "type": "security",
+        "example": "An antivirus app can no longer list every process, so it checks apps by install instead.",
+        "apps": [
+          "Avast"
+        ]
+      },
+      {
+        "type": "ads",
+        "example": "A tracker wanted to learn which video app you used right before an ad. The OS now blocks that view.",
+        "apps": []
+      },
+      {
+        "type": "productivity",
+        "example": "A task manager app cannot kill other apps, so it can only suggest closing them.",
+        "apps": [
+          "Greenify"
+        ]
+      },
+      {
+        "type": "utilities",
+        "example": "A battery saver shows only apps that have used energy through the system's own reports.",
+        "apps": [
+          "Battery settings"
+        ]
+      },
+      {
+        "type": "kids",
+        "example": "A parental control app needs Usage access and a special accessibility link to see what a child is running.",
+        "apps": [
+          "Family Link"
+        ]
+      }
+    ],
+    "risks": [
+      "Old workarounds still exist",
+      "Usage access is the loophole"
+    ],
+    "android_note": "Android removed process lists in version 5.0 and now exposes only the app's own processes.",
+    "ios_note": "iOS has never shown other running apps."
+  },
+  "technical_bounds": [
+    "Usage Access is the only proxy"
+  ],
+  "scores": {
+    "sensitivity": 4,
+    "utility": 1,
+    "fingerprint_bits": null,
+    "friction": 3
+  },
+  "value": {
+    "legit_uses": [
+      "None"
+    ],
+    "abuse": [
+      "Habit tracking"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2014-11",
+      "platform": "android",
+      "version": "5.0 (API 21)",
+      "change": "getRunningTasks limited to the caller's own tasks"
+    }
+  ],
+  "refs": [
+    {
+      "t": "android",
+      "label": "Android: ActivityManager",
+      "url": "https://developer.android.com/reference/android/app/ActivityManager"
+    },
+    {
+      "t": "android",
+      "label": "Android: PackageManager",
+      "url": "https://developer.android.com/reference/android/content/pm/PackageManager"
+    }
+  ],
+  "confidence": "docs"
+}

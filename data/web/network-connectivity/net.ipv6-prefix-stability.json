@@ -1,0 +1,207 @@
+{
+  "id": "web.net.ipv6-prefix-stability",
+  "name": "IPv6 prefix and interface ID stability",
+  "kind": "tracking",
+  "group": "network-connectivity",
+  "subgroup": "Addressing",
+  "tags": [
+    "ipv6",
+    "slaac",
+    "privacy-extensions",
+    "prefix"
+  ],
+  "plain": "IPv6 addresses can stay stable for weeks, making them a long lived ID even if cookies are cleared.",
+  "meaning": "The /64 prefix delegated by an ISP often persists for weeks or months, while privacy extensions rotate the interface ID (about daily). Servers key on the /64 or /56 to identify a household.",
+  "lifecycle": [
+    "on-arrival"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "IPv6 source address (RFC 4941 temporary addresses)",
+      "access": {
+        "grant": "none",
+        "prompt_ui": "",
+        "secure_context": false,
+        "user_gesture": false,
+        "persistence": "",
+        "revocation": "",
+        "iframe": "",
+        "steps": [
+          "Server logs IPv6",
+          "Truncates to /64 or /56",
+          "Tracks over time"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "1",
+          "note": "",
+          "date": "2008-12-11"
+        },
+        "edge": {
+          "s": "y",
+          "v": "79",
+          "note": "",
+          "date": "2020-01-15"
+        },
+        "firefox": {
+          "s": "y",
+          "v": "1",
+          "note": "",
+          "date": "2004-11-09"
+        },
+        "safari": {
+          "s": "y",
+          "v": "1",
+          "note": "",
+          "date": "2003-06-23"
+        },
+        "ios_safari": {
+          "s": "y",
+          "v": "1",
+          "note": "",
+          "date": "2007-06-29"
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "1",
+          "note": "",
+          "date": ""
+        },
+        "samsung": {
+          "s": "y",
+          "v": "5.0",
+          "note": "",
+          "date": "2016-12-15"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "string",
+    "metric": "IPv6 prefix",
+    "update": "",
+    "fields": [
+      {
+        "name": "/64 prefix",
+        "type": "string",
+        "unit": "",
+        "range": "64 bits",
+        "precision": "stable for days to months"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can tell your home network apart by its stable IPv6 address, even after clearing cookies",
+    "user_action": "Nothing. It happens when your device loads a page over IPv6",
+    "can": [
+      "See the first half of your IPv6 address, which often stays the same for weeks or months",
+      "Recognize the same household again after you clear cookies",
+      "Use it to limit how many requests one home can make"
+    ],
+    "cannot": [
+      "Tell which person or device at home is browsing from the stable part alone",
+      "Follow you once you move to a different network, such as a cafe or mobile data",
+      "Follow the second half of the address for long, since devices change it about daily",
+      "Work for you if your connection is IPv4 only"
+    ],
+    "reach": 4,
+    "reach_label": "Follows your home across weeks",
+    "differs": ""
+  },
+  "story": {
+    "what_it_is": "Your IPv6 internet address can stay the same for weeks, so it can quietly work like a long lived ID.",
+    "icon": "fingerprint",
+    "tags": [
+      "Tracking",
+      "Network",
+      "Silent"
+    ],
+    "marketing": [],
+    "for_you": "You never see this. Your home network is given a long lasting address block, and every site you visit can see the same front part of it. Clearing cookies does not change it.",
+    "for_makers": "Makers can link visits from the same home even when cookies are gone. It is cheap and works for every request. Privacy extensions rotate part of the address, but the network prefix often stays put.",
+    "use_cases": [
+      {
+        "type": "ads",
+        "example": "An ad network sees the same home network prefix across three different news sites. It treats the visits as one household and shows follow up ads even though cookies were cleared.",
+        "apps": []
+      },
+      {
+        "type": "security",
+        "example": "A shop's fraud system sees a new account come from the same IPv6 prefix as ten banned accounts. It holds the order for review.",
+        "apps": []
+      },
+      {
+        "type": "games",
+        "example": "A browser game bans a cheater by network prefix. The player who clears cookies and makes a new account still gets blocked because the prefix matches.",
+        "apps": []
+      },
+      {
+        "type": "analytics",
+        "example": "An analytics tool uses the prefix, plus browser clues, to stitch a repeat visitor across weeks when cookies are blocked.",
+        "apps": []
+      },
+      {
+        "type": "social",
+        "example": "A social site spots many fake accounts created from one household prefix and limits sign ups from it.",
+        "apps": []
+      },
+      {
+        "type": "video",
+        "example": "A streaming site limits how many devices can play at once per household and uses the network prefix to tell which devices share a home.",
+        "apps": [
+          "Netflix"
+        ]
+      },
+      {
+        "type": "enterprise",
+        "example": "A company login portal trusts a staff member's home prefix as a familiar place, and asks for less proof from it.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Cookie free tracking",
+      "Links your devices at home"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Privacy extensions rotate the interface ID, not the prefix",
+    "Mobile carriers change prefix more often"
+  ],
+  "scores": {
+    "sensitivity": 3,
+    "utility": 3,
+    "fingerprint_bits": 4,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": "Rate limiting",
+    "abuse": "Household level tracking"
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "related": [
+    "web.net.client-ip"
+  ],
+  "refs": [
+    {
+      "t": "rfc",
+      "label": "RFC 4941 Privacy Extensions for SLAAC",
+      "url": "https://www.rfc-editor.org/rfc/rfc4941"
+    },
+    {
+      "t": "rfc",
+      "label": "RFC 7721 Security and privacy of IPv6 addressing",
+      "url": "https://www.rfc-editor.org/rfc/rfc7721"
+    }
+  ],
+  "confidence": "docs"
+}

@@ -1,0 +1,209 @@
+{
+  "id": "mob.dev.ringer-focus",
+  "name": "Ringer mode, Do Not Disturb and Focus",
+  "kind": "signal",
+  "group": "device-system-profile",
+  "subgroup": "Audio state",
+  "tags": [
+    "dnd",
+    "focus",
+    "interruption-filter"
+  ],
+  "plain": "Android shows ringer mode and DND state freely; iOS exposes only a Focus on/off flag after a prompt.",
+  "meaning": "Reveals when the person does not want to be disturbed: sleeping, working, driving. Android leaks more with no prompt; iOS gates it behind a Focus Status permission and returns one boolean.",
+  "lifecycle": [
+    "on-launch",
+    "in-session"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "y",
+      "v": "1.0",
+      "api": 1,
+      "permission": "",
+      "protection": "none",
+      "grant": "none",
+      "prompt_ui": "",
+      "persistence": "",
+      "revocation": "",
+      "store_policy": "",
+      "api_surface": "AudioManager.getRingerMode() (NORMAL, VIBRATE, SILENT); NotificationManager.getCurrentInterruptionFilter() (API 23)",
+      "note": "DND state readable with no permission since API 23; policy details need Notification Policy Access"
+    },
+    "ios": {
+      "s": "p",
+      "v": "15.0",
+      "permission": "prompt",
+      "protection": "prompt",
+      "grant": "none",
+      "prompt_ui": "",
+      "persistence": "Settings > Privacy & Security > Focus",
+      "revocation": "",
+      "store_policy": "Allow Focus Status prompt",
+      "api_surface": "Returns true, false or nil only; the physical ringer switch and Focus name are not exposed",
+      "note": ""
+    }
+  },
+  "data": {
+    "type": "enum",
+    "metric": "Ringer mode and interruption filter",
+    "update": "On change or poll",
+    "fields": [
+      {
+        "name": "ringer_mode",
+        "type": "enum",
+        "unit": "",
+        "range": "NORMAL, VIBRATE, SILENT",
+        "precision": "3 values"
+      },
+      {
+        "name": "interruption_filter",
+        "type": "enum",
+        "unit": "",
+        "range": "ALL, PRIORITY, NONE, ALARMS",
+        "precision": "4 values"
+      },
+      {
+        "name": "ios_is_focused",
+        "type": "boolean",
+        "unit": "",
+        "range": "true, false, null",
+        "precision": "1 bit"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can see ringer and Do Not Disturb on Android, but only Focus on iPhone",
+    "user_action": "Nothing on Android. On iPhone you answer a permission prompt first",
+    "can": [
+      "See if your Android is on normal, vibrate or silent",
+      "See if Do Not Disturb is on, on Android 6 and newer",
+      "See on iPhone if a Focus is on, after you allow it",
+      "Hold back sounds or alerts to match your mode"
+    ],
+    "cannot": [
+      "See the name of your iPhone Focus",
+      "See the position of the iPhone ringer switch",
+      "Change Do Not Disturb on Android without Notification Policy Access",
+      "Learn which calls or contacts you let through"
+    ],
+    "reach": 2,
+    "reach_label": "While the app is open",
+    "differs": "Android shows ringer and Do Not Disturb with no prompt. iPhone shows only on, off or unknown after a permission prompt."
+  },
+  "story": {
+    "what_it_is": "An app can see if your phone is on silent or in a Do Not Disturb mode.",
+    "icon": "bell-off",
+    "tags": [
+      "Silent",
+      "Focus",
+      "Android"
+    ],
+    "marketing": [
+      {
+        "vendor": "Apple",
+        "name": "Focus status",
+        "pitch": "Developer rule: apps can ask permission to know only if a Focus is on, with no detail about which one.",
+        "url": "https://developer.apple.com/documentation/intents/infocusstatuscenter"
+      }
+    ],
+    "for_you": "On Android, apps can see your ringer mode and Do Not Disturb with no prompt. On iPhone, an app must ask first and only learns a simple yes or no. It can hint when you sleep, work or drive.",
+    "for_makers": "Makers use it to avoid noisy alerts at bad times, and to show Away status in chat. Because it reveals your routine, Apple keeps it behind a prompt and a single yes or no.",
+    "use_cases": [
+      {
+        "type": "messaging",
+        "example": "A chat app shows you as Busy when you turn on a Focus, so friends know you will not reply.",
+        "apps": [
+          "Messages"
+        ]
+      },
+      {
+        "type": "games",
+        "example": "A game mutes sound effects when your phone is on silent but keeps vibration.",
+        "apps": []
+      },
+      {
+        "type": "fitness",
+        "example": "A workout app changes alerts to haptics when the ringer is off.",
+        "apps": []
+      },
+      {
+        "type": "automotive",
+        "example": "A driving app learns you are in a driving Focus and reads messages aloud.",
+        "apps": []
+      },
+      {
+        "type": "productivity",
+        "example": "A work app holds low priority alerts when you are in a work Focus.",
+        "apps": []
+      },
+      {
+        "type": "ads",
+        "example": "An ad firm reads silent mode as a sign you are at a meeting or in bed.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Reveals your daily routine",
+      "Android shares freely"
+    ],
+    "android_note": "Ringer mode and Do Not Disturb state are readable with no prompt.",
+    "ios_note": "Needs a Focus Status permission and returns one yes or no flag."
+  },
+  "technical_bounds": [
+    "iOS never exposes which Focus is active",
+    "Needs the person to grant Focus Status once"
+  ],
+  "scores": {
+    "sensitivity": 2,
+    "utility": 2,
+    "fingerprint_bits": 1,
+    "friction": 2
+  },
+  "value": {
+    "legit_uses": [
+      "Hold nonurgent sounds",
+      "Messaging apps show a Focus status"
+    ],
+    "abuse": [
+      "Infers sleep or driving schedule"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2015-10",
+      "platform": "android",
+      "version": "6.0 (API 23)",
+      "change": "Interruption filter readable via NotificationManager"
+    },
+    {
+      "date": "2021-09",
+      "platform": "ios",
+      "version": "iOS 15",
+      "change": "INFocusStatusCenter added with a user prompt"
+    }
+  ],
+  "related": [
+    "mob.dev.volume-stream"
+  ],
+  "refs": [
+    {
+      "t": "android",
+      "label": "Android: AudioManager",
+      "url": "https://developer.android.com/reference/android/media/AudioManager"
+    },
+    {
+      "t": "apple",
+      "label": "Apple: INFocusStatusCenter",
+      "url": "https://developer.apple.com/documentation/intents/infocusstatuscenter"
+    }
+  ],
+  "confidence": "docs"
+}

@@ -1,0 +1,207 @@
+{
+  "id": "web.net.favicon-cache-supercookie",
+  "name": "Favicon cache supercookie (F-CACHE)",
+  "kind": "tracking",
+  "group": "network-connectivity",
+  "subgroup": "Supercookies",
+  "tags": [
+    "favicon",
+    "cache",
+    "supercookie",
+    "ndss"
+  ],
+  "plain": "A site encodes an ID into which favicons were cached, which survives clearing cookies.",
+  "meaning": "NDSS 2021 (Solomos et al.) showed a persistent ID stored in the favicon cache across subdomains, surviving cookie clearing and even private browsing in some browsers. Vendors patched after disclosure.",
+  "lifecycle": [
+    "on-arrival"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "Favicon requests to N subdomain paths; navigation redirect probing",
+      "access": {
+        "grant": "none",
+        "prompt_ui": "",
+        "secure_context": false,
+        "user_gesture": false,
+        "persistence": "",
+        "revocation": "",
+        "iframe": "",
+        "steps": [
+          "Load pages with chosen favicons to write bits",
+          "Probe which favicons are cached",
+          "Reassemble the ID"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "r",
+          "v": "1",
+          "note": "Fixed after 2021 disclosure (versions not verified)",
+          "date": "2008-12-11"
+        },
+        "edge": {
+          "s": "r",
+          "v": "79",
+          "note": "Fixed after 2021 disclosure (versions not verified)",
+          "date": "2020-01-15"
+        },
+        "firefox": {
+          "s": "r",
+          "v": "1",
+          "note": "Fixed after 2021 disclosure (versions not verified)",
+          "date": "2004-11-09"
+        },
+        "safari": {
+          "s": "r",
+          "v": "1",
+          "note": "Fixed after 2021 disclosure (versions not verified)",
+          "date": "2003-06-23"
+        },
+        "ios_safari": {
+          "s": "r",
+          "v": "1",
+          "note": "Fixed after 2021 disclosure (versions not verified)",
+          "date": "2007-06-29"
+        },
+        "chrome_android": {
+          "s": "r",
+          "v": "1",
+          "note": "Fixed after 2021 disclosure (versions not verified)",
+          "date": ""
+        },
+        "samsung": {
+          "s": "r",
+          "v": "5.0",
+          "note": "Fixed after 2021 disclosure (versions not verified)",
+          "date": "2016-12-15"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "integer",
+    "metric": "32 bits demonstrated",
+    "update": "",
+    "fields": [
+      {
+        "name": "id bits",
+        "type": "integer",
+        "unit": "bits",
+        "range": "32",
+        "precision": "needs up to 4 seconds"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can try to tag your browser with a hidden icon cache ID, though fixes limit it",
+    "user_action": "Nothing. It happens when you visit a site that tries it",
+    "can": [
+      "Store an ID using which tiny site icons your browser has cached",
+      "Recognise a returning visitor, even after you clear cookies in unpatched browsers",
+      "Link visits across subdomains of the same site in older versions"
+    ],
+    "cannot": [
+      "Work in browsers that fixed it after researchers reported it in 2021",
+      "Follow you across unrelated sites",
+      "Survive clearing browsing data in updated browsers"
+    ],
+    "reach": 1,
+    "reach_label": "Mostly blocked by fixes",
+    "differs": "Browser makers patched it after 2021, so behavior differs by version."
+  },
+  "story": {
+    "what_it_is": "A site hides an ID in which tiny page icons your browser has saved.",
+    "icon": "cookie",
+    "tags": [
+      "Tracking",
+      "Cache",
+      "Hidden"
+    ],
+    "marketing": [],
+    "for_you": "You never see it. You clear cookies and history, and a site still knows it is you, because of the pattern of tiny icons your browser saved. Browsers have worked to close this.",
+    "for_makers": "Researchers showed it works across subdomains and even in private mode. A tracker could use it as a persistent ID. Makers who care about privacy prefer to avoid it, and browsers are closing the hole.",
+    "use_cases": [
+      {
+        "type": "ads",
+        "example": "A tracking network sets a pattern of favicons on a first visit and reads it back later to recognize you.",
+        "apps": []
+      },
+      {
+        "type": "analytics",
+        "example": "A measurement script reconnects returning visitors who cleared cookies.",
+        "apps": []
+      },
+      {
+        "type": "security",
+        "example": "A fraud tool uses it to link accounts from one browser even in private windows.",
+        "apps": []
+      },
+      {
+        "type": "shopping",
+        "example": "A marketing site recognizes a shopper who tries to look anonymous.",
+        "apps": []
+      },
+      {
+        "type": "games",
+        "example": "A game site could link a banned user to a new account made in the same browser.",
+        "apps": []
+      },
+      {
+        "type": "media",
+        "example": "A publisher could count one reader as one person across paywall resets.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Survives cookie clearing",
+      "Works in private mode"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Patched in Chrome, Safari and Brave (reported)",
+    "Needs many subdomains and requests"
+  ],
+  "scores": {
+    "sensitivity": 3,
+    "utility": 1,
+    "fingerprint_bits": 4,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": "None",
+    "abuse": "Cookie-free persistent tracking, survives incognito in affected builds"
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2021-02",
+      "browser": "paper",
+      "version": "",
+      "change": "Solomos et al. Tracking You Persistently via Favicons (NDSS 2021)"
+    }
+  ],
+  "related": [
+    "web.net.etag-cache-supercookie"
+  ],
+  "refs": [
+    {
+      "t": "paper",
+      "label": "Solomos et al., Tracking You Persistently via Favicons (NDSS 2021)",
+      "url": "https://www.ndss-symposium.org/ndss-paper/the-leaky-web-automated-discovery-of-cross-site-information-leaks-in-browsers-and-the-web/"
+    },
+    {
+      "t": "web",
+      "label": "F-CACHE project",
+      "url": "https://www.cs.uic.edu/~polakis/papers/solomos-ndss21.pdf"
+    }
+  ],
+  "confidence": "docs"
+}

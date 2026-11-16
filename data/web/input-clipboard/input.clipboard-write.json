@@ -1,0 +1,254 @@
+{
+  "id": "web.input.clipboard-write",
+  "name": "Async Clipboard write",
+  "kind": "action",
+  "group": "input-clipboard",
+  "subgroup": "Clipboard",
+  "tags": [
+    "copy"
+  ],
+  "plain": "Puts text or images onto the clipboard.",
+  "meaning": "Can overwrite what the person copied, for example swapping a crypto address. Allowed on a click without a prompt in all browsers.",
+  "lifecycle": [
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "navigator.clipboard.write(), writeText(); ClipboardItem.supports()",
+      "permission_name": "clipboard-write",
+      "permissions_policy": "clipboard-write",
+      "bcd": [
+        "api.Clipboard.write",
+        "api.Clipboard.writeText"
+      ],
+      "access": {
+        "grant": "gesture",
+        "prompt_ui": "No prompt; needs transient activation or (Chromium) the clipboard-write permission, which is auto-granted to the active tab.",
+        "secure_context": true,
+        "user_gesture": true,
+        "persistence": "Per call",
+        "revocation": "n/a",
+        "iframe": "Cross-origin iframes need allow=\"clipboard-write\"",
+        "steps": [
+          "Click or tap",
+          "navigator.clipboard.writeText(...)",
+          "Clipboard updated"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "76",
+          "note": "",
+          "date": "2019-07-30"
+        },
+        "edge": {
+          "s": "y",
+          "v": "79",
+          "note": "",
+          "date": "2020-01-15"
+        },
+        "firefox": {
+          "s": "y",
+          "v": "127",
+          "note": "",
+          "date": "2024-06-11"
+        },
+        "safari": {
+          "s": "y",
+          "v": "13.1",
+          "note": "",
+          "date": "2020-03-24"
+        },
+        "ios_safari": {
+          "s": "y",
+          "v": "13.4",
+          "note": "",
+          "date": "2020-03-24"
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "76",
+          "note": "",
+          "date": "2019-07-30"
+        },
+        "samsung": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "none",
+    "metric": "Clipboard content",
+    "update": "per call",
+    "fields": [
+      {
+        "name": "text/plain",
+        "type": "string",
+        "unit": "text",
+        "range": "any",
+        "precision": "1 byte"
+      },
+      {
+        "name": "text/html",
+        "type": "string",
+        "unit": "html",
+        "range": "any",
+        "precision": "1 byte"
+      },
+      {
+        "name": "image/png",
+        "type": "binary",
+        "unit": "bytes",
+        "range": "any",
+        "precision": "pixels"
+      },
+      {
+        "name": "web custom formats",
+        "type": "binary",
+        "unit": "bytes",
+        "range": "prefix 'web ' optional",
+        "precision": "per format"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can put text or images on your clipboard when you tap a button",
+    "user_action": "You tap Copy link, Copy code or a similar button",
+    "can": [
+      "Copy text, links or images onto your clipboard after a tap or click",
+      "Replace whatever you had copied before",
+      "Work without any pop up in most browsers"
+    ],
+    "cannot": [
+      "Copy to your clipboard while you are not using the page, on most browsers",
+      "See what you copied before",
+      "Stop you from pasting something else afterward"
+    ],
+    "reach": 1,
+    "reach_label": "One copy, when you tap",
+    "differs": "Chrome, Edge, Firefox and Safari all allow it after a tap. Samsung Internet support is limited."
+  },
+  "story": {
+    "what_it_is": "A site puts text or images on your clipboard, usually when you tap Copy.",
+    "icon": "clipboard-copy",
+    "tags": [
+      "Clipboard",
+      "Copy button"
+    ],
+    "marketing": [
+      {
+        "vendor": "web.dev (Google)",
+        "name": "Async Clipboard API",
+        "pitch": "Google describes it as a modern way for pages to copy text and images with a simple call after a click.",
+        "url": "https://web.dev/articles/async-clipboard"
+      }
+    ],
+    "for_you": "You press a 'Copy link' or 'Copy code' button and a small note says Copied. You can then paste it anywhere. It happens on your tap and usually shows no prompt.",
+    "for_makers": "Copy buttons cut friction for sharing, referral codes, invite links, and code. Makers use them to spread links and track how many people share.",
+    "use_cases": [
+      {
+        "type": "games",
+        "example": "A browser game has a 'Copy invite link' button so a player can paste it to friends in chat and fill a lobby.",
+        "apps": [
+          "Skribbl.io"
+        ]
+      },
+      {
+        "type": "social",
+        "example": "A share sheet button copies a post link in one tap.",
+        "apps": [
+          "X",
+          "Reddit"
+        ]
+      },
+      {
+        "type": "shopping",
+        "example": "A checkout page copies a discount code so a shopper can paste it at the store.",
+        "apps": []
+      },
+      {
+        "type": "developer",
+        "example": "A docs site gives a Copy button on every code block.",
+        "apps": [
+          "MDN",
+          "GitHub"
+        ]
+      },
+      {
+        "type": "payments",
+        "example": "A crypto or payment page copies a wallet address, and a bad site could swap in a different one.",
+        "apps": []
+      },
+      {
+        "type": "analytics",
+        "example": "A team counts how many people click Copy to measure what content gets shared.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Can overwrite what you copied",
+      "Clipboard hijack"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Needs a gesture in Firefox and Safari",
+    "Cannot read after write without permission"
+  ],
+  "scores": {
+    "sensitivity": 2,
+    "utility": 5,
+    "fingerprint_bits": null,
+    "friction": 1
+  },
+  "value": {
+    "legit_uses": [
+      "Copy buttons"
+    ],
+    "abuse": [
+      "Clipboard hijacking (crypto address swap)"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2018-04",
+      "browser": "chrome",
+      "version": "66",
+      "change": "Async Clipboard write ships"
+    },
+    {
+      "date": "2020-03",
+      "browser": "safari",
+      "version": "13.1",
+      "change": "Async Clipboard write"
+    }
+  ],
+  "related": [
+    "web.input.clipboard-read"
+  ],
+  "refs": [
+    {
+      "t": "mdn",
+      "label": "MDN Clipboard.write",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/Clipboard/write"
+    },
+    {
+      "t": "spec",
+      "label": "W3C Clipboard API and events",
+      "url": "https://www.w3.org/TR/clipboard-apis/"
+    }
+  ],
+  "confidence": "docs"
+}

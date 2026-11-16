@@ -1,0 +1,279 @@
+{
+  "id": "mob.camera.microphone",
+  "name": "Microphone",
+  "kind": "permission",
+  "group": "camera-mic-screen",
+  "subgroup": "Capture",
+  "tags": [
+    "runtime-permission",
+    "audio",
+    "indicator",
+    "voice"
+  ],
+  "plain": "Asks to record sound from the microphone.",
+  "meaning": "Hears conversations, music, ambient sounds and the user's voice. A top concern because capture can run without any visible UI.",
+  "lifecycle": [
+    "in-session",
+    "background"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "y",
+      "v": "6.0",
+      "api": 23,
+      "permission": "RECORD_AUDIO",
+      "protection": "dangerous",
+      "grant": "prompt",
+      "prompt_ui": "While using the app, Only this time, Don't allow (Android 11+)",
+      "persistence": "Until revoked or auto-reset",
+      "revocation": "Settings > Apps > Permissions > Microphone; Quick Settings mic toggle (Android 12)",
+      "store_policy": "Play: background mic use needs a foreground service of type microphone (API 30+)",
+      "api_surface": "AudioRecord, MediaRecorder, SpeechRecognizer",
+      "note": "Android 11 restricts mic access to foreground services started while visible."
+    },
+    "ios": {
+      "s": "y",
+      "v": "7.0",
+      "permission": "NSMicrophoneUsageDescription (NSSpeechRecognitionUsageDescription for speech)",
+      "protection": "prompt",
+      "grant": "prompt",
+      "prompt_ui": "OK or Don't Allow",
+      "persistence": "Until revoked; prompt shown once",
+      "revocation": "Settings > Privacy & Security > Microphone",
+      "store_policy": "App Review 5.1.1",
+      "api_surface": "AVAudioSession.requestRecordPermission, AVAudioApplication (iOS 17), AVAudioEngine",
+      "note": "Orange dot in the status bar while in use (iOS 14); background audio mode keeps recording."
+    }
+  },
+  "web_equivalents": [
+    "web.camera.microphone"
+  ],
+  "data": {
+    "type": "stream",
+    "metric": "PCM audio",
+    "update": "up to 48 kHz, 16 bit, continuous",
+    "fields": [
+      {
+        "name": "samples",
+        "type": "binary",
+        "unit": "Hz",
+        "range": "8000 to 48000",
+        "precision": "16 bit PCM"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can listen through your microphone while in use, after you tap Allow",
+    "user_action": "You tap Record, Voice message, or Join a call, then tap Allow",
+    "can": [
+      "Record sound and your voice while the app is open",
+      "Hear music and background noise as well",
+      "Keep recording in the background on iPhone with the audio background mode, shown by an orange dot"
+    ],
+    "cannot": [
+      "Use the mic without an orange dot (iPhone) or green chip (Android 12 and later)",
+      "Use the mic in the background on Android 11 and later unless a visible service started in the foreground",
+      "Use it after you tap Don't Allow"
+    ],
+    "reach": 3,
+    "reach_label": "While the app is open, sometimes more",
+    "differs": "Android 11 and later adds Only this time and limits background mic use. iPhone allows background audio with an orange dot."
+  },
+  "story": {
+    "what_it_is": "Lets an app record sound from the microphone, such as your voice, music or the room.",
+    "icon": "mic",
+    "tags": [
+      "Microphone",
+      "Asks first",
+      "Sensitive"
+    ],
+    "marketing": [
+      {
+        "vendor": "Apple",
+        "name": "Microphone indicator",
+        "pitch": "iOS shows an orange dot when an app uses the microphone.",
+        "url": "https://www.apple.com/privacy/features/"
+      },
+      {
+        "vendor": "Google",
+        "name": "Microphone access",
+        "pitch": "Apps need your permission and Android shows a chip when the mic is active.",
+        "url": "https://developer.android.com/about/versions/11/privacy/permissions"
+      }
+    ],
+    "for_you": "A pop up asks 'Allow microphone?' You then talk, record or join voice chat, and a dot or chip warns you when it is on.",
+    "for_makers": "Voice powers calls, voice notes, music recognition, voice chat in games and assistants. Capture can run without any visible screen, so both systems add indicators and limits on background use.",
+    "use_cases": [
+      {
+        "type": "games",
+        "example": "You talk with teammates in a voice lobby during a match.",
+        "apps": [
+          "Fortnite",
+          "Call of Duty Mobile"
+        ]
+      },
+      {
+        "type": "messaging",
+        "example": "You hold a button and send a voice note.",
+        "apps": [
+          "WhatsApp",
+          "Telegram"
+        ]
+      },
+      {
+        "type": "music",
+        "example": "You hold up the phone and the app names the song playing.",
+        "apps": [
+          "Shazam"
+        ]
+      },
+      {
+        "type": "live",
+        "example": "You speak on a live audio stage.",
+        "apps": [
+          "X Spaces",
+          "Clubhouse"
+        ]
+      },
+      {
+        "type": "creative",
+        "example": "You record a vocal track over a beat in a music app.",
+        "apps": [
+          "GarageBand",
+          "BandLab"
+        ]
+      },
+      {
+        "type": "smart-home",
+        "example": "You say a command to your smart speaker app.",
+        "apps": [
+          "Alexa",
+          "Google Home"
+        ]
+      },
+      {
+        "type": "security",
+        "example": "A malicious app tries to record conversations in the background, which the indicator exposes.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Hears conversations",
+      "Background capture risk"
+    ],
+    "android_note": "Android lets apps record in the background only with a visible foreground service.",
+    "ios_note": "iOS shows an orange dot and blocks background recording unless the app uses an allowed mode."
+  },
+  "technical_bounds": [
+    "Android disables background capture for apps without a foreground service",
+    "System shows an indicator on both OSes",
+    "Cannot record in background without a visible foreground service or audio session"
+  ],
+  "scores": {
+    "sensitivity": 5,
+    "utility": 5,
+    "fingerprint_bits": null,
+    "friction": 2
+  },
+  "value": {
+    "legit_uses": [
+      "Calls",
+      "Voice notes",
+      "Voice assistants"
+    ],
+    "abuse": [
+      "Ambient eavesdropping",
+      "Ultrasonic beacon cross-device tracking"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": true,
+      "how": "Voice messages in chat and video upload explain the permission (community discussion, Sept 2024). Play Data safety lists voice or sound recordings, music files and other audio files (all optional); Apple label lists Audio Data. No LinkedIn statement found on microphone use for ads."
+    }
+  },
+  "history": [
+    {
+      "date": "2023-10",
+      "platform": "android",
+      "version": "14 (API 34)",
+      "change": "Foreground service type microphone required"
+    },
+    {
+      "date": "2021-10",
+      "platform": "android",
+      "version": "12 (API 31)",
+      "change": "Indicator chip and global mic toggle added"
+    },
+    {
+      "date": "2021-10",
+      "platform": "android",
+      "version": "12 (API 31)",
+      "change": "Microphone indicator and global toggle"
+    },
+    {
+      "date": "2020-09",
+      "platform": "ios",
+      "version": "iOS 14",
+      "change": "Orange indicator dot added"
+    },
+    {
+      "date": "2020-09",
+      "platform": "android",
+      "version": "11 (API 30)",
+      "change": "Background mic requires a microphone foreground service type"
+    },
+    {
+      "date": "2020-09",
+      "platform": "ios",
+      "version": "iOS 14",
+      "change": "Orange dot indicator"
+    },
+    {
+      "date": "2015-10",
+      "platform": "android",
+      "version": "6.0 (API 23)",
+      "change": "Microphone made a runtime permission"
+    }
+  ],
+  "related": [
+    "mob.camera.camera",
+    "mob.camera.indicators",
+    "mob.camera.global-toggles",
+    "mob.notifications.foreground-service"
+  ],
+  "refs": [
+    {
+      "t": "android",
+      "label": "Android: Microphone permission and foreground services",
+      "url": "https://developer.android.com/develop/background-work/services/fgs/service-types#microphone"
+    },
+    {
+      "t": "android",
+      "label": "Android 11 permissions and privacy changes",
+      "url": "https://developer.android.com/about/versions/11/privacy/permissions"
+    },
+    {
+      "t": "apple",
+      "label": "Apple: AVAudioApplication",
+      "url": "https://developer.apple.com/documentation/avfaudio/avaudioapplication"
+    },
+    {
+      "t": "android",
+      "label": "Android: Foreground service types",
+      "url": "https://developer.android.com/develop/background-work/services/fgs/service-types"
+    },
+    {
+      "t": "apple",
+      "label": "Apple: AVAudioSession",
+      "url": "https://developer.apple.com/documentation/avfaudio/avaudiosession"
+    },
+    {
+      "t": "news",
+      "label": "Hacker News: Is LinkedIn listening in? (Sept 2024, anecdotal)",
+      "url": "https://news.ycombinator.com/item?id=41434848"
+    }
+  ],
+  "confidence": "docs"
+}

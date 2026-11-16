@@ -1,0 +1,206 @@
+{
+  "id": "mob.ads.fingerprinting-ban",
+  "name": "Fingerprinting ban and ATT enforcement",
+  "kind": "not-exposed",
+  "group": "attribution-ads",
+  "subgroup": "Apple tracking consent",
+  "tags": [
+    "fingerprinting",
+    "att",
+    "app-review",
+    "enforcement"
+  ],
+  "plain": "Apple forbids deriving a device identity from signals to track someone who said no under ATT.",
+  "meaning": "Stops apps and SDKs from rebuilding an ID from IP, model, locale and similar signals after the person refused tracking. It is enforced mainly at App Review and by required reason API gating.",
+  "lifecycle": [
+    "on-launch",
+    "in-session"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "n",
+      "v": "",
+      "permission": "",
+      "protection": "none",
+      "grant": "not-exposed",
+      "prompt_ui": "",
+      "persistence": "",
+      "revocation": "",
+      "store_policy": "Google Play Ads policy: use the advertising ID for ads; persistent IDs allowed only for non-ad uses with privacy policy",
+      "api_surface": "",
+      "note": "Play does not ban probabilistic matching or IP use; Google changed its ad products to allow IP address use in Feb 2025 and the UK ICO criticised the change."
+    },
+    "ios": {
+      "s": "r",
+      "v": "14.5",
+      "permission": "",
+      "protection": "none",
+      "grant": "not-exposed",
+      "prompt_ui": "",
+      "persistence": "",
+      "revocation": "",
+      "store_policy": "App Review 5.1.2(i): no device or user fingerprinting; ATT rules",
+      "api_surface": "Required reason APIs, privacy manifests, NSPrivacyTrackingDomains",
+      "note": "Apple states fingerprinting violates the rules even with consent banners. Enforcement is review rejection and, since 2024, required reason API reasons plus blocked tracking domains."
+    }
+  },
+  "web_equivalents": [
+    "web.render.composite-fingerprint"
+  ],
+  "data": {
+    "type": "none",
+    "metric": "Policy, not a data value",
+    "update": "static",
+    "fields": []
+  },
+  "limits": {
+    "headline": "Can't rebuild your identity from phone details after you refuse tracking on iPhone",
+    "user_action": "Nothing. You said no on the tracking prompt; Apple enforces it in review",
+    "can": [
+      "Use ordinary details for fraud and app function, within Apple's rules",
+      "Measure results in groups without naming you",
+      "Use IP addresses on Android; Play does not ban it"
+    ],
+    "cannot": [
+      "Combine IP, model and language to build an ID on iPhone",
+      "Hide it behind a consent banner",
+      "Use blocked tracking sites after you said no",
+      "Pass App Review if found doing it"
+    ],
+    "reach": 1,
+    "reach_label": "Blocked by rule on iPhone",
+    "differs": "Apple bans fingerprinting even with a banner. Google Play does not ban matching and now allows IP use in ads."
+  },
+  "story": {
+    "what_it_is": "Apple's rule that bans rebuilding a device ID from small clues after you say no to tracking.",
+    "icon": "ban",
+    "tags": [
+      "Apple rules",
+      "Fingerprinting",
+      "Tracking"
+    ],
+    "marketing": [
+      {
+        "vendor": "Apple",
+        "name": "App Review Guidelines, Data use and sharing",
+        "pitch": "Apps must not derive data from a device to identify a user who declined tracking.",
+        "url": "https://developer.apple.com/app-store/review/guidelines/#data-use-and-sharing"
+      }
+    ],
+    "for_you": "You do not see anything. It is a rule that says: if you tap 'Ask App Not to Track', the app may not secretly follow you anyway using your phone model, language and IP address.",
+    "for_makers": "Makers who use fingerprinting risk rejection. Apple enforces it at App Review and through required reason APIs, so ad networks moved to clearly permitted measures like SKAN.",
+    "use_cases": [
+      {
+        "type": "ads",
+        "example": "An ad network that mixed IP and model to rebuild an ID could see its apps pulled.",
+        "apps": [
+          "Unity Ads"
+        ]
+      },
+      {
+        "type": "games",
+        "example": "A game studio drops a probabilistic attribution tool to avoid a rejection.",
+        "apps": [
+          "Voodoo"
+        ]
+      },
+      {
+        "type": "analytics",
+        "example": "A measurement firm limits itself to consented IDs and anonymous aggregates.",
+        "apps": [
+          "Adjust",
+          "AppsFlyer"
+        ]
+      },
+      {
+        "type": "security",
+        "example": "Fraud teams may use signals to stop abuse, but not to track people for ads.",
+        "apps": []
+      },
+      {
+        "type": "shopping",
+        "example": "A retailer is told to remove a script that built a device profile from signals.",
+        "apps": []
+      },
+      {
+        "type": "developer",
+        "example": "A developer reads the guideline and rewrites its tracker to use only IDFV inside its own apps.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Hard to detect",
+      "Rule applies unevenly"
+    ],
+    "android_note": "Android has no equal rule, but Google Play bans abusive fingerprinting for ads on kids apps.",
+    "ios_note": "Applied mainly through App Review and the privacy manifest process."
+  },
+  "technical_bounds": [
+    "Review rejection for SDKs that fingerprint",
+    "NSPrivacyTrackingDomains blocked at the network layer when ATT is not granted (declared domains only)",
+    "Enforcement is largely review time, not runtime"
+  ],
+  "scores": {
+    "sensitivity": 5,
+    "utility": 3,
+    "fingerprint_bits": null,
+    "friction": 3
+  },
+  "value": {
+    "legit_uses": [
+      "Fraud prevention using non-identifying signals"
+    ],
+    "abuse": [
+      "Re-identifying users who opted out"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2020-12",
+      "platform": "ios",
+      "version": "iOS 14",
+      "change": "Apple tells developers ATT cannot be bypassed by fingerprinting"
+    },
+    {
+      "date": "2023-12",
+      "platform": "ios",
+      "version": "iOS 17",
+      "change": "Required reason APIs announced to curb signals used for fingerprinting"
+    },
+    {
+      "date": "2024-05",
+      "platform": "ios",
+      "version": "iOS 17.5",
+      "change": "Required reason API reasons enforced for new uploads (1 May 2024)"
+    }
+  ],
+  "related": [
+    "mob.xtrack.device-fingerprinting",
+    "mob.policy.required-reason-apis"
+  ],
+  "refs": [
+    {
+      "t": "apple",
+      "label": "Apple: App Review Guidelines 5.1.2",
+      "url": "https://developer.apple.com/app-store/review/guidelines/#data-use-and-sharing"
+    },
+    {
+      "t": "apple",
+      "label": "Apple News: Privacy updates for App Store submissions",
+      "url": "https://developer.apple.com/news/?id=r1henawx"
+    },
+    {
+      "t": "apple",
+      "label": "Apple: Describing use of required reason API",
+      "url": "https://developer.apple.com/documentation/bundleresources/describing-use-of-required-reason-api"
+    }
+  ],
+  "confidence": "docs"
+}

@@ -1,0 +1,220 @@
+{
+  "id": "web.device.ch-form-factors",
+  "name": "Client Hint: form factors",
+  "kind": "signal",
+  "group": "device-system-profile",
+  "subgroup": "Client Hints",
+  "tags": [
+    "ua-ch",
+    "form-factor",
+    "xr",
+    "tablet"
+  ],
+  "plain": "Device class list: Desktop, Mobile, Tablet, XR, Automotive, EInk, Watch.",
+  "meaning": "Newer replacement for guessing from the mobile flag and screen size. Lets a site serve car, e-reader, VR or tablet layouts. Some users report more than one factor.",
+  "lifecycle": [
+    "on-arrival",
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "getHighEntropyValues(['formFactors']); Sec-CH-UA-Form-Factors",
+      "bcd": [
+        "api.NavigatorUAData.getHighEntropyValues"
+      ],
+      "access": {
+        "grant": "none",
+        "prompt_ui": "None",
+        "secure_context": true,
+        "user_gesture": false,
+        "persistence": "read fresh on every page load; nothing stored",
+        "revocation": "none needed (no grant)",
+        "iframe": "Readable from cross-origin iframes too (same values)",
+        "steps": [
+          "Page script reads the value",
+          "No prompt is shown"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "90",
+          "note": "Approximate version; origin trial earlier",
+          "date": "2021-04-13"
+        },
+        "edge": {
+          "s": "y",
+          "v": "90",
+          "note": "",
+          "date": "2021-04-15"
+        },
+        "firefox": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "safari": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "ios_safari": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "90",
+          "note": "",
+          "date": "2021-04-13"
+        },
+        "samsung": {
+          "s": "y",
+          "v": "23.0",
+          "note": "",
+          "date": "2023-10-18"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "object",
+    "metric": "",
+    "update": "static per session",
+    "fields": [
+      {
+        "name": "formFactors",
+        "type": "list",
+        "unit": "",
+        "range": "Automotive, Desktop, EInk, Mobile, Tablet, Watch, XR (combinable)",
+        "precision": ""
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can tell if you use a desktop, phone, tablet, watch, or car screen",
+    "user_action": "Nothing. The site asks and Chromium answers without a prompt",
+    "can": [
+      "See device types such as Desktop, Mobile, Tablet, Watch, XR, or Automotive",
+      "Show a layout that fits an e-reader, car, or headset",
+      "Fit the page to your device without guessing from screen size",
+      "Learn about more than one type if your device reports it"
+    ],
+    "cannot": [
+      "Work in Firefox, Safari, or on iPhone",
+      "See your exact device model",
+      "Get an answer until the site asks for it",
+      "Be sure; some devices report oddly"
+    ],
+    "reach": 2,
+    "reach_label": "Device type, only when the site asks",
+    "differs": "Chromium browsers answer. Firefox and Safari do not."
+  },
+  "story": {
+    "what_it_is": "Tells a site what kind of device you use: desktop, phone, tablet, headset, car, e-reader or watch.",
+    "icon": "monitor-smartphone",
+    "tags": [
+      "Device type",
+      "Silent",
+      "Chrome"
+    ],
+    "marketing": [
+      {
+        "vendor": "Google",
+        "name": "User-Agent Client Hints",
+        "pitch": "Chrome offers sites a standard way to ask about the device when they need it.",
+        "url": "https://developer.chrome.com/docs/privacy-sandbox/user-agent/"
+      }
+    ],
+    "for_you": "You never see the question. What you see is a page that fits your device: a big touch layout on a car screen, or a simpler page on an e-reader. It helps pages look right without guessing from screen size.",
+    "for_makers": "The old method guessed from screen size and a mobile flag. A direct list of device types lets sites serve the right layout and the right controls. Some devices report more than one type, which also makes a handy signal.",
+    "use_cases": [
+      {
+        "type": "automotive",
+        "example": "A web app in a car's browser shows large buttons and voice prompts instead of tiny links.",
+        "apps": []
+      },
+      {
+        "type": "ar-vr",
+        "example": "A WebXR site detects a headset and offers its 3D room instead of a flat page.",
+        "apps": []
+      },
+      {
+        "type": "games",
+        "example": "A browser game offers touch buttons on tablets and keyboard hints on desktops.",
+        "apps": []
+      },
+      {
+        "type": "media",
+        "example": "A streaming site serves a simple high-contrast layout to an e-ink reader with no video.",
+        "apps": []
+      },
+      {
+        "type": "shopping",
+        "example": "A web shop shows tablet layouts with bigger product photos and fewer columns.",
+        "apps": []
+      },
+      {
+        "type": "accessibility",
+        "example": "A news site offers a text-first page on slow e-readers.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Hardware group clue",
+      "Multiple answers give a more unique ID"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Chromium only",
+    "High entropy, so must be requested"
+  ],
+  "scores": {
+    "sensitivity": 1,
+    "utility": 3,
+    "fingerprint_bits": 1.5,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Car and e-ink layouts"
+    ],
+    "abuse": [
+      "Device cohorting"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2024-05",
+      "browser": "chrome",
+      "version": "125",
+      "change": "Form-Factors hint reached stable (approximate)"
+    }
+  ],
+  "related": [
+    "web.device.ua-client-hints-high"
+  ],
+  "refs": [
+    {
+      "t": "mdn",
+      "label": "MDN Sec-CH-UA-Form-Factors",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/Sec-CH-UA-Form-Factors"
+    },
+    {
+      "t": "spec",
+      "label": "UA Client Hints spec",
+      "url": "https://wicg.github.io/ua-client-hints/"
+    }
+  ],
+  "confidence": "inferred"
+}

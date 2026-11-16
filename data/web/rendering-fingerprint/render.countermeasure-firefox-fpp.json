@@ -1,0 +1,241 @@
+{
+  "id": "web.render.countermeasure-firefox-fpp",
+  "name": "Firefox Fingerprinting Protection and RFP",
+  "kind": "tracking",
+  "group": "rendering-fingerprint",
+  "subgroup": "Countermeasures",
+  "tags": [
+    "countermeasure",
+    "firefox",
+    "fpp",
+    "rfp",
+    "canvas"
+  ],
+  "plain": "Firefox randomizes canvas readback and spoofs other values in strict modes and Private Browsing.",
+  "meaning": "FPP (since 119) targets known fingerprinting scripts. Firefox 145 adds more protections in Private Browsing and ETP Strict, claimed to halve the share of unique-looking users. Full resistFingerprinting (RFP) unifies values but breaks sites.",
+  "lifecycle": [
+    "on-arrival"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "about:preferences#privacy > ETP Strict; privacy.fingerprintingProtection; privacy.resistFingerprinting",
+      "access": {
+        "grant": "none",
+        "prompt_ui": "",
+        "secure_context": false,
+        "user_gesture": false,
+        "persistence": "",
+        "revocation": "",
+        "iframe": "",
+        "steps": [
+          "Firefox flags known fingerprinting domains",
+          "Applies randomization or spoofing to canvas, timezone, hardwareConcurrency, screen",
+          "RFP sets UTC, 1000x900 letterboxing, 16.67 ms timers"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "edge": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "firefox": {
+          "s": "y",
+          "v": "119",
+          "note": "FPP in Private Browsing and ETP Strict; major expansion in 145",
+          "date": "2023-10-24"
+        },
+        "safari": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "ios_safari": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "chrome_android": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "samsung": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "none",
+    "metric": "Random LSB noise to canvas readback; spoofed fixed values under RFP",
+    "update": "",
+    "fields": [
+      {
+        "name": "timer precision under RFP",
+        "type": "float",
+        "unit": "ms",
+        "range": "16.67",
+        "precision": "fixed"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can't be fingerprinted as easily in Firefox strict mode or Private Browsing",
+    "user_action": "You turn on Strict tracking protection, or open a Private Window",
+    "can": [
+      "Add noise to canvas results for known fingerprinting scripts",
+      "Hide or change some values such as screen size and time zone",
+      "Block more tracking in Firefox 145 and later in Private Browsing"
+    ],
+    "cannot": [
+      "Protect you fully in the normal Standard mode",
+      "Stop every fingerprinting script, since only known ones are targeted",
+      "Stop sites that follow you with a login"
+    ],
+    "reach": 1,
+    "reach_label": "Strict or private mode only",
+    "differs": "Firefox protects more in strict and private modes. Chrome has none by default, and Safari 26 protects all browsing."
+  },
+  "story": {
+    "what_it_is": "Firefox blocks known fingerprinting scripts and, in strict modes, spoofs values and randomizes canvas readback.",
+    "icon": "shield",
+    "tags": [
+      "Privacy",
+      "Defense",
+      "Browser"
+    ],
+    "marketing": [
+      {
+        "vendor": "Mozilla",
+        "name": "Fingerprinting protection",
+        "pitch": "Firefox says it stops known fingerprinting scripts and in strict modes makes your browser look like many others.",
+        "url": "https://support.mozilla.org/en-US/kb/firefox-protection-against-fingerprinting"
+      },
+      {
+        "vendor": "Mozilla",
+        "name": "Enhanced Tracking Protection",
+        "pitch": "Firefox blocks trackers by default, including known fingerprinters, and shows what it blocked.",
+        "url": "https://support.mozilla.org/en-US/kb/enhanced-tracking-protection-firefox-desktop"
+      }
+    ],
+    "for_you": "In normal use you may never notice. In strict mode or a Private Window, some sites may look slightly different, ask you to confirm a canvas request, or run a slower captcha.",
+    "for_makers": "Mozilla uses it as a selling point for privacy. It breaks fewer sites in default mode than in strict mode. Makers who rely on exact device values for graphics or fraud must expect noisy answers from Firefox.",
+    "use_cases": [
+      {
+        "type": "ads",
+        "example": "An ad script tries to hash your canvas, but Firefox blocks it or scrambles the result.",
+        "apps": []
+      },
+      {
+        "type": "security",
+        "example": "A fraud tool sees Firefox strict mode users all look alike and has to lean on other signals.",
+        "apps": []
+      },
+      {
+        "type": "games",
+        "example": "A WebGL game still works on Firefox, though some tests for graphics card name show a generic one.",
+        "apps": []
+      },
+      {
+        "type": "creative",
+        "example": "A web photo editor may be asked to confirm canvas use in Private Windows, because Firefox can block image readback.",
+        "apps": [
+          "Photopea"
+        ]
+      },
+      {
+        "type": "analytics",
+        "example": "A cookie free analytics tool can no longer count unique visitors well on Firefox in strict mode.",
+        "apps": []
+      },
+      {
+        "type": "banking",
+        "example": "A bank's device recognition may fail for Firefox users in strict mode, so they get more checks.",
+        "apps": []
+      },
+      {
+        "type": "news",
+        "example": "A news site's trackers are blocked, so paywall and ad measurement see fewer Firefox visits.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Can break some sites",
+      "Strict mode makes you stand out"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Not on in Standard mode",
+    "RFP breaks some sites (dark mode, timezone)",
+    "Whether Standard mode gets 145 protections: release notes limit them to Private and Strict"
+  ],
+  "scores": {
+    "sensitivity": 1,
+    "utility": 3,
+    "fingerprint_bits": null,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": "Privacy for Firefox users",
+    "abuse": "Detect RFP or FPP users via unusual values"
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2023-10",
+      "browser": "firefox",
+      "version": "119",
+      "change": "Fingerprinting Protection (FPP) ships for ETP Strict and Private Browsing"
+    },
+    {
+      "date": "2025-11",
+      "browser": "firefox",
+      "version": "145",
+      "change": "New phase of protections; canvas readback randomization in Private Browsing and ETP Strict"
+    },
+    {
+      "date": "2015-09",
+      "browser": "firefox",
+      "version": "41",
+      "change": "privacy.resistFingerprinting from Tor Uplift"
+    }
+  ],
+  "related": [
+    "web.render.canvas-2d-fingerprint",
+    "web.perf.timer-precision"
+  ],
+  "refs": [
+    {
+      "t": "mozilla",
+      "label": "Firefox 145 release notes",
+      "url": "https://www.firefox.com/en-US/firefox/145.0/releasenotes/"
+    },
+    {
+      "t": "mozilla",
+      "label": "Mozilla Fingerprinting wiki",
+      "url": "https://wiki.mozilla.org/Security/Fingerprinting"
+    },
+    {
+      "t": "mozilla",
+      "label": "Tor Uplift project",
+      "url": "https://wiki.mozilla.org/Security/Tor_Uplift"
+    }
+  ],
+  "confidence": "verified"
+}

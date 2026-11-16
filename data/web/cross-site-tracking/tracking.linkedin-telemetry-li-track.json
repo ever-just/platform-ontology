@@ -1,0 +1,210 @@
+{
+  "id": "web.tracking.linkedin-telemetry-li-track",
+  "name": "LinkedIn telemetry endpoint (/li/track)",
+  "kind": "tracking",
+  "group": "cross-site-tracking",
+  "subgroup": "Telemetry",
+  "tags": [
+    "telemetry",
+    "beacon",
+    "batching"
+  ],
+  "plain": "A single endpoint receives batched interaction and fingerprint events from the page.",
+  "meaning": "Carries tracking events including AedEvent, SpectroscopyEvent and the encrypted fingerprint in batches, so one request can hold many data points.",
+  "lifecycle": [
+    "on-arrival",
+    "in-session",
+    "after-leaving"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "POST https://www.linkedin.com/li/track (batch up to 29 events, 4 retries per BrowserGate)",
+      "access": {
+        "grant": "none",
+        "prompt_ui": "None (no browser prompt)",
+        "secure_context": false,
+        "user_gesture": false,
+        "persistence": "Events sent per page and on unload",
+        "revocation": "",
+        "iframe": "",
+        "steps": [
+          "fireTrackingPayload queues events",
+          "Batch is posted",
+          "Retries up to 4 times"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "",
+          "note": ""
+        },
+        "edge": {
+          "s": "y",
+          "v": "",
+          "note": ""
+        },
+        "firefox": {
+          "s": "y",
+          "v": "",
+          "note": ""
+        },
+        "safari": {
+          "s": "y",
+          "v": "",
+          "note": ""
+        },
+        "ios_safari": {
+          "s": "y",
+          "v": "",
+          "note": ""
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "",
+          "note": ""
+        },
+        "samsung": {
+          "s": "y",
+          "v": "",
+          "note": ""
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "event",
+    "metric": "Telemetry batch",
+    "update": "per page",
+    "fields": [
+      {
+        "name": "batch_size",
+        "type": "integer",
+        "unit": "events",
+        "range": "1 to 29",
+        "precision": "1"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can send batches of your clicks and device traits from LinkedIn pages to LinkedIn",
+    "user_action": "Nothing. It happens as you use LinkedIn",
+    "can": [
+      "Collect your clicks and other page interactions",
+      "Send them in batches to LinkedIn's own address",
+      "Include device and fingerprint traits with the batch"
+    ],
+    "cannot": [
+      "See other sites, tabs or apps",
+      "Show a prompt, so you cannot tell when it runs",
+      "Run if blocked, though blocking can break parts of the site",
+      "Name you beyond what LinkedIn already knows from your session"
+    ],
+    "reach": 3,
+    "reach_label": "Your activity on LinkedIn",
+    "differs": ""
+  },
+  "story": {
+    "what_it_is": "One web address that receives batches of events from the page, including device check data.",
+    "icon": "send",
+    "tags": [
+      "Telemetry",
+      "Silent",
+      "Fingerprinting"
+    ],
+    "marketing": [],
+    "for_you": "You never see these calls. As you use the page, small bundles of data go back to LinkedIn in the background. They hold clicks, timings and, per a public analysis, encrypted device check results.",
+    "for_makers": "Product teams need to know what people click and where they get stuck. Batching events in one endpoint keeps pages fast and cheap. The same pipe can carry safety and device signals, so it is hard to see from outside what each bundle holds.",
+    "use_cases": [
+      {
+        "type": "analytics",
+        "example": "LinkedIn measures how far you scroll in the feed and which posts you pause on, and sends that in one batch.",
+        "apps": [
+          "LinkedIn"
+        ]
+      },
+      {
+        "type": "security",
+        "example": "A bundle includes device check results that help decide whether a login is suspicious.",
+        "apps": [
+          "LinkedIn"
+        ]
+      },
+      {
+        "type": "games",
+        "example": "A game page reports how long you took on a puzzle, so makers can tune difficulty and spot bot times.",
+        "apps": [
+          "LinkedIn Games"
+        ]
+      },
+      {
+        "type": "live",
+        "example": "A live video event page reports buffering and drop offs so the team can fix streaming problems.",
+        "apps": [
+          "LinkedIn Live"
+        ]
+      },
+      {
+        "type": "ads",
+        "example": "Ad viewability, such as whether an ad was on screen, is sent to prove to the advertiser it was seen.",
+        "apps": [
+          "LinkedIn Ads"
+        ]
+      },
+      {
+        "type": "developer",
+        "example": "Error and speed data go out in the same batch, so engineers can fix a slow page.",
+        "apps": [
+          "LinkedIn"
+        ]
+      }
+    ],
+    "risks": [
+      "Hard to know what each batch holds",
+      "Runs all the time on the page"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Batch size and retry numbers are BrowserGate figures"
+  ],
+  "scores": {
+    "sensitivity": 3,
+    "utility": 3,
+    "fingerprint_bits": null,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Product analytics"
+    ],
+    "abuse": [
+      "Carries fingerprint events"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": true,
+      "how": "Endpoint seen in the snapshot; batch numbers from BrowserGate."
+    }
+  },
+  "related": [
+    "web.tracking.linkedin-extension-probe",
+    "web.tracking.linkedin-apfc-fingerprint"
+  ],
+  "refs": [
+    {
+      "t": "github",
+      "label": "mdp/linkedin-extension-fingerprinting (LinkedIn script snapshot and ID list)",
+      "url": "https://github.com/mdp/linkedin-extension-fingerprinting"
+    },
+    {
+      "t": "news",
+      "label": "BrowserGate: how it works (48 feature table)",
+      "url": "https://browsergate.eu/how-it-works/"
+    }
+  ],
+  "confidence": "docs"
+}

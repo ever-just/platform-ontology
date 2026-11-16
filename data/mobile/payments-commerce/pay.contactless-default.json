@@ -1,0 +1,206 @@
+{
+  "id": "mob.pay.contactless-default",
+  "name": "Default contactless payment app",
+  "kind": "capability",
+  "group": "payments-commerce",
+  "subgroup": "Wallets",
+  "tags": [
+    "default-wallet",
+    "nfc",
+    "tap-and-pay",
+    "dma"
+  ],
+  "plain": "The person picks which wallet app answers when they tap to pay.",
+  "meaning": "Decides which company sits between the person and the terminal. Android lets any HCE wallet be default; iOS opened this in the EU.",
+  "lifecycle": [
+    "in-session"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "y",
+      "v": "4.4",
+      "api": 19,
+      "permission": "BIND_NFC_SERVICE; ROLE",
+      "protection": "role",
+      "grant": "role",
+      "prompt_ui": "Settings > Connected devices > Contactless payments",
+      "persistence": "Until changed",
+      "revocation": "Settings",
+      "store_policy": "",
+      "api_surface": "CardEmulation.CATEGORY_PAYMENT, HostApduService",
+      "note": "Google Wallet is default on most phones."
+    },
+    "ios": {
+      "s": "f",
+      "v": "17.4",
+      "permission": "HCE entitlement; Default Contactless App setting",
+      "protection": "entitlement",
+      "grant": "settings",
+      "prompt_ui": "Settings > NFC & SE (EU)",
+      "persistence": "Until changed",
+      "revocation": "Settings",
+      "store_policy": "EU DMA only; scope should be re-checked for later iOS releases",
+      "api_surface": "CardSession, Wallet",
+      "note": "Outside EU Apple Pay remains the only default."
+    }
+  },
+  "data": {
+    "type": "enum",
+    "metric": "Default app",
+    "update": "on change",
+    "fields": [
+      {
+        "name": "default app",
+        "type": "string",
+        "unit": "package",
+        "range": "installed HCE wallets",
+        "precision": "exact"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can answer when you tap to pay, after you pick it as the default wallet",
+    "user_action": "You choose a wallet in Settings, then hold your phone to a payment terminal",
+    "can": [
+      "Pay at a terminal with a tap",
+      "Be chosen as default on Android in the contactless payments setting",
+      "Be chosen on iPhone in the EU through NFC and Secure Element settings"
+    ],
+    "cannot": [
+      "Become the default without your choice",
+      "Replace Apple Pay on iPhone outside the EU",
+      "Replace Google Wallet unless you pick it in Android Settings"
+    ],
+    "reach": 2,
+    "reach_label": "Only when you tap to pay",
+    "differs": "Android lets you pick any wallet. iPhone allows other wallets only in the EU from iOS 17.4."
+  },
+  "story": {
+    "what_it_is": "Lets you pick which wallet app answers when you tap your phone to pay.",
+    "icon": "smartphone-nfc",
+    "tags": [
+      "Payments",
+      "Choice",
+      "Wallet"
+    ],
+    "marketing": [
+      {
+        "vendor": "Google",
+        "name": "Host card emulation",
+        "pitch": "Google lets any approved wallet app act as a payment card over NFC and be the default.",
+        "url": "https://developer.android.com/develop/connectivity/nfc/hce"
+      },
+      {
+        "vendor": "Apple",
+        "name": "HCE transactions in apps",
+        "pitch": "Apple opened NFC payments in apps in the EU so other wallets can compete.",
+        "url": "https://developer.apple.com/support/hce-transactions-in-apps/"
+      }
+    ],
+    "for_you": "You tap your phone at a terminal and the wallet you chose pays. In settings you pick which app does it. The default wallet decides which brand sits between you and the shop.",
+    "for_makers": "Banks and wallet makers want to be the default so you tap with their app. It gives them purchase data and loyalty, and platforms guard it carefully because of fraud.",
+    "use_cases": [
+      {
+        "type": "payments",
+        "example": "A person picks a bank's own wallet for tap to pay.",
+        "apps": [
+          "Google Wallet",
+          "Samsung Wallet"
+        ]
+      },
+      {
+        "type": "banking",
+        "example": "A bank wants its card to be the first one at the terminal.",
+        "apps": []
+      },
+      {
+        "type": "shopping",
+        "example": "A store wallet bundles loyalty points with a tap to pay.",
+        "apps": [
+          "Starbucks"
+        ]
+      },
+      {
+        "type": "travel",
+        "example": "A transit app taps at the gate with a wallet card.",
+        "apps": []
+      },
+      {
+        "type": "security",
+        "example": "A fake wallet app tries to be default, so stores review them.",
+        "apps": []
+      },
+      {
+        "type": "automotive",
+        "example": "A car key and payment app share a tap.",
+        "apps": []
+      },
+      {
+        "type": "ads",
+        "example": "A wallet shows an offer from a store as you tap.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Fake wallet apps",
+      "Concentration of purchase data"
+    ],
+    "android_note": "Google Wallet is the default on most phones. Any approved wallet can be default.",
+    "ios_note": "Only in the EU can another wallet use the tap. Elsewhere Apple Pay stays the default."
+  },
+  "technical_bounds": [
+    "iOS only EU; Android open"
+  ],
+  "scores": {
+    "sensitivity": 3,
+    "utility": 4,
+    "fingerprint_bits": 0,
+    "friction": 3
+  },
+  "value": {
+    "legit_uses": [
+      "Bank wallets"
+    ],
+    "abuse": [
+      "Fake wallet apps"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2013-10",
+      "platform": "android",
+      "version": "4.4 (API 19)",
+      "change": "Default payment app selection"
+    },
+    {
+      "date": "2024-03",
+      "platform": "ios",
+      "version": "iOS 17.4",
+      "change": "HCE for approved EU wallets"
+    }
+  ],
+  "related": [
+    "mob.hw.nfc-hce",
+    "mob.pay.wallet-pay-sheet"
+  ],
+  "refs": [
+    {
+      "t": "android",
+      "label": "Android: HCE",
+      "url": "https://developer.android.com/develop/connectivity/nfc/hce"
+    },
+    {
+      "t": "apple",
+      "label": "Apple: HCE transactions in apps",
+      "url": "https://developer.apple.com/support/hce-transactions-in-apps/"
+    }
+  ],
+  "confidence": "inferred"
+}

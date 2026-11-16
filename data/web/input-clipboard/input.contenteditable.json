@@ -1,0 +1,235 @@
+{
+  "id": "web.input.contenteditable",
+  "name": "Editable regions and spellcheck",
+  "kind": "capability",
+  "group": "input-clipboard",
+  "subgroup": "Text",
+  "tags": [
+    "contenteditable",
+    "editor",
+    "spellcheck"
+  ],
+  "plain": "Makes any element editable; the browser spellcheck may run on what is typed.",
+  "meaning": "A site can build rich editors from plain HTML. With a cloud assisted spellcheck on, typed text can leave the device, so editing in a web page is not always private.",
+  "lifecycle": [
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "contenteditable=true|plaintext-only; spellcheck attribute; document.execCommand (legacy); Selection and Range",
+      "bcd": [
+        "api.HTMLElement.contentEditable",
+        "api.HTMLElement.spellcheck"
+      ],
+      "access": {
+        "grant": "none",
+        "prompt_ui": "None (no browser prompt)",
+        "secure_context": false,
+        "user_gesture": false,
+        "activation": "none",
+        "persistence": "While the element exists",
+        "revocation": "Nothing to revoke (no permission is stored)",
+        "iframe": "No iframe flag; designMode on iframes is allowed",
+        "steps": [
+          "Set contenteditable on an element",
+          "Person types or pastes",
+          "Page reads innerHTML and beforeinput events"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "1",
+          "note": "",
+          "date": "2008-12-11"
+        },
+        "edge": {
+          "s": "y",
+          "v": "12",
+          "note": "",
+          "date": "2015-07-29"
+        },
+        "firefox": {
+          "s": "y",
+          "v": "3",
+          "note": "",
+          "date": "2008-06-17"
+        },
+        "safari": {
+          "s": "y",
+          "v": "3",
+          "note": "",
+          "date": "2007-10-26"
+        },
+        "ios_safari": {
+          "s": "y",
+          "v": "1",
+          "note": "All iOS browsers use WebKit",
+          "date": "2007-06-29"
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "18",
+          "note": "",
+          "date": "2012-06-27"
+        },
+        "samsung": {
+          "s": "y",
+          "v": "1.0",
+          "note": "",
+          "date": "2013-04-27"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "none",
+    "metric": "",
+    "update": "",
+    "fields": []
+  },
+  "limits": {
+    "headline": "Can turn parts of a page into a text editor you can type in",
+    "user_action": "You click into an editable box and start typing",
+    "can": [
+      "Let you type, format and edit text right on the page",
+      "Run browser spellcheck on what you type",
+      "Send what you type to the site's servers when it chooses to"
+    ],
+    "cannot": [
+      "Show a permission pop up; there is none",
+      "Check spelling in the cloud unless that browser setting is on",
+      "See text you type on other pages or in other apps"
+    ],
+    "reach": 2,
+    "reach_label": "Only what you type there",
+    "differs": ""
+  },
+  "story": {
+    "what_it_is": "Makes any part of a page editable, with spellcheck that may check what you type.",
+    "icon": "pencil",
+    "tags": [
+      "Editing",
+      "Typing",
+      "Spellcheck"
+    ],
+    "marketing": [
+      {
+        "vendor": "MDN (standards docs)",
+        "name": "contenteditable",
+        "pitch": "Describes the attribute that makes any element editable, used to build rich text editors.",
+        "url": "https://developer.mozilla.org/en-US/docs/Web/HTML/Global_attributes/contenteditable"
+      }
+    ],
+    "for_you": "You click into a block of text on a page and type as if in a word processor. You may see red squiggly lines under typos. If a cloud spellcheck is on, what you type may be sent off your device.",
+    "for_makers": "Makers build rich editors for posts, docs and messages without extra software. Spellcheck is a free feature that keeps users writing instead of leaving.",
+    "use_cases": [
+      {
+        "type": "productivity",
+        "example": "An online document editor lets a team type in the same file and see each other's cursors live.",
+        "apps": [
+          "Google Docs",
+          "Notion"
+        ]
+      },
+      {
+        "type": "social",
+        "example": "A social post box lets you type, bold and add links before you publish.",
+        "apps": [
+          "LinkedIn",
+          "Medium"
+        ]
+      },
+      {
+        "type": "messaging",
+        "example": "A web email composer gives spell check and formatting as you write.",
+        "apps": [
+          "Gmail",
+          "Outlook"
+        ]
+      },
+      {
+        "type": "games",
+        "example": "A game's in browser chat box or level editor uses editable text so players can name items and write messages.",
+        "apps": []
+      },
+      {
+        "type": "developer",
+        "example": "A browser code editor uses editable text to show typing, with live feedback.",
+        "apps": [
+          "CodePen"
+        ]
+      },
+      {
+        "type": "security",
+        "example": "If cloud spellcheck is on, passwords or secrets typed in an editable region may leave the device.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Cloud spellcheck may send text",
+      "Typing visible to the site"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "contenteditable=plaintext-only: Chrome 51, Safari 11.1, Firefox 136",
+    "execCommand is deprecated but still shipped in all browsers",
+    "Spellcheck: Chrome default is on device; Enhanced spell check sends text to Google servers; Edge uses its own service when enabled; Firefox and Safari check locally",
+    "Browser extensions (for example grammar tools) can read and change editable regions"
+  ],
+  "scores": {
+    "sensitivity": 3,
+    "utility": 5,
+    "fingerprint_bits": null,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Rich text and code editors",
+      "Comment boxes"
+    ],
+    "abuse": [
+      "Collecting everything typed into editors (session replay)",
+      "Third party spellcheck leakage in cloud mode"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2016-05",
+      "browser": "chrome",
+      "version": "51",
+      "change": "contenteditable plaintext-only"
+    },
+    {
+      "date": "2025-02",
+      "browser": "firefox",
+      "version": "136",
+      "change": "contenteditable plaintext-only"
+    }
+  ],
+  "related": [
+    "web.input.edit-context"
+  ],
+  "refs": [
+    {
+      "t": "mdn",
+      "label": "MDN contenteditable",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Global_attributes/contenteditable"
+    },
+    {
+      "t": "spec",
+      "label": "HTML Standard: editing",
+      "url": "https://html.spec.whatwg.org/multipage/interaction.html#contenteditable"
+    }
+  ],
+  "confidence": "docs"
+}

@@ -1,0 +1,246 @@
+{
+  "id": "web.device.user-agent",
+  "name": "User agent string",
+  "kind": "signal",
+  "group": "device-system-profile",
+  "subgroup": "Browser identity",
+  "tags": [
+    "user-agent",
+    "client-hints",
+    "fingerprint"
+  ],
+  "plain": "The text the browser sends naming its browser, version and operating system.",
+  "meaning": "Says which browser, version and OS the person uses. Chrome has been reducing detail since 2022, but the string still gates features, and LinkedIn's extension probe only runs when it contains Chrome.",
+  "lifecycle": [
+    "on-arrival",
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "navigator.userAgent; User-Agent header; UA Client Hints",
+      "bcd": [
+        "api.Navigator.userAgent"
+      ],
+      "access": {
+        "grant": "none",
+        "prompt_ui": "None (no browser prompt)",
+        "secure_context": false,
+        "user_gesture": false,
+        "persistence": "",
+        "revocation": "",
+        "iframe": "",
+        "steps": [
+          "Script reads the value",
+          "Value joins the fingerprint payload"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "1",
+          "note": "",
+          "date": "2008-12-11"
+        },
+        "edge": {
+          "s": "y",
+          "v": "12",
+          "note": "",
+          "date": "2015-07-29"
+        },
+        "firefox": {
+          "s": "y",
+          "v": "1",
+          "note": "",
+          "date": "2004-11-09"
+        },
+        "safari": {
+          "s": "y",
+          "v": "1",
+          "note": "",
+          "date": "2003-06-23"
+        },
+        "ios_safari": {
+          "s": "y",
+          "v": "1",
+          "note": "",
+          "date": "2007-06-29"
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "18",
+          "note": "",
+          "date": "2012-06-27"
+        },
+        "samsung": {
+          "s": "y",
+          "v": "1.0",
+          "note": "",
+          "date": "2013-04-27"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "string",
+    "metric": "User agent string",
+    "update": "static per browser version",
+    "fields": [
+      {
+        "name": "userAgent",
+        "type": "string",
+        "unit": "",
+        "range": "up to 1500 chars collected",
+        "precision": "reduced in Chrome 101 to 110"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can see your browser, version, and operating system from the text it sends",
+    "user_action": "Nothing. Your browser sends it with every page request",
+    "can": [
+      "See your browser brand and version",
+      "See your OS family",
+      "Turn features on or off to match",
+      "Spot likely bots from odd text"
+    ],
+    "cannot": [
+      "See exact OS build or device model; Chrome trims the detail",
+      "Be sure; you or an add on can change it",
+      "See your name, location, or accounts",
+      "Learn anything private by itself"
+    ],
+    "reach": 2,
+    "reach_label": "Browser and OS, on every request",
+    "differs": ""
+  },
+  "story": {
+    "what_it_is": "The text your browser sends naming its browser, version and operating system.",
+    "icon": "app-window",
+    "tags": [
+      "Browser",
+      "Operating system",
+      "Silent"
+    ],
+    "marketing": [
+      {
+        "vendor": "Google",
+        "name": "User-Agent reduction",
+        "pitch": "Chrome has been trimming the string to give out less detail and moving the rest to client hints.",
+        "url": "https://developer.chrome.com/docs/privacy-sandbox/user-agent/"
+      }
+    ],
+    "for_you": "You never see it, but your browser sends it with every request. It is why a site knows you are on Safari on an iPhone and shows the right version of the page.",
+    "for_makers": "It is the oldest way to tell browsers apart and still decides which code and features a site sends. Bot defence and analytics use it, even though it is easy to fake. Chrome now gives less detail than it once did.",
+    "use_cases": [
+      {
+        "type": "developer",
+        "example": "A site sends an older script file to an old browser it recognises from the string.",
+        "apps": []
+      },
+      {
+        "type": "games",
+        "example": "A browser game portal shows a note that a browser cannot run WebGL games well.",
+        "apps": [
+          "Poki"
+        ]
+      },
+      {
+        "type": "video",
+        "example": "A streaming site picks a player that works in the visitor's browser.",
+        "apps": [
+          "Netflix"
+        ]
+      },
+      {
+        "type": "security",
+        "example": "A bot defence service blocks clients whose strings name known scraping tools.",
+        "apps": [
+          "Cloudflare"
+        ]
+      },
+      {
+        "type": "analytics",
+        "example": "A dashboard counts visits by browser and version.",
+        "apps": [
+          "Google Analytics"
+        ]
+      },
+      {
+        "type": "ads",
+        "example": "An ad platform checks strings to filter out crawlers and fake traffic.",
+        "apps": [
+          "DoubleVerify"
+        ]
+      },
+      {
+        "type": "social",
+        "example": "A professional network reads the string and extension clues to catch tools that scrape profiles.",
+        "apps": [
+          "LinkedIn"
+        ]
+      }
+    ],
+    "risks": [
+      "Easy to fake",
+      "Reveals browser and OS"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Reduced in Chrome (UA Reduction)",
+    "Can be changed by users and extensions"
+  ],
+  "scores": {
+    "sensitivity": 2,
+    "utility": 3,
+    "fingerprint_bits": 8,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Compat",
+      "Analytics"
+    ],
+    "abuse": [
+      "Fingerprint input"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": true,
+      "how": "Collector key(s): userAgent. Also used as a gate: the AED probe runs only if the string contains 'Chrome'."
+    }
+  },
+  "history": [
+    {
+      "date": "2022",
+      "browser": "chrome",
+      "version": "101",
+      "change": "User Agent Reduction begins"
+    },
+    {
+      "date": "2023",
+      "browser": "chrome",
+      "version": "110",
+      "change": "Reduced string rolls out more broadly (approx)"
+    }
+  ],
+  "related": [
+    "web.tracking.linkedin-apfc-fingerprint"
+  ],
+  "refs": [
+    {
+      "t": "mdn",
+      "label": "MDN userAgent",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/Navigator/userAgent"
+    },
+    {
+      "t": "github",
+      "label": "mdp/linkedin-extension-fingerprinting (LinkedIn script snapshot and ID list)",
+      "url": "https://github.com/mdp/linkedin-extension-fingerprinting"
+    }
+  ],
+  "confidence": "docs"
+}

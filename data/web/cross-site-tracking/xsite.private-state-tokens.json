@@ -1,0 +1,226 @@
+{
+  "id": "web.xsite.private-state-tokens",
+  "name": "Private State Tokens",
+  "kind": "capability",
+  "group": "cross-site-tracking",
+  "subgroup": "Anti-fraud",
+  "tags": [
+    "private-state-tokens",
+    "trust-tokens",
+    "anti-fraud"
+  ],
+  "plain": "Anonymous tokens that carry a trust signal across sites without identifying the person.",
+  "meaning": "An issuer vouches that a visitor looks human and later redeemers read that single bit, unlinked to identity. Chrome lists it as Continue to support after Oct 2025. Issuer limit: 2 issuers per origin used per top frame (soft cap).",
+  "lifecycle": [
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "document.hasPrivateToken(), fetch(url, {privateToken: {...}})",
+      "bcd": [
+        "api.Document.hasPrivateToken"
+      ],
+      "access": {
+        "grant": "none",
+        "prompt_ui": "None",
+        "secure_context": false,
+        "user_gesture": false,
+        "persistence": "Tokens expire per issuer; limited batch per issuer",
+        "revocation": "Clear site data, browser privacy settings",
+        "iframe": "",
+        "steps": []
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "117",
+          "note": "Continue to support",
+          "date": "2023-09-12"
+        },
+        "edge": {
+          "s": "y",
+          "v": "117",
+          "note": "",
+          "date": "2023-09-15"
+        },
+        "firefox": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "safari": {
+          "s": "n",
+          "v": "",
+          "note": "Safari has separate Private Access Tokens (iOS 16)"
+        },
+        "ios_safari": {
+          "s": "p",
+          "v": "16",
+          "note": "Private Access Tokens",
+          "date": "2022-09-12"
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "117",
+          "note": "",
+          "date": "2023-09-12"
+        },
+        "samsung": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "binary",
+    "metric": "Opaque redemption record",
+    "update": "per redemption",
+    "fields": []
+  },
+  "limits": {
+    "headline": "Can carry a trust signal between sites without telling them who you are",
+    "user_action": "Nothing. It happens when a site checks if you are a real person",
+    "can": [
+      "Hold a token that says you were judged real by a first site",
+      "Show the token to a second site to prove it",
+      "Keep the two sites from linking the visits"
+    ],
+    "cannot": [
+      "Tell the second site who you are",
+      "Work in Firefox or Safari, and only in tests on iPhone browsers",
+      "Last forever; tokens run out and are limited in number",
+      "Be reused without limit"
+    ],
+    "reach": 2,
+    "reach_label": "A trust signal, no name",
+    "differs": "Chrome and Edge support it. Safari on iPhone is partial. Firefox does not support it."
+  },
+  "story": {
+    "what_it_is": "Anonymous tokens that carry a trust signal across sites without naming you.",
+    "icon": "key-round",
+    "tags": [
+      "Fraud",
+      "Privacy",
+      "Chrome"
+    ],
+    "marketing": [
+      {
+        "vendor": "Google Chrome",
+        "name": "Private State Tokens",
+        "pitch": "Chrome says the tokens let a site share a trust signal, such as this visitor seems human, without cross site tracking.",
+        "url": "https://privacysandbox.google.com/overview/status"
+      }
+    ],
+    "for_you": "You never see it. A site you trust can vouch that you look like a real person, in a token. Another site can read that single bit and let you through without a puzzle.",
+    "for_makers": "Fraud and bot teams want a clue about a visitor when they have no history with them. The token passes a yes or no without a name. It helps cut CAPTCHA puzzles for real people.",
+    "use_cases": [
+      {
+        "type": "security",
+        "example": "A new visitor to a ticket site shows a token from a trusted site, so the site skips a CAPTCHA.",
+        "apps": [
+          "Ticketmaster",
+          "Cloudflare"
+        ]
+      },
+      {
+        "type": "ads",
+        "example": "An ad network reads a token to decide if a click is from a real person, before it bills the advertiser.",
+        "apps": [
+          "Google Ad Manager"
+        ]
+      },
+      {
+        "type": "games",
+        "example": "A game site lets you skip the bot puzzle at sign up, because a token shows you are human.",
+        "apps": [
+          "Roblox",
+          "Steam"
+        ]
+      },
+      {
+        "type": "payments",
+        "example": "A checkout page uses a token as one fraud signal for a new customer.",
+        "apps": [
+          "Stripe",
+          "Shopify"
+        ]
+      },
+      {
+        "type": "social",
+        "example": "A social site rate limits fake sign ups by asking for a human token.",
+        "apps": [
+          "Reddit"
+        ]
+      },
+      {
+        "type": "media",
+        "example": "A news site shows a sign up wall only to visitors without a human token.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Issuers hold power over who is trusted",
+      "Few sites use it so far"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Max 2 issuers per top-level origin (typical)",
+    "Redemption reveals trust bit only",
+    "Chrome only"
+  ],
+  "scores": {
+    "sensitivity": 2,
+    "utility": 3,
+    "fingerprint_bits": null,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Bot and fraud filtering"
+    ],
+    "abuse": [
+      "Gatekeeping content on opaque trust score"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2020-03",
+      "browser": "chrome",
+      "version": "84",
+      "change": "Origin trial began (ended Chrome 101)"
+    },
+    {
+      "date": "2023-07",
+      "browser": "chrome",
+      "version": "113",
+      "change": "Shipped on by default"
+    }
+  ],
+  "related": [
+    "web.xsite.third-party-cookies-status"
+  ],
+  "refs": [
+    {
+      "t": "vendor",
+      "label": "Privacy Sandbox feature status page (updated Aug 14, 2026)",
+      "url": "https://privacysandbox.google.com/overview/status"
+    },
+    {
+      "t": "spec",
+      "label": "Private State Token API",
+      "url": "https://wicg.github.io/trust-token-api/"
+    }
+  ],
+  "confidence": "docs"
+}

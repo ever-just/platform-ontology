@@ -1,0 +1,219 @@
+{
+  "id": "web.device.browser-flavor-globals",
+  "name": "Browser flavor globals",
+  "kind": "signal",
+  "group": "device-system-profile",
+  "subgroup": "Browser identity",
+  "tags": [
+    "feature-detection",
+    "fingerprintjs",
+    "vendor-flavors"
+  ],
+  "plain": "Checks for window objects only certain browsers define (chrome, safari, __gCrWeb, opr).",
+  "meaning": "Identifies Chrome vs Edge vs Opera vs Safari vs in-app webviews even when the UA lies. FingerprintJS tests about 30 flavor names; spoofing tools often miss one.",
+  "lifecycle": [
+    "on-arrival",
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "window.chrome, window.safari, window.opr, window.__gCrWeb, window.ApplePaySession ...",
+      "access": {
+        "grant": "none",
+        "prompt_ui": "None",
+        "secure_context": false,
+        "user_gesture": false,
+        "persistence": "read fresh on every page load; nothing stored",
+        "revocation": "none needed (no grant)",
+        "iframe": "Readable from cross-origin iframes too (same values)",
+        "steps": [
+          "Page script reads the value",
+          "No prompt is shown"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "1",
+          "note": "",
+          "date": "2008-12-11"
+        },
+        "edge": {
+          "s": "y",
+          "v": "12",
+          "note": "",
+          "date": "2015-07-29"
+        },
+        "firefox": {
+          "s": "y",
+          "v": "1",
+          "note": "",
+          "date": "2004-11-09"
+        },
+        "safari": {
+          "s": "y",
+          "v": "1",
+          "note": "",
+          "date": "2003-06-23"
+        },
+        "ios_safari": {
+          "s": "y",
+          "v": "1",
+          "note": "",
+          "date": "2007-06-29"
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "18",
+          "note": "",
+          "date": "2012-06-27"
+        },
+        "samsung": {
+          "s": "y",
+          "v": "1.0",
+          "note": "",
+          "date": "2013-04-27"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "object",
+    "metric": "",
+    "update": "static per session",
+    "fields": [
+      {
+        "name": "flavors",
+        "type": "list",
+        "unit": "",
+        "range": "subset of about 30 known global names",
+        "precision": ""
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can tell which browser you really use, even when the label is changed",
+    "user_action": "Nothing. It happens when the page loads",
+    "can": [
+      "Check for tell tale items that only Chrome, Edge, Opera, or Safari add",
+      "Spot in-app browsers inside other apps",
+      "Catch a browser that claims to be another one",
+      "Use the pattern as one more clue to tell you apart"
+    ],
+    "cannot": [
+      "See your browser settings or add ons",
+      "Learn your identity from these checks alone",
+      "See your browsing history",
+      "Be fooled less often by tools that change only the label"
+    ],
+    "reach": 2,
+    "reach_label": "Browser type, while the page loads",
+    "differs": ""
+  },
+  "story": {
+    "what_it_is": "Checks for special browser objects that only Chrome, Safari, Opera or in-app browsers define.",
+    "icon": "app-window",
+    "tags": [
+      "Browser",
+      "Silent",
+      "Fraud"
+    ],
+    "marketing": [],
+    "for_you": "You never see it. If you open a link inside the Instagram app, a site may know it is that kind of browser and show a nudge to open in Safari or Chrome instead. Its main effect is that the site can tell what really runs underneath.",
+    "for_makers": "A browser name in the user agent is easy to fake, but the hidden objects are harder to match. Fraud and bot teams use the mismatch to catch scrapers that lie. Developers use it to work around quirks in each browser engine and in app webviews.",
+    "use_cases": [
+      {
+        "type": "security",
+        "example": "A bot defence service sees a client saying it is Chrome but missing the chrome object, and puts up a challenge.",
+        "apps": [
+          "Cloudflare",
+          "DataDome"
+        ]
+      },
+      {
+        "type": "social",
+        "example": "A site spots that you came from the Instagram or Facebook in-app browser and shows an Open in browser prompt.",
+        "apps": [
+          "Instagram",
+          "Facebook"
+        ]
+      },
+      {
+        "type": "ads",
+        "example": "An ad verification tool checks what kind of browser shows an ad so it counts the view correctly.",
+        "apps": []
+      },
+      {
+        "type": "games",
+        "example": "A browser game portal detects an app webview where fullscreen or sound is flaky, and shows tips.",
+        "apps": []
+      },
+      {
+        "type": "payments",
+        "example": "A checkout page picks the right wallet button, such as Apple Pay in Safari, when it knows the real engine.",
+        "apps": [
+          "Apple Pay"
+        ]
+      },
+      {
+        "type": "developer",
+        "example": "An error tracker adds the true browser engine to a crash report so developers can reproduce it.",
+        "apps": [
+          "Sentry"
+        ]
+      },
+      {
+        "type": "banking",
+        "example": "A bank's login flow raises a risk score when browser objects disagree with the user agent.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Hard to hide or fake",
+      "Adds to a device fingerprint"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Only reveals browser family, not user"
+  ],
+  "scores": {
+    "sensitivity": 1,
+    "utility": 3,
+    "fingerprint_bits": 1.5,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Detect in-app browsers"
+    ],
+    "abuse": [
+      "Spoof detection",
+      "Bot detection"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "related": [
+    "web.device.navigator-oscpu-vendor"
+  ],
+  "refs": [
+    {
+      "t": "github",
+      "label": "fingerprintjs source: vendor_flavors",
+      "url": "https://github.com/fingerprintjs/fingerprintjs/blob/master/src/sources/vendor_flavors.ts"
+    },
+    {
+      "t": "github",
+      "label": "CreepJS (abrahamjuliot)",
+      "url": "https://github.com/abrahamjuliot/creepjs"
+    }
+  ],
+  "confidence": "verified"
+}

@@ -1,0 +1,223 @@
+{
+  "id": "web.net.ja4-fingerprint-family",
+  "name": "JA4+ network fingerprint family",
+  "kind": "tracking",
+  "group": "network-connectivity",
+  "subgroup": "TLS",
+  "tags": [
+    "ja4",
+    "ja4h",
+    "ja4t",
+    "foxio"
+  ],
+  "plain": "A newer family of fingerprints for TLS, HTTP, TCP and more, built to survive randomization.",
+  "meaning": "JA4 (FoxIO, 2023) sorts ciphers and extensions so Chrome's shuffle gives one value. JA4S (server), JA4H (HTTP), JA4L (latency), JA4X (cert), JA4SSH and JA4T (TCP) extend it. JA4 is BSD licensed; the rest use FoxIO License 1.1.",
+  "lifecycle": [
+    "on-arrival"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "FoxIO-LLC/ja4 parsers (Wireshark, Zeek, Suricata, Cloudflare)",
+      "access": {
+        "grant": "none",
+        "prompt_ui": "",
+        "secure_context": false,
+        "user_gesture": false,
+        "persistence": "",
+        "revocation": "",
+        "iframe": "",
+        "steps": [
+          "Parse handshake",
+          "Sort fields",
+          "Hash into a readable a_b_c string"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "1",
+          "note": "",
+          "date": "2008-12-11"
+        },
+        "edge": {
+          "s": "y",
+          "v": "79",
+          "note": "",
+          "date": "2020-01-15"
+        },
+        "firefox": {
+          "s": "y",
+          "v": "1",
+          "note": "",
+          "date": "2004-11-09"
+        },
+        "safari": {
+          "s": "y",
+          "v": "1",
+          "note": "",
+          "date": "2003-06-23"
+        },
+        "ios_safari": {
+          "s": "y",
+          "v": "1",
+          "note": "",
+          "date": "2007-06-29"
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "1",
+          "note": "",
+          "date": ""
+        },
+        "samsung": {
+          "s": "y",
+          "v": "5.0",
+          "note": "",
+          "date": "2016-12-15"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "string",
+    "metric": "Fixed length human readable string",
+    "update": "",
+    "fields": [
+      {
+        "name": "ja4",
+        "type": "string",
+        "unit": "",
+        "range": "t13d1516h2_xxxx_yyyy",
+        "precision": "exact"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can recognize your browser or app from several quiet network clues, even when shuffled",
+    "user_action": "Nothing. It happens when your device connects and sends requests",
+    "can": [
+      "Build a sorted code from how your browser starts a connection, so shuffling does not hide it",
+      "Add clues from the web request, connection timing and certificates",
+      "Use the codes to block bots and hunt for attacks",
+      "Keep tracking the same client across different internet addresses"
+    ],
+    "cannot": [
+      "See who you are by name or account",
+      "See page content or what you type",
+      "Be switched off from your browser settings",
+      "Tell apart two people with the same software and similar setup"
+    ],
+    "reach": 3,
+    "reach_label": "Quietly, on every connection",
+    "differs": ""
+  },
+  "story": {
+    "what_it_is": "A newer set of network fingerprints that still names your software, even when browsers shuffle their handshake.",
+    "icon": "fingerprint",
+    "tags": [
+      "Tracking",
+      "Silent",
+      "Security"
+    ],
+    "marketing": [],
+    "for_you": "You never see this. Many layers of your connection, from secure handshake to web request, leave small patterns. Together they point to what kind of device and software you use.",
+    "for_makers": "Makers use these codes because they stay useful after browsers randomize order. Defenders share lists of good and bad codes to catch bots and malware. The same data can quietly help sort visitors without cookies.",
+    "use_cases": [
+      {
+        "type": "security",
+        "example": "A bot defence service sees a login attack that claims to be Safari on iPhone. The network codes match a Linux scripting tool, so it blocks the traffic.",
+        "apps": [
+          "Cloudflare"
+        ]
+      },
+      {
+        "type": "ads",
+        "example": "An ad exchange flags fake traffic farms because thousands of visits share one rare network code but claim to be many different phones.",
+        "apps": []
+      },
+      {
+        "type": "games",
+        "example": "A cloud gaming sign in page rejects automated account sellers whose connection pattern matches a known tool and not a real browser.",
+        "apps": []
+      },
+      {
+        "type": "shopping",
+        "example": "A ticket seller keeps a list of codes seen in past scalper attacks and rejects new requests that match them.",
+        "apps": []
+      },
+      {
+        "type": "enterprise",
+        "example": "A company's security team uses the codes to spot a stolen login coming from a very different kind of device than the owner's laptop.",
+        "apps": []
+      },
+      {
+        "type": "analytics",
+        "example": "A threat research team groups web attacks by shared code to find which ones come from the same toolkit.",
+        "apps": []
+      },
+      {
+        "type": "banking",
+        "example": "A bank adds the code to its risk score at login. A match with the customer's usual code lowers friction for them.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Hard to see or avoid",
+      "Unfair blocks for odd setups"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Spoofable by uTLS and curl-impersonate",
+    "Software versions share hashes"
+  ],
+  "scores": {
+    "sensitivity": 2,
+    "utility": 5,
+    "fingerprint_bits": 3,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": "Bot management, threat hunting (Cloudflare, AWS WAF, Fastly)",
+    "abuse": "Client tracking"
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2023-09",
+      "browser": "tool",
+      "version": "",
+      "change": "JA4 and JA4+ announced by FoxIO"
+    },
+    {
+      "date": "2024-01",
+      "browser": "tool",
+      "version": "",
+      "change": "Cloudflare exposes JA4 in Bot Management"
+    }
+  ],
+  "related": [
+    "web.net.ja3-tls-fingerprint",
+    "web.net.tcp-ip-passive-os-fingerprint"
+  ],
+  "refs": [
+    {
+      "t": "github",
+      "label": "FoxIO-LLC/ja4",
+      "url": "https://github.com/FoxIO-LLC/ja4"
+    },
+    {
+      "t": "vendor",
+      "label": "Cloudflare JA4 signals",
+      "url": "https://developers.cloudflare.com/bots/additional-configurations/ja3-ja4-fingerprint/"
+    }
+  ],
+  "confidence": "docs"
+}

@@ -1,0 +1,219 @@
+{
+  "id": "mob.dev.thermal-state",
+  "name": "Thermal state and headroom",
+  "kind": "signal",
+  "group": "device-system-profile",
+  "subgroup": "Power",
+  "tags": [
+    "thermal",
+    "throttling"
+  ],
+  "plain": "Reports how hot the device is: 4 coarse levels on iOS, 7 levels plus a forecast on Android.",
+  "meaning": "Shows the phone is throttled or in a hot place (car, sun, charging while gaming). Weak context signal; more useful to games that scale quality.",
+  "lifecycle": [
+    "in-session"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "y",
+      "v": "10",
+      "api": 29,
+      "permission": "",
+      "protection": "none",
+      "grant": "none",
+      "prompt_ui": "",
+      "persistence": "",
+      "revocation": "",
+      "store_policy": "",
+      "api_surface": "PowerManager.getCurrentThermalStatus() (API 29), getThermalHeadroom(seconds) (API 30), addThermalStatusListener",
+      "note": "Status: NONE, LIGHT, MODERATE, SEVERE, CRITICAL, EMERGENCY, SHUTDOWN (7 levels); headroom is a 0.0 to 1.0 float forecast, 1.0 meaning throttling"
+    },
+    "ios": {
+      "s": "y",
+      "v": "11.0",
+      "permission": "none",
+      "protection": "none",
+      "grant": "none",
+      "prompt_ui": "",
+      "persistence": "",
+      "revocation": "",
+      "store_policy": "",
+      "api_surface": "4 levels: nominal, fair, serious, critical",
+      "note": ""
+    }
+  },
+  "web_equivalents": [
+    "web.compute.compute-pressure"
+  ],
+  "data": {
+    "type": "enum",
+    "metric": "Thermal status",
+    "update": "On change",
+    "fields": [
+      {
+        "name": "android_status",
+        "type": "enum",
+        "unit": "",
+        "range": "NONE to SHUTDOWN",
+        "precision": "7 levels"
+      },
+      {
+        "name": "android_headroom",
+        "type": "float",
+        "unit": "fraction",
+        "range": "0.0 to 1.0 (NaN if unsupported)",
+        "precision": "forecast up to 60 s ahead"
+      },
+      {
+        "name": "ios_thermal_state",
+        "type": "enum",
+        "unit": "",
+        "range": "nominal to critical",
+        "precision": "4 levels"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can tell how hot your phone is, in 4 levels on iPhone and 7 on Android",
+    "user_action": "Nothing. The app checks while it is running, mostly games and video",
+    "can": [
+      "See iPhone heat as nominal, fair, serious or critical",
+      "See Android heat in 7 levels, from none to shutdown",
+      "Get a forecast on Android 11 and newer, as a number from 0.0 to 1.0",
+      "Slow down graphics or work when the phone is hot"
+    ],
+    "cannot": [
+      "See an exact temperature in degrees on iPhone",
+      "Cool the phone down",
+      "See heat forecasts on Android 10 and older"
+    ],
+    "reach": 2,
+    "reach_label": "While the app is running",
+    "differs": "Android gives 7 levels plus a forecast. iPhone gives 4 coarse levels only."
+  },
+  "story": {
+    "what_it_is": "An app can tell if your phone is getting too hot.",
+    "icon": "thermometer",
+    "tags": [
+      "Silent",
+      "Games",
+      "Heat"
+    ],
+    "marketing": [
+      {
+        "vendor": "Google",
+        "name": "Thermal API and ADPF",
+        "pitch": "Developer pitch: sense heat headroom so games and apps can adjust before the phone slows down.",
+        "url": "https://developer.android.com/games/optimize/adpf/thermal"
+      },
+      {
+        "vendor": "Apple",
+        "name": "Thermal state",
+        "pitch": "Developer guide: apps can respond to the device's thermal state to keep it cool and responsive.",
+        "url": "https://developer.apple.com/documentation/foundation/processinfo/thermalstate"
+      }
+    ],
+    "for_you": "If your phone gets hot in a car or in the sun, a game may lower its graphics so it cools down. You see a smoother, cooler experience, though sometimes with fewer effects.",
+    "for_makers": "Games and video apps use it to scale quality before the phone throttles and stutters. Android offers seven levels and a forecast, iOS four coarse levels.",
+    "use_cases": [
+      {
+        "type": "games",
+        "example": "A racing game quietly cuts shadows and resolution when your phone reports heat, so frame rate holds.",
+        "apps": []
+      },
+      {
+        "type": "ar-vr",
+        "example": "An AR app drops tracking quality when your phone is hot after a long session.",
+        "apps": []
+      },
+      {
+        "type": "video",
+        "example": "A camera or video call app lowers resolution if the phone is overheating.",
+        "apps": []
+      },
+      {
+        "type": "fitness",
+        "example": "A workout app that uses camera and GPS warns you the phone is too hot in the sun.",
+        "apps": []
+      },
+      {
+        "type": "automotive",
+        "example": "A car mirror app on a hot dashboard reduces map detail to stay cool.",
+        "apps": []
+      },
+      {
+        "type": "live",
+        "example": "A streaming app lowers bitrate when the phone is hot during a long live stream.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Hints where you are",
+      "Minor privacy impact"
+    ],
+    "android_note": "Reports seven levels plus a forecast of future headroom.",
+    "ios_note": "Reports four coarse levels to apps."
+  },
+  "technical_bounds": [
+    "No temperature in degrees on iOS",
+    "Headroom rate-limited: call at most about once per second"
+  ],
+  "scores": {
+    "sensitivity": 1,
+    "utility": 3,
+    "fingerprint_bits": 1,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Lower frame rate or resolution",
+      "Pause heavy uploads"
+    ],
+    "abuse": [
+      "Little"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2019-09",
+      "platform": "android",
+      "version": "10 (API 29)",
+      "change": "Thermal status API added"
+    },
+    {
+      "date": "2020-09",
+      "platform": "android",
+      "version": "11 (API 30)",
+      "change": "getThermalHeadroom forecast added"
+    },
+    {
+      "date": "2017-09",
+      "platform": "ios",
+      "version": "iOS 11",
+      "change": "ProcessInfo.thermalState added"
+    }
+  ],
+  "related": [
+    "mob.dev.battery-health"
+  ],
+  "refs": [
+    {
+      "t": "android",
+      "label": "Android: PowerManager",
+      "url": "https://developer.android.com/reference/android/os/PowerManager"
+    },
+    {
+      "t": "apple",
+      "label": "Apple: ProcessInfo",
+      "url": "https://developer.apple.com/documentation/foundation/processinfo"
+    }
+  ],
+  "confidence": "docs"
+}

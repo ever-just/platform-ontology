@@ -1,0 +1,245 @@
+{
+  "id": "web.render.audio-context-properties",
+  "name": "AudioContext hardware properties",
+  "kind": "signal",
+  "group": "rendering-fingerprint",
+  "subgroup": "Audio",
+  "tags": [
+    "web-audio",
+    "sampleRate",
+    "latency",
+    "channels"
+  ],
+  "plain": "Reads the audio output sample rate, latency and channel count with no prompt.",
+  "meaning": "Sample rate (44100 or 48000), base and output latency and maximum output channels reveal the audio hardware and OS audio stack, such as wired headphones, Bluetooth or a studio interface.",
+  "lifecycle": [
+    "on-arrival"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "new AudioContext(); ctx.sampleRate; baseLatency; outputLatency; destination.maxChannelCount",
+      "bcd": [
+        "api.BaseAudioContext.sampleRate",
+        "api.AudioContext.outputLatency"
+      ],
+      "access": {
+        "grant": "none",
+        "prompt_ui": "",
+        "secure_context": false,
+        "user_gesture": false,
+        "persistence": "",
+        "revocation": "",
+        "iframe": "",
+        "steps": [
+          "Create AudioContext (may start suspended)",
+          "Read properties"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "14",
+          "note": "",
+          "date": "2011-09-16"
+        },
+        "edge": {
+          "s": "y",
+          "v": "12",
+          "note": "",
+          "date": "2015-07-29"
+        },
+        "firefox": {
+          "s": "y",
+          "v": "25",
+          "note": "",
+          "date": "2013-10-29"
+        },
+        "safari": {
+          "s": "p",
+          "v": "6",
+          "note": "baseLatency only, no outputLatency",
+          "date": "2012-07-25"
+        },
+        "ios_safari": {
+          "s": "y",
+          "v": "6",
+          "note": "",
+          "date": "2012-09-10"
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "18",
+          "note": "",
+          "date": "2012-06-27"
+        },
+        "samsung": {
+          "s": "y",
+          "v": "1.0",
+          "note": "",
+          "date": "2013-04-27"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "object",
+    "metric": "4 numbers",
+    "update": "",
+    "fields": [
+      {
+        "name": "sampleRate",
+        "type": "integer",
+        "unit": "Hz",
+        "range": "8000 to 96000",
+        "precision": "exact"
+      },
+      {
+        "name": "baseLatency",
+        "type": "float",
+        "unit": "s",
+        "range": "0 to 0.1",
+        "precision": "1 ms or finer"
+      },
+      {
+        "name": "outputLatency",
+        "type": "float",
+        "unit": "s",
+        "range": "0 to 0.5",
+        "precision": "1 ms or finer, Chrome and Firefox only"
+      },
+      {
+        "name": "maxChannelCount",
+        "type": "integer",
+        "unit": "",
+        "range": "2 to 32",
+        "precision": "exact"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can see your audio setup, such as sample rate and output channels",
+    "user_action": "Nothing. It happens when the page loads",
+    "can": [
+      "Check the sample rate, usually 44100 or 48000",
+      "Check how much delay the audio system has",
+      "Count the most speaker channels your device can output",
+      "Guess if you use headphones, Bluetooth or built in speakers"
+    ],
+    "cannot": [
+      "Listen to you or record sound",
+      "Name your exact headphones or speakers",
+      "Ask you first, since there is no pop up",
+      "Play sound without a tap or click on the page in many browsers"
+    ],
+    "reach": 2,
+    "reach_label": "Silent, device traits only",
+    "differs": ""
+  },
+  "story": {
+    "what_it_is": "A page reads your audio output's sample rate, delay and channel count without asking.",
+    "icon": "volume-2",
+    "tags": [
+      "Audio",
+      "Silent",
+      "Hardware"
+    ],
+    "marketing": [
+      {
+        "vendor": "MDN",
+        "name": "AudioContext",
+        "pitch": "Represents an audio processing graph and exposes properties like sample rate and output latency.",
+        "url": "https://developer.mozilla.org/en-US/docs/Web/API/AudioContext"
+      }
+    ],
+    "for_you": "You never see a prompt. The page learns whether you are on built in speakers, Bluetooth headphones or a studio sound card, just by checking a few numbers.",
+    "for_makers": "Audio apps need these numbers to keep sound in time. The same numbers help fraud and tracking tools tell devices apart, and tell phones from desktops.",
+    "use_cases": [
+      {
+        "type": "games",
+        "example": "A rhythm game in the browser reads your audio delay and shifts the notes so they match what you hear.",
+        "apps": []
+      },
+      {
+        "type": "music",
+        "example": "A web piano or synth like Chrome Music Lab picks the best buffer size for your hardware to avoid crackles.",
+        "apps": [
+          "Chrome Music Lab"
+        ]
+      },
+      {
+        "type": "video",
+        "example": "A video call tool sets its sound rate to match your headset so the voice stays clear.",
+        "apps": [
+          "Google Meet",
+          "Jitsi"
+        ]
+      },
+      {
+        "type": "security",
+        "example": "A fraud engine notes that a login came from a device with an unusual sound setup.",
+        "apps": []
+      },
+      {
+        "type": "ads",
+        "example": "A tracking script includes your sample rate in a device ID along with screen size and fonts.",
+        "apps": []
+      },
+      {
+        "type": "creative",
+        "example": "A browser based music studio warns that Bluetooth adds delay, and suggests wired headphones for recording.",
+        "apps": [
+          "Soundtrap",
+          "BandLab"
+        ]
+      },
+      {
+        "type": "education",
+        "example": "A web ear training app measures output delay so it can grade your tapping timing fairly.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Reveals what headphones you use",
+      "Adds to a device ID"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Cannot enumerate devices without mic permission",
+    "Autoplay policy may leave context suspended but properties still readable"
+  ],
+  "scores": {
+    "sensitivity": 2,
+    "utility": 2,
+    "fingerprint_bits": 3,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": "Set buffer sizes for audio apps",
+    "abuse": "Hardware class and Bluetooth inference"
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "related": [
+    "web.render.audio-offline-fingerprint"
+  ],
+  "refs": [
+    {
+      "t": "mdn",
+      "label": "MDN BaseAudioContext.sampleRate",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/BaseAudioContext/sampleRate"
+    },
+    {
+      "t": "mdn",
+      "label": "MDN outputLatency",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/AudioContext/outputLatency"
+    }
+  ],
+  "confidence": "docs"
+}

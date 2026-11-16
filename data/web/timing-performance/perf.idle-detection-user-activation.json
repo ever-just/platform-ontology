@@ -1,0 +1,238 @@
+{
+  "id": "web.perf.idle-detection-user-activation",
+  "name": "User activation and idle inference",
+  "kind": "signal",
+  "group": "timing-performance",
+  "subgroup": "Attention",
+  "tags": [
+    "userActivation",
+    "idle",
+    "IdleDetector",
+    "engagement"
+  ],
+  "plain": "Tells whether the person has clicked or typed recently, and in Chromium whether they are idle.",
+  "meaning": "navigator.userActivation shows if a click or key happened. IdleDetector (permission gated, Chromium) reports user active or idle and screen locked. Without it, sites infer idle from the absence of input events.",
+  "lifecycle": [
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "navigator.userActivation.hasBeenActive/isActive; new IdleDetector().start({threshold})",
+      "permissions_policy": "idle-detection",
+      "bcd": [
+        "api.IdleDetector",
+        "api.UserActivation"
+      ],
+      "access": {
+        "grant": "none",
+        "prompt_ui": "",
+        "secure_context": true,
+        "user_gesture": false,
+        "persistence": "",
+        "revocation": "",
+        "iframe": "",
+        "steps": [
+          "Check userActivation",
+          "For IdleDetector, request permission",
+          "Listen to change events"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "94",
+          "note": "",
+          "date": "2021-09-21"
+        },
+        "edge": {
+          "s": "y",
+          "v": "114",
+          "note": "",
+          "date": "2023-06-02"
+        },
+        "firefox": {
+          "s": "y",
+          "v": "120",
+          "note": "BCD lists no support; agent research says otherwise",
+          "date": "2023-11-21"
+        },
+        "safari": {
+          "s": "y",
+          "v": "16.4",
+          "note": "BCD lists no support; agent research says otherwise",
+          "date": "2023-03-27"
+        },
+        "ios_safari": {
+          "s": "y",
+          "v": "16.4",
+          "note": "BCD lists no support; agent research says otherwise",
+          "date": "2023-03-27"
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "94",
+          "note": "",
+          "date": "2021-09-21"
+        },
+        "samsung": {
+          "s": "y",
+          "v": "17.0",
+          "note": "",
+          "date": "2022-05-04"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "event",
+    "metric": "userState: active or idle, screenState: locked or unlocked",
+    "update": "",
+    "fields": [
+      {
+        "name": "userState",
+        "type": "string",
+        "unit": "",
+        "range": "active, idle",
+        "precision": "60 s minimum threshold"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can see if you recently clicked or typed, and in Chromium if you are idle",
+    "user_action": "You click or type on the page. Idle checks need you to tap Allow",
+    "can": [
+      "Tell if you clicked or pressed a key lately",
+      "In Chromium, learn if you are active or idle, after you allow it",
+      "In Chromium, learn if your screen is locked, after you allow it"
+    ],
+    "cannot": [
+      "See what you typed or clicked, only that you did",
+      "Get idle checks in Firefox or Safari",
+      "Get idle checks without your Allow",
+      "Learn why you are idle or what you are doing"
+    ],
+    "reach": 2,
+    "reach_label": "While the page is open",
+    "differs": "The idle permission works in Chrome and Edge only. The simple click check works in every browser."
+  },
+  "story": {
+    "what_it_is": "A page can tell if you recently clicked or typed, and in Chromium, with permission, whether you are idle.",
+    "icon": "hourglass",
+    "tags": [
+      "Presence",
+      "Asks first",
+      "Chromium only"
+    ],
+    "marketing": [
+      {
+        "vendor": "Google Chrome",
+        "name": "Idle Detection API",
+        "pitch": "Chrome says it lets apps like chat know when you are away from the device, with your permission.",
+        "url": "https://developer.chrome.com/docs/capabilities/web-apis/idle-detection"
+      },
+      {
+        "vendor": "MDN",
+        "name": "User activation",
+        "pitch": "Explains that some features only work right after a real click or key press.",
+        "url": "https://developer.mozilla.org/en-US/docs/Web/Security/User_activation"
+      }
+    ],
+    "for_you": "Some features, like opening a popup, only work right after you tap or click. For the idle check, Chromium asks first, then a chat app can mark you as away or active.",
+    "for_makers": "User activation stops pages from playing sound or opening windows without you. Idle detection helps chat and collaboration apps show real presence and send notifications to the right device.",
+    "use_cases": [
+      {
+        "type": "messaging",
+        "example": "A work chat web app marks you away after you leave the computer, then sends alerts to your phone.",
+        "apps": [
+          "Slack",
+          "Microsoft Teams",
+          "Google Chat"
+        ]
+      },
+      {
+        "type": "productivity",
+        "example": "A shared document editor shows who is active right now so teammates know who is working.",
+        "apps": [
+          "Google Docs",
+          "Figma"
+        ]
+      },
+      {
+        "type": "games",
+        "example": "A browser game only starts sound and video after your first click, because browsers require it.",
+        "apps": []
+      },
+      {
+        "type": "video",
+        "example": "A video site pauses or lowers quality when you step away, to save data.",
+        "apps": []
+      },
+      {
+        "type": "security",
+        "example": "A banking site logs you out when you are idle, after a few minutes without activity.",
+        "apps": []
+      },
+      {
+        "type": "ads",
+        "example": "An ad site only counts a video as viewed if you interacted, which stops bots that play videos.",
+        "apps": []
+      },
+      {
+        "type": "education",
+        "example": "An online exam page notes long idle gaps to review for possible cheating.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Presence is personal",
+      "Can feel like watching"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "IdleDetector is Chromium only, 60 s minimum threshold, requires permission",
+    "Never shows which apps are active"
+  ],
+  "scores": {
+    "sensitivity": 2,
+    "utility": 2,
+    "fingerprint_bits": 2,
+    "friction": 3
+  },
+  "value": {
+    "legit_uses": "Chat presence, kiosks",
+    "abuse": "Attention surveillance, proctoring"
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2021-09",
+      "browser": "chrome",
+      "version": "94",
+      "change": "IdleDetector ships (permission prompt)"
+    }
+  ],
+  "related": [
+    "web.perf.page-visibility-focus"
+  ],
+  "refs": [
+    {
+      "t": "mdn",
+      "label": "MDN Idle Detection API",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/Idle_Detection_API"
+    },
+    {
+      "t": "mdn",
+      "label": "MDN UserActivation",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/UserActivation"
+    }
+  ],
+  "confidence": "docs"
+}

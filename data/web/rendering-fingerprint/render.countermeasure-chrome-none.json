@@ -1,0 +1,230 @@
+{
+  "id": "web.render.countermeasure-chrome-none",
+  "name": "Chrome and Edge: no default fingerprint defense",
+  "kind": "tracking",
+  "group": "rendering-fingerprint",
+  "subgroup": "Countermeasures",
+  "tags": [
+    "countermeasure",
+    "chrome",
+    "privacy-budget",
+    "ua-reduction"
+  ],
+  "plain": "Chrome and Edge do not randomize or block fingerprinting APIs by default.",
+  "meaning": "Chrome only reduced passive signals (User-Agent Reduction, Client Hints, partitioned storage). Privacy Budget never shipped, so canvas, WebGL, audio and fonts stay fully readable. Chrome has the largest fingerprinting surface.",
+  "lifecycle": [
+    "on-arrival"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "Chrome settings (no toggle); Incognito changes nothing for fingerprints",
+      "access": {
+        "grant": "none",
+        "prompt_ui": "",
+        "secure_context": false,
+        "user_gesture": false,
+        "persistence": "",
+        "revocation": "",
+        "iframe": "",
+        "steps": [
+          "Site reads canvas, WebGL, fonts as usual",
+          "Chrome only coarsens UA string and some high entropy hints",
+          "Enterprise and extensions like CanvasBlocker can add noise"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "n",
+          "v": "",
+          "note": ":No default defense"
+        },
+        "edge": {
+          "s": "n",
+          "v": "",
+          "note": ":No default defense"
+        },
+        "firefox": {
+          "s": "n",
+          "v": "",
+          "note": ":Edge adds Strict tracking prevention but not fingerprint noise"
+        },
+        "safari": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "ios_safari": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "chrome_android": {
+          "s": "n",
+          "v": "",
+          "note": ":No default defense"
+        },
+        "samsung": {
+          "s": "n",
+          "v": "",
+          "note": ":No default defense"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "none",
+    "metric": "No noise, no budget",
+    "update": "",
+    "fields": [
+      {
+        "name": "noise",
+        "type": "boolean",
+        "unit": "",
+        "range": "none",
+        "precision": "n/a"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can't stop sites from using device traits to spot you in Chrome or Edge",
+    "user_action": "Nothing. It is how Chrome and Edge are set up by default",
+    "can": [
+      "Let sites check canvas, graphics, audio and fonts as usual",
+      "Let sites see a trimmed down browser and system label",
+      "Keep cookies separate per site, which blocks some tracking"
+    ],
+    "cannot": [
+      "Add random noise to those checks",
+      "Block sites from fingerprinting by default",
+      "Hide your graphics card, fonts and sound setup"
+    ],
+    "reach": 1,
+    "reach_label": "Little default protection",
+    "differs": "Safari, Firefox and Brave add protections that Chrome and Edge do not."
+  },
+  "story": {
+    "what_it_is": "Chrome and Edge do not block or randomize most fingerprinting signals by default.",
+    "icon": "shield-off",
+    "tags": [
+      "Browser",
+      "Privacy gap",
+      "Defaults"
+    ],
+    "marketing": [
+      {
+        "vendor": "Google Chrome",
+        "name": "User agent reduction",
+        "pitch": "Chrome says it is trimming detail from the browser's identity string to reduce passive tracking.",
+        "url": "https://developer.chrome.com/docs/privacy-sandbox/user-agent/"
+      }
+    ],
+    "for_you": "Most people use Chrome or Edge and leave the default settings on. That means canvas, audio and graphics details are available to most sites, with no warning to you.",
+    "for_makers": "Fraud teams and ad tech rely on the open signals, because they work for the largest share of web users. Chrome has trimmed some data, like the version string, but still leaves most others readable.",
+    "use_cases": [
+      {
+        "type": "ads",
+        "example": "An ad network builds a device ID on Chrome visitors using canvas, fonts and graphics, because nothing stops it.",
+        "apps": []
+      },
+      {
+        "type": "security",
+        "example": "A bank trusts that Chrome reports honest values, and builds its device recognition on that.",
+        "apps": []
+      },
+      {
+        "type": "games",
+        "example": "A browser game reads graphics card names to pick the best quality setting for each player.",
+        "apps": []
+      },
+      {
+        "type": "analytics",
+        "example": "A visitor counting tool gets stable IDs from Chrome users and uses them for unique counts.",
+        "apps": [
+          "FingerprintJS"
+        ]
+      },
+      {
+        "type": "shopping",
+        "example": "A big retailer detects bots by checking that Chrome's values look like a real laptop.",
+        "apps": []
+      },
+      {
+        "type": "video",
+        "example": "A streaming site reads device and codec details to choose video quality.",
+        "apps": [
+          "Netflix",
+          "YouTube"
+        ]
+      },
+      {
+        "type": "developer",
+        "example": "A developer uses the same signals to fix bugs that only appear on certain graphics cards.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Default setting leaves signals open",
+      "Few people change defaults"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Incognito mode does not change fingerprints",
+    "Edge Strict mode blocks some trackers, not fingerprinting"
+  ],
+  "scores": {
+    "sensitivity": 1,
+    "utility": 3,
+    "fingerprint_bits": null,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": "n/a",
+    "abuse": "Highest fingerprint fidelity of any browser"
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2022-05",
+      "browser": "chrome",
+      "version": "101",
+      "change": "User-Agent Reduction starts"
+    },
+    {
+      "date": "2023-02",
+      "browser": "chrome",
+      "version": "110",
+      "change": "Reduced user agent string rolled out to all desktop and Android"
+    },
+    {
+      "date": "2025-10",
+      "browser": "chrome",
+      "version": "",
+      "change": "Privacy Sandbox APIs largely wound down"
+    }
+  ],
+  "related": [
+    "web.render.composite-fingerprint",
+    "web.render.webgl-parameters-extensions"
+  ],
+  "refs": [
+    {
+      "t": "vendor",
+      "label": "Chrome User-Agent Reduction",
+      "url": "https://developer.chrome.com/docs/privacy-sandbox/user-agent/"
+    },
+    {
+      "t": "github",
+      "label": "Privacy Budget explainer",
+      "url": "https://github.com/mikewest/privacy-budget"
+    }
+  ],
+  "confidence": "docs"
+}

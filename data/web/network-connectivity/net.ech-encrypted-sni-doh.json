@@ -1,0 +1,227 @@
+{
+  "id": "web.net.ech-encrypted-sni-doh",
+  "name": "ECH and DoH visibility",
+  "kind": "signal",
+  "group": "network-connectivity",
+  "subgroup": "Privacy transport",
+  "tags": [
+    "ech",
+    "sni",
+    "doh",
+    "dns"
+  ],
+  "plain": "Encrypted Client Hello and DNS over HTTPS hide which site a visitor connects to from the local network.",
+  "meaning": "ECH encrypts the SNI and the rest of the ClientHello using a key from DNS HTTPS records (RFC 9849 in Chrome 117 and Firefox 118 era). DoH encrypts DNS lookups. They hide hostnames from ISPs but not from the site, and they weaken JA3/JA4 on the wire.",
+  "lifecycle": [
+    "on-arrival"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "TLS ECH extension; HTTPS RR; DoH",
+      "access": {
+        "grant": "none",
+        "prompt_ui": "",
+        "secure_context": false,
+        "user_gesture": false,
+        "persistence": "",
+        "revocation": "",
+        "iframe": "",
+        "steps": [
+          "Resolver returns ECH config",
+          "Browser sends encrypted inner ClientHello",
+          "Network sees only a public name"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "117",
+          "note": "",
+          "date": "2023-09-12"
+        },
+        "edge": {
+          "s": "y",
+          "v": "117",
+          "note": "",
+          "date": "2023-09-15"
+        },
+        "firefox": {
+          "s": "y",
+          "v": "118",
+          "note": "",
+          "date": "2023-09-26"
+        },
+        "safari": {
+          "s": "n",
+          "v": "",
+          "note": ":No ECH support known at 2026-11 (unverified)"
+        },
+        "ios_safari": {
+          "s": "n",
+          "v": "",
+          "note": ":No ECH support known at 2026-11 (unverified)"
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "117",
+          "note": "",
+          "date": "2023-09-12"
+        },
+        "samsung": {
+          "s": "y",
+          "v": "24.0",
+          "note": "",
+          "date": "2024-01-25"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "boolean",
+    "metric": "ECH accepted",
+    "update": "",
+    "fields": [
+      {
+        "name": "ech_accepted",
+        "type": "boolean",
+        "unit": "",
+        "range": "true or false",
+        "precision": "per connection"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can hide the site you visit from your internet provider, not from the site itself",
+    "user_action": "Nothing. Your browser can turn it on by itself, or you choose it in settings",
+    "can": [
+      "Hide the site name from your internet provider on supported sites",
+      "Hide your DNS lookups from your network with secure DNS",
+      "Keep working on supported sites without changing how pages look"
+    ],
+    "cannot": [
+      "Hide you from the site you visit; it still sees you connect",
+      "Work in Safari today",
+      "Work with some network filters and monitors, which may break or block it"
+    ],
+    "reach": 1,
+    "reach_label": "Protects you from the network",
+    "differs": "Chrome, Edge, Firefox and Samsung Internet support it. Safari does not yet."
+  },
+  "story": {
+    "what_it_is": "Hides which site you connect to from people watching your network.",
+    "icon": "eye-off",
+    "tags": [
+      "Network",
+      "Privacy",
+      "Encryption"
+    ],
+    "marketing": [
+      {
+        "vendor": "Cloudflare",
+        "name": "Encrypted Client Hello",
+        "pitch": "Cloudflare pitches it as the missing piece that hides which website you visit from anyone watching the connection.",
+        "url": "https://blog.cloudflare.com/encrypted-client-hello/"
+      },
+      {
+        "vendor": "Mozilla",
+        "name": "DNS over HTTPS",
+        "pitch": "Mozilla describes DNS over HTTPS as a way to encrypt website lookups so others on the network cannot see them.",
+        "url": "https://support.mozilla.org/en-US/kb/firefox-dns-over-https"
+      }
+    ],
+    "for_you": "You see nothing change. On public Wi-Fi or at a school, the network can no longer easily see which site you are opening. Your home network or work can still see that you connected.",
+    "for_makers": "Makers get stronger privacy for visitors and fewer blocked connections. Network filters, schools and countries lose an easy way to block sites by name. Some security tools also lose visibility.",
+    "use_cases": [
+      {
+        "type": "media",
+        "example": "A news site in a country with censorship becomes harder for the network to block by name.",
+        "apps": []
+      },
+      {
+        "type": "games",
+        "example": "A gamer on school or hotel Wi-Fi opens a game site that the network blocks by name, and it still loads.",
+        "apps": []
+      },
+      {
+        "type": "security",
+        "example": "A company security tool loses sight of which sites staff open, so it uses managed browsers instead.",
+        "apps": []
+      },
+      {
+        "type": "shopping",
+        "example": "A shopper on cafe Wi-Fi hides which stores they visit from nearby snoopers.",
+        "apps": []
+      },
+      {
+        "type": "ads",
+        "example": "Internet providers lose a data source used to sell browsing history to marketers.",
+        "apps": []
+      },
+      {
+        "type": "analytics",
+        "example": "A researcher measures how much web traffic hides its destination.",
+        "apps": [
+          "Cloudflare Radar"
+        ]
+      }
+    ],
+    "risks": [
+      "Hides sites from parental filters",
+      "Harder for security teams"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Needs an ECH enabled CDN (Cloudflare) and DoH",
+    "Outer SNI still visible as a shared public name"
+  ],
+  "scores": {
+    "sensitivity": 1,
+    "utility": 3,
+    "fingerprint_bits": 1,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": "Censorship resistance, privacy",
+    "abuse": "Makes middlebox TLS fingerprinting harder"
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2023-09",
+      "browser": "chrome",
+      "version": "117",
+      "change": "ECH enabled by default"
+    },
+    {
+      "date": "2023-09",
+      "browser": "firefox",
+      "version": "118",
+      "change": "ECH enabled by default (DoH required)"
+    }
+  ],
+  "related": [
+    "web.net.dns-resolver-leak",
+    "web.net.ja4-fingerprint-family"
+  ],
+  "refs": [
+    {
+      "t": "rfc",
+      "label": "IETF TLS ECH specification",
+      "url": "https://datatracker.ietf.org/doc/draft-ietf-tls-esni/"
+    },
+    {
+      "t": "vendor",
+      "label": "Cloudflare ECH",
+      "url": "https://blog.cloudflare.com/encrypted-client-hello/"
+    }
+  ],
+  "confidence": "docs"
+}

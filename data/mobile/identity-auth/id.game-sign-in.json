@@ -1,0 +1,205 @@
+{
+  "id": "mob.id.game-sign-in",
+  "name": "Game services sign in (Play Games, Game Center)",
+  "kind": "capability",
+  "group": "identity-auth",
+  "subgroup": "Games",
+  "tags": [
+    "play-games",
+    "game-center",
+    "achievements",
+    "leaderboards"
+  ],
+  "plain": "Signs the player into the platform game account for scores and saves.",
+  "meaning": "Gives a game a stable player ID, display name and friends list. It links gaming activity across titles for the same person.",
+  "lifecycle": [
+    "signed-in"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "y",
+      "v": "4.0",
+      "api": 14,
+      "permission": "None; Play Games Services v2 sign in (automatic) from 2023, v1 sunset",
+      "protection": "none",
+      "grant": "prompt",
+      "prompt_ui": "Automatic sign in with a one time consent; manual sign in button",
+      "persistence": "Until revoked",
+      "revocation": "Play Games app > Settings > Delete Play Games account",
+      "store_policy": "Play: PGS v2 required for new releases",
+      "api_surface": "Play Games Services v2 GamesSignInClient, PlayersClient, Saved Games",
+      "note": "PGS v1 is retired; Play Games on PC uses the same account."
+    },
+    "ios": {
+      "s": "y",
+      "v": "4.2",
+      "permission": "com.apple.developer.game-center",
+      "protection": "entitlement",
+      "grant": "prompt",
+      "prompt_ui": "Game Center banner; sign in to Apple ID",
+      "persistence": "Until signed out",
+      "revocation": "Settings > Game Center",
+      "store_policy": "",
+      "api_surface": "GameKit GKLocalPlayer, GKAccessPoint (iOS 14), Games app (iOS 26)",
+      "note": "iOS 26 adds a Games app with challenges and Activity feed."
+    }
+  },
+  "data": {
+    "type": "object",
+    "metric": "Player profile",
+    "update": "per session",
+    "fields": [
+      {
+        "name": "player id",
+        "type": "string",
+        "unit": "opaque",
+        "range": "team scoped",
+        "precision": "stable per developer"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can sign you in to your game account to save progress and post scores",
+    "user_action": "You open a game and tap Sign in, or it signs you in on first launch",
+    "can": [
+      "Sign you in to Play Games or Game Center with the account already on the phone",
+      "Show your player name and profile picture in the game",
+      "Save game progress to the platform's cloud",
+      "Post scores and unlock achievements"
+    ],
+    "cannot": [
+      "See your Google or Apple account password",
+      "See your friends list without your approval",
+      "Move progress to the other platform (iPhone to Android or back)",
+      "Sign you in when you decline or turn the service off"
+    ],
+    "reach": 2,
+    "reach_label": "Your game profile only",
+    "differs": "Android uses Play Games Services and signs in automatically. iPhone uses Game Center and shows a sign in prompt."
+  },
+  "story": {
+    "what_it_is": "You sign into the phone's built in game account, so scores, saves and friends follow you.",
+    "icon": "gamepad-2",
+    "tags": [
+      "Games",
+      "Account",
+      "Convenience"
+    ],
+    "marketing": [
+      {
+        "vendor": "Google",
+        "name": "Google Play Games services",
+        "pitch": "One game profile that carries your achievements, cloud saves and leaderboards across devices.",
+        "url": "https://developer.android.com/games/pgs/overview"
+      },
+      {
+        "vendor": "Apple",
+        "name": "Game Center",
+        "pitch": "Apple's social gaming network for friends, leaderboards and achievements across your Apple devices.",
+        "url": "https://developer.apple.com/game-center/"
+      }
+    ],
+    "for_you": "When you open a game you see a small welcome banner with your gamer name. Your progress is saved to the account and shows up on a new phone. Friends can see your scores and invite you to play.",
+    "for_makers": "Makers get a ready made player ID, friends list, leaderboard and cloud save without building their own. It also gives the platform a link between your play in many games, which helps with recommendations and retention.",
+    "use_cases": [
+      {
+        "type": "games",
+        "example": "A puzzle game restores your levels and coins on a new phone after you sign in with your game account.",
+        "apps": [
+          "Monument Valley"
+        ]
+      },
+      {
+        "type": "games",
+        "example": "A racing game shows your lap time against friends on a leaderboard.",
+        "apps": [
+          "Asphalt 9",
+          "Real Racing 3"
+        ]
+      },
+      {
+        "type": "games",
+        "example": "A multiplayer game uses your friends list to start a match or invite someone straight into your party.",
+        "apps": [
+          "Words With Friends"
+        ]
+      },
+      {
+        "type": "ar-vr",
+        "example": "An AR title saves your collection to the game account so a lost phone does not wipe it.",
+        "apps": []
+      },
+      {
+        "type": "kids",
+        "example": "A kids game uses an account managed by a parent so achievements are saved without a new password.",
+        "apps": []
+      },
+      {
+        "type": "analytics",
+        "example": "A studio sees returning players across devices and counts a person once, not three phones.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Links play across titles",
+      "Account lock in"
+    ],
+    "android_note": "Android uses Play Games, and it signs in automatically when the player has a Google account on the phone.",
+    "ios_note": "iPhone uses Game Center, and the player signs in once in Settings and can turn it off per app."
+  },
+  "technical_bounds": [
+    "Friends list needs player consent"
+  ],
+  "scores": {
+    "sensitivity": 2,
+    "utility": 3,
+    "fingerprint_bits": 1,
+    "friction": 1
+  },
+  "value": {
+    "legit_uses": [
+      "Leaderboards",
+      "Cloud saves"
+    ],
+    "abuse": [
+      "Cross game identity"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2023-02",
+      "platform": "android",
+      "version": "Play Games Services v2",
+      "change": "Automatic sign in replaces explicit sign in"
+    },
+    {
+      "date": "2025-09",
+      "platform": "ios",
+      "version": "iOS 26",
+      "change": "Apple Games app"
+    }
+  ],
+  "related": [
+    "mob.id.sign-in-google"
+  ],
+  "refs": [
+    {
+      "t": "android",
+      "label": "Android: Play Games Services",
+      "url": "https://developer.android.com/games/pgs/overview"
+    },
+    {
+      "t": "apple",
+      "label": "Apple: GameKit",
+      "url": "https://developer.apple.com/documentation/gamekit"
+    }
+  ],
+  "confidence": "docs"
+}

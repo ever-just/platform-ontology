@@ -1,0 +1,179 @@
+{
+  "id": "mob.linkedin.people-you-may-know",
+  "name": "People You May Know from contacts and calendar",
+  "kind": "tracking",
+  "group": "personal-data-contacts",
+  "subgroup": "Social graph inference",
+  "tags": [
+    "social-graph",
+    "shadow-profile",
+    "server-side"
+  ],
+  "plain": "LinkedIn uses uploaded contacts and others' uploads to suggest connections.",
+  "meaning": "A person's number or email in someone else's address book can feed suggestions about them even if they never uploaded anything.",
+  "lifecycle": [
+    "signed-in",
+    "background"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "y",
+      "v": "",
+      "permission": "",
+      "protection": "none",
+      "grant": "none",
+      "prompt_ui": "Server side",
+      "persistence": "Until removed",
+      "revocation": "Delete imported contacts in Settings",
+      "store_policy": "",
+      "api_surface": "Server side",
+      "note": ""
+    },
+    "ios": {
+      "s": "y",
+      "v": "",
+      "permission": "",
+      "protection": "none",
+      "grant": "none",
+      "prompt_ui": "Server side",
+      "persistence": "Until removed",
+      "revocation": "Delete imported contacts in Settings",
+      "store_policy": "",
+      "api_surface": "Server side",
+      "note": ""
+    }
+  },
+  "data": {
+    "type": "list",
+    "metric": "Contacts and calendar attendees",
+    "update": "periodic",
+    "fields": []
+  },
+  "limits": {
+    "headline": "Can suggest you to people from their uploaded contacts, even if you never uploaded yours",
+    "user_action": "Nothing from you. It happens when someone else uploads their address book",
+    "can": [
+      "Match your number or email found in someone else's address book",
+      "Suggest connections about you",
+      "Use uploaded contacts and calendar to build suggestions"
+    ],
+    "cannot": [
+      "Be stopped by denying contacts on your own phone",
+      "Be controlled through a phone permission prompt; it happens on the server"
+    ],
+    "reach": 4,
+    "reach_label": "Ongoing, from other people's uploads",
+    "differs": ""
+  },
+  "story": {
+    "what_it_is": "LinkedIn suggests people to connect with, using uploaded address books and what other people uploaded.",
+    "icon": "user-round-search",
+    "tags": [
+      "Contacts",
+      "Tracking",
+      "Social"
+    ],
+    "marketing": [],
+    "for_you": "You see people you might know. Some are surprising, like a doctor or an ex. Your number or email can reach LinkedIn when someone else uploads their address book, even if you never joined.",
+    "for_makers": "Contact uploads link people in ways no profile can. LinkedIn uses them to grow connections and keep members active. Mixing your contacts with others' makes strange guesses and can reveal who knows whom.",
+    "use_cases": [
+      {
+        "type": "social",
+        "example": "LinkedIn shows a recruiter you met once because she has your number.",
+        "apps": [
+          "LinkedIn"
+        ]
+      },
+      {
+        "type": "dating",
+        "example": "A dating app uses uploads to avoid showing people you know, the reverse of the same data.",
+        "apps": []
+      },
+      {
+        "type": "messaging",
+        "example": "A chat app suggests friends from address books uploaded by others.",
+        "apps": [
+          "WhatsApp"
+        ]
+      },
+      {
+        "type": "social",
+        "example": "A photo app suggests people to follow from shared contacts.",
+        "apps": [
+          "Instagram"
+        ]
+      },
+      {
+        "type": "security",
+        "example": "A security researcher shows how uploads can reveal a hidden link between two people.",
+        "apps": []
+      },
+      {
+        "type": "enterprise",
+        "example": "A sales app suggests leads from the contacts a coworker uploaded.",
+        "apps": []
+      },
+      {
+        "type": "health",
+        "example": "A support group app hides a member's real links so they cannot be linked.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Reveals hidden links between people",
+      "Others' uploads expose you",
+      "Hard to remove"
+    ],
+    "android_note": "The Android LinkedIn app can ask to sync your contacts, and you can turn it off.",
+    "ios_note": "The iPhone LinkedIn app asks for contacts and you can turn off sync in Settings."
+  },
+  "technical_bounds": [
+    "Imported contacts deleted immediately on request; suggestions can take up to 72 hours to update"
+  ],
+  "scores": {
+    "sensitivity": 5,
+    "utility": 3,
+    "fingerprint_bits": null,
+    "friction": 3
+  },
+  "value": {
+    "legit_uses": [
+      "Find colleagues"
+    ],
+    "abuse": [
+      "Mapping non-member relationships"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": true,
+      "how": "Policy 1.2 says LinkedIn receives contact info when others import or sync contacts, or scan business cards. Section 2.1 uses address book uploads for suggestions. LinkedIn help: contacts deleted immediately, suggestions update within 72 hours."
+    }
+  },
+  "history": [
+    {
+      "date": "2025-12",
+      "platform": "android",
+      "version": "n/a",
+      "change": "Contacts sync reported as no longer supported on LinkedIn help pages (date not stated)"
+    }
+  ],
+  "related": [
+    "mob.contacts.read",
+    "mob.contacts.calendar"
+  ],
+  "refs": [
+    {
+      "t": "policy",
+      "label": "LinkedIn Privacy Policy (effective 3 Nov 2025)",
+      "url": "https://www.linkedin.com/legal/privacy-policy"
+    },
+    {
+      "t": "policy",
+      "label": "LinkedIn Help: Delete imported contacts",
+      "url": "https://www.linkedin.com/help/linkedin/answer/a563126"
+    }
+  ],
+  "confidence": "verified"
+}

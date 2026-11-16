@@ -1,0 +1,183 @@
+{
+  "id": "mob.linkedin.id-verification",
+  "name": "LinkedIn ID verification (CLEAR, Persona)",
+  "kind": "capability",
+  "group": "identity-auth",
+  "subgroup": "Verification",
+  "tags": [
+    "third-party-vendor",
+    "biometric",
+    "nfc"
+  ],
+  "plain": "Checks a government ID and selfie through a partner inside the app.",
+  "meaning": "Links a real legal identity and face to the profile, then shows a verified badge. Vendor retention rules apply.",
+  "lifecycle": [
+    "signed-in"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "y",
+      "v": "",
+      "permission": "CAMERA, NFC",
+      "protection": "dangerous",
+      "grant": "prompt",
+      "prompt_ui": "Camera prompt; NFC toggle",
+      "persistence": "Until revoked",
+      "revocation": "Settings > Apps > Permissions",
+      "store_policy": "",
+      "api_surface": "Persona SDK or CLEAR web flow",
+      "note": ""
+    },
+    "ios": {
+      "s": "y",
+      "v": "",
+      "permission": "NSCameraUsageDescription; NFC reader entitlement",
+      "protection": "prompt",
+      "grant": "prompt",
+      "prompt_ui": "Camera prompt; NFC sheet",
+      "persistence": "Until revoked",
+      "revocation": "Settings > Privacy & Security",
+      "store_policy": "",
+      "api_surface": "Persona SDK or CLEAR web flow",
+      "note": ""
+    }
+  },
+  "data": {
+    "type": "object",
+    "metric": "ID images, selfie, chip data, facial geometry",
+    "update": "once",
+    "fields": []
+  },
+  "limits": {
+    "headline": "Can check a government ID and a selfie through a partner inside the app",
+    "user_action": "You tap Verify, take photos of your ID, and scan a selfie",
+    "can": [
+      "Use the camera to photograph your ID and your face",
+      "Scan the chip in a passport or ID with NFC (Android and iPhone)",
+      "Send the images to a partner like CLEAR or Persona for matching",
+      "Show a verified badge on your profile"
+    ],
+    "cannot": [
+      "Verify you without you taking the photos",
+      "See your ID before you scan it",
+      "Keep using the camera when you leave the screen",
+      "Verify you with no partner check"
+    ],
+    "reach": 1,
+    "reach_label": "One scan, one moment",
+    "differs": "Both phones use the camera and NFC with a prompt. Android needs the camera permission; iPhone needs a camera purpose string."
+  },
+  "story": {
+    "what_it_is": "An app checks your government ID and a selfie through a partner company, then shows a verified badge.",
+    "icon": "badge-check",
+    "tags": [
+      "Identity",
+      "Asks first",
+      "Biometric"
+    ],
+    "marketing": [],
+    "for_you": "You tap Verify, take a photo of your ID and a selfie, and a partner checks them. If it passes, you get a badge on your profile. Fewer fake profiles contact you.",
+    "for_makers": "Makers want fewer fake accounts and scams, and a badge helps users trust each other. The partner holds the sensitive scans, so retention rules matter. Verified people also bring better ad and hiring value to the platform.",
+    "use_cases": [
+      {
+        "type": "social",
+        "example": "A professional network adds a badge so recruiters trust a profile is a real person.",
+        "apps": [
+          "LinkedIn"
+        ]
+      },
+      {
+        "type": "dating",
+        "example": "A dating app asks for a face check so you know your match is not using someone else's photos.",
+        "apps": [
+          "Tinder",
+          "Bumble"
+        ]
+      },
+      {
+        "type": "rideshare",
+        "example": "A ride or rental app confirms a driver's license and face before it gives the person access.",
+        "apps": [
+          "Uber"
+        ]
+      },
+      {
+        "type": "shopping",
+        "example": "A resale marketplace verifies sellers to cut scams.",
+        "apps": [
+          "eBay",
+          "Vinted"
+        ]
+      },
+      {
+        "type": "banking",
+        "example": "A bank opens an account after a live ID and selfie check.",
+        "apps": [
+          "Chime"
+        ]
+      },
+      {
+        "type": "payments",
+        "example": "A crypto exchange checks your ID before it lets you buy.",
+        "apps": [
+          "Coinbase"
+        ]
+      }
+    ],
+    "risks": [
+      "Biometric data kept too long",
+      "Mistakes lock out real people"
+    ],
+    "android_note": "Android apps use the same partner flows, usually through the camera and a web view.",
+    "ios_note": "iPhone apps use the camera and the same partner flows, sometimes with NFC to read a passport chip."
+  },
+  "technical_bounds": [
+    "Optional and free per LinkedIn"
+  ],
+  "scores": {
+    "sensitivity": 5,
+    "utility": 4,
+    "fingerprint_bits": null,
+    "friction": 3
+  },
+  "value": {
+    "legit_uses": [
+      "Fraud reduction"
+    ],
+    "abuse": [
+      "Biometric retention"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": true,
+      "how": "CLEAR in the US, Canada and Mexico; Persona (NFC passport plus selfie) in other countries; India uses DigiLocker. Persona deletes face geometry after processing and keeps selfie and ID data up to 30 days (third-party write-ups)."
+    }
+  },
+  "history": [
+    {
+      "date": "2023-04",
+      "platform": "android",
+      "version": "n/a",
+      "change": "Persona partnership expanded passport verification to more countries (press)"
+    }
+  ],
+  "related": [
+    "mob.camera.camera",
+    "mob.peripherals.nfc"
+  ],
+  "refs": [
+    {
+      "t": "policy",
+      "label": "LinkedIn Help: Verifications",
+      "url": "https://www.linkedin.com/help/linkedin/answer/140551"
+    },
+    {
+      "t": "vendor",
+      "label": "Persona help: LinkedIn verification",
+      "url": "https://help.withpersona.com/end-users/linkedin/get-verified"
+    }
+  ],
+  "confidence": "docs"
+}

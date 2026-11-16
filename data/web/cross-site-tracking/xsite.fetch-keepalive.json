@@ -1,0 +1,248 @@
+{
+  "id": "web.xsite.fetch-keepalive",
+  "name": "fetch keepalive",
+  "kind": "capability",
+  "group": "cross-site-tracking",
+  "subgroup": "After leaving",
+  "tags": [
+    "fetch",
+    "keepalive",
+    "analytics"
+  ],
+  "plain": "A fetch flag that lets the request finish after the page is gone.",
+  "meaning": "Replaces sendBeacon when a site needs custom headers or methods on exit. The browser holds the request open past unload, with the same 64 KiB cap. Firefox shipped it in version 133 (Nov 2024).",
+  "lifecycle": [
+    "after-leaving"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "fetch(url, {keepalive: true})",
+      "bcd": [
+        "api.Request.keepalive"
+      ],
+      "access": {
+        "grant": "none",
+        "prompt_ui": "None",
+        "secure_context": false,
+        "user_gesture": false,
+        "persistence": "Until the request completes or fails",
+        "revocation": "Clear site data, browser privacy settings",
+        "iframe": "",
+        "steps": []
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "66",
+          "note": "",
+          "date": "2018-04-17"
+        },
+        "edge": {
+          "s": "y",
+          "v": "15",
+          "note": "",
+          "date": "2017-04-05"
+        },
+        "firefox": {
+          "s": "y",
+          "v": "133",
+          "note": "",
+          "date": "2024-11-26"
+        },
+        "safari": {
+          "s": "y",
+          "v": "13",
+          "note": "",
+          "date": "2019-09-19"
+        },
+        "ios_safari": {
+          "s": "y",
+          "v": "13",
+          "note": "",
+          "date": "2019-09-19"
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "66",
+          "note": "",
+          "date": "2018-04-17"
+        },
+        "samsung": {
+          "s": "y",
+          "v": "9.0",
+          "note": "",
+          "date": "2018-09-15"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "event",
+    "metric": "Keepalive request",
+    "update": "at page exit",
+    "fields": [
+      {
+        "name": "payload",
+        "type": "integer",
+        "unit": "bytes",
+        "range": "up to about 65536",
+        "precision": "exact"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can finish sending a request after you leave or close the page",
+    "user_action": "Nothing. It happens when you close or leave a page that has a pending report",
+    "can": [
+      "Complete a request that was started before you left",
+      "Send a last report about the visit",
+      "Send a small amount of data even as the page unloads"
+    ],
+    "cannot": [
+      "Send a large amount of data, since there is a small size limit",
+      "Keep running for long after the page is gone",
+      "Run if the browser or a blocker stops the request",
+      "Show you a prompt or any sign"
+    ],
+    "reach": 2,
+    "reach_label": "A final report, as you leave",
+    "differs": ""
+  },
+  "story": {
+    "what_it_is": "A flag that lets a web request finish even if you close the page.",
+    "icon": "timer",
+    "tags": [
+      "Analytics",
+      "Silent",
+      "Page exit"
+    ],
+    "marketing": [
+      {
+        "vendor": "Mozilla",
+        "name": "Request keepalive",
+        "pitch": "Developer docs say keepalive lets a request outlive the page, so a final report can go out as you leave.",
+        "url": "https://developer.mozilla.org/en-US/docs/Web/API/Request/keepalive"
+      }
+    ],
+    "for_you": "You never see it. You close a tab or click away, and the page quietly sends one last note that finishes after the page is gone. It might be your time on page or a saved draft.",
+    "for_makers": "Sites need a way to report at exit, when normal requests are cancelled. Keepalive allows custom headers and methods, which sendBeacon does not. The 64 KiB cap limits how much can go.",
+    "use_cases": [
+      {
+        "type": "analytics",
+        "example": "A news site reports how long you read and how far you scrolled as you close the article.",
+        "apps": [
+          "Chartbeat",
+          "Google Analytics"
+        ]
+      },
+      {
+        "type": "games",
+        "example": "A browser game sends your final score or a session end event when you close the tab, so progress is not lost.",
+        "apps": [
+          "Wordle",
+          "Agar.io"
+        ]
+      },
+      {
+        "type": "productivity",
+        "example": "An online editor sends a last autosave while you close the tab, so your last words are saved.",
+        "apps": [
+          "Google Docs",
+          "Notion"
+        ]
+      },
+      {
+        "type": "video",
+        "example": "A video site sends your watch position when you leave, so the next visit resumes at the same moment.",
+        "apps": [
+          "YouTube",
+          "Netflix"
+        ]
+      },
+      {
+        "type": "security",
+        "example": "A fraud tool sends a final batch of mouse and typing data when you leave a checkout page.",
+        "apps": [
+          "Sift",
+          "HUMAN Security"
+        ]
+      },
+      {
+        "type": "ads",
+        "example": "An ad tag sends a last viewability report that says how long the ad was on screen.",
+        "apps": [
+          "Google Ad Manager"
+        ]
+      }
+    ],
+    "risks": [
+      "Hard to see or stop",
+      "Can send data as you leave"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "About 64 KiB total in flight per page",
+    "Not available with all request modes",
+    "Blocked by tracker blockers"
+  ],
+  "scores": {
+    "sensitivity": 3,
+    "utility": 4,
+    "fingerprint_bits": null,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Exit logging with headers"
+    ],
+    "abuse": [
+      "Post-visit data exfiltration"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2018-04",
+      "browser": "chrome",
+      "version": "66",
+      "change": "Shipped"
+    },
+    {
+      "date": "2019-09",
+      "browser": "safari",
+      "version": "13",
+      "change": "Shipped"
+    },
+    {
+      "date": "2024-11",
+      "browser": "firefox",
+      "version": "133",
+      "change": "Shipped"
+    }
+  ],
+  "related": [
+    "web.xsite.sendbeacon",
+    "web.xsite.fetchlater"
+  ],
+  "refs": [
+    {
+      "t": "mdn",
+      "label": "MDN fetch keepalive",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/Request/keepalive"
+    },
+    {
+      "t": "spec",
+      "label": "Fetch Standard keepalive",
+      "url": "https://fetch.spec.whatwg.org/#request-keepalive-flag"
+    }
+  ],
+  "confidence": "verified"
+}

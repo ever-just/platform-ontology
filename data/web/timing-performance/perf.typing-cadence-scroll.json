@@ -1,0 +1,225 @@
+{
+  "id": "web.perf.typing-cadence-scroll",
+  "name": "Scroll and touch dynamics",
+  "kind": "tracking",
+  "group": "timing-performance",
+  "subgroup": "Behavioral biometrics",
+  "tags": [
+    "scroll",
+    "touch",
+    "force",
+    "radius",
+    "swipe"
+  ],
+  "plain": "Records scroll speed, swipe shape and touch pressure and size.",
+  "meaning": "Touch events expose contact radius, rotation and force (where hardware supports it); scroll and swipe timing is device and person specific. Used in mobile behavioral biometrics and bot checks.",
+  "lifecycle": [
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "touchstart/touchmove Touch.radiusX, rotationAngle, force; scroll events; PointerEvent.pressure",
+      "bcd": [
+        "api.Touch.force"
+      ],
+      "access": {
+        "grant": "none",
+        "prompt_ui": "",
+        "secure_context": false,
+        "user_gesture": false,
+        "persistence": "",
+        "revocation": "",
+        "iframe": "",
+        "steps": [
+          "Listen to touch and scroll events",
+          "Record force, radius, velocity",
+          "Model per user or per device"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "38",
+          "note": "",
+          "date": "2014-10-07"
+        },
+        "edge": {
+          "s": "y",
+          "v": "79",
+          "note": "",
+          "date": "2020-01-15"
+        },
+        "firefox": {
+          "s": "y",
+          "v": "52",
+          "note": "force on Firefox for Android only",
+          "date": "2017-03-07"
+        },
+        "safari": {
+          "s": "y",
+          "v": "13",
+          "note": "No force on iPhone without 3D Touch",
+          "date": "2019-09-19"
+        },
+        "ios_safari": {
+          "s": "y",
+          "v": "10",
+          "note": "",
+          "date": "2016-09-13"
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "38",
+          "note": "",
+          "date": "2014-10-08"
+        },
+        "samsung": {
+          "s": "y",
+          "v": "3.0",
+          "note": "",
+          "date": "2015-04-10"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "event",
+    "metric": "Per touch sample",
+    "update": "",
+    "fields": [
+      {
+        "name": "force",
+        "type": "float",
+        "unit": "",
+        "range": "0 to 1",
+        "precision": "hardware dependent (0 on many Androids)"
+      },
+      {
+        "name": "radiusX",
+        "type": "float",
+        "unit": "CSS px",
+        "range": "0 to 100",
+        "precision": "about 0.1 px"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can track how you scroll and swipe, plus touch size and pressure",
+    "user_action": "You scroll, swipe or touch the screen",
+    "can": [
+      "See how fast you scroll",
+      "See the shape of your swipes",
+      "See touch size and tilt, and pressure where your device has it",
+      "Build a touch profile used in fraud checks"
+    ],
+    "cannot": [
+      "See touches outside the page",
+      "Ask permission first",
+      "See pressure on devices that do not measure it",
+      "See what you type"
+    ],
+    "reach": 3,
+    "reach_label": "While you use the page",
+    "differs": "Pressure is available on some iPhones and Android devices only. Many touch screens report just size."
+  },
+  "story": {
+    "what_it_is": "A script records scroll speed, swipe shape, touch pressure and finger size to judge how you use the page.",
+    "icon": "hand",
+    "tags": [
+      "Touch",
+      "Silent",
+      "Behavior"
+    ],
+    "marketing": [],
+    "for_you": "You never see it. The way you swipe and scroll is very personal. A page that records it can tell if a human is holding the phone, and sometimes who it is.",
+    "for_makers": "Fraud and bot defense tools use touch and scroll patterns as a quiet check that a real person is using a real device. Product teams use the same data for scroll depth and heat maps.",
+    "use_cases": [
+      {
+        "type": "banking",
+        "example": "A banking site compares how you swipe and tap with your usual style, as a hidden check.",
+        "apps": []
+      },
+      {
+        "type": "security",
+        "example": "A bot detector sees scroll jumps that are too perfect and blocks the visit.",
+        "apps": [
+          "Cloudflare",
+          "HUMAN"
+        ]
+      },
+      {
+        "type": "news",
+        "example": "A news site measures how far down each article people scroll to learn which stories hold attention.",
+        "apps": []
+      },
+      {
+        "type": "shopping",
+        "example": "A shop uses scroll and tap heat maps to see where people lose interest on a product page.",
+        "apps": [
+          "Hotjar",
+          "Microsoft Clarity"
+        ]
+      },
+      {
+        "type": "games",
+        "example": "A mobile browser game finds auto clickers by checking that taps do not have natural pressure and size.",
+        "apps": []
+      },
+      {
+        "type": "social",
+        "example": "A social site checks that likes on a feed come from natural scroll and touch, not from a script.",
+        "apps": []
+      },
+      {
+        "type": "ads",
+        "example": "An ad network checks that taps on an ad had natural movement, to avoid charging for fake clicks.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Behavior is personal",
+      "Hard to notice",
+      "Used for tracking"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "No pressure on mouse or most phones",
+    "iOS 13 removed Force Touch values on iPhones"
+  ],
+  "scores": {
+    "sensitivity": 2,
+    "utility": 3,
+    "fingerprint_bits": 3,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": "Drawing apps, gestures",
+    "abuse": "Behavioral biometrics and fraud scoring, sensor presence detection"
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "related": [
+    "web.perf.keystroke-dynamics",
+    "web.perf.mouse-dynamics"
+  ],
+  "refs": [
+    {
+      "t": "mdn",
+      "label": "MDN Touch.force",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/Touch/force"
+    },
+    {
+      "t": "paper",
+      "label": "Frank et al., Touchalytics (2013)",
+      "url": "https://arxiv.org/abs/1207.6231"
+    }
+  ],
+  "confidence": "docs"
+}

@@ -1,0 +1,178 @@
+{
+  "id": "mob.files.storage-legacy",
+  "name": "Legacy external storage",
+  "kind": "permission",
+  "group": "files-storage",
+  "subgroup": "Storage",
+  "tags": [
+    "runtime-permission",
+    "scoped-storage",
+    "legacy"
+  ],
+  "plain": "Old permission for reading and writing shared files.",
+  "meaning": "Opened all shared files to any app that asked. Replaced by scoped storage and granular media permissions.",
+  "lifecycle": [
+    "in-session"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "r",
+      "v": "11",
+      "api": 30,
+      "permission": "READ_EXTERNAL_STORAGE, WRITE_EXTERNAL_STORAGE",
+      "protection": "dangerous",
+      "grant": "not-exposed",
+      "prompt_ui": "Allow or Don't allow",
+      "persistence": "Until revoked",
+      "revocation": "Settings > Apps > Permissions > Files and media",
+      "store_policy": "Play: replaced by scoped storage",
+      "api_surface": "Environment.getExternalStorageDirectory (legacy)",
+      "note": "Effectively ineffective on Android 11+ (API 30) for apps targeting 11; READ_EXTERNAL_STORAGE ignored for media on 13."
+    },
+    "ios": {
+      "s": "n",
+      "v": "",
+      "permission": "",
+      "protection": "none",
+      "grant": "not-exposed",
+      "prompt_ui": "none",
+      "persistence": "none",
+      "revocation": "",
+      "store_policy": "App Review 5.1.1",
+      "api_surface": "App sandbox",
+      "note": "iOS apps have always been sandboxed."
+    }
+  },
+  "web_equivalents": [
+    "web.storage.file-system-access"
+  ],
+  "data": {
+    "type": "list",
+    "metric": "Shared files",
+    "update": "on demand",
+    "fields": []
+  },
+  "limits": {
+    "headline": "Can't open shared files with the old storage permission on newer Android, and never on iPhone",
+    "user_action": "You tap Allow on a storage prompt, which no longer does much",
+    "can": [
+      "Ask for the old storage permission on older Android",
+      "Open shared files freely on Android 10 and older",
+      "Still show the prompt on some apps, with little effect"
+    ],
+    "cannot": [
+      "Open shared files on Android 11 and newer when the app targets that version",
+      "Open photos or videos on Android 13 with the old permission; it is ignored for media",
+      "Exist on iPhone; apps have always been sandboxed",
+      "Open other apps' private folders"
+    ],
+    "reach": 1,
+    "reach_label": "Mostly blocked on new phones",
+    "differs": "Android only. The old permission worked before Android 11 and is mostly ignored now. iPhone never had it."
+  },
+  "story": {
+    "what_it_is": "An old Android permission that opened your shared files to any app that asked.",
+    "icon": "folder",
+    "tags": [
+      "Permission",
+      "Old",
+      "Android"
+    ],
+    "marketing": [],
+    "for_you": "Years ago, a pop up asked to access photos, media and files, and a yes opened almost everything. Newer Android replaced it with narrower choices, so you rarely see it now.",
+    "for_makers": "It made file handling easy for makers but gave them too much. Google replaced it with scoped storage and granular media permissions, and Play blocks it for new apps.",
+    "use_cases": [
+      {
+        "type": "media",
+        "example": "An old music app used it to scan every folder for songs.",
+        "apps": []
+      },
+      {
+        "type": "games",
+        "example": "An old game saved data to a shared folder so you could back it up by hand.",
+        "apps": []
+      },
+      {
+        "type": "utilities",
+        "example": "An old cleaner app deleted junk files across all folders.",
+        "apps": []
+      },
+      {
+        "type": "creative",
+        "example": "An old photo editor saved edits to shared pictures.",
+        "apps": []
+      },
+      {
+        "type": "security",
+        "example": "Old malware used it to read other apps' downloaded files.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Too much access",
+      "Old apps may still use it"
+    ],
+    "android_note": "Replaced by scoped storage and granular media permissions, and no longer effective on new versions.",
+    "ios_note": "iPhone never had this kind of access."
+  },
+  "technical_bounds": [
+    "Scoped storage limits app to its own files and media it creates"
+  ],
+  "scores": {
+    "sensitivity": 4,
+    "utility": 2,
+    "fingerprint_bits": null,
+    "friction": 2
+  },
+  "value": {
+    "legit_uses": [
+      "Legacy file managers"
+    ],
+    "abuse": [
+      "Cross-app data scraping"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2019-09",
+      "platform": "android",
+      "version": "10 (API 29)",
+      "change": "Scoped storage introduced"
+    },
+    {
+      "date": "2020-09",
+      "platform": "android",
+      "version": "11 (API 30)",
+      "change": "Scoped storage enforced"
+    },
+    {
+      "date": "2022-08",
+      "platform": "android",
+      "version": "13 (API 33)",
+      "change": "READ_EXTERNAL_STORAGE ignored for media"
+    }
+  ],
+  "related": [
+    "mob.files.manage-external-storage"
+  ],
+  "refs": [
+    {
+      "t": "android",
+      "label": "Android: Scoped storage",
+      "url": "https://developer.android.com/about/versions/11/privacy/storage"
+    },
+    {
+      "t": "android",
+      "label": "Android 13 behavior changes (all apps)",
+      "url": "https://developer.android.com/about/versions/13/behavior-changes-all"
+    }
+  ],
+  "confidence": "docs"
+}

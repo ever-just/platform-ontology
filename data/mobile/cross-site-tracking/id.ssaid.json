@@ -1,0 +1,192 @@
+{
+  "id": "mob.id.ssaid",
+  "name": "Android ID (SSAID)",
+  "kind": "tracking",
+  "group": "cross-site-tracking",
+  "subgroup": "Device identifiers",
+  "tags": [
+    "android-id",
+    "per-signing-key"
+  ],
+  "plain": "A 64-bit ID per app signing key and user on Android; changes on factory reset.",
+  "meaning": "Gives a stable per-developer device ID with no prompt. Since Android 8 apps signed by different developers see different values.",
+  "lifecycle": [
+    "on-launch",
+    "in-session"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "y",
+      "v": "1.5",
+      "api": 3,
+      "permission": "",
+      "protection": "none",
+      "grant": "none",
+      "prompt_ui": "",
+      "persistence": "Until factory reset or signing key change",
+      "revocation": "Factory reset",
+      "store_policy": "Play: use the advertising ID for ads, not this",
+      "api_surface": "Settings.Secure.ANDROID_ID",
+      "note": "64-bit value as 16 hex characters; scoped to signing key, user and device since Android 8"
+    },
+    "ios": {
+      "s": "n",
+      "v": "",
+      "permission": "none",
+      "protection": "not-exposed",
+      "grant": "not-exposed",
+      "prompt_ui": "",
+      "persistence": "",
+      "revocation": "",
+      "store_policy": "",
+      "api_surface": "No ANDROID_ID equivalent",
+      "note": "Closest analog is identifierForVendor (separate entry)"
+    }
+  },
+  "data": {
+    "type": "string",
+    "metric": "64-bit ID",
+    "update": "Static",
+    "fields": [
+      {
+        "name": "android_id",
+        "type": "string",
+        "unit": "hex",
+        "range": "16 characters",
+        "precision": "64 bits"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can recognize your Android phone with a long ID, separate for each app maker",
+    "user_action": "Nothing. Any Android app can ask for it with no prompt",
+    "can": [
+      "Use a 16 character ID to tell your phone and user profile apart",
+      "Keep recognizing you across restarts and app updates",
+      "Link your activity across apps signed by the same developer"
+    ],
+    "cannot": [
+      "Match you across apps from different developers on Android 8 and newer",
+      "Survive a factory reset; a new ID is made",
+      "Exist on iPhone; the closest match is the vendor ID, which works differently"
+    ],
+    "reach": 3,
+    "reach_label": "One developer's apps, ongoing",
+    "differs": "Android only. iPhone has no Android ID; its closest match is the vendor ID."
+  },
+  "story": {
+    "what_it_is": "A long ID Android keeps for each developer's apps on one phone.",
+    "icon": "hash",
+    "tags": [
+      "Silent",
+      "Android",
+      "Tracking"
+    ],
+    "marketing": [
+      {
+        "vendor": "Google",
+        "name": "Android ID (SSAID)",
+        "pitch": "Developer guide: a 64 bit value that is unique per app signing key and user, and resets on factory reset.",
+        "url": "https://developer.android.com/training/articles/user-data-ids"
+      }
+    ],
+    "for_you": "You never see it and it asks nothing. It lets one company recognize your phone across its apps, and it changes only if you factory reset or the developer changes signing keys.",
+    "for_makers": "Gives developers a stable ID without any permission. It is used for saved accounts, fraud checks and tying installs together, though Google tells developers to prefer other IDs for ads.",
+    "use_cases": [
+      {
+        "type": "games",
+        "example": "A game restores your progress on a re-installed copy of the game because it sees the same ID as before.",
+        "apps": []
+      },
+      {
+        "type": "security",
+        "example": "A payments app counts how many accounts used one phone ID and blocks the tenth.",
+        "apps": [
+          "Google Pay"
+        ]
+      },
+      {
+        "type": "ads",
+        "example": "An ad attribution tool uses it to tie an install to a click when the ad ID has been turned off.",
+        "apps": []
+      },
+      {
+        "type": "shopping",
+        "example": "A coupon app makes sure a one time welcome offer is not redeemed again on the same phone.",
+        "apps": []
+      },
+      {
+        "type": "analytics",
+        "example": "A product team counts unique devices over months without asking for a login.",
+        "apps": []
+      },
+      {
+        "type": "enterprise",
+        "example": "A company device manager uses it to know which phone is which in its fleet.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Stable fingerprint without consent",
+      "Easy to join with other data"
+    ],
+    "android_note": "Per app signing key and user since Android 8, so different developers see different values.",
+    "ios_note": "iPhone has no SSAID; the closest is the vendor ID."
+  },
+  "technical_bounds": [
+    "Resets on factory reset",
+    "Different value per signing key"
+  ],
+  "scores": {
+    "sensitivity": 3,
+    "utility": 3,
+    "fingerprint_bits": 64,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Per-install analytics",
+      "Fraud checks"
+    ],
+    "abuse": [
+      "Cross-session tracking"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2017-08",
+      "platform": "android",
+      "version": "8.0 (API 26)",
+      "change": "ANDROID_ID scoped per signing key, user and device"
+    }
+  ],
+  "related": [
+    "mob.id.idfv",
+    "mob.id.advertising-id"
+  ],
+  "refs": [
+    {
+      "t": "android",
+      "label": "Android: Best practices for unique identifiers",
+      "url": "https://developer.android.com/training/articles/user-data-ids"
+    },
+    {
+      "t": "android",
+      "label": "Android 10 privacy changes",
+      "url": "https://developer.android.com/about/versions/10/privacy/changes"
+    },
+    {
+      "t": "android",
+      "label": "Android: Settings.Secure",
+      "url": "https://developer.android.com/reference/android/provider/Settings.Secure"
+    }
+  ],
+  "confidence": "verified"
+}

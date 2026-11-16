@@ -1,0 +1,187 @@
+{
+  "id": "mob.dev.os-version",
+  "name": "OS version and security patch level",
+  "kind": "signal",
+  "group": "device-system-profile",
+  "subgroup": "Software state",
+  "tags": [
+    "os-version",
+    "patch-level"
+  ],
+  "plain": "Reads OS version, API level and security patch date with no prompt.",
+  "meaning": "Shows how up to date the phone is and its exposure to known bugs. A strong fingerprint bit and a fraud and compatibility signal.",
+  "lifecycle": [
+    "on-launch",
+    "in-session"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "y",
+      "v": "1.0",
+      "api": 1,
+      "permission": "",
+      "protection": "none",
+      "grant": "none",
+      "prompt_ui": "",
+      "persistence": "",
+      "revocation": "",
+      "store_policy": "",
+      "api_surface": "Build.VERSION.RELEASE, SDK_INT, SECURITY_PATCH (API 23), INCREMENTAL, BASE_OS",
+      "note": "Patch date is a yyyy-mm-dd string"
+    },
+    "ios": {
+      "s": "y",
+      "v": "2.0",
+      "permission": "none",
+      "protection": "none",
+      "grant": "none",
+      "prompt_ui": "",
+      "persistence": "",
+      "revocation": "",
+      "store_policy": "",
+      "api_surface": "Version like 26.1; build like 23B85",
+      "note": ""
+    }
+  },
+  "web_equivalents": [
+    "web.device.ch-platform-version",
+    "web.device.user-agent"
+  ],
+  "data": {
+    "type": "string",
+    "metric": "OS version, patch",
+    "update": "Changes on update",
+    "fields": [
+      {
+        "name": "sdk_int",
+        "type": "integer",
+        "unit": "API level",
+        "range": "1 to 36",
+        "precision": "exact"
+      },
+      {
+        "name": "patch",
+        "type": "string",
+        "unit": "date",
+        "range": "yyyy-mm-dd",
+        "precision": "1 day"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can see your phone's system version and security patch date, with no prompt",
+    "user_action": "Nothing. The app checks when it opens, often to show an update message",
+    "can": [
+      "See your Android version, its build level and the security patch date",
+      "See your iPhone system version and build number",
+      "Show you a message to update, or turn off features that need a newer system"
+    ],
+    "cannot": [
+      "Install updates for you",
+      "See which apps or settings you have changed",
+      "Tell who you are from the version alone"
+    ],
+    "reach": 2,
+    "reach_label": "Always available, simple facts",
+    "differs": "Android shows a security patch date apps can use. iPhone shows version and build only."
+  },
+  "story": {
+    "what_it_is": "An app can read your system version and how recently it got security fixes.",
+    "icon": "badge-info",
+    "tags": [
+      "Silent",
+      "Security",
+      "Device"
+    ],
+    "marketing": [],
+    "for_you": "You never see it. It shows whether your phone is up to date. An app can use that to warn you or to refuse to run on an old system.",
+    "for_makers": "Makers use it to turn features on or off and to warn about risk. It is also a useful fraud clue and a fingerprint detail.",
+    "use_cases": [
+      {
+        "type": "banking",
+        "example": "A bank app warns you that your system is too old to be safe and asks you to update.",
+        "apps": []
+      },
+      {
+        "type": "games",
+        "example": "A game turns on a new graphics mode only on the latest system.",
+        "apps": []
+      },
+      {
+        "type": "security",
+        "example": "A fraud tool raises risk when a login comes from an old, unpatched system.",
+        "apps": []
+      },
+      {
+        "type": "enterprise",
+        "example": "A company blocks work mail on phones missing the latest security patch.",
+        "apps": []
+      },
+      {
+        "type": "ads",
+        "example": "An ad firm adds the exact system version to a fingerprint.",
+        "apps": []
+      },
+      {
+        "type": "developer",
+        "example": "A developer checks which versions have the most users to decide when to drop old support.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Reveals your update habits",
+      "Adds to a fingerprint"
+    ],
+    "android_note": "Reads version, API level and security patch date with no prompt.",
+    "ios_note": "Reads the system version with no prompt, but no patch date."
+  },
+  "technical_bounds": [
+    "Low entropy per platform"
+  ],
+  "scores": {
+    "sensitivity": 1,
+    "utility": 4,
+    "fingerprint_bits": 4,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Compatibility",
+      "Security warnings"
+    ],
+    "abuse": [
+      "Fingerprint"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2015-10",
+      "platform": "android",
+      "version": "6.0 (API 23)",
+      "change": "SECURITY_PATCH exposed"
+    }
+  ],
+  "related": [
+    "mob.dev.model"
+  ],
+  "refs": [
+    {
+      "t": "android",
+      "label": "Android: Build",
+      "url": "https://developer.android.com/reference/android/os/Build"
+    },
+    {
+      "t": "apple",
+      "label": "Apple: UIDevice",
+      "url": "https://developer.apple.com/documentation/uikit/uidevice"
+    }
+  ],
+  "confidence": "inferred"
+}

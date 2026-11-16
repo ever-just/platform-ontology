@@ -1,0 +1,241 @@
+{
+  "id": "web.files.file-input",
+  "name": "File input (choose files to upload)",
+  "kind": "picker",
+  "group": "files-storage",
+  "subgroup": "Files",
+  "tags": [
+    "file-input",
+    "upload",
+    "file-picker"
+  ],
+  "plain": "Opens the system file chooser; the page gets only the files the person picks.",
+  "meaning": "The most common way a site reaches a person's files. The person picks exactly what is shared, and the site sees name, size, type and modified time, but not the folder path.",
+  "lifecycle": [
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "<input type=file multiple accept=...>; input.files; File, FileList",
+      "bcd": [
+        "html.elements.input.type_file",
+        "api.HTMLInputElement.files",
+        "api.File"
+      ],
+      "access": {
+        "grant": "picker",
+        "prompt_ui": "System file chooser dialog (the person picks files)",
+        "secure_context": false,
+        "user_gesture": true,
+        "activation": "transient",
+        "persistence": "Per selection; File objects live until the page unloads",
+        "revocation": "Nothing to revoke (no permission is stored)",
+        "iframe": "Works in any frame; no permission policy",
+        "steps": [
+          "Person clicks the input or a label",
+          "System picker opens",
+          "Page receives FileList with File objects"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "1",
+          "note": "",
+          "date": "2008-12-11"
+        },
+        "edge": {
+          "s": "y",
+          "v": "12",
+          "note": "",
+          "date": "2015-07-29"
+        },
+        "firefox": {
+          "s": "y",
+          "v": "1",
+          "note": "",
+          "date": "2004-11-09"
+        },
+        "safari": {
+          "s": "y",
+          "v": "1",
+          "note": "",
+          "date": "2003-06-23"
+        },
+        "ios_safari": {
+          "s": "y",
+          "v": "1",
+          "note": "All iOS browsers use WebKit",
+          "date": "2007-06-29"
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "18",
+          "note": "",
+          "date": "2012-06-27"
+        },
+        "samsung": {
+          "s": "y",
+          "v": "1.0",
+          "note": "",
+          "date": "2013-04-27"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "none",
+    "metric": "",
+    "update": "",
+    "fields": []
+  },
+  "limits": {
+    "headline": "Can open only the files you pick in the file chooser",
+    "user_action": "You tap Choose file, Upload or Attach, then pick.",
+    "can": [
+      "Open the files you choose, one or several",
+      "Upload them to its servers",
+      "See their name, size and type"
+    ],
+    "cannot": [
+      "See other files or folders on your device",
+      "Change or delete the originals",
+      "Keep access after you close or reload the page",
+      "See the full folder path"
+    ],
+    "reach": 1,
+    "reach_label": "Only the files you pick",
+    "differs": ""
+  },
+  "story": {
+    "what_it_is": "Opens your system's file chooser, and the page gets only the files you pick.",
+    "icon": "file-input",
+    "tags": [
+      "Files",
+      "Picker",
+      "Safe"
+    ],
+    "marketing": [
+      {
+        "vendor": "MDN",
+        "name": "input type file",
+        "pitch": "Documents the standard way a page asks a person to choose files to share.",
+        "url": "https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/file"
+      }
+    ],
+    "for_you": "You tap 'Choose file', pick a photo or document in a system window, and the page gets only that one. It cannot see anything else on your device.",
+    "for_makers": "It is the safest, oldest way to get files. It works everywhere with no permission pop up, which is why upload forms are built on it.",
+    "use_cases": [
+      {
+        "type": "social",
+        "example": "You pick a profile photo from your camera roll.",
+        "apps": [
+          "Facebook",
+          "Instagram"
+        ]
+      },
+      {
+        "type": "banking",
+        "example": "You choose a PDF statement to upload to a loan application.",
+        "apps": []
+      },
+      {
+        "type": "education",
+        "example": "You choose an essay file to submit to a class.",
+        "apps": [
+          "Canvas",
+          "Google Classroom"
+        ]
+      },
+      {
+        "type": "productivity",
+        "example": "You choose a file to attach to a message.",
+        "apps": [
+          "Gmail"
+        ]
+      },
+      {
+        "type": "health",
+        "example": "You pick a scan or lab result to share with a clinic.",
+        "apps": []
+      },
+      {
+        "type": "games",
+        "example": "You pick a profile avatar or a custom skin for a browser game.",
+        "apps": []
+      },
+      {
+        "type": "shopping",
+        "example": "You pick a photo to send for a return request.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Shares a private file",
+      "Check what you pick"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Can open the picker only from a click, tap or key press (input.showPicker also needs activation)",
+    "The path is hidden: value shows C:\\fakepath\\name; no folder, no sibling files",
+    "Cannot set files programmatically to a chosen path; only via DataTransfer from existing File objects",
+    "Reads the file as it is at read time; later edits throw NotReadableError in Chrome and Safari if the file changed",
+    "accept filter is a hint, not enforcement; no size limit from the browser (memory bound)"
+  ],
+  "scores": {
+    "sensitivity": 3,
+    "utility": 5,
+    "fingerprint_bits": null,
+    "friction": 1
+  },
+  "value": {
+    "legit_uses": [
+      "Document and photo uploads",
+      "Import data",
+      "Profile pictures"
+    ],
+    "abuse": [
+      "Tricking people into uploading private files",
+      "Reading photo metadata (GPS EXIF) from uploads"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2022-03",
+      "browser": "chrome",
+      "version": "99",
+      "change": "HTMLInputElement.showPicker() ships, so a script can open the chooser from its own gesture handler"
+    }
+  ],
+  "related": [
+    "web.files.file-metadata",
+    "web.files.file-system-access-pickers"
+  ],
+  "refs": [
+    {
+      "t": "mdn",
+      "label": "MDN file",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/input/file"
+    },
+    {
+      "t": "spec",
+      "label": "HTML Standard: file upload state",
+      "url": "https://html.spec.whatwg.org/multipage/input.html#file-upload-state-(type=file)"
+    },
+    {
+      "t": "mdn",
+      "label": "MDN File API",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/File_API"
+    }
+  ],
+  "confidence": "docs"
+}

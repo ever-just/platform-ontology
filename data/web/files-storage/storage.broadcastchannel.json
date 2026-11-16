@@ -1,0 +1,221 @@
+{
+  "id": "web.storage.broadcastchannel",
+  "name": "BroadcastChannel",
+  "kind": "capability",
+  "group": "files-storage",
+  "subgroup": "In session",
+  "tags": [
+    "broadcastchannel",
+    "tabs",
+    "messaging"
+  ],
+  "plain": "Lets tabs and frames of the same site send messages to each other instantly.",
+  "meaning": "A site can see that the same person has several tabs open and sync a login, logout or shopping state. Since partitioning, a tracker embed can no longer message its own copy on a different top site.",
+  "lifecycle": [
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "new BroadcastChannel(name).postMessage(data)",
+      "bcd": [
+        "api.BroadcastChannel"
+      ],
+      "access": {
+        "grant": "none",
+        "prompt_ui": "None",
+        "secure_context": false,
+        "user_gesture": false,
+        "persistence": "While at least one context is open",
+        "revocation": "Clear site data, browser privacy settings",
+        "iframe": "",
+        "steps": []
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "54",
+          "note": "",
+          "date": "2016-10-12"
+        },
+        "edge": {
+          "s": "y",
+          "v": "79",
+          "note": "",
+          "date": "2020-01-15"
+        },
+        "firefox": {
+          "s": "y",
+          "v": "38",
+          "note": "",
+          "date": "2015-05-12"
+        },
+        "safari": {
+          "s": "y",
+          "v": "15.4",
+          "note": "",
+          "date": "2022-03-14"
+        },
+        "ios_safari": {
+          "s": "y",
+          "v": "15.4",
+          "note": "",
+          "date": "2022-03-14"
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "54",
+          "note": "",
+          "date": "2016-10-19"
+        },
+        "samsung": {
+          "s": "y",
+          "v": "6.0",
+          "note": "",
+          "date": "2017-08-23"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "event",
+    "metric": "Messages between tabs",
+    "update": "live",
+    "fields": []
+  },
+  "limits": {
+    "headline": "Can send messages between open tabs and frames of the same site",
+    "user_action": "Nothing. It happens while you have the same site open in more than one tab.",
+    "can": [
+      "Pass messages instantly between open tabs of the same site",
+      "Do things like log out of all tabs or sync a cart",
+      "Send text or small bits of data"
+    ],
+    "cannot": [
+      "Reach tabs from other sites",
+      "Reach tabs that are closed",
+      "Send messages to other apps on your device"
+    ],
+    "reach": 2,
+    "reach_label": "Only tabs of the same site",
+    "differs": ""
+  },
+  "story": {
+    "what_it_is": "Lets tabs and frames of the same site send each other messages instantly.",
+    "icon": "radio",
+    "tags": [
+      "Tabs",
+      "Silent",
+      "Developer"
+    ],
+    "marketing": [
+      {
+        "vendor": "MDN",
+        "name": "Broadcast Channel API",
+        "pitch": "Documents how pages of the same site can send messages to each other across tabs.",
+        "url": "https://developer.mozilla.org/en-US/docs/Web/API/Broadcast_Channel_API"
+      }
+    ],
+    "for_you": "You never see it. It is why you log out in one tab and every other tab of that site logs out too, or why a cart count updates everywhere.",
+    "for_makers": "It keeps many open tabs in sync with no server round trip. Makers use it for logins, settings and shared state. It only works between pages of the same site.",
+    "use_cases": [
+      {
+        "type": "security",
+        "example": "You sign out on one tab of a web app and every other open tab of that app locks too.",
+        "apps": []
+      },
+      {
+        "type": "shopping",
+        "example": "You add an item to your cart in one tab and the count updates in all your other tabs.",
+        "apps": []
+      },
+      {
+        "type": "games",
+        "example": "A browser game warns you if you open it in a second tab, so two copies do not fight over the same save.",
+        "apps": []
+      },
+      {
+        "type": "messaging",
+        "example": "A web chat marks messages read in every tab as soon as you read them in one.",
+        "apps": [
+          "Slack",
+          "WhatsApp Web"
+        ]
+      },
+      {
+        "type": "productivity",
+        "example": "A document editor tells other tabs that you changed a setting, such as dark mode.",
+        "apps": []
+      },
+      {
+        "type": "video",
+        "example": "A web player pauses in one tab when you start another video in a second tab.",
+        "apps": [
+          "YouTube"
+        ]
+      },
+      {
+        "type": "ads",
+        "example": "A tracker script on one tab tells a script on another tab of the same site about your visit.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Cross tab tracking inside one site",
+      "Only same site"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Same origin and same storage partition only",
+    "Messages are structured clones",
+    "No delivery to closed pages"
+  ],
+  "scores": {
+    "sensitivity": 1,
+    "utility": 3,
+    "fingerprint_bits": null,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Multi tab logout, state sync"
+    ],
+    "abuse": [
+      "Cross-site ID sync before partitioning"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2022-03",
+      "browser": "safari",
+      "version": "15.4",
+      "change": "Shipped in Safari"
+    },
+    {
+      "date": "2023-07",
+      "browser": "chrome",
+      "version": "115",
+      "change": "Partitioned by top level site"
+    }
+  ],
+  "related": [
+    "web.storage.storage-partitioning",
+    "web.storage.sharedworker"
+  ],
+  "refs": [
+    {
+      "t": "mdn",
+      "label": "MDN BroadcastChannel",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/BroadcastChannel"
+    }
+  ],
+  "confidence": "docs"
+}

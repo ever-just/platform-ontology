@@ -1,0 +1,208 @@
+{
+  "id": "web.notexposed.bluetooth-nearby",
+  "name": "Nearby Bluetooth devices",
+  "kind": "not-exposed",
+  "group": "device-system-profile",
+  "subgroup": "Sensors",
+  "tags": [
+    "not-exposed",
+    "bluetooth",
+    "sensors"
+  ],
+  "plain": "Sites cannot scan for nearby Bluetooth devices without a picker you approve.",
+  "meaning": "Web Bluetooth (Chromium) requires a user gesture, a chooser prompt and a service filter; the page only gets devices the person picks. Silent scanning does not exist. Safari and Firefox do not support Web Bluetooth.",
+  "lifecycle": [
+    "on-arrival",
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "navigator.bluetooth.requestDevice() (prompt, gesture)",
+      "access": {
+        "grant": "not-exposed",
+        "prompt_ui": "None",
+        "secure_context": false,
+        "user_gesture": false,
+        "persistence": "read fresh on every page load; nothing stored",
+        "revocation": "not applicable",
+        "iframe": "Readable from cross-origin iframes too (same values)",
+        "steps": [
+          "Page script reads the value",
+          "No prompt is shown"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "edge": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "firefox": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "safari": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "ios_safari": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "chrome_android": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "samsung": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "none",
+    "metric": "",
+    "update": "static per session",
+    "fields": [
+      {
+        "name": "proxy: requestDevice filters",
+        "type": "string",
+        "unit": "",
+        "range": "page sees only the chosen device",
+        "precision": ""
+      },
+      {
+        "name": "proxy: getDevices()",
+        "type": "string",
+        "unit": "",
+        "range": "previously granted devices only",
+        "precision": ""
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can't scan for nearby Bluetooth devices without a picker you approve",
+    "user_action": "You tap Connect device and pick one from the browser list",
+    "can": [
+      "Ask to connect to one device in Chrome or Edge on Android and desktop",
+      "Show a list for you to choose from",
+      "Work with the one device you pick, for that visit"
+    ],
+    "cannot": [
+      "Scan nearby devices quietly",
+      "See the list of devices you did not pick",
+      "Work in Safari, Firefox, or on iPhone",
+      "Keep a device linked forever without asking again"
+    ],
+    "reach": 1,
+    "reach_label": "One device you pick",
+    "differs": "Web Bluetooth works in Chromium browsers only. Safari and Firefox do not offer it."
+  },
+  "story": {
+    "what_it_is": "Sites cannot scan for Bluetooth devices around you without a picker you approve.",
+    "icon": "bluetooth",
+    "tags": [
+      "Blocked",
+      "Bluetooth",
+      "Privacy"
+    ],
+    "marketing": [
+      {
+        "vendor": "Google",
+        "name": "Web Bluetooth",
+        "pitch": "Chrome describes a way to talk to a nearby Bluetooth device after you choose it from a list.",
+        "url": "https://developer.chrome.com/docs/capabilities/bluetooth"
+      }
+    ],
+    "for_you": "A site cannot quietly list your earbuds, watch or other gadgets. If it wants to connect, Chrome shows a chooser and you pick one device. Safari does not offer it at all.",
+    "for_makers": "Apps wanted to scan for nearby devices to find shoppers in stores, to track people or to set up gadgets. The web allows only a user-chosen device, so these uses are blocked. Real gadget setup uses the picker.",
+    "use_cases": [
+      {
+        "type": "smart-home",
+        "example": "A smart light site wants to find every bulb nearby, but must wait for you to pick one in the chooser.",
+        "apps": []
+      },
+      {
+        "type": "fitness",
+        "example": "A heart rate chest strap page wants to connect, and you choose your strap in the picker.",
+        "apps": []
+      },
+      {
+        "type": "developer",
+        "example": "A device maker's setup page uses the picker to flash firmware onto one device.",
+        "apps": [
+          "Espruino"
+        ]
+      },
+      {
+        "type": "shopping",
+        "example": "A store app wanted to detect shoppers by phone signals, which a web page cannot do.",
+        "apps": []
+      },
+      {
+        "type": "games",
+        "example": "A browser game wanted to find nearby friends' phones, but can only use the picker or a code.",
+        "apps": []
+      },
+      {
+        "type": "security",
+        "example": "A tracker wanted to log which Bluetooth gadgets you carry to recognise you, which is blocked.",
+        "apps": []
+      },
+      {
+        "type": "health",
+        "example": "A blood sugar monitor page connects to the one sensor you pick.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Needs your clear choice",
+      "Picker can still be tapped by mistake"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Presence tracking via beacons"
+  ],
+  "scores": {
+    "sensitivity": 4,
+    "utility": 2,
+    "fingerprint_bits": 0.0,
+    "friction": 3
+  },
+  "value": {
+    "legit_uses": [
+      "None: the browser deliberately withholds it"
+    ],
+    "abuse": [
+      "Beacon based indoor tracking in native apps"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "refs": [
+    {
+      "t": "mdn",
+      "label": "MDN Web Bluetooth API",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/Web_Bluetooth_API"
+    }
+  ],
+  "confidence": "docs"
+}

@@ -1,0 +1,258 @@
+{
+  "id": "mob.files.media-images",
+  "name": "Read photos",
+  "kind": "permission",
+  "group": "files-storage",
+  "subgroup": "Media",
+  "tags": [
+    "runtime-permission",
+    "photos",
+    "play-restricted",
+    "exif",
+    "partial-access"
+  ],
+  "plain": "Lets the app read all photos in the shared gallery.",
+  "meaning": "Exposes the person's whole photo library, including screenshots, documents and faces. Google Play requires apps to use the Photo Picker unless core functionality needs full access.",
+  "lifecycle": [
+    "in-session"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "f",
+      "v": "13",
+      "api": 33,
+      "permission": "READ_MEDIA_IMAGES",
+      "protection": "dangerous",
+      "grant": "prompt",
+      "prompt_ui": "Android 13: Allow or Don't allow; Android 14+: Select photos and videos or Allow all",
+      "persistence": "Until revoked or auto-reset",
+      "revocation": "Settings > Apps > Permissions > Photos and videos",
+      "store_policy": "Play: Photo and Video Permissions policy; declaration for apps needing broad access (mandatory since May 28, 2025)",
+      "api_surface": "MediaStore, Photo Picker (no permission)",
+      "note": "Granular media permission introduced in Android 13 replacing READ_EXTERNAL_STORAGE for images."
+    },
+    "ios": {
+      "s": "y",
+      "v": "14",
+      "permission": "NSPhotoLibraryUsageDescription",
+      "protection": "prompt",
+      "grant": "prompt",
+      "prompt_ui": "Limit Access, Allow Full Access, Don't Allow (iOS 14)",
+      "persistence": "Until revoked; limited selection persists",
+      "revocation": "Settings > Privacy & Security > Photos",
+      "store_policy": "App Review 5.1.1",
+      "api_surface": "PHPhotoLibrary.requestAuthorization(for: .readWrite), PHPickerViewController (no permission)",
+      "note": "PHPicker runs out of process and needs no permission."
+    }
+  },
+  "web_equivalents": [
+    "web.files.file-input",
+    "web.peripherals.not-exposed-camera-roll"
+  ],
+  "data": {
+    "type": "list",
+    "metric": "Image files and metadata",
+    "update": "on demand",
+    "fields": [
+      {
+        "name": "image_count",
+        "type": "integer",
+        "unit": "photos",
+        "range": "0 to tens of thousands",
+        "precision": "exact"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can open all photos in your gallery, or only the ones you choose on newer phones",
+    "user_action": "You tap Add photo or Backup photos, then choose Allow or Select photos",
+    "can": [
+      "Open every photo in your shared gallery if you tap Allow all",
+      "Open only chosen photos on Android 14 and newer, or iPhone with Limit access",
+      "Show photos in the app so you can pick",
+      "Skip the permission completely by using the system Photo Picker"
+    ],
+    "cannot": [
+      "See photos you did not pick when you choose Limited access or Select photos",
+      "Use the older single storage permission for images on Android 13 and newer",
+      "Open private folders of other apps",
+      "Keep going if you turn the permission off in Settings"
+    ],
+    "reach": 3,
+    "reach_label": "All photos, or only those you pick",
+    "differs": "Android 13 added a photos only permission and Android 14 added Select photos. iPhone has offered Limit access since iOS 14."
+  },
+  "story": {
+    "what_it_is": "Lets an app read every photo in your shared gallery.",
+    "icon": "image",
+    "tags": [
+      "Permission",
+      "Asks first",
+      "Photos"
+    ],
+    "marketing": [
+      {
+        "vendor": "Google",
+        "name": "Photo picker",
+        "pitch": "Developer pitch: use the system photo picker so users pick photos with no broad permission needed.",
+        "url": "https://developer.android.com/training/data-storage/shared/photopicker"
+      }
+    ],
+    "for_you": "A pop up asks to access photos. Allow all means the app can see everything, including faces, screenshots of bank pages and places. Google tells apps to use the picker instead.",
+    "for_makers": "Makers need it for gallery apps and backup tools. Google Play now asks most other apps to use the Photo Picker unless full access is core to what the app does.",
+    "use_cases": [
+      {
+        "type": "social",
+        "example": "A photo sharing app shows your whole gallery so you can choose pictures to post.",
+        "apps": [
+          "Instagram"
+        ]
+      },
+      {
+        "type": "utilities",
+        "example": "A cloud backup app copies new photos to the cloud in the background.",
+        "apps": [
+          "Google Photos"
+        ]
+      },
+      {
+        "type": "creative",
+        "example": "A photo editor opens your gallery so you can edit any picture.",
+        "apps": []
+      },
+      {
+        "type": "shopping",
+        "example": "A visual search app lets you pick a photo of a shoe to find a match.",
+        "apps": []
+      },
+      {
+        "type": "security",
+        "example": "A vault app hides your private photos behind a code.",
+        "apps": []
+      },
+      {
+        "type": "messaging",
+        "example": "A chat app lets you send photos from your gallery.",
+        "apps": [
+          "WhatsApp"
+        ]
+      },
+      {
+        "type": "ads",
+        "example": "A bad app might scan photos for IDs or faces to sell or steal.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Sees everything including screenshots",
+      "Can reveal places and faces"
+    ],
+    "android_note": "Needs READ_MEDIA_IMAGES, and Play restricts it to core use cases.",
+    "ios_note": "iOS uses its Photos permission with full or limited choices."
+  },
+  "technical_bounds": [
+    "Photo Picker avoids the permission",
+    "Limited library on iOS and partial access on Android 14",
+    "Photo picker avoids any permission"
+  ],
+  "scores": {
+    "sensitivity": 5,
+    "utility": 4,
+    "fingerprint_bits": null,
+    "friction": 2
+  },
+  "value": {
+    "legit_uses": [
+      "Gallery apps",
+      "Backup"
+    ],
+    "abuse": [
+      "Image scraping",
+      "Location harvesting via EXIF"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": true,
+      "how": "Play Data safety lists Photos and Videos as collected (optional). Apple label lists Photos or Videos, Linked To You. Members attach media to posts and messages; the specific permission request path in the app is unverified."
+    }
+  },
+  "history": [
+    {
+      "date": "2025-05",
+      "platform": "android",
+      "version": "Play policy",
+      "change": "Photo and video permission declaration mandatory from May 28, 2025"
+    },
+    {
+      "date": "2023-10",
+      "platform": "android",
+      "version": "14 (API 34)",
+      "change": "Partial photo access"
+    },
+    {
+      "date": "2022-08",
+      "platform": "android",
+      "version": "13 (API 33)",
+      "change": "Granular media permissions replaced READ_EXTERNAL_STORAGE"
+    },
+    {
+      "date": "2022-08",
+      "platform": "android",
+      "version": "13 (API 33)",
+      "change": "Granular media permissions replace READ_EXTERNAL_STORAGE"
+    },
+    {
+      "date": "2020-09",
+      "platform": "ios",
+      "version": "iOS 14",
+      "change": "Limited photo library and PHPicker introduced"
+    },
+    {
+      "date": "2020-09",
+      "platform": "ios",
+      "version": "iOS 14",
+      "change": "Limited Photos library"
+    }
+  ],
+  "related": [
+    "mob.files.media-video",
+    "mob.files.photo-picker",
+    "mob.files.media-selected",
+    "mob.camera.camera"
+  ],
+  "refs": [
+    {
+      "t": "android",
+      "label": "Android 13: Granular media permissions",
+      "url": "https://developer.android.com/about/versions/13/behavior-changes-13#granular-media-permissions"
+    },
+    {
+      "t": "policy",
+      "label": "Google Play: Photo and Video Permissions policy",
+      "url": "https://support.google.com/googleplay/android-developer/answer/14115180"
+    },
+    {
+      "t": "apple",
+      "label": "Apple: Delivering an enhanced privacy experience in your photos app",
+      "url": "https://developer.apple.com/documentation/photokit/delivering-an-enhanced-privacy-experience-in-your-photos-app"
+    },
+    {
+      "t": "android",
+      "label": "Android: Photo picker",
+      "url": "https://developer.android.com/training/data-storage/shared/photopicker"
+    },
+    {
+      "t": "apple",
+      "label": "Apple: PHPickerViewController",
+      "url": "https://developer.apple.com/documentation/photokit/phpickerviewcontroller"
+    },
+    {
+      "t": "vendor",
+      "label": "Google Play Data safety, LinkedIn (com.linkedin.android)",
+      "url": "https://play.google.com/store/apps/datasafety?id=com.linkedin.android&hl=en_US"
+    }
+  ],
+  "confidence": "verified"
+}

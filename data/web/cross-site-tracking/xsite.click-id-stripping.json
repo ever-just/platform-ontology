@@ -1,0 +1,247 @@
+{
+  "id": "web.xsite.click-id-stripping",
+  "name": "Click ID and query parameter stripping",
+  "kind": "tracking",
+  "group": "cross-site-tracking",
+  "subgroup": "Before the visit",
+  "tags": [
+    "link-tracking-protection",
+    "query-parameter-stripping",
+    "brave",
+    "safari",
+    "firefox"
+  ],
+  "plain": "Browsers remove known tracking parameters from URLs before the site sees them, in some modes.",
+  "meaning": "Controls whether a site can read the ad click ID at all. Safari strips in Private, Mail and Messages; Firefox in ETP Strict and Private; Brave in all modes by default; Chrome does not strip. Measurement teams lose attribution where stripping applies.",
+  "lifecycle": [
+    "before-visit"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "Browser feature (no site API); site sees URL without the parameter",
+      "access": {
+        "grant": "settings",
+        "prompt_ui": "None",
+        "secure_context": false,
+        "user_gesture": false,
+        "persistence": "Applies per navigation",
+        "revocation": "Clear site data, browser privacy settings",
+        "iframe": "",
+        "steps": []
+      },
+      "support": {
+        "chrome": {
+          "s": "n",
+          "v": "",
+          "note": "No stripping"
+        },
+        "edge": {
+          "s": "n",
+          "v": "",
+          "note": "Tracking prevention does not strip params"
+        },
+        "firefox": {
+          "s": "p",
+          "v": "102",
+          "note": "ETP Strict and Private only in release",
+          "date": "2022-06-28"
+        },
+        "safari": {
+          "s": "p",
+          "v": "17",
+          "note": "Private Browsing, Mail and Messages",
+          "date": "2023-09-18"
+        },
+        "ios_safari": {
+          "s": "p",
+          "v": "17",
+          "note": "",
+          "date": "2023-09-18"
+        },
+        "chrome_android": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "samsung": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "none",
+    "metric": "Parameters removed from URL",
+    "update": "per navigation",
+    "fields": []
+  },
+  "limits": {
+    "headline": "Can remove known tracking codes from links before the site sees them, in some modes",
+    "user_action": "You open a link with a tracking code while using a browser privacy mode",
+    "can": [
+      "Strip known tracking codes from a web address",
+      "Block the code from reaching the site",
+      "Work in Firefox and Safari in some privacy modes"
+    ],
+    "cannot": [
+      "Remove codes it does not know about",
+      "Run in Chrome, Edge or Samsung Internet by default",
+      "Hide a code if you share the link before it is cleaned",
+      "Stop trackers that use other methods like cookies or fingerprints"
+    ],
+    "reach": 2,
+    "reach_label": "Known codes only, some modes",
+    "differs": "Firefox in strict or private mode and Safari in private browsing strip codes. Chrome and Edge do not."
+  },
+  "story": {
+    "what_it_is": "Some browsers remove known tracking codes from web addresses before the site can read them.",
+    "icon": "scissors",
+    "tags": [
+      "Privacy",
+      "Click ID",
+      "Browser protection"
+    ],
+    "marketing": [
+      {
+        "vendor": "Mozilla",
+        "name": "Query parameter stripping",
+        "pitch": "Firefox says it strips known tracking parameters in Strict mode and Private windows so sites cannot follow you by link.",
+        "url": "https://firefox-source-docs.mozilla.org/toolkit/components/antitracking/anti-tracking/query-stripping/index.html"
+      },
+      {
+        "vendor": "Apple",
+        "name": "Link Tracking Protection",
+        "pitch": "Apple says Safari removes tracking parts of links in Private Browsing, Mail and Messages.",
+        "url": "https://webkit.org/blog/14445/webkit-features-in-safari-17-0/"
+      }
+    ],
+    "for_you": "You click a link with a long tail of letters and nothing seems different. The browser quietly cuts off the tracking part, so the site never sees it. You may notice your ad gets less personal.",
+    "for_makers": "Makers lose the click ID they use to prove an ad worked. They respond with server side tagging and other IDs. Browser makers use stripping to sell privacy, and ad teams must plan for it.",
+    "use_cases": [
+      {
+        "type": "ads",
+        "example": "A shopper uses Brave and clicks an ad. The click ID is stripped, so the sale cannot be tied to the ad.",
+        "apps": [
+          "Brave",
+          "Google Ads"
+        ]
+      },
+      {
+        "type": "analytics",
+        "example": "A marketing team sees traffic from Safari as direct visits and cannot credit the right campaign.",
+        "apps": [
+          "Google Analytics"
+        ]
+      },
+      {
+        "type": "social",
+        "example": "A shared link with fbclid is cleaned in Messages, so the sender's tracking tail does not reach the friend.",
+        "apps": [
+          "Messages",
+          "Meta"
+        ]
+      },
+      {
+        "type": "shopping",
+        "example": "A coupon site loses the code that proves a sale, and so gets less money from partners.",
+        "apps": [
+          "Honey",
+          "RetailMeNot"
+        ]
+      },
+      {
+        "type": "games",
+        "example": "A game ad campaign cannot see which ads brought logged out players when the browser strips the click ID.",
+        "apps": []
+      },
+      {
+        "type": "security",
+        "example": "A phishing link often hides a tracking tail. Stripping it removes one way to tell which target clicked.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Not in every browser",
+      "Sites work around it with other IDs"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Works from a maintained list: unknown parameters pass through",
+    "Does not touch UTM keys",
+    "Safari 27 beta adds Threads (xmt), YouTube (si) and X (twclid, cn, cxt) per a July 2026 code review; verify at release",
+    "Server side tagging with first-party capture before stripping can still record it only if the parameter reached the server"
+  ],
+  "scores": {
+    "sensitivity": 3,
+    "utility": 1,
+    "fingerprint_bits": null,
+    "friction": 3
+  },
+  "value": {
+    "legit_uses": [
+      "User privacy protection"
+    ],
+    "abuse": [
+      "Not applicable; site side counter is dropping parameters into cookies earlier or using first-party redirects"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2022-06",
+      "browser": "firefox",
+      "version": "102",
+      "change": "Query Parameter Stripping launched in ETP Strict and Private windows"
+    },
+    {
+      "date": "2023-09",
+      "browser": "safari",
+      "version": "17",
+      "change": "Link Tracking Protection stripping for Private Browsing, Mail, Messages"
+    },
+    {
+      "date": "2025-09",
+      "browser": "safari",
+      "version": "26",
+      "change": "AFP on by default in regular browsing; classified scripts lose query parameters and referrer (reports disagree whether Link Tracking Protection itself widened)"
+    },
+    {
+      "date": "2026-07",
+      "browser": "safari",
+      "version": "27 beta",
+      "change": "More platforms added to the strip list per TAGGRS code review (secondary source)"
+    }
+  ],
+  "related": [
+    "web.xsite.ad-click-ids",
+    "web.xsite.safari-27-tracker-ip-blocking"
+  ],
+  "refs": [
+    {
+      "t": "mozilla",
+      "label": "Firefox Query Parameter Stripping docs",
+      "url": "https://firefox-source-docs.mozilla.org/toolkit/components/antitracking/anti-tracking/query-stripping/index.html"
+    },
+    {
+      "t": "webkit",
+      "label": "WebKit features in Safari 17.0",
+      "url": "https://webkit.org/blog/14445/webkit-features-in-safari-17-0/"
+    },
+    {
+      "t": "news",
+      "label": "PPC Land on Safari 27 tracker changes (Jul 2026)",
+      "url": "https://ppc.land/safari-27-blocks-linkedin-and-bing-ad-trackers-by-ip-address/"
+    }
+  ],
+  "confidence": "docs"
+}

@@ -1,0 +1,217 @@
+{
+  "id": "web.auth.cross-device-linking",
+  "name": "Cross device identity linking",
+  "kind": "tracking",
+  "group": "identity-auth",
+  "subgroup": "Signed in",
+  "tags": [
+    "cross-device",
+    "deterministic",
+    "login-graph",
+    "household"
+  ],
+  "plain": "A site recognises one person across phone, laptop and tablet when they sign in on each.",
+  "meaning": "A shared login ID is a deterministic link. Hashed email, phone and shared IP add probabilistic links. Ad platforms with big login bases (Google, Meta, Apple) see the same person across devices; others rent graphs like UID2 or RampID.",
+  "lifecycle": [
+    "signed-in",
+    "after-leaving"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "Account ID in first party cookie or token; hashed email in ad requests",
+      "access": {
+        "grant": "none",
+        "prompt_ui": "None",
+        "secure_context": false,
+        "user_gesture": false,
+        "persistence": "Linked for as long as the account and ID graph entry exist",
+        "revocation": "Clear site data, browser privacy settings",
+        "iframe": "",
+        "steps": []
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "1",
+          "note": ":Server side, browser independent",
+          "date": "2008-12-11"
+        },
+        "edge": {
+          "s": "y",
+          "v": "1",
+          "note": ":Server side, browser independent",
+          "date": ""
+        },
+        "firefox": {
+          "s": "y",
+          "v": "1",
+          "note": ":Server side, browser independent",
+          "date": "2004-11-09"
+        },
+        "safari": {
+          "s": "y",
+          "v": "1",
+          "note": ":Server side, browser independent",
+          "date": "2003-06-23"
+        },
+        "ios_safari": {
+          "s": "y",
+          "v": "1",
+          "note": ":Server side, browser independent",
+          "date": "2007-06-29"
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "1",
+          "note": ":Server side, browser independent",
+          "date": ""
+        },
+        "samsung": {
+          "s": "y",
+          "v": "1",
+          "note": ":Server side, browser independent",
+          "date": "2013-04-27"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "string",
+    "metric": "Linked account ID",
+    "update": "per login",
+    "fields": []
+  },
+  "limits": {
+    "headline": "Can recognize you as one person across your phone, laptop and tablet when you sign in",
+    "user_action": "You sign in on each device with the same account or email.",
+    "can": [
+      "Link your devices through the same account",
+      "Match you using a scrambled copy of your email in ad requests",
+      "Carry your history and recommendations from one device to the next"
+    ],
+    "cannot": [
+      "Link a device you never signed in on, except by guesswork",
+      "Match you if you use a different account or email on each device"
+    ],
+    "reach": 4,
+    "reach_label": "Follows you across your devices",
+    "differs": ""
+  },
+  "story": {
+    "what_it_is": "A site recognises you as one person across your phone, laptop and tablet when you sign in on each.",
+    "icon": "monitor-smartphone",
+    "tags": [
+      "Tracking",
+      "Account",
+      "Silent"
+    ],
+    "marketing": [],
+    "for_you": "You do not see it. Because you sign in on each device, the site can show your history on all of them, and also connect your habits across them.",
+    "for_makers": "Makers use it for better service, like continuing a video where you left off. Advertisers use it to follow a person across devices and measure which ad on one device led to a purchase on another.",
+    "use_cases": [
+      {
+        "type": "video",
+        "example": "You pause a show on your laptop and it resumes on your phone at the same minute.",
+        "apps": [
+          "Netflix",
+          "YouTube"
+        ]
+      },
+      {
+        "type": "shopping",
+        "example": "You add an item on your phone and see it in your cart on your laptop.",
+        "apps": [
+          "Amazon"
+        ]
+      },
+      {
+        "type": "ads",
+        "example": "An advertiser sees that you saw an ad on your phone and bought on your laptop, and counts it as a win.",
+        "apps": [
+          "Meta",
+          "Google Ads"
+        ]
+      },
+      {
+        "type": "games",
+        "example": "A browser game keeps your progress on every device that you sign in on.",
+        "apps": []
+      },
+      {
+        "type": "security",
+        "example": "A bank spots a login from a new device and asks for another step.",
+        "apps": []
+      },
+      {
+        "type": "social",
+        "example": "A social site shows the same feed and drafts on every device.",
+        "apps": []
+      },
+      {
+        "type": "analytics",
+        "example": "A team counts one person as one user across devices to get the true audience size.",
+        "apps": [
+          "Google Analytics"
+        ]
+      }
+    ],
+    "risks": [
+      "Cross device profiling",
+      "Hard to opt out"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Needs the person to sign in on each device",
+    "Hash matching needs the vendor's own copy of the email",
+    "Safari and Firefox limit cross-site ID passing"
+  ],
+  "scores": {
+    "sensitivity": 5,
+    "utility": 4,
+    "fingerprint_bits": null,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Same account on any device, cross device frequency caps"
+    ],
+    "abuse": [
+      "Profile joining across devices without clear consent"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2024-07",
+      "browser": "all",
+      "version": "",
+      "change": "FTC says hashing does not anonymise personal identifiers"
+    }
+  ],
+  "related": [
+    "web.xsite.id-graphs",
+    "web.xsite.email-hash-identity",
+    "web.xsite.ip-address-matching"
+  ],
+  "refs": [
+    {
+      "t": "vendor",
+      "label": "FTC: hashing doesn't make data anonymous",
+      "url": "https://www.ftc.gov/business-guidance/blog/2024/07/no-hashing-still-doesnt-make-your-data-anonymous"
+    },
+    {
+      "t": "vendor",
+      "label": "UID2 overview",
+      "url": "https://unifiedid.com/docs/intro"
+    }
+  ],
+  "confidence": "docs"
+}

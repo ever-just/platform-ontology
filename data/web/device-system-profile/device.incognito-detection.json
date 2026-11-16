@@ -1,0 +1,244 @@
+{
+  "id": "web.device.incognito-detection",
+  "name": "Private browsing detection",
+  "kind": "signal",
+  "group": "device-system-profile",
+  "subgroup": "Browser state",
+  "tags": [
+    "incognito",
+    "private-mode",
+    "arms-race"
+  ],
+  "plain": "Infers whether the browser is in a private or incognito window.",
+  "meaning": "Sites use it for metered paywalls and fraud scoring. Browsers keep closing the leaks (quota size, filesystem API, IndexedDB errors), so any method has a short life.",
+  "lifecycle": [
+    "on-arrival",
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "navigator.storage.estimate() quota, IndexedDB open errors, FileSystem API, timing",
+      "bcd": [
+        "api.StorageManager.estimate"
+      ],
+      "access": {
+        "grant": "none",
+        "prompt_ui": "None",
+        "secure_context": false,
+        "user_gesture": false,
+        "persistence": "read fresh on every page load; nothing stored",
+        "revocation": "none needed (no grant)",
+        "iframe": "Readable from cross-origin iframes too (same values)",
+        "steps": [
+          "Page script reads the value",
+          "No prompt is shown"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "61",
+          "note": "",
+          "date": "2017-09-05"
+        },
+        "edge": {
+          "s": "y",
+          "v": "79",
+          "note": "",
+          "date": "2020-01-15"
+        },
+        "firefox": {
+          "s": "y",
+          "v": "57",
+          "note": "",
+          "date": "2017-11-14"
+        },
+        "safari": {
+          "s": "y",
+          "v": "17",
+          "note": "",
+          "date": "2023-09-18"
+        },
+        "ios_safari": {
+          "s": "y",
+          "v": "17",
+          "note": "",
+          "date": "2023-09-18"
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "61",
+          "note": "",
+          "date": "2017-09-05"
+        },
+        "samsung": {
+          "s": "y",
+          "v": "8.0",
+          "note": "",
+          "date": "2018-07-18"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "object",
+    "metric": "",
+    "update": "static per session",
+    "fields": [
+      {
+        "name": "private",
+        "type": "boolean",
+        "unit": "",
+        "range": "inferred true or false",
+        "precision": "detector dependent"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can often tell if you are in a private window, until browsers close the gaps",
+    "user_action": "Nothing. It happens when the page loads",
+    "can": [
+      "Check storage size and errors that differ in private mode",
+      "Block a metered paywall trick or add a fraud score",
+      "Ask you to leave the private window"
+    ],
+    "cannot": [
+      "See what you browse in the private window",
+      "Work for long; browsers keep fixing these tells",
+      "Be certain; each method can fail",
+      "Stop the private window from working"
+    ],
+    "reach": 2,
+    "reach_label": "A guess, on page load",
+    "differs": ""
+  },
+  "story": {
+    "what_it_is": "Guesses whether you are in a private or incognito window.",
+    "icon": "eye-off",
+    "tags": [
+      "Private mode",
+      "Silent",
+      "Paywalls"
+    ],
+    "marketing": [
+      {
+        "vendor": "Google",
+        "name": "Incognito mode in Chrome",
+        "pitch": "Chrome says Incognito does not save your browsing history on the device, but sites can still see your visit.",
+        "url": "https://support.google.com/chrome/answer/95464"
+      }
+    ],
+    "for_you": "You never see the check. You may notice a site that refuses to open a free article in private mode, or asks you to sign in. Your private window looks like any other, but the site may treat it differently.",
+    "for_makers": "Publishers use it to enforce free article limits that would reset in a private window. Fraud teams treat private browsing as a mild risk signal. Browsers keep closing the clues, so each method works only a short time.",
+    "use_cases": [
+      {
+        "type": "news",
+        "example": "A newspaper with a few free articles a month blocks private windows, since they would reset the counter.",
+        "apps": [
+          "The New York Times",
+          "The Washington Post"
+        ]
+      },
+      {
+        "type": "security",
+        "example": "A payments fraud system adds risk when a new account is created in private mode.",
+        "apps": [
+          "Stripe Radar"
+        ]
+      },
+      {
+        "type": "shopping",
+        "example": "A retail site cannot keep your cart across visits in private mode and shows a note.",
+        "apps": []
+      },
+      {
+        "type": "games",
+        "example": "A browser games portal tells you progress will be lost when you close the private window.",
+        "apps": []
+      },
+      {
+        "type": "banking",
+        "example": "A bank notes that a login came from a private window and may ask for an extra code.",
+        "apps": []
+      },
+      {
+        "type": "ads",
+        "example": "An ad vendor treats private browsers as users who opted out of tracking.",
+        "apps": []
+      },
+      {
+        "type": "education",
+        "example": "An online exam provider blocks private windows to stop hidden helper tools.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "May block people who value privacy",
+      "Detection tricks change often"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "No official API",
+    "Each method patched within months",
+    "Cannot see history or cookies of the normal window"
+  ],
+  "scores": {
+    "sensitivity": 2,
+    "utility": 3,
+    "fingerprint_bits": 0.5,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Metered paywall",
+      "Fraud scoring"
+    ],
+    "abuse": [
+      "Treating private users as suspect"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": true,
+      "how": "Incognito or private mode detected. Read by the LinkedIn APFC fingerprint script (48 features, alleged by BrowserGate, partly confirmed by BleepingComputer)."
+    }
+  },
+  "history": [
+    {
+      "date": "2019-07",
+      "browser": "chrome",
+      "version": "76",
+      "change": "FileSystem API incognito leak closed"
+    },
+    {
+      "date": "2023-07",
+      "browser": "firefox",
+      "version": "115",
+      "change": "IndexedDB private-mode error removed"
+    }
+  ],
+  "related": [
+    "web.device.storage-estimate"
+  ],
+  "refs": [
+    {
+      "t": "github",
+      "label": "CreepJS (abrahamjuliot)",
+      "url": "https://github.com/abrahamjuliot/creepjs"
+    },
+    {
+      "t": "news",
+      "label": "BrowserGate: how LinkedIn's script works",
+      "url": "https://browsergate.eu/how-it-works/"
+    },
+    {
+      "t": "mdn",
+      "label": "MDN StorageManager.estimate",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/StorageManager/estimate"
+    }
+  ],
+  "confidence": "inferred"
+}

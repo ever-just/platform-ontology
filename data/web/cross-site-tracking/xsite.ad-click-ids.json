@@ -1,0 +1,277 @@
+{
+  "id": "web.xsite.ad-click-ids",
+  "name": "Ad click IDs (gclid, fbclid, msclkid and more)",
+  "kind": "tracking",
+  "group": "cross-site-tracking",
+  "subgroup": "Before the visit",
+  "tags": [
+    "gclid",
+    "gbraid",
+    "wbraid",
+    "fbclid",
+    "msclkid",
+    "ttclid",
+    "li_fat_id",
+    "twclid",
+    "epik",
+    "igshid"
+  ],
+  "plain": "Unique IDs ad platforms add to links so a later purchase can be matched to the exact ad click.",
+  "meaning": "A click ID ties one person's click on an ad to later conversions, even across sessions, and is stored in a first-party cookie (for example Google _gcl_aw about 90 days, Meta _fbc about 90 days). iOS ATT era gbraid/wbraid are aggregated.",
+  "lifecycle": [
+    "before-visit",
+    "on-arrival",
+    "after-leaving"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "URL query: gclid, gbraid, wbraid (Google), fbclid (Meta), msclkid (Microsoft), ttclid (TikTok), li_fat_id (LinkedIn), twclid (X), epik (Pinterest), igshid (Instagram)",
+      "access": {
+        "grant": "none",
+        "prompt_ui": "None",
+        "secure_context": false,
+        "user_gesture": false,
+        "persistence": "First-party cookie copies, typically 30 to 90 days, then sent to ad platforms via pixel or server API",
+        "revocation": "Clear site data, browser privacy settings",
+        "iframe": "",
+        "steps": []
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "1",
+          "note": "URL parameters travel in any browser unless stripped",
+          "date": "2008-12-11"
+        },
+        "edge": {
+          "s": "y",
+          "v": "1",
+          "note": "URL parameters travel in any browser unless stripped",
+          "date": ""
+        },
+        "firefox": {
+          "s": "y",
+          "v": "1",
+          "note": "URL parameters travel in any browser unless stripped",
+          "date": "2004-11-09"
+        },
+        "safari": {
+          "s": "y",
+          "v": "1",
+          "note": "URL parameters travel in any browser unless stripped",
+          "date": "2003-06-23"
+        },
+        "ios_safari": {
+          "s": "y",
+          "v": "1",
+          "note": "URL parameters travel in any browser unless stripped",
+          "date": "2007-06-29"
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "1",
+          "note": "URL parameters travel in any browser unless stripped",
+          "date": ""
+        },
+        "samsung": {
+          "s": "y",
+          "v": "1",
+          "note": "URL parameters travel in any browser unless stripped",
+          "date": "2013-04-27"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "string",
+    "metric": "Opaque per click token",
+    "update": "per ad click",
+    "fields": [
+      {
+        "name": "gclid",
+        "type": "string",
+        "unit": "token",
+        "range": "up to about 100 chars",
+        "precision": "unique per click"
+      },
+      {
+        "name": "fbclid",
+        "type": "string",
+        "unit": "token",
+        "range": "about 60 to 100 chars",
+        "precision": "unique per click"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can tag your ad click so a later purchase links back to that exact ad",
+    "user_action": "You click an ad link that carries a code such as gclid, fbclid or msclkid",
+    "can": [
+      "Add a unique code to the web address of the page you land on",
+      "Let the site or its ad tools save that code",
+      "Match a later purchase or sign up to your ad click",
+      "Pass the code to the ad company on the server side"
+    ],
+    "cannot": [
+      "Exist unless you arrived through an ad link with the code",
+      "Follow you to other sites on its own",
+      "Work if your browser strips known codes from links, in some modes",
+      "Name you; it is a code, not a name, until matched to an account"
+    ],
+    "reach": 3,
+    "reach_label": "One ad click, matched later",
+    "differs": "Safari, Firefox and Brave remove some of these codes from links in certain modes. Chrome keeps them."
+  },
+  "story": {
+    "what_it_is": "A unique code added to an ad link so a later purchase can be matched to that exact click.",
+    "icon": "tag",
+    "tags": [
+      "Ads",
+      "Click ID",
+      "Cookies"
+    ],
+    "marketing": [
+      {
+        "vendor": "Apple",
+        "name": "Link Tracking Protection",
+        "pitch": "Apple says Safari 17 removes tracking codes from links in Private Browsing, Mail and Messages to protect privacy.",
+        "url": "https://webkit.org/blog/14445/webkit-features-in-safari-17-0/"
+      }
+    ],
+    "for_you": "You click an ad and the web address ends in a long string of letters and numbers. You may not notice it. The site saves that code, so a sale next week can be tied to your click.",
+    "for_makers": "Advertisers want to know which ad paid off, down to one click. A click code stored in the advertiser's own cookie survives most privacy rules for about three months. It is the base of nearly all ad accounting, and the reason for the arms race with browser protections.",
+    "use_cases": [
+      {
+        "type": "ads",
+        "example": "You click a Google ad for running shoes. A gclid is added, the shop stores it, and the sale is credited to that click.",
+        "apps": [
+          "Google Ads",
+          "Nike"
+        ]
+      },
+      {
+        "type": "social",
+        "example": "You tap an Instagram ad, an fbclid joins the link, and Meta can link your purchase to that ad.",
+        "apps": [
+          "Meta Ads"
+        ]
+      },
+      {
+        "type": "games",
+        "example": "A mobile game web store tracks which ad brought a player who later buys gems, to pay the ad network.",
+        "apps": [
+          "Roblox web",
+          "Steam"
+        ]
+      },
+      {
+        "type": "analytics",
+        "example": "A marketer sees which of 40 ads made money, instead of only which got clicks.",
+        "apps": [
+          "Google Analytics",
+          "Triple Whale"
+        ]
+      },
+      {
+        "type": "shopping",
+        "example": "A retailer in a Black Friday ad run sees which keyword made the sale and moves budget in real time.",
+        "apps": [
+          "Amazon Ads",
+          "Shopify"
+        ]
+      },
+      {
+        "type": "security",
+        "example": "Fraud teams look for the same click code used by many sales, which is a sign of fake traffic.",
+        "apps": []
+      },
+      {
+        "type": "media",
+        "example": "A newsletter site sees which ad created each paying subscriber, and which only brought free readers.",
+        "apps": [
+          "Substack",
+          "The New York Times"
+        ]
+      }
+    ],
+    "risks": [
+      "Ties a click to a person",
+      "Codes can leak in shared links"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Stripped in Safari Private Browsing, Mail and Messages (Link Tracking Protection) and Firefox ETP Strict",
+    "Chrome leaves them intact",
+    "Platforms may refuse conversions older than their attribution window (often 7 to 90 days)",
+    "Only identifies a click, not a person's identity by itself"
+  ],
+  "scores": {
+    "sensitivity": 4,
+    "utility": 5,
+    "fingerprint_bits": 0.0,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Offline conversion upload",
+      "Ad ROI measurement",
+      "Fraud filtering"
+    ],
+    "abuse": [
+      "Cross-session identity stitching",
+      "Sharing click ID with unrelated vendors"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2023-09",
+      "browser": "safari",
+      "version": "17",
+      "change": "Link Tracking Protection strips known click IDs in Private Browsing, Mail and Messages"
+    },
+    {
+      "date": "2022-06",
+      "browser": "firefox",
+      "version": "102",
+      "change": "Query Parameter Stripping removes known trackers in ETP Strict and Private windows"
+    },
+    {
+      "date": "2021-04",
+      "browser": "safari",
+      "version": "14.5",
+      "change": "iOS ATT; Google introduced gbraid and wbraid for aggregated iOS app to web measurement"
+    }
+  ],
+  "related": [
+    "web.xsite.click-id-stripping",
+    "web.xsite.utm-params",
+    "web.xsite.conversions-api"
+  ],
+  "refs": [
+    {
+      "t": "webkit",
+      "label": "WebKit: Link Tracking Protection (Safari 17)",
+      "url": "https://webkit.org/blog/14445/webkit-features-in-safari-17-0/"
+    },
+    {
+      "t": "vendor",
+      "label": "Google Ads auto-tagging and gclid",
+      "url": "https://support.google.com/google-ads/answer/9744275"
+    },
+    {
+      "t": "mozilla",
+      "label": "Firefox Query Parameter Stripping",
+      "url": "https://firefox-source-docs.mozilla.org/toolkit/components/antitracking/anti-tracking/query-stripping/index.html"
+    }
+  ],
+  "confidence": "docs"
+}

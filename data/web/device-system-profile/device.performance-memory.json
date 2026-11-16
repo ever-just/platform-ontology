@@ -1,0 +1,214 @@
+{
+  "id": "web.device.performance-memory",
+  "name": "JS heap size",
+  "kind": "signal",
+  "group": "device-system-profile",
+  "subgroup": "Hardware",
+  "tags": [
+    "performance.memory",
+    "chromium-only",
+    "ram"
+  ],
+  "plain": "Chromium reports JavaScript heap size limits, which track device RAM.",
+  "meaning": "jsHeapSizeLimit is about 2 to 4 GB on 64-bit desktops and 0.5 to 1 GB on low-end phones, bucketed in Chrome, so it hints at RAM class even though deviceMemory is capped at 8.",
+  "lifecycle": [
+    "on-arrival",
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "performance.memory.jsHeapSizeLimit, totalJSHeapSize, usedJSHeapSize",
+      "access": {
+        "grant": "none",
+        "prompt_ui": "None",
+        "secure_context": false,
+        "user_gesture": false,
+        "persistence": "read fresh on every page load; nothing stored",
+        "revocation": "none needed (no grant)",
+        "iframe": "Readable from cross-origin iframes too (same values)",
+        "steps": [
+          "Page script reads the value",
+          "No prompt is shown"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "7",
+          "note": "Non-standard; quantized",
+          "date": "2010-10-19"
+        },
+        "edge": {
+          "s": "y",
+          "v": "79",
+          "note": "",
+          "date": "2020-01-15"
+        },
+        "firefox": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "safari": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "ios_safari": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "18",
+          "note": "",
+          "date": "2012-06-27"
+        },
+        "samsung": {
+          "s": "y",
+          "v": "4.0",
+          "note": "",
+          "date": "2016-03-11"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "object",
+    "metric": "",
+    "update": "static per session",
+    "fields": [
+      {
+        "name": "jsHeapSizeLimit",
+        "type": "integer",
+        "unit": "bytes",
+        "range": "about 0.5 GB to 4 GB",
+        "precision": "bucketed"
+      },
+      {
+        "name": "usedJSHeapSize",
+        "type": "integer",
+        "unit": "bytes",
+        "range": "0 to limit",
+        "precision": "bucketed"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can see how much memory the page can use, which hints at your RAM class",
+    "user_action": "Nothing. It happens when the page runs in Chrome or Edge",
+    "can": [
+      "Check the JavaScript memory limit and how much is used",
+      "Guess a low, mid, or high RAM device from the limit",
+      "Tune how much the page loads at once",
+      "Use it as a hardware clue"
+    ],
+    "cannot": [
+      "Work in Firefox, Safari, or on iPhone",
+      "See your exact RAM size",
+      "See memory used by other tabs or apps",
+      "See precise numbers; Chrome rounds them into buckets"
+    ],
+    "reach": 2,
+    "reach_label": "A rough memory class, in Chrome",
+    "differs": "Only Chromium browsers share it. Firefox and Safari do not."
+  },
+  "story": {
+    "what_it_is": "Chrome tells a page how much working memory its JavaScript is allowed to use, which hints at your device's RAM.",
+    "icon": "memory-stick",
+    "tags": [
+      "Memory",
+      "Chrome",
+      "Silent"
+    ],
+    "marketing": [],
+    "for_you": "You never see it. It is one of the numbers a page can read that quietly shows whether you have a small or large machine, even when other memory numbers are hidden.",
+    "for_makers": "Developers use it to find memory leaks and to learn when a tab is close to crashing. Fingerprinting code uses the same limit to guess RAM class. Chrome rounds the numbers, so the hint is rough.",
+    "use_cases": [
+      {
+        "type": "developer",
+        "example": "A web app team logs heap size in tests to find a leak that slowly eats memory.",
+        "apps": [
+          "Sentry"
+        ]
+      },
+      {
+        "type": "games",
+        "example": "A large browser game checks the heap limit and loads smaller maps on devices with a low limit.",
+        "apps": []
+      },
+      {
+        "type": "creative",
+        "example": "A browser design tool warns before opening a huge file that would exceed the tab's memory.",
+        "apps": [
+          "Figma"
+        ]
+      },
+      {
+        "type": "productivity",
+        "example": "A big spreadsheet in the browser avoids loading everything at once when memory is tight.",
+        "apps": [
+          "Google Sheets"
+        ]
+      },
+      {
+        "type": "security",
+        "example": "A bot detector notes that a headless browser reports a typical server heap size and flags it.",
+        "apps": []
+      },
+      {
+        "type": "ads",
+        "example": "An ad tech script uses heap size to guess a device tier for choosing heavier or lighter ads.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Hint at RAM size",
+      "Chrome only"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Non-standard",
+    "Coarsened"
+  ],
+  "scores": {
+    "sensitivity": 1,
+    "utility": 2,
+    "fingerprint_bits": 1.5,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Memory leak diagnostics"
+    ],
+    "abuse": [
+      "RAM class fingerprint"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2019-01",
+      "browser": "chrome",
+      "version": "",
+      "change": "Values bucketed and jittered to reduce precision"
+    }
+  ],
+  "refs": [
+    {
+      "t": "mdn",
+      "label": "MDN Performance.memory",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/Performance/memory"
+    }
+  ],
+  "confidence": "docs"
+}

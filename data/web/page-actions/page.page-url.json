@@ -1,0 +1,211 @@
+{
+  "id": "web.page.page-url",
+  "name": "Page URL (location)",
+  "kind": "signal",
+  "group": "page-actions",
+  "subgroup": "Page context",
+  "tags": [
+    "url",
+    "fingerprint"
+  ],
+  "plain": "Reads the current page's full address.",
+  "meaning": "The URL (up to 1500 chars) shows what profile or page the person is looking at, which is sensitive on a social network.",
+  "lifecycle": [
+    "on-arrival",
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "window.location.href",
+      "bcd": [
+        "api.Location.href"
+      ],
+      "access": {
+        "grant": "none",
+        "prompt_ui": "None (no browser prompt)",
+        "secure_context": false,
+        "user_gesture": false,
+        "persistence": "",
+        "revocation": "",
+        "iframe": "",
+        "steps": [
+          "Script reads the value",
+          "Value joins the fingerprint payload"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "1",
+          "note": "",
+          "date": "2008-12-11"
+        },
+        "edge": {
+          "s": "y",
+          "v": "12",
+          "note": "",
+          "date": "2015-07-29"
+        },
+        "firefox": {
+          "s": "y",
+          "v": "1",
+          "note": "",
+          "date": "2004-11-09"
+        },
+        "safari": {
+          "s": "y",
+          "v": "1",
+          "note": "",
+          "date": "2003-06-23"
+        },
+        "ios_safari": {
+          "s": "y",
+          "v": "1",
+          "note": "",
+          "date": "2007-06-29"
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "18",
+          "note": "",
+          "date": "2012-06-27"
+        },
+        "samsung": {
+          "s": "y",
+          "v": "1.0",
+          "note": "",
+          "date": "2013-04-27"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "string",
+    "metric": "Page URL (location)",
+    "update": "per page",
+    "fields": [
+      {
+        "name": "location",
+        "type": "string",
+        "unit": "",
+        "range": "up to 1500 chars",
+        "precision": "exact"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can see the full address of the page you are on",
+    "user_action": "Nothing. It happens as soon as the page loads.",
+    "can": [
+      "See the whole address, including any search words or codes in it",
+      "Use bits of the address to show the right content",
+      "Send the address to its own server or to other companies it works with"
+    ],
+    "cannot": [
+      "See the address of other tabs",
+      "Send the part after # to its server by itself; the browser keeps that part local",
+      "See your history of earlier pages",
+      "Change the address to a different site"
+    ],
+    "reach": 1,
+    "reach_label": "The current page only",
+    "differs": ""
+  },
+  "story": {
+    "what_it_is": "A page can read its own full web address, including tracking parts.",
+    "icon": "link",
+    "tags": [
+      "Silent",
+      "Tracking",
+      "Links"
+    ],
+    "marketing": [],
+    "for_you": "You never see it. The address of the page you are on, including bits after the question mark, may be read and sent to others.",
+    "for_makers": "Analytics and ad tools read it to know which page, campaign and referrer brought you. Sometimes the address holds private info like an email or a search term.",
+    "use_cases": [
+      {
+        "type": "analytics",
+        "example": "A script reads campaign tags in the address to credit the right ad.",
+        "apps": [
+          "Google Analytics"
+        ]
+      },
+      {
+        "type": "ads",
+        "example": "An ad pixel sends the page address to the ad network to match a purchase to an ad.",
+        "apps": [
+          "Meta Pixel"
+        ]
+      },
+      {
+        "type": "shopping",
+        "example": "A store reads the discount code in a link and applies it to your cart.",
+        "apps": []
+      },
+      {
+        "type": "security",
+        "example": "A phishing scanner compares the page address with known bad ones.",
+        "apps": []
+      },
+      {
+        "type": "social",
+        "example": "A share button builds a link to the current page for you to post.",
+        "apps": [
+          "X",
+          "Facebook"
+        ]
+      },
+      {
+        "type": "developer",
+        "example": "A single page app reads the address to know which view to show.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Private info in links",
+      "Leaks to third parties"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Cannot read other tabs"
+  ],
+  "scores": {
+    "sensitivity": 3,
+    "utility": 3,
+    "fingerprint_bits": 4,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Analytics"
+    ],
+    "abuse": [
+      "Reading viewed profiles"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": true,
+      "how": "Collector key(s): location. dataLimit 1500."
+    }
+  },
+  "related": [
+    "web.tracking.linkedin-apfc-fingerprint"
+  ],
+  "refs": [
+    {
+      "t": "mdn",
+      "label": "MDN Location",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/Location"
+    },
+    {
+      "t": "github",
+      "label": "mdp/linkedin-extension-fingerprinting (LinkedIn script snapshot and ID list)",
+      "url": "https://github.com/mdp/linkedin-extension-fingerprinting"
+    }
+  ],
+  "confidence": "docs"
+}

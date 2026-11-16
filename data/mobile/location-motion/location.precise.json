@@ -1,0 +1,262 @@
+{
+  "id": "mob.location.precise",
+  "name": "Precise location",
+  "kind": "permission",
+  "group": "location-motion",
+  "subgroup": "Position",
+  "tags": [
+    "gps",
+    "runtime-permission",
+    "fine-location"
+  ],
+  "plain": "Asks for the device's exact GPS position while the app is in use.",
+  "meaning": "Reveals where a person is to within meters: home, work, routines, travel. Android's fine and iOS's precise grant are the most sensitive runtime permissions after background access.",
+  "lifecycle": [
+    "in-session"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "y",
+      "v": "6.0",
+      "api": 23,
+      "permission": "ACCESS_FINE_LOCATION",
+      "protection": "dangerous",
+      "grant": "prompt",
+      "prompt_ui": "Android 12+: Precise or Approximate choice, then While using the app, Only this time, Don't allow",
+      "persistence": "Until revoked or auto-reset; one-time grant ends when the app leaves view",
+      "revocation": "Settings > Apps > Permissions > Location; Privacy dashboard",
+      "store_policy": "Play: foreground location needs a prominent data-safety disclosure",
+      "api_surface": "FusedLocationProviderClient, LocationManager",
+      "note": "Apps targeting 12 (API 31) must also declare COARSE; the user can downgrade to approximate."
+    },
+    "ios": {
+      "s": "y",
+      "v": "2.0",
+      "permission": "NSLocationWhenInUseUsageDescription",
+      "protection": "prompt",
+      "grant": "prompt",
+      "prompt_ui": "Allow Once, Allow While Using App, Don't Allow; Precise Location toggle on the map card (iOS 14)",
+      "persistence": "Until revoked; Allow Once lapses after the app is backgrounded for a while",
+      "revocation": "Settings > Privacy & Security > Location Services",
+      "store_policy": "App Review 5.1.1 and 5.1.5: purpose string must be specific; location only for relevant features",
+      "api_surface": "CLLocationManager, CLLocationUpdate (iOS 17), CLServiceSession (iOS 18)",
+      "note": "Precise is on by default; app can ask for temporary full accuracy with requestTemporaryFullAccuracyAuthorization."
+    }
+  },
+  "web_equivalents": [
+    "web.location.geolocation"
+  ],
+  "data": {
+    "type": "object",
+    "metric": "Coordinates with accuracy radius",
+    "update": "one-shot or continuous, about 1 Hz when requested",
+    "fields": [
+      {
+        "name": "latitude",
+        "type": "float",
+        "unit": "degrees",
+        "range": "-90 to 90",
+        "precision": "about 3 to 5 m (GNSS)"
+      },
+      {
+        "name": "longitude",
+        "type": "float",
+        "unit": "degrees",
+        "range": "-180 to 180",
+        "precision": "about 3 to 5 m (GNSS)"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can see your exact GPS spot while you use the app, after you allow",
+    "user_action": "You tap Allow While Using the App with Precise on",
+    "can": [
+      "Find your exact position within a few meters",
+      "Follow you as you move while the app is open",
+      "Show turn by turn directions or delivery tracking",
+      "Ask for full accuracy for a moment if you chose approximate (iPhone)"
+    ],
+    "cannot": [
+      "Follow you when the app is closed without Always allow",
+      "See your exact spot if you choose Approximate",
+      "Use the permission after you pick Don't Allow",
+      "Use your exact spot before you tap Allow"
+    ],
+    "reach": 2,
+    "reach_label": "Exact spot, while the app is open",
+    "differs": "Android 12 and newer lets you downgrade to approximate in the prompt. iPhone has a Precise switch you can turn off."
+  },
+  "story": {
+    "what_it_is": "An app learns exactly where you are, to within a few meters, while you use it.",
+    "icon": "map-pin",
+    "tags": [
+      "Location",
+      "Asks first",
+      "Sensitive"
+    ],
+    "marketing": [
+      {
+        "vendor": "Apple",
+        "name": "Location Services",
+        "pitch": "Apple lets you choose whether each app can see your exact location and when.",
+        "url": "https://support.apple.com/en-us/102515"
+      },
+      {
+        "vendor": "Google",
+        "name": "Precise location",
+        "pitch": "Android lets you allow exact location, which apps use for maps, rides and delivery.",
+        "url": "https://developer.android.com/training/location/permissions"
+      }
+    ],
+    "for_you": "You see a prompt asking to use your location, with an option for precise. If you agree, the blue dot on the map shows your true spot, and maps, rides and delivery feel magical. You can switch it off any time.",
+    "for_makers": "Makers need the exact spot for turn by turn directions, finding a driver and showing nearby places. It is also valuable to advertisers and data brokers. That is why platforms add prompts, reminders and the approximate option.",
+    "use_cases": [
+      {
+        "type": "maps",
+        "example": "A map app shows the blue dot on the right side of the street and reroutes you after a wrong turn.",
+        "apps": [
+          "Google Maps",
+          "Waze"
+        ]
+      },
+      {
+        "type": "rideshare",
+        "example": "A ride app finds the exact corner where the driver should pick you up.",
+        "apps": [
+          "Uber",
+          "Lyft"
+        ]
+      },
+      {
+        "type": "games",
+        "example": "An AR game places creatures at real places around you and needs your exact spot to match gyms and stops.",
+        "apps": [
+          "Pokemon GO",
+          "Ingress",
+          "Monster Hunter Now"
+        ]
+      },
+      {
+        "type": "delivery",
+        "example": "A food app shows the courier moving toward your door in real time.",
+        "apps": [
+          "DoorDash",
+          "Uber Eats"
+        ]
+      },
+      {
+        "type": "dating",
+        "example": "A dating app shows how many meters away a match is.",
+        "apps": [
+          "Tinder",
+          "Grindr"
+        ]
+      },
+      {
+        "type": "ads",
+        "example": "A hidden kit records where you are many times a day and sells the trail to data brokers.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Trails sold to data brokers",
+      "Stalkerware tracking",
+      "Shows home and work"
+    ],
+    "android_note": "Android lets you grant fine or coarse location, with a one time and only while using option.",
+    "ios_note": "iPhone has a Precise Location switch for each app and shows a blue arrow when location is in use."
+  },
+  "technical_bounds": [
+    "Needs location services on at the OS level",
+    "Background use needs a separate grant on both platforms",
+    "Status bar or Dynamic Island indicator while in use"
+  ],
+  "scores": {
+    "sensitivity": 5,
+    "utility": 5,
+    "fingerprint_bits": null,
+    "friction": 2
+  },
+  "value": {
+    "legit_uses": [
+      "Navigation",
+      "Delivery tracking",
+      "Store locators"
+    ],
+    "abuse": [
+      "Selling location trails to data brokers",
+      "Stalkerware tracking"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": true,
+      "how": "Privacy policy sections 1.5 and 2.1: LinkedIn asks members to opt in before using GPS or similar tools to identify precise location or proximity, used for tasks such as suggesting nearby members or calculating a commute. iOS label lists Precise Location (some purposes) as Linked to You."
+    }
+  },
+  "history": [
+    {
+      "date": "2015-10",
+      "platform": "android",
+      "version": "6.0 (API 23)",
+      "change": "Location became a runtime permission with an in-app prompt"
+    },
+    {
+      "date": "2020-09",
+      "platform": "ios",
+      "version": "iOS 14",
+      "change": "Precise Location toggle added; apps can request one-time temporary full accuracy"
+    },
+    {
+      "date": "2021-10",
+      "platform": "android",
+      "version": "12 (API 31)",
+      "change": "Approximate option added; apps must request FINE together with COARSE"
+    },
+    {
+      "date": "2019-09",
+      "platform": "ios",
+      "version": "iOS 13",
+      "change": "Allow Once introduced for location"
+    },
+    {
+      "date": "2023-09",
+      "platform": "ios",
+      "version": "iOS 17",
+      "change": "CLLocationUpdate async API and system-level location button in Share Location"
+    }
+  ],
+  "related": [
+    "mob.location.approximate",
+    "mob.location.background"
+  ],
+  "refs": [
+    {
+      "t": "android",
+      "label": "Android: Request location permissions",
+      "url": "https://developer.android.com/develop/sensors-and-location/location/permissions"
+    },
+    {
+      "t": "apple",
+      "label": "Apple: Requesting authorization to use location services",
+      "url": "https://developer.apple.com/documentation/corelocation/requesting-authorization-to-use-location-services"
+    },
+    {
+      "t": "android",
+      "label": "Android 12 behavior changes (all apps)",
+      "url": "https://developer.android.com/about/versions/12/behavior-changes-all"
+    },
+    {
+      "t": "policy",
+      "label": "LinkedIn Privacy Policy (effective 3 Nov 2025)",
+      "url": "https://www.linkedin.com/legal/privacy-policy"
+    },
+    {
+      "t": "vendor",
+      "label": "App Store listing and App Privacy label, LinkedIn (id288429040)",
+      "url": "https://apps.apple.com/us/app/linkedin-professional-network/id288429040"
+    }
+  ],
+  "confidence": "verified"
+}

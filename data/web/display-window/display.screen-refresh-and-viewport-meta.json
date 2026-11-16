@@ -1,0 +1,219 @@
+{
+  "id": "web.display.screen-refresh-and-viewport-meta",
+  "name": "Viewport meta and visual viewport",
+  "kind": "signal",
+  "group": "display-window",
+  "subgroup": "Window",
+  "tags": [
+    "visualViewport",
+    "pinch-zoom"
+  ],
+  "plain": "visualViewport reports pinch-zoom scale and on-screen keyboard offsets.",
+  "meaning": "Scale above 1 tells the person is zoomed in (accessibility); height shrink exposes the on-screen keyboard. Updates live as the user pinches or types.",
+  "lifecycle": [
+    "on-arrival",
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "window.visualViewport.scale, width, height, offsetTop, 'resize' event",
+      "bcd": [
+        "api.VisualViewport"
+      ],
+      "access": {
+        "grant": "none",
+        "prompt_ui": "None",
+        "secure_context": false,
+        "user_gesture": false,
+        "persistence": "read fresh on every page load; nothing stored",
+        "revocation": "none needed (no grant)",
+        "iframe": "Readable from cross-origin iframes too (same values)",
+        "steps": [
+          "Page script reads the value",
+          "No prompt is shown"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "61",
+          "note": "",
+          "date": "2017-09-05"
+        },
+        "edge": {
+          "s": "y",
+          "v": "79",
+          "note": "",
+          "date": "2020-01-15"
+        },
+        "firefox": {
+          "s": "y",
+          "v": "91",
+          "note": "",
+          "date": "2021-08-10"
+        },
+        "safari": {
+          "s": "y",
+          "v": "13",
+          "note": "",
+          "date": "2019-09-19"
+        },
+        "ios_safari": {
+          "s": "y",
+          "v": "13",
+          "note": "",
+          "date": "2019-09-19"
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "61",
+          "note": "",
+          "date": "2017-09-05"
+        },
+        "samsung": {
+          "s": "y",
+          "v": "8.0",
+          "note": "",
+          "date": "2018-07-18"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "object",
+    "metric": "",
+    "update": "static per session",
+    "fields": [
+      {
+        "name": "scale",
+        "type": "float",
+        "unit": "ratio",
+        "range": "0.25 to 5",
+        "precision": "0.01"
+      },
+      {
+        "name": "width, height",
+        "type": "float",
+        "unit": "CSS px",
+        "range": "",
+        "precision": "sub-pixel"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can see your pinch zoom level and when the on screen keyboard pops up",
+    "user_action": "You pinch to zoom, or tap a box that opens the keyboard.",
+    "can": [
+      "Check your current pinch zoom scale",
+      "See changes to the visible area, such as when the keyboard opens",
+      "Move buttons so they stay above the keyboard"
+    ],
+    "cannot": [
+      "See what you type on the keyboard",
+      "Tell which keyboard app you use",
+      "Zoom the page for you"
+    ],
+    "reach": 2,
+    "reach_label": "While the page is open",
+    "differs": ""
+  },
+  "story": {
+    "what_it_is": "Reports pinch zoom level and how far the on screen keyboard has pushed the page.",
+    "icon": "maximize-2",
+    "tags": [
+      "Display",
+      "Phone",
+      "Silent"
+    ],
+    "marketing": [
+      {
+        "vendor": "MDN",
+        "name": "Visual Viewport API",
+        "pitch": "Explains how a page can read the part of the page currently visible, including zoom and keyboard changes.",
+        "url": "https://developer.mozilla.org/en-US/docs/Web/API/Visual_Viewport_API"
+      }
+    ],
+    "for_you": "You never see the reading. It is why a chat box slides up neatly above the keyboard when you start typing on your phone.",
+    "for_makers": "Makers use it to keep inputs visible and to adapt to zoom. The same numbers can show how a person holds and uses a device, which fraud teams can use.",
+    "use_cases": [
+      {
+        "type": "messaging",
+        "example": "A chat site lifts the message box above the on screen keyboard so you can see what you type.",
+        "apps": [
+          "WhatsApp Web",
+          "Slack"
+        ]
+      },
+      {
+        "type": "games",
+        "example": "A browser game keeps its controls on screen when the keyboard opens for chat.",
+        "apps": []
+      },
+      {
+        "type": "maps",
+        "example": "A web map redraws labels when you pinch to zoom.",
+        "apps": [
+          "Google Maps"
+        ]
+      },
+      {
+        "type": "shopping",
+        "example": "A checkout form scrolls the card number field into view when the keyboard pops up.",
+        "apps": []
+      },
+      {
+        "type": "security",
+        "example": "A bot check sees a browser that never pinch zooms or shows a keyboard on a supposed phone.",
+        "apps": []
+      },
+      {
+        "type": "accessibility",
+        "example": "A site keeps text readable when a user zooms in a lot.",
+        "apps": []
+      },
+      {
+        "type": "creative",
+        "example": "A drawing app tells drawing taps apart from zoom gestures.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Behavior fingerprint",
+      "Reveals zoom use"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Browser pinch scale differs per OS"
+  ],
+  "scores": {
+    "sensitivity": 1,
+    "utility": 3,
+    "fingerprint_bits": 1.0,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Keyboard-aware UI"
+    ],
+    "abuse": [
+      "Zoom behavior"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "refs": [
+    {
+      "t": "mdn",
+      "label": "MDN VisualViewport",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/VisualViewport"
+    }
+  ],
+  "confidence": "docs"
+}

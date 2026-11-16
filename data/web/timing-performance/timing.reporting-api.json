@@ -1,0 +1,257 @@
+{
+  "id": "web.timing.reporting-api",
+  "name": "Reporting API (crash, CSP and deprecation reports)",
+  "kind": "capability",
+  "group": "timing-performance",
+  "subgroup": "Telemetry",
+  "tags": [
+    "reporting-api",
+    "csp-report",
+    "crash-report",
+    "deprecation"
+  ],
+  "plain": "Sends the browser's own error, crash and policy violation reports to a site endpoint.",
+  "meaning": "A site can learn when its page crashes, runs out of memory, hits a blocked resource or uses a deprecated feature on your device, and gets those reports even after the page closed. No prompt is shown.",
+  "lifecycle": [
+    "in-session",
+    "after-leaving"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "Reporting-Endpoints: default=\"https://example/r\"; new ReportingObserver(cb, {types})",
+      "bcd": [
+        "http.headers.Reporting-Endpoints",
+        "api.ReportingObserver",
+        "api.ReportBody"
+      ],
+      "access": {
+        "grant": "none",
+        "prompt_ui": "None (no browser prompt)",
+        "secure_context": false,
+        "user_gesture": false,
+        "activation": "none",
+        "persistence": "Reports are queued and sent in the background, even after the tab is closed",
+        "revocation": "Nothing to revoke (no permission is stored)",
+        "iframe": "Per document and its Reporting-Endpoints header; cross-origin frames use their own policy",
+        "steps": [
+          "Server sends Reporting-Endpoints header",
+          "Browser notices a violation, deprecation or crash",
+          "Browser sends a JSON report to the endpoint, possibly later",
+          "Page can also read some reports with ReportingObserver"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "96",
+          "note": "",
+          "date": "2021-11-15"
+        },
+        "edge": {
+          "s": "y",
+          "v": "96",
+          "note": "",
+          "date": "2021-11-19"
+        },
+        "firefox": {
+          "s": "y",
+          "v": "130",
+          "note": "",
+          "date": "2024-09-03"
+        },
+        "safari": {
+          "s": "y",
+          "v": "16.4",
+          "note": "",
+          "date": "2023-03-27"
+        },
+        "ios_safari": {
+          "s": "y",
+          "v": "16.4",
+          "note": "All iOS browsers use WebKit",
+          "date": "2023-03-27"
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "96",
+          "note": "",
+          "date": "2021-11-15"
+        },
+        "samsung": {
+          "s": "y",
+          "v": "17.0",
+          "note": "",
+          "date": "2022-05-04"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "none",
+    "metric": "",
+    "update": "",
+    "fields": []
+  },
+  "limits": {
+    "headline": "Can get the browser's crash and error reports sent to the site",
+    "user_action": "Nothing. It happens if the page crashes or breaks a site rule",
+    "can": [
+      "Receive reports on crashes, out of memory stops and blocked content",
+      "Receive notes about old features your device used",
+      "Get the report even after you left the page"
+    ],
+    "cannot": [
+      "See anything you typed or saved",
+      "Ask permission first",
+      "Know who you are by itself",
+      "See reports from pages it does not own"
+    ],
+    "reach": 2,
+    "reach_label": "Silent, even after you leave",
+    "differs": ""
+  },
+  "story": {
+    "what_it_is": "The browser sends its own crash, security policy and old feature warning reports to an address the site chooses.",
+    "icon": "file-warning",
+    "tags": [
+      "Reports",
+      "Silent",
+      "Safety"
+    ],
+    "marketing": [
+      {
+        "vendor": "Google Chrome",
+        "name": "Reporting API",
+        "pitch": "Chrome says it lets sites receive reports about crashes, policy violations and deprecated features from real users.",
+        "url": "https://developer.chrome.com/docs/capabilities/web-apis/reporting-api"
+      },
+      {
+        "vendor": "MDN",
+        "name": "Reporting API",
+        "pitch": "Describes a standard way for browsers to send reports about problems to a site's chosen endpoint.",
+        "url": "https://developer.mozilla.org/en-US/docs/Web/API/Reporting_API"
+      }
+    ],
+    "for_you": "You never see these reports. When your browser blocks a bad script or a tab crashes, it quietly tells the site, so the team can fix the problem. Your browser may send some details with it.",
+    "for_makers": "Teams use it to catch crashes and blocked content from real visitors, which a test lab would miss. It also helps teams roll out stronger security rules safely, in report only mode first.",
+    "use_cases": [
+      {
+        "type": "security",
+        "example": "A bank turns on a strict content policy in report mode and learns which scripts it would block before it enforces.",
+        "apps": []
+      },
+      {
+        "type": "games",
+        "example": "A browser game studio gets crash reports from real players on rare phones.",
+        "apps": []
+      },
+      {
+        "type": "developer",
+        "example": "A site learns that a feature it uses will be removed in the next browser, and plans a fix.",
+        "apps": []
+      },
+      {
+        "type": "shopping",
+        "example": "A retailer sees reports that a third party script is being blocked, and finds a broken checkout step.",
+        "apps": []
+      },
+      {
+        "type": "analytics",
+        "example": "A monitoring service collects reports across many sites and groups them by cause.",
+        "apps": [
+          "Sentry",
+          "Datadog"
+        ]
+      },
+      {
+        "type": "ads",
+        "example": "A publisher sees that an ad was blocked for breaking a rule and removes it.",
+        "apps": []
+      },
+      {
+        "type": "news",
+        "example": "A news site uses reports about intervention warnings to stop heavy ads that freeze the page.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Reports may include page URLs",
+      "Sent without asking"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Report types vary: csp-violation, deprecation, intervention, crash, coep, coop, permissions-policy-violation, integrity-violation",
+    "Browsers batch reports and retry for a limited time; delivery is best effort and delayed",
+    "Reports cannot include page content, only the violation details and URL",
+    "Firefox supports the header from 130 and ReportingObserver from 149; Safari 16.4",
+    "The older Report-To header is removed from the spec in favour of Reporting-Endpoints"
+  ],
+  "scores": {
+    "sensitivity": 2,
+    "utility": 4,
+    "fingerprint_bits": null,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "CSP violation monitoring",
+      "Crash and OOM telemetry",
+      "Deprecation warnings before breaking changes"
+    ],
+    "abuse": [
+      "Collecting reports about the person's browser features and blocked extensions",
+      "Exfiltrating clues about browser state"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2021-11",
+      "browser": "chrome",
+      "version": "96",
+      "change": "Reporting-Endpoints header ships"
+    },
+    {
+      "date": "2023-03",
+      "browser": "safari",
+      "version": "16.4",
+      "change": "Reporting API ships in Safari"
+    },
+    {
+      "date": "2024-09",
+      "browser": "firefox",
+      "version": "130",
+      "change": "Firefox ships Reporting-Endpoints header"
+    }
+  ],
+  "related": [
+    "web.actions.send-beacon",
+    "web.perf.long-animation-frames"
+  ],
+  "refs": [
+    {
+      "t": "mdn",
+      "label": "MDN Reporting API",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/Reporting_API"
+    },
+    {
+      "t": "spec",
+      "label": "W3C Reporting API",
+      "url": "https://www.w3.org/TR/reporting-1/"
+    },
+    {
+      "t": "chromestatus",
+      "label": "Chrome: Reporting API",
+      "url": "https://developer.chrome.com/docs/capabilities/web-apis/reporting-api"
+    }
+  ],
+  "confidence": "docs"
+}

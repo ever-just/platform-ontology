@@ -1,0 +1,222 @@
+{
+  "id": "web.os.window-controls-overlay",
+  "name": "Window Controls Overlay and Tabbed mode",
+  "kind": "capability",
+  "group": "os-integration-install",
+  "subgroup": "Window",
+  "tags": [
+    "window"
+  ],
+  "plain": "Lets an installed app draw into the title bar, or show tabs.",
+  "meaning": "Customises the app window chrome on desktop.",
+  "lifecycle": [
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "manifest display_override: ['window-controls-overlay','tabbed']",
+      "bcd": [
+        "manifests.webapp.display_override"
+      ],
+      "access": {
+        "grant": "install",
+        "prompt_ui": "None",
+        "secure_context": true,
+        "user_gesture": false,
+        "persistence": "Per origin",
+        "revocation": "Site settings",
+        "iframe": "Same as top level; cross-origin iframes need a permissions policy where listed",
+        "steps": [
+          "Call the API",
+          "Browser applies its access rules",
+          "Page receives the result"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "89",
+          "note": "",
+          "date": "2021-03-02"
+        },
+        "edge": {
+          "s": "y",
+          "v": "89",
+          "note": "",
+          "date": "2021-03-04"
+        },
+        "firefox": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "safari": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "ios_safari": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "chrome_android": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "samsung": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "object",
+    "metric": "Lets an installed app draw into the title bar, or show tabs.",
+    "update": "on demand",
+    "fields": [
+      {
+        "name": "titlebarAreaRect",
+        "type": "object",
+        "unit": "pixels",
+        "range": "x,y,width,height"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can draw into the title bar of an installed app, like showing tabs or search",
+    "user_action": "You install the web app on a computer and open it",
+    "can": [
+      "Place buttons or a search box in the title bar of the app window",
+      "Draw tabs there",
+      "Keep the system's close and minimize buttons"
+    ],
+    "cannot": [
+      "Work for a site that is not installed",
+      "Hide the close, minimize or maximize buttons",
+      "Work in Firefox, Safari or on phones",
+      "See anything outside its own window"
+    ],
+    "reach": 1,
+    "reach_label": "Only its own window",
+    "differs": "Chrome and Edge on computers only. Phones, Safari and Firefox do not support it."
+  },
+  "story": {
+    "what_it_is": "An installed desktop web app can draw its own design in the title bar, or show tabs there.",
+    "icon": "app-window",
+    "tags": [
+      "Installed apps",
+      "Windows",
+      "Design"
+    ],
+    "marketing": [
+      {
+        "vendor": "Google Chrome",
+        "name": "Window Controls Overlay",
+        "pitch": "Lets installed web apps use the full window, including the title bar area, so they look like desktop apps.",
+        "url": "https://developer.chrome.com/docs/web-platform/window-controls-overlay"
+      }
+    ],
+    "for_you": "The app uses the whole window, with its search bar or tabs in the top strip. It looks more like a real desktop program. Window buttons still work as usual.",
+    "for_makers": "Makers get a premium look and more space for tools. It helps web apps match desktop apps for design. It is used for polish, and only works for installed apps on desktop.",
+    "use_cases": [
+      {
+        "type": "productivity",
+        "example": "A web design app puts its toolbar in the title bar, which gives the canvas more space.",
+        "apps": [
+          "Figma"
+        ]
+      },
+      {
+        "type": "messaging",
+        "example": "A chat app puts its search box in the title bar, like a native chat app.",
+        "apps": [
+          "Slack"
+        ]
+      },
+      {
+        "type": "music",
+        "example": "A web music player shows now playing in the top strip.",
+        "apps": []
+      },
+      {
+        "type": "developer",
+        "example": "A web code editor shows tabs in the title bar to save room.",
+        "apps": [
+          "VS Code for the Web"
+        ]
+      },
+      {
+        "type": "games",
+        "example": "A web game launcher uses the full window with its logo in the title bar.",
+        "apps": []
+      },
+      {
+        "type": "creative",
+        "example": "A web video editor shows the project name and tools in the top strip.",
+        "apps": []
+      },
+      {
+        "type": "enterprise",
+        "example": "A company dashboard app shows alerts in the title bar.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Only installed apps",
+      "Can hide window controls"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Desktop Chromium only",
+    "Installed PWA"
+  ],
+  "scores": {
+    "sensitivity": 1,
+    "utility": 2,
+    "fingerprint_bits": null,
+    "friction": 1
+  },
+  "value": {
+    "legit_uses": [
+      "Custom title bars"
+    ],
+    "abuse": [
+      "None"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2022-05",
+      "browser": "chrome",
+      "version": "105",
+      "change": "Window Controls Overlay"
+    },
+    {
+      "date": "2024-06",
+      "browser": "chrome",
+      "version": "126",
+      "change": "Tabbed mode"
+    }
+  ],
+  "refs": [
+    {
+      "t": "mdn",
+      "label": "MDN WindowControlsOverlay",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/WindowControlsOverlay"
+    }
+  ],
+  "confidence": "verified"
+}

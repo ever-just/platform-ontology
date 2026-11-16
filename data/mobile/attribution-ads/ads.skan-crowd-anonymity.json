@@ -1,0 +1,195 @@
+{
+  "id": "mob.ads.skan-crowd-anonymity",
+  "name": "SKAN crowd anonymity tiers",
+  "kind": "capability",
+  "group": "attribution-ads",
+  "subgroup": "Apple attribution",
+  "tags": [
+    "skan",
+    "crowd-anonymity",
+    "thresholds",
+    "k-anonymity"
+  ],
+  "plain": "Apple withholds detail from postbacks when too few installs came from a campaign.",
+  "meaning": "Protects individuals in small groups: low install counts get less detail. Small advertisers lose signal first.",
+  "lifecycle": [
+    "before-install"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "n",
+      "v": "",
+      "permission": "",
+      "protection": "none",
+      "grant": "not-exposed",
+      "prompt_ui": "",
+      "persistence": "",
+      "revocation": "",
+      "store_policy": "",
+      "api_surface": "",
+      "note": "Not applicable."
+    },
+    "ios": {
+      "s": "y",
+      "v": "16.1",
+      "permission": "",
+      "protection": "none",
+      "grant": "none",
+      "prompt_ui": "",
+      "persistence": "",
+      "revocation": "",
+      "store_policy": "",
+      "api_surface": "",
+      "note": "Four tiers (0 to 3). Higher tiers unlock 3 or 4 digit source identifiers and fine conversion values; tier 0 gives the least data. Thresholds are secret and Apple does not publish them."
+    }
+  },
+  "data": {
+    "type": "enum",
+    "metric": "Crowd anonymity tier 0 to 3",
+    "update": "decided per postback by Apple",
+    "fields": [
+      {
+        "name": "source-identifier digits",
+        "type": "integer",
+        "unit": "digits",
+        "range": "2 to 4",
+        "precision": ""
+      },
+      {
+        "name": "conversion value",
+        "type": "enum",
+        "unit": "",
+        "range": "none, coarse, or fine by tier",
+        "precision": ""
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can't get much detail when too few people installed from an ad",
+    "user_action": "Nothing. Apple applies the rules by itself",
+    "can": [
+      "Send full detail for large campaigns",
+      "Send a 3 or 4 digit campaign ID in higher tiers",
+      "Send a detailed score in higher tiers"
+    ],
+    "cannot": [
+      "See the exact limits; Apple keeps them secret",
+      "Get detail for small campaigns at tier 0",
+      "Pick the tier; Apple decides"
+    ],
+    "reach": 1,
+    "reach_label": "Detail depends on campaign size",
+    "differs": "iPhone only (iOS 16.1 and later). Not used on Android."
+  },
+  "story": {
+    "what_it_is": "Apple hides detail from ad reports when too few people came from a campaign.",
+    "icon": "users-round",
+    "tags": [
+      "Ads",
+      "Privacy",
+      "Apple"
+    ],
+    "marketing": [
+      {
+        "vendor": "Apple",
+        "name": "SKAdNetwork crowd anonymity",
+        "pitch": "Reports include less detail when a campaign has few installs, to protect people in small groups.",
+        "url": "https://developer.apple.com/documentation/storekit/skadnetwork"
+      }
+    ],
+    "for_you": "You never see it. If you are one of few people who installed from a niche ad, Apple makes sure the report cannot point to you.",
+    "for_makers": "The more installs a campaign has, the more detail the report shows. Small advertisers lose the most detail first, so many test big first or combine campaigns.",
+    "use_cases": [
+      {
+        "type": "games",
+        "example": "A new indie studio runs a tiny test and gets only a basic count back.",
+        "apps": []
+      },
+      {
+        "type": "ads",
+        "example": "A big ad network sees full values for large campaigns, but only a coarse one for small ones.",
+        "apps": [
+          "Meta",
+          "Google Ads"
+        ]
+      },
+      {
+        "type": "shopping",
+        "example": "A boutique retailer merges its campaigns into one to reach a higher detail tier.",
+        "apps": []
+      },
+      {
+        "type": "analytics",
+        "example": "A measurement team models what small campaigns would look like at scale.",
+        "apps": [
+          "Singular"
+        ]
+      },
+      {
+        "type": "security",
+        "example": "Small groups cannot be singled out, which protects rare users.",
+        "apps": []
+      },
+      {
+        "type": "developer",
+        "example": "A developer reads postbacks and finds blank values due to low volume.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Small advertisers lose signal",
+      "Data may be missing"
+    ],
+    "android_note": "Android has no equal system.",
+    "ios_note": "Part of SKAdNetwork 4 on iOS 16.1 and later."
+  },
+  "technical_bounds": [
+    "Thresholds undocumented",
+    "Applied independently to each postback"
+  ],
+  "scores": {
+    "sensitivity": 1,
+    "utility": 3,
+    "fingerprint_bits": null,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Prevents re-identification"
+    ],
+    "abuse": [
+      "Advertisers split campaigns to game thresholds"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2022-10",
+      "platform": "ios",
+      "version": "iOS 16.1",
+      "change": "Tiered data disclosure introduced in SKAN 4"
+    }
+  ],
+  "related": [
+    "mob.ads.skadnetwork"
+  ],
+  "refs": [
+    {
+      "t": "apple",
+      "label": "Apple: SKAdNetwork",
+      "url": "https://developer.apple.com/documentation/storekit/skadnetwork"
+    },
+    {
+      "t": "vendor",
+      "label": "Adjust: SKAN 4 explained",
+      "url": "https://www.adjust.com/resources/ebooks/skadnetwork-4/"
+    }
+  ],
+  "confidence": "inferred"
+}

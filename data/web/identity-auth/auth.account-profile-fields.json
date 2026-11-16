@@ -1,0 +1,236 @@
+{
+  "id": "web.auth.account-profile-fields",
+  "name": "Account profile fields",
+  "kind": "capability",
+  "group": "identity-auth",
+  "subgroup": "Signed in",
+  "tags": [
+    "account",
+    "profile",
+    "sign-up",
+    "pii"
+  ],
+  "plain": "What the person typed when signing up: name, email, phone, address, birthday and more.",
+  "meaning": "Once signed in, every action ties to a stored identity. The site holds the typed fields plus order, device and login history. Email and phone are the keys ad platforms and data brokers use to match the person across services.",
+  "lifecycle": [
+    "signed-in"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "HTML forms with autocomplete tokens; server database",
+      "access": {
+        "grant": "gesture",
+        "prompt_ui": "None",
+        "secure_context": false,
+        "user_gesture": false,
+        "persistence": "Kept for the life of the account and usually for months after deletion for legal reasons",
+        "revocation": "Clear site data, browser privacy settings",
+        "iframe": "",
+        "steps": [
+          "Person fills sign-up form or picks autofill",
+          "Server stores fields",
+          "Later logins attach activity to that record"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "1",
+          "note": ":Form fields work everywhere",
+          "date": "2008-12-11"
+        },
+        "edge": {
+          "s": "y",
+          "v": "1",
+          "note": ":Form fields work everywhere",
+          "date": ""
+        },
+        "firefox": {
+          "s": "y",
+          "v": "1",
+          "note": ":Form fields work everywhere",
+          "date": "2004-11-09"
+        },
+        "safari": {
+          "s": "y",
+          "v": "1",
+          "note": ":Form fields work everywhere",
+          "date": "2003-06-23"
+        },
+        "ios_safari": {
+          "s": "y",
+          "v": "1",
+          "note": ":Form fields work everywhere",
+          "date": "2007-06-29"
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "1",
+          "note": ":Form fields work everywhere",
+          "date": ""
+        },
+        "samsung": {
+          "s": "y",
+          "v": "1",
+          "note": ":Form fields work everywhere",
+          "date": "2013-04-27"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "object",
+    "metric": "Name, email, phone, address, birthday",
+    "update": "at sign-up and edits",
+    "fields": []
+  },
+  "limits": {
+    "headline": "Can keep the details you typed when signing up, such as name, email and address",
+    "user_action": "You fill in a sign up or checkout form and tap Create account.",
+    "can": [
+      "Keep the name, email, phone, address or birthday you typed",
+      "Show them back to you and use them for mail, shipping or billing",
+      "Combine them with what you do on the site"
+    ],
+    "cannot": [
+      "See details you did not enter",
+      "Check that what you typed is true, unless it verifies it",
+      "See your browser's saved addresses and cards until you choose to autofill"
+    ],
+    "reach": 3,
+    "reach_label": "What you typed, kept on its servers",
+    "differs": ""
+  },
+  "story": {
+    "what_it_is": "What you typed when you signed up: name, email, phone, address, birthday and more.",
+    "icon": "user-pen",
+    "tags": [
+      "Account",
+      "Personal",
+      "Asks first"
+    ],
+    "marketing": [
+      {
+        "vendor": "MDN",
+        "name": "autocomplete attribute",
+        "pitch": "Documents how browsers fill account and address fields so people type less.",
+        "url": "https://developer.mozilla.org/en-US/docs/Web/HTML/Attributes/autocomplete"
+      },
+      {
+        "vendor": "web.dev",
+        "name": "Sign in form best practices",
+        "pitch": "Google teaches sites to make sign up and sign in simple, using autofill and clear fields.",
+        "url": "https://web.dev/articles/sign-in-form-best-practices"
+      }
+    ],
+    "for_you": "You see forms asking for your name, email and more, often with an autofill suggestion. The more you share, the more the site can tailor and remember.",
+    "for_makers": "Profile fields are the basis for personal service, marketing and fraud checks. Makers want accurate data, but each extra field lowers sign ups. Many also buy or match this data for ads.",
+    "use_cases": [
+      {
+        "type": "shopping",
+        "example": "A store uses your name, address and birthday to prefill checkout and send a birthday offer.",
+        "apps": [
+          "Amazon"
+        ]
+      },
+      {
+        "type": "social",
+        "example": "A social site uses your birthday and city to suggest friends and show age limited content.",
+        "apps": [
+          "Facebook"
+        ]
+      },
+      {
+        "type": "dating",
+        "example": "A dating app uses your age, gender and city to match you.",
+        "apps": []
+      },
+      {
+        "type": "games",
+        "example": "A browser game uses your username and birth year to set chat and spending limits.",
+        "apps": []
+      },
+      {
+        "type": "banking",
+        "example": "A bank checks your name, address and birth date during sign up to confirm identity.",
+        "apps": []
+      },
+      {
+        "type": "ads",
+        "example": "An advertiser matches a hashed email to build an ad audience of your type.",
+        "apps": [
+          "Meta",
+          "Google Ads"
+        ]
+      },
+      {
+        "type": "kids",
+        "example": "A kids site asks a parent for an email to give consent, based on the age given.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Data sold or matched",
+      "Identity theft if leaked"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Only what the person enters or autofills",
+    "Browser autofill fills fields only after the person picks an entry",
+    "Laws such as GDPR and CCPA add access and delete rights"
+  ],
+  "scores": {
+    "sensitivity": 5,
+    "utility": 5,
+    "fingerprint_bits": null,
+    "friction": 1
+  },
+  "value": {
+    "legit_uses": [
+      "Accounts, delivery, support"
+    ],
+    "abuse": [
+      "Resale or ad matching using email and phone"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2018-05",
+      "browser": "all",
+      "version": "",
+      "change": "GDPR in force: access, deletion and portability rights"
+    },
+    {
+      "date": "2020-01",
+      "browser": "all",
+      "version": "",
+      "change": "CCPA in force in California"
+    }
+  ],
+  "related": [
+    "web.xsite.email-hash-identity",
+    "web.auth.cross-device-linking"
+  ],
+  "refs": [
+    {
+      "t": "mdn",
+      "label": "MDN autocomplete attribute",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Attributes/autocomplete"
+    },
+    {
+      "t": "vendor",
+      "label": "GDPR text (EUR-Lex)",
+      "url": "https://eur-lex.europa.eu/eli/reg/2016/679/oj"
+    }
+  ],
+  "confidence": "docs"
+}

@@ -1,0 +1,247 @@
+{
+  "id": "mob.os.widgets",
+  "name": "Home screen widgets",
+  "kind": "capability",
+  "group": "app-ecosystem",
+  "subgroup": "Widgets",
+  "tags": [
+    "widgets",
+    "appwidget",
+    "widgetkit",
+    "refresh-budget"
+  ],
+  "plain": "Small live panels on the home screen that the person adds themselves; refresh rates are capped on both systems.",
+  "meaning": "Widgets keep an app visible without opening it. Android refreshes on a timer (30 min minimum) or by push; iOS gives each widget a daily budget of about 40 to 70 refreshes.",
+  "lifecycle": [
+    "background",
+    "signed-in"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "y",
+      "v": "1.5",
+      "api": 3,
+      "permission": "None (BIND_APPWIDGET only for hosts)",
+      "protection": "none",
+      "grant": "settings",
+      "prompt_ui": "User long presses home screen and adds the widget",
+      "persistence": "Until removed; survives reboot",
+      "revocation": "Remove from home screen",
+      "store_policy": "",
+      "api_surface": "AppWidgetProvider, Glance, RemoteViews",
+      "note": "updatePeriodMillis minimum 30 min; widget bitmaps are size capped on Android 17; Android 12 added reconfigure and responsive layouts"
+    },
+    "ios": {
+      "s": "y",
+      "v": "14.0",
+      "permission": "None",
+      "protection": "none",
+      "grant": "settings",
+      "prompt_ui": "User adds from widget gallery",
+      "persistence": "Until removed",
+      "revocation": "Remove from home screen",
+      "store_policy": "",
+      "api_surface": "WidgetKit TimelineProvider, App Intents",
+      "note": "Budget roughly 40 to 70 timeline reloads per day per widget, shorter when the widget is visible; push reloads via WidgetPushHandler (iOS 26) are budgeted too"
+    }
+  },
+  "web_equivalents": [
+    "web.notify.badging"
+  ],
+  "data": {
+    "type": "stream",
+    "metric": "Widget content",
+    "update": "Timeline or push",
+    "fields": [
+      {
+        "name": "refreshes_per_day_ios",
+        "type": "integer",
+        "unit": "count",
+        "range": "40 to 70",
+        "precision": "approx"
+      },
+      {
+        "name": "min_period_android",
+        "type": "integer",
+        "unit": "minutes",
+        "range": "30",
+        "precision": "system"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can show live info on your home screen, but only refresh a limited number of times",
+    "user_action": "You add the widget yourself from the widget gallery or by long pressing the home screen",
+    "can": [
+      "Show a small panel with the latest data on your home screen",
+      "Refresh every 30 minutes at best on Android, or on a push signal",
+      "Change when you tap or reconfigure it"
+    ],
+    "cannot": [
+      "Appear before you add it",
+      "Refresh more than about 40 to 70 times a day on iPhone",
+      "Run live at the second level; updates are spaced out",
+      "Use large images on Android 17 beyond the size cap"
+    ],
+    "reach": 3,
+    "reach_label": "Small, spaced out, after you add it",
+    "differs": "Android refreshes on a timer of 30 minutes or more, or by push. iPhone gives a daily refresh budget."
+  },
+  "story": {
+    "what_it_is": "Small live panels you put on the home screen, such as weather, steps or a timer.",
+    "icon": "layout-dashboard",
+    "tags": [
+      "Home screen",
+      "Always visible",
+      "Battery"
+    ],
+    "marketing": [
+      {
+        "vendor": "Apple",
+        "name": "Widgets",
+        "pitch": "Get information you care about at a glance, right on the Home Screen and Lock Screen.",
+        "url": "https://developer.apple.com/widgets/"
+      },
+      {
+        "vendor": "Google",
+        "name": "App widgets",
+        "pitch": "Add small views of an app's key info and actions to the Android home screen.",
+        "url": "https://developer.android.com/develop/ui/views/appwidgets/overview"
+      }
+    ],
+    "for_you": "You pick a widget and put it where you want. You see the weather, score or timer without opening the app, and a tap jumps into it.",
+    "for_makers": "A widget keeps an app on the screen all day, which brings people back. Both systems cap how often a widget can refresh, so makers choose smart moments or push updates to save battery.",
+    "use_cases": [
+      {
+        "type": "live",
+        "example": "A sports app widget shows the live score of tonight's game, and the number changes while you watch.",
+        "apps": [
+          "ESPN",
+          "NBA"
+        ]
+      },
+      {
+        "type": "fitness",
+        "example": "A step and ring widget keeps your daily goal in view and nudges you to finish.",
+        "apps": [
+          "Apple Fitness",
+          "Strava"
+        ]
+      },
+      {
+        "type": "games",
+        "example": "A game widget shows when your farm crops are ready or when the next energy refill arrives.",
+        "apps": [
+          "Pokemon GO",
+          "Clash of Clans"
+        ]
+      },
+      {
+        "type": "rideshare",
+        "example": "A live widget shows your ride's arrival time on the lock screen as the car approaches.",
+        "apps": [
+          "Uber",
+          "Lyft"
+        ]
+      },
+      {
+        "type": "delivery",
+        "example": "A food delivery widget counts down minutes until the courier arrives.",
+        "apps": [
+          "DoorDash",
+          "Uber Eats"
+        ]
+      },
+      {
+        "type": "ads",
+        "example": "Brands gain a spot on the home screen, which counts as free daily attention for a store or bank.",
+        "apps": [
+          "Amazon",
+          "Chase"
+        ]
+      },
+      {
+        "type": "productivity",
+        "example": "A task widget lets you tick off a to do item without opening the app.",
+        "apps": [
+          "Todoist",
+          "Notion"
+        ]
+      }
+    ],
+    "risks": [
+      "Content visible on lock screen",
+      "Battery use if refreshed too often"
+    ],
+    "android_note": "Android refreshes on a timer (30 minutes minimum) or by push.",
+    "ios_note": "iOS gives each widget a daily budget of roughly 40 to 70 refreshes."
+  },
+  "technical_bounds": [
+    "Only the user can place a widget",
+    "Refresh budget is dynamic on iOS"
+  ],
+  "scores": {
+    "sensitivity": 2,
+    "utility": 4,
+    "fingerprint_bits": null,
+    "friction": 1
+  },
+  "value": {
+    "legit_uses": [
+      "Glanceable info",
+      "Retention"
+    ],
+    "abuse": [
+      "Background polling by timer"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2009-04",
+      "platform": "android",
+      "version": "1.5 (API 3)",
+      "change": "App widgets introduced"
+    },
+    {
+      "date": "2020-09",
+      "platform": "ios",
+      "version": "iOS 14",
+      "change": "WidgetKit and home screen widgets introduced"
+    },
+    {
+      "date": "2021-10",
+      "platform": "android",
+      "version": "12 (API 31)",
+      "change": "Widget redesign with responsive layouts"
+    }
+  ],
+  "related": [
+    "mob.notif.live-activities",
+    "mob.bg.ios-refresh-processing"
+  ],
+  "refs": [
+    {
+      "t": "android",
+      "label": "Android: App widgets overview",
+      "url": "https://developer.android.com/develop/ui/views/appwidgets/overview"
+    },
+    {
+      "t": "apple",
+      "label": "Apple: Keeping a widget up to date",
+      "url": "https://developer.apple.com/documentation/widgetkit/keeping-a-widget-up-to-date"
+    },
+    {
+      "t": "android",
+      "label": "Android 17 behavior changes",
+      "url": "https://developer.android.com/about/versions/17/behavior-changes-all"
+    }
+  ],
+  "confidence": "docs"
+}

@@ -1,0 +1,231 @@
+{
+  "id": "web.xsite.google-tag",
+  "name": "Google tag (gtag.js)",
+  "kind": "tracking",
+  "group": "cross-site-tracking",
+  "subgroup": "Ad pixels",
+  "tags": [
+    "gtag",
+    "ga4",
+    "google-ads",
+    "_ga",
+    "consent-mode"
+  ],
+  "plain": "Google's page script for analytics and ads; sets IDs like _ga and _gcl_au in the browser.",
+  "meaning": "_ga (2 years, capped at 400 days in Chrome) joins visits into one user, _gid lasts 24 hours, _gcl_au 90 days for ad conversions. Consent Mode v2 changes what is sent if the person declines.",
+  "lifecycle": [
+    "in-session",
+    "after-leaving"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "gtag('event', ...); requests to google-analytics.com/g/collect",
+      "access": {
+        "grant": "none",
+        "prompt_ui": "None",
+        "secure_context": false,
+        "user_gesture": false,
+        "persistence": "_ga about 2 years (400 days in Chrome), _gid 24 hours, _gcl_au 90 days",
+        "revocation": "Clear site data, browser privacy settings",
+        "iframe": "",
+        "steps": []
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "1",
+          "note": "Script runs in any browser, cookie lifetimes vary",
+          "date": "2008-12-11"
+        },
+        "edge": {
+          "s": "y",
+          "v": "1",
+          "note": "Script runs in any browser, cookie lifetimes vary",
+          "date": ""
+        },
+        "firefox": {
+          "s": "y",
+          "v": "1",
+          "note": "Script runs in any browser, cookie lifetimes vary",
+          "date": "2004-11-09"
+        },
+        "safari": {
+          "s": "y",
+          "v": "1",
+          "note": "Script runs in any browser, cookie lifetimes vary",
+          "date": "2003-06-23"
+        },
+        "ios_safari": {
+          "s": "y",
+          "v": "1",
+          "note": "Script runs in any browser, cookie lifetimes vary",
+          "date": "2007-06-29"
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "1",
+          "note": "Script runs in any browser, cookie lifetimes vary",
+          "date": ""
+        },
+        "samsung": {
+          "s": "y",
+          "v": "1",
+          "note": "Script runs in any browser, cookie lifetimes vary",
+          "date": "2013-04-27"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "event",
+    "metric": "Analytics events",
+    "update": "per action",
+    "fields": []
+  },
+  "limits": {
+    "headline": "Can tell Google about your visits and actions on a site that uses the tag",
+    "user_action": "Nothing. It happens when you open a page with the Google tag",
+    "can": [
+      "Set IDs such as _ga and _gcl_au in your browser",
+      "Report page views, clicks and purchases to Google",
+      "Link visits over time with the same ID",
+      "Feed Google Analytics and Google Ads"
+    ],
+    "cannot": [
+      "Run on sites that do not include the tag",
+      "See other sites unless they also use it",
+      "Keep the ID if you clear cookies or block the script",
+      "Know your name unless you sign in to Google or the site shares it"
+    ],
+    "reach": 3,
+    "reach_label": "Your visits to tagged sites",
+    "differs": "Safari and Firefox limit how long some of its cookies last. Chrome keeps them for longer."
+  },
+  "story": {
+    "what_it_is": "Google's page script for analytics and ads that sets IDs in your browser.",
+    "icon": "chart-bar",
+    "tags": [
+      "Ads",
+      "Analytics",
+      "Cookies"
+    ],
+    "marketing": [
+      {
+        "vendor": "Google",
+        "name": "Google tag cookies",
+        "pitch": "Google documents the cookies like _ga that its tag sets to measure visits and ad results.",
+        "url": "https://developers.google.com/analytics/devguides/collection/ga4/cookie-usage"
+      }
+    ],
+    "for_you": "You do not see the script. It sets small files like _ga that tell Google you are the same visitor, and counts what you do. If you decline cookies, Consent Mode can still send limited signals.",
+    "for_makers": "The Google tag is the base for Analytics and Google Ads on a large share of the web. It counts visits, sales and ad clicks in one tool. Consent Mode lets sites model results when people say no.",
+    "use_cases": [
+      {
+        "type": "analytics",
+        "example": "A blog owner sees how many people visited today, which pages they read and where they came from.",
+        "apps": [
+          "Google Analytics"
+        ]
+      },
+      {
+        "type": "ads",
+        "example": "A shop sees which Google ad made each sale, using the _gcl cookies and click IDs.",
+        "apps": [
+          "Google Ads"
+        ]
+      },
+      {
+        "type": "games",
+        "example": "A browser game site sees how many players come from a search, and how long they stay.",
+        "apps": [
+          "CrazyGames",
+          "Poki"
+        ]
+      },
+      {
+        "type": "shopping",
+        "example": "A retailer builds a remarketing list of people who looked at a product.",
+        "apps": [
+          "Shopify",
+          "Wayfair"
+        ]
+      },
+      {
+        "type": "media",
+        "example": "A news site measures which stories keep readers longest, to decide what to write.",
+        "apps": [
+          "BBC",
+          "The Guardian"
+        ]
+      },
+      {
+        "type": "security",
+        "example": "Consent Mode sends pings with no cookies if a person declines, which Google uses to model the missing data.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Follows you across visits",
+      "Google sees data from huge number of sites"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Safari caps JS set cookies at 7 days",
+    "Consent Mode modelling fills gaps for declined users",
+    "Blocked by many blockers"
+  ],
+  "scores": {
+    "sensitivity": 4,
+    "utility": 5,
+    "fingerprint_bits": null,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Analytics, conversion measurement"
+    ],
+    "abuse": [
+      "Cross-site ad profiles and remarketing lists"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2023-11",
+      "browser": "all",
+      "version": "",
+      "change": "Consent Mode v2 required for EEA ad personalisation from Mar 2024"
+    },
+    {
+      "date": "2023-07",
+      "browser": "all",
+      "version": "",
+      "change": "Universal Analytics stopped processing; GA4 only"
+    }
+  ],
+  "related": [
+    "web.xsite.google-enhanced-conversions",
+    "web.xsite.ad-click-ids"
+  ],
+  "refs": [
+    {
+      "t": "vendor",
+      "label": "Google cookies used by Analytics",
+      "url": "https://developers.google.com/analytics/devguides/collection/ga4/cookie-usage"
+    },
+    {
+      "t": "vendor",
+      "label": "Google Ads cookies",
+      "url": "https://business.safety.google/adscookies/"
+    }
+  ],
+  "confidence": "docs"
+}

@@ -1,0 +1,175 @@
+{
+  "id": "mob.sensor.ambient-light",
+  "name": "Ambient light sensor",
+  "kind": "signal",
+  "group": "location-motion",
+  "subgroup": "Motion",
+  "tags": [
+    "light-sensor"
+  ],
+  "plain": "Android reads lux with no prompt; iOS has no public ambient light API.",
+  "meaning": "Shows whether the person is indoors, outdoors or in the dark.",
+  "lifecycle": [
+    "in-session"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "y",
+      "v": "1.5",
+      "api": 3,
+      "permission": "",
+      "protection": "none",
+      "grant": "none",
+      "prompt_ui": "",
+      "persistence": "",
+      "revocation": "",
+      "store_policy": "",
+      "api_surface": "Sensor.TYPE_LIGHT",
+      "note": "Lux 0 to about 40000"
+    },
+    "ios": {
+      "s": "n",
+      "v": "",
+      "permission": "none",
+      "protection": "not-exposed",
+      "grant": "not-exposed",
+      "prompt_ui": "",
+      "persistence": "",
+      "revocation": "",
+      "store_policy": "",
+      "api_surface": "No public ambient light API",
+      "note": "UIScreen.brightness is the only proxy, and it reflects the setting not the room"
+    }
+  },
+  "web_equivalents": [
+    "web.location.sensor-ambient-light"
+  ],
+  "data": {
+    "type": "float",
+    "metric": "Illuminance",
+    "update": "On change",
+    "fields": [
+      {
+        "name": "lux",
+        "type": "float",
+        "unit": "lux",
+        "range": "0 to 40000",
+        "precision": "depends on OEM"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can measure room light on Android, but can't on iPhone",
+    "user_action": "Nothing. On Android it happens when the app uses auto brightness or a light meter feature",
+    "can": [
+      "Measure the light level around an Android phone, up to about 40000 lux",
+      "Adjust screen colors or brightness to match the room (Android)",
+      "Check the screen brightness setting on iPhone, which does not show the room"
+    ],
+    "cannot": [
+      "Measure room light on iPhone; no public sensor exists",
+      "Learn the room from iPhone brightness, which only shows your setting",
+      "Ask you first on Android; no prompt is used"
+    ],
+    "reach": 1,
+    "reach_label": "Light level, Android only",
+    "differs": "Android shares the light sensor with no prompt. iPhone has no public ambient light sensor."
+  },
+  "story": {
+    "what_it_is": "An app can read how bright the light is around your phone.",
+    "icon": "sun",
+    "tags": [
+      "Sensors",
+      "Silent",
+      "Android"
+    ],
+    "marketing": [
+      {
+        "vendor": "Google",
+        "name": "Light sensor",
+        "pitch": "Android's environment sensors let apps read the light level in lux.",
+        "url": "https://developer.android.com/develop/sensors-and-location/sensors/sensors_environment"
+      }
+    ],
+    "for_you": "You never see it. Your screen brightness and some apps adapt to a dark room or bright sun. It tells apps whether you are indoors, outside or in bed.",
+    "for_makers": "Makers use it to switch to a dark screen or boost contrast in bright light. It also lets analytics guess your context. Researchers have also shown it can leak details about what is on a screen nearby.",
+    "use_cases": [
+      {
+        "type": "media",
+        "example": "A reader app turns to a warmer, darker page when the room gets dark.",
+        "apps": []
+      },
+      {
+        "type": "fitness",
+        "example": "A cycling app raises screen contrast when you ride in bright sun.",
+        "apps": []
+      },
+      {
+        "type": "creative",
+        "example": "A camera app picks a night mode when it senses low light.",
+        "apps": []
+      },
+      {
+        "type": "games",
+        "example": "A game dims its menu when you play in the dark so it is easier on your eyes.",
+        "apps": []
+      },
+      {
+        "type": "smart-home",
+        "example": "A smart home app turns lights on when your phone sees that the room is dark.",
+        "apps": []
+      },
+      {
+        "type": "analytics",
+        "example": "A tracker uses light levels to guess if you are indoors, outdoors or in bed.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Reveals context",
+      "Weak fingerprint bit"
+    ],
+    "android_note": "Android reads light in lux with no prompt.",
+    "ios_note": "iPhone has no public light sensor for apps, though the system adjusts brightness itself."
+  },
+  "technical_bounds": [
+    "iOS has no equivalent"
+  ],
+  "scores": {
+    "sensitivity": 2,
+    "utility": 2,
+    "fingerprint_bits": 1,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Adaptive UI"
+    ],
+    "abuse": [
+      "Context inference"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "related": [
+    "mob.dev.brightness"
+  ],
+  "refs": [
+    {
+      "t": "android",
+      "label": "Android: Sensors overview",
+      "url": "https://developer.android.com/develop/sensors-and-location/sensors/sensors_overview"
+    },
+    {
+      "t": "apple",
+      "label": "Apple: UIScreen",
+      "url": "https://developer.apple.com/documentation/uikit/uiscreen"
+    }
+  ],
+  "confidence": "docs"
+}

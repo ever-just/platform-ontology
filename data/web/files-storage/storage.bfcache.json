@@ -1,0 +1,235 @@
+{
+  "id": "web.storage.bfcache",
+  "name": "Back forward cache",
+  "kind": "signal",
+  "group": "files-storage",
+  "subgroup": "In session",
+  "tags": [
+    "bfcache",
+    "pageshow",
+    "pagehide",
+    "navigation"
+  ],
+  "plain": "The browser freezes a left page whole and restores it instantly on Back, with scripts and state intact.",
+  "meaning": "A person who leaves and presses Back can resume the same JavaScript heap, form values and open connections. Analytics must treat pageshow with persisted=true as a new view. The page can run no code while frozen.",
+  "lifecycle": [
+    "after-leaving",
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "pageshow / pagehide events with event.persisted",
+      "bcd": [
+        "api.PageTransitionEvent.persisted"
+      ],
+      "access": {
+        "grant": "none",
+        "prompt_ui": "None",
+        "secure_context": false,
+        "user_gesture": false,
+        "persistence": "Chrome keeps pages about 10 minutes (up to 6 entries on Android is not documented, verify)",
+        "revocation": "Clear site data, browser privacy settings",
+        "iframe": "",
+        "steps": []
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "4",
+          "note": "",
+          "date": "2010-01-25"
+        },
+        "edge": {
+          "s": "y",
+          "v": "12",
+          "note": "",
+          "date": "2015-07-29"
+        },
+        "firefox": {
+          "s": "y",
+          "v": "11",
+          "note": "",
+          "date": "2012-03-13"
+        },
+        "safari": {
+          "s": "y",
+          "v": "5",
+          "note": "",
+          "date": "2010-06-07"
+        },
+        "ios_safari": {
+          "s": "y",
+          "v": "4",
+          "note": "",
+          "date": "2010-06-21"
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "18",
+          "note": "",
+          "date": "2012-06-27"
+        },
+        "samsung": {
+          "s": "y",
+          "v": "1.0",
+          "note": "",
+          "date": "2013-04-27"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "event",
+    "metric": "pageshow persisted flag",
+    "update": "per back navigation",
+    "fields": [
+      {
+        "name": "persisted",
+        "type": "boolean",
+        "unit": "none",
+        "range": "true or false",
+        "precision": "exact"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can freeze this page when you leave and bring it back instantly on Back",
+    "user_action": "You tap Back or Forward to return to the page.",
+    "can": [
+      "Keep the page exactly how you left it",
+      "Restore your scroll spot and typed text",
+      "Run a bit of code when the page comes back"
+    ],
+    "cannot": [
+      "Keep the page running while it is frozen",
+      "Keep it frozen for long, since browsers drop it after a few minutes or when memory is low",
+      "Freeze pages that hold certain open connections"
+    ],
+    "reach": 1,
+    "reach_label": "Only for the Back button",
+    "differs": ""
+  },
+  "story": {
+    "what_it_is": "The browser freezes a page you leave and restores it instantly when you press Back.",
+    "icon": "history",
+    "tags": [
+      "Speed",
+      "Back button",
+      "Silent"
+    ],
+    "marketing": [
+      {
+        "vendor": "web.dev",
+        "name": "Back/forward cache",
+        "pitch": "Google pitches it as a way to make Back and Forward feel instant by keeping whole pages in memory.",
+        "url": "https://web.dev/articles/bfcache"
+      }
+    ],
+    "for_you": "You press Back and the page returns in an instant, exactly as you left it, scroll spot and typed text included. You did not wait for it to load.",
+    "for_makers": "Makers love it because a fast Back button keeps people browsing and buying. They must make sure the page restores safely, for example by refreshing timers and logins after the restore.",
+    "use_cases": [
+      {
+        "type": "shopping",
+        "example": "You open a product, press Back, and the search results return instantly with your scroll spot saved.",
+        "apps": [
+          "Amazon",
+          "eBay"
+        ]
+      },
+      {
+        "type": "news",
+        "example": "You read a story, press Back, and the front page comes back with nothing reloaded.",
+        "apps": []
+      },
+      {
+        "type": "games",
+        "example": "A browser game page is frozen when you leave and resumes at once, unless it blocks the freeze with open connections.",
+        "apps": []
+      },
+      {
+        "type": "ads",
+        "example": "An ad script has to handle a page restored from the cache, or it counts one view and misses the next.",
+        "apps": []
+      },
+      {
+        "type": "analytics",
+        "example": "A measurement tool uses the restore event to count a Back visit as a new page view.",
+        "apps": [
+          "Google Analytics"
+        ]
+      },
+      {
+        "type": "banking",
+        "example": "A bank page asks the browser not to freeze it, so a returning user must log in again.",
+        "apps": []
+      },
+      {
+        "type": "social",
+        "example": "A feed page returns instantly after you view a photo and keeps your place.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Stale pages",
+      "Sensitive pages may linger"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Pages with unload handlers or open WebSockets may be excluded",
+    "Cache-Control: no-store pages are mostly excluded",
+    "Cannot run timers or fetches while frozen"
+  ],
+  "scores": {
+    "sensitivity": 2,
+    "utility": 3,
+    "fingerprint_bits": null,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Instant back navigation"
+    ],
+    "abuse": [
+      "Stale data after restore, double counted analytics"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2021-11",
+      "browser": "chrome",
+      "version": "96",
+      "change": "bfcache enabled on desktop"
+    },
+    {
+      "date": "2024-01",
+      "browser": "chrome",
+      "version": "123",
+      "change": "Cache-Control: no-store pages begin to be eligible in a gradual rollout (verify)"
+    }
+  ],
+  "related": [
+    "web.xsite.page-lifecycle-events"
+  ],
+  "refs": [
+    {
+      "t": "mdn",
+      "label": "MDN Page lifecycle: bfcache",
+      "url": "https://developer.mozilla.org/en-US/docs/Glossary/bfcache"
+    },
+    {
+      "t": "vendor",
+      "label": "web.dev back/forward cache",
+      "url": "https://web.dev/articles/bfcache"
+    }
+  ],
+  "confidence": "docs"
+}

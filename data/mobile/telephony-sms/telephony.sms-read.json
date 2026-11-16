@@ -1,0 +1,211 @@
+{
+  "id": "mob.telephony.sms-read",
+  "name": "Read and receive SMS",
+  "kind": "permission",
+  "group": "telephony-sms",
+  "subgroup": "SMS",
+  "tags": [
+    "runtime-permission",
+    "sms",
+    "play-restricted",
+    "otp"
+  ],
+  "plain": "Lets the app read stored texts and get a copy of incoming SMS.",
+  "meaning": "Texts contain bank codes, medical reminders and private chats. Google Play restricts SMS access to default handlers, and Android 17 delays OTP texts.",
+  "lifecycle": [
+    "background",
+    "in-session"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "f",
+      "v": "6.0",
+      "api": 23,
+      "permission": "READ_SMS, RECEIVE_SMS, RECEIVE_MMS, RECEIVE_WAP_PUSH",
+      "protection": "dangerous",
+      "grant": "prompt",
+      "prompt_ui": "Allow or Don't allow",
+      "persistence": "Until revoked or auto-reset",
+      "revocation": "Settings > Apps > Permissions > SMS",
+      "store_policy": "Play: default SMS handler only unless an exception applies (2019 policy)",
+      "api_surface": "Telephony.Sms, SmsRetriever, SMS User Consent API",
+      "note": "SMS Retriever and User Consent APIs need no permission."
+    },
+    "ios": {
+      "s": "n",
+      "v": "",
+      "permission": "",
+      "protection": "none",
+      "grant": "not-exposed",
+      "prompt_ui": "none",
+      "persistence": "none",
+      "revocation": "",
+      "store_policy": "App Review 5.1.1",
+      "api_surface": "UITextContentType.oneTimeCode, MFMessageComposeViewController, ILMessageFilterExtension",
+      "note": "iOS gives apps no SMS read API; OTP AutoFill fills codes via keyboard QuickType; message filter extensions only sort unknown senders."
+    }
+  },
+  "web_equivalents": [
+    "web.contacts.webotp",
+    "web.notexposed.call-log-sms"
+  ],
+  "data": {
+    "type": "list",
+    "metric": "SMS messages",
+    "update": "event on arrival and on demand",
+    "fields": [
+      {
+        "name": "message",
+        "type": "string",
+        "unit": "chars",
+        "range": "up to 160 per segment",
+        "precision": "exact"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can see texts on Android only if Google approves the app, and never on iPhone",
+    "user_action": "You tap Allow when your messaging app asks to access SMS",
+    "can": [
+      "List stored texts",
+      "Get a copy of each incoming SMS",
+      "Fill one time codes through the SMS Retriever or User Consent flow, with no permission (Android)",
+      "Fill codes through keyboard AutoFill (iPhone)"
+    ],
+    "cannot": [
+      "See texts on iPhone",
+      "Be on Google Play unless it is a default SMS handler",
+      "See one time code texts right away on Android 17; they are delayed"
+    ],
+    "reach": 4,
+    "reach_label": "All your texts, once allowed",
+    "differs": "Android gives text access to approved apps; iPhone gives no SMS access and fills codes through the keyboard."
+  },
+  "story": {
+    "what_it_is": "Lets the app read stored texts and get a copy of new incoming SMS.",
+    "icon": "message-square-text",
+    "tags": [
+      "SMS",
+      "Permission",
+      "Sensitive"
+    ],
+    "marketing": [
+      {
+        "vendor": "Google",
+        "name": "SMS Retriever",
+        "pitch": "A way for apps to read a one time code from a text without asking for SMS permission.",
+        "url": "https://developers.google.com/identity/sms-retriever/overview"
+      }
+    ],
+    "for_you": "A prompt asks to access your texts. If you agree, the app can read bank codes, delivery notices and private chats. Most apps no longer need this, since codes can be filled in another way.",
+    "for_makers": "SMS apps and backups need it. It also used to power code reading for sign in. Google Play limits it to messaging apps because texts hold secrets and malware loves them.",
+    "use_cases": [
+      {
+        "type": "messaging",
+        "example": "A texting app shows all your conversations and receives new ones.",
+        "apps": [
+          "Google Messages"
+        ]
+      },
+      {
+        "type": "security",
+        "example": "A banking trojan reads a login code from a text and moves money, which is why it is restricted.",
+        "apps": []
+      },
+      {
+        "type": "productivity",
+        "example": "A backup app saves all texts before a phone move.",
+        "apps": []
+      },
+      {
+        "type": "shopping",
+        "example": "A delivery app reads a tracking text to update your parcel.",
+        "apps": []
+      },
+      {
+        "type": "enterprise",
+        "example": "A compliance app archives work texts.",
+        "apps": []
+      },
+      {
+        "type": "payments",
+        "example": "An app reads a bank text to log spending, which is now blocked in most stores.",
+        "apps": []
+      },
+      {
+        "type": "analytics",
+        "example": "A budgeting app wanted to scrape transactions from SMS.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Bank codes stolen",
+      "Private messages exposed",
+      "Malware abuse"
+    ],
+    "android_note": "The SMS Retriever and user consent tools let apps read one code without the permission.",
+    "ios_note": "iPhone gives apps no way to read texts. One time codes appear above the keyboard, and message filters only sort unknown senders."
+  },
+  "technical_bounds": [
+    "Default SMS app and companion apps are exempt from OTP delay",
+    "iOS blocks reads entirely"
+  ],
+  "scores": {
+    "sensitivity": 5,
+    "utility": 2,
+    "fingerprint_bits": null,
+    "friction": 3
+  },
+  "value": {
+    "legit_uses": [
+      "Messaging apps",
+      "SMS backup"
+    ],
+    "abuse": [
+      "OTP theft and fraud malware"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2019-03",
+      "platform": "android",
+      "version": "Play policy",
+      "change": "Google Play restricted SMS and call log permissions to default handlers"
+    },
+    {
+      "date": "2026-06",
+      "platform": "android",
+      "version": "17 (API 37)",
+      "change": "OTP protection: standard OTP SMS held for 3 hours from non-default apps for apps targeting 37; WebOTP and SMS Retriever format messages delayed 3 hours for all apps"
+    }
+  ],
+  "related": [
+    "mob.telephony.sms-send",
+    "mob.telephony.call-log"
+  ],
+  "refs": [
+    {
+      "t": "android",
+      "label": "Android 17 release notes",
+      "url": "https://developer.android.com/about/versions/17"
+    },
+    {
+      "t": "policy",
+      "label": "Google Play: Use of SMS or Call Log permission groups",
+      "url": "https://support.google.com/googleplay/android-developer/answer/10208820"
+    },
+    {
+      "t": "apple",
+      "label": "Apple: Autofilling one-time codes",
+      "url": "https://developer.apple.com/documentation/security/password_autofill/about_the_password_autofill_workflow"
+    }
+  ],
+  "confidence": "docs"
+}

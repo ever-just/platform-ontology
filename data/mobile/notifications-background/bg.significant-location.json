@@ -1,0 +1,203 @@
+{
+  "id": "mob.bg.significant-location",
+  "name": "Significant location change",
+  "kind": "capability",
+  "group": "notifications-background",
+  "subgroup": "Location in background",
+  "tags": [
+    "location",
+    "low-power",
+    "wake-on-move"
+  ],
+  "plain": "A low power way to learn that the device moved a long distance, even when the app is closed.",
+  "meaning": "Wakes the app after the person moves about 500 meters or changes cell towers, so it can rebuild a movement history cheaply. iOS relaunches apps for it; Android uses geofences and activity transitions.",
+  "lifecycle": [
+    "background"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "p",
+      "v": "4.0",
+      "api": 29,
+      "permission": "ACCESS_BACKGROUND_LOCATION (10+)",
+      "protection": "dangerous",
+      "grant": "prompt",
+      "prompt_ui": "Allow all the time (Settings)",
+      "persistence": "Until revoked",
+      "revocation": "Settings > Location > App permissions",
+      "store_policy": "Play: background location declaration and review",
+      "api_surface": "No exact analog; use geofences or Fused low power updates",
+      "note": "Approximate analog via Geofencing API or passive location requests"
+    },
+    "ios": {
+      "s": "y",
+      "v": "4.0",
+      "permission": "NSLocationAlwaysAndWhenInUseUsageDescription; Always authorization",
+      "protection": "prompt",
+      "grant": "prompt",
+      "prompt_ui": "Always prompt after When In Use",
+      "persistence": "Until revoked; relaunches after termination",
+      "revocation": "Settings > Privacy > Location Services",
+      "store_policy": "App Review 5.1.1",
+      "api_surface": "CLLocationManager.startMonitoringSignificantLocationChanges()",
+      "note": "Updates when the position changes by about 500 m and at least about 5 min apart (typical)"
+    }
+  },
+  "data": {
+    "type": "event",
+    "metric": "Location change",
+    "update": "About 500 m moved",
+    "fields": [
+      {
+        "name": "threshold",
+        "type": "integer",
+        "unit": "meters",
+        "range": "about 500",
+        "precision": "approx"
+      },
+      {
+        "name": "min_gap",
+        "type": "integer",
+        "unit": "minutes",
+        "range": "about 5",
+        "precision": "approx"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can learn that you moved a long way, about 500 meters, even with the app closed",
+    "user_action": "You allow Always location, or turn on a feature that follows trips and places loosely",
+    "can": [
+      "Learn you have moved to a new area, using very little battery",
+      "Wake up in the background when you travel far enough",
+      "Use that move as a cue to refresh nearby results"
+    ],
+    "cannot": [
+      "Follow your exact path or speed",
+      "Update more often than about every 5 minutes",
+      "Run at all if you did not allow Always location",
+      "Match this exactly on Android, which has only a rough substitute through geofencing"
+    ],
+    "reach": 3,
+    "reach_label": "Ongoing, but only big moves",
+    "differs": "iPhone has a built in significant change service. Android only has an approximate version through geofences or passive location."
+  },
+  "story": {
+    "what_it_is": "A very low power way for an app to learn that you moved a long distance, even while closed.",
+    "icon": "route",
+    "tags": [
+      "Location",
+      "Asks first",
+      "Background"
+    ],
+    "marketing": [
+      {
+        "vendor": "Apple",
+        "name": "Significant location change",
+        "pitch": "Apple describes this service as a battery friendly way to be notified when a device moves a meaningful distance.",
+        "url": "https://developer.apple.com/documentation/corelocation/handling-location-updates-in-the-background"
+      }
+    ],
+    "for_you": "You never see it. An app quietly notes that you have moved to a new area, so your weather or traffic card is right when you open it. It needs your Always location choice.",
+    "for_makers": "Makers can rebuild a rough history of movement without keeping GPS on. It supports commute and weather features, and it is also a way to build a long term travel profile.",
+    "use_cases": [
+      {
+        "type": "travel",
+        "example": "A trip app notices you landed in a new city and shows your hotel and a local guide.",
+        "apps": [
+          "TripIt",
+          "Google Trips"
+        ]
+      },
+      {
+        "type": "maps",
+        "example": "A traffic app learns your usual commute and warns you about delays before you leave.",
+        "apps": [
+          "Google Maps",
+          "Waze"
+        ]
+      },
+      {
+        "type": "news",
+        "example": "A weather app shifts its alerts to the new town you drove into.",
+        "apps": [
+          "Weather Channel",
+          "Carrot Weather"
+        ]
+      },
+      {
+        "type": "ads",
+        "example": "An ad network updates which city a device is in so local ads match.",
+        "apps": []
+      },
+      {
+        "type": "security",
+        "example": "A banking app sees you suddenly in another country and tightens checks on card use.",
+        "apps": []
+      },
+      {
+        "type": "games",
+        "example": "A game reopens with local events for the city you are visiting.",
+        "apps": [
+          "Pokemon GO"
+        ]
+      }
+    ],
+    "risks": [
+      "Builds a long term movement history",
+      "Hard to see when it is on"
+    ],
+    "android_note": "There is no exact copy. Apps use geofences or passive location instead.",
+    "ios_note": "Updates arrive when you move about 500 meters, and at least about five minutes apart."
+  },
+  "technical_bounds": [
+    "Needs Always authorization",
+    "Wake up only"
+  ],
+  "scores": {
+    "sensitivity": 4,
+    "utility": 3,
+    "fingerprint_bits": null,
+    "friction": 3
+  },
+  "value": {
+    "legit_uses": [
+      "Commute detection"
+    ],
+    "abuse": [
+      "Building long term movement profile"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2010-06",
+      "platform": "ios",
+      "version": "iOS 4",
+      "change": "Significant location change service introduced"
+    }
+  ],
+  "related": [
+    "mob.bg.region-monitoring",
+    "mob.bg.visit-monitoring"
+  ],
+  "refs": [
+    {
+      "t": "apple",
+      "label": "Apple: Handling location updates in the background",
+      "url": "https://developer.apple.com/documentation/corelocation/handling-location-updates-in-the-background"
+    },
+    {
+      "t": "android",
+      "label": "Android: Location permissions",
+      "url": "https://developer.android.com/develop/sensors-and-location/location/permissions"
+    }
+  ],
+  "confidence": "docs"
+}

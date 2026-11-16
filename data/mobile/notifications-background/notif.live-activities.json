@@ -1,0 +1,232 @@
+{
+  "id": "mob.notif.live-activities",
+  "name": "Live Activities and Dynamic Island",
+  "kind": "capability",
+  "group": "notifications-background",
+  "subgroup": "Live surfaces",
+  "tags": [
+    "live-activity",
+    "dynamic-island",
+    "lock-screen",
+    "time-limited"
+  ],
+  "plain": "Pins a live status (delivery, score, ride) to the lock screen and Dynamic Island for up to 8 hours.",
+  "meaning": "A glanceable always-on channel that shows where a person's order or ride is. It runs a long way under the OS: 8 hours active, then up to 4 more on the lock screen.",
+  "lifecycle": [
+    "in-session",
+    "background"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "p",
+      "v": "16",
+      "api": 36,
+      "permission": "POST_PROMOTED_NOTIFICATIONS for Live Updates (Android 16); see mob.notif.android-live-updates",
+      "protection": "normal",
+      "grant": "install",
+      "prompt_ui": "Promoted ongoing notification and status chip",
+      "persistence": "Until app ends or user dismisses",
+      "revocation": "Settings > Notifications > Live updates",
+      "store_policy": "Play policy: not for ads or chat",
+      "api_surface": "Notification.ProgressStyle, setRequestPromotedOngoing",
+      "note": "Closest analog is Android 16 Live Updates"
+    },
+    "ios": {
+      "s": "y",
+      "v": "16.1",
+      "permission": "NSSupportsLiveActivities (Info.plist)",
+      "protection": "none",
+      "grant": "settings",
+      "prompt_ui": "Per app Live Activities toggle in Settings",
+      "persistence": "Active up to 8 hours; after ending stays on Lock Screen up to 4 hours by default; ends if user force quits",
+      "revocation": "Settings > App > Live Activities; swipe away; Focus",
+      "store_policy": "App Review 4.5.4",
+      "api_surface": "ActivityKit: Activity.request, ActivityAttributes; WidgetKit",
+      "note": "Payload for updates about 4 KB; up to 8 hours active, up to 4 hours lock screen retention after end; a few concurrent activities per app (documented about 5)"
+    }
+  },
+  "web_equivalents": [
+    "web.notify.badging"
+  ],
+  "data": {
+    "type": "object",
+    "metric": "Activity",
+    "update": "Push or app updates",
+    "fields": [
+      {
+        "name": "active_limit",
+        "type": "integer",
+        "unit": "hours",
+        "range": "8",
+        "precision": "system"
+      },
+      {
+        "name": "retention_after_end",
+        "type": "integer",
+        "unit": "hours",
+        "range": "up to 4",
+        "precision": "system default"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can pin live status to your iPhone lock screen for up to 8 hours",
+    "user_action": "You start a ride, order, game or timer, and the app starts a Live Activity",
+    "can": [
+      "Show things like delivery progress or a score on the lock screen",
+      "Use the Dynamic Island on iPhone 14 Pro and newer",
+      "Keep updating while the activity runs, up to 8 hours",
+      "Stay visible on the lock screen up to 4 hours after it ends"
+    ],
+    "cannot": [
+      "Run it if you turned Live Activities off for that app",
+      "Run for more than 8 hours",
+      "Run unlimited activities at once; each app gets only a few",
+      "Match it exactly on Android, where the closest feature is Live Updates on Android 16"
+    ],
+    "reach": 2,
+    "reach_label": "While running, up to 8 hours",
+    "differs": "iPhone has Live Activities from iOS 16.1. Android 16 has a similar Live Updates feature."
+  },
+  "story": {
+    "what_it_is": "A live status card, like a delivery or score, pinned to the iPhone lock screen and Dynamic Island.",
+    "icon": "activity",
+    "tags": [
+      "Notifications",
+      "Live",
+      "iPhone"
+    ],
+    "marketing": [
+      {
+        "vendor": "Apple",
+        "name": "Live Activities",
+        "pitch": "Apple pitches Live Activities as a way to show live information like a ride or score on the Lock Screen and Dynamic Island.",
+        "url": "https://developer.apple.com/documentation/activitykit"
+      }
+    ],
+    "for_you": "You order a ride and see the car and time left on the lock screen and the Dynamic Island. It updates itself, and you can end it any time.",
+    "for_makers": "Makers get an always visible spot that is hard to ignore. They use it for time bound tasks, and it also keeps the app in front of people.",
+    "use_cases": [
+      {
+        "type": "delivery",
+        "example": "A food order shows a live progress bar from kitchen to your door.",
+        "apps": [
+          "DoorDash",
+          "Uber Eats"
+        ]
+      },
+      {
+        "type": "live",
+        "example": "A football match shows the live score on the lock screen.",
+        "apps": [
+          "ESPN",
+          "Apple Sports"
+        ]
+      },
+      {
+        "type": "rideshare",
+        "example": "Your ride shows the car, driver and arrival time on the Dynamic Island.",
+        "apps": [
+          "Uber",
+          "Lyft"
+        ]
+      },
+      {
+        "type": "travel",
+        "example": "A flight shows gate, boarding and delay changes live.",
+        "apps": [
+          "United",
+          "Delta"
+        ]
+      },
+      {
+        "type": "fitness",
+        "example": "A workout or run shows pace and time in the Dynamic Island.",
+        "apps": [
+          "Strava"
+        ]
+      },
+      {
+        "type": "games",
+        "example": "A game shows a build timer or a match countdown on the lock screen.",
+        "apps": []
+      },
+      {
+        "type": "music",
+        "example": "A music app shows what is playing and a quick control.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Another persistent nudge",
+      "Can show private info on a locked screen"
+    ],
+    "android_note": "Android 16 has a close match called Live Updates.",
+    "ios_note": "Runs up to 8 hours, then stays on the lock screen up to 4 more. You can turn it off per app."
+  },
+  "technical_bounds": [
+    "8 hour hard cap",
+    "User can disable per app",
+    "Update frequency limited by an hourly push budget"
+  ],
+  "scores": {
+    "sensitivity": 2,
+    "utility": 4,
+    "fingerprint_bits": null,
+    "friction": 1
+  },
+  "value": {
+    "legit_uses": [
+      "Delivery tracking",
+      "Sports",
+      "Rideshare"
+    ],
+    "abuse": [
+      "Persistent engagement placement"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2022-10",
+      "platform": "ios",
+      "version": "iOS 16.1",
+      "change": "Live Activities and Dynamic Island launched (iPhone 14 Pro)"
+    },
+    {
+      "date": "2023-09",
+      "platform": "ios",
+      "version": "iOS 17",
+      "change": "Live Activities gain interactive buttons through App Intents"
+    },
+    {
+      "date": "2025-09",
+      "platform": "ios",
+      "version": "iOS 26",
+      "change": "Live Activities extend to CarPlay and the Mac menu bar"
+    }
+  ],
+  "related": [
+    "mob.notif.liveactivity-push",
+    "mob.notif.android-live-updates"
+  ],
+  "refs": [
+    {
+      "t": "apple",
+      "label": "Apple: ActivityKit",
+      "url": "https://developer.apple.com/documentation/activitykit"
+    },
+    {
+      "t": "apple",
+      "label": "Apple: Displaying live data with Live Activities",
+      "url": "https://developer.apple.com/documentation/activitykit/displaying-live-data-with-live-activities"
+    }
+  ],
+  "confidence": "docs"
+}

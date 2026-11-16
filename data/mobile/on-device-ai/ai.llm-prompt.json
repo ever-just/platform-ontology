@@ -1,0 +1,221 @@
+{
+  "id": "mob.ai.llm-prompt",
+  "name": "On-device language model (Foundation Models, Gemini Nano Prompt API)",
+  "kind": "capability",
+  "group": "on-device-ai",
+  "subgroup": "Generative AI",
+  "tags": [
+    "foundation-models",
+    "gemini-nano",
+    "aicore",
+    "llm",
+    "on-device"
+  ],
+  "plain": "Runs a small language model on the phone with no cloud call.",
+  "meaning": "Apps can prompt a system model for text, structured output and tool calls. Both are free and offline but only on eligible devices, and the models are small.",
+  "lifecycle": [
+    "in-session"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "p",
+      "v": "14",
+      "api": 34,
+      "permission": "None; AICore system service; Prompt API beta in ML Kit GenAI (nano-v2 devices, per app quota)",
+      "protection": "none",
+      "grant": "none",
+      "prompt_ui": "Model download by system; quota and foreground limits",
+      "persistence": "Per request",
+      "revocation": "Settings > Google > AICore",
+      "store_policy": "Gemini Nano usage policy",
+      "api_surface": "ML Kit GenAI Prompt API, AICore, Google AI Edge SDK (experimental)",
+      "note": "Only some flagship phones (Pixel 9 and 10, Galaxy S24 and up and others); availability varies by device."
+    },
+    "ios": {
+      "s": "y",
+      "v": "26.0",
+      "permission": "None; requires Apple Intelligence enabled",
+      "protection": "none",
+      "grant": "none",
+      "prompt_ui": "Check SystemLanguageModel.availability; Apple Intelligence setting",
+      "persistence": "Per session",
+      "revocation": "Settings > Apple Intelligence & Siri",
+      "store_policy": "Apple acceptable use requirements for the model",
+      "api_surface": "FoundationModels LanguageModelSession, @Generable, Tool, SystemLanguageModel",
+      "note": "About 3B parameter model; free, offline; guided generation and tool calling; iOS 26 on Apple Intelligence devices."
+    }
+  },
+  "data": {
+    "type": "object",
+    "metric": "Model response",
+    "update": "per request",
+    "fields": [
+      {
+        "name": "text",
+        "type": "string",
+        "unit": "tokens",
+        "range": "context window about 4k",
+        "precision": "n/a"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can use a small AI model on your phone, with no internet needed",
+    "user_action": "You tap an AI feature like Summarize or Rewrite",
+    "can": [
+      "Answer, summarize or rewrite text on the phone",
+      "Work offline and for free on iPhones with Apple Intelligence (iOS 26)",
+      "Use guided answers and tools on iPhone, or Gemini Nano on some newer Android phones"
+    ],
+    "cannot": [
+      "Run on older phones; only some flagship Android phones and Apple Intelligence iPhones qualify",
+      "Match the power of big cloud models",
+      "Run forever in the background; Android limits it by quota and foreground use"
+    ],
+    "reach": 2,
+    "reach_label": "While you use the feature",
+    "differs": "iPhone needs Apple Intelligence and iOS 26. Android uses Gemini Nano on some phones, like Pixel 9 and 10 and Galaxy S24 and newer."
+  },
+  "story": {
+    "what_it_is": "A small AI language model that runs on the phone with no internet call.",
+    "icon": "brain",
+    "tags": [
+      "AI",
+      "Private",
+      "Offline"
+    ],
+    "marketing": [
+      {
+        "vendor": "Apple",
+        "name": "Foundation Models",
+        "pitch": "Apple lets apps use the on device model behind Apple Intelligence, free and offline.",
+        "url": "https://developer.apple.com/documentation/foundationmodels"
+      },
+      {
+        "vendor": "Google",
+        "name": "ML Kit GenAI",
+        "pitch": "Google offers on device generative AI tasks through ML Kit using Gemini Nano.",
+        "url": "https://developers.google.com/ml-kit/genai"
+      }
+    ],
+    "for_you": "You ask an app to summarize, rewrite or answer, and it works with no signal. Your text stays on the phone. It is smaller and less clever than the big chat models.",
+    "for_makers": "Makers get an AI feature with no server cost and a privacy story. The model is small and only on newer phones, so features must work without it.",
+    "use_cases": [
+      {
+        "type": "productivity",
+        "example": "A notes app summarizes a long page on a plane with no signal.",
+        "apps": [
+          "Notes",
+          "Bear"
+        ]
+      },
+      {
+        "type": "games",
+        "example": "A role playing game uses the model to write live non player chat.",
+        "apps": []
+      },
+      {
+        "type": "messaging",
+        "example": "A chat app suggests short replies privately.",
+        "apps": [
+          "Messages"
+        ]
+      },
+      {
+        "type": "education",
+        "example": "A study app builds quiz questions from your notes with no upload.",
+        "apps": []
+      },
+      {
+        "type": "health",
+        "example": "A journal app summarizes entries without sending them to the cloud.",
+        "apps": [
+          "Day One"
+        ]
+      },
+      {
+        "type": "accessibility",
+        "example": "An app rephrases text in simpler words for a reader.",
+        "apps": []
+      },
+      {
+        "type": "shopping",
+        "example": "A store app summarizes long reviews on the phone.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Prompt injection when tools are linked",
+      "Only on newer phones"
+    ],
+    "android_note": "Gemini Nano runs on some flagship phones like Pixel 9 and 10 and Galaxy S24 and later.",
+    "ios_note": "A roughly 3B model on Apple Intelligence devices, with guided output and tool calls."
+  },
+  "technical_bounds": [
+    "Small context window; device eligibility; not for world knowledge"
+  ],
+  "scores": {
+    "sensitivity": 2,
+    "utility": 5,
+    "fingerprint_bits": 1,
+    "friction": 1
+  },
+  "value": {
+    "legit_uses": [
+      "Private summarisation",
+      "Offline assistants"
+    ],
+    "abuse": [
+      "Prompt injection when tools are connected"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2025-06",
+      "platform": "ios",
+      "version": "iOS 26",
+      "change": "Foundation Models framework"
+    },
+    {
+      "date": "2025-05",
+      "platform": "android",
+      "version": "ML Kit GenAI",
+      "change": "GenAI APIs on Gemini Nano"
+    },
+    {
+      "date": "2025-10",
+      "platform": "android",
+      "version": "Prompt API",
+      "change": "Prompt API beta"
+    }
+  ],
+  "related": [
+    "mob.ai.text-tools",
+    "mob.ai.ml-runtime"
+  ],
+  "refs": [
+    {
+      "t": "apple",
+      "label": "Apple: Foundation Models",
+      "url": "https://developer.apple.com/documentation/foundationmodels"
+    },
+    {
+      "t": "android",
+      "label": "ML Kit GenAI APIs",
+      "url": "https://developers.google.com/ml-kit/genai"
+    },
+    {
+      "t": "android",
+      "label": "Android: Gemini Nano",
+      "url": "https://developer.android.com/ai/gemini-nano"
+    }
+  ],
+  "confidence": "verified"
+}

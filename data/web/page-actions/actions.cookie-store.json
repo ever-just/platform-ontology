@@ -1,0 +1,250 @@
+{
+  "id": "web.actions.cookie-store",
+  "name": "Cookie Store API",
+  "kind": "capability",
+  "group": "page-actions",
+  "subgroup": "Storage",
+  "tags": [
+    "cookie-store",
+    "cookies",
+    "async-cookies"
+  ],
+  "plain": "Reads and changes cookies asynchronously and gets change events, including in service workers.",
+  "meaning": "A site can watch and edit its own cookies without parsing document.cookie. It sees only non-HttpOnly cookies for its own origin.",
+  "lifecycle": [
+    "in-session",
+    "after-leaving"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "cookieStore.get(), getAll(), set(), delete(); cookiechange event",
+      "bcd": [
+        "api.CookieStore",
+        "api.CookieStoreManager"
+      ],
+      "access": {
+        "grant": "none",
+        "prompt_ui": "None (no browser prompt)",
+        "secure_context": true,
+        "user_gesture": false,
+        "activation": "none",
+        "persistence": "Same as the cookie lifetime",
+        "revocation": "Nothing to revoke (no permission is stored)",
+        "iframe": "Same-origin and secure contexts only",
+        "steps": [
+          "Call cookieStore.set({name, value})",
+          "Cookie stored",
+          "cookiechange event fires in other tabs and service workers"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "87",
+          "note": "",
+          "date": "2020-11-17"
+        },
+        "edge": {
+          "s": "y",
+          "v": "87",
+          "note": "",
+          "date": "2020-11-19"
+        },
+        "firefox": {
+          "s": "y",
+          "v": "140",
+          "note": "",
+          "date": "2025-06-24"
+        },
+        "safari": {
+          "s": "y",
+          "v": "18.4",
+          "note": "",
+          "date": "2025-03-31"
+        },
+        "ios_safari": {
+          "s": "y",
+          "v": "18.4",
+          "note": "All iOS browsers use WebKit",
+          "date": "2025-03-31"
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "87",
+          "note": "",
+          "date": "2020-11-17"
+        },
+        "samsung": {
+          "s": "y",
+          "v": "14.0",
+          "note": "",
+          "date": "2021-04-17"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "none",
+    "metric": "",
+    "update": "",
+    "fields": []
+  },
+  "limits": {
+    "headline": "Can watch and change the site's own cookies, but not hidden ones or other sites' cookies",
+    "user_action": "Nothing. It happens when the site's script checks or sets a cookie",
+    "can": [
+      "List and change the site's own cookies that scripts may see",
+      "Get a notice when its own cookies change, including in a background script",
+      "Keep your sign in in step across tabs"
+    ],
+    "cannot": [
+      "See other sites' cookies",
+      "See protected cookies marked HttpOnly",
+      "Work from outside the site's own address",
+      "Be sure to stop cookie syncing, which you stop by clearing cookies or blocking trackers"
+    ],
+    "reach": 3,
+    "reach_label": "The site's own cookies, ongoing",
+    "differs": ""
+  },
+  "story": {
+    "what_it_is": "A page can read and change cookies the modern way and hear about changes, even in background scripts.",
+    "icon": "cookie",
+    "tags": [
+      "Cookies",
+      "Tracking",
+      "Capability"
+    ],
+    "marketing": [
+      {
+        "vendor": "MDN Web Docs",
+        "name": "Cookie Store API",
+        "pitch": "Offers an async way to read and write cookies and to listen for changes, including in service workers.",
+        "url": "https://developer.mozilla.org/en-US/docs/Web/API/Cookie_Store_API"
+      }
+    ],
+    "for_you": "You never see it. Sites use it to remember your login and settings. If you clear cookies, the site will see the change.",
+    "for_makers": "Makers use it to manage login, consent choices and tracking IDs without blocking the page. Change events let them react when cookies are added or cleared. It works inside background scripts too.",
+    "use_cases": [
+      {
+        "type": "shopping",
+        "example": "A store keeps your cart and login in cookies, and notices if they are cleared to rebuild your session.",
+        "apps": []
+      },
+      {
+        "type": "ads",
+        "example": "An ad script watches for cookie changes and re-creates its ID if you clear it.",
+        "apps": []
+      },
+      {
+        "type": "analytics",
+        "example": "An analytics tool reads and writes its visitor ID cookie, and sends a new event when it changes.",
+        "apps": [
+          "Google Analytics"
+        ]
+      },
+      {
+        "type": "games",
+        "example": "A browser game portal stores your sign in and settings in cookies, and syncs across tabs.",
+        "apps": []
+      },
+      {
+        "type": "security",
+        "example": "A bank page detects when its session cookie is removed and logs out the tab.",
+        "apps": []
+      },
+      {
+        "type": "news",
+        "example": "A news site stores your cookie consent choices and reads them in the background scripts.",
+        "apps": []
+      },
+      {
+        "type": "video",
+        "example": "A streaming site shares a login across tabs using cookie change events.",
+        "apps": [
+          "Netflix"
+        ]
+      }
+    ],
+    "risks": [
+      "Tracking IDs",
+      "Hard to clear for good"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "HTTPS only; cannot read HttpOnly cookies",
+    "Cookie size limit 4096 bytes for name plus value; about 180 cookies per domain in Chrome, 50 per domain in Firefox (older), 150 in Safari",
+    "Max Expires/Max-Age cap is 400 days in Chrome (Chrome 104)",
+    "Third-party contexts follow normal third-party cookie blocking and the Storage Access API",
+    "Support per MDN BCD: Chrome and Edge 87, Safari 18.4, Firefox 140"
+  ],
+  "scores": {
+    "sensitivity": 2,
+    "utility": 3,
+    "fingerprint_bits": null,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Session sync across tabs",
+      "Service worker session checks"
+    ],
+    "abuse": [
+      "Cookie syncing and ID resurrection",
+      "Persistent identifiers"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2020-11",
+      "browser": "chrome",
+      "version": "87",
+      "change": "Cookie Store API ships"
+    },
+    {
+      "date": "2022-08",
+      "browser": "chrome",
+      "version": "104",
+      "change": "Cookie Max-Age and Expires capped at 400 days"
+    },
+    {
+      "date": "2025-03",
+      "browser": "safari",
+      "version": "18.4",
+      "change": "Cookie Store API ships in Safari"
+    },
+    {
+      "date": "2025-06",
+      "browser": "firefox",
+      "version": "140",
+      "change": "Cookie Store API ships in Firefox"
+    }
+  ],
+  "refs": [
+    {
+      "t": "mdn",
+      "label": "MDN Cookie Store API",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/Cookie_Store_API"
+    },
+    {
+      "t": "spec",
+      "label": "WICG Cookie Store API",
+      "url": "https://wicg.github.io/cookie-store/"
+    },
+    {
+      "t": "chromestatus",
+      "label": "Chrome Cookie Store API",
+      "url": "https://chromestatus.com/feature/5658847691669504"
+    }
+  ],
+  "confidence": "docs"
+}

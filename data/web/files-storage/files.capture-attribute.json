@@ -1,0 +1,224 @@
+{
+  "id": "web.files.capture-attribute",
+  "name": "Capture attribute (camera or mic from a file input)",
+  "kind": "picker",
+  "group": "files-storage",
+  "subgroup": "Files",
+  "tags": [
+    "capture",
+    "camera",
+    "file-input",
+    "mobile"
+  ],
+  "plain": "Opens the phone camera or microphone directly from a file input; the page gets one finished file.",
+  "meaning": "A site can skip the gallery and ask for a fresh photo, video or recording. It gets a single file, not a live stream, and the person confirms each capture.",
+  "lifecycle": [
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "<input type=file accept=\"image/*\" capture=\"environment\">; capture=user",
+      "bcd": [
+        "html.elements.input.capture",
+        "api.HTMLInputElement.capture"
+      ],
+      "access": {
+        "grant": "picker",
+        "prompt_ui": "None (no browser prompt)",
+        "secure_context": false,
+        "user_gesture": true,
+        "activation": "transient",
+        "persistence": "Per capture",
+        "revocation": "Nothing to revoke (no permission is stored)",
+        "iframe": "Works in any frame",
+        "steps": [
+          "Person taps the input",
+          "Camera or voice recorder app opens",
+          "Person captures and confirms; File returns to the page"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "n",
+          "v": "",
+          "note": "Desktop falls back to the file chooser"
+        },
+        "edge": {
+          "s": "n",
+          "v": "",
+          "note": "Desktop falls back to the file chooser"
+        },
+        "firefox": {
+          "s": "n",
+          "v": "",
+          "note": "Desktop falls back to the file chooser"
+        },
+        "safari": {
+          "s": "n",
+          "v": "",
+          "note": "Desktop falls back to the file chooser"
+        },
+        "ios_safari": {
+          "s": "y",
+          "v": "10",
+          "note": "All iOS browsers use WebKit",
+          "date": "2016-09-13"
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "25",
+          "note": "",
+          "date": "2013-02-27"
+        },
+        "samsung": {
+          "s": "y",
+          "v": "1.5",
+          "note": "",
+          "date": "2013-09-25"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "none",
+    "metric": "",
+    "update": "",
+    "fields": []
+  },
+  "limits": {
+    "headline": "Can open your camera or microphone app for one photo, video or clip",
+    "user_action": "You tap Take photo, Scan document or Record video on an upload button.",
+    "can": [
+      "Start the phone's camera app straight from an upload button",
+      "Receive the one finished file",
+      "Ask for the front or back camera"
+    ],
+    "cannot": [
+      "Watch live camera video",
+      "Take extra pictures after the first",
+      "See your photo library, only the one new picture",
+      "Work on computers, which show a normal file chooser"
+    ],
+    "reach": 1,
+    "reach_label": "One finished photo or clip",
+    "differs": "Works on iPhone and Android phones. Desktop browsers ignore it and show the usual file chooser."
+  },
+  "story": {
+    "what_it_is": "A file button that opens your phone camera or microphone directly and hands over one finished file.",
+    "icon": "camera",
+    "tags": [
+      "Camera",
+      "Phone",
+      "Picker"
+    ],
+    "marketing": [
+      {
+        "vendor": "MDN",
+        "name": "HTML capture attribute",
+        "pitch": "Documents a tag that asks a phone to open the camera or recorder to fill a file field.",
+        "url": "https://developer.mozilla.org/en-US/docs/Web/HTML/Attributes/capture"
+      }
+    ],
+    "for_you": "You tap 'Take photo' and your phone camera opens. You shoot, accept, and the page gets just that one picture. It never sees a live camera feed.",
+    "for_makers": "It is the simplest way to collect a photo or clip with no camera code and no permission fuss. Makers use it for ID checks, claims and listings. The person picks what to send.",
+    "use_cases": [
+      {
+        "type": "banking",
+        "example": "A bank asks you to photograph your ID and a cheque, then uploads both with one tap.",
+        "apps": []
+      },
+      {
+        "type": "shopping",
+        "example": "A marketplace lets you snap photos of an item to sell right from the listing form.",
+        "apps": [
+          "eBay",
+          "Facebook Marketplace"
+        ]
+      },
+      {
+        "type": "health",
+        "example": "A clinic portal lets you take a photo of a rash for the nurse to see.",
+        "apps": []
+      },
+      {
+        "type": "education",
+        "example": "A homework site lets students photograph their work and submit it.",
+        "apps": []
+      },
+      {
+        "type": "delivery",
+        "example": "A delivery site asks for a photo of a damaged package.",
+        "apps": []
+      },
+      {
+        "type": "social",
+        "example": "A site lets you record a short voice or video note straight into a post.",
+        "apps": []
+      },
+      {
+        "type": "enterprise",
+        "example": "A field service app records a photo of a repair as proof of work.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Shares a sensitive photo",
+      "Picks what you send"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Mobile only effect: desktop browsers fall back to the file chooser",
+    "Values user (front camera) or environment (rear camera); the app may let the person switch",
+    "Result is a single file; the page cannot stream or preview before the capture ends",
+    "Combined with accept=image/*, video/* or audio/* to choose the capture type",
+    "No separate camera permission prompt on most browsers because the OS camera app does the capture"
+  ],
+  "scores": {
+    "sensitivity": 4,
+    "utility": 4,
+    "fingerprint_bits": null,
+    "friction": 1
+  },
+  "value": {
+    "legit_uses": [
+      "Document scanning (ID, receipts)",
+      "Quick photo upload"
+    ],
+    "abuse": [
+      "Pushing people to take photos of sensitive documents"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2016-09",
+      "browser": "ios_safari",
+      "version": "10",
+      "change": "capture attribute supported in iOS Safari (BCD)"
+    }
+  ],
+  "related": [
+    "web.files.file-input"
+  ],
+  "refs": [
+    {
+      "t": "mdn",
+      "label": "MDN capture",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Attributes/capture"
+    },
+    {
+      "t": "spec",
+      "label": "W3C HTML Media Capture",
+      "url": "https://www.w3.org/TR/html-media-capture/"
+    }
+  ],
+  "confidence": "docs"
+}

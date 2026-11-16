@@ -1,0 +1,247 @@
+{
+  "id": "web.storage.storage-partitioning",
+  "name": "Storage partitioning",
+  "kind": "signal",
+  "group": "files-storage",
+  "subgroup": "Cross site",
+  "tags": [
+    "partitioning",
+    "total-cookie-protection",
+    "itp",
+    "storage-keys"
+  ],
+  "plain": "Browsers key embedded storage by the top site so a tracker sees a separate store on each site.",
+  "meaning": "Cuts the main cross-site tracking path: a widget on site A and site B no longer shares one cookie or localStorage. Embeds can still track within one site, and workarounds shift to link decoration, redirects and server side IDs.",
+  "lifecycle": [
+    "in-session",
+    "before-visit"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "Browser behaviour keyed by (top-level site, frame site); use Storage Access API to opt out",
+      "access": {
+        "grant": "none",
+        "prompt_ui": "None",
+        "secure_context": false,
+        "user_gesture": false,
+        "persistence": "Per browser profile",
+        "revocation": "Clear site data, browser privacy settings",
+        "iframe": "",
+        "steps": []
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "115",
+          "note": "",
+          "date": "2023-07-18"
+        },
+        "edge": {
+          "s": "y",
+          "v": "115",
+          "note": "",
+          "date": "2023-07-21"
+        },
+        "firefox": {
+          "s": "y",
+          "v": "103",
+          "note": "",
+          "date": "2022-07-26"
+        },
+        "safari": {
+          "s": "y",
+          "v": "13.1",
+          "note": "",
+          "date": "2020-03-24"
+        },
+        "ios_safari": {
+          "s": "y",
+          "v": "13.4",
+          "note": "",
+          "date": "2020-03-24"
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "115",
+          "note": "",
+          "date": "2023-07-21"
+        },
+        "samsung": {
+          "s": "y",
+          "v": "23.0",
+          "note": "",
+          "date": "2023-10-18"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "none",
+    "metric": "No data exposed",
+    "update": "n/a",
+    "fields": []
+  },
+  "limits": {
+    "headline": "Can't use the same embedded storage to recognize you across different sites",
+    "user_action": "Nothing. Your browser does it for you whenever a page is embedded.",
+    "can": [
+      "Store data separately for each site that embeds it",
+      "Still remember you on one site",
+      "Ask for its own cookies back, if you allow"
+    ],
+    "cannot": [
+      "Share one stored copy across the sites that embed it",
+      "Link a visit on one site to a visit on another through that storage",
+      "Skip the Storage Access prompt where browsers require it"
+    ],
+    "reach": 1,
+    "reach_label": "Separate storage per site",
+    "differs": ""
+  },
+  "story": {
+    "what_it_is": "Browsers give an embedded site a separate store on every site that embeds it, so trackers cannot link you.",
+    "icon": "split",
+    "tags": [
+      "Privacy",
+      "Cookies",
+      "Silent"
+    ],
+    "marketing": [
+      {
+        "vendor": "MDN",
+        "name": "State partitioning",
+        "pitch": "Mozilla explains how Firefox splits stored data by the top site to stop cross site tracking.",
+        "url": "https://developer.mozilla.org/en-US/docs/Web/Privacy/Guides/State_Partitioning"
+      },
+      {
+        "vendor": "WebKit",
+        "name": "Tracking Prevention",
+        "pitch": "Apple describes how Safari limits cross site tracking, including how embedded storage is isolated.",
+        "url": "https://webkit.org/tracking-prevention/"
+      }
+    ],
+    "for_you": "You get this for free. A tracker or like button embedded on two sites can no longer recognise you as the same person using its own stored data.",
+    "for_makers": "It is a big win for privacy and a loss for old style cross site tracking. Ad firms must move to other signals. Honest embeds, like logins and chat, may need to ask for access.",
+    "use_cases": [
+      {
+        "type": "ads",
+        "example": "An ad network embedded on two news sites sees two different, unlinked visitors instead of one person.",
+        "apps": []
+      },
+      {
+        "type": "social",
+        "example": "A like or share button on a blog can no longer use its own cookie to see which other sites you visit.",
+        "apps": [
+          "Facebook"
+        ]
+      },
+      {
+        "type": "video",
+        "example": "An embedded video player forgets your login on each site until it asks for access.",
+        "apps": [
+          "YouTube"
+        ]
+      },
+      {
+        "type": "enterprise",
+        "example": "A support chat widget on a company site keeps a chat only for that site, not across the web.",
+        "apps": [
+          "Intercom"
+        ]
+      },
+      {
+        "type": "games",
+        "example": "A game portal that embeds each game keeps game saves apart per portal.",
+        "apps": [
+          "Poki",
+          "CrazyGames"
+        ]
+      },
+      {
+        "type": "analytics",
+        "example": "A measurement firm can no longer follow a visitor across client sites using embedded storage.",
+        "apps": []
+      },
+      {
+        "type": "security",
+        "example": "A fraud service embedded on many sites loses a shared ID and must use other signals.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Breaks some embeds",
+      "Pushes trackers to fingerprinting"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Third party frames get a different store on each top site",
+    "Includes cookies (Firefox, Safari), localStorage, IndexedDB, Cache, BroadcastChannel, SharedWorker",
+    "Chrome partitions storage but keeps unpartitioned cookies as a user choice"
+  ],
+  "scores": {
+    "sensitivity": 3,
+    "utility": 2,
+    "fingerprint_bits": null,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Privacy by default"
+    ],
+    "abuse": [
+      "Not applicable"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2020-03",
+      "browser": "safari",
+      "version": "13.1",
+      "change": "Full third party cookie blocking and partitioned storage in ITP"
+    },
+    {
+      "date": "2022-07",
+      "browser": "firefox",
+      "version": "103",
+      "change": "Total Cookie Protection by default for all users"
+    },
+    {
+      "date": "2023-07",
+      "browser": "chrome",
+      "version": "115",
+      "change": "Third party storage partitioning rollout for storage and communication APIs"
+    }
+  ],
+  "related": [
+    "web.xsite.third-party-cookies-status",
+    "web.xsite.chips-partitioned-cookies",
+    "web.xsite.storage-access-api"
+  ],
+  "refs": [
+    {
+      "t": "mdn",
+      "label": "MDN State partitioning",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/Privacy/Guides/State_Partitioning"
+    },
+    {
+      "t": "webkit",
+      "label": "WebKit Tracking Prevention",
+      "url": "https://webkit.org/tracking-prevention/"
+    },
+    {
+      "t": "vendor",
+      "label": "Chrome storage partitioning",
+      "url": "https://developers.google.com/privacy-sandbox/cookies/storage-partitioning"
+    }
+  ],
+  "confidence": "verified"
+}

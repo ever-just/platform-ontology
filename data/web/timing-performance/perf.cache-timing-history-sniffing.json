@@ -1,0 +1,231 @@
+{
+  "id": "web.perf.cache-timing-history-sniffing",
+  "name": "Cache timing history sniffing",
+  "kind": "tracking",
+  "group": "timing-performance",
+  "subgroup": "Side channels",
+  "tags": [
+    "cache",
+    "timing",
+    "history",
+    "partitioning"
+  ],
+  "plain": "Times how fast a resource loads to guess whether the person already visited a site.",
+  "meaning": "A cached image or script loads in milliseconds, an uncached one in tens. Probing resources from other sites, or the status of a login, reveals browsing history. Cache partitioning mostly ended the cross-site variant.",
+  "lifecycle": [
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "fetch/Image + performance.now(); PerformanceResourceTiming transferSize",
+      "access": {
+        "grant": "none",
+        "prompt_ui": "",
+        "secure_context": false,
+        "user_gesture": false,
+        "persistence": "",
+        "revocation": "",
+        "iframe": "",
+        "steps": [
+          "Choose a resource unique to a target site",
+          "Request it and measure timing",
+          "Infer cached or not"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "n",
+          "v": "",
+          "note": ":Mitigated by cache partitioning since 86"
+        },
+        "edge": {
+          "s": "n",
+          "v": "",
+          "note": ":Mitigated by cache partitioning since 86"
+        },
+        "firefox": {
+          "s": "n",
+          "v": "",
+          "note": ":Mitigated since 85"
+        },
+        "safari": {
+          "s": "n",
+          "v": "",
+          "note": ":Mitigated since 2013 (ITP and partitioned cache)"
+        },
+        "ios_safari": {
+          "s": "n",
+          "v": "",
+          "note": ":Mitigated since 2013 (ITP and partitioned cache)"
+        },
+        "chrome_android": {
+          "s": "n",
+          "v": "",
+          "note": ":Mitigated by cache partitioning since 86"
+        },
+        "samsung": {
+          "s": "n",
+          "v": "",
+          "note": ":Mitigated by cache partitioning since 86"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "boolean",
+    "metric": "Timing distribution threshold",
+    "update": "",
+    "fields": [
+      {
+        "name": "load time",
+        "type": "float",
+        "unit": "ms",
+        "range": "1 to 300",
+        "precision": "limited by timer"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can time how fast something loads to guess if you visited a site before",
+    "user_action": "Nothing. It happens when the page loads",
+    "can": [
+      "Time how fast an image or script loads",
+      "Guess it was cached if it loads in a few milliseconds",
+      "Learn if you have visited some sites or are logged in"
+    ],
+    "cannot": [
+      "See your full browsing history",
+      "Work as well now that browsers keep separate caches per site",
+      "Ask permission first",
+      "See what you did on the other site"
+    ],
+    "reach": 2,
+    "reach_label": "Mostly blocked by split caches",
+    "differs": "Chrome, Edge, Firefox and Safari now partition the cache per site, which breaks most of this."
+  },
+  "story": {
+    "what_it_is": "A site times how fast something loads to guess if you have already visited another site.",
+    "icon": "history",
+    "tags": [
+      "Silent",
+      "History",
+      "Tracking"
+    ],
+    "marketing": [
+      {
+        "vendor": "Google Chrome",
+        "name": "HTTP cache partitioning",
+        "pitch": "Chrome describes splitting the cache by site so one site cannot learn what you visited elsewhere.",
+        "url": "https://developer.chrome.com/blog/http-cache-partitioning"
+      }
+    ],
+    "for_you": "You never see it. A page asks for a picture from another site and watches how quickly it appears. A fast load suggests you have been there before. Newer browsers have mostly blocked this.",
+    "for_makers": "It once let a site learn your browsing history without asking. Browsers now keep a separate cache for each site. Researchers and security teams still test it, and old browsers can still be fooled.",
+    "use_cases": [
+      {
+        "type": "security",
+        "example": "A researcher shows that a news page can tell if you visited a bank by timing a logo load.",
+        "apps": []
+      },
+      {
+        "type": "ads",
+        "example": "An ad network guesses that you are in market for a car by checking which dealers' images are in cache.",
+        "apps": []
+      },
+      {
+        "type": "social",
+        "example": "A social site checks whether you have seen a rival site recently to tune what it shows.",
+        "apps": []
+      },
+      {
+        "type": "shopping",
+        "example": "A shop checks if you saw a competitor's product images to adjust a promo.",
+        "apps": []
+      },
+      {
+        "type": "developer",
+        "example": "A web performance team uses cache timing in tests to see how much a page benefits from caching.",
+        "apps": []
+      },
+      {
+        "type": "news",
+        "example": "A paywall tests whether you came from a certain site by checking for its assets.",
+        "apps": []
+      },
+      {
+        "type": "analytics",
+        "example": "A security team reviews logs for pages that probe other sites' files.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Mostly fixed in modern browsers",
+      "Old browsers still exposed"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Same-site cache probing still works",
+    "Partitioned caches make cross-site probing fail in all three major browsers"
+  ],
+  "scores": {
+    "sensitivity": 3,
+    "utility": 1,
+    "fingerprint_bits": 4,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": "None legit",
+    "abuse": "Browsing history leak, login state detection"
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2013-01",
+      "browser": "safari",
+      "version": "",
+      "change": "Safari partitions HTTP cache by first party"
+    },
+    {
+      "date": "2020-10",
+      "browser": "chrome",
+      "version": "86",
+      "change": "HTTP cache partitioned by top-level site and frame site"
+    },
+    {
+      "date": "2021-01",
+      "browser": "firefox",
+      "version": "85",
+      "change": "Network partitioning including HTTP cache"
+    }
+  ],
+  "related": [
+    "web.perf.visited-link-sniffing",
+    "web.net.etag-cache-supercookie"
+  ],
+  "refs": [
+    {
+      "t": "paper",
+      "label": "Felten and Schneider, Timing Attacks on Web Privacy (2000)",
+      "url": "https://www.cs.princeton.edu/~felten/webtiming.pdf"
+    },
+    {
+      "t": "vendor",
+      "label": "Chrome HTTP cache partitioning",
+      "url": "https://developer.chrome.com/blog/http-cache-partitioning"
+    },
+    {
+      "t": "mozilla",
+      "label": "Firefox network partitioning",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/Privacy/Guides/State_Partitioning"
+    }
+  ],
+  "confidence": "docs"
+}

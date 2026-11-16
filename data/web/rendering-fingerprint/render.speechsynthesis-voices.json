@@ -1,0 +1,239 @@
+{
+  "id": "web.render.speechsynthesis-voices",
+  "name": "speechSynthesis voice list",
+  "kind": "signal",
+  "group": "rendering-fingerprint",
+  "subgroup": "Speech",
+  "tags": [
+    "speech",
+    "voices",
+    "tts",
+    "locale"
+  ],
+  "plain": "Lists the text-to-speech voices installed on the device.",
+  "meaning": "Voices reveal OS, installed languages, downloaded premium voices and Google or Microsoft cloud voices, which hints at language and accessibility use.",
+  "lifecycle": [
+    "on-arrival"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "speechSynthesis.getVoices(); onvoiceschanged",
+      "bcd": [
+        "api.SpeechSynthesis.getVoices"
+      ],
+      "access": {
+        "grant": "none",
+        "prompt_ui": "",
+        "secure_context": false,
+        "user_gesture": false,
+        "persistence": "",
+        "revocation": "",
+        "iframe": "",
+        "steps": [
+          "Call getVoices (may be empty until voiceschanged fires)",
+          "Read name, lang, localService, voiceURI"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "33",
+          "note": "",
+          "date": "2014-02-20"
+        },
+        "edge": {
+          "s": "y",
+          "v": "14",
+          "note": "",
+          "date": "2016-08-02"
+        },
+        "firefox": {
+          "s": "y",
+          "v": "49",
+          "note": "",
+          "date": "2016-09-20"
+        },
+        "safari": {
+          "s": "y",
+          "v": "7",
+          "note": "",
+          "date": "2013-10-22"
+        },
+        "ios_safari": {
+          "s": "y",
+          "v": "7",
+          "note": "",
+          "date": "2013-09-18"
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "33",
+          "note": "",
+          "date": "2014-02-26"
+        },
+        "samsung": {
+          "s": "y",
+          "v": "3.0",
+          "note": "",
+          "date": "2015-04-10"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "list",
+    "metric": "0 to 200 voice objects",
+    "update": "",
+    "fields": [
+      {
+        "name": "name",
+        "type": "string",
+        "unit": "",
+        "range": "voice name",
+        "precision": "exact"
+      },
+      {
+        "name": "lang",
+        "type": "string",
+        "unit": "",
+        "range": "BCP 47",
+        "precision": "exact"
+      },
+      {
+        "name": "localService",
+        "type": "boolean",
+        "unit": "",
+        "range": "true or false",
+        "precision": "exact"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can list the spoken voices installed on your device",
+    "user_action": "Nothing. It happens when the page loads, or when a page offers to speak text",
+    "can": [
+      "List the text to speech voices on your device",
+      "Learn your system, languages and any extra voices you downloaded",
+      "Guess if you use accessibility tools",
+      "Speak text on the page when it chooses to"
+    ],
+    "cannot": [
+      "Listen to you or record sound",
+      "See what you say out loud",
+      "Ask permission first",
+      "List voices in browsers that hide them"
+    ],
+    "reach": 2,
+    "reach_label": "Silent, voice list only",
+    "differs": ""
+  },
+  "story": {
+    "what_it_is": "A page lists the text to speech voices installed on your device.",
+    "icon": "ear",
+    "tags": [
+      "Silent",
+      "Voices",
+      "Fingerprinting"
+    ],
+    "marketing": [
+      {
+        "vendor": "MDN",
+        "name": "SpeechSynthesis",
+        "pitch": "Lets a page read text aloud using voices that come with your device.",
+        "url": "https://developer.mozilla.org/en-US/docs/Web/API/SpeechSynthesis"
+      }
+    ],
+    "for_you": "You do not see a prompt. The list of voices differs by system, language and add ons, so it reveals your language setup. If a site reads text aloud, it uses one of those voices.",
+    "for_makers": "Reading apps and language tools need it to offer a voice. The list is also unique by phone, laptop and region, so tracking tools add it to a device ID.",
+    "use_cases": [
+      {
+        "type": "education",
+        "example": "A language learning site reads a word aloud in the right accent so you can hear how it sounds.",
+        "apps": [
+          "Duolingo",
+          "Google Translate"
+        ]
+      },
+      {
+        "type": "accessibility",
+        "example": "A reading tool in the browser reads an article aloud for someone who has trouble seeing.",
+        "apps": [
+          "Microsoft Edge Read Aloud"
+        ]
+      },
+      {
+        "type": "news",
+        "example": "A news site adds a Listen to this article button that uses your device voice.",
+        "apps": []
+      },
+      {
+        "type": "games",
+        "example": "A browser game with voice narration picks a built in voice so it does not have to download audio.",
+        "apps": []
+      },
+      {
+        "type": "kids",
+        "example": "A children's story site reads a book aloud with a friendly voice from the device.",
+        "apps": []
+      },
+      {
+        "type": "ads",
+        "example": "A tracker adds the voice list to a device ID, since it differs by system and language packs.",
+        "apps": []
+      },
+      {
+        "type": "security",
+        "example": "A fraud tool sees a device with no voices, which is common for servers and headless browsers.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Reveals your languages",
+      "Adds to a device ID"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "No audio capture",
+    "Chrome on Android returns few voices"
+  ],
+  "scores": {
+    "sensitivity": 3,
+    "utility": 2,
+    "fingerprint_bits": 5,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": "Pick a reading voice",
+    "abuse": "Language, OS and accessibility-use inference"
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2025-09",
+      "browser": "safari",
+      "version": "26",
+      "change": "Voice list restricted for known fingerprinting scripts"
+    }
+  ],
+  "refs": [
+    {
+      "t": "mdn",
+      "label": "MDN SpeechSynthesis.getVoices",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/SpeechSynthesis/getVoices"
+    },
+    {
+      "t": "webkit",
+      "label": "WebKit features in Safari 26",
+      "url": "https://webkit.org/blog/17333/webkit-features-in-safari-26-0/"
+    }
+  ],
+  "confidence": "verified"
+}

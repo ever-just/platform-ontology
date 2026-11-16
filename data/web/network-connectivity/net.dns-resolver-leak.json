@@ -1,0 +1,219 @@
+{
+  "id": "web.net.dns-resolver-leak",
+  "name": "DNS resolver leak test",
+  "kind": "signal",
+  "group": "network-connectivity",
+  "subgroup": "DNS",
+  "tags": [
+    "dns",
+    "resolver",
+    "leak",
+    "vpn"
+  ],
+  "plain": "A page makes the browser look up unique hostnames so the site learns which DNS resolver the visitor uses.",
+  "meaning": "The page requests random-subdomain.example. The authoritative server logs which recursive resolver asked, revealing the ISP, a public DNS (Google, Cloudflare), or a VPN leak. DoH hides it from the local network, not from the site.",
+  "lifecycle": [
+    "on-arrival"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "fetch/img to unique subdomains; authoritative DNS logging",
+      "access": {
+        "grant": "none",
+        "prompt_ui": "",
+        "secure_context": false,
+        "user_gesture": false,
+        "persistence": "",
+        "revocation": "",
+        "iframe": "",
+        "steps": [
+          "Load unique subdomain resources",
+          "Log resolver source IP",
+          "Compare to client IP and VPN claim"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "1",
+          "note": "",
+          "date": "2008-12-11"
+        },
+        "edge": {
+          "s": "y",
+          "v": "79",
+          "note": "",
+          "date": "2020-01-15"
+        },
+        "firefox": {
+          "s": "y",
+          "v": "1",
+          "note": "",
+          "date": "2004-11-09"
+        },
+        "safari": {
+          "s": "y",
+          "v": "1",
+          "note": "",
+          "date": "2003-06-23"
+        },
+        "ios_safari": {
+          "s": "y",
+          "v": "1",
+          "note": "",
+          "date": "2007-06-29"
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "1",
+          "note": "",
+          "date": ""
+        },
+        "samsung": {
+          "s": "y",
+          "v": "5.0",
+          "note": "",
+          "date": "2016-12-15"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "string",
+    "metric": "Resolver IP and ASN",
+    "update": "",
+    "fields": [
+      {
+        "name": "resolver ip",
+        "type": "string",
+        "unit": "",
+        "range": "IPv4 or IPv6",
+        "precision": "exact"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can find which DNS service your device uses by having it look up odd names",
+    "user_action": "Nothing. It happens when the page loads in the background",
+    "can": [
+      "Make your browser look up unique made up site names",
+      "See which DNS service answers, such as your ISP, Google or Cloudflare",
+      "Spot a VPN that leaks DNS"
+    ],
+    "cannot": [
+      "See which sites you visit in other tabs from this test",
+      "Be hidden by encrypted DNS, which only hides it from your network, not from the site",
+      "Learn your name from it"
+    ],
+    "reach": 1,
+    "reach_label": "One quiet check",
+    "differs": ""
+  },
+  "story": {
+    "what_it_is": "A page makes your browser look up odd web names so it can see which DNS service you use.",
+    "icon": "server",
+    "tags": [
+      "Network",
+      "Silent",
+      "Privacy"
+    ],
+    "marketing": [],
+    "for_you": "You see nothing. The page quietly asks your browser to look up random names, and the site's own server sees which DNS service asked. That can show your internet provider or whether a VPN is leaking.",
+    "for_makers": "VPN, privacy and security testers use it to check leaks. Fraud teams can use it as one more clue to where you really are, even behind a VPN.",
+    "use_cases": [
+      {
+        "type": "security",
+        "example": "A VPN leak test website shows which DNS service your computer uses, and whether it matches the VPN.",
+        "apps": [
+          "ipleak.net",
+          "dnsleaktest.com"
+        ]
+      },
+      {
+        "type": "security",
+        "example": "A fraud system compares the DNS service with the claimed country and flags a mismatch.",
+        "apps": []
+      },
+      {
+        "type": "games",
+        "example": "A game anti cheat or region lock service checks whether a player behind a VPN is faking a region.",
+        "apps": []
+      },
+      {
+        "type": "media",
+        "example": "A streaming service checks for DNS tricks used to unlock other regions.",
+        "apps": [
+          "Netflix"
+        ]
+      },
+      {
+        "type": "analytics",
+        "example": "A privacy researcher measures which DNS services people use.",
+        "apps": []
+      },
+      {
+        "type": "ads",
+        "example": "A tracker can use the resolver as an extra clue to link visits.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Can expose a VPN leak",
+      "Hidden extra requests"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "ECS (EDNS client subnet) may leak a client prefix",
+    "Resolver may not map to a person"
+  ],
+  "scores": {
+    "sensitivity": 2,
+    "utility": 4,
+    "fingerprint_bits": 2,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": "Leak testing (dnsleaktest, browserleaks)",
+    "abuse": "VPN bypass detection, network profiling"
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2020-02",
+      "browser": "firefox",
+      "version": "",
+      "change": "DoH default in the US"
+    },
+    {
+      "date": "2020-05",
+      "browser": "chrome",
+      "version": "83",
+      "change": "Automatic DoH upgrade for supporting resolvers"
+    }
+  ],
+  "related": [
+    "web.net.vpn-proxy-tor-detection",
+    "web.net.ech-encrypted-sni-doh"
+  ],
+  "refs": [
+    {
+      "t": "tool",
+      "label": "BrowserLeaks DNS",
+      "url": "https://browserleaks.com/dns"
+    },
+    {
+      "t": "rfc",
+      "label": "RFC 8484 DoH",
+      "url": "https://www.rfc-editor.org/rfc/rfc8484"
+    }
+  ],
+  "confidence": "docs"
+}

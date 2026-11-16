@@ -1,0 +1,262 @@
+{
+  "id": "web.render.composite-fingerprint",
+  "name": "Composite fingerprint (FingerprintJS, CreepJS)",
+  "kind": "tracking",
+  "group": "rendering-fingerprint",
+  "subgroup": "Composite",
+  "tags": [
+    "fingerprint",
+    "visitorId",
+    "ml",
+    "persistence"
+  ],
+  "plain": "Combines dozens of signals into one visitor ID that survives cookie clearing.",
+  "meaning": "Open and commercial libraries hash 50 to 100 signals, then match drifting fingerprints to past visitors. Research found 90% of fingerprints are unique on desktop but breaking up over weeks, so linking needs ML.",
+  "lifecycle": [
+    "on-arrival",
+    "in-session",
+    "after-leaving"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "fingerprintjs.load().then(fp=>fp.get()); CreepJS",
+      "access": {
+        "grant": "none",
+        "prompt_ui": "",
+        "secure_context": false,
+        "user_gesture": false,
+        "persistence": "",
+        "revocation": "",
+        "iframe": "",
+        "steps": [
+          "Collect canvas, WebGL, audio, fonts, screen, timezone, hardware",
+          "Hash components to visitorId",
+          "Server matches new IDs to old ones with ML"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "1",
+          "note": "",
+          "date": "2008-12-11"
+        },
+        "edge": {
+          "s": "y",
+          "v": "79",
+          "note": "",
+          "date": "2020-01-15"
+        },
+        "firefox": {
+          "s": "y",
+          "v": "1",
+          "note": "",
+          "date": "2004-11-09"
+        },
+        "safari": {
+          "s": "y",
+          "v": "1",
+          "note": "",
+          "date": "2003-06-23"
+        },
+        "ios_safari": {
+          "s": "y",
+          "v": "1",
+          "note": "",
+          "date": "2007-06-29"
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "1",
+          "note": "",
+          "date": ""
+        },
+        "samsung": {
+          "s": "y",
+          "v": "5.0",
+          "note": "",
+          "date": "2016-12-15"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "hash",
+    "metric": "128-bit visitorId; open source version about 40 to 60 percent browser-ID accuracy per vendor claims, commercial claims 99.5%",
+    "update": "",
+    "fields": [
+      {
+        "name": "visitorId",
+        "type": "hash",
+        "unit": "bits",
+        "range": "128",
+        "precision": "stable weeks to months"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can combine many device traits into one visitor ID that survives cleared cookies",
+    "user_action": "Nothing. It happens when the page loads, and again on each visit",
+    "can": [
+      "Collect about 50 to 100 small traits about your device and browser",
+      "Merge them into one visitor ID",
+      "Match your new profile to an old one when a few traits change",
+      "Link your visits across days without any cookie"
+    ],
+    "cannot": [
+      "Be sure it is you, since many devices on desktop look alike or change after updates",
+      "See your name unless you log in",
+      "Match you well when Tor Browser or Brave hide or blur the traits",
+      "Ask your permission first"
+    ],
+    "reach": 4,
+    "reach_label": "Follows your device across visits",
+    "differs": "Fingerprints work better on desktop. Phones of the same model look more alike, so they are harder to tell apart."
+  },
+  "story": {
+    "what_it_is": "A script combines dozens of small browser and device traits into one ID that survives cookie clearing.",
+    "icon": "fingerprint",
+    "tags": [
+      "Tracking",
+      "Anti fraud",
+      "Silent"
+    ],
+    "marketing": [],
+    "for_you": "You see no sign of it. Your browser quietly answers dozens of small questions, and the combined answers are often unique enough to pick you out of millions of people.",
+    "for_makers": "Tools like FingerprintJS and CreepJS package this as a product. Sellers use it to stop fraud, fake accounts and refund abuse. It is also used to track people across sites when cookies are blocked.",
+    "use_cases": [
+      {
+        "type": "security",
+        "example": "An online bank uses a visitor ID to see that a login came from a device never seen with this customer.",
+        "apps": [
+          "FingerprintJS"
+        ]
+      },
+      {
+        "type": "shopping",
+        "example": "A retailer catches one person using many accounts to abuse a first order discount.",
+        "apps": []
+      },
+      {
+        "type": "games",
+        "example": "A free to play browser game stops a banned cheater from simply opening a new account.",
+        "apps": []
+      },
+      {
+        "type": "payments",
+        "example": "A checkout provider scores each order partly by how familiar the device is.",
+        "apps": [
+          "Stripe Radar",
+          "Sift",
+          "Kount"
+        ]
+      },
+      {
+        "type": "ads",
+        "example": "An ad network tries to link anonymous browsing across sites after the person clears cookies.",
+        "apps": []
+      },
+      {
+        "type": "dating",
+        "example": "A dating site blocks scam accounts that keep coming back from the same laptop.",
+        "apps": []
+      },
+      {
+        "type": "analytics",
+        "example": "A research page, Cover Your Tracks, shows how unique your browser is so you can see what leaks.",
+        "apps": [
+          "Cover Your Tracks (EFF)",
+          "CreepJS"
+        ]
+      }
+    ],
+    "risks": [
+      "Hard to clear or reset",
+      "Used without clear consent",
+      "Can wrongly flag shared computers"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Mobile devices are far less unique than desktop",
+    "Shared enterprise images collide",
+    "Browser anti-fingerprint modes create noisy or common values"
+  ],
+  "scores": {
+    "sensitivity": 4,
+    "utility": 2,
+    "fingerprint_bits": 8,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": "Fraud and account-takeover detection",
+    "abuse": "Cross-site tracking when third-party script is on many sites"
+  },
+  "case_study": {
+    "linkedin": {
+      "used": true,
+      "how": "LinkedIn's script collects fingerprint signals; see research/linkedin-case.md"
+    }
+  },
+  "history": [
+    {
+      "date": "2018-04",
+      "browser": "paper",
+      "version": "",
+      "change": "Hiding in the Crowd: 33.6% of 2M fingerprints unique, mobile less"
+    },
+    {
+      "date": "2018-05",
+      "browser": "paper",
+      "version": "",
+      "change": "FP-Stalker: fingerprints drift, linking gives average tracking duration up to 51.8 days"
+    },
+    {
+      "date": "2023-09",
+      "browser": "safari",
+      "version": "17",
+      "change": "Private Browsing noise makes composite IDs unstable"
+    },
+    {
+      "date": "2025-09",
+      "browser": "safari",
+      "version": "26",
+      "change": "Fingerprint protection default for known scripts"
+    }
+  ],
+  "related": [
+    "web.render.canvas-2d-fingerprint",
+    "web.render.webgl-render-hash",
+    "web.render.font-enumeration-metrics"
+  ],
+  "refs": [
+    {
+      "t": "paper",
+      "label": "Gomez-Boix et al., Hiding in the Crowd (WWW 2018)",
+      "url": "https://hal.inria.fr/hal-01718234"
+    },
+    {
+      "t": "paper",
+      "label": "Vastel et al., FP-Stalker (S&P 2018)",
+      "url": "https://hal.inria.fr/hal-01652021"
+    },
+    {
+      "t": "github",
+      "label": "FingerprintJS",
+      "url": "https://github.com/fingerprintjs/fingerprintjs"
+    },
+    {
+      "t": "github",
+      "label": "CreepJS",
+      "url": "https://github.com/abrahamjuliot/creepjs"
+    },
+    {
+      "t": "vendor",
+      "label": "EFF Cover Your Tracks",
+      "url": "https://coveryourtracks.eff.org/"
+    }
+  ],
+  "confidence": "docs"
+}

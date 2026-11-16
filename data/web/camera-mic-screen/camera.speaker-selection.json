@@ -1,0 +1,256 @@
+{
+  "id": "web.camera.speaker-selection",
+  "name": "Audio output device selection (selectAudioOutput)",
+  "kind": "permission",
+  "group": "camera-mic-screen",
+  "subgroup": "Capture",
+  "tags": [
+    "speaker",
+    "output-device"
+  ],
+  "plain": "Lets a site pick which speaker or headphones play audio.",
+  "meaning": "Lets a site list and choose speakers. The chooser shows device names only after a pick, because output names can reveal paired Bluetooth gear and hardware.",
+  "lifecycle": [
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "navigator.mediaDevices.selectAudioOutput(); HTMLMediaElement.setSinkId(); enumerateDevices() audiooutput",
+      "permission_name": "speaker-selection",
+      "permissions_policy": "speaker-selection",
+      "bcd": [
+        "api.MediaDevices.selectAudioOutput",
+        "api.HTMLMediaElement.setSinkId"
+      ],
+      "access": {
+        "grant": "picker",
+        "prompt_ui": "Browser chooser lists output devices; the site receives the chosen deviceId only.",
+        "secure_context": true,
+        "user_gesture": true,
+        "persistence": "Per origin and device after a pick",
+        "revocation": "Site settings; revoke by clearing site data",
+        "iframe": "Needs allow=\"speaker-selection\" in iframes",
+        "steps": [
+          "User clicks a button",
+          "Call selectAudioOutput()",
+          "Browser shows speaker list",
+          "Site gets a MediaDeviceInfo and calls setSinkId()"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "110",
+          "note": "setSinkId from 49, selectAudioOutput 110",
+          "date": "2023-02-07"
+        },
+        "edge": {
+          "s": "y",
+          "v": "110",
+          "note": "BCD lists no support; agent research says otherwise",
+          "date": "2023-02-09"
+        },
+        "firefox": {
+          "s": "y",
+          "v": "116",
+          "note": "selectAudioOutput 116 behind gesture",
+          "date": "2023-08-01"
+        },
+        "safari": {
+          "s": "p",
+          "v": "18.5",
+          "note": "setSinkId 18.5",
+          "date": "2025-05-12"
+        },
+        "ios_safari": {
+          "s": "p",
+          "v": "18.5",
+          "note": "iOS 18.5",
+          "date": "2025-05-12"
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "110",
+          "note": "BCD lists no support; agent research says otherwise",
+          "date": "2023-02-07"
+        },
+        "samsung": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "object",
+    "metric": "MediaDeviceInfo of the chosen output",
+    "update": "one-shot",
+    "fields": [
+      {
+        "name": "deviceId",
+        "type": "string",
+        "unit": "opaque id",
+        "range": "per-origin",
+        "precision": "32 hex"
+      },
+      {
+        "name": "label",
+        "type": "string",
+        "unit": "text",
+        "range": "only after pick",
+        "precision": "device name"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can send sound to the speaker or headphones you pick",
+    "user_action": "You click Choose speaker in a call or music page and pick a device from the list",
+    "can": [
+      "Play audio through the output device you choose",
+      "Remember which output device you picked",
+      "Switch between speakers and headphones during a call"
+    ],
+    "cannot": [
+      "Pick a device for you without the browser chooser",
+      "See devices you did not choose in the list",
+      "Hear sound or record anything, since this only controls where audio plays",
+      "Work in Samsung Internet; Safari and iPhone browsers support only part of it"
+    ],
+    "reach": 1,
+    "reach_label": "One chosen speaker",
+    "differs": "Chrome, Edge and Firefox support it fully. Safari and iPhone browsers support only part of it."
+  },
+  "story": {
+    "what_it_is": "Lets a site choose which speaker or headphones plays its sound, after you pick one.",
+    "icon": "speaker",
+    "tags": [
+      "Audio",
+      "Picker",
+      "Devices"
+    ],
+    "marketing": [
+      {
+        "vendor": "Mozilla",
+        "name": "selectAudioOutput",
+        "pitch": "Developer docs say a page can ask the person to choose an audio output device, and then play sound there.",
+        "url": "https://developer.mozilla.org/en-US/docs/Web/API/MediaDevices/selectAudioOutput"
+      }
+    ],
+    "for_you": "A small picker lists your speakers and headphones, and you choose one. After that, the site plays sound to that device, for example your headset and not the laptop speakers.",
+    "for_makers": "In calls and games, sending voices to a headset and game sound to a speaker makes a nicer product, with no need to dig through system settings. The picker hides the device names until you choose, since names like a car stereo or earbuds can reveal your life.",
+    "use_cases": [
+      {
+        "type": "video",
+        "example": "In a call, you pick your headset for the voice of others, and your laptop speaker for the ringing sound.",
+        "apps": [
+          "Google Meet",
+          "Microsoft Teams"
+        ]
+      },
+      {
+        "type": "games",
+        "example": "A browser game sends the voice chat to your headset and the game music to your room speakers.",
+        "apps": [
+          "Discord web",
+          "Xbox Cloud Gaming"
+        ]
+      },
+      {
+        "type": "music",
+        "example": "A web music tool lets a DJ send the cue track to headphones while the crowd hears the main mix.",
+        "apps": []
+      },
+      {
+        "type": "enterprise",
+        "example": "A contact center web phone sends the customer voice to a headset, and keeps the ring on the desk speaker.",
+        "apps": [
+          "Twilio Flex",
+          "Five9"
+        ]
+      },
+      {
+        "type": "education",
+        "example": "A language class page sends a teacher voice to headphones, so a student in a shared room is not heard by others.",
+        "apps": [
+          "Zoom web"
+        ]
+      },
+      {
+        "type": "accessibility",
+        "example": "A person using a hearing loop or special headset chooses it as the output for a call.",
+        "apps": [
+          "Google Meet"
+        ]
+      }
+    ],
+    "risks": [
+      "Device names reveal Bluetooth gear",
+      "Sound can go to a device you forgot about"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Output labels hidden until a pick",
+    "Needs a user gesture",
+    "No system volume control"
+  ],
+  "scores": {
+    "sensitivity": 2,
+    "utility": 3,
+    "fingerprint_bits": null,
+    "friction": 2
+  },
+  "value": {
+    "legit_uses": [
+      "Call apps with headset choice"
+    ],
+    "abuse": [
+      "Learning a person's connected audio hardware"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2016-03",
+      "browser": "chrome",
+      "version": "49",
+      "change": "setSinkId ships"
+    },
+    {
+      "date": "2023-02",
+      "browser": "chrome",
+      "version": "110",
+      "change": "selectAudioOutput ships"
+    },
+    {
+      "date": "2025-09",
+      "browser": "ios_safari",
+      "version": "26",
+      "change": "Speaker selection support on iOS and iPadOS (version unconfirmed)"
+    }
+  ],
+  "related": [
+    "web.camera.enumerate-devices"
+  ],
+  "refs": [
+    {
+      "t": "mdn",
+      "label": "MDN selectAudioOutput",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/MediaDevices/selectAudioOutput"
+    },
+    {
+      "t": "spec",
+      "label": "W3C Audio Output Devices",
+      "url": "https://www.w3.org/TR/audio-output/"
+    }
+  ],
+  "confidence": "docs"
+}

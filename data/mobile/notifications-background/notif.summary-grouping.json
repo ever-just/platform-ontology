@@ -1,0 +1,215 @@
+{
+  "id": "mob.notif.summary-grouping",
+  "name": "Notification summary, grouping and cooldown",
+  "kind": "signal",
+  "group": "notifications-background",
+  "subgroup": "Permission and presentation",
+  "tags": [
+    "notifications",
+    "summary",
+    "relevance",
+    "grouping"
+  ],
+  "plain": "The OS decides when and how alerts are bundled: iOS summary, Android groups and cooldown.",
+  "meaning": "Controls how often a person is nudged. Apps can only hint (relevance score, group keys); the system may hold alerts for a daily digest or mute rapid ones.",
+  "lifecycle": [
+    "background"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "p",
+      "v": "7.0",
+      "api": 24,
+      "permission": "",
+      "protection": "none",
+      "grant": "none",
+      "prompt_ui": "Settings > Notifications; adaptive notifications, cooldown",
+      "persistence": "Per app until changed",
+      "revocation": "Settings > Notifications",
+      "store_policy": "",
+      "api_surface": "Notification.Builder.setGroup(), setGroupSummary(); no numeric relevance score",
+      "note": "Android 15 and 16 added notification cooldown and auto grouping; thresholds not published"
+    },
+    "ios": {
+      "s": "y",
+      "v": "15.0",
+      "permission": "",
+      "protection": "none",
+      "grant": "settings",
+      "prompt_ui": "Notification Summary setting: choose apps and times",
+      "persistence": "Per app in Settings",
+      "revocation": "Settings > Notifications > Scheduled Summary",
+      "store_policy": "",
+      "api_surface": "aps relevance-score 0 to 1, thread-id, interruption-level",
+      "note": "Passive notifications queue for the summary; relevance-score 0 to 1 orders them"
+    }
+  },
+  "web_equivalents": [
+    "web.notify.notifications"
+  ],
+  "data": {
+    "type": "float",
+    "metric": "relevance-score",
+    "update": "Per push",
+    "fields": [
+      {
+        "name": "relevance-score",
+        "type": "float",
+        "unit": "score",
+        "range": "0 to 1",
+        "precision": "0.01"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can't decide alone when your alerts arrive; the system groups them and holds some back",
+    "user_action": "You pick apps and times in Notification Summary on iPhone, or use adaptive notifications on Android",
+    "can": [
+      "Mark an alert as low priority so it joins your summary",
+      "Rank alerts from 0 to 1 so important ones come first",
+      "Let Android group many alerts into one bundle"
+    ],
+    "cannot": [
+      "Bypass your Notification Summary on iPhone",
+      "Stop Android from cooling down noisy alerts, which started in Android 15 and 16",
+      "Know the exact thresholds, since they are not published",
+      "Choose your summary times for you"
+    ],
+    "reach": 1,
+    "reach_label": "The system decides what you see",
+    "differs": "iPhone has Notification Summary with times you choose. Android uses cooldown and automatic grouping."
+  },
+  "story": {
+    "what_it_is": "The phone decides how alerts are bundled, held for a digest or toned down if they come too fast.",
+    "icon": "inbox",
+    "tags": [
+      "Notifications",
+      "Control",
+      "Silent"
+    ],
+    "marketing": [
+      {
+        "vendor": "Apple",
+        "name": "Scheduled Summary",
+        "pitch": "Apple pitches Notification Summary as a way to get less urgent alerts in one tidy bundle at times you choose.",
+        "url": "https://developer.apple.com/documentation/usernotifications/generating-a-remote-notification"
+      },
+      {
+        "vendor": "Google",
+        "name": "Notification grouping",
+        "pitch": "Google describes how Android groups related alerts into one stack.",
+        "url": "https://developer.android.com/develop/ui/views/notifications/group"
+      }
+    ],
+    "for_you": "You see fewer, tidier alerts. Less urgent ones may wait for a morning or evening digest. If one app sends many alerts in a row, the phone may quiet it.",
+    "for_makers": "Makers can only hint at importance. They cannot force a spot, so they tune relevance scores and group names, and some try to game them to stay on top.",
+    "use_cases": [
+      {
+        "type": "messaging",
+        "example": "A group chat with 50 messages becomes one grouped alert instead of 50.",
+        "apps": [
+          "WhatsApp",
+          "Slack"
+        ]
+      },
+      {
+        "type": "news",
+        "example": "A news app has its non urgent stories placed in your evening summary.",
+        "apps": [
+          "NYT"
+        ]
+      },
+      {
+        "type": "social",
+        "example": "A social app is toned down after sending many likes alerts in a minute.",
+        "apps": [
+          "Instagram"
+        ]
+      },
+      {
+        "type": "shopping",
+        "example": "A store tries to mark every sale as top importance, but the phone ranks it lower.",
+        "apps": []
+      },
+      {
+        "type": "games",
+        "example": "A game with many reminders finds they are bundled into a daily digest.",
+        "apps": []
+      },
+      {
+        "type": "ads",
+        "example": "A growth team tests different relevance scores to see which alerts people notice.",
+        "apps": []
+      },
+      {
+        "type": "productivity",
+        "example": "A calendar app keeps its next meeting alert on top of lower importance alerts.",
+        "apps": [
+          "Google Calendar"
+        ]
+      }
+    ],
+    "risks": [
+      "Important alerts can get buried",
+      "Apps may try to game the ranking"
+    ],
+    "android_note": "Android 15 and 16 add cooldown and auto grouping. Thresholds are not published.",
+    "ios_note": "iOS lets you choose apps and times for a daily summary."
+  },
+  "technical_bounds": [
+    "System can override app hints",
+    "Time Sensitive bypasses the summary"
+  ],
+  "scores": {
+    "sensitivity": 1,
+    "utility": 3,
+    "fingerprint_bits": null,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Digests"
+    ],
+    "abuse": [
+      "Gaming relevance score"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2021-09",
+      "platform": "ios",
+      "version": "iOS 15",
+      "change": "Scheduled notification summary and relevance score"
+    },
+    {
+      "date": "2024-10",
+      "platform": "android",
+      "version": "15",
+      "change": "Notification cooldown reduces rapid alert bursts"
+    }
+  ],
+  "related": [
+    "mob.notif.time-sensitive",
+    "mob.system.focus-status"
+  ],
+  "refs": [
+    {
+      "t": "apple",
+      "label": "Apple: Generating a remote notification",
+      "url": "https://developer.apple.com/documentation/usernotifications/generating-a-remote-notification"
+    },
+    {
+      "t": "android",
+      "label": "Android: Group notifications",
+      "url": "https://developer.android.com/develop/ui/views/notifications/group"
+    }
+  ],
+  "confidence": "docs"
+}

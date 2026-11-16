@@ -1,0 +1,229 @@
+{
+  "id": "mob.policy.background-location",
+  "name": "Play background location policy",
+  "kind": "capability",
+  "group": "app-ecosystem",
+  "subgroup": "Play permission declarations",
+  "tags": [
+    "background-location",
+    "location-declaration",
+    "access-background-location"
+  ],
+  "plain": "Apps that read location while closed must justify it to Google with a video and form.",
+  "meaning": "Background location is the most sensitive mobile signal. Play requires a feature that needs it, a prominent disclosure, and approval. iOS shows 'Always Allow' reminders instead.",
+  "lifecycle": [
+    "background"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "p",
+      "v": "10",
+      "api": 29,
+      "permission": "ACCESS_BACKGROUND_LOCATION",
+      "protection": "dangerous",
+      "grant": "none",
+      "prompt_ui": "Separate prompt since 11; Settings route only",
+      "persistence": "",
+      "revocation": "",
+      "store_policy": "Play: declaration form with video; core functionality; deadline in 2021",
+      "api_surface": "Play Console > Sensitive permissions > Location",
+      "note": ""
+    },
+    "ios": {
+      "s": "p",
+      "v": "13.0",
+      "permission": "NSLocationAlwaysAndWhenInUseUsageDescription",
+      "protection": "prompt",
+      "grant": "prompt",
+      "prompt_ui": "While Using, then Always upgrade; periodic reminders",
+      "persistence": "",
+      "revocation": "",
+      "store_policy": "App Review 5.1.1; purpose string required",
+      "api_surface": "CLLocationManager.requestAlwaysAuthorization",
+      "note": "iOS 13 added Allow Once and delayed Always prompts."
+    }
+  },
+  "web_equivalents": [
+    "web.location.geolocation"
+  ],
+  "data": {
+    "type": "object",
+    "metric": "Location fix",
+    "update": "background intervals",
+    "fields": [
+      {
+        "name": "latitude",
+        "type": "float",
+        "unit": "deg",
+        "range": "",
+        "precision": ""
+      },
+      {
+        "name": "longitude",
+        "type": "float",
+        "unit": "deg",
+        "range": "",
+        "precision": ""
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can follow your location while closed, only if Google approves and you pick Always",
+    "user_action": "You tap Always allow, or change it in Settings after a first While using choice",
+    "can": [
+      "Follow your location in the background for features like trip tracking, after approval",
+      "Ask for the Always choice after you first allow While using (iPhone)",
+      "Remind you now and then that it is using your place (iPhone)"
+    ],
+    "cannot": [
+      "Be approved on Google Play without a video, form and a feature that needs it",
+      "Ask for always access in the first Android prompt; Android 11 and later sends you to Settings",
+      "Keep Always access hidden from you"
+    ],
+    "reach": 4,
+    "reach_label": "Background location, anytime",
+    "differs": "Android needs a Settings route and a Play approval. iPhone adds Allow Once and delayed Always prompts."
+  },
+  "story": {
+    "what_it_is": "Google's rule that apps must prove a good reason before tracking you while closed.",
+    "icon": "map-pin",
+    "tags": [
+      "Location",
+      "Play rules",
+      "Sensitive"
+    ],
+    "marketing": [
+      {
+        "vendor": "Google",
+        "name": "Background location access",
+        "pitch": "Apps must show a feature that needs it, and tell you clearly, before reading location in the background.",
+        "url": "https://support.google.com/googleplay/android-developer/answer/9799150"
+      },
+      {
+        "vendor": "Apple",
+        "name": "Always Allow reminders",
+        "pitch": "iOS shows periodic reminders when an app uses your location in the background.",
+        "url": "https://developer.apple.com/documentation/corelocation/requesting-authorization-to-use-location-services"
+      }
+    ],
+    "for_you": "You see a prominent explanation, then a separate step to choose 'Allow all the time'. Later the phone may remind you which apps use your location in the background.",
+    "for_makers": "Background location is the most sensitive signal on a phone, so Play asks for a video and form before approval. Real needs like geofenced reminders and family sharing pass; ad data collectors do not.",
+    "use_cases": [
+      {
+        "type": "maps",
+        "example": "A navigation app keeps guiding you when you lock the screen, so it needs location in the background.",
+        "apps": [
+          "Google Maps",
+          "Waze"
+        ]
+      },
+      {
+        "type": "fitness",
+        "example": "A running tracker records your route while the screen is off and the phone is in your pocket.",
+        "apps": [
+          "Strava",
+          "Nike Run Club"
+        ]
+      },
+      {
+        "type": "social",
+        "example": "A family app shows where your kids are on a map and alerts you when they reach school.",
+        "apps": [
+          "Life360"
+        ]
+      },
+      {
+        "type": "games",
+        "example": "A walking game counts steps and finds creatures as you move around town with the app closed.",
+        "apps": [
+          "Pokemon GO",
+          "Pikmin Bloom"
+        ]
+      },
+      {
+        "type": "delivery",
+        "example": "A courier app updates your order's live position even if the driver switches to a call.",
+        "apps": [
+          "DoorDash",
+          "Instacart"
+        ]
+      },
+      {
+        "type": "security",
+        "example": "A lost phone finder keeps reporting position so you can get it back.",
+        "apps": [
+          "Find My Device"
+        ]
+      },
+      {
+        "type": "ads",
+        "example": "An ad data SDK was caught selling background location to data brokers, which is why the rule exists.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Reveals home and work",
+      "Sold by data brokers"
+    ],
+    "android_note": "Android 10 and 11 added a separate 'all the time' step, and Play requires approval.",
+    "ios_note": "iOS offers 'Allow While Using' first and shows later reminders about background use."
+  },
+  "technical_bounds": [
+    "Needs strong justification on Android",
+    "Reminders on iOS"
+  ],
+  "scores": {
+    "sensitivity": 5,
+    "utility": 4,
+    "fingerprint_bits": null,
+    "friction": 4
+  },
+  "value": {
+    "legit_uses": [
+      "Navigation, fitness, safety"
+    ],
+    "abuse": [
+      "Data brokers, visit tracking"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2019-09",
+      "platform": "android",
+      "version": "Android 10",
+      "change": "Background location permission"
+    },
+    {
+      "date": "2019-09",
+      "platform": "ios",
+      "version": "iOS 13",
+      "change": "Allow Once and Always reminders"
+    },
+    {
+      "date": "2021-04",
+      "platform": "android",
+      "version": "Play policy",
+      "change": "Declaration review begins"
+    }
+  ],
+  "refs": [
+    {
+      "t": "android",
+      "label": "Play: Location permissions policy",
+      "url": "https://support.google.com/googleplay/android-developer/answer/9799150"
+    },
+    {
+      "t": "apple",
+      "label": "Apple: Requesting always authorization",
+      "url": "https://developer.apple.com/documentation/corelocation/requesting-authorization-to-use-location-services"
+    }
+  ],
+  "confidence": "docs"
+}

@@ -1,0 +1,226 @@
+{
+  "id": "web.notexposed.real-ip-vpn",
+  "name": "Real IP behind a VPN",
+  "kind": "not-exposed",
+  "group": "device-system-profile",
+  "subgroup": "Network",
+  "tags": [
+    "not-exposed",
+    "vpn",
+    "ip",
+    "webrtc"
+  ],
+  "plain": "A page cannot learn your real IP if a VPN works properly.",
+  "meaning": "Servers see the VPN exit IP. Leaks come from WebRTC (local IPs now hidden by mDNS), DNS leaks outside the browser, IPv6 bypass and timezone or language mismatch. Browsers expose no 'real IP' API.",
+  "lifecycle": [
+    "on-arrival",
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "none",
+      "access": {
+        "grant": "not-exposed",
+        "prompt_ui": "None",
+        "secure_context": false,
+        "user_gesture": false,
+        "persistence": "read fresh on every page load; nothing stored",
+        "revocation": "not applicable",
+        "iframe": "Readable from cross-origin iframes too (same values)",
+        "steps": [
+          "Page script reads the value",
+          "No prompt is shown"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "edge": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "firefox": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "safari": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "ios_safari": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "chrome_android": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "samsung": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "none",
+    "metric": "",
+    "update": "static per session",
+    "fields": [
+      {
+        "name": "proxy: WebRTC STUN reflexive candidate",
+        "type": "string",
+        "unit": "",
+        "range": "can show a public IP different from HTTP when VPN is partial (split tunnel)",
+        "precision": ""
+      },
+      {
+        "name": "proxy: timezone vs IP geo",
+        "type": "string",
+        "unit": "",
+        "range": "mismatch is a VPN tell",
+        "precision": ""
+      },
+      {
+        "name": "proxy: Accept-Language",
+        "type": "string",
+        "unit": "",
+        "range": "reveals home language",
+        "precision": ""
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can't see your real IP address when your VPN works properly",
+    "user_action": "Nothing. It happens when your device connects to the site",
+    "can": [
+      "See the VPN exit IP address",
+      "Spot leaks from IPv6, DNS, or a broken VPN setup",
+      "Notice if your time zone or language does not match the IP",
+      "Learn the area of the VPN server"
+    ],
+    "cannot": [
+      "See your home IP while the VPN holds",
+      "See your local network IP; WebRTC now hides it",
+      "Ask the browser for your real IP; there is no way",
+      "Be sure about your location from the VPN IP"
+    ],
+    "reach": 1,
+    "reach_label": "VPN address only",
+    "differs": ""
+  },
+  "story": {
+    "what_it_is": "A page cannot learn your real internet address if your VPN works properly.",
+    "icon": "globe",
+    "tags": [
+      "Blocked",
+      "VPN",
+      "Privacy"
+    ],
+    "marketing": [
+      {
+        "vendor": "Apple",
+        "name": "iCloud Private Relay",
+        "pitch": "Apple describes a way to hide your IP address and browsing from sites and from network providers.",
+        "url": "https://support.apple.com/102602"
+      }
+    ],
+    "for_you": "Sites see the VPN's address instead of yours. If the VPN is set up well, nothing about your home connection leaks. Leaks happen outside the browser, such as DNS or IPv6.",
+    "for_makers": "The real address ties a visit to a place and a person. When a VPN hides it, sites fall back on language, clock time zone and fingerprints. Fraud teams use mismatches to guess a VPN is in use.",
+    "use_cases": [
+      {
+        "type": "video",
+        "example": "A streaming site wanted your real country for rights and blocks known VPN addresses.",
+        "apps": [
+          "Netflix",
+          "BBC iPlayer"
+        ]
+      },
+      {
+        "type": "games",
+        "example": "A game site wanted your region for matchmaking and uses server latency tests.",
+        "apps": []
+      },
+      {
+        "type": "banking",
+        "example": "A bank wanted your home address for fraud checks and treats VPN use as extra risk.",
+        "apps": []
+      },
+      {
+        "type": "shopping",
+        "example": "A shop wanted your real location for price tailoring and sees the VPN place.",
+        "apps": []
+      },
+      {
+        "type": "security",
+        "example": "A fraud team spots a timezone that does not match the VPN's country.",
+        "apps": []
+      },
+      {
+        "type": "ads",
+        "example": "An ad network wanted your true area for local ads and uses the exit region.",
+        "apps": []
+      },
+      {
+        "type": "news",
+        "example": "A news paywall wanted to enforce regional rules and uses the VPN location.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Leaks outside the browser can expose you",
+      "Time zone mismatch can flag VPN use"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "VPN user safety"
+  ],
+  "scores": {
+    "sensitivity": 5,
+    "utility": 2,
+    "fingerprint_bits": 0.0,
+    "friction": 3
+  },
+  "value": {
+    "legit_uses": [
+      "None: the browser deliberately withholds it"
+    ],
+    "abuse": [
+      "Leak-based deanonymization"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "related": [
+    "web.locale.timezone"
+  ],
+  "refs": [
+    {
+      "t": "vendor",
+      "label": "BrowserLeaks WebRTC leak test",
+      "url": "https://browserleaks.com/webrtc"
+    },
+    {
+      "t": "github",
+      "label": "CreepJS (abrahamjuliot)",
+      "url": "https://github.com/abrahamjuliot/creepjs"
+    }
+  ],
+  "confidence": "docs"
+}

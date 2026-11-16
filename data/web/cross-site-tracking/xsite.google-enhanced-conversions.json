@@ -1,0 +1,228 @@
+{
+  "id": "web.xsite.google-enhanced-conversions",
+  "name": "Google enhanced conversions",
+  "kind": "tracking",
+  "group": "cross-site-tracking",
+  "subgroup": "Ad pixels",
+  "tags": [
+    "enhanced-conversions",
+    "google-ads",
+    "hashed-email",
+    "first-party-data"
+  ],
+  "plain": "Google matches a hashed email or phone from a checkout to a Google account to count the sale.",
+  "meaning": "Advertiser sends SHA-256 normalised email, phone, name and address after a conversion. Google matches them to signed in accounts that clicked an ad. It does not need third party cookies and it works after the person leaves.",
+  "lifecycle": [
+    "after-leaving",
+    "signed-in"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "gtag('set','user_data',...); enhanced conversions for web or leads",
+      "access": {
+        "grant": "none",
+        "prompt_ui": "None",
+        "secure_context": false,
+        "user_gesture": false,
+        "persistence": "Conversion window up to 90 days for clicks",
+        "revocation": "Clear site data, browser privacy settings",
+        "iframe": "",
+        "steps": []
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "1",
+          "note": "Script or server, browser independent",
+          "date": "2008-12-11"
+        },
+        "edge": {
+          "s": "y",
+          "v": "1",
+          "note": "Script or server, browser independent",
+          "date": ""
+        },
+        "firefox": {
+          "s": "y",
+          "v": "1",
+          "note": "Script or server, browser independent",
+          "date": "2004-11-09"
+        },
+        "safari": {
+          "s": "y",
+          "v": "1",
+          "note": "Script or server, browser independent",
+          "date": "2003-06-23"
+        },
+        "ios_safari": {
+          "s": "y",
+          "v": "1",
+          "note": "Script or server, browser independent",
+          "date": "2007-06-29"
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "1",
+          "note": "Script or server, browser independent",
+          "date": ""
+        },
+        "samsung": {
+          "s": "y",
+          "v": "1",
+          "note": "Script or server, browser independent",
+          "date": "2013-04-27"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "hash",
+    "metric": "SHA-256 of email, phone",
+    "update": "per conversion",
+    "fields": [
+      {
+        "name": "hash",
+        "type": "string",
+        "unit": "hex",
+        "range": "64 chars",
+        "precision": "exact"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can match a scrambled email or phone from your checkout to a Google account",
+    "user_action": "You enter your email or phone at checkout or on a form",
+    "can": [
+      "Scramble your email or phone in the browser",
+      "Send it to Google to match with a Google account",
+      "Count the sale or sign up to the ad that led to it"
+    ],
+    "cannot": [
+      "Match you if you were not signed in to Google anywhere, or use a different email",
+      "Send the plain email or phone",
+      "Run if the site does not use the feature",
+      "Work if the script is blocked"
+    ],
+    "reach": 3,
+    "reach_label": "One checkout, matched to Google",
+    "differs": ""
+  },
+  "story": {
+    "what_it_is": "Google matches a scrambled email or phone from your checkout to your Google account to count the sale.",
+    "icon": "target",
+    "tags": [
+      "Ads",
+      "Email",
+      "Google"
+    ],
+    "marketing": [
+      {
+        "vendor": "Google Ads",
+        "name": "Enhanced conversions",
+        "pitch": "Google pitches it as a way to improve measurement by using hashed first party data, with privacy safe matching.",
+        "url": "https://support.google.com/google-ads/answer/9888656"
+      }
+    ],
+    "for_you": "You buy something and the shop sends a scrambled email or phone to Google. Google checks whether you clicked an ad while signed in. You do not see it, and it works after you leave the site.",
+    "for_makers": "It fixes lost sales when cookies are blocked. Matching to signed in accounts gives Google better data to bid with. Advertisers see more sales credited to ads, which supports more spend.",
+    "use_cases": [
+      {
+        "type": "ads",
+        "example": "You click a Google ad on your phone, buy on your laptop, and the shop's scrambled email lets Google link both.",
+        "apps": [
+          "Google Ads"
+        ]
+      },
+      {
+        "type": "shopping",
+        "example": "A retailer sends hashed email, name and address at checkout to count sales that cookies miss.",
+        "apps": [
+          "Shopify",
+          "Best Buy"
+        ]
+      },
+      {
+        "type": "games",
+        "example": "A game store sends a hashed email at purchase so Google Ads can find more players like the buyers.",
+        "apps": [
+          "Steam",
+          "Epic Games"
+        ]
+      },
+      {
+        "type": "analytics",
+        "example": "A marketer sees conversion counts rise, and bid rules improve.",
+        "apps": [
+          "Google Ads",
+          "Google Analytics"
+        ]
+      },
+      {
+        "type": "enterprise",
+        "example": "A B2B form sends a hashed work email, so Google can credit the ad that led to a demo request.",
+        "apps": [
+          "HubSpot",
+          "Salesforce"
+        ]
+      },
+      {
+        "type": "security",
+        "example": "Teams check that no plain email is sent, since Google needs it to be hashed first.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Links your sale to your Google account",
+      "Works even after you leave"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Needs advertiser to collect email or phone",
+    "Hashing is SHA-256 after trim and lowercase",
+    "Consent Mode and law still apply"
+  ],
+  "scores": {
+    "sensitivity": 4,
+    "utility": 5,
+    "fingerprint_bits": null,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Accurate ad measurement"
+    ],
+    "abuse": [
+      "Linking checkout identity to Google accounts"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2021-12",
+      "browser": "all",
+      "version": "",
+      "change": "Enhanced conversions for web launched"
+    }
+  ],
+  "related": [
+    "web.xsite.google-tag",
+    "web.xsite.conversions-api",
+    "web.xsite.email-hash-identity"
+  ],
+  "refs": [
+    {
+      "t": "vendor",
+      "label": "About enhanced conversions",
+      "url": "https://support.google.com/google-ads/answer/9888656"
+    }
+  ],
+  "confidence": "docs"
+}

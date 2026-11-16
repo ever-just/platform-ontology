@@ -1,0 +1,216 @@
+{
+  "id": "mob.ads.mmp-adjust",
+  "name": "Adjust SDK",
+  "kind": "tracking",
+  "group": "attribution-ads",
+  "subgroup": "Mobile measurement partners",
+  "tags": [
+    "adjust",
+    "axe",
+    "mmp",
+    "sdk"
+  ],
+  "plain": "A third-party SDK for install attribution, SKAN management, deep links and fraud filtering.",
+  "meaning": "Collects device IDs, IP, UA, events; supports probabilistic matching on Android and for consenting iOS users. Part of AppLovin.",
+  "lifecycle": [
+    "before-install",
+    "on-launch",
+    "in-session",
+    "after-uninstall"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "y",
+      "v": "",
+      "permission": "INTERNET, ACCESS_NETWORK_STATE; AD_ID for GAID; Install Referrer library",
+      "protection": "normal",
+      "grant": "install",
+      "prompt_ui": "",
+      "persistence": "",
+      "revocation": "",
+      "store_policy": "Data safety must list SDK data; Families: certified ad SDK rules",
+      "api_surface": "MMP SDK + Play Install Referrer + GAID",
+      "note": "Install Referrer and GAID attribution; Adjust also reads Meta Install Referrer."
+    },
+    "ios": {
+      "s": "y",
+      "v": "",
+      "permission": "NSUserTrackingUsageDescription if IDFA used; privacy manifest from SDK",
+      "protection": "prompt",
+      "grant": "prompt",
+      "prompt_ui": "",
+      "persistence": "",
+      "revocation": "",
+      "store_policy": "Privacy manifest and signature required for listed SDKs; ATT 5.1.2(i)",
+      "api_surface": "MMP SDK + SKAdNetwork/AdAttributionKit + ATT",
+      "note": "Wraps SKAN conversion values; ATT status reported through its own consent wrapper."
+    }
+  },
+  "web_equivalents": [
+    "web.xsite.ad-click-ids"
+  ],
+  "data": {
+    "type": "object",
+    "metric": "Install, session and event records tied to an MMP ID",
+    "update": "continuous via SDK",
+    "fields": [
+      {
+        "name": "device ID",
+        "type": "string",
+        "unit": "",
+        "range": "GAID, IDFA or IDFV, MMP-specific ID",
+        "precision": ""
+      },
+      {
+        "name": "attribution source",
+        "type": "string",
+        "unit": "",
+        "range": "",
+        "precision": ""
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can link your install to its ad and watch what you do in the app",
+    "user_action": "Nothing. It starts when the app opens, after you tapped an ad and installed",
+    "can": [
+      "Match an install to an ad through the Play install referrer or ad ID",
+      "Collect device IDs, IP address and app events",
+      "Guess a match from clues, on Android and for iPhone users who agree",
+      "Pass events on to ad networks"
+    ],
+    "cannot": [
+      "Use the iPhone ad ID after you tap Ask App Not to Track",
+      "Guess matches from clues on iPhone without your agreement",
+      "Skip the tracking prompt on iPhone"
+    ],
+    "reach": 4,
+    "reach_label": "Ongoing, across ad networks",
+    "differs": "Android uses the install referrer and ad ID. iPhone uses Apple's delayed reports and the ID only if you allow tracking."
+  },
+  "story": {
+    "what_it_is": "A third party code library that credits an install to the right ad and fights fake installs.",
+    "icon": "target",
+    "tags": [
+      "Ads",
+      "Attribution",
+      "Tracking"
+    ],
+    "marketing": [],
+    "for_you": "You never see it. When you install an app after an ad, Adjust helps the app company learn which ad did it, and sends you to the right screen.",
+    "for_makers": "Adjust collects device IDs, IP, user agent and events, and runs attribution, SKAN management, deep links and fraud filters. It supports probabilistic matching on Android and for consenting iOS users. It is part of AppLovin.",
+    "use_cases": [
+      {
+        "type": "games",
+        "example": "A studio sees which of its 30 ad networks brings the cheapest paying players.",
+        "apps": [
+          "Rovio",
+          "Playrix"
+        ]
+      },
+      {
+        "type": "ads",
+        "example": "An ad network sends an install click to Adjust and Adjust confirms the match and pays out.",
+        "apps": [
+          "AppLovin"
+        ]
+      },
+      {
+        "type": "shopping",
+        "example": "A fashion app uses a deep link to open the right jacket after install.",
+        "apps": [
+          "Zalando"
+        ]
+      },
+      {
+        "type": "security",
+        "example": "Adjust flags installs from emulators and click farms so the advertiser does not pay.",
+        "apps": []
+      },
+      {
+        "type": "fitness",
+        "example": "A wellness app compares install quality from podcast ads and from social ads.",
+        "apps": [
+          "Calm"
+        ]
+      },
+      {
+        "type": "analytics",
+        "example": "A growth lead merges ad spend and SKAN data in one dashboard.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Collects IDs and IP across many apps",
+      "Probabilistic matching"
+    ],
+    "android_note": "On Android it reads the Google advertising ID and the Play install referrer.",
+    "ios_note": "On iOS it manages SKAN conversion values and uses the IDFA only if allowed."
+  },
+  "technical_bounds": [
+    "Data flows to the vendor's cloud",
+    "Needs ATT for IDFA matching on iOS",
+    "Privacy manifest and required reasons apply"
+  ],
+  "scores": {
+    "sensitivity": 4,
+    "utility": 5,
+    "fingerprint_bits": 12,
+    "friction": 1
+  },
+  "value": {
+    "legit_uses": [
+      "Attribution, fraud detection, deep links, ROAS"
+    ],
+    "abuse": [
+      "Cross-customer device graph",
+      "Fingerprint-style matching on non-consenting iOS"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2021-04",
+      "platform": "ios",
+      "version": "iOS 14.5",
+      "change": "MMPs shift to SKAN and consent-gated IDFA for iOS"
+    },
+    {
+      "date": "2024-05",
+      "platform": "ios",
+      "version": "iOS 17.5",
+      "change": "Privacy manifests and signatures required for the SDK"
+    },
+    {
+      "date": "2025-10",
+      "platform": "android",
+      "version": "Android 16",
+      "change": "Privacy Sandbox wind-down: Install Referrer plus GAID remain the Android core"
+    }
+  ],
+  "related": [
+    "mob.xtrack.probabilistic-matching",
+    "mob.attr.install-referrer",
+    "mob.ads.skadnetwork",
+    "mob.ads.sdk-data-sharing"
+  ],
+  "refs": [
+    {
+      "t": "vendor",
+      "label": "Adjust developer docs",
+      "url": "https://dev.adjust.com/"
+    },
+    {
+      "t": "vendor",
+      "label": "Adjust: WWDC25 AdAttributionKit",
+      "url": "https://www.adjust.com/blog/wwdc-adattributionkit-2025/"
+    }
+  ],
+  "confidence": "docs"
+}

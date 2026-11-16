@@ -1,0 +1,219 @@
+{
+  "id": "web.xsite.safari-7-day-storage-cap",
+  "name": "Safari 7 day script storage deletion",
+  "kind": "signal",
+  "group": "files-storage",
+  "subgroup": "After leaving",
+  "tags": [
+    "itp",
+    "7-day",
+    "script-writable-storage",
+    "safari"
+  ],
+  "plain": "Safari deletes a site's script written storage after 7 days of Safari use without a visit to the site.",
+  "meaning": "Covers localStorage, IndexedDB, Cache, service workers, media keys and script set cookies. The counter is days of Safari use, not calendar days. Installed Home Screen web apps are exempt. Limits long lived tracker storage.",
+  "lifecycle": [
+    "after-leaving"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "Browser behaviour; no site API",
+      "access": {
+        "grant": "none",
+        "prompt_ui": "None",
+        "secure_context": false,
+        "user_gesture": false,
+        "persistence": "Deleted when Safari use passes 7 days with no user interaction on the site",
+        "revocation": "Clear site data, browser privacy settings",
+        "iframe": "",
+        "steps": []
+      },
+      "support": {
+        "chrome": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "edge": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "firefox": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "safari": {
+          "s": "y",
+          "v": "13.1",
+          "note": "",
+          "date": "2020-03-24"
+        },
+        "ios_safari": {
+          "s": "y",
+          "v": "13.4",
+          "note": "",
+          "date": "2020-03-24"
+        },
+        "chrome_android": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "samsung": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "none",
+    "metric": "No data exposed",
+    "update": "n/a",
+    "fields": []
+  },
+  "limits": {
+    "headline": "Can't keep script saved data in Safari after 7 days of use without a visit",
+    "user_action": "Nothing. Safari does it for you in the background.",
+    "can": [
+      "Keep data for as long as you visit the site at least once every 7 days of Safari use",
+      "Keep data when it is added to your Home screen as an app",
+      "Keep cookies set by the site's server, as opposed to its scripts"
+    ],
+    "cannot": [
+      "Keep script saved data, such as localStorage, IndexedDB and cookies set by scripts, after 7 days of Safari use without a visit",
+      "Get around the limit by asking Safari",
+      "Be affected the same way in Chrome or Firefox"
+    ],
+    "reach": 1,
+    "reach_label": "Safari clears it after 7 days",
+    "differs": "Safari on iPhone and Mac only. Chrome and Firefox do not do this."
+  },
+  "story": {
+    "what_it_is": "Safari erases a site's script stored data if you skip the site for 7 days of Safari use.",
+    "icon": "timer",
+    "tags": [
+      "Safari",
+      "Storage",
+      "Silent"
+    ],
+    "marketing": [
+      {
+        "vendor": "WebKit",
+        "name": "Full third party cookie blocking and more",
+        "pitch": "Apple announced Safari limits on script written storage as part of its work against cross site tracking.",
+        "url": "https://webkit.org/blog/10218/full-third-party-cookie-blocking-and-more/"
+      },
+      {
+        "vendor": "WebKit",
+        "name": "Tracking Prevention",
+        "pitch": "Apple describes Safari's tracking protections, including how long some site data lives.",
+        "url": "https://webkit.org/tracking-prevention/"
+      }
+    ],
+    "for_you": "If you do not visit a site for a week of Safari use, it may forget you. You might have to log in again or lose a saved score or setting.",
+    "for_makers": "It shortens the life of trackers that hide IDs in storage. It also cuts the life of honest sites, so makers rely on server side cookies or ask people to install the web app to avoid it.",
+    "use_cases": [
+      {
+        "type": "ads",
+        "example": "A tracker that kept a visitor ID in local storage loses it after a week away, so Safari users look new on return.",
+        "apps": []
+      },
+      {
+        "type": "games",
+        "example": "A casual browser game loses a local save if you skip a couple of weeks, unless you sign in or install it.",
+        "apps": []
+      },
+      {
+        "type": "shopping",
+        "example": "A store forgets your wishlist stored in the browser if you do not come back soon.",
+        "apps": []
+      },
+      {
+        "type": "analytics",
+        "example": "A measurement team sees Safari visitors counted as new more often, because the ID expired.",
+        "apps": [
+          "Google Analytics"
+        ]
+      },
+      {
+        "type": "productivity",
+        "example": "A note app on Safari asks you to sign in or install it so offline notes are not removed.",
+        "apps": []
+      },
+      {
+        "type": "media",
+        "example": "A news site loses your reading list kept in local storage after a week away.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Data loss",
+      "Breaks long term stats"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Counts days Safari was used",
+    "Home Screen web apps have no cap",
+    "Server set first party cookies are not covered unless cloaked or IP mismatched",
+    "Interaction (tap or click) resets the clock"
+  ],
+  "scores": {
+    "sensitivity": 2,
+    "utility": 2,
+    "fingerprint_bits": null,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Privacy protection"
+    ],
+    "abuse": [
+      "Not applicable"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2019-09",
+      "browser": "safari",
+      "version": "13",
+      "change": "ITP 2.3 introduced storage caps"
+    },
+    {
+      "date": "2020-03",
+      "browser": "safari",
+      "version": "13.1",
+      "change": "7 day cap on all script writable storage"
+    }
+  ],
+  "related": [
+    "web.storage.localstorage",
+    "web.storage.indexeddb",
+    "web.xsite.service-worker-lifetime"
+  ],
+  "refs": [
+    {
+      "t": "webkit",
+      "label": "WebKit Tracking Prevention",
+      "url": "https://webkit.org/tracking-prevention/"
+    },
+    {
+      "t": "webkit",
+      "label": "WebKit: Full third party cookie blocking and more",
+      "url": "https://webkit.org/blog/10218/full-third-party-cookie-blocking-and-more/"
+    }
+  ],
+  "confidence": "verified"
+}

@@ -1,0 +1,244 @@
+{
+  "id": "web.device.webgl-parameters",
+  "name": "WebGL parameters and extensions",
+  "kind": "signal",
+  "group": "device-system-profile",
+  "subgroup": "Hardware",
+  "tags": [
+    "webgl",
+    "gpu",
+    "limits"
+  ],
+  "plain": "About 65 WebGL limits and an extension list that differ by GPU and driver.",
+  "meaning": "MAX_TEXTURE_SIZE (4096 to 32768), MAX_VERTEX_ATTRIBS, shader precision formats and supported extensions together fingerprint the GPU even when the renderer string is hidden.",
+  "lifecycle": [
+    "on-arrival",
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "gl.getParameter(...), gl.getSupportedExtensions(), gl.getShaderPrecisionFormat()",
+      "bcd": [
+        "api.WebGLRenderingContext.getSupportedExtensions"
+      ],
+      "access": {
+        "grant": "none",
+        "prompt_ui": "None",
+        "secure_context": false,
+        "user_gesture": false,
+        "persistence": "read fresh on every page load; nothing stored",
+        "revocation": "none needed (no grant)",
+        "iframe": "Readable from cross-origin iframes too (same values)",
+        "steps": [
+          "Page script reads the value",
+          "No prompt is shown"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "9",
+          "note": "",
+          "date": "2011-02-03"
+        },
+        "edge": {
+          "s": "y",
+          "v": "12",
+          "note": "",
+          "date": "2015-07-29"
+        },
+        "firefox": {
+          "s": "y",
+          "v": "4",
+          "note": "",
+          "date": "2011-03-22"
+        },
+        "safari": {
+          "s": "y",
+          "v": "5.1",
+          "note": "",
+          "date": "2011-07-20"
+        },
+        "ios_safari": {
+          "s": "y",
+          "v": "8",
+          "note": "",
+          "date": "2014-09-17"
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "25",
+          "note": "",
+          "date": "2013-02-27"
+        },
+        "samsung": {
+          "s": "y",
+          "v": "1.5",
+          "note": "",
+          "date": "2013-09-25"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "object",
+    "metric": "",
+    "update": "static per session",
+    "fields": [
+      {
+        "name": "MAX_TEXTURE_SIZE",
+        "type": "integer",
+        "unit": "px",
+        "range": "4096 to 32768",
+        "precision": "exact"
+      },
+      {
+        "name": "extensions",
+        "type": "list",
+        "unit": "",
+        "range": "20 to 40 names",
+        "precision": ""
+      },
+      {
+        "name": "shader precision",
+        "type": "object",
+        "unit": "bits",
+        "range": "rangeMin, rangeMax, precision",
+        "precision": ""
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can measure about 65 graphics limits that point to your GPU and driver",
+    "user_action": "Nothing. It happens when a page draws 3D graphics or tests for it",
+    "can": [
+      "Check texture size limits, shader precision, and extension lists",
+      "Tell GPU and driver families apart",
+      "Use the pattern to recognize your device even when the GPU name is hidden",
+      "Tune graphics for what your device handles"
+    ],
+    "cannot": [
+      "See your files or screen contents",
+      "Tell your exact GPU model unless the name is shared",
+      "Work if graphics support is off",
+      "Be sure; browsers may round or hide values"
+    ],
+    "reach": 3,
+    "reach_label": "GPU traits, silently",
+    "differs": ""
+  },
+  "story": {
+    "what_it_is": "About 65 graphics limits and a list of extras that differ by graphics chip and driver.",
+    "icon": "layout-grid",
+    "tags": [
+      "Graphics",
+      "Games",
+      "Fingerprinting"
+    ],
+    "marketing": [
+      {
+        "vendor": "MDN",
+        "name": "WebGL API",
+        "pitch": "Docs describe WebGL as the way pages draw fast 2D and 3D graphics in the browser.",
+        "url": "https://developer.mozilla.org/en-US/docs/Web/API/WebGL_API"
+      }
+    ],
+    "for_you": "You never see it. A 3D game or map asks your graphics chip what it can do and picks settings that work. The same answers, taken together, can act as a fingerprint of your graphics hardware.",
+    "for_makers": "Graphics apps must know the biggest texture, the shader precision and which extras exist. Trackers read the same numbers because they differ by chip and driver. Even when the name is hidden, the limits can tell devices apart.",
+    "use_cases": [
+      {
+        "type": "games",
+        "example": "A browser 3D game reads the texture size limit and picks high or medium graphics so it does not crash.",
+        "apps": [
+          "Unity WebGL games"
+        ]
+      },
+      {
+        "type": "maps",
+        "example": "A web map asks which graphics features exist to draw 3D buildings smoothly.",
+        "apps": [
+          "Google Maps",
+          "Mapbox"
+        ]
+      },
+      {
+        "type": "creative",
+        "example": "A browser 3D tool checks which extensions exist before turning on advanced lighting.",
+        "apps": [
+          "Figma"
+        ]
+      },
+      {
+        "type": "games",
+        "example": "A cloud gaming page uses graphics capability to tune its overlay and video drawing.",
+        "apps": [
+          "GeForce NOW"
+        ]
+      },
+      {
+        "type": "ar-vr",
+        "example": "A web based virtual tour scales scene detail to what the graphics chip can handle.",
+        "apps": []
+      },
+      {
+        "type": "security",
+        "example": "A fraud service uses the limit list to tell real GPUs from virtual machines and emulators.",
+        "apps": []
+      },
+      {
+        "type": "ads",
+        "example": "A fingerprint vendor adds the graphics profile to a device ID that survives cookie clearing.",
+        "apps": [
+          "FingerprintJS"
+        ]
+      }
+    ],
+    "risks": [
+      "Strong fingerprint",
+      "Works even if the GPU name is hidden"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Randomized (farbled) by Brave",
+    "Firefox fingerprint protection narrows"
+  ],
+  "scores": {
+    "sensitivity": 1,
+    "utility": 3,
+    "fingerprint_bits": 4.0,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Quality tiering"
+    ],
+    "abuse": [
+      "Hardware fingerprint"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": true,
+      "how": "65+ parameters. Read by the LinkedIn APFC fingerprint script (48 features, alleged by BrowserGate, partly confirmed by BleepingComputer)."
+    }
+  },
+  "related": [
+    "web.device.webgl-renderer"
+  ],
+  "refs": [
+    {
+      "t": "github",
+      "label": "fingerprintjs source: webgl",
+      "url": "https://github.com/fingerprintjs/fingerprintjs/blob/master/src/sources/webgl.ts"
+    },
+    {
+      "t": "github",
+      "label": "CreepJS (abrahamjuliot)",
+      "url": "https://github.com/abrahamjuliot/creepjs"
+    }
+  ],
+  "confidence": "docs"
+}

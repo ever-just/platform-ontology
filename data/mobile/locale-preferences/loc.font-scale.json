@@ -1,0 +1,211 @@
+{
+  "id": "mob.loc.font-scale",
+  "name": "Font size and Dynamic Type setting",
+  "kind": "signal",
+  "group": "locale-preferences",
+  "subgroup": "Accessibility",
+  "tags": [
+    "font-scale",
+    "accessibility-inference"
+  ],
+  "plain": "Reads the system text size setting, which hints at age or low vision.",
+  "meaning": "Large text settings correlate with age and visual impairment, a sensitive inference the person never chose to share.",
+  "lifecycle": [
+    "on-launch",
+    "in-session"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "y",
+      "v": "1.0",
+      "api": 1,
+      "permission": "",
+      "protection": "none",
+      "grant": "none",
+      "prompt_ui": "",
+      "persistence": "",
+      "revocation": "",
+      "store_policy": "",
+      "api_surface": "Configuration.fontScale (0.85 to 2.0 typical), Android 14 nonlinear scaling",
+      "note": "Float multiplier; 0.85, 1.0, 1.15, 1.3 default steps"
+    },
+    "ios": {
+      "s": "y",
+      "v": "7.0",
+      "permission": "none",
+      "protection": "none",
+      "grant": "none",
+      "prompt_ui": "",
+      "persistence": "",
+      "revocation": "",
+      "store_policy": "",
+      "api_surface": "12 category values",
+      "note": ""
+    }
+  },
+  "web_equivalents": [
+    "web.locale.zoom-text-size",
+    "web.locale.accessibility-inference"
+  ],
+  "data": {
+    "type": "enum",
+    "metric": "Text scale",
+    "update": "On change",
+    "fields": [
+      {
+        "name": "font_scale",
+        "type": "float",
+        "unit": "multiplier",
+        "range": "0.85 to 2.0",
+        "precision": "0.15 steps"
+      },
+      {
+        "name": "ios_category",
+        "type": "enum",
+        "unit": "",
+        "range": "xSmall to accessibilityXXXLarge",
+        "precision": "12 values"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can see your text size setting, which may hint at age or vision needs",
+    "user_action": "Nothing. It happens when the app lays out text",
+    "can": [
+      "Check how large your system text is",
+      "Make its own text larger or smaller to match",
+      "Use the size as one clue in a device fingerprint"
+    ],
+    "cannot": [
+      "Change your text size setting",
+      "See why you picked the size",
+      "Tell your age or eyesight on its own; the clue is only a hint"
+    ],
+    "reach": 1,
+    "reach_label": "One size setting",
+    "differs": "Android gives a number such as 0.85 to 2.0. iPhone gives one of 12 size steps."
+  },
+  "story": {
+    "what_it_is": "An app sees how large you set your text, which can hint at age or poor eyesight.",
+    "icon": "a-large-small",
+    "tags": [
+      "Accessibility",
+      "Silent",
+      "Sensitive"
+    ],
+    "marketing": [
+      {
+        "vendor": "Apple",
+        "name": "Dynamic Type",
+        "pitch": "Apple lets people choose text size, and apps scale their text to fit the choice.",
+        "url": "https://developer.apple.com/documentation/uikit/scaling-fonts-automatically"
+      },
+      {
+        "vendor": "Google",
+        "name": "Font size setting",
+        "pitch": "Android lets you change text size so reading is easier on your own phone.",
+        "url": "https://www.android.com/accessibility/"
+      }
+    ],
+    "for_you": "You pick the text size that is easy on your eyes and apps follow. You never see apps read the setting, but a big font might get you a simpler screen. It might also tell the app something you did not mean to share.",
+    "for_makers": "Makers need this to avoid broken layouts. The setting also correlates with age and low vision, which can lead to guesses about people. Platforms warn against using it to profile.",
+    "use_cases": [
+      {
+        "type": "banking",
+        "example": "A bank app grows its balance and buttons so older users can read them.",
+        "apps": []
+      },
+      {
+        "type": "media",
+        "example": "A video app makes subtitles bigger when your text size is large.",
+        "apps": [
+          "Netflix"
+        ]
+      },
+      {
+        "type": "news",
+        "example": "A news app resizes headlines to fit your text size without breaking.",
+        "apps": [
+          "The New York Times"
+        ]
+      },
+      {
+        "type": "messaging",
+        "example": "A chat app grows its bubbles and keeps buttons reachable at huge sizes.",
+        "apps": [
+          "WhatsApp"
+        ]
+      },
+      {
+        "type": "health",
+        "example": "A health app keeps medicine times readable for people with low vision.",
+        "apps": []
+      },
+      {
+        "type": "ads",
+        "example": "An ad tool guesses that a large font means an older person and shows them different ads.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Infers age or vision",
+      "Fingerprint bit"
+    ],
+    "android_note": "Android apps read the font scale as a number and can respond to it with no prompt.",
+    "ios_note": "iPhone apps read a size category in Dynamic Type and respond to changes live."
+  },
+  "technical_bounds": [
+    "Not tied to identity"
+  ],
+  "scores": {
+    "sensitivity": 3,
+    "utility": 3,
+    "fingerprint_bits": 3,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Respect user text size"
+    ],
+    "abuse": [
+      "Infer age or disability"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2023-10",
+      "platform": "android",
+      "version": "14 (API 34)",
+      "change": "Nonlinear font scaling to 200 percent"
+    },
+    {
+      "date": "2013-09",
+      "platform": "ios",
+      "version": "iOS 7",
+      "change": "Dynamic Type introduced"
+    }
+  ],
+  "related": [
+    "mob.loc.screen-reader"
+  ],
+  "refs": [
+    {
+      "t": "android",
+      "label": "Android 13 behavior changes",
+      "url": "https://developer.android.com/about/versions/13/behavior-changes-13"
+    },
+    {
+      "t": "apple",
+      "label": "Apple: UIAccessibility",
+      "url": "https://developer.apple.com/documentation/uikit/uiaccessibility"
+    }
+  ],
+  "confidence": "inferred"
+}

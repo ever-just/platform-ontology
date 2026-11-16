@@ -1,0 +1,243 @@
+{
+  "id": "web.timing.request-animation-frame",
+  "name": "requestAnimationFrame timing",
+  "kind": "signal",
+  "group": "timing-performance",
+  "subgroup": "Frame pacing",
+  "tags": [
+    "requestAnimationFrame",
+    "refresh-rate",
+    "frame-pacing",
+    "visibility"
+  ],
+  "plain": "Runs code before each screen refresh, and reveals the display's refresh rate.",
+  "meaning": "A site can learn your monitor's refresh rate (60, 120, 144 Hz) by counting frames, and can tell when the tab is hidden because callbacks stop. It is the core of smooth animation.",
+  "lifecycle": [
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "requestAnimationFrame(cb); cb(timestamp)",
+      "bcd": [
+        "api.Window.requestAnimationFrame",
+        "api.Window.cancelAnimationFrame"
+      ],
+      "access": {
+        "grant": "none",
+        "prompt_ui": "None (no browser prompt)",
+        "secure_context": false,
+        "user_gesture": false,
+        "activation": "none",
+        "persistence": "Per page; callbacks run once per display refresh while the tab is visible",
+        "revocation": "Nothing to revoke (no permission is stored)",
+        "iframe": "Per frame; hidden iframes stop receiving callbacks",
+        "steps": [
+          "Page calls requestAnimationFrame",
+          "Browser calls back before the next paint",
+          "Page reads the DOMHighResTimeStamp argument"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "24",
+          "note": "",
+          "date": "2013-01-10"
+        },
+        "edge": {
+          "s": "y",
+          "v": "12",
+          "note": "",
+          "date": "2015-07-29"
+        },
+        "firefox": {
+          "s": "y",
+          "v": "23",
+          "note": "",
+          "date": "2013-08-06"
+        },
+        "safari": {
+          "s": "y",
+          "v": "7",
+          "note": "",
+          "date": "2013-10-22"
+        },
+        "ios_safari": {
+          "s": "y",
+          "v": "7",
+          "note": "All iOS browsers use WebKit",
+          "date": "2013-09-18"
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "25",
+          "note": "",
+          "date": "2013-02-27"
+        },
+        "samsung": {
+          "s": "y",
+          "v": "1.5",
+          "note": "",
+          "date": "2013-09-25"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "none",
+    "metric": "",
+    "update": "",
+    "fields": []
+  },
+  "limits": {
+    "headline": "Can run code before each screen refresh and learn your refresh rate",
+    "user_action": "Nothing. It happens when the page shows animation",
+    "can": [
+      "Run smooth animations and games",
+      "Count frames to learn your screen runs at 60, 120 or 144 Hz",
+      "Tell when the tab is hidden, since the calls pause"
+    ],
+    "cannot": [
+      "Run while the tab is hidden in most browsers",
+      "Ask permission first",
+      "See your files",
+      "Know who you are by itself"
+    ],
+    "reach": 2,
+    "reach_label": "While the page is visible",
+    "differs": ""
+  },
+  "story": {
+    "what_it_is": "A page runs code right before each screen refresh, which also reveals your display's refresh rate.",
+    "icon": "film",
+    "tags": [
+      "Animation",
+      "Games",
+      "Silent"
+    ],
+    "marketing": [
+      {
+        "vendor": "MDN",
+        "name": "requestAnimationFrame",
+        "pitch": "Tells the browser to run animation code just before the next screen refresh, for smooth motion.",
+        "url": "https://developer.mozilla.org/en-US/docs/Web/API/Window/requestAnimationFrame"
+      }
+    ],
+    "for_you": "You never see a prompt. It is why animations and games look smooth. When you switch tabs, the browser pauses it to save power. It also shows how fast your screen refreshes.",
+    "for_makers": "It is the heartbeat of every browser game and animation. It lets code draw in time with the screen and pause when hidden. The timing also reveals the refresh rate, which is a small device clue.",
+    "use_cases": [
+      {
+        "type": "games",
+        "example": "A browser game like Krunker.io calls it every frame to move players and draw the scene.",
+        "apps": [
+          "Krunker.io",
+          "Slither.io"
+        ]
+      },
+      {
+        "type": "creative",
+        "example": "A design tool redraws only when needed, in step with the screen, so panning stays smooth.",
+        "apps": [
+          "Figma",
+          "Excalidraw"
+        ]
+      },
+      {
+        "type": "maps",
+        "example": "A web map redraws tiles and labels in each frame while you drag.",
+        "apps": [
+          "Google Maps",
+          "Mapbox"
+        ]
+      },
+      {
+        "type": "video",
+        "example": "A video player draws overlays like subtitles in time with each frame.",
+        "apps": []
+      },
+      {
+        "type": "ads",
+        "example": "An ad script uses frame timing to check the ad was truly on screen and not hidden in a background tab.",
+        "apps": []
+      },
+      {
+        "type": "security",
+        "example": "A bot detector sees that frames never run, a sign of a hidden or headless browser.",
+        "apps": []
+      },
+      {
+        "type": "education",
+        "example": "A science site animates a simulation, like planets in orbit, smoothly at the screen's speed.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Reveals refresh rate",
+      "Can reveal hidden tabs"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Callbacks pause entirely in background tabs and hidden iframes in all major browsers (no hidden polling)",
+    "Frame rate follows the display: 60 Hz gives about 16.7 ms between callbacks, 120 Hz gives about 8.3 ms",
+    "Safari on iOS in Low Power Mode drops callbacks to about 30 fps",
+    "Timestamps are rounded like performance.now() (coarse, with jitter)",
+    "No access to the exact refresh rate; it must be measured"
+  ],
+  "scores": {
+    "sensitivity": 1,
+    "utility": 5,
+    "fingerprint_bits": 2,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Animation and games",
+      "Canvas and WebGL rendering",
+      "Scroll linked effects"
+    ],
+    "abuse": [
+      "Refresh rate fingerprinting",
+      "Detecting hidden tabs or low power mode"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2013-01",
+      "browser": "chrome",
+      "version": "24",
+      "change": "Unprefixed requestAnimationFrame"
+    },
+    {
+      "date": "2013-08",
+      "browser": "firefox",
+      "version": "23",
+      "change": "Unprefixed requestAnimationFrame"
+    }
+  ],
+  "related": [
+    "web.perf.refresh-rate-measurement",
+    "web.actions.page-visibility-throttling"
+  ],
+  "refs": [
+    {
+      "t": "mdn",
+      "label": "MDN requestAnimationFrame",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/Window/requestAnimationFrame"
+    },
+    {
+      "t": "spec",
+      "label": "HTML: animation frames",
+      "url": "https://html.spec.whatwg.org/multipage/imagebitmap-and-animations.html#animation-frames"
+    }
+  ],
+  "confidence": "docs"
+}

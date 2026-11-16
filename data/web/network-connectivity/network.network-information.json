@@ -1,0 +1,274 @@
+{
+  "id": "web.network.network-information",
+  "name": "Network Information API",
+  "kind": "signal",
+  "group": "network-connectivity",
+  "subgroup": "Connection quality",
+  "tags": [
+    "netinfo",
+    "effectiveType",
+    "downlink",
+    "rtt",
+    "chromium-only"
+  ],
+  "plain": "Estimated connection type, speed and latency, plus a data-saver flag.",
+  "meaning": "Lets a site pick light pages on slow links. effectiveType buckets: slow-2g, 2g, 3g, 4g. downlink rounds to 25 kbps steps (capped near 10 Mbps), rtt to 25 ms steps. Type (wifi or cellular) is Android only.",
+  "lifecycle": [
+    "on-arrival",
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "navigator.connection.effectiveType, .downlink, .rtt, .saveData, .type, 'change' event",
+      "bcd": [
+        "api.NetworkInformation.effectiveType",
+        "api.NetworkInformation.downlink",
+        "api.NetworkInformation.rtt"
+      ],
+      "access": {
+        "grant": "none",
+        "prompt_ui": "None",
+        "secure_context": false,
+        "user_gesture": false,
+        "persistence": "read fresh on every page load; nothing stored",
+        "revocation": "none needed (no grant)",
+        "iframe": "Readable from cross-origin iframes too (same values)",
+        "steps": [
+          "Page script reads the value",
+          "No prompt is shown"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "61",
+          "note": "type since 38 on Android",
+          "date": "2017-09-05"
+        },
+        "edge": {
+          "s": "y",
+          "v": "79",
+          "note": "",
+          "date": "2020-01-15"
+        },
+        "firefox": {
+          "s": "n",
+          "v": "",
+          "note": "Android only, removed"
+        },
+        "safari": {
+          "s": "n",
+          "v": "",
+          "note": "Declined"
+        },
+        "ios_safari": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "38",
+          "note": "",
+          "date": "2014-10-08"
+        },
+        "samsung": {
+          "s": "y",
+          "v": "3.0",
+          "note": "",
+          "date": "2015-04-10"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "object",
+    "metric": "",
+    "update": "static per session",
+    "fields": [
+      {
+        "name": "effectiveType",
+        "type": "enum",
+        "unit": "",
+        "range": "slow-2g, 2g, 3g, 4g",
+        "precision": "from rtt and downlink thresholds"
+      },
+      {
+        "name": "downlink",
+        "type": "float",
+        "unit": "Mbps",
+        "range": "0 to 10",
+        "precision": "rounded to 25 kbps"
+      },
+      {
+        "name": "rtt",
+        "type": "integer",
+        "unit": "ms",
+        "range": "0 to about 3000",
+        "precision": "rounded to 25 ms"
+      },
+      {
+        "name": "saveData",
+        "type": "boolean",
+        "unit": "",
+        "range": "true or false",
+        "precision": ""
+      },
+      {
+        "name": "type",
+        "type": "enum",
+        "unit": "",
+        "range": "bluetooth, cellular, ethernet, wifi, wimax, none, other, unknown",
+        "precision": "Android Chromium"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can see roughly how fast your connection is and whether you turned on data saving",
+    "user_action": "Nothing. It happens when the page loads and while you stay on it",
+    "can": [
+      "See a rough speed class such as 2G, 3G or 4G",
+      "See rounded speed and delay figures",
+      "See if data saver is on",
+      "Tell Wi-Fi from cellular on Android only"
+    ],
+    "cannot": [
+      "See your exact speed, since figures are rounded to coarse steps",
+      "Work in Firefox or Safari",
+      "Tell Wi-Fi from cellular on a computer",
+      "See your provider, name or location"
+    ],
+    "reach": 2,
+    "reach_label": "While the page is open",
+    "differs": "Only Chrome, Edge and Samsung Internet offer it. Wi-Fi versus cellular is shown on Android only."
+  },
+  "story": {
+    "what_it_is": "A page can read your estimated connection type, speed and delay, and if data saver is on.",
+    "icon": "wifi",
+    "tags": [
+      "Network",
+      "Silent",
+      "Browser info"
+    ],
+    "marketing": [
+      {
+        "vendor": "MDN Web Docs",
+        "name": "Network Information API",
+        "pitch": "Lets pages adapt to the connection, such as sending less data on slow links or when data saver is on.",
+        "url": "https://developer.mozilla.org/en-US/docs/Web/API/NetworkInformation"
+      }
+    ],
+    "for_you": "You never see a prompt. Sites may load lighter pictures or skip auto video if your line is slow or you turned on data saver. You just see a faster page.",
+    "for_makers": "Makers use it to cut load time, save mobile data and keep users from leaving. It is also quietly counted in some fingerprints. Firefox and Safari do not offer it.",
+    "use_cases": [
+      {
+        "type": "video",
+        "example": "A video site starts at 480p on a weak connection and moves up when speed improves.",
+        "apps": [
+          "YouTube"
+        ]
+      },
+      {
+        "type": "games",
+        "example": "A browser game checks speed before loading its big level pack and offers a smaller pack on slow lines.",
+        "apps": []
+      },
+      {
+        "type": "shopping",
+        "example": "A store shows tiny image placeholders first for shoppers with data saver on.",
+        "apps": []
+      },
+      {
+        "type": "news",
+        "example": "A news site holds back auto play video on slow connections and metered data plans.",
+        "apps": []
+      },
+      {
+        "type": "productivity",
+        "example": "A web editor such as Google Docs delays syncing big attachments until the connection is better.",
+        "apps": [
+          "Google Docs"
+        ]
+      },
+      {
+        "type": "analytics",
+        "example": "A speed dashboard shows how page load changes by connection type across real visitors.",
+        "apps": []
+      },
+      {
+        "type": "ads",
+        "example": "An ad script reads type, speed and delay as part of a device fingerprint.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Adds to a fingerprint",
+      "Chromium only"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Chromium only",
+    "Estimate from recent traffic, not a speed test",
+    "Cannot read Wi-Fi name or signal"
+  ],
+  "scores": {
+    "sensitivity": 1,
+    "utility": 4,
+    "fingerprint_bits": 2.5,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Adaptive loading",
+      "Lite pages"
+    ],
+    "abuse": [
+      "Network-class fingerprint",
+      "Price discrimination by connection"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": true,
+      "how": "Connection type, downlink, RTT collected. Read by the LinkedIn APFC fingerprint script (alleged by BrowserGate, partly confirmed by BleepingComputer)."
+    }
+  },
+  "history": [
+    {
+      "date": "2017-09",
+      "browser": "chrome",
+      "version": "61",
+      "change": "effectiveType, rtt, downlink available"
+    },
+    {
+      "date": "2019-01",
+      "browser": "firefox",
+      "version": "",
+      "change": "Not supported on desktop; Android support removed"
+    }
+  ],
+  "related": [
+    "web.network.ect-client-hints"
+  ],
+  "refs": [
+    {
+      "t": "mdn",
+      "label": "MDN NetworkInformation",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/NetworkInformation"
+    },
+    {
+      "t": "spec",
+      "label": "WICG Network Information",
+      "url": "https://wicg.github.io/netinfo/"
+    },
+    {
+      "t": "news",
+      "label": "BrowserGate: how LinkedIn's script works",
+      "url": "https://browsergate.eu/how-it-works/"
+    }
+  ],
+  "confidence": "verified"
+}

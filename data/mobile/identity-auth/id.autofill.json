@@ -1,0 +1,211 @@
+{
+  "id": "mob.id.autofill",
+  "name": "Autofill (app side and service side)",
+  "kind": "capability",
+  "group": "identity-auth",
+  "subgroup": "Passwords",
+  "tags": [
+    "autofill",
+    "autofill-service",
+    "password"
+  ],
+  "plain": "Lets the keyboard offer saved usernames, passwords, cards and addresses in app forms.",
+  "meaning": "The autofill service sees which fields the app shows (labels, IDs) and can fill them. Legacy Android services read the whole view tree.",
+  "lifecycle": [
+    "in-session"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "y",
+      "v": "8.0",
+      "api": 26,
+      "permission": "BIND_AUTOFILL_SERVICE (service side)",
+      "protection": "signature",
+      "grant": "settings",
+      "prompt_ui": "User must pick the Autofill service in Settings",
+      "persistence": "Until changed",
+      "revocation": "Settings > Passwords & accounts > Autofill service",
+      "store_policy": "",
+      "api_surface": "AutofillService, View.setAutofillHints, AutofillManager",
+      "note": "Android 14 pushes passkeys and passwords through Credential Manager as well."
+    },
+    "ios": {
+      "s": "y",
+      "v": "12.0",
+      "permission": "NSContactsUsageDescription not needed; textContentType keys; Associated Domains for credentials",
+      "protection": "none",
+      "grant": "none",
+      "prompt_ui": "Quick Type bar suggestions",
+      "persistence": "n/a",
+      "revocation": "Settings > Passwords > AutoFill Passwords",
+      "store_policy": "",
+      "api_surface": "UITextContentType (.username, .password, .oneTimeCode), ASCredentialProviderViewController",
+      "note": "SMS one time codes can be offered above the keyboard in iOS 12 and later."
+    }
+  },
+  "web_equivalents": [
+    "web.contacts.autofill-tokens",
+    "web.contacts.address-payment-autofill"
+  ],
+  "data": {
+    "type": "object",
+    "metric": "Filled value",
+    "update": "per field",
+    "fields": [
+      {
+        "name": "autofill hint",
+        "type": "enum",
+        "unit": "id",
+        "range": "username, password, creditCardNumber, postalAddress...",
+        "precision": "exact"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can offer saved logins, cards and addresses in forms, only after you tap a suggestion",
+    "user_action": "You tap a username, password, card or address field and choose a suggestion",
+    "can": [
+      "Mark form fields so the keyboard knows to suggest a saved username or password",
+      "Receive the value you choose from the suggestion",
+      "Offer one time text message codes above the keyboard on iPhone",
+      "Act as the autofill service itself if you pick the app in Settings"
+    ],
+    "cannot": [
+      "See your saved passwords or cards without you tapping a suggestion",
+      "Fill fields with no action from you",
+      "Pick itself as your password manager; you choose that in Settings",
+      "Grab data for sites or apps the manager does not match"
+    ],
+    "reach": 2,
+    "reach_label": "Only what you choose to fill",
+    "differs": "Android lets you pick an autofill service in Settings. iPhone uses its own keychain or a password manager you enable."
+  },
+  "story": {
+    "what_it_is": "The keyboard can offer your saved logins, cards and addresses in app forms.",
+    "icon": "key-round",
+    "tags": [
+      "Passwords",
+      "Forms",
+      "Convenience"
+    ],
+    "marketing": [
+      {
+        "vendor": "Apple",
+        "name": "AutoFill",
+        "pitch": "Passwords, cards and codes appear above the keyboard so you can fill a form with one tap.",
+        "url": "https://developer.apple.com/documentation/security/password-autofill"
+      },
+      {
+        "vendor": "Google",
+        "name": "Autofill with Google",
+        "pitch": "Android fills in saved passwords, addresses and payment details across apps from one place.",
+        "url": "https://developer.android.com/identity/autofill"
+      }
+    ],
+    "for_you": "You tap a login box and your saved username and password pop up above the keyboard. One tap fills it. You skip typing and avoid weak passwords.",
+    "for_makers": "Makers want sign up and checkout to be fast, because every extra typed field loses buyers. The password manager in the middle sees which fields an app shows, so its trust level matters.",
+    "use_cases": [
+      {
+        "type": "shopping",
+        "example": "At checkout you tap the card box and your saved card and address fill in, so you buy before you change your mind.",
+        "apps": [
+          "Amazon",
+          "Shopify checkout"
+        ]
+      },
+      {
+        "type": "rideshare",
+        "example": "An Uber login screen fills your email and password with one tap on a new phone.",
+        "apps": [
+          "Uber"
+        ]
+      },
+      {
+        "type": "delivery",
+        "example": "A food delivery app fills your home address and phone so a hungry order takes seconds.",
+        "apps": [
+          "DoorDash"
+        ]
+      },
+      {
+        "type": "banking",
+        "example": "A bank app fills a saved username while keeping the password behind a Face ID check.",
+        "apps": []
+      },
+      {
+        "type": "games",
+        "example": "A game store login fills your account details so you can start playing after a reinstall.",
+        "apps": [
+          "Epic Games",
+          "Roblox"
+        ]
+      },
+      {
+        "type": "security",
+        "example": "An attacker shows a fake login box in the hope the autofill service fills it, which is why good managers check the app identity first.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Fake app can trick filling",
+      "Service sees field labels"
+    ],
+    "android_note": "Android lets you pick any autofill service, and older ones could read the whole screen layout.",
+    "ios_note": "iPhone autofill is built into the keyboard and password manager, and apps only see what you choose to fill."
+  },
+  "technical_bounds": [
+    "Secure fields can be blocked from autofill by developers"
+  ],
+  "scores": {
+    "sensitivity": 4,
+    "utility": 4,
+    "fingerprint_bits": 1,
+    "friction": 2
+  },
+  "value": {
+    "legit_uses": [
+      "Password managers"
+    ],
+    "abuse": [
+      "Malicious autofill service"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2017-08",
+      "platform": "android",
+      "version": "8.0 (API 26)",
+      "change": "Autofill framework"
+    },
+    {
+      "date": "2018-09",
+      "platform": "ios",
+      "version": "iOS 12",
+      "change": "Password AutoFill and one time code fill"
+    }
+  ],
+  "related": [
+    "mob.id.credential-provider",
+    "mob.id.passkeys-app"
+  ],
+  "refs": [
+    {
+      "t": "android",
+      "label": "Android: Autofill framework",
+      "url": "https://developer.android.com/identity/autofill/autofill-optimize"
+    },
+    {
+      "t": "apple",
+      "label": "Apple: AutoFill",
+      "url": "https://developer.apple.com/documentation/security/password_autofill"
+    }
+  ],
+  "confidence": "docs"
+}

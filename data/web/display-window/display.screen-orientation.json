@@ -1,0 +1,221 @@
+{
+  "id": "web.display.screen-orientation",
+  "name": "Screen orientation",
+  "kind": "signal",
+  "group": "display-window",
+  "subgroup": "Screen",
+  "tags": [
+    "screen",
+    "orientation"
+  ],
+  "plain": "Reads portrait or landscape and angle.",
+  "meaning": "Shows how the phone or tablet is held and whether a laptop screen is rotated.",
+  "lifecycle": [
+    "on-arrival",
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "screen.orientation.type, angle",
+      "bcd": [
+        "api.Screen.orientation"
+      ],
+      "access": {
+        "grant": "none",
+        "prompt_ui": "None (no browser prompt)",
+        "secure_context": false,
+        "user_gesture": false,
+        "persistence": "",
+        "revocation": "",
+        "iframe": "",
+        "steps": [
+          "Script reads the value",
+          "Value joins the fingerprint payload"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "38",
+          "note": "",
+          "date": "2014-10-07"
+        },
+        "edge": {
+          "s": "y",
+          "v": "79",
+          "note": "",
+          "date": "2020-01-15"
+        },
+        "firefox": {
+          "s": "y",
+          "v": "43",
+          "note": "",
+          "date": "2015-12-15"
+        },
+        "safari": {
+          "s": "y",
+          "v": "16.4",
+          "note": "",
+          "date": "2023-03-27"
+        },
+        "ios_safari": {
+          "s": "y",
+          "v": "16.4",
+          "note": "",
+          "date": "2023-03-27"
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "39",
+          "note": "",
+          "date": "2014-11-12"
+        },
+        "samsung": {
+          "s": "y",
+          "v": "4.0",
+          "note": "",
+          "date": "2016-03-11"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "enum",
+    "metric": "Screen orientation",
+    "update": "on rotate",
+    "fields": [
+      {
+        "name": "type",
+        "type": "enum",
+        "unit": "",
+        "range": "portrait-primary and others",
+        "precision": ""
+      },
+      {
+        "name": "angle",
+        "type": "integer",
+        "unit": "degrees",
+        "range": "0, 90, 180, 270",
+        "precision": ""
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can check whether your screen is portrait or landscape and its angle",
+    "user_action": "Nothing. It happens when the page loads or you rotate the device.",
+    "can": [
+      "Check portrait or landscape",
+      "Check the rotation angle",
+      "Notice when you rotate the device"
+    ],
+    "cannot": [
+      "See the device's tilt or movement",
+      "Rotate your screen for you",
+      "See how you hold the device when rotation is locked"
+    ],
+    "reach": 1,
+    "reach_label": "Portrait or landscape only",
+    "differs": ""
+  },
+  "story": {
+    "what_it_is": "Reads whether the screen is portrait or landscape, and the angle.",
+    "icon": "rotate-3d",
+    "tags": [
+      "Display",
+      "Phone",
+      "Silent"
+    ],
+    "marketing": [
+      {
+        "vendor": "MDN",
+        "name": "Screen Orientation API",
+        "pitch": "Documents how a page can read the orientation and angle of the screen.",
+        "url": "https://developer.mozilla.org/en-US/docs/Web/API/Screen_Orientation_API"
+      }
+    ],
+    "for_you": "You turn your phone and the page rearranges. The angle can be 0, 90 or 180 degrees. You never see the reading.",
+    "for_makers": "Makers use it to reshape layouts. It is also a quick way to tell a real phone from a desktop browser faking one, because real phones rotate and desktops do not.",
+    "use_cases": [
+      {
+        "type": "games",
+        "example": "A browser game switches from a tall menu to a wide play field when you turn your phone.",
+        "apps": []
+      },
+      {
+        "type": "video",
+        "example": "A video page goes full screen when you rotate to landscape.",
+        "apps": [
+          "YouTube"
+        ]
+      },
+      {
+        "type": "maps",
+        "example": "A web map moves its search bar and info card when you rotate.",
+        "apps": [
+          "Google Maps"
+        ]
+      },
+      {
+        "type": "shopping",
+        "example": "A store shows more of each photo in landscape on tablets.",
+        "apps": []
+      },
+      {
+        "type": "security",
+        "example": "A fraud check sees motion from a phone with an angle that never changes, which can mean an emulator.",
+        "apps": []
+      },
+      {
+        "type": "education",
+        "example": "A reading app switches to a two page spread in landscape on tablets.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Mild fingerprint clue",
+      "Hints at device type"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Not a motion sensor"
+  ],
+  "scores": {
+    "sensitivity": 2,
+    "utility": 3,
+    "fingerprint_bits": 2,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Adapt layout"
+    ],
+    "abuse": [
+      "Fingerprint input"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": true,
+      "how": "Collector key(s): screenOrientation. "
+    }
+  },
+  "related": [
+    "web.tracking.linkedin-apfc-fingerprint"
+  ],
+  "refs": [
+    {
+      "t": "mdn",
+      "label": "MDN orientation",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/Screen/orientation"
+    },
+    {
+      "t": "github",
+      "label": "mdp/linkedin-extension-fingerprinting (LinkedIn script snapshot and ID list)",
+      "url": "https://github.com/mdp/linkedin-extension-fingerprinting"
+    }
+  ],
+  "confidence": "docs"
+}

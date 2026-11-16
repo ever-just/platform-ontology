@@ -1,0 +1,230 @@
+{
+  "id": "web.files.file-metadata",
+  "name": "File metadata (name, size, type, modified time)",
+  "kind": "signal",
+  "group": "files-storage",
+  "subgroup": "Files",
+  "tags": [
+    "file",
+    "metadata",
+    "mime",
+    "exif"
+  ],
+  "plain": "Shows name, byte size, MIME type and last modified time of any file the person shares.",
+  "meaning": "Metadata alone can reveal a lot: camera model names, document names, dates of work. The MIME type comes from the person's OS file associations, which also differs between machines.",
+  "lifecycle": [
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "File.name, size, type, lastModified, webkitRelativePath; Blob.slice(), arrayBuffer()",
+      "bcd": [
+        "api.File.name",
+        "api.File.lastModified",
+        "api.Blob.type"
+      ],
+      "access": {
+        "grant": "none",
+        "prompt_ui": "None (no browser prompt)",
+        "secure_context": false,
+        "user_gesture": false,
+        "activation": "none",
+        "persistence": "While the File object lives",
+        "revocation": "Nothing to revoke (no permission is stored)",
+        "iframe": "Same origin, per file",
+        "steps": [
+          "Person shares a file via input, drop, paste or picker",
+          "Page reads the File properties",
+          "Page can slice and read bytes"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "13",
+          "note": "",
+          "date": "2011-08-02"
+        },
+        "edge": {
+          "s": "y",
+          "v": "12",
+          "note": "",
+          "date": "2015-07-29"
+        },
+        "firefox": {
+          "s": "y",
+          "v": "3.6",
+          "note": "",
+          "date": "2010-01-21"
+        },
+        "safari": {
+          "s": "y",
+          "v": "8",
+          "note": "",
+          "date": "2014-10-16"
+        },
+        "ios_safari": {
+          "s": "y",
+          "v": "8",
+          "note": "All iOS browsers use WebKit",
+          "date": "2014-09-17"
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "18",
+          "note": "",
+          "date": "2012-06-27"
+        },
+        "samsung": {
+          "s": "y",
+          "v": "1.0",
+          "note": "",
+          "date": "2013-04-27"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "none",
+    "metric": "",
+    "update": "",
+    "fields": []
+  },
+  "limits": {
+    "headline": "Can see the name, size, type and last changed date of files you share",
+    "user_action": "You pick or drop a file onto the page.",
+    "can": [
+      "See each file's name and size",
+      "See its type and last changed date",
+      "Check the file before it uploads, and refuse it if too big"
+    ],
+    "cannot": [
+      "See the full folder path on your computer",
+      "See files you did not share",
+      "Learn more than that without opening the file's contents"
+    ],
+    "reach": 1,
+    "reach_label": "Basic file details only",
+    "differs": ""
+  },
+  "story": {
+    "what_it_is": "Shows the name, size, type and last changed time of any file you share.",
+    "icon": "file-search",
+    "tags": [
+      "Files",
+      "Silent",
+      "Metadata"
+    ],
+    "marketing": [
+      {
+        "vendor": "MDN",
+        "name": "File API",
+        "pitch": "Documents how a page can read basic details of a file a person has chosen.",
+        "url": "https://developer.mozilla.org/en-US/docs/Web/API/File"
+      }
+    ],
+    "for_you": "The page sees the name, size, kind and last changed time of each file you give it. You never see it read, but it is why an upload checks the size first.",
+    "for_makers": "Makers use it to block files that are too big or of the wrong kind before upload. The same details can reveal when a file was made and what kind of device made it.",
+    "use_cases": [
+      {
+        "type": "social",
+        "example": "A site refuses a video larger than its limit before you wait for it to upload.",
+        "apps": [
+          "YouTube",
+          "Instagram"
+        ]
+      },
+      {
+        "type": "banking",
+        "example": "A loan portal checks that your uploads are PDFs or photos, not other file types.",
+        "apps": []
+      },
+      {
+        "type": "security",
+        "example": "A fraud team reads the last changed time of an uploaded ID photo to see if it was just edited.",
+        "apps": []
+      },
+      {
+        "type": "games",
+        "example": "A mod site checks the name and size of a mod file for known cheats.",
+        "apps": []
+      },
+      {
+        "type": "creative",
+        "example": "A music tool reads the file name and type to pick a sound format.",
+        "apps": []
+      },
+      {
+        "type": "education",
+        "example": "A homework site checks that the file was last changed before the deadline.",
+        "apps": []
+      },
+      {
+        "type": "enterprise",
+        "example": "A document system uses the last changed time to decide which copy is newer.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Reveals file history",
+      "Could hint at your device"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Only for files the person selected, dropped or pasted",
+    "No full path, owner, creation time or hash; lastModified is milliseconds since epoch (filesystem precision may be 1 s or 2 s)",
+    "Firefox resistFingerprinting rounds lastModified (to 100 ms or more) and sets type from extension only",
+    "type is guessed from the extension via the OS registry (Chrome, Windows and macOS differ for unknown types such as .md)",
+    "EXIF and document properties are not exposed natively but can be parsed by the page from the bytes (GPS in photos)"
+  ],
+  "scores": {
+    "sensitivity": 3,
+    "utility": 4,
+    "fingerprint_bits": 3,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Validate upload types and sizes",
+      "Sort by date"
+    ],
+    "abuse": [
+      "Extracting EXIF GPS and device model from photos",
+      "Fingerprint by installed apps (MIME registry)"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2015",
+      "browser": "chrome",
+      "version": "42",
+      "change": "File.lastModified (replacing lastModifiedDate)"
+    }
+  ],
+  "related": [
+    "web.files.file-input",
+    "web.files.drop-files"
+  ],
+  "refs": [
+    {
+      "t": "mdn",
+      "label": "MDN File",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/File"
+    },
+    {
+      "t": "spec",
+      "label": "W3C File API",
+      "url": "https://www.w3.org/TR/FileAPI/"
+    }
+  ],
+  "confidence": "docs"
+}

@@ -1,0 +1,219 @@
+{
+  "id": "web.os.file-handling",
+  "name": "File Handling (launchQueue)",
+  "kind": "capability",
+  "group": "os-integration-install",
+  "subgroup": "File types",
+  "tags": [
+    "file types"
+  ],
+  "plain": "Lets an installed web app open files of a given type from the file manager.",
+  "meaning": "Registers the PWA as handler for file types; the file arrives as a handle once the person opens it.",
+  "lifecycle": [
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "manifest file_handlers; window.launchQueue.setConsumer(launchParams => launchParams.files)",
+      "bcd": [
+        "manifests.webapp.file_handlers"
+      ],
+      "access": {
+        "grant": "install",
+        "prompt_ui": "OS Open with list; first open confirm",
+        "secure_context": true,
+        "user_gesture": false,
+        "persistence": "Per origin",
+        "revocation": "Site settings",
+        "iframe": "Same as top level; cross-origin iframes need a permissions policy where listed",
+        "steps": [
+          "Call the API",
+          "Browser applies its access rules",
+          "Page receives the result"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "102",
+          "note": "",
+          "date": "2022-05-24"
+        },
+        "edge": {
+          "s": "y",
+          "v": "102",
+          "note": "",
+          "date": "2022-05-31"
+        },
+        "firefox": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "safari": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "ios_safari": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "chrome_android": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "samsung": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "object",
+    "metric": "Lets an installed web app open files of a given type from the file manager.",
+    "update": "on demand",
+    "fields": [
+      {
+        "name": "launchParams.files",
+        "type": "list",
+        "range": "FileSystemFileHandle[]"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can open files from your file manager in an installed web app, after you choose it",
+    "user_action": "You install the web app, then open a file with Open with and pick it",
+    "can": [
+      "Appear in the Open with list for file types it supports",
+      "Open the one file you picked and show it in the app",
+      "Save changes back to that file after you confirm"
+    ],
+    "cannot": [
+      "Open files you did not choose",
+      "Work for a site that is not installed",
+      "Work in Firefox, Safari or on phones",
+      "Skip the confirm step the first time you open a file"
+    ],
+    "reach": 1,
+    "reach_label": "One file you choose",
+    "differs": "Chrome and Edge on computers only. Phones, Firefox and Safari do not support it."
+  },
+  "story": {
+    "what_it_is": "An installed web app can be set to open certain file types when you double click them.",
+    "icon": "file-up",
+    "tags": [
+      "Installed apps",
+      "Files",
+      "Capability"
+    ],
+    "marketing": [
+      {
+        "vendor": "Google Chrome",
+        "name": "File Handling",
+        "pitch": "Installed web apps can register as handlers for file types, so a double click opens the file in the app.",
+        "url": "https://developer.chrome.com/docs/capabilities/web-apis/file-handling"
+      }
+    ],
+    "for_you": "You double click a picture or document and it opens in the web app, like a normal desktop program. On first use the browser may ask to confirm. You can change the default later.",
+    "for_makers": "Makers make web apps feel native: their app shows up in Open with and as the default. It deepens habit and loyalty. It works only for installed web apps in Chromium.",
+    "use_cases": [
+      {
+        "type": "creative",
+        "example": "A web photo editor opens PNG files straight from your folder when you double click them.",
+        "apps": []
+      },
+      {
+        "type": "music",
+        "example": "A web audio editor opens a sound file from the desktop.",
+        "apps": []
+      },
+      {
+        "type": "productivity",
+        "example": "A web document app opens text and CSV files you double click.",
+        "apps": [
+          "Google Docs"
+        ]
+      },
+      {
+        "type": "developer",
+        "example": "A web code editor opens source files from the file manager.",
+        "apps": [
+          "VS Code for the Web"
+        ]
+      },
+      {
+        "type": "games",
+        "example": "A web emulator or level editor opens a save or map file with a double click.",
+        "apps": []
+      },
+      {
+        "type": "video",
+        "example": "A web video tool opens clips you dragged from a camera folder.",
+        "apps": []
+      },
+      {
+        "type": "education",
+        "example": "A web drawing app for classes opens a student's file from a shared drive.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Hijacks file defaults",
+      "Only installed apps"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Installed PWA only",
+    "Desktop only (Chrome, Edge)",
+    "No file type registration on mobile"
+  ],
+  "scores": {
+    "sensitivity": 2,
+    "utility": 3,
+    "fingerprint_bits": null,
+    "friction": 1
+  },
+  "value": {
+    "legit_uses": [
+      "Editors and viewers"
+    ],
+    "abuse": [
+      "None notable"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2022-04",
+      "browser": "chrome",
+      "version": "102",
+      "change": "File Handling ships on desktop"
+    }
+  ],
+  "refs": [
+    {
+      "t": "mdn",
+      "label": "MDN file_handlers",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/Progressive_web_apps/Manifest/Reference/file_handlers"
+    },
+    {
+      "t": "vendor",
+      "label": "Chrome File Handling",
+      "url": "https://developer.chrome.com/docs/capabilities/web-apis/file-handling"
+    }
+  ],
+  "confidence": "verified"
+}

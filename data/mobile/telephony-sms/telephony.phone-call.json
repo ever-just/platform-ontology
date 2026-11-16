@@ -1,0 +1,176 @@
+{
+  "id": "mob.telephony.phone-call",
+  "name": "Place and answer calls",
+  "kind": "permission",
+  "group": "telephony-sms",
+  "subgroup": "Calls",
+  "tags": [
+    "runtime-permission",
+    "dial"
+  ],
+  "plain": "Lets the app start or answer phone calls without the user pressing Dial.",
+  "meaning": "A direct call costs money and can disclose the number; premium-rate fraud is the abuse case. Normal apps should hand off to the dialer instead.",
+  "lifecycle": [
+    "in-session"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "y",
+      "v": "6.0",
+      "api": 23,
+      "permission": "CALL_PHONE, ANSWER_PHONE_CALLS (API 26), ADD_VOICEMAIL",
+      "protection": "dangerous",
+      "grant": "prompt",
+      "prompt_ui": "Allow or Don't allow",
+      "persistence": "Until revoked",
+      "revocation": "Settings > Apps > Permissions > Phone",
+      "store_policy": "Play: avoid unless the app is the default dialer; ACTION_DIAL needs nothing",
+      "api_surface": "TelecomManager.placeCall, Intent.ACTION_CALL, ACTION_DIAL",
+      "note": "ACTION_DIAL opens the dialer with the number filled in and needs no permission."
+    },
+    "ios": {
+      "s": "y",
+      "v": "3.0",
+      "permission": "none (CallKit entitlement-free for VoIP)",
+      "protection": "none",
+      "grant": "none",
+      "prompt_ui": "tel: URL asks the user to confirm Call",
+      "persistence": "n/a",
+      "revocation": "n/a",
+      "store_policy": "App Review 3.2.2",
+      "api_surface": "UIApplication.open(tel:), CallKit CXProvider",
+      "note": "Apps cannot dial directly; VoIP calls use CallKit and PushKit; no way to answer cellular calls."
+    }
+  },
+  "data": {
+    "type": "event",
+    "metric": "Placed call",
+    "update": "on demand",
+    "fields": []
+  },
+  "limits": {
+    "headline": "Can start calls for you on Android after you allow it; iPhone asks you to confirm",
+    "user_action": "You tap a phone number, a Call button, or Dial",
+    "can": [
+      "Place a call directly (Android, with permission)",
+      "Open the dialer with the number filled in, with no permission",
+      "Answer calls on Android 8 and later",
+      "Make internet calls through the system calling screen on iPhone"
+    ],
+    "cannot": [
+      "Dial directly on iPhone",
+      "Answer ordinary phone calls on iPhone",
+      "Skip your confirm tap on a phone link on iPhone"
+    ],
+    "reach": 2,
+    "reach_label": "Calls you start or answer",
+    "differs": "Android can dial directly with permission; iPhone always asks you to confirm and cannot answer cellular calls."
+  },
+  "story": {
+    "what_it_is": "Lets an app start or answer phone calls without you pressing Dial.",
+    "icon": "phone-outgoing",
+    "tags": [
+      "Calls",
+      "Permission",
+      "Money"
+    ],
+    "marketing": [],
+    "for_you": "The app asks to make calls. If you say yes, it can dial for you with no extra tap. You pay the cost, so the permission needs trust.",
+    "for_makers": "Click to call is useful for support lines and emergency features. The same power could call a premium number and run up a bill. Most apps instead open the dialer with the number filled in, with no permission.",
+    "use_cases": [
+      {
+        "type": "enterprise",
+        "example": "A support app dials the helpline in one tap.",
+        "apps": []
+      },
+      {
+        "type": "security",
+        "example": "A safety app calls an emergency contact when you press a panic button.",
+        "apps": []
+      },
+      {
+        "type": "travel",
+        "example": "A hotel app calls the front desk.",
+        "apps": []
+      },
+      {
+        "type": "rideshare",
+        "example": "A ride app lets you call the driver.",
+        "apps": [
+          "Uber"
+        ]
+      },
+      {
+        "type": "delivery",
+        "example": "A food app lets you call the restaurant.",
+        "apps": []
+      },
+      {
+        "type": "utilities",
+        "example": "A call assistant dials a number you speak aloud.",
+        "apps": []
+      },
+      {
+        "type": "security",
+        "example": "A scam app dials a premium number to steal money, which is why it is limited.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Premium rate fraud",
+      "Reveals your number",
+      "Cost to you"
+    ],
+    "android_note": "Opening the dialer with a number filled in needs no permission.",
+    "ios_note": "iPhone apps cannot dial directly. Internet calls use CallKit and apps cannot answer cellular calls."
+  },
+  "technical_bounds": [
+    "iOS always confirms before dialing",
+    "Android CALL_PHONE bypasses confirmation"
+  ],
+  "scores": {
+    "sensitivity": 3,
+    "utility": 3,
+    "fingerprint_bits": null,
+    "friction": 2
+  },
+  "value": {
+    "legit_uses": [
+      "Click to call"
+    ],
+    "abuse": [
+      "Premium rate fraud"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2017-08",
+      "platform": "android",
+      "version": "8.0 (API 26)",
+      "change": "ANSWER_PHONE_CALLS added"
+    }
+  ],
+  "related": [
+    "mob.telephony.phone-state"
+  ],
+  "refs": [
+    {
+      "t": "android",
+      "label": "Android: Manifest.permission reference",
+      "url": "https://developer.android.com/reference/android/Manifest.permission"
+    },
+    {
+      "t": "android",
+      "label": "Android: Telecom framework",
+      "url": "https://developer.android.com/develop/connectivity/telecom"
+    }
+  ],
+  "confidence": "docs"
+}

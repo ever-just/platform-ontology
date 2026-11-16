@@ -1,0 +1,230 @@
+{
+  "id": "web.peripherals.vibration",
+  "name": "Vibration",
+  "kind": "action",
+  "group": "peripherals-hardware",
+  "subgroup": "Haptics",
+  "tags": [
+    "vibrate",
+    "haptic"
+  ],
+  "plain": "Makes the phone buzz in a pattern.",
+  "meaning": "Gives tactile feedback only; it cannot read anything. Sites can annoy people or use it for cues, but it also signals the device is a phone.",
+  "lifecycle": [
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "navigator.vibrate(pattern)",
+      "bcd": [
+        "api.Navigator.vibrate"
+      ],
+      "access": {
+        "grant": "gesture",
+        "prompt_ui": "No prompt; needs a prior tap on the page",
+        "secure_context": true,
+        "user_gesture": true,
+        "persistence": "None",
+        "revocation": "Mute device",
+        "iframe": "Needs user activation in the frame (sticky activation)",
+        "steps": [
+          "User taps",
+          "Call navigator.vibrate([200,100,200])"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "32",
+          "note": "",
+          "date": "2014-01-14"
+        },
+        "edge": {
+          "s": "y",
+          "v": "79",
+          "note": "",
+          "date": "2020-01-15"
+        },
+        "firefox": {
+          "s": "r",
+          "v": "129",
+          "note": "Until Firefox 26 included, when the vibration pattern was too long or any of its elements too large, Firefox threw an exception instead of returning <code>false",
+          "date": "2024-08-06"
+        },
+        "safari": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "ios_safari": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "32",
+          "note": "Beginning in Chrome 55, this is not supported in cross-origin iframes. Beginning in Chrome 60, this method requires a user gesture. Otherwise it returns <code>f",
+          "date": "2014-01-15"
+        },
+        "samsung": {
+          "s": "y",
+          "v": "2.0",
+          "note": "Beginning in Chrome 55, this is not supported in cross-origin iframes. Beginning in Chrome 60, this method requires a user gesture. Otherwise it returns <code>f",
+          "date": "2014-10-17"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "none",
+    "metric": "",
+    "update": "",
+    "fields": [
+      {
+        "name": "pattern",
+        "type": "list",
+        "unit": "ms",
+        "range": "array of up to 10 durations; each up to 10000 ms",
+        "precision": "Chrome clamps"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can buzz the phone in a pattern, after you have tapped on the page",
+    "user_action": "You tap a button or touch the page before it buzzes.",
+    "can": [
+      "Buzz your Android phone in a pattern",
+      "Stop a buzz it started",
+      "Give touch feedback in games, timers and alerts"
+    ],
+    "cannot": [
+      "Buzz before you have tapped on the page",
+      "Buzz on iPhone, because Safari does not offer it",
+      "Buzz in current Firefox, which no longer offers it"
+    ],
+    "reach": 1,
+    "reach_label": "Short buzz after a tap",
+    "differs": "Android Chrome and Edge allow it. iPhone Safari does not."
+  },
+  "story": {
+    "what_it_is": "A site can make your phone buzz in a pattern after a tap.",
+    "icon": "vibrate",
+    "tags": [
+      "Phone buzz",
+      "Needs a click",
+      "Games"
+    ],
+    "marketing": [
+      {
+        "vendor": "Mozilla",
+        "name": "Vibration API",
+        "pitch": "MDN says the API lets a page use the phone's vibration hardware for touch feedback.",
+        "url": "https://developer.mozilla.org/en-US/docs/Web/API/Vibration_API"
+      }
+    ],
+    "for_you": "A short buzz confirms a tap or warns you about something in the page. Safari on iPhone does not allow it.",
+    "for_makers": "Makers add buzz for touch feedback, alerts and game effects. It works without a prompt but only after you have tapped the page.",
+    "use_cases": [
+      {
+        "type": "games",
+        "example": "A browser shooter buzzes when you are hit, and a racing game buzzes when you bump a car.",
+        "apps": []
+      },
+      {
+        "type": "fitness",
+        "example": "A web workout timer buzzes when it is time to switch moves.",
+        "apps": []
+      },
+      {
+        "type": "accessibility",
+        "example": "A web app uses short and long buzzes as a code for people who cannot see the screen.",
+        "apps": []
+      },
+      {
+        "type": "delivery",
+        "example": "A web ride or food app buzzes when the driver arrives, if the page is open.",
+        "apps": []
+      },
+      {
+        "type": "messaging",
+        "example": "A web chat buzzes when a message lands while you are in the app.",
+        "apps": []
+      },
+      {
+        "type": "security",
+        "example": "A shady page may buzz to trick you into thinking you got a call or alert.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Annoying buzzes",
+      "Alert tricks"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Needs a prior tap on the page",
+    "Android only in practice; ignored on iOS",
+    "No effect with ringer off on some devices"
+  ],
+  "scores": {
+    "sensitivity": 1,
+    "utility": 2,
+    "fingerprint_bits": 0.5,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Game feedback",
+      "Timer alerts"
+    ],
+    "abuse": [
+      "Nuisance buzzing"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2013",
+      "browser": "chrome",
+      "version": "32",
+      "change": "Vibration API ships"
+    },
+    {
+      "date": "2017-01",
+      "browser": "chrome",
+      "version": "60",
+      "change": "Requires user activation"
+    },
+    {
+      "date": "2024-09",
+      "browser": "firefox",
+      "version": "129",
+      "change": "Firefox removes Navigator.vibrate"
+    }
+  ],
+  "related": [
+    "web.peripherals.gamepad"
+  ],
+  "refs": [
+    {
+      "t": "mdn",
+      "label": "MDN Vibration API",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/Vibration_API"
+    },
+    {
+      "t": "spec",
+      "label": "W3C Vibration",
+      "url": "https://www.w3.org/TR/vibration/"
+    }
+  ],
+  "confidence": "verified"
+}

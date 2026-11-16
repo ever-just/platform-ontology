@@ -1,0 +1,174 @@
+{
+  "id": "mob.net.vpn",
+  "name": "VPN active detection",
+  "kind": "signal",
+  "group": "network-connectivity",
+  "subgroup": "Connectivity",
+  "tags": [
+    "vpn",
+    "detection"
+  ],
+  "plain": "Android shows a VPN flag with no prompt; iOS offers only indirect hints.",
+  "meaning": "Reveals whether the person hides their IP or uses a corporate VPN; apps use it for fraud and geo-blocking decisions.",
+  "lifecycle": [
+    "on-launch",
+    "in-session"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "y",
+      "v": "5.0",
+      "api": 21,
+      "permission": "ACCESS_NETWORK_STATE",
+      "protection": "normal",
+      "grant": "install",
+      "prompt_ui": "",
+      "persistence": "",
+      "revocation": "",
+      "store_policy": "",
+      "api_surface": "NetworkCapabilities.hasTransport(TRANSPORT_VPN), !hasCapability(NET_CAPABILITY_NOT_VPN)",
+      "note": "Reliable for system VPNs"
+    },
+    "ios": {
+      "s": "p",
+      "v": "2.0",
+      "permission": "none",
+      "protection": "none",
+      "grant": "none",
+      "prompt_ui": "",
+      "persistence": "",
+      "revocation": "",
+      "store_policy": "",
+      "api_surface": "No official flag; Apple does not provide a VPN API for detection",
+      "note": ""
+    }
+  },
+  "web_equivalents": [
+    "web.net.vpn-proxy-tor-detection"
+  ],
+  "data": {
+    "type": "boolean",
+    "metric": "VPN on or off",
+    "update": "On change",
+    "fields": [
+      {
+        "name": "vpn",
+        "type": "boolean",
+        "unit": "",
+        "range": "true, false",
+        "precision": "1 bit"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can see if a VPN is on, directly on Android and by guessing on iPhone",
+    "user_action": "Nothing. It happens when the app checks the connection",
+    "can": [
+      "Check a VPN flag on Android",
+      "Guess a VPN from iPhone network hints",
+      "Block or limit features when a VPN is on"
+    ],
+    "cannot": [
+      "See which VPN or what it carries",
+      "Get an official VPN flag on iPhone",
+      "Always catch a VPN on iPhone; guesses can be wrong"
+    ],
+    "reach": 1,
+    "reach_label": "Whether a VPN is on",
+    "differs": "Android has a reliable flag for system VPNs. iPhone has no official flag, only indirect hints."
+  },
+  "story": {
+    "what_it_is": "An app can often tell if you are using a VPN.",
+    "icon": "shield",
+    "tags": [
+      "Network",
+      "Silent",
+      "Privacy"
+    ],
+    "marketing": [],
+    "for_you": "You do not see it. Some apps behave differently when they see a VPN: a streaming app may block you, or a bank may ask for extra checks. It does not read your traffic, only that a tunnel is on.",
+    "for_makers": "Makers use it for fraud checks and to follow content rules by country. It can also be used to turn away people who use privacy tools. It is easy to read on Android and mostly indirect on iPhone.",
+    "use_cases": [
+      {
+        "type": "media",
+        "example": "A streaming service blocks playback when it sees a VPN trying to fake your country.",
+        "apps": [
+          "Netflix",
+          "BBC iPlayer"
+        ]
+      },
+      {
+        "type": "banking",
+        "example": "A bank asks for a code when you log in through a VPN.",
+        "apps": []
+      },
+      {
+        "type": "games",
+        "example": "A game bans players who use a VPN to dodge a region lock or an IP ban.",
+        "apps": []
+      },
+      {
+        "type": "shopping",
+        "example": "A ticket seller limits purchases from VPNs to fight bots.",
+        "apps": []
+      },
+      {
+        "type": "enterprise",
+        "example": "A work app only opens when the company VPN is on.",
+        "apps": []
+      },
+      {
+        "type": "security",
+        "example": "A fraud engine adds risk when it sees a VPN with a sign up in a new country.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Blocks privacy tool users",
+      "Weak fingerprint bit"
+    ],
+    "android_note": "Android apps can see a VPN flag with no prompt.",
+    "ios_note": "iPhone gives only indirect hints, like unusual network interface names."
+  },
+  "technical_bounds": [
+    "iOS detection is heuristic"
+  ],
+  "scores": {
+    "sensitivity": 2,
+    "utility": 3,
+    "fingerprint_bits": 1,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Fraud checks",
+      "Geo-restricted content"
+    ],
+    "abuse": [
+      "Block privacy tool users"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "related": [
+    "mob.net.proxy"
+  ],
+  "refs": [
+    {
+      "t": "android",
+      "label": "Android: ConnectivityManager",
+      "url": "https://developer.android.com/reference/android/net/ConnectivityManager"
+    },
+    {
+      "t": "apple",
+      "label": "Apple: ProcessInfo",
+      "url": "https://developer.apple.com/documentation/foundation/processinfo"
+    }
+  ],
+  "confidence": "docs"
+}

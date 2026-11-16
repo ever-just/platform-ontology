@@ -1,0 +1,242 @@
+{
+  "id": "web.files.blob-urls",
+  "name": "Blob URLs (object URLs)",
+  "kind": "capability",
+  "group": "files-storage",
+  "subgroup": "Files",
+  "tags": [
+    "blob",
+    "object-url",
+    "download",
+    "phishing"
+  ],
+  "plain": "Makes a temporary URL for in-memory data or a File, usable in links, images and downloads.",
+  "meaning": "A site can hand files to itself without a server round trip. The URL works only in that browser and origin and dies when the page unloads or is revoked.",
+  "lifecycle": [
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "URL.createObjectURL(blob); URL.revokeObjectURL(url); blob:https://origin/uuid",
+      "bcd": [
+        "api.URL.createObjectURL_static",
+        "api.Blob"
+      ],
+      "access": {
+        "grant": "none",
+        "prompt_ui": "None (no browser prompt)",
+        "secure_context": false,
+        "user_gesture": false,
+        "activation": "none",
+        "persistence": "Until the document unloads or revokeObjectURL() is called",
+        "revocation": "Nothing to revoke (no permission is stored)",
+        "iframe": "Same origin only; partitioned by top level site in modern browsers",
+        "steps": [
+          "Create a Blob or take a File",
+          "Call URL.createObjectURL",
+          "Use the blob: URL in img, a download or fetch"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "19",
+          "note": "",
+          "date": "2012-05-15"
+        },
+        "edge": {
+          "s": "y",
+          "v": "12",
+          "note": "",
+          "date": "2015-07-29"
+        },
+        "firefox": {
+          "s": "y",
+          "v": "19",
+          "note": "",
+          "date": "2013-02-19"
+        },
+        "safari": {
+          "s": "y",
+          "v": "6",
+          "note": "",
+          "date": "2012-07-25"
+        },
+        "ios_safari": {
+          "s": "y",
+          "v": "6",
+          "note": "All iOS browsers use WebKit",
+          "date": "2012-09-10"
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "25",
+          "note": "",
+          "date": "2013-02-27"
+        },
+        "samsung": {
+          "s": "y",
+          "v": "1.5",
+          "note": "",
+          "date": "2013-09-25"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "none",
+    "metric": "",
+    "update": "",
+    "fields": []
+  },
+  "limits": {
+    "headline": "Can make temporary links to data held in memory, which work only on its own site",
+    "user_action": "You pick an image to preview, or tap Download for a file the page built.",
+    "can": [
+      "Turn a file or data into a temporary link for images, video or downloads",
+      "Preview an image you chose before upload",
+      "Hand you a file it built, for you to download"
+    ],
+    "cannot": [
+      "Open files you did not pick or that it did not build",
+      "Use the link from another site, since it only works on the site that made it",
+      "Keep the link after you close the tab"
+    ],
+    "reach": 1,
+    "reach_label": "Only data it already has",
+    "differs": ""
+  },
+  "story": {
+    "what_it_is": "Makes a temporary web address for data held in memory or a file you chose.",
+    "icon": "link",
+    "tags": [
+      "Files",
+      "Silent",
+      "Developer"
+    ],
+    "marketing": [
+      {
+        "vendor": "MDN",
+        "name": "URL.createObjectURL",
+        "pitch": "Documents how a page can turn a file or data into a short lived address for images, videos and downloads.",
+        "url": "https://developer.mozilla.org/en-US/docs/Web/API/URL/createObjectURL_static"
+      }
+    ],
+    "for_you": "You see a photo preview appear the moment you pick it, or a download start for a file the page just made. The page never sent it anywhere first.",
+    "for_makers": "It lets a site show or save data without uploading it. That makes previews instant and tools faster. It can also hide files from simple scanners, so security teams watch for it.",
+    "use_cases": [
+      {
+        "type": "social",
+        "example": "You choose a photo for a profile and see it right away, before it uploads.",
+        "apps": []
+      },
+      {
+        "type": "creative",
+        "example": "A web editor lets you download your edited image or video straight from memory.",
+        "apps": [
+          "Canva",
+          "Photopea"
+        ]
+      },
+      {
+        "type": "games",
+        "example": "A browser game saves and shares a replay or screenshot as a downloaded file.",
+        "apps": []
+      },
+      {
+        "type": "video",
+        "example": "A web video tool plays a clip you recorded without sending it to a server.",
+        "apps": []
+      },
+      {
+        "type": "productivity",
+        "example": "A document site makes a PDF in your browser and offers it as a download.",
+        "apps": []
+      },
+      {
+        "type": "security",
+        "example": "A phishing page builds a fake document in memory and shows it from a blob address so filters do not see it.",
+        "apps": []
+      },
+      {
+        "type": "messaging",
+        "example": "A chat site previews an attachment the second you pick it.",
+        "apps": [
+          "Slack"
+        ]
+      }
+    ],
+    "risks": [
+      "Hides content from filters",
+      "Phishing use"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Only usable by the origin that created it (fetching from another origin fails)",
+    "Top frame navigation to blob: and data: URLs from other origins is blocked (Chrome 60, Firefox 59 for data:)",
+    "Not a persistent store: gone after reload or unload; unrevoked URLs keep the Blob in memory",
+    "Chrome stores big blobs on disk; practical single blob sizes of a few gigabytes",
+    "Blob URL storage partitioning by top level site is rolling out across browsers (Firefox and Safari first, Chrome later)"
+  ],
+  "scores": {
+    "sensitivity": 1,
+    "utility": 5,
+    "fingerprint_bits": null,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Client side downloads",
+      "Image previews",
+      "Workers from blobs"
+    ],
+    "abuse": [
+      "Phishing pages built from blob URLs that hide the real host",
+      "Hiding payloads from network filters"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2017-07",
+      "browser": "chrome",
+      "version": "60",
+      "change": "Block top frame navigation to blob and data URLs from other origins"
+    },
+    {
+      "date": "2025",
+      "browser": "chrome",
+      "version": "137",
+      "change": "Blob URL partitioning by top level site (rollout date approximate)"
+    }
+  ],
+  "related": [
+    "web.actions.downloads"
+  ],
+  "refs": [
+    {
+      "t": "mdn",
+      "label": "MDN createObjectURL static",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/URL/createObjectURL_static"
+    },
+    {
+      "t": "spec",
+      "label": "File API: Blob URL",
+      "url": "https://www.w3.org/TR/FileAPI/#url"
+    },
+    {
+      "t": "chromestatus",
+      "label": "Chrome Blob URL partitioning",
+      "url": "https://chromestatus.com/feature/5130809139412992"
+    }
+  ],
+  "confidence": "docs"
+}

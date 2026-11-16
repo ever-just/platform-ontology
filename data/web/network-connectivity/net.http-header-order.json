@@ -1,0 +1,207 @@
+{
+  "id": "web.net.http-header-order",
+  "name": "HTTP header order and casing",
+  "kind": "tracking",
+  "group": "network-connectivity",
+  "subgroup": "HTTP",
+  "tags": [
+    "headers",
+    "order",
+    "casing",
+    "user-agent"
+  ],
+  "plain": "The set and order of request headers is different for each browser and HTTP library.",
+  "meaning": "Chrome, Firefox and Safari send Accept, Accept-Language, Accept-Encoding and Sec-* headers in distinct orders; scripted clients (requests, Go, Node fetch) differ. Mismatches versus the User-Agent flag bots.",
+  "lifecycle": [
+    "on-arrival"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "Server request header parsing",
+      "access": {
+        "grant": "none",
+        "prompt_ui": "",
+        "secure_context": false,
+        "user_gesture": false,
+        "persistence": "",
+        "revocation": "",
+        "iframe": "",
+        "steps": [
+          "Read headers in received order",
+          "Hash names, order and values",
+          "Compare with User-Agent"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "1",
+          "note": "",
+          "date": "2008-12-11"
+        },
+        "edge": {
+          "s": "y",
+          "v": "79",
+          "note": "",
+          "date": "2020-01-15"
+        },
+        "firefox": {
+          "s": "y",
+          "v": "1",
+          "note": "",
+          "date": "2004-11-09"
+        },
+        "safari": {
+          "s": "y",
+          "v": "1",
+          "note": "",
+          "date": "2003-06-23"
+        },
+        "ios_safari": {
+          "s": "y",
+          "v": "1",
+          "note": "",
+          "date": "2007-06-29"
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "1",
+          "note": "",
+          "date": ""
+        },
+        "samsung": {
+          "s": "y",
+          "v": "5.0",
+          "note": "",
+          "date": "2016-12-15"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "string",
+    "metric": "Ordered list",
+    "update": "",
+    "fields": [
+      {
+        "name": "header order",
+        "type": "list",
+        "unit": "",
+        "range": "10 to 20 names",
+        "precision": "exact"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can tell which browser or tool you use from the order of request headers",
+    "user_action": "Nothing. It happens with every page request",
+    "can": [
+      "Compare the order and casing of header lines with known browsers",
+      "Spot scripts and bots that use plain code libraries",
+      "Flag a browser name that does not match the headers"
+    ],
+    "cannot": [
+      "Know your name or account from it",
+      "See your files or other tabs",
+      "Tell two people on the same browser version apart"
+    ],
+    "reach": 2,
+    "reach_label": "Sent with every request",
+    "differs": ""
+  },
+  "story": {
+    "what_it_is": "The order of the info your browser sends to a site reveals which browser it is.",
+    "icon": "list-ordered",
+    "tags": [
+      "Fingerprint",
+      "Silent",
+      "Network"
+    ],
+    "marketing": [],
+    "for_you": "You never see it. Each browser sends the same pieces in a slightly different order, like a signature. A site can tell Chrome from Firefox from a script even if the browser claims otherwise.",
+    "for_makers": "Bot defense vendors use header order as a quick way to catch scripts pretending to be browsers. It is also a fingerprint input, since software versions and add-ons leave marks.",
+    "use_cases": [
+      {
+        "type": "security",
+        "example": "A bot defense checks if the header order matches the browser claim, and blocks scripts that fake Chrome.",
+        "apps": [
+          "Cloudflare",
+          "DataDome"
+        ]
+      },
+      {
+        "type": "games",
+        "example": "A game login page blocks credential stuffing tools that send headers in an odd order.",
+        "apps": [
+          "Roblox"
+        ]
+      },
+      {
+        "type": "shopping",
+        "example": "A sneaker or ticket site spots scalper bots by header order before the sale begins.",
+        "apps": [
+          "Ticketmaster"
+        ]
+      },
+      {
+        "type": "ads",
+        "example": "An ad platform filters click fraud from scripts with the wrong header signature.",
+        "apps": []
+      },
+      {
+        "type": "analytics",
+        "example": "A traffic report separates real browsers from crawlers.",
+        "apps": []
+      },
+      {
+        "type": "media",
+        "example": "A streaming site stops account sharing and scraping tools by headers.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Hard to hide",
+      "Can flag privacy tools"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Proxies and CDNs can reorder headers",
+    "HTTP/2 lowercases names"
+  ],
+  "scores": {
+    "sensitivity": 2,
+    "utility": 4,
+    "fingerprint_bits": 3,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": "Bot detection",
+    "abuse": "Client identification"
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "related": [
+    "web.net.http2-akamai-fingerprint",
+    "web.net.client-hints"
+  ],
+  "refs": [
+    {
+      "t": "github",
+      "label": "FoxIO-LLC/ja4 (JA4H)",
+      "url": "https://github.com/FoxIO-LLC/ja4/blob/main/technical_details/JA4H.md"
+    },
+    {
+      "t": "mdn",
+      "label": "MDN HTTP headers",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers"
+    }
+  ],
+  "confidence": "docs"
+}

@@ -1,0 +1,228 @@
+{
+  "id": "web.os.web-locks-media-session",
+  "name": "Web Locks and Media Session",
+  "kind": "capability",
+  "group": "os-integration-install",
+  "subgroup": "System integration",
+  "tags": [
+    "system integration"
+  ],
+  "plain": "Lets a page coordinate tabs and show media controls on the lock screen.",
+  "meaning": "Media Session exposes title and artwork to OS media UI. Web Locks coordinates work across tabs.",
+  "lifecycle": [
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "navigator.locks.request(name,cb); navigator.mediaSession.metadata",
+      "bcd": [
+        "api.MediaSession"
+      ],
+      "access": {
+        "grant": "none",
+        "prompt_ui": "None",
+        "secure_context": true,
+        "user_gesture": false,
+        "persistence": "Per origin",
+        "revocation": "Site settings",
+        "iframe": "Same as top level; cross-origin iframes need a permissions policy where listed",
+        "steps": [
+          "Call the API",
+          "Browser applies its access rules",
+          "Page receives the result"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "73",
+          "note": "",
+          "date": "2019-03-12"
+        },
+        "edge": {
+          "s": "y",
+          "v": "79",
+          "note": "",
+          "date": "2020-01-15"
+        },
+        "firefox": {
+          "s": "y",
+          "v": "82",
+          "note": "",
+          "date": "2020-10-20"
+        },
+        "safari": {
+          "s": "y",
+          "v": "15",
+          "note": "",
+          "date": "2021-09-20"
+        },
+        "ios_safari": {
+          "s": "y",
+          "v": "15",
+          "note": "",
+          "date": "2021-09-20"
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "57",
+          "note": "",
+          "date": "2017-03-16"
+        },
+        "samsung": {
+          "s": "y",
+          "v": "7.0",
+          "note": "",
+          "date": "2018-03-16"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "object",
+    "metric": "Lets a page coordinate tabs and show media controls on the lock screen.",
+    "update": "on demand",
+    "fields": [
+      {
+        "name": "metadata",
+        "type": "object",
+        "range": "title, artist, album, artwork[]"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can coordinate work across your open tabs and show media controls on your lock screen",
+    "user_action": "You play a podcast or video, or open the same site in two tabs",
+    "can": [
+      "Show the title and artwork in your lock screen and notification controls",
+      "Let play and pause buttons from your headphones or keyboard reach the page",
+      "Make two tabs of the same site take turns doing a job"
+    ],
+    "cannot": [
+      "See other sites' tabs",
+      "See what other apps are playing",
+      "Take over your controls when another app is playing",
+      "Learn anything about you from this alone"
+    ],
+    "reach": 2,
+    "reach_label": "While media is playing",
+    "differs": ""
+  },
+  "story": {
+    "what_it_is": "A page can coordinate its own tabs, and show play and pause controls on your lock screen.",
+    "icon": "music",
+    "tags": [
+      "Media",
+      "Capability",
+      "Silent"
+    ],
+    "marketing": [
+      {
+        "vendor": "web.dev",
+        "name": "Media Session API",
+        "pitch": "Lets a page show track info and play controls on the lock screen, headphones and car displays.",
+        "url": "https://web.dev/articles/media-session"
+      }
+    ],
+    "for_you": "You see the song title, picture and play buttons on your lock screen and in your car. Pressing a headphone button pauses the page. Behind the scenes, tabs avoid fighting over the same job.",
+    "for_makers": "Makers get a polished player with lock screen controls and clean tab behavior. Locks stop two tabs doing the same work, such as syncing twice. Both are quiet features that make web apps feel native.",
+    "use_cases": [
+      {
+        "type": "music",
+        "example": "A web music player shows the song, cover art and skip buttons on your phone lock screen.",
+        "apps": [
+          "YouTube Music"
+        ]
+      },
+      {
+        "type": "video",
+        "example": "A video site shows play, pause and seek controls on the lock screen and a smart watch.",
+        "apps": [
+          "YouTube"
+        ]
+      },
+      {
+        "type": "games",
+        "example": "A browser game with sound pauses music when you press pause on your headphones.",
+        "apps": []
+      },
+      {
+        "type": "productivity",
+        "example": "A web editor uses locks so only one open tab syncs your document at a time.",
+        "apps": [
+          "Google Docs"
+        ]
+      },
+      {
+        "type": "live",
+        "example": "A live radio or podcast site shows the show name on the lock screen.",
+        "apps": []
+      },
+      {
+        "type": "automotive",
+        "example": "A web player shows track info on a car display when your phone is connected.",
+        "apps": []
+      },
+      {
+        "type": "messaging",
+        "example": "A web chat uses locks so only one tab plays the message sound.",
+        "apps": [
+          "Slack"
+        ]
+      }
+    ],
+    "risks": [
+      "Little risk",
+      "Tab behavior surprises"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Media Session only for playing media",
+    "Web Locks scoped to origin"
+  ],
+  "scores": {
+    "sensitivity": 1,
+    "utility": 3,
+    "fingerprint_bits": null,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Podcasts"
+    ],
+    "abuse": [
+      "None"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2018",
+      "browser": "chrome",
+      "version": "69",
+      "change": "Web Locks"
+    },
+    {
+      "date": "2019",
+      "browser": "chrome",
+      "version": "73",
+      "change": "Media Session"
+    }
+  ],
+  "refs": [
+    {
+      "t": "mdn",
+      "label": "MDN Media Session API",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/Media_Session_API"
+    }
+  ],
+  "confidence": "verified"
+}

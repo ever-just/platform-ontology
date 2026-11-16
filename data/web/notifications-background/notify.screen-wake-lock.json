@@ -1,0 +1,271 @@
+{
+  "id": "web.notify.screen-wake-lock",
+  "name": "Screen Wake Lock",
+  "kind": "capability",
+  "group": "notifications-background",
+  "subgroup": "Keep awake",
+  "tags": [
+    "battery"
+  ],
+  "plain": "Keeps the screen on while the page is visible.",
+  "meaning": "Stops the display from dimming or locking, which can drain battery and expose the screen. Browsers drop it when the page is hidden or battery is low, so it cannot hold the screen on in the background.",
+  "lifecycle": [
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "navigator.wakeLock.request('screen'); sentinel.release(); 'release' event",
+      "permission_name": "screen-wake-lock",
+      "permissions_policy": "screen-wake-lock",
+      "bcd": [
+        "api.WakeLock",
+        "api.WakeLockSentinel"
+      ],
+      "access": {
+        "grant": "none",
+        "prompt_ui": "No prompt in most browsers; Chrome keeps a policy gate; the permission state granted, denied or prompt follows policy and battery.",
+        "secure_context": true,
+        "user_gesture": false,
+        "persistence": "Held only while the document is visible",
+        "revocation": "Page hidden, low battery or power saver, sentinel.release()",
+        "iframe": "Needs allow=\"screen-wake-lock\" in iframes",
+        "steps": [
+          "Call navigator.wakeLock.request('screen')",
+          "Browser grants a WakeLockSentinel",
+          "Lock releases on hide, low battery or release()",
+          "Re-request on visibilitychange"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "84",
+          "note": "",
+          "date": "2020-07-27"
+        },
+        "edge": {
+          "s": "y",
+          "v": "84",
+          "note": "",
+          "date": "2020-07-16"
+        },
+        "firefox": {
+          "s": "y",
+          "v": "126",
+          "note": "",
+          "date": "2024-05-14"
+        },
+        "safari": {
+          "s": "y",
+          "v": "16.4",
+          "note": "",
+          "date": "2023-03-27"
+        },
+        "ios_safari": {
+          "s": "y",
+          "v": "18.4",
+          "note": "",
+          "date": "2025-03-31"
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "84",
+          "note": "",
+          "date": "2020-07-27"
+        },
+        "samsung": {
+          "s": "y",
+          "v": "14.0",
+          "note": "",
+          "date": "2021-04-17"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "object",
+    "metric": "WakeLockSentinel",
+    "update": "while active",
+    "fields": [
+      {
+        "name": "type",
+        "type": "enum",
+        "unit": "none",
+        "range": "screen only",
+        "precision": "fixed"
+      },
+      {
+        "name": "released",
+        "type": "boolean",
+        "unit": "none",
+        "range": "true or false",
+        "precision": "event driven"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can keep your screen on while the page is showing, but not in the background",
+    "user_action": "You open a recipe, video or presentation and the page asks to stay awake",
+    "can": [
+      "Stop the screen from dimming or locking while the page is visible",
+      "Keep a recipe or slide show on screen",
+      "Work in all major browsers with no pop up in most"
+    ],
+    "cannot": [
+      "Keep the screen on once you switch tabs or minimize the page",
+      "Hold the screen on when battery is low",
+      "Keep the computer awake when the screen is off",
+      "Override browser rules that release it when the page is hidden"
+    ],
+    "reach": 2,
+    "reach_label": "Only while the page is visible",
+    "differs": ""
+  },
+  "story": {
+    "what_it_is": "A page can keep your screen from dimming or locking while you use it.",
+    "icon": "sun",
+    "tags": [
+      "Screen",
+      "Capability",
+      "Battery"
+    ],
+    "marketing": [
+      {
+        "vendor": "web.dev",
+        "name": "Screen Wake Lock API",
+        "pitch": "Stops the screen from turning off while you read, cook, present or watch, with no user setting changes.",
+        "url": "https://web.dev/articles/wake-lock"
+      }
+    ],
+    "for_you": "You do not see a prompt. While you watch a video or follow a recipe, your screen stays on. It lets go when you leave the page. It can use more battery.",
+    "for_makers": "Makers use it for reading, video, maps, recipes and live scoreboards, where a dimmed screen breaks the experience. It only works while the tab is visible. The browser can release it when battery is low.",
+    "use_cases": [
+      {
+        "type": "video",
+        "example": "A video site keeps the screen on while you watch, so the screen does not dim mid movie.",
+        "apps": [
+          "YouTube",
+          "Netflix"
+        ]
+      },
+      {
+        "type": "games",
+        "example": "A browser game with long thoughtful turns, or a cloud game stream, keeps the display awake while you play with a gamepad.",
+        "apps": [
+          "Xbox Cloud Gaming",
+          "GeForce NOW"
+        ]
+      },
+      {
+        "type": "shopping",
+        "example": "A recipe site keeps the screen on while you cook with messy hands.",
+        "apps": []
+      },
+      {
+        "type": "maps",
+        "example": "A web map app keeps the display on while you navigate a walk.",
+        "apps": [
+          "Google Maps"
+        ]
+      },
+      {
+        "type": "live",
+        "example": "A live scoreboard or stream stays visible during a match.",
+        "apps": []
+      },
+      {
+        "type": "productivity",
+        "example": "A slide viewer keeps the screen on while you present.",
+        "apps": [
+          "Google Slides"
+        ]
+      },
+      {
+        "type": "fitness",
+        "example": "A workout timer site keeps the screen on while you exercise.",
+        "apps": []
+      },
+      {
+        "type": "payments",
+        "example": "A web ticket page keeps the QR code bright for a scanner at the gate.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Drains battery",
+      "Screen burn on some displays"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Only 'screen' type exists",
+    "Needs a visible active document",
+    "Released on low battery"
+  ],
+  "scores": {
+    "sensitivity": 1,
+    "utility": 3,
+    "fingerprint_bits": null,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Recipe pages",
+      "Video and presentation apps"
+    ],
+    "abuse": [
+      "Battery drain, always-on display"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2020-07",
+      "browser": "chrome",
+      "version": "84",
+      "change": "Screen Wake Lock ships"
+    },
+    {
+      "date": "2023-03",
+      "browser": "safari",
+      "version": "16.4",
+      "change": "Safari ships Screen Wake Lock"
+    },
+    {
+      "date": "2024-05",
+      "browser": "firefox",
+      "version": "126",
+      "change": "Firefox ships Screen Wake Lock"
+    },
+    {
+      "date": "2025-03",
+      "browser": "chrome",
+      "version": "134",
+      "change": "Baseline newly available across engines"
+    }
+  ],
+  "related": [
+    "web.notify.system-wake-lock",
+    "web.notify.idle-detection"
+  ],
+  "refs": [
+    {
+      "t": "mdn",
+      "label": "MDN Screen Wake Lock API",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/Screen_Wake_Lock_API"
+    },
+    {
+      "t": "spec",
+      "label": "W3C Screen Wake Lock",
+      "url": "https://www.w3.org/TR/screen-wake-lock/"
+    }
+  ],
+  "confidence": "docs"
+}

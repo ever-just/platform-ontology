@@ -1,0 +1,214 @@
+{
+  "id": "mob.os.auto-backup",
+  "name": "Android Auto Backup and restore",
+  "kind": "capability",
+  "group": "os-integration-install",
+  "subgroup": "Backup",
+  "tags": [
+    "auto-backup",
+    "25mb",
+    "restore",
+    "dataextractionrules",
+    "cross-platform"
+  ],
+  "plain": "Android copies up to 25 MB of app data to Google Drive about once a day and restores it at the next install.",
+  "meaning": "A reinstall or new phone can bring old app data back, including identifiers the developer stored. Android 16 QPR2 adds transfer of some data to iOS.",
+  "lifecycle": [
+    "background",
+    "after-uninstall"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "y",
+      "v": "6.0",
+      "api": 23,
+      "permission": "None (android:allowBackup, dataExtractionRules)",
+      "protection": "none",
+      "grant": "settings",
+      "prompt_ui": "Settings > Google > Backup",
+      "persistence": "Up to 25 MB per app in Google Drive; runs about once every 24 h on idle, charging, unmetered network",
+      "revocation": "Turn off in Settings or exclude paths",
+      "store_policy": "Play: sensitive data should be excluded",
+      "api_surface": "BackupAgent, android:dataExtractionRules (target 12+), fullBackupContent",
+      "note": "25 MB limit per app; backup about every 24 h; restore runs at install before first launch; backup deleted after 57 days of device inactivity (unverified)"
+    },
+    "ios": {
+      "s": "n",
+      "v": "",
+      "permission": "",
+      "protection": "none",
+      "grant": "not-exposed",
+      "prompt_ui": "None",
+      "persistence": "n/a",
+      "revocation": "",
+      "store_policy": "",
+      "api_surface": "",
+      "note": "iOS equivalent is iCloud Backup (whole container); see mob.os.icloud-backup-kvs"
+    }
+  },
+  "web_equivalents": [
+    "web.storage.persistence-eviction"
+  ],
+  "data": {
+    "type": "binary",
+    "metric": "Backed up data",
+    "update": "About every 24 h",
+    "fields": [
+      {
+        "name": "size_cap_mb",
+        "type": "integer",
+        "unit": "MB",
+        "range": "25",
+        "precision": "system"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can save up to 25 MB of app data to your Google account daily",
+    "user_action": "Nothing. It happens when Android backup is on and the phone is idle",
+    "can": [
+      "Back up app settings and data, up to 25 MB, roughly every 24 hours",
+      "Restore that data when you reinstall or set up a new phone",
+      "Restore before the first launch of the app"
+    ],
+    "cannot": [
+      "Back up more than 25 MB",
+      "Back up when you turned off Settings, Google, Backup",
+      "Keep backups for a phone you stopped using; they are deleted after 57 days",
+      "Do this on iPhone, which uses iCloud Backup instead"
+    ],
+    "reach": 3,
+    "reach_label": "A daily copy of app data",
+    "differs": "Android has Auto Backup with a 25 MB cap. iPhone backs up the whole app folder with iCloud Backup."
+  },
+  "story": {
+    "what_it_is": "Android quietly copies up to 25 MB of app data to Google Drive and restores it on reinstall.",
+    "icon": "cloud-upload",
+    "tags": [
+      "Android",
+      "Backup",
+      "Silent"
+    ],
+    "marketing": [
+      {
+        "vendor": "Google",
+        "name": "Auto Backup for apps",
+        "pitch": "Google describes Auto Backup as a way for apps to save data to Drive so it returns after a reinstall or a new phone.",
+        "url": "https://developer.android.com/identity/data/autobackup"
+      }
+    ],
+    "for_you": "You get a new phone and your app settings and progress are already there. You never press backup. The same thing happens after a reinstall.",
+    "for_makers": "Makers get restores for free. The downside is that stored identifiers can also return, so one person can look like the same user across reinstalls.",
+    "use_cases": [
+      {
+        "type": "games",
+        "example": "A new phone loads your saved game and settings.",
+        "apps": [
+          "Candy Crush"
+        ]
+      },
+      {
+        "type": "productivity",
+        "example": "A notes app restores local notes.",
+        "apps": []
+      },
+      {
+        "type": "fitness",
+        "example": "A workout app brings back your plan.",
+        "apps": []
+      },
+      {
+        "type": "ads",
+        "example": "An ad SDK that saved an ID in app storage finds the same ID after a reinstall.",
+        "apps": []
+      },
+      {
+        "type": "security",
+        "example": "A bank app must make sure old tokens are not restored by a backup.",
+        "apps": []
+      },
+      {
+        "type": "analytics",
+        "example": "A team sees a returning device with the same ID and links it to the old user.",
+        "apps": []
+      },
+      {
+        "type": "messaging",
+        "example": "A chat app restores settings but asks you to sign in again.",
+        "apps": [
+          "Signal"
+        ]
+      }
+    ],
+    "risks": [
+      "Identifiers carried across reinstall",
+      "Old data returns unseen"
+    ],
+    "android_note": "About 25 MB per app, once about every 24 hours, restored at install before first launch.",
+    "ios_note": "iOS uses iCloud Backup of the whole app container instead."
+  },
+  "technical_bounds": [
+    "25 MB cap",
+    "Excluded when the app opts out or user disables backup"
+  ],
+  "scores": {
+    "sensitivity": 3,
+    "utility": 3,
+    "fingerprint_bits": 5,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Restore settings",
+      "Move to new phone"
+    ],
+    "abuse": [
+      "Carrying identifiers across reinstall"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2015-10",
+      "platform": "android",
+      "version": "6.0 (API 23)",
+      "change": "Auto Backup for Apps introduced"
+    },
+    {
+      "date": "2021-10",
+      "platform": "android",
+      "version": "12 (API 31)",
+      "change": "dataExtractionRules replaces fullBackupContent for target 12+"
+    },
+    {
+      "date": "2025-12",
+      "platform": "android",
+      "version": "16 QPR2",
+      "change": "Cross platform data transfer to iOS announced"
+    }
+  ],
+  "related": [
+    "mob.os.uninstall-data-deletion",
+    "mob.os.block-store",
+    "mob.os.icloud-backup-kvs"
+  ],
+  "refs": [
+    {
+      "t": "android",
+      "label": "Android: Back up user data with Auto Backup",
+      "url": "https://developer.android.com/identity/data/autobackup"
+    },
+    {
+      "t": "android",
+      "label": "Android: Data extraction rules",
+      "url": "https://developer.android.com/identity/data/autobackup#IncludingFiles"
+    }
+  ],
+  "confidence": "docs"
+}

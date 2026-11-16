@@ -1,0 +1,189 @@
+{
+  "id": "mob.os.sideloading-verification",
+  "name": "Sideloading and Android developer verification",
+  "kind": "action",
+  "group": "os-integration-install",
+  "subgroup": "Distribution",
+  "tags": [
+    "developer-verification",
+    "sideloading",
+    "advanced-flow",
+    "adb"
+  ],
+  "plain": "Android will require every installed app's developer to be verified starting 2026.",
+  "meaning": "Apps from any source on certified devices must be tied to a verified developer. A one time advanced flow lets experienced users install unverified apps. ADB installs are exempt.",
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "f",
+      "v": "16",
+      "api": 36,
+      "permission": "None; developer verification in Play Console or Android Developer Console",
+      "protection": "none",
+      "grant": "install",
+      "prompt_ui": "Install blocked unless developer verified or advanced flow completed (24 hour wait)",
+      "persistence": "Per install",
+      "revocation": "Settings > Developer options",
+      "store_policy": "Android policy; enforced from Sep 30 2026 in BR, ID, SG, TH",
+      "api_surface": "Android Developer Console verification, PackageInstaller",
+      "note": "Applies to certified Android 7 or later; global in 2027; hobbyist and student accounts have lighter rules."
+    },
+    "ios": {
+      "s": "f",
+      "v": "",
+      "permission": "Distribution via App Store or authorised marketplace; notarization",
+      "protection": "none",
+      "grant": "none",
+      "prompt_ui": "n/a",
+      "persistence": "n/a",
+      "revocation": "n/a",
+      "store_policy": "Apple requires notarization for all iOS apps including marketplace apps in EU and Japan",
+      "api_surface": "Notarization service",
+      "note": "iOS has no sideloading path in most regions; personal developer signing expires after 7 days."
+    }
+  },
+  "data": {
+    "type": "none",
+    "metric": "Policy",
+    "update": "n/a",
+    "fields": [
+      {
+        "name": "verified developer",
+        "type": "boolean",
+        "unit": "flag",
+        "range": "n/a",
+        "precision": "n/a"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can install apps from outside the store on Android, but the developer must be verified",
+    "user_action": "You try to install an app file, and Android checks who made it",
+    "can": [
+      "Install from verified developers on certified Android phones",
+      "Go through the advanced flow to install from unverified ones",
+      "Get lighter rules for hobbyist and student accounts"
+    ],
+    "cannot": [
+      "Install from an unverified developer without the advanced flow",
+      "Skip the rule on certified Android 7 or newer phones; it goes global in 2027",
+      "Sideload on iPhone in most regions, where it is not possible"
+    ],
+    "reach": 1,
+    "reach_label": "A check before the install",
+    "differs": "Android starts verification in 2026 and goes global in 2027. iPhone has no side loading in most regions; personal signing expires after 7 days."
+  },
+  "story": {
+    "what_it_is": "Android will require every app's developer to be verified, with a slow advanced path for experts.",
+    "icon": "shield-alert",
+    "tags": [
+      "Android",
+      "Install",
+      "Rules"
+    ],
+    "marketing": [
+      {
+        "vendor": "Google",
+        "name": "Android developer verification",
+        "pitch": "Google says it will tie every installed app to a verified developer to fight malware, with an advanced flow for experts.",
+        "url": "https://developer.android.com/developer-verification"
+      }
+    ],
+    "for_you": "You try to install an app by file and it may be blocked unless the developer is verified. If you are advanced you can complete a one time process that includes a 24 hour wait.",
+    "for_makers": "Makers must register even when they sell outside Google Play. Google says it stops scam apps, and critics fear it will shut out hobbyists and anonymous makers.",
+    "use_cases": [
+      {
+        "type": "banking",
+        "example": "Scam apps that copy a bank app lose their anonymous hiding place.",
+        "apps": []
+      },
+      {
+        "type": "games",
+        "example": "A hobby game maker must register to share its game by link.",
+        "apps": []
+      },
+      {
+        "type": "developer",
+        "example": "Students and hobbyists get lighter rules and can still install their own builds by ADB.",
+        "apps": []
+      },
+      {
+        "type": "enterprise",
+        "example": "A company registers once and installs private apps on staff phones.",
+        "apps": []
+      },
+      {
+        "type": "media",
+        "example": "Alternative stores must now list only apps from verified makers.",
+        "apps": [
+          "F-Droid"
+        ]
+      },
+      {
+        "type": "security",
+        "example": "Malware that spreads by link becomes easier to trace.",
+        "apps": []
+      },
+      {
+        "type": "utilities",
+        "example": "Open source tool authors worry about the registration step.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Excludes anonymous developers",
+      "Adds a waiting period"
+    ],
+    "android_note": "Applies to certified Android 7 or later. Global in 2027.",
+    "ios_note": "iOS has no sideloading in most places. A personal developer signing expires after 7 days."
+  },
+  "technical_bounds": [
+    "Only certified devices; open source devices unaffected"
+  ],
+  "scores": {
+    "sensitivity": 3,
+    "utility": 3,
+    "fingerprint_bits": 0,
+    "friction": 3
+  },
+  "value": {
+    "legit_uses": [
+      "Reduce malware"
+    ],
+    "abuse": [
+      "Excludes anonymous developers"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2025-08",
+      "platform": "android",
+      "version": "announce",
+      "change": "Google announced developer verification"
+    },
+    {
+      "date": "2026-09",
+      "platform": "android",
+      "version": "enforce",
+      "change": "First country wave starts"
+    }
+  ],
+  "related": [
+    "mob.os.alt-marketplaces",
+    "mob.os.notarization"
+  ],
+  "refs": [
+    {
+      "t": "android",
+      "label": "Android developer verification",
+      "url": "https://developer.android.com/developer-verification"
+    }
+  ],
+  "confidence": "verified"
+}

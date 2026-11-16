@@ -1,0 +1,270 @@
+{
+  "id": "mob.notifications.post-notifications",
+  "name": "Notifications",
+  "kind": "permission",
+  "group": "notifications-background",
+  "subgroup": "Alerts",
+  "tags": [
+    "runtime-permission",
+    "push",
+    "notification",
+    "notifications",
+    "opt-in",
+    "re-engagement"
+  ],
+  "plain": "Asks to show alerts, banners and badges from the app.",
+  "meaning": "Gives the app a direct line to the person's lock screen. Abuse is spam; legitimate uses are messages, delivery updates and security codes.",
+  "lifecycle": [
+    "in-session",
+    "background",
+    "signed-in"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "y",
+      "v": "13",
+      "api": 33,
+      "permission": "POST_NOTIFICATIONS",
+      "protection": "dangerous",
+      "grant": "prompt",
+      "prompt_ui": "Allow or Don't allow; apps targeting 33+ choose when to ask",
+      "persistence": "Until revoked; existing apps are pre-granted on upgrade",
+      "revocation": "Settings > Apps > Notifications",
+      "store_policy": "Play: no declaration, but data-safety disclosure for push",
+      "api_surface": "NotificationManager, NotificationCompat",
+      "note": "Apps targeting below 33 get the dialog automatically when they create their first channel."
+    },
+    "ios": {
+      "s": "y",
+      "v": "10",
+      "permission": "none in Info.plist (runtime authorization); optional entitlements for time-sensitive and critical alerts",
+      "protection": "prompt",
+      "grant": "prompt",
+      "prompt_ui": "Allow or Don't Allow; provisional quiet delivery (iOS 12); Scheduled Summary (iOS 15)",
+      "persistence": "Until revoked",
+      "revocation": "Settings > Notifications",
+      "store_policy": "App Review 4.5.4 push must not be required; no spam; critical alerts need Apple approval",
+      "api_surface": "UNUserNotificationCenter.requestAuthorization, UNAuthorizationOptions",
+      "note": "Provisional authorization delivers silently to Notification Center without a prompt."
+    }
+  },
+  "web_equivalents": [
+    "web.notify.notifications",
+    "web.notify.push-api"
+  ],
+  "data": {
+    "type": "event",
+    "metric": "Notification delivery",
+    "update": "per message; Android tracks per channel",
+    "fields": [
+      {
+        "name": "channels",
+        "type": "integer",
+        "unit": "channels",
+        "range": "0 to 100",
+        "precision": "exact"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can show alerts, banners and badges, but only after you allow it",
+    "user_action": "You tap Allow when the app asks to send notifications",
+    "can": [
+      "Show alerts, banners, sounds and badges once you allow",
+      "Ask at a good moment; apps for Android 13 or newer choose when",
+      "Deliver quietly to Notification Center on iPhone without a prompt, called provisional"
+    ],
+    "cannot": [
+      "Show alerts if you tap Don't allow or Don't Allow",
+      "Make you keep seeing them; you can turn them off any time in Settings",
+      "Show in Android 13 or newer without asking, unless it targets an older version"
+    ],
+    "reach": 2,
+    "reach_label": "Only after you say yes",
+    "differs": "Both ask before the first alert. iPhone also has quiet provisional delivery. Android 13 and newer lets apps choose when to ask."
+  },
+  "story": {
+    "what_it_is": "Asks to show alerts, banners and badges from the app.",
+    "icon": "bell",
+    "tags": [
+      "Asks first",
+      "Notifications",
+      "Nudge"
+    ],
+    "marketing": [
+      {
+        "vendor": "Google",
+        "name": "Notification runtime permission",
+        "pitch": "Android 13 added a runtime permission so people choose whether an app can send notifications.",
+        "url": "https://developer.android.com/develop/ui/views/notifications/notification-permission"
+      }
+    ],
+    "for_you": "You see a pop up asking Allow notifications. If you say yes, the app can ping you on your lock screen. You can change your mind in settings.",
+    "for_makers": "Makers want this for chat, orders and security codes. Many also use it to bring you back, so asking at the right moment matters.",
+    "use_cases": [
+      {
+        "type": "messaging",
+        "example": "A chat app asks right after you sign up so you never miss a message.",
+        "apps": [
+          "WhatsApp",
+          "Telegram"
+        ]
+      },
+      {
+        "type": "delivery",
+        "example": "A food app asks to tell you when the driver arrives.",
+        "apps": [
+          "DoorDash"
+        ]
+      },
+      {
+        "type": "banking",
+        "example": "A bank app asks so it can send fraud and login codes.",
+        "apps": []
+      },
+      {
+        "type": "games",
+        "example": "A game asks after the tutorial so it can remind you when energy refills.",
+        "apps": [
+          "Candy Crush"
+        ]
+      },
+      {
+        "type": "social",
+        "example": "A social app asks to tell you about likes and follows.",
+        "apps": [
+          "Instagram"
+        ]
+      },
+      {
+        "type": "shopping",
+        "example": "A store asks to tell you about price drops.",
+        "apps": [
+          "Amazon"
+        ]
+      },
+      {
+        "type": "ads",
+        "example": "A marketing team tests when to ask to get more yes answers.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Spam and nagging",
+      "Dark pattern re engagement"
+    ],
+    "android_note": "Android 13 and up asks. Apps aimed at older versions get a pop up when they make their first channel.",
+    "ios_note": "iOS offers a quiet delivery option and a scheduled summary."
+  },
+  "technical_bounds": [
+    "No prompt on iOS until the app asks",
+    "Android treats existing installs as granted",
+    "Android 13 needs two denials to be permanent; older upgrades keep the old grant",
+    "Foreground service notifications cannot be hidden",
+    "Per channel and Focus settings control delivery"
+  ],
+  "scores": {
+    "sensitivity": 2,
+    "utility": 5,
+    "fingerprint_bits": null,
+    "friction": 2
+  },
+  "value": {
+    "legit_uses": [
+      "Messaging",
+      "Security codes",
+      "Order updates"
+    ],
+    "abuse": [
+      "Engagement spam",
+      "Dark pattern re-engagement"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": true,
+      "how": "LinkedIn sends push notifications for messages, network activity and jobs; policy 2.3 lists push notifications as a communication channel. Members control categories in Settings."
+    }
+  },
+  "history": [
+    {
+      "date": "2022-08",
+      "platform": "android",
+      "version": "13 (API 33)",
+      "change": "POST_NOTIFICATIONS runtime permission added"
+    },
+    {
+      "date": "2022-08",
+      "platform": "android",
+      "version": "13 (API 33)",
+      "change": "POST_NOTIFICATIONS runtime permission"
+    },
+    {
+      "date": "2021-09",
+      "platform": "ios",
+      "version": "iOS 15",
+      "change": "Time Sensitive notifications and Notification Summary added"
+    },
+    {
+      "date": "2018-09",
+      "platform": "ios",
+      "version": "iOS 12",
+      "change": "Provisional authorization and critical alerts introduced"
+    },
+    {
+      "date": "2018-09",
+      "platform": "ios",
+      "version": "iOS 12",
+      "change": "Provisional authorization added"
+    },
+    {
+      "date": "2018-09",
+      "platform": "ios",
+      "version": "iOS 12",
+      "change": "Provisional authorization"
+    },
+    {
+      "date": "2016-09",
+      "platform": "ios",
+      "version": "iOS 10",
+      "change": "UserNotifications framework"
+    },
+    {
+      "date": "2009-06",
+      "platform": "ios",
+      "version": "iOS 3",
+      "change": "Remote notifications with a user prompt on first registration"
+    }
+  ],
+  "related": [
+    "mob.notifications.live-updates",
+    "mob.notifications.full-screen-intent",
+    "mob.notify.provisional-authorization",
+    "mob.notif.channels-categories",
+    "mob.notif.apns-silent-push"
+  ],
+  "refs": [
+    {
+      "t": "android",
+      "label": "Android: Notification runtime permission",
+      "url": "https://developer.android.com/develop/ui/views/notifications/notification-permission"
+    },
+    {
+      "t": "android",
+      "label": "Android 13 behavior changes (all apps)",
+      "url": "https://developer.android.com/about/versions/13/behavior-changes-all"
+    },
+    {
+      "t": "apple",
+      "label": "Apple: Asking permission to use notifications",
+      "url": "https://developer.apple.com/documentation/usernotifications/asking-permission-to-use-notifications"
+    },
+    {
+      "t": "policy",
+      "label": "LinkedIn Privacy Policy (effective 3 Nov 2025)",
+      "url": "https://www.linkedin.com/legal/privacy-policy"
+    }
+  ],
+  "confidence": "verified"
+}

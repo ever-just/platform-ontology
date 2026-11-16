@@ -1,0 +1,235 @@
+{
+  "id": "web.location.sensor-magnetometer",
+  "name": "Magnetometer",
+  "kind": "permission",
+  "group": "location-motion",
+  "subgroup": "Generic Sensor API",
+  "tags": [
+    "generic-sensor",
+    "secure-context"
+  ],
+  "plain": "Reads the magnetic field around the device, like a compass.",
+  "meaning": "Gives compass heading and can reveal nearby metal and electronics. Indoor magnetic fields form a rough fingerprint of a building or room.",
+  "lifecycle": [
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "new Magnetometer({frequency})",
+      "permission_name": "magnetometer",
+      "permissions_policy": "magnetometer",
+      "bcd": [
+        "api.Magnetometer"
+      ],
+      "access": {
+        "grant": "prompt",
+        "prompt_ui": "Chromium shows no bubble: access follows the Motion sensors site setting (default Allow) plus the Permissions API name. Safari and Firefox do not ship the API.",
+        "secure_context": true,
+        "user_gesture": false,
+        "persistence": "Site setting Allow or Block per origin",
+        "revocation": "chrome://settings/content/sensors; Permissions API 'change' event",
+        "iframe": "Cross-origin iframes blocked unless allow=\"magnetometer\"; page must be focused and visible",
+        "steps": [
+          "Check isSecureContext and Permissions Policy",
+          "Construct the sensor with {frequency: 60}",
+          "sensor.start()",
+          "'reading' events fire; 'error' event on NotAllowedError or NotReadableError"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "67",
+          "note": "",
+          "date": "2018-05-29"
+        },
+        "edge": {
+          "s": "y",
+          "v": "79",
+          "note": "",
+          "date": "2020-01-15"
+        },
+        "firefox": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "safari": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "ios_safari": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "67",
+          "note": "",
+          "date": "2018-05-31"
+        },
+        "samsung": {
+          "s": "y",
+          "v": "9.0",
+          "note": "BCD lists no support; agent research says otherwise",
+          "date": "2018-09-15"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "event",
+    "metric": "Sensor readings at the requested frequency",
+    "update": "up to 60 Hz (Chrome caps frequency)",
+    "fields": [
+      {
+        "name": "x, y, z",
+        "type": "float",
+        "unit": "microtesla",
+        "range": "about -4900 to 4900 hardware; Earth field 25 to 65",
+        "precision": "about 0.1"
+      },
+      {
+        "name": "frequency",
+        "type": "float",
+        "unit": "Hz",
+        "range": "1 to 10 effective",
+        "precision": "1 Hz"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can sense the magnetic field around your device, like a compass",
+    "user_action": "Nothing in most browsers. Chrome allows it by default unless you changed Motion sensors in site settings",
+    "can": [
+      "Find which way your device points, like a compass",
+      "Spot nearby metal and electronics",
+      "Guess which room or building you are in from its magnetic pattern, roughly"
+    ],
+    "cannot": [
+      "Run in Firefox or Safari, which do not support it",
+      "Show a prompt in Chrome; there is none by default",
+      "Measure the field while the page is closed"
+    ],
+    "reach": 2,
+    "reach_label": "While the page is open",
+    "differs": "Chrome, Edge and Samsung Internet support it. Safari and Firefox do not."
+  },
+  "story": {
+    "what_it_is": "The page reads the magnetic field around your device, like a compass.",
+    "icon": "compass",
+    "tags": [
+      "Sensors",
+      "Compass",
+      "Silent"
+    ],
+    "marketing": [
+      {
+        "vendor": "Google Chrome",
+        "name": "Generic Sensor API",
+        "pitch": "Chrome describes a common way for web pages to read motion and environment sensors such as accelerometer and gyroscope.",
+        "url": "https://developer.chrome.com/docs/capabilities/web-apis/generic-sensor"
+      }
+    ],
+    "for_you": "A compass or a map turns to match where you face. You may not see a prompt. Nearby metal and electronics change what the sensor reads.",
+    "for_makers": "Makers use it for compass features and AR. Indoor magnetic patterns can help place a person in a building, and they are also a rough fingerprint of where a device has been.",
+    "use_cases": [
+      {
+        "type": "maps",
+        "example": "A web map or hiking page turns to the direction you face.",
+        "apps": [
+          "Google Maps",
+          "AllTrails"
+        ]
+      },
+      {
+        "type": "ar-vr",
+        "example": "A web AR scene lines up virtual objects with north.",
+        "apps": [
+          "8th Wall"
+        ]
+      },
+      {
+        "type": "games",
+        "example": "A treasure hunt or location web game points you toward the next clue.",
+        "apps": [
+          "Geocaching.com"
+        ]
+      },
+      {
+        "type": "travel",
+        "example": "A museum or airport web app uses magnetic maps to guide people indoors.",
+        "apps": []
+      },
+      {
+        "type": "security",
+        "example": "A fraud tool may check whether a phone reads believable magnetic data, since an emulator does not.",
+        "apps": []
+      },
+      {
+        "type": "analytics",
+        "example": "A tracker uses the readings to build a rough fingerprint of the device and its surroundings.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Hints at surroundings",
+      "Fingerprint clue"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Chrome limits sampling for privacy",
+    "Not in Firefox or Safari"
+  ],
+  "scores": {
+    "sensitivity": 3,
+    "utility": 3,
+    "fingerprint_bits": 3,
+    "friction": 1
+  },
+  "value": {
+    "legit_uses": [
+      "Compass in web maps",
+      "AR heading"
+    ],
+    "abuse": [
+      "Indoor localisation by magnetic fingerprint"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2018-05",
+      "browser": "chrome",
+      "version": "67",
+      "change": "Magnetometer ships with the Generic Sensor API"
+    }
+  ],
+  "related": [
+    "web.location.sensor-orientation",
+    "web.location.device-orientation"
+  ],
+  "refs": [
+    {
+      "t": "mdn",
+      "label": "MDN Magnetometer",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/Magnetometer"
+    },
+    {
+      "t": "spec",
+      "label": "W3C Magnetometer",
+      "url": "https://www.w3.org/TR/magnetometer/"
+    }
+  ],
+  "confidence": "docs"
+}

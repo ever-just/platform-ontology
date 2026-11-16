@@ -1,0 +1,253 @@
+{
+  "id": "web.device.device-memory",
+  "name": "Approximate device RAM",
+  "kind": "signal",
+  "group": "device-system-profile",
+  "subgroup": "Hardware",
+  "tags": [
+    "navigator",
+    "ram",
+    "capped",
+    "chromium-only",
+    "client-hint"
+  ],
+  "plain": "RAM in gigabytes, rounded down to a power of two and capped at 8.",
+  "meaning": "Lets a site serve a light page to low-memory phones. Rounded to 0.25, 0.5, 1, 2, 4 or 8 GB, so a 32 GB workstation and an 8 GB laptop look identical.",
+  "lifecycle": [
+    "on-arrival",
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "navigator.deviceMemory; Sec-CH-Device-Memory, Device-Memory headers",
+      "bcd": [
+        "api.Navigator.deviceMemory"
+      ],
+      "access": {
+        "grant": "none",
+        "prompt_ui": "None",
+        "secure_context": true,
+        "user_gesture": false,
+        "persistence": "read fresh on every page load; nothing stored",
+        "revocation": "none needed (no grant)",
+        "iframe": "Readable from cross-origin iframes too (same values)",
+        "steps": [
+          "Page script reads the value",
+          "No prompt is shown"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "63",
+          "note": "Secure contexts only",
+          "date": "2017-12-06"
+        },
+        "edge": {
+          "s": "y",
+          "v": "79",
+          "note": "",
+          "date": "2020-01-15"
+        },
+        "firefox": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "safari": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "ios_safari": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "63",
+          "note": "",
+          "date": "2017-12-05"
+        },
+        "samsung": {
+          "s": "y",
+          "v": "8.0",
+          "note": "",
+          "date": "2018-07-18"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "object",
+    "metric": "",
+    "update": "static per session",
+    "fields": [
+      {
+        "name": "deviceMemory",
+        "type": "float",
+        "unit": "GB",
+        "range": "0.25, 0.5, 1, 2, 4, 8",
+        "precision": "rounded down to power of two, max 8"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can see roughly how much RAM you have, rounded and capped at 8 GB",
+    "user_action": "Nothing. It happens when the page loads in Chrome or Edge",
+    "can": [
+      "See memory as 0.25, 0.5, 1, 2, 4, or 8 GB",
+      "Send a lighter page to low memory phones",
+      "Use the number as one hardware clue"
+    ],
+    "cannot": [
+      "See your exact RAM; a 32 GB machine looks like 8",
+      "Work in Firefox, Safari, or on iPhone",
+      "See how much memory is free right now",
+      "Work on pages that are not HTTPS"
+    ],
+    "reach": 2,
+    "reach_label": "A rounded RAM bucket",
+    "differs": "Chrome, Edge, and Samsung Internet share it. Firefox and Safari share nothing."
+  },
+  "story": {
+    "what_it_is": "Tells a page roughly how much memory your device has, capped at 8 GB.",
+    "icon": "memory-stick",
+    "tags": [
+      "Memory",
+      "Silent",
+      "Chrome"
+    ],
+    "marketing": [
+      {
+        "vendor": "MDN",
+        "name": "Navigator.deviceMemory",
+        "pitch": "Documents a rough, rounded memory figure that lets pages adapt to low-end devices.",
+        "url": "https://developer.mozilla.org/en-US/docs/Web/API/Navigator/deviceMemory"
+      }
+    ],
+    "for_you": "You never see it asked. If your phone has little memory, a site may quietly give you a lighter version so it does not crash. If you have a big machine, you get the full version.",
+    "for_makers": "Sites use it to serve light pages to low-memory phones and heavy pages to strong machines. It is capped and rounded, so a 32 GB workstation looks like 8 GB. It still adds a clue to a fingerprint.",
+    "use_cases": [
+      {
+        "type": "shopping",
+        "example": "A shop serves smaller images and fewer scripts to a phone that reports 2 GB, so the page loads fast.",
+        "apps": []
+      },
+      {
+        "type": "games",
+        "example": "A browser game turns down textures and crowd count on devices that report 2 GB or less.",
+        "apps": []
+      },
+      {
+        "type": "video",
+        "example": "A video site loads fewer thumbnails ahead of time on a low-memory phone.",
+        "apps": [
+          "YouTube"
+        ]
+      },
+      {
+        "type": "creative",
+        "example": "A browser editor warns that a large file may crash on a device with little memory.",
+        "apps": [
+          "Figma",
+          "Photopea"
+        ]
+      },
+      {
+        "type": "news",
+        "example": "A news site drops heavy interactive graphics for low-memory visitors.",
+        "apps": []
+      },
+      {
+        "type": "ads",
+        "example": "An ad network picks lighter ad formats for low-memory phones to avoid freezing the page.",
+        "apps": []
+      },
+      {
+        "type": "security",
+        "example": "A fraud tool treats an impossible combination of memory and device model as a sign of a fake.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Fingerprint clue",
+      "Treats low-end phones differently"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Capped at 8 GB, floor 0.25 GB",
+    "Not in Firefox or Safari",
+    "Header needs Accept-CH opt-in"
+  ],
+  "scores": {
+    "sensitivity": 1,
+    "utility": 3,
+    "fingerprint_bits": 1.0,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Adaptive loading on cheap phones"
+    ],
+    "abuse": [
+      "Device-tier inference",
+      "Fingerprint component"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": true,
+      "how": "Collector key(s): deviceMemory. BleepingComputer confirms memory is collected."
+    }
+  },
+  "history": [
+    {
+      "date": "2017-12",
+      "browser": "chrome",
+      "version": "63",
+      "change": "Shipped with the 8 GB cap"
+    },
+    {
+      "date": "2021-01",
+      "browser": "chrome",
+      "version": "",
+      "change": "Restricted to secure contexts per spec"
+    }
+  ],
+  "related": [
+    "web.device.hardware-concurrency"
+  ],
+  "refs": [
+    {
+      "t": "spec",
+      "label": "W3C Device Memory",
+      "url": "https://www.w3.org/TR/device-memory/"
+    },
+    {
+      "t": "mdn",
+      "label": "MDN deviceMemory",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/Navigator/deviceMemory"
+    },
+    {
+      "t": "github",
+      "label": "fingerprintjs source: device_memory",
+      "url": "https://github.com/fingerprintjs/fingerprintjs/blob/master/src/sources/device_memory.ts"
+    },
+    {
+      "t": "news",
+      "label": "BleepingComputer: LinkedIn scans for 6,000+ Chrome extensions",
+      "url": "https://www.bleepingcomputer.com/news/security/linkedin-secretely-scans-for-6-000-plus-chrome-extensions-collects-data/"
+    },
+    {
+      "t": "github",
+      "label": "mdp/linkedin-extension-fingerprinting (LinkedIn script snapshot and ID list)",
+      "url": "https://github.com/mdp/linkedin-extension-fingerprinting"
+    }
+  ],
+  "confidence": "verified"
+}

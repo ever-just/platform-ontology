@@ -1,0 +1,215 @@
+{
+  "id": "web.notexposed.installed-apps",
+  "name": "Installed native apps",
+  "kind": "not-exposed",
+  "group": "device-system-profile",
+  "subgroup": "Software",
+  "tags": [
+    "not-exposed",
+    "apps",
+    "software"
+  ],
+  "plain": "A site cannot list your installed apps, except to check its own related app.",
+  "meaning": "navigator.getInstalledRelatedApps() (Chrome Android 80, Chrome desktop 140 for PWAs) only answers for apps declared in the site manifest related_applications. Custom URL scheme probing is blocked or prompts. Roughly 0 bits for arbitrary apps.",
+  "lifecycle": [
+    "on-arrival",
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "navigator.getInstalledRelatedApps()",
+      "access": {
+        "grant": "not-exposed",
+        "prompt_ui": "None",
+        "secure_context": false,
+        "user_gesture": false,
+        "persistence": "read fresh on every page load; nothing stored",
+        "revocation": "not applicable",
+        "iframe": "Readable from cross-origin iframes too (same values)",
+        "steps": [
+          "Page script reads the value",
+          "No prompt is shown"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "edge": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "firefox": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "safari": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "ios_safari": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "chrome_android": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "samsung": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "none",
+    "metric": "",
+    "update": "static per session",
+    "fields": [
+      {
+        "name": "proxy: getInstalledRelatedApps",
+        "type": "string",
+        "unit": "",
+        "range": "own related apps only, listed in manifest",
+        "precision": ""
+      },
+      {
+        "name": "proxy: custom URL scheme",
+        "type": "string",
+        "unit": "",
+        "range": "Chrome and Safari show a prompt; no silent result",
+        "precision": ""
+      },
+      {
+        "name": "proxy: extension probing",
+        "type": "string",
+        "unit": "",
+        "range": "see web.device.extension-probing for browser extensions",
+        "precision": ""
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can't list your installed apps; can only check its own related app",
+    "user_action": "Nothing. It happens when the site checks for its own app",
+    "can": [
+      "Check if the site's own listed app is installed on Chrome for Android",
+      "Check for its own installed web app on desktop Chrome 140",
+      "Offer Open in app instead of an install prompt"
+    ],
+    "cannot": [
+      "List other apps on your phone or computer",
+      "Check apps it did not name in its own site file",
+      "Probe custom links without a prompt or block",
+      "Work in Safari or Firefox"
+    ],
+    "reach": 1,
+    "reach_label": "Only its own app",
+    "differs": "Chrome on Android and recent desktop Chrome can check the site's own app. Safari and Firefox cannot."
+  },
+  "story": {
+    "what_it_is": "A site cannot list your apps. It can only check for its own related app.",
+    "icon": "app-window",
+    "tags": [
+      "Blocked",
+      "Apps",
+      "Android"
+    ],
+    "marketing": [
+      {
+        "vendor": "Google",
+        "name": "getInstalledRelatedApps",
+        "pitch": "Chrome describes a way for a site to check whether its own related app is installed, so it can skip prompts.",
+        "url": "https://developer.chrome.com/docs/capabilities/web-apis/get-installed-related-apps"
+      }
+    ],
+    "for_you": "A website cannot see what apps you have. If it has its own app, it may check that one app so it does not nag you to install it again.",
+    "for_makers": "App lists show health, money, religion and more, so they are very sensitive. The web lets a site check only its own listed app. Everything else stays hidden.",
+    "use_cases": [
+      {
+        "type": "shopping",
+        "example": "A shop checks whether its own app is installed and hides the Get the app banner if so.",
+        "apps": []
+      },
+      {
+        "type": "social",
+        "example": "A social site checks for its own app and offers Open in app instead of install.",
+        "apps": []
+      },
+      {
+        "type": "music",
+        "example": "A music site checks its own app and switches to it when you press play.",
+        "apps": []
+      },
+      {
+        "type": "ads",
+        "example": "An advertiser wanted your whole app list to profile you and cannot get it.",
+        "apps": []
+      },
+      {
+        "type": "games",
+        "example": "A game site checks its own mobile app to offer cross play sign-in.",
+        "apps": []
+      },
+      {
+        "type": "security",
+        "example": "A tracker wanted to check for banking or dating apps and cannot.",
+        "apps": []
+      },
+      {
+        "type": "banking",
+        "example": "A bank site checks only its own app to offer a one tap login handoff.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Only works for declared related apps"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "App list reveals health, religion, orientation"
+  ],
+  "scores": {
+    "sensitivity": 4,
+    "utility": 2,
+    "fingerprint_bits": 0.0,
+    "friction": 3
+  },
+  "value": {
+    "legit_uses": [
+      "None: the browser deliberately withholds it"
+    ],
+    "abuse": [
+      "Sites attempt proxies to recover it"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "related": [
+    "web.device.extension-probing"
+  ],
+  "refs": [
+    {
+      "t": "mdn",
+      "label": "MDN getInstalledRelatedApps",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/Navigator/getInstalledRelatedApps"
+    }
+  ],
+  "confidence": "docs"
+}

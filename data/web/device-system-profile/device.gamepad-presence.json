@@ -1,0 +1,243 @@
+{
+  "id": "web.device.gamepad-presence",
+  "name": "Gamepad presence",
+  "kind": "signal",
+  "group": "device-system-profile",
+  "subgroup": "Input hardware",
+  "tags": [
+    "gamepad",
+    "controller",
+    "activation-required"
+  ],
+  "plain": "Lists connected game controllers, but only after a button press on the controller.",
+  "meaning": "Reveals a controller is plugged in or paired (id string includes vendor and product IDs). Hidden until the user presses a button, so it is not a silent probe.",
+  "lifecycle": [
+    "on-arrival",
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "navigator.getGamepads(), gamepadconnected event",
+      "permissions_policy": "gamepad",
+      "bcd": [
+        "api.Navigator.getGamepads"
+      ],
+      "access": {
+        "grant": "none",
+        "prompt_ui": "None",
+        "secure_context": true,
+        "user_gesture": false,
+        "persistence": "read fresh on every page load; nothing stored",
+        "revocation": "none needed (no grant)",
+        "iframe": "Readable from cross-origin iframes too (same values)",
+        "steps": [
+          "Page script reads the value",
+          "No prompt is shown"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "35",
+          "note": "",
+          "date": "2014-05-20"
+        },
+        "edge": {
+          "s": "y",
+          "v": "12",
+          "note": "",
+          "date": "2015-07-29"
+        },
+        "firefox": {
+          "s": "y",
+          "v": "29",
+          "note": "",
+          "date": "2014-04-29"
+        },
+        "safari": {
+          "s": "y",
+          "v": "10.1",
+          "note": "",
+          "date": "2017-03-27"
+        },
+        "ios_safari": {
+          "s": "y",
+          "v": "10.3",
+          "note": "",
+          "date": "2017-03-27"
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "35",
+          "note": "",
+          "date": "2014-05-20"
+        },
+        "samsung": {
+          "s": "y",
+          "v": "3.0",
+          "note": "",
+          "date": "2015-04-10"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "object",
+    "metric": "",
+    "update": "static per session",
+    "fields": [
+      {
+        "name": "id",
+        "type": "string",
+        "unit": "",
+        "range": "e.g. Xbox 360 Controller (STANDARD GAMEPAD Vendor: 045e Product: 028e)",
+        "precision": ""
+      },
+      {
+        "name": "buttons",
+        "type": "list",
+        "unit": "",
+        "range": "up to 17 buttons",
+        "precision": ""
+      },
+      {
+        "name": "axes",
+        "type": "list",
+        "unit": "",
+        "range": "up to 4 axes, -1 to 1",
+        "precision": ""
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can see a game controller only after you press a button on it",
+    "user_action": "You press a button on a connected controller while the page is open",
+    "can": [
+      "List connected controllers, including maker and product codes",
+      "Use the controller to play a game in the page",
+      "Tell when a controller connects or disconnects"
+    ],
+    "cannot": [
+      "See a controller before you press a button on it",
+      "See controllers when the tab is in the background",
+      "Learn anything about other devices",
+      "Silently check; pressing a button is required"
+    ],
+    "reach": 2,
+    "reach_label": "Only after a button press",
+    "differs": ""
+  },
+  "story": {
+    "what_it_is": "Lists game controllers connected to your device, but only after you press a button on one.",
+    "icon": "gamepad-2",
+    "tags": [
+      "Games",
+      "Controllers",
+      "Asks first"
+    ],
+    "marketing": [
+      {
+        "vendor": "MDN",
+        "name": "Gamepad API",
+        "pitch": "Documents how pages read controllers so web games can feel like console games.",
+        "url": "https://developer.mozilla.org/en-US/docs/Web/API/Gamepad_API"
+      }
+    ],
+    "for_you": "You plug in or pair a controller, then press a button. Only then the page can see it. Nothing shows up before that, so it is not a silent check.",
+    "for_makers": "Games and cloud gaming sites want controller support to feel like a console. The press-a-button rule stops sites from quietly listing devices. The controller name still shows the brand, which is a small fingerprint clue.",
+    "use_cases": [
+      {
+        "type": "games",
+        "example": "A cloud gaming site such as Xbox Cloud Gaming shows controller buttons on screen after you press a button on your Xbox pad.",
+        "apps": [
+          "Xbox Cloud Gaming",
+          "GeForce NOW"
+        ]
+      },
+      {
+        "type": "games",
+        "example": "A browser platformer or racing game switches from keyboard hints to PlayStation button icons when it sees a DualSense.",
+        "apps": [
+          "Poki"
+        ]
+      },
+      {
+        "type": "games",
+        "example": "A multiplayer party game in the browser assigns player 1 to 4 as each friend presses a button on their pad.",
+        "apps": []
+      },
+      {
+        "type": "accessibility",
+        "example": "A web game supports an adaptive controller so players with limited mobility can join in.",
+        "apps": []
+      },
+      {
+        "type": "media",
+        "example": "A browser media center app lets you browse shows with a gamepad on a living room TV.",
+        "apps": []
+      },
+      {
+        "type": "education",
+        "example": "A web robotics simulator lets students drive a virtual robot with a joystick.",
+        "apps": []
+      },
+      {
+        "type": "security",
+        "example": "A fingerprinting script records the controller ID string once a user presses a button.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Brand and model of controller revealed",
+      "Only after a button press"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Needs user input on the pad first",
+    "Only while the page is focused"
+  ],
+  "scores": {
+    "sensitivity": 2,
+    "utility": 3,
+    "fingerprint_bits": 1.0,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Browser games"
+    ],
+    "abuse": [
+      "Detect gamers"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2018-01",
+      "browser": "chrome",
+      "version": "",
+      "change": "Secure context and focused-page needed; Permissions-Policy gamepad added"
+    }
+  ],
+  "refs": [
+    {
+      "t": "mdn",
+      "label": "MDN Gamepad API",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/Gamepad_API"
+    },
+    {
+      "t": "spec",
+      "label": "W3C Gamepad",
+      "url": "https://www.w3.org/TR/gamepad/"
+    }
+  ],
+  "confidence": "docs"
+}

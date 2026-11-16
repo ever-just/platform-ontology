@@ -1,0 +1,240 @@
+{
+  "id": "web.fingerprint.spoofing-detection",
+  "name": "Spoofing and lie detection (signals)",
+  "kind": "tracking",
+  "group": "rendering-fingerprint",
+  "subgroup": "Fingerprint integrity",
+  "tags": [
+    "fingerprint",
+    "anti-spoof",
+    "signals"
+  ],
+  "plain": "Checks whether language, resolution, OS or browser values were faked and whether an ad blocker is on.",
+  "meaning": "Compares claimed values with probed ones to spot people using privacy tools or anti-detect browsers. The result becomes a fingerprint signal in itself.",
+  "lifecycle": [
+    "on-arrival"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "Fingerprint2.js style checks: liedLanguages, liedResolution, liedOS, liedBrowser, adBlockInstalled",
+      "access": {
+        "grant": "none",
+        "prompt_ui": "None (no browser prompt)",
+        "secure_context": false,
+        "user_gesture": false,
+        "persistence": "",
+        "revocation": "",
+        "iframe": "",
+        "steps": [
+          "Compare navigator.languages with language",
+          "Compare screen sizes with available sizes",
+          "Compare UA OS with platform and touch",
+          "Compare UA browser with feature probes",
+          "Probe for ad blocker bait elements"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "",
+          "note": ""
+        },
+        "edge": {
+          "s": "y",
+          "v": "",
+          "note": ""
+        },
+        "firefox": {
+          "s": "y",
+          "v": "",
+          "note": ""
+        },
+        "safari": {
+          "s": "y",
+          "v": "",
+          "note": ""
+        },
+        "ios_safari": {
+          "s": "y",
+          "v": "",
+          "note": ""
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "",
+          "note": ""
+        },
+        "samsung": {
+          "s": "y",
+          "v": "",
+          "note": ""
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "object",
+    "metric": "Five flags",
+    "update": "per page",
+    "fields": [
+      {
+        "name": "adBlockInstalled",
+        "type": "boolean",
+        "unit": "",
+        "range": "",
+        "precision": ""
+      },
+      {
+        "name": "liedLanguages",
+        "type": "boolean",
+        "unit": "",
+        "range": "",
+        "precision": ""
+      },
+      {
+        "name": "liedResolution",
+        "type": "boolean",
+        "unit": "",
+        "range": "",
+        "precision": ""
+      },
+      {
+        "name": "liedOS",
+        "type": "boolean",
+        "unit": "",
+        "range": "",
+        "precision": ""
+      },
+      {
+        "name": "liedBrowser",
+        "type": "boolean",
+        "unit": "",
+        "range": "",
+        "precision": ""
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can check whether your browser settings were faked or an ad blocker is on",
+    "user_action": "Nothing. It happens when the page loads",
+    "can": [
+      "Compare your claimed language, screen size and system with what the browser actually shows",
+      "Tell if an ad blocker is running",
+      "Spot privacy tools and anti detect browsers",
+      "Add the result to a profile it builds about your device"
+    ],
+    "cannot": [
+      "Ask your permission first",
+      "Change your settings or turn your ad blocker off",
+      "See your name or account by itself",
+      "Be stopped by a browser pop up, since none exists"
+    ],
+    "reach": 3,
+    "reach_label": "Silent check on every visit",
+    "differs": ""
+  },
+  "story": {
+    "what_it_is": "A script checks whether your browser's reported language, screen or system were faked, and whether an ad blocker is on.",
+    "icon": "scan-eye",
+    "tags": [
+      "Anti fraud",
+      "Silent",
+      "Fingerprinting"
+    ],
+    "marketing": [],
+    "for_you": "You never see it. The site quietly checks that the story your browser tells is consistent. If it looks faked, you may get an extra check, a CAPTCHA, or a blocked checkout with no clear reason.",
+    "for_makers": "Fraud and bot teams use it to catch people who hide behind fake settings. Ad networks use it to spot ad blockers and bots. It also lets trackers notice who is trying to avoid them.",
+    "use_cases": [
+      {
+        "type": "security",
+        "example": "A fraud tool sees a browser claiming to be an iPhone but acting like a Linux server, and flags it as a bot.",
+        "apps": [
+          "FingerprintJS",
+          "Akamai Bot Manager"
+        ]
+      },
+      {
+        "type": "payments",
+        "example": "Fraud checks compare your reported time zone, language and device. A mismatch can send an order for manual review.",
+        "apps": [
+          "Stripe Radar"
+        ]
+      },
+      {
+        "type": "ads",
+        "example": "An ad network tests for fake traffic. If the browser lies about its screen size, the click is not billed to the advertiser.",
+        "apps": []
+      },
+      {
+        "type": "games",
+        "example": "A free to play browser game bans players who fake their device to farm rewards many times.",
+        "apps": []
+      },
+      {
+        "type": "news",
+        "example": "A news site detects an ad blocker and shows a polite wall asking you to turn it off or subscribe.",
+        "apps": []
+      },
+      {
+        "type": "shopping",
+        "example": "A ticket site spots scalper bots that fake many different devices to grab seats, and lets real fans through.",
+        "apps": [
+          "Ticketmaster"
+        ]
+      },
+      {
+        "type": "analytics",
+        "example": "Analytics tools filter out visits where values were spoofed, so charts are not full of fake visitors.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Privacy tools can look suspicious",
+      "False alarms block real people",
+      "Can single out people who hide"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Cannot tell which tool caused the mismatch"
+  ],
+  "scores": {
+    "sensitivity": 3,
+    "utility": 2,
+    "fingerprint_bits": 3,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Bot detection"
+    ],
+    "abuse": [
+      "Singles out privacy tool users"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": true,
+      "how": "signals key in the collector returns adBlockInstalled and the four lied flags (verified in the snapshot)."
+    }
+  },
+  "related": [
+    "web.tracking.linkedin-apfc-fingerprint",
+    "web.page.adblock-detection"
+  ],
+  "refs": [
+    {
+      "t": "github",
+      "label": "mdp/linkedin-extension-fingerprinting (LinkedIn script snapshot and ID list)",
+      "url": "https://github.com/mdp/linkedin-extension-fingerprinting"
+    },
+    {
+      "t": "news",
+      "label": "BrowserGate: how it works (48 feature table)",
+      "url": "https://browsergate.eu/how-it-works/"
+    }
+  ],
+  "confidence": "verified"
+}

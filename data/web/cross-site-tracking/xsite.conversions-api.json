@@ -1,0 +1,244 @@
+{
+  "id": "web.xsite.conversions-api",
+  "name": "Conversions APIs (server to server)",
+  "kind": "tracking",
+  "group": "cross-site-tracking",
+  "subgroup": "Ad pixels",
+  "tags": [
+    "conversions-api",
+    "capi",
+    "server-events",
+    "dedup"
+  ],
+  "plain": "Advertisers send purchase and signup events from their server straight to ad platforms.",
+  "meaning": "Meta, TikTok, LinkedIn, Snap and Google accept server events with hashed email, phone, IP and click IDs, bypassing browser blocking. Meta dedups with event_id inside 48 hours. The person sees nothing and the browser cannot stop it.",
+  "lifecycle": [
+    "after-leaving",
+    "signed-in"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "POST graph.facebook.com/{pixel}/events; Google Ads API upload; LinkedIn Conversions API",
+      "access": {
+        "grant": "none",
+        "prompt_ui": "None",
+        "secure_context": false,
+        "user_gesture": false,
+        "persistence": "Event windows 7 to 90 days depending on platform",
+        "revocation": "Clear site data, browser privacy settings",
+        "iframe": "",
+        "steps": []
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "1",
+          "note": "Server side, browser independent",
+          "date": "2008-12-11"
+        },
+        "edge": {
+          "s": "y",
+          "v": "1",
+          "note": "Server side, browser independent",
+          "date": ""
+        },
+        "firefox": {
+          "s": "y",
+          "v": "1",
+          "note": "Server side, browser independent",
+          "date": "2004-11-09"
+        },
+        "safari": {
+          "s": "y",
+          "v": "1",
+          "note": "Server side, browser independent",
+          "date": "2003-06-23"
+        },
+        "ios_safari": {
+          "s": "y",
+          "v": "1",
+          "note": "Server side, browser independent",
+          "date": "2007-06-29"
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "1",
+          "note": "Server side, browser independent",
+          "date": ""
+        },
+        "samsung": {
+          "s": "y",
+          "v": "1",
+          "note": "Server side, browser independent",
+          "date": "2013-04-27"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "object",
+    "metric": "Event with hashed identifiers",
+    "update": "per event",
+    "fields": []
+  },
+  "limits": {
+    "headline": "Can send your purchases and sign ups to ad platforms from the advertiser's server",
+    "user_action": "Nothing on your side. It happens after you buy or sign up on a site",
+    "can": [
+      "Send events straight from a company's server to ad platforms",
+      "Include scrambled email, phone and click ID details",
+      "Count sales even if your browser blocks tracking scripts"
+    ],
+    "cannot": [
+      "Be seen or blocked in your browser, since it never touches your device",
+      "Match you without the advertiser having your details or click ID",
+      "Cover sites that have not set it up",
+      "Be turned off with a browser setting"
+    ],
+    "reach": 3,
+    "reach_label": "Every event the company sends",
+    "differs": ""
+  },
+  "story": {
+    "what_it_is": "Companies send your purchase and signup events from their servers straight to ad platforms.",
+    "icon": "server",
+    "tags": [
+      "Ads",
+      "Server side",
+      "Silent"
+    ],
+    "marketing": [
+      {
+        "vendor": "Meta",
+        "name": "Conversions API",
+        "pitch": "Meta pitches it as a way to share web and app events directly from a business server for more reliable measurement.",
+        "url": "https://developers.facebook.com/docs/marketing-api/conversions-api/"
+      }
+    ],
+    "for_you": "You never see it. After you buy something or sign up, the company's own server sends a note to Meta, TikTok, Snap or Google, often with scrambled email and phone. Your browser cannot block it.",
+    "for_makers": "Browser blockers and iOS rules cut pixel data, so server events win back lost sales. Platforms use the scrambled IDs and click IDs to match events to ads. Matching improves ad targeting and the numbers in reports.",
+    "use_cases": [
+      {
+        "type": "ads",
+        "example": "A shop sends each order to Meta from its server so ads still get credit when the shopper used a blocker.",
+        "apps": [
+          "Shopify",
+          "Meta Ads"
+        ]
+      },
+      {
+        "type": "games",
+        "example": "A game site sends Meta and TikTok a note when a player signs up or pays, so campaigns find more players like them.",
+        "apps": [
+          "Roblox",
+          "Zynga"
+        ]
+      },
+      {
+        "type": "analytics",
+        "example": "A marketing team compares pixel and server events and removes duplicates with an event ID.",
+        "apps": [
+          "Segment"
+        ]
+      },
+      {
+        "type": "shopping",
+        "example": "A retailer sends in store and phone orders to ad platforms, tied to a customer email.",
+        "apps": [
+          "Nike",
+          "Sephora"
+        ]
+      },
+      {
+        "type": "enterprise",
+        "example": "A B2B firm sends a signed contract event to LinkedIn and Google weeks after the first click.",
+        "apps": [
+          "Salesforce",
+          "HubSpot"
+        ]
+      },
+      {
+        "type": "payments",
+        "example": "A payment company sends a successful charge event, so ad platforms count only paid sales.",
+        "apps": [
+          "Stripe"
+        ]
+      },
+      {
+        "type": "security",
+        "example": "The same stream lets platforms see fake sign ups, which helps them cut ad fraud.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Cannot be blocked in your browser",
+      "Hashed email still identifies you"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Requires data the advertiser holds (email, click ID)",
+    "Consent rules still apply",
+    "Hashed identifiers are still personal data (FTC Jul 2024)",
+    "Matching rate limited by hash quality"
+  ],
+  "scores": {
+    "sensitivity": 4,
+    "utility": 5,
+    "fingerprint_bits": null,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Resilient measurement"
+    ],
+    "abuse": [
+      "Evading browser protections, silent sharing of purchases"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": true,
+      "how": "LinkedIn Conversions API accepts hashed email and click IDs server side."
+    }
+  },
+  "history": [
+    {
+      "date": "2020-07",
+      "browser": "all",
+      "version": "",
+      "change": "Facebook Conversions API launched after iOS 14 changes"
+    },
+    {
+      "date": "2024-07",
+      "browser": "all",
+      "version": "",
+      "change": "FTC states hashing does not make data anonymous"
+    }
+  ],
+  "related": [
+    "web.xsite.meta-pixel",
+    "web.xsite.google-enhanced-conversions",
+    "web.xsite.server-side-tagging"
+  ],
+  "refs": [
+    {
+      "t": "vendor",
+      "label": "Meta Conversions API",
+      "url": "https://developers.facebook.com/docs/marketing-api/conversions-api/"
+    },
+    {
+      "t": "vendor",
+      "label": "FTC: No, hashing still doesn't make your data anonymous",
+      "url": "https://www.ftc.gov/business-guidance/blog/2024/07/no-hashing-still-doesnt-make-your-data-anonymous"
+    },
+    {
+      "t": "vendor",
+      "label": "LinkedIn Conversions API",
+      "url": "https://learn.microsoft.com/en-us/linkedin/marketing/conversions/"
+    }
+  ],
+  "confidence": "docs"
+}

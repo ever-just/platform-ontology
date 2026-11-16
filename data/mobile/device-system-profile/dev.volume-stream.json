@@ -1,0 +1,196 @@
+{
+  "id": "mob.dev.volume-stream",
+  "name": "Volume level per audio stream",
+  "kind": "signal",
+  "group": "device-system-profile",
+  "subgroup": "Audio state",
+  "tags": [
+    "no-prompt",
+    "volume",
+    "listening-context"
+  ],
+  "plain": "Reads the current media, ring and alarm volume without any prompt.",
+  "meaning": "Shows whether the person is muted, at a meeting, or listening loud. Apps use it to warn or adapt; trackers read it as a weak behavioral signal.",
+  "lifecycle": [
+    "on-launch",
+    "in-session"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "y",
+      "v": "1.0",
+      "api": 1,
+      "permission": "",
+      "protection": "none",
+      "grant": "none",
+      "prompt_ui": "",
+      "persistence": "",
+      "revocation": "",
+      "store_policy": "",
+      "api_surface": "AudioManager.getStreamVolume(), getStreamMaxVolume()",
+      "note": "Max steps differ by device: STREAM_MUSIC 15 on most phones, up to 25 on some OEM builds"
+    },
+    "ios": {
+      "s": "y",
+      "v": "2.0",
+      "permission": "",
+      "protection": "none",
+      "grant": "none",
+      "prompt_ui": "",
+      "persistence": "",
+      "revocation": "",
+      "store_policy": "",
+      "api_surface": "AVAudioSession.outputVolume (KVO observable)",
+      "note": "Public API gives only the system output volume; no separate ring volume is readable"
+    }
+  },
+  "web_equivalents": [
+    "web.notexposed.system-volume"
+  ],
+  "data": {
+    "type": "float",
+    "metric": "Output volume level",
+    "update": "On change (iOS KVO) or on poll (Android)",
+    "fields": [
+      {
+        "name": "android_stream_volume",
+        "type": "integer",
+        "unit": "steps",
+        "range": "0 to 15 (typical media), 0 to 25 (some OEMs)",
+        "precision": "1 step, about 6.7 percent"
+      },
+      {
+        "name": "ios_output_volume",
+        "type": "float",
+        "unit": "fraction",
+        "range": "0.0 to 1.0",
+        "precision": "16 steps of 0.0625"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can see how loud your phone is set, with no prompt",
+    "user_action": "Nothing. The app checks while it is open, such as a video or call app",
+    "can": [
+      "See media, ring and alarm volume on Android",
+      "See the iPhone output volume while the app is open",
+      "Get told when you press the volume buttons on iPhone",
+      "Warn you if the sound is muted or very low"
+    ],
+    "cannot": [
+      "See a separate ring volume on iPhone; only the overall output volume is shown",
+      "Change the volume on iPhone without your tap",
+      "Count on the same volume steps on every Android; 15 is common and some go up to 25"
+    ],
+    "reach": 2,
+    "reach_label": "While the app is open",
+    "differs": "Android shows each sound stream (media, ring, alarm). iPhone shows one output volume."
+  },
+  "story": {
+    "what_it_is": "An app can read your current media, ring and alarm volume.",
+    "icon": "volume-2",
+    "tags": [
+      "Silent",
+      "Audio",
+      "Context"
+    ],
+    "marketing": [],
+    "for_you": "You never see it. An app can tell if you are muted, in a quiet meeting or playing loud music. Apps may warn you when you are about to blast sound.",
+    "for_makers": "Makers use it to warn about loud sound, remind you to unmute and adjust alerts. Trackers read it as a weak behavior signal.",
+    "use_cases": [
+      {
+        "type": "games",
+        "example": "A game shows a 'sound is off' banner when your media volume is zero, so you do not miss a tutorial.",
+        "apps": []
+      },
+      {
+        "type": "music",
+        "example": "A music app warns you about loud sound when headphones are on at high volume.",
+        "apps": []
+      },
+      {
+        "type": "video",
+        "example": "A video app asks if you want to unmute when you start a clip with volume at zero.",
+        "apps": []
+      },
+      {
+        "type": "messaging",
+        "example": "A chat app uses a softer ping when your ring volume is low.",
+        "apps": []
+      },
+      {
+        "type": "fitness",
+        "example": "A running app raises coach voice volume when it detects loud wind or traffic.",
+        "apps": []
+      },
+      {
+        "type": "ads",
+        "example": "An ad network skips audio ads when your media volume is off.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Reveals if you are in a meeting",
+      "Weak behavior signal"
+    ],
+    "android_note": "Reads volume per stream with no prompt.",
+    "ios_note": "Reads the current output volume with no prompt."
+  },
+  "technical_bounds": [
+    "No audio content is exposed, only the level",
+    "iOS cannot read the separate ringer volume or the hardware ringer switch state"
+  ],
+  "scores": {
+    "sensitivity": 1,
+    "utility": 2,
+    "fingerprint_bits": 2,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Warn when volume is high",
+      "Skip audible cues when muted"
+    ],
+    "abuse": [
+      "Weak behavioral fingerprint",
+      "Detecting presence or meetings"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2008-09",
+      "platform": "android",
+      "version": "1.0 (API 1)",
+      "change": "getStreamVolume available with no permission"
+    },
+    {
+      "date": "2008-07",
+      "platform": "ios",
+      "version": "iOS 2",
+      "change": "AVAudioSession.outputVolume readable (KVO added later)"
+    }
+  ],
+  "related": [
+    "mob.dev.ringer-focus"
+  ],
+  "refs": [
+    {
+      "t": "android",
+      "label": "Android: AudioManager",
+      "url": "https://developer.android.com/reference/android/media/AudioManager"
+    },
+    {
+      "t": "apple",
+      "label": "Apple: AVAudioSession",
+      "url": "https://developer.apple.com/documentation/avfaudio/avaudiosession"
+    }
+  ],
+  "confidence": "docs"
+}

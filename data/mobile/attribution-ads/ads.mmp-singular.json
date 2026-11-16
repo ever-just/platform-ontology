@@ -1,0 +1,211 @@
+{
+  "id": "mob.ads.mmp-singular",
+  "name": "Singular SDK",
+  "kind": "tracking",
+  "group": "attribution-ads",
+  "subgroup": "Mobile measurement partners",
+  "tags": [
+    "singular",
+    "roi",
+    "mmp",
+    "sdk"
+  ],
+  "plain": "A SDK that attributes installs and also merges ad spend and SKAN data into one ROI view.",
+  "meaning": "Receives events, IDs and cost data; handles SKAN configuration and Android Install Referrer. Competes with AppsFlyer and Adjust.",
+  "lifecycle": [
+    "before-install",
+    "on-launch",
+    "in-session",
+    "after-uninstall"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "y",
+      "v": "",
+      "permission": "INTERNET, ACCESS_NETWORK_STATE; AD_ID for GAID; Install Referrer library",
+      "protection": "normal",
+      "grant": "install",
+      "prompt_ui": "",
+      "persistence": "",
+      "revocation": "",
+      "store_policy": "Data safety must list SDK data; Families: certified ad SDK rules",
+      "api_surface": "MMP SDK + Play Install Referrer + GAID",
+      "note": "Install Referrer, GAID."
+    },
+    "ios": {
+      "s": "y",
+      "v": "",
+      "permission": "NSUserTrackingUsageDescription if IDFA used; privacy manifest from SDK",
+      "protection": "prompt",
+      "grant": "prompt",
+      "prompt_ui": "",
+      "persistence": "",
+      "revocation": "",
+      "store_policy": "Privacy manifest and signature required for listed SDKs; ATT 5.1.2(i)",
+      "api_surface": "MMP SDK + SKAdNetwork/AdAttributionKit + ATT",
+      "note": "SKAN 4, AAK support, ATT consent API."
+    }
+  },
+  "web_equivalents": [
+    "web.xsite.ad-click-ids"
+  ],
+  "data": {
+    "type": "object",
+    "metric": "Install, session and event records tied to an MMP ID",
+    "update": "continuous via SDK",
+    "fields": [
+      {
+        "name": "device ID",
+        "type": "string",
+        "unit": "",
+        "range": "GAID, IDFA or IDFV, MMP-specific ID",
+        "precision": ""
+      },
+      {
+        "name": "attribution source",
+        "type": "string",
+        "unit": "",
+        "range": "",
+        "precision": ""
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can link your install to an ad and show spending and results in one place",
+    "user_action": "Nothing. It starts when the app opens, after you tapped an ad and installed",
+    "can": [
+      "Match an install to an ad using the install referrer and ad ID",
+      "Receive events, IDs and cost data",
+      "Manage Apple's delayed reports using your tracking choice"
+    ],
+    "cannot": [
+      "Use the iPhone ad ID after you tap Ask App Not to Track",
+      "Give exact per person ad results on iPhone without your yes",
+      "Skip the tracking prompt on iPhone"
+    ],
+    "reach": 4,
+    "reach_label": "Ongoing, across ad networks",
+    "differs": "Android uses the install referrer and ad ID. iPhone uses Apple's delayed reports and the ID only if allowed."
+  },
+  "story": {
+    "what_it_is": "An SDK that credits installs to ads and joins ad spend and Apple reports into one return on spend view.",
+    "icon": "chart-bar",
+    "tags": [
+      "Ads",
+      "Attribution",
+      "Tracking"
+    ],
+    "marketing": [],
+    "for_you": "You never see it. If you installed after an ad, the company behind the app learns which ad and how much that ad was worth.",
+    "for_makers": "Singular receives events, IDs and cost data from ad networks, handles SKAN setup and uses the Android install referrer. It competes with AppsFlyer and Adjust, and pitches one clear return on ad spend number.",
+    "use_cases": [
+      {
+        "type": "games",
+        "example": "A game studio sees ad spend and SKAN postbacks in one chart to decide where to put next week's budget.",
+        "apps": [
+          "Rovio"
+        ]
+      },
+      {
+        "type": "shopping",
+        "example": "A retailer compares the real cost of an install from three video ad networks.",
+        "apps": []
+      },
+      {
+        "type": "ads",
+        "example": "An ad network sends costs to Singular so every network shows up in the same chart.",
+        "apps": [
+          "AppLovin",
+          "Unity"
+        ]
+      },
+      {
+        "type": "analytics",
+        "example": "A growth team adjusts SKAN conversion values to learn more about early purchases.",
+        "apps": []
+      },
+      {
+        "type": "security",
+        "example": "Singular filters fake installs from known bad sources.",
+        "apps": []
+      },
+      {
+        "type": "media",
+        "example": "A streaming app measures which podcast ad brought subscribers.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Combines ad spend with user data",
+      "Sees events across customers"
+    ],
+    "android_note": "Uses the Google advertising ID and the Play install referrer on Android.",
+    "ios_note": "On iOS it relies on SKAN or AdAttributionKit."
+  },
+  "technical_bounds": [
+    "Data flows to the vendor's cloud",
+    "Needs ATT for IDFA matching on iOS",
+    "Privacy manifest and required reasons apply"
+  ],
+  "scores": {
+    "sensitivity": 4,
+    "utility": 5,
+    "fingerprint_bits": 12,
+    "friction": 1
+  },
+  "value": {
+    "legit_uses": [
+      "Attribution, fraud detection, deep links, ROAS"
+    ],
+    "abuse": [
+      "Cross-customer device graph",
+      "Fingerprint-style matching on non-consenting iOS"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2021-04",
+      "platform": "ios",
+      "version": "iOS 14.5",
+      "change": "MMPs shift to SKAN and consent-gated IDFA for iOS"
+    },
+    {
+      "date": "2024-05",
+      "platform": "ios",
+      "version": "iOS 17.5",
+      "change": "Privacy manifests and signatures required for the SDK"
+    },
+    {
+      "date": "2025-10",
+      "platform": "android",
+      "version": "Android 16",
+      "change": "Privacy Sandbox wind-down: Install Referrer plus GAID remain the Android core"
+    }
+  ],
+  "related": [
+    "mob.xtrack.probabilistic-matching",
+    "mob.attr.install-referrer",
+    "mob.ads.skadnetwork",
+    "mob.ads.sdk-data-sharing"
+  ],
+  "refs": [
+    {
+      "t": "vendor",
+      "label": "Singular support",
+      "url": "https://support.singular.net/"
+    },
+    {
+      "t": "vendor",
+      "label": "Singular: WWDC25 AdAttributionKit",
+      "url": "https://www.singular.net/blog/wwdc-2025-aak/"
+    }
+  ],
+  "confidence": "docs"
+}

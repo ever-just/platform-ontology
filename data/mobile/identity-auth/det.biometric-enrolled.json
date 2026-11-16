@@ -1,0 +1,193 @@
+{
+  "id": "mob.det.biometric-enrolled",
+  "name": "Biometric availability and enrollment change",
+  "kind": "signal",
+  "group": "identity-auth",
+  "subgroup": "Security state",
+  "tags": [
+    "biometrics",
+    "enrollment"
+  ],
+  "plain": "Reads if biometrics are enrolled; iOS also exposes a token that changes when enrollment changes.",
+  "meaning": "Reveals device security setup. The iOS domain state changes when a new finger or face is added, so it is a weak device-state fingerprint.",
+  "lifecycle": [
+    "on-launch",
+    "in-session"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "y",
+      "v": "10",
+      "api": 29,
+      "permission": "USE_BIOMETRIC (normal)",
+      "protection": "normal",
+      "grant": "install",
+      "prompt_ui": "",
+      "persistence": "",
+      "revocation": "",
+      "store_policy": "",
+      "api_surface": "BiometricManager.canAuthenticate(BIOMETRIC_STRONG)",
+      "note": "Result codes: SUCCESS, NONE_ENROLLED, NO_HARDWARE, HW_UNAVAILABLE"
+    },
+    "ios": {
+      "s": "y",
+      "v": "8.0",
+      "permission": "prompt",
+      "protection": "none",
+      "grant": "none",
+      "prompt_ui": "",
+      "persistence": "",
+      "revocation": "",
+      "store_policy": "",
+      "api_surface": "evaluatedPolicyDomainState changes when enrollment changes; Face ID needs usage string only when authenticating",
+      "note": ""
+    }
+  },
+  "data": {
+    "type": "enum",
+    "metric": "Availability",
+    "update": "On check",
+    "fields": [
+      {
+        "name": "status",
+        "type": "enum",
+        "unit": "",
+        "range": "SUCCESS, NONE_ENROLLED, NO_HARDWARE",
+        "precision": "3 values"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can check whether you set up fingerprint or face unlock, but not who you are",
+    "user_action": "Nothing. It happens when the app decides whether to offer biometric sign in",
+    "can": [
+      "Check if the phone has fingerprint or face unlock hardware",
+      "Check if you have enrolled at least one fingerprint or face",
+      "On iPhone, notice that your enrolled fingerprints or faces changed since last time",
+      "Decide whether to show a biometric sign in button"
+    ],
+    "cannot": [
+      "See your fingerprint, face scan, or any biometric data",
+      "Tell which finger or face is enrolled, or how many",
+      "Unlock anything without the system scan prompt"
+    ],
+    "reach": 1,
+    "reach_label": "One yes or no answer",
+    "differs": "iPhone also gives a change marker when someone adds a new finger or face. Android gives only a status such as none enrolled or no hardware."
+  },
+  "story": {
+    "what_it_is": "An app can quietly check whether you have set up a fingerprint or face unlock.",
+    "icon": "fingerprint",
+    "tags": [
+      "Identity",
+      "Silent",
+      "Security"
+    ],
+    "marketing": [
+      {
+        "vendor": "Google",
+        "name": "BiometricManager",
+        "pitch": "Android tells apps whether strong biometric sign in is ready on the device before offering it.",
+        "url": "https://developer.android.com/identity/sign-in/biometric-auth"
+      }
+    ],
+    "for_you": "You never see this check. You just notice that an app offers 'Use Face ID' or 'Use fingerprint' only when you have set one up. If you add a new face or finger, some apps may quietly ask you to log in again.",
+    "for_makers": "Makers need to know whether to show the biometric button or fall back to a password. Banks also watch for the enrollment change on iPhone, because a new face added right before a big transfer can mean someone else has the phone.",
+    "use_cases": [
+      {
+        "type": "banking",
+        "example": "A bank app checks that you have fingerprint unlock set up, then offers a one tap login instead of a long password.",
+        "apps": [
+          "Chase",
+          "Revolut"
+        ]
+      },
+      {
+        "type": "security",
+        "example": "A bank notices a new face was added to a phone an hour ago and asks for a full password and a code before it allows a large transfer.",
+        "apps": []
+      },
+      {
+        "type": "productivity",
+        "example": "A password manager shows an 'Unlock with Face ID' toggle only when the phone can actually do it.",
+        "apps": [
+          "1Password",
+          "Bitwarden"
+        ]
+      },
+      {
+        "type": "payments",
+        "example": "A payments app skips the biometric prompt on a phone with no enrolled finger and asks for a PIN instead.",
+        "apps": [
+          "PayPal"
+        ]
+      },
+      {
+        "type": "enterprise",
+        "example": "A work app checks that biometrics are set up so company data is protected by more than a 4 digit code.",
+        "apps": [
+          "Microsoft Intune"
+        ]
+      },
+      {
+        "type": "analytics",
+        "example": "An ad or fraud tool adds the enrollment state to a quiet device profile, which helps tell one phone from another.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Weak fingerprint bit",
+      "Reveals security setup"
+    ],
+    "android_note": "Android only says whether strong biometrics are ready (yes, none enrolled, no hardware). It does not give a change token.",
+    "ios_note": "iPhone apps can read a token that changes whenever someone adds or removes a face or finger, which acts as a small device state signal."
+  },
+  "technical_bounds": [
+    "No template data exposed"
+  ],
+  "scores": {
+    "sensitivity": 2,
+    "utility": 3,
+    "fingerprint_bits": 2,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Offer biometric sign-in"
+    ],
+    "abuse": [
+      "Fingerprint bit"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2019-09",
+      "platform": "android",
+      "version": "10 (API 29)",
+      "change": "BiometricManager.canAuthenticate for strong biometrics"
+    }
+  ],
+  "related": [
+    "mob.det.lock-state"
+  ],
+  "refs": [
+    {
+      "t": "android",
+      "label": "Android: BiometricManager",
+      "url": "https://developer.android.com/reference/android/hardware/biometrics/BiometricManager"
+    },
+    {
+      "t": "apple",
+      "label": "Apple: Keychain services",
+      "url": "https://developer.apple.com/documentation/security/keychain-services"
+    }
+  ],
+  "confidence": "docs"
+}

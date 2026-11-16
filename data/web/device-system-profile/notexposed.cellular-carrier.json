@@ -1,0 +1,206 @@
+{
+  "id": "web.notexposed.cellular-carrier",
+  "name": "Carrier, SIM and cell tower",
+  "kind": "not-exposed",
+  "group": "device-system-profile",
+  "subgroup": "Network",
+  "tags": [
+    "not-exposed",
+    "carrier",
+    "sim"
+  ],
+  "plain": "Sites cannot read your mobile carrier, SIM or tower ID.",
+  "meaning": "Only the Network Information type (cellular) on Android Chromium and the server-side IP to ASN lookup reveal the carrier (about 100 major carriers). No MCC, MNC, SIM or tower API exists on the web.",
+  "lifecycle": [
+    "on-arrival",
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "none",
+      "access": {
+        "grant": "not-exposed",
+        "prompt_ui": "None",
+        "secure_context": false,
+        "user_gesture": false,
+        "persistence": "read fresh on every page load; nothing stored",
+        "revocation": "not applicable",
+        "iframe": "Readable from cross-origin iframes too (same values)",
+        "steps": [
+          "Page script reads the value",
+          "No prompt is shown"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "edge": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "firefox": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "safari": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "ios_safari": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "chrome_android": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "samsung": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "none",
+    "metric": "",
+    "update": "static per session",
+    "fields": [
+      {
+        "name": "proxy: IP to ASN lookup (server side)",
+        "type": "string",
+        "unit": "",
+        "range": "identifies carrier network",
+        "precision": ""
+      },
+      {
+        "name": "proxy: navigator.connection.type",
+        "type": "string",
+        "unit": "",
+        "range": "cellular only, Android Chromium",
+        "precision": ""
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can't see your mobile carrier, SIM, or cell tower from a web page",
+    "user_action": "Nothing. Pages have no way to ask for this",
+    "can": [
+      "Check if you are on cellular or Wi-Fi in Chrome on Android",
+      "Look up your carrier from your IP address on the server",
+      "Guess your connection speed class"
+    ],
+    "cannot": [
+      "See SIM details",
+      "See your carrier code or tower ID",
+      "See your phone number",
+      "Get a carrier name directly; only a server lookup by IP gives a guess"
+    ],
+    "reach": 1,
+    "reach_label": "A guess from IP only",
+    "differs": ""
+  },
+  "story": {
+    "what_it_is": "Sites cannot read your mobile carrier, SIM or cell tower.",
+    "icon": "signal",
+    "tags": [
+      "Blocked",
+      "Network",
+      "Privacy"
+    ],
+    "marketing": [],
+    "for_you": "A page cannot tell which phone company you use from your phone. It can guess from your internet address, and Android Chrome may report a rough connection type like 4G or Wi-Fi.",
+    "for_makers": "Marketers and fraud teams want the carrier to target offers, verify identity and spot fraud. The web does not give it. They use IP address lookups that name the network provider instead.",
+    "use_cases": [
+      {
+        "type": "ads",
+        "example": "A mobile ad network wants your carrier and uses the network of your IP address to guess.",
+        "apps": []
+      },
+      {
+        "type": "banking",
+        "example": "A bank wanted to match your SIM to your account for fraud and uses a separate phone number check.",
+        "apps": []
+      },
+      {
+        "type": "video",
+        "example": "A streaming site wanted to know if you are on cellular data to lower quality and uses the connection type hint.",
+        "apps": [
+          "Netflix"
+        ]
+      },
+      {
+        "type": "games",
+        "example": "A cloud gaming site wanted tower quality for stream tuning and measures speed in the page instead.",
+        "apps": [
+          "Xbox Cloud Gaming"
+        ]
+      },
+      {
+        "type": "security",
+        "example": "A fraud team wanted to flag SIM swap risk and relies on server side checks.",
+        "apps": []
+      },
+      {
+        "type": "travel",
+        "example": "A roaming offer site wanted to know when you travel and uses your IP country.",
+        "apps": []
+      },
+      {
+        "type": "analytics",
+        "example": "A telco partner wanted to match visits to subscribers and needs an agreement and sign-in.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "IP address still shows network",
+      "Not an exact carrier ID"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Carrier identity enables targeted ads"
+  ],
+  "scores": {
+    "sensitivity": 4,
+    "utility": 2,
+    "fingerprint_bits": 0.0,
+    "friction": 3
+  },
+  "value": {
+    "legit_uses": [
+      "None: the browser deliberately withholds it"
+    ],
+    "abuse": [
+      "Sites attempt proxies to recover it"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "related": [
+    "web.network.network-information"
+  ],
+  "refs": [
+    {
+      "t": "spec",
+      "label": "WICG Network Information",
+      "url": "https://wicg.github.io/netinfo/"
+    }
+  ],
+  "confidence": "docs"
+}

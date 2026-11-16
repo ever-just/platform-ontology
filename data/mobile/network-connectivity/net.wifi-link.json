@@ -1,0 +1,193 @@
+{
+  "id": "mob.net.wifi-link",
+  "name": "Wi-Fi signal strength and link speed",
+  "kind": "signal",
+  "group": "network-connectivity",
+  "subgroup": "Wi-Fi",
+  "tags": [
+    "rssi",
+    "link-speed"
+  ],
+  "plain": "Android reads signal and link speed with no prompt; iOS gives signal strength only with the Wi-Fi entitlement.",
+  "meaning": "Gives a rough distance from the router and speed tier. Can be used with BSSID to locate the person inside a home.",
+  "lifecycle": [
+    "on-launch",
+    "in-session"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "y",
+      "v": "1.0",
+      "api": 1,
+      "permission": "ACCESS_WIFI_STATE",
+      "protection": "normal",
+      "grant": "install",
+      "prompt_ui": "",
+      "persistence": "",
+      "revocation": "",
+      "store_policy": "",
+      "api_surface": "WifiInfo.getRssi(), getLinkSpeed(), getFrequency(), getWifiStandard() (API 30)",
+      "note": "RSSI -100 to -30 dBm; link speed up to 2400 Mbps and beyond"
+    },
+    "ios": {
+      "s": "f",
+      "v": "14.0",
+      "permission": "entitlement",
+      "protection": "entitlement",
+      "grant": "none",
+      "prompt_ui": "",
+      "persistence": "",
+      "revocation": "",
+      "store_policy": "",
+      "api_surface": "No dBm; normalized value",
+      "note": ""
+    }
+  },
+  "data": {
+    "type": "object",
+    "metric": "RSSI, link speed",
+    "update": "On change",
+    "fields": [
+      {
+        "name": "rssi",
+        "type": "integer",
+        "unit": "dBm",
+        "range": "-100 to -30",
+        "precision": "1 dBm"
+      },
+      {
+        "name": "link_speed",
+        "type": "integer",
+        "unit": "Mbps",
+        "range": "1 to 5000",
+        "precision": "1 Mbps"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can see Wi-Fi signal strength and speed on Android; iPhone needs special approval",
+    "user_action": "Nothing on Android. On iPhone only approved apps can do it",
+    "can": [
+      "Get signal strength in dBm on Android",
+      "See link speed up to 2400 Mbps and more, the frequency and Wi-Fi generation",
+      "Get a normalized signal value on iPhone with the Wi-Fi entitlement"
+    ],
+    "cannot": [
+      "Get dBm on iPhone",
+      "See signal strength on iPhone without the special Apple entitlement",
+      "See other people's networks or passwords"
+    ],
+    "reach": 1,
+    "reach_label": "Signal and speed of your Wi-Fi",
+    "differs": "Android shows dBm and speed with a normal permission. iPhone needs a special Apple entitlement and gives a normalized value."
+  },
+  "story": {
+    "what_it_is": "An app can read your Wi-Fi signal strength and speed.",
+    "icon": "wifi",
+    "tags": [
+      "Network",
+      "Silent",
+      "Wi-Fi"
+    ],
+    "marketing": [],
+    "for_you": "You do not see it. A video call app may warn you that your signal is weak. It also tells the app about how far you are from the router.",
+    "for_makers": "Makers use signal strength to adjust quality and to warn users. It can help guess where you are in a home, especially together with the network ID. It is more open on Android than on iPhone.",
+    "use_cases": [
+      {
+        "type": "video",
+        "example": "A video call app drops to audio only when Wi-Fi gets weak.",
+        "apps": [
+          "Zoom",
+          "Google Meet"
+        ]
+      },
+      {
+        "type": "games",
+        "example": "A cloud gaming app shows a signal meter and warns you about lag.",
+        "apps": [
+          "Xbox Cloud Gaming",
+          "GeForce NOW"
+        ]
+      },
+      {
+        "type": "smart-home",
+        "example": "A router app shows which rooms have weak Wi-Fi and suggests a better spot for the router.",
+        "apps": [
+          "Eero",
+          "Google Home"
+        ]
+      },
+      {
+        "type": "utilities",
+        "example": "A speed test app shows link speed and signal in dBm.",
+        "apps": [
+          "Speedtest"
+        ]
+      },
+      {
+        "type": "ads",
+        "example": "A tracker combines signal strength with the router ID to guess where you stand in a home.",
+        "apps": []
+      },
+      {
+        "type": "security",
+        "example": "A security app notes a sudden drop in signal as a clue of a fake hotspot nearby.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Indoor location clue",
+      "Home layout inference"
+    ],
+    "android_note": "Android apps read signal and link speed with no prompt on current versions.",
+    "ios_note": "iPhone gives signal strength only to apps with the Wi-Fi information entitlement."
+  },
+  "technical_bounds": [
+    "iOS needs entitlement"
+  ],
+  "scores": {
+    "sensitivity": 2,
+    "utility": 2,
+    "fingerprint_bits": 2,
+    "friction": 1
+  },
+  "value": {
+    "legit_uses": [
+      "Show signal quality"
+    ],
+    "abuse": [
+      "Indoor location"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2020-09",
+      "platform": "ios",
+      "version": "iOS 14",
+      "change": "signalStrength added"
+    }
+  ],
+  "related": [
+    "mob.network.wifi-info"
+  ],
+  "refs": [
+    {
+      "t": "android",
+      "label": "Android: WifiInfo",
+      "url": "https://developer.android.com/reference/android/net/wifi/WifiInfo"
+    },
+    {
+      "t": "apple",
+      "label": "Apple: NEHotspotNetwork",
+      "url": "https://developer.apple.com/documentation/networkextension/nehotspotnetwork"
+    }
+  ],
+  "confidence": "docs"
+}

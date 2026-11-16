@@ -1,0 +1,218 @@
+{
+  "id": "web.os.launch-handler",
+  "name": "Launch Handler",
+  "kind": "capability",
+  "group": "os-integration-install",
+  "subgroup": "Window",
+  "tags": [
+    "window"
+  ],
+  "plain": "Controls how an installed app reopens when a link is clicked.",
+  "meaning": "Picks reuse of the existing window or a new one.",
+  "lifecycle": [
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "manifest launch_handler {client_mode}",
+      "bcd": [
+        "manifests.webapp.launch_handler"
+      ],
+      "access": {
+        "grant": "install",
+        "prompt_ui": "None",
+        "secure_context": true,
+        "user_gesture": false,
+        "persistence": "Per origin",
+        "revocation": "Site settings",
+        "iframe": "Same as top level; cross-origin iframes need a permissions policy where listed",
+        "steps": [
+          "Call the API",
+          "Browser applies its access rules",
+          "Page receives the result"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "110",
+          "note": "",
+          "date": "2023-02-07"
+        },
+        "edge": {
+          "s": "y",
+          "v": "110",
+          "note": "",
+          "date": "2023-02-09"
+        },
+        "firefox": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "safari": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "ios_safari": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "110",
+          "note": "",
+          "date": "2023-02-07"
+        },
+        "samsung": {
+          "s": "y",
+          "v": "21.0",
+          "note": "",
+          "date": "2023-05-19"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "object",
+    "metric": "Controls how an installed app reopens when a link is clicked.",
+    "update": "on demand",
+    "fields": [
+      {
+        "name": "client_mode",
+        "type": "enum",
+        "range": "auto, navigate-new, navigate-existing, focus-existing"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can choose whether links reopen your installed app in its existing window or a new one",
+    "user_action": "You click a link that opens in your installed web app",
+    "can": [
+      "Reuse the app's open window when you click a link",
+      "Open a new window instead",
+      "Pass the link to the app that is already running"
+    ],
+    "cannot": [
+      "Work for a site that is not installed",
+      "Open links outside the app on its own",
+      "Work in Firefox or Safari",
+      "Change how other apps open"
+    ],
+    "reach": 1,
+    "reach_label": "One link, one window",
+    "differs": "Chrome, Edge and Samsung Internet only. Firefox, Safari and iPhone do not support it."
+  },
+  "story": {
+    "what_it_is": "An installed web app picks whether a clicked link reuses its open window or opens a new one.",
+    "icon": "external-link",
+    "tags": [
+      "Installed apps",
+      "Windows",
+      "Capability"
+    ],
+    "marketing": [
+      {
+        "vendor": "MDN Web Docs",
+        "name": "launch_handler",
+        "pitch": "A setting that tells an installed web app how to open when launched, such as reusing an existing window.",
+        "url": "https://developer.mozilla.org/en-US/docs/Web/Progressive_web_apps/Manifest/Reference/launch_handler"
+      }
+    ],
+    "for_you": "You click a link to your app, and it opens in the window you already have, instead of a pile of new windows. It feels tidy and like a normal desktop app.",
+    "for_makers": "Makers choose between single window and many windows for a better flow. A chat app can jump to the right thread in the open window. It is a polish feature for installed web apps.",
+    "use_cases": [
+      {
+        "type": "messaging",
+        "example": "A chat app takes you to the right conversation in the window you already have open.",
+        "apps": [
+          "Slack"
+        ]
+      },
+      {
+        "type": "music",
+        "example": "A web music player plays the clicked track in the existing player, not a second one.",
+        "apps": []
+      },
+      {
+        "type": "productivity",
+        "example": "A web mail app opens a new message in the main window when you click a mail link.",
+        "apps": [
+          "Gmail"
+        ]
+      },
+      {
+        "type": "games",
+        "example": "A web game launcher reuses its window when you click a game invite link.",
+        "apps": []
+      },
+      {
+        "type": "video",
+        "example": "A web video call app takes your meeting link to the call window you already have.",
+        "apps": [
+          "Google Meet"
+        ]
+      },
+      {
+        "type": "creative",
+        "example": "A web design app opens a shared file link in its existing window as a new tab.",
+        "apps": [
+          "Figma"
+        ]
+      },
+      {
+        "type": "enterprise",
+        "example": "A company portal opens a link to a ticket in the same app window to keep staff focused.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Only installed apps",
+      "Can surprise users"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Installed PWA only"
+  ],
+  "scores": {
+    "sensitivity": 1,
+    "utility": 2,
+    "fingerprint_bits": null,
+    "friction": 1
+  },
+  "value": {
+    "legit_uses": [
+      "Single window apps"
+    ],
+    "abuse": [
+      "None"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2023-02",
+      "browser": "chrome",
+      "version": "110",
+      "change": "Launch Handler ships"
+    }
+  ],
+  "refs": [
+    {
+      "t": "mdn",
+      "label": "MDN launch_handler",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/Progressive_web_apps/Manifest/Reference/launch_handler"
+    }
+  ],
+  "confidence": "verified"
+}

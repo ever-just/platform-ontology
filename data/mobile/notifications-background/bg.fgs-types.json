@@ -1,0 +1,212 @@
+{
+  "id": "mob.bg.fgs-types",
+  "name": "Foreground service types (Android 14)",
+  "kind": "capability",
+  "group": "notifications-background",
+  "subgroup": "Android background limits",
+  "tags": [
+    "foreground-service",
+    "service-types",
+    "android-14",
+    "declared-purpose"
+  ],
+  "plain": "Every foreground service must declare a purpose and hold the matching permission.",
+  "meaning": "Forces apps to state why they keep running (location, camera, media, phone call). The type decides which hardware and permissions the service can use, so it shows purpose to reviewers.",
+  "lifecycle": [
+    "background",
+    "in-session"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "y",
+      "v": "14",
+      "api": 34,
+      "permission": "FOREGROUND_SERVICE_<TYPE> permissions such as _LOCATION, _CAMERA, _MICROPHONE, _DATA_SYNC, _MEDIA_PLAYBACK, _CONNECTED_DEVICE, _PHONE_CALL, _SPECIAL_USE",
+      "protection": "normal",
+      "grant": "install",
+      "prompt_ui": "Notification required; microphone, camera, location need their own runtime grant while in use",
+      "persistence": "While the service runs",
+      "revocation": "Task manager",
+      "store_policy": "Play: FGS type declaration form for apps targeting 34",
+      "api_surface": "android:foregroundServiceType, startForeground(id, notification, type)",
+      "note": "Types: camera, connectedDevice, dataSync, health, location, mediaPlayback, mediaProjection, microphone, phoneCall, remoteMessaging, shortService, specialUse, systemExempted; mediaProcessing added in 15"
+    },
+    "ios": {
+      "s": "p",
+      "v": "4.0",
+      "permission": "UIBackgroundModes",
+      "protection": "entitlement",
+      "grant": "entitlement",
+      "prompt_ui": "None",
+      "persistence": "Per mode; app suspended when work ends",
+      "revocation": "Remove capability",
+      "store_policy": "App Review 2.5.4",
+      "api_surface": "UIBackgroundModes: audio, location, voip, bluetooth-central, bluetooth-peripheral, fetch, remote-notification, processing, external-accessory, nearby-interaction",
+      "note": "See mob.bg.ios-modes"
+    }
+  },
+  "data": {
+    "type": "enum",
+    "metric": "Service type",
+    "update": "Per service",
+    "fields": [
+      {
+        "name": "type",
+        "type": "enum",
+        "unit": "",
+        "range": "about 14 types",
+        "precision": ""
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can run long Android background tasks, but only for a declared purpose with a notification",
+    "user_action": "You start something long, like playing music, tracking a run, or syncing a big file",
+    "can": [
+      "Keep playing audio, tracking location or syncing data while the screen is off",
+      "Show you a notification that says the work is running",
+      "Use the camera, microphone or location in the background, but only after you allowed each one"
+    ],
+    "cannot": [
+      "Start a background service from nowhere without a notification",
+      "Use the microphone, camera or location without their own permission",
+      "Pick any purpose it likes; Android 14 makes each service declare one type and checks it",
+      "Match this on iPhone, where background modes need an Apple approved setting instead"
+    ],
+    "reach": 3,
+    "reach_label": "Ongoing, but tied to a stated purpose",
+    "differs": "Android uses service types with a visible notification. iPhone uses background modes set up in Xcode."
+  },
+  "story": {
+    "what_it_is": "Android makes every always-running app task state its purpose, like navigation or music.",
+    "icon": "tag",
+    "tags": [
+      "Background",
+      "Android",
+      "Transparency"
+    ],
+    "marketing": [
+      {
+        "vendor": "Google",
+        "name": "Foreground service types",
+        "pitch": "Android 14 requires apps to declare why a service keeps running, such as media playback or location.",
+        "url": "https://developer.android.com/develop/background-work/services/fgs/service-types"
+      }
+    ],
+    "for_you": "You see this as a persistent notification, such as a music player or a navigation arrow. It tells you an app is allowed to keep working while you do something else.",
+    "for_makers": "Makers must pick the right label and get the matching permission. Google and reviewers use the label to check an app is not hiding battery heavy work behind a vague reason.",
+    "use_cases": [
+      {
+        "type": "maps",
+        "example": "A navigation app keeps turn by turn guidance running with the screen off using the location type.",
+        "apps": [
+          "Google Maps",
+          "Waze"
+        ]
+      },
+      {
+        "type": "music",
+        "example": "A streaming app keeps playing with the phone locked using the media playback type.",
+        "apps": [
+          "Spotify",
+          "YouTube Music"
+        ]
+      },
+      {
+        "type": "rideshare",
+        "example": "A driver app keeps sharing live position during a trip while you check messages in another app.",
+        "apps": [
+          "Uber",
+          "Lyft"
+        ]
+      },
+      {
+        "type": "fitness",
+        "example": "A cycling app records your route and heart rate through the whole ride using location and health types.",
+        "apps": [
+          "Strava",
+          "Komoot"
+        ]
+      },
+      {
+        "type": "messaging",
+        "example": "A calling app keeps your microphone live during a voice call after you leave the app.",
+        "apps": [
+          "WhatsApp",
+          "Signal"
+        ]
+      },
+      {
+        "type": "games",
+        "example": "A cloud gaming or remote play app keeps its stream alive while you answer a text.",
+        "apps": [
+          "Xbox Cloud Gaming"
+        ]
+      }
+    ],
+    "risks": [
+      "Apps can misuse loose labels like special use",
+      "Always-on notification can be ignored"
+    ],
+    "android_note": "Required from Android 14. Each type needs its own permission, and camera, mic and location still need your tap.",
+    "ios_note": "iOS uses background modes in Xcode instead, which are reviewed by Apple."
+  },
+  "technical_bounds": [
+    "Type must match actual use",
+    "Play review for sensitive types"
+  ],
+  "scores": {
+    "sensitivity": 2,
+    "utility": 4,
+    "fingerprint_bits": null,
+    "friction": 1
+  },
+  "value": {
+    "legit_uses": [
+      "Navigation",
+      "Media"
+    ],
+    "abuse": [
+      "Using a loose type like specialUse to stay alive"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2023-10",
+      "platform": "android",
+      "version": "14 (API 34)",
+      "change": "Foreground service type and matching permission mandatory"
+    },
+    {
+      "date": "2024-10",
+      "platform": "android",
+      "version": "15 (API 35)",
+      "change": "mediaProcessing type added; BOOT_COMPLETED receivers cannot start dataSync, camera, mediaPlayback, phoneCall, mediaProjection or microphone FGS"
+    }
+  ],
+  "related": [
+    "mob.bg.fgs-timeouts",
+    "mob.bg.fgs-start-restrictions",
+    "mob.notif.ongoing-foreground"
+  ],
+  "refs": [
+    {
+      "t": "android",
+      "label": "Android: Foreground service types",
+      "url": "https://developer.android.com/develop/background-work/services/fgs/service-types"
+    },
+    {
+      "t": "android",
+      "label": "Android 14 behavior changes",
+      "url": "https://developer.android.com/about/versions/14/behavior-changes-14"
+    }
+  ],
+  "confidence": "docs"
+}

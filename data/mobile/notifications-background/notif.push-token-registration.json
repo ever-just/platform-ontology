@@ -1,0 +1,236 @@
+{
+  "id": "mob.notif.push-token-registration",
+  "name": "Push token registration (FCM token, APNs device token)",
+  "kind": "capability",
+  "group": "notifications-background",
+  "subgroup": "Push",
+  "tags": [
+    "push",
+    "token",
+    "persistent-identifier",
+    "background"
+  ],
+  "plain": "Gets an address that lets a server reach this app install, even when the app is closed.",
+  "meaning": "The token ties one install to a server-side profile and lets the company wake or message the person at any time. It rotates on reinstall, restore or data clear, so servers use it to detect churn.",
+  "lifecycle": [
+    "background",
+    "signed-in"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "y",
+      "v": "1.0",
+      "api": 1,
+      "permission": "INTERNET (normal); POST_NOTIFICATIONS (API 33) only for visible alerts",
+      "protection": "normal",
+      "grant": "install",
+      "prompt_ui": "None for the token; Android 13+ prompt for visible notifications",
+      "persistence": "FCM token rotates on app restore to a new device, uninstall and reinstall, data clear, or token refresh; stale after 1 month idle, expired after 270 days",
+      "revocation": "Settings > Apps > Notifications; Force stop; uninstall",
+      "store_policy": "Google Play: FCM is the supported route for non-China devices",
+      "api_surface": "FirebaseMessaging.getToken(), FirebaseMessagingService.onNewToken()",
+      "note": "GCM was replaced by FCM in 2016; Play services delivers messages over one shared connection"
+    },
+    "ios": {
+      "s": "y",
+      "v": "3.0",
+      "permission": "aps-environment entitlement (Push Notifications capability)",
+      "protection": "entitlement",
+      "grant": "entitlement",
+      "prompt_ui": "None for the token; alert permission is a separate prompt",
+      "persistence": "Token changes on reinstall, restore to a new device, or OS reinstall; Apple says do not assume a fixed length (32 bytes in practice)",
+      "revocation": "Settings > Notifications; uninstall",
+      "store_policy": "App Review 4.5.4: push must not be required for the app to function; no spam",
+      "api_surface": "UIApplication.registerForRemoteNotifications(), didRegisterForRemoteNotificationsWithDeviceToken",
+      "note": "Token is issued even when the person denies alerts, so silent pushes can still arrive"
+    }
+  },
+  "web_equivalents": [
+    "web.notify.push-api"
+  ],
+  "data": {
+    "type": "string",
+    "metric": "Opaque device or install token",
+    "update": "On rotation events",
+    "fields": [
+      {
+        "name": "fcm_token",
+        "type": "string",
+        "unit": "chars",
+        "range": "about 160 to 200",
+        "precision": "random"
+      },
+      {
+        "name": "apns_token",
+        "type": "binary",
+        "unit": "binary",
+        "range": "32 typical",
+        "precision": "random"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can get an address so its server can reach your app, even when closed",
+    "user_action": "Nothing. It happens when the app opens and registers for push",
+    "can": [
+      "Get a unique token for this install of the app",
+      "Send that token to its server",
+      "Receive silent pushes on iPhone even if you said no to alerts"
+    ],
+    "cannot": [
+      "Show alerts on Android 13 or newer without your permission",
+      "Show alerts on iPhone if you refused the alert prompt",
+      "Learn who you are from the token alone"
+    ],
+    "reach": 3,
+    "reach_label": "A stable address for this install",
+    "differs": "iPhone gives a token even if you deny alerts. Android 13 and newer asks before visible notifications."
+  },
+  "story": {
+    "what_it_is": "A secret address that lets a company's server send messages to one app install.",
+    "icon": "key-round",
+    "tags": [
+      "Push",
+      "Identity",
+      "Tracking"
+    ],
+    "marketing": [
+      {
+        "vendor": "Google",
+        "name": "Manage FCM tokens",
+        "pitch": "Google tells developers to keep device tokens fresh so messages reach each install.",
+        "url": "https://firebase.google.com/docs/cloud-messaging/manage-tokens"
+      },
+      {
+        "vendor": "Apple",
+        "name": "Registering with APNs",
+        "pitch": "Apple describes how an app asks for a device token to receive remote notifications.",
+        "url": "https://developer.apple.com/documentation/usernotifications/registering-your-app-with-apns"
+      }
+    ],
+    "for_you": "You never see it. When you first open an app, it quietly gets this address, even if you say no to alerts. That address lets the company reach your phone and recognize this install.",
+    "for_makers": "Makers store the token with your account so they can message you at any time. A new token after a reinstall also tells them someone left and came back, which feeds churn and ad measurement.",
+    "use_cases": [
+      {
+        "type": "messaging",
+        "example": "A chat app uses your token to send a message alert to the right phone.",
+        "apps": [
+          "WhatsApp"
+        ]
+      },
+      {
+        "type": "games",
+        "example": "A game ties the token to your player profile so it can ring you when a friend plays.",
+        "apps": [
+          "Clash Royale"
+        ]
+      },
+      {
+        "type": "shopping",
+        "example": "A retailer links your token to your cart so it can send an abandoned cart reminder.",
+        "apps": [
+          "Amazon"
+        ]
+      },
+      {
+        "type": "ads",
+        "example": "An ad company links tokens across apps in the same family to see the same device.",
+        "apps": []
+      },
+      {
+        "type": "analytics",
+        "example": "A product team counts new tokens to measure reinstalls and lapsed users.",
+        "apps": []
+      },
+      {
+        "type": "security",
+        "example": "A bank uses a token to push a login approval to the registered phone.",
+        "apps": []
+      },
+      {
+        "type": "live",
+        "example": "A sports app sends goal alerts to every device that follows the team.",
+        "apps": [
+          "ESPN"
+        ]
+      }
+    ],
+    "risks": [
+      "Links one install to a profile",
+      "Can be shared or traded"
+    ],
+    "android_note": "Android 13 and up asks for permission only for visible alerts. The token itself is silent.",
+    "ios_note": "iOS gives a token even if you deny alerts, so silent pushes can still arrive."
+  },
+  "technical_bounds": [
+    "Token is per install, not per person or device",
+    "Delivery still needs a visible-notification grant to show anything on Android 13+ and iOS"
+  ],
+  "scores": {
+    "sensitivity": 3,
+    "utility": 5,
+    "fingerprint_bits": null,
+    "friction": 1
+  },
+  "value": {
+    "legit_uses": [
+      "Re-engagement",
+      "Alerts"
+    ],
+    "abuse": [
+      "Cross-linking installs through a shared token store",
+      "Spam"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2016-05",
+      "platform": "android",
+      "version": "Firebase Cloud Messaging",
+      "change": "FCM announced as the successor to GCM"
+    },
+    {
+      "date": "2019-04",
+      "platform": "android",
+      "version": "Play services",
+      "change": "GCM server APIs shut down; FCM only"
+    },
+    {
+      "date": "2024-07",
+      "platform": "android",
+      "version": "FCM",
+      "change": "Legacy FCM HTTP and XMPP APIs begin shutting down; HTTP v1 required"
+    },
+    {
+      "date": "2019-09",
+      "platform": "ios",
+      "version": "iOS 13",
+      "change": "Device token description format changed; apps must read the raw Data bytes"
+    }
+  ],
+  "related": [
+    "mob.notif.fcm-delivery",
+    "mob.notif.apns-delivery",
+    "mob.notif.uninstall-detection"
+  ],
+  "refs": [
+    {
+      "t": "vendor",
+      "label": "FCM: Manage registration tokens",
+      "url": "https://firebase.google.com/docs/cloud-messaging/manage-tokens"
+    },
+    {
+      "t": "apple",
+      "label": "Apple: Registering your app with APNs",
+      "url": "https://developer.apple.com/documentation/usernotifications/registering-your-app-with-apns"
+    }
+  ],
+  "confidence": "docs"
+}

@@ -1,0 +1,224 @@
+{
+  "id": "web.device.webdriver-flag",
+  "name": "Automation (webdriver) flag",
+  "kind": "signal",
+  "group": "device-system-profile",
+  "subgroup": "Browser identity",
+  "tags": [
+    "navigator",
+    "bot-detection",
+    "automation"
+  ],
+  "plain": "True when the browser is being driven by Selenium, Playwright, Puppeteer or similar.",
+  "meaning": "Tells a site a script, not a person, may be on the page. Bot defenses use it with other tells (missing plugins, headless UA) to block or challenge scrapers and agents.",
+  "lifecycle": [
+    "on-arrival",
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "navigator.webdriver",
+      "bcd": [
+        "api.Navigator.webdriver"
+      ],
+      "access": {
+        "grant": "none",
+        "prompt_ui": "None",
+        "secure_context": false,
+        "user_gesture": false,
+        "persistence": "read fresh on every page load; nothing stored",
+        "revocation": "none needed (no grant)",
+        "iframe": "Readable from cross-origin iframes too (same values)",
+        "steps": [
+          "Page script reads the value",
+          "No prompt is shown"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "63",
+          "note": "",
+          "date": "2017-12-06"
+        },
+        "edge": {
+          "s": "y",
+          "v": "12",
+          "note": "",
+          "date": "2015-07-29"
+        },
+        "firefox": {
+          "s": "y",
+          "v": "60",
+          "note": "",
+          "date": "2018-05-09"
+        },
+        "safari": {
+          "s": "y",
+          "v": "10.1",
+          "note": "",
+          "date": "2017-03-27"
+        },
+        "ios_safari": {
+          "s": "y",
+          "v": "10.3",
+          "note": "",
+          "date": "2017-03-27"
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "63",
+          "note": "",
+          "date": "2017-12-05"
+        },
+        "samsung": {
+          "s": "y",
+          "v": "8.0",
+          "note": "",
+          "date": "2018-07-18"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "object",
+    "metric": "",
+    "update": "static per session",
+    "fields": [
+      {
+        "name": "webdriver",
+        "type": "boolean",
+        "unit": "",
+        "range": "true when under WebDriver control",
+        "precision": ""
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can tell if Selenium, Playwright, or Puppeteer is controlling the browser",
+    "user_action": "Nothing. It happens when the page loads",
+    "can": [
+      "Check whether the browser says it is automated",
+      "Combine it with other clues like a headless label",
+      "Block, slow, or challenge likely scrapers and AI agents"
+    ],
+    "cannot": [
+      "Be sure; bot makers can hide the flag",
+      "See what the script is doing",
+      "Tell a good script from a bad one",
+      "Show true when you browse by hand"
+    ],
+    "reach": 1,
+    "reach_label": "One yes or no flag",
+    "differs": ""
+  },
+  "story": {
+    "what_it_is": "A simple true or false that says a script, not a person, is driving the browser.",
+    "icon": "bot",
+    "tags": [
+      "Automation",
+      "Silent",
+      "Fraud"
+    ],
+    "marketing": [
+      {
+        "vendor": "MDN",
+        "name": "Navigator.webdriver",
+        "pitch": "Docs say this flag is true when the browser is controlled by WebDriver automation.",
+        "url": "https://developer.mozilla.org/en-US/docs/Web/API/Navigator/webdriver"
+      }
+    ],
+    "for_you": "You never see it. In an ordinary browser it says false and nothing changes. If you run an automation tool, some sites will challenge you.",
+    "for_makers": "It is the cheapest bot test: one line of code. Defences use it with other tells like missing plugins and headless user agents. It catches lazy scrapers but not skilled ones.",
+    "use_cases": [
+      {
+        "type": "security",
+        "example": "A web firewall serves a challenge page to clients with the flag set.",
+        "apps": [
+          "Cloudflare"
+        ]
+      },
+      {
+        "type": "shopping",
+        "example": "A concert ticket seller blocks scalper scripts that run in automated browsers.",
+        "apps": [
+          "Ticketmaster"
+        ]
+      },
+      {
+        "type": "games",
+        "example": "A multiplayer browser game bans automation that plays for you.",
+        "apps": []
+      },
+      {
+        "type": "ads",
+        "example": "An ad network refuses to count ad views from automated browsers.",
+        "apps": []
+      },
+      {
+        "type": "analytics",
+        "example": "A traffic tool removes automated visits so your numbers are cleaner.",
+        "apps": [
+          "Google Analytics"
+        ]
+      },
+      {
+        "type": "developer",
+        "example": "A QA engineer sees the flag in a test run and sets sites to test mode.",
+        "apps": [
+          "Puppeteer"
+        ]
+      },
+      {
+        "type": "travel",
+        "example": "A flight site stops fare scraping bots by challenging automated browsers.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Blocks useful automation",
+      "Easy to hide"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Trivially spoofed by stealth plugins",
+    "Does not identify who runs the automation"
+  ],
+  "scores": {
+    "sensitivity": 1,
+    "utility": 4,
+    "fingerprint_bits": 0.1,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Bot defense",
+      "Fraud scoring"
+    ],
+    "abuse": [
+      "Blocking legitimate agents"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": true,
+      "how": "Collected as automation flag and framework detection. Read by the LinkedIn APFC fingerprint script (48 features, alleged by BrowserGate, partly confirmed by BleepingComputer)."
+    }
+  },
+  "refs": [
+    {
+      "t": "mdn",
+      "label": "MDN webdriver",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/Navigator/webdriver"
+    },
+    {
+      "t": "github",
+      "label": "CreepJS (abrahamjuliot)",
+      "url": "https://github.com/abrahamjuliot/creepjs"
+    }
+  ],
+  "confidence": "docs"
+}

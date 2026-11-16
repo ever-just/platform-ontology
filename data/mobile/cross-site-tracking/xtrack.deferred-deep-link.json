@@ -1,0 +1,213 @@
+{
+  "id": "mob.xtrack.deferred-deep-link",
+  "name": "Deferred deep links",
+  "kind": "capability",
+  "group": "cross-site-tracking",
+  "subgroup": "Install to click linking",
+  "tags": [
+    "deep-link",
+    "deferred",
+    "onboarding",
+    "attribution"
+  ],
+  "plain": "A link that sends a new user to the right in-app screen after they install the app.",
+  "meaning": "A click happened before install, so something must carry the target and campaign through the store. Methods: Install Referrer, clipboard, or probabilistic match.",
+  "lifecycle": [
+    "before-install",
+    "on-launch"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "y",
+      "v": "",
+      "permission": "",
+      "protection": "none",
+      "grant": "none",
+      "prompt_ui": "",
+      "persistence": "",
+      "revocation": "",
+      "store_policy": "",
+      "api_surface": "Play Install Referrer (reliable), Firebase Dynamic Links (shut down Aug 2025), MMP links",
+      "note": "Firebase Dynamic Links stopped working on 25 August 2025."
+    },
+    "ios": {
+      "s": "p",
+      "v": "",
+      "permission": "",
+      "protection": "none",
+      "grant": "none",
+      "prompt_ui": "",
+      "persistence": "",
+      "revocation": "",
+      "store_policy": "Clipboard use triggers paste prompt since iOS 16",
+      "api_surface": "Universal links (after install), clipboard handoff, probabilistic, App Clips",
+      "note": "No platform channel carries data through the App Store."
+    }
+  },
+  "web_equivalents": [
+    "web.xsite.navigational-tracking"
+  ],
+  "data": {
+    "type": "object",
+    "metric": "Target URL and campaign params",
+    "update": "once at first open",
+    "fields": [
+      {
+        "name": "deeplink_value",
+        "type": "string",
+        "unit": "",
+        "range": "",
+        "precision": ""
+      },
+      {
+        "name": "campaign",
+        "type": "string",
+        "unit": "",
+        "range": "",
+        "precision": ""
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can send you to the right screen after install, using how you reached the store",
+    "user_action": "You tap a link, install the app, then open it for the first time",
+    "can": [
+      "Open the exact in-app screen the link promised after your first launch",
+      "Use the Google Play install referrer on Android to carry link details",
+      "Use universal links or a copied code on iPhone, for installs that start from the web",
+      "Keep the link working through a marketing partner's tools"
+    ],
+    "cannot": [
+      "Pass data through the iPhone App Store itself; no direct channel exists",
+      "Use Firebase Dynamic Links; they stopped working on 25 August 2025",
+      "Work as sure-fire on iPhone; it relies on guessing or a copied code",
+      "Give the app extra access to your data"
+    ],
+    "reach": 1,
+    "reach_label": "Once, after install",
+    "differs": "Android has a reliable install referrer. iPhone has no equivalent, so apps use workarounds that sometimes miss."
+  },
+  "story": {
+    "what_it_is": "A link that takes a new person to the right screen inside an app after they install it.",
+    "icon": "link-2",
+    "tags": [
+      "Install",
+      "Links",
+      "Ads"
+    ],
+    "marketing": [
+      {
+        "vendor": "Google",
+        "name": "Play Install Referrer",
+        "pitch": "Developer guide: read where a Play Store install came from, so you can open the right content on first launch.",
+        "url": "https://developer.android.com/google/play/installreferrer"
+      },
+      {
+        "vendor": "Apple",
+        "name": "Universal Links",
+        "pitch": "Developer guide: links that open your app to the right content, or the web if the app is missing.",
+        "url": "https://developer.apple.com/ios/universal-links/"
+      }
+    ],
+    "for_you": "You tap a link to a friend's playlist or a sale item, install the app, and it opens right on that item instead of a blank home page. It feels smooth, and you may never know a hidden code carried it over.",
+    "for_makers": "Makers want the install to end where the ad promised. It lifts sign ups, makes referrals work and lets them measure which campaign paid off, even though the click and the first open are minutes apart.",
+    "use_cases": [
+      {
+        "type": "games",
+        "example": "A friend sends a link to join a match. You install the game and it drops you straight into their lobby.",
+        "apps": []
+      },
+      {
+        "type": "shopping",
+        "example": "An ad for a jacket opens the store app on that jacket after you install, with the sale price applied.",
+        "apps": []
+      },
+      {
+        "type": "music",
+        "example": "A shared playlist link opens in the music app right after install and starts playing.",
+        "apps": [
+          "Spotify"
+        ]
+      },
+      {
+        "type": "rideshare",
+        "example": "A promo link gives a new rider a free first ride credit that appears on the first open.",
+        "apps": [
+          "Uber"
+        ]
+      },
+      {
+        "type": "social",
+        "example": "A group invite takes a new user to the right chat room after they sign up.",
+        "apps": []
+      },
+      {
+        "type": "ads",
+        "example": "An ad platform counts the install and the later purchase against the original ad.",
+        "apps": []
+      },
+      {
+        "type": "travel",
+        "example": "A flight deal link lands you on the same route search in the airline app.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Needs a hidden code to follow you",
+      "Can link ad click to person"
+    ],
+    "android_note": "Play Install Referrer carries the code through the store with no prompt.",
+    "ios_note": "iOS has no store referrer, so apps use clipboard or guess matches, and Apple limits the sneaky versions."
+  },
+  "technical_bounds": [
+    "iOS has no store-side carrier: relies on clipboard or guess",
+    "Android is reliable with Install Referrer"
+  ],
+  "scores": {
+    "sensitivity": 2,
+    "utility": 4,
+    "fingerprint_bits": null,
+    "friction": 1
+  },
+  "value": {
+    "legit_uses": [
+      "Onboarding to a promised product"
+    ],
+    "abuse": [
+      "Cross-device id leakage in link params"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2025-08",
+      "platform": "android",
+      "version": "Firebase",
+      "change": "Firebase Dynamic Links shut down (25 Aug 2025)"
+    }
+  ],
+  "related": [
+    "mob.attr.install-referrer",
+    "mob.xtrack.clipboard-attribution",
+    "mob.xtrack.probabilistic-matching"
+  ],
+  "refs": [
+    {
+      "t": "android",
+      "label": "Android: Install Referrer",
+      "url": "https://developer.android.com/google/play/installreferrer"
+    },
+    {
+      "t": "vendor",
+      "label": "Firebase: Dynamic Links deprecation FAQ",
+      "url": "https://firebase.google.com/support/dynamic-links-faq"
+    }
+  ],
+  "confidence": "docs"
+}

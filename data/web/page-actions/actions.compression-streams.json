@@ -1,0 +1,232 @@
+{
+  "id": "web.actions.compression-streams",
+  "name": "Compression Streams",
+  "kind": "capability",
+  "group": "page-actions",
+  "subgroup": "Compute",
+  "tags": [
+    "compression",
+    "streams",
+    "gzip"
+  ],
+  "plain": "Compresses or decompresses data in the page with built-in gzip, deflate or deflate-raw.",
+  "meaning": "A site can shrink or expand data without a library. It also lets trackers pack fingerprint payloads before sending them out.",
+  "lifecycle": [
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "new CompressionStream('gzip'); new DecompressionStream('deflate')",
+      "bcd": [
+        "api.CompressionStream",
+        "api.DecompressionStream"
+      ],
+      "access": {
+        "grant": "none",
+        "prompt_ui": "None (no browser prompt)",
+        "secure_context": false,
+        "user_gesture": false,
+        "activation": "none",
+        "persistence": "None",
+        "revocation": "Nothing to revoke (no permission is stored)",
+        "iframe": "No iframe flag; available in workers",
+        "steps": [
+          "Create CompressionStream",
+          "Pipe a ReadableStream through it",
+          "Read the compressed stream"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "80",
+          "note": "",
+          "date": "2020-02-04"
+        },
+        "edge": {
+          "s": "y",
+          "v": "80",
+          "note": "",
+          "date": "2020-02-07"
+        },
+        "firefox": {
+          "s": "y",
+          "v": "113",
+          "note": "",
+          "date": "2023-05-09"
+        },
+        "safari": {
+          "s": "y",
+          "v": "16.4",
+          "note": "",
+          "date": "2023-03-27"
+        },
+        "ios_safari": {
+          "s": "y",
+          "v": "16.4",
+          "note": "All iOS browsers use WebKit",
+          "date": "2023-03-27"
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "80",
+          "note": "",
+          "date": "2020-02-04"
+        },
+        "samsung": {
+          "s": "y",
+          "v": "13.0",
+          "note": "",
+          "date": "2020-12-02"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "none",
+    "metric": "",
+    "update": "",
+    "fields": []
+  },
+  "limits": {
+    "headline": "Can squeeze or unpack data in the page with the browser's built in compression",
+    "user_action": "Nothing. It happens when a site's script compresses logs, files or data",
+    "can": [
+      "Compress data with gzip or deflate before sending it",
+      "Unpack compressed files in the page",
+      "Shrink payloads, including tracking data, before they go out"
+    ],
+    "cannot": [
+      "See your files unless you chose them",
+      "Send anything by itself, only change data the page already has",
+      "Be turned off from your browser settings",
+      "Do heavy work forever, since large tricks can hit memory limits"
+    ],
+    "reach": 1,
+    "reach_label": "Data the page already has",
+    "differs": ""
+  },
+  "story": {
+    "what_it_is": "A page can squeeze or unpack data with built in compression, so it sends less over the network.",
+    "icon": "archive",
+    "tags": [
+      "Performance",
+      "Capability",
+      "Silent"
+    ],
+    "marketing": [
+      {
+        "vendor": "MDN Web Docs",
+        "name": "Compression Streams API",
+        "pitch": "Gives pages fast built in gzip and deflate, with no extra code to download.",
+        "url": "https://developer.mozilla.org/en-US/docs/Web/API/Compression_Streams_API"
+      }
+    ],
+    "for_you": "You never see it. Pages that use it send smaller uploads and open big files faster. It saves time and data.",
+    "for_makers": "Makers drop heavy compression libraries and ship less code. It speeds up uploads, saves and downloads. The same trick can hide the size of data a script sends out, which tracking code can use.",
+    "use_cases": [
+      {
+        "type": "games",
+        "example": "A browser game compresses save files before uploading them to the cloud, so saves are quick on mobile data.",
+        "apps": []
+      },
+      {
+        "type": "productivity",
+        "example": "A web editor compresses documents before sync and saves bandwidth.",
+        "apps": [
+          "Google Docs"
+        ]
+      },
+      {
+        "type": "creative",
+        "example": "A web design tool unpacks large project files in the browser.",
+        "apps": [
+          "Figma"
+        ]
+      },
+      {
+        "type": "video",
+        "example": "A web video app packs frames or clips before an upload.",
+        "apps": []
+      },
+      {
+        "type": "analytics",
+        "example": "An analytics script compresses batches of events before sending them in one request.",
+        "apps": []
+      },
+      {
+        "type": "developer",
+        "example": "A web tool lets you drag in a zip or gzip file and view its contents in the page.",
+        "apps": []
+      },
+      {
+        "type": "ads",
+        "example": "A tracking script packs a large fingerprint into a small request that is hard to spot.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Hides data size",
+      "Little risk"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Formats: gzip, deflate, deflate-raw (brotli not in the spec baseline)",
+    "Streaming only, no password or zip container; browser does not compress files on disk",
+    "DecompressionStream has no output cap; zip bomb risk fills memory",
+    "Support: Chrome 80, Safari 16.4, Firefox 113"
+  ],
+  "scores": {
+    "sensitivity": 1,
+    "utility": 3,
+    "fingerprint_bits": null,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Uploading logs",
+      "In-browser archive tools",
+      "Smaller payloads"
+    ],
+    "abuse": [
+      "Obfuscated telemetry payloads",
+      "Memory exhaustion with a decompression bomb"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2020-02",
+      "browser": "chrome",
+      "version": "80",
+      "change": "Compression Streams ship"
+    },
+    {
+      "date": "2023-05",
+      "browser": "firefox",
+      "version": "113",
+      "change": "Compression Streams ship"
+    }
+  ],
+  "refs": [
+    {
+      "t": "mdn",
+      "label": "MDN Compression Streams API",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/Compression_Streams_API"
+    },
+    {
+      "t": "spec",
+      "label": "WHATWG Compression Standard",
+      "url": "https://compression.spec.whatwg.org/"
+    }
+  ],
+  "confidence": "docs"
+}

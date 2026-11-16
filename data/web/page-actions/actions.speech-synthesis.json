@@ -1,0 +1,228 @@
+{
+  "id": "web.actions.speech-synthesis",
+  "name": "Speech synthesis (text to speech)",
+  "kind": "action",
+  "group": "page-actions",
+  "subgroup": "Media output",
+  "tags": [
+    "tts",
+    "speech-synthesis",
+    "voices"
+  ],
+  "plain": "Speaks text aloud with the device's voices; needs a prior interaction.",
+  "meaning": "A site can read text out loud with built-in voices. The voice list differs by device, so it also hints at the OS, language packs and installed software.",
+  "lifecycle": [
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "speechSynthesis.speak(new SpeechSynthesisUtterance(text)); getVoices()",
+      "bcd": [
+        "api.SpeechSynthesis.speak",
+        "api.SpeechSynthesis.getVoices"
+      ],
+      "access": {
+        "grant": "gesture",
+        "prompt_ui": "No prompt (needs a click, tap or keypress)",
+        "secure_context": false,
+        "user_gesture": true,
+        "activation": "sticky",
+        "persistence": "Voices list fixed per OS; queue lasts for the page",
+        "revocation": "Nothing to revoke (no permission is stored)",
+        "iframe": "Cross-origin iframes need allow=\"autoplay\"-like activation in that frame",
+        "steps": [
+          "Person interacts with the page (sticky)",
+          "Page calls speak()",
+          "Device plays the voice"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "33",
+          "note": "",
+          "date": "2014-02-20"
+        },
+        "edge": {
+          "s": "y",
+          "v": "14",
+          "note": "",
+          "date": "2016-08-02"
+        },
+        "firefox": {
+          "s": "y",
+          "v": "49",
+          "note": "",
+          "date": "2016-09-20"
+        },
+        "safari": {
+          "s": "y",
+          "v": "7",
+          "note": "",
+          "date": "2013-10-22"
+        },
+        "ios_safari": {
+          "s": "y",
+          "v": "7",
+          "note": "All iOS browsers use WebKit",
+          "date": "2013-09-18"
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "33",
+          "note": "",
+          "date": "2014-02-26"
+        },
+        "samsung": {
+          "s": "y",
+          "v": "3.0",
+          "note": "",
+          "date": "2015-04-10"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "none",
+    "metric": "",
+    "update": "",
+    "fields": []
+  },
+  "limits": {
+    "headline": "Can speak text out loud, after you have tapped on the page",
+    "user_action": "You tap Listen or Play aloud, or tap the page before it speaks.",
+    "can": [
+      "Speak text out loud using voices on your device",
+      "Pause, resume or stop the voice",
+      "Pick a voice from the ones on your device"
+    ],
+    "cannot": [
+      "Speak the moment a page loads, before you have tapped or clicked",
+      "Record you or hear what you say",
+      "Use voices you do not have on your device"
+    ],
+    "reach": 2,
+    "reach_label": "While the page is open",
+    "differs": ""
+  },
+  "story": {
+    "what_it_is": "A page can read text out loud with your device's voices.",
+    "icon": "volume-2",
+    "tags": [
+      "Audio",
+      "Needs a click",
+      "Accessibility"
+    ],
+    "marketing": [
+      {
+        "vendor": "Mozilla",
+        "name": "Web Speech API",
+        "pitch": "MDN says speech synthesis lets pages read text aloud with the voices on your device.",
+        "url": "https://developer.mozilla.org/en-US/docs/Web/API/Web_Speech_API"
+      }
+    ],
+    "for_you": "You tap a Listen button and a voice reads an article or a language lesson. The browser blocks a page from talking before you have touched it.",
+    "for_makers": "Makers use it for accessibility, language apps and hands free reading. It costs them nothing because the device does the voice work.",
+    "use_cases": [
+      {
+        "type": "education",
+        "example": "A language app reads a Spanish word aloud so you can hear the accent.",
+        "apps": [
+          "Duolingo",
+          "Google Translate"
+        ]
+      },
+      {
+        "type": "news",
+        "example": "A news site offers a Listen to this article button.",
+        "apps": [
+          "Medium"
+        ]
+      },
+      {
+        "type": "accessibility",
+        "example": "A screen reading tool speaks page text for people with low vision or dyslexia.",
+        "apps": []
+      },
+      {
+        "type": "games",
+        "example": "A browser game has a robot narrator reading dialog out loud.",
+        "apps": []
+      },
+      {
+        "type": "productivity",
+        "example": "A web note app reads your note back to you while you cook.",
+        "apps": []
+      },
+      {
+        "type": "kids",
+        "example": "A children's reading site speaks each word as the child taps it.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Sudden noise",
+      "Voice list can identify a device"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Chrome 71 requires user activation on the page before speak() produces sound",
+    "Utterance rate 0.1 to 10, pitch 0 to 2, volume 0 to 1",
+    "Network voices in Chrome (Google voices) historically stop after about 15 s of speech (known issue)",
+    "Cannot record the output or pick voices not installed",
+    "Voice list and default voice leak OS and language (fingerprint)"
+  ],
+  "scores": {
+    "sensitivity": 1,
+    "utility": 3,
+    "fingerprint_bits": 3,
+    "friction": 1
+  },
+  "value": {
+    "legit_uses": [
+      "Accessibility readers",
+      "Language learning",
+      "Audio notifications"
+    ],
+    "abuse": [
+      "Voice list fingerprinting",
+      "Unexpected audio"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2018-12",
+      "browser": "chrome",
+      "version": "71",
+      "change": "speak() requires user activation"
+    },
+    {
+      "date": "2016-04",
+      "browser": "chrome",
+      "version": "47",
+      "change": "Remote voices exposed through getVoices"
+    }
+  ],
+  "refs": [
+    {
+      "t": "mdn",
+      "label": "MDN SpeechSynthesis",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/SpeechSynthesis"
+    },
+    {
+      "t": "spec",
+      "label": "W3C Web Speech API",
+      "url": "https://webaudio.github.io/web-speech-api/"
+    }
+  ],
+  "confidence": "docs"
+}

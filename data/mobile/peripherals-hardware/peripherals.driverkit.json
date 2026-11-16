@@ -1,0 +1,191 @@
+{
+  "id": "mob.peripherals.driverkit",
+  "name": "Hardware drivers (DriverKit and USB)",
+  "kind": "capability",
+  "group": "peripherals-hardware",
+  "subgroup": "Drivers",
+  "tags": [
+    "entitlement",
+    "driverkit",
+    "usb"
+  ],
+  "plain": "Runs user space drivers for hardware; on iPadOS only on M series iPads.",
+  "meaning": "Lets apps talk to USB and PCIe style accessories; power and risk justify Apple approval and user approval.",
+  "lifecycle": [
+    "in-session"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "p",
+      "v": "3.1",
+      "api": 12,
+      "permission": "None; per device USB permission dialog",
+      "protection": "none",
+      "grant": "prompt",
+      "prompt_ui": "USB device permission dialog",
+      "persistence": "Per device until unplugged",
+      "revocation": "Settings > Connected devices",
+      "store_policy": "",
+      "api_surface": "UsbManager host API",
+      "note": "No kernel or arbitrary drivers for apps"
+    },
+    "ios": {
+      "s": "f",
+      "v": "16",
+      "permission": "com.apple.developer.driverkit (and family specific entitlements)",
+      "protection": "entitlement",
+      "grant": "entitlement",
+      "prompt_ui": "User enables the driver in Settings",
+      "persistence": "Until disabled",
+      "revocation": "Settings > General > Login Items and Extensions > Drivers",
+      "store_policy": "Apple approves via request",
+      "api_surface": "DriverKit, IOUSBHostDevice",
+      "note": "iPadOS 16 and later on M1 and newer iPads; macOS uses same API"
+    }
+  },
+  "data": {
+    "type": "stream",
+    "metric": "Device IO",
+    "update": "continuous",
+    "fields": [
+      {
+        "name": "devices",
+        "type": "list",
+        "unit": "USB IDs",
+        "range": "per entitlement",
+        "precision": ""
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can run hardware drivers only on M series iPads, with Apple approval",
+    "user_action": "You turn the driver on in Settings, then plug in the device",
+    "can": [
+      "Run a driver for a USB or similar accessory on iPad with M1 or newer (iPadOS 16 and later)",
+      "Talk to a USB device on Android after you tap Allow"
+    ],
+    "cannot": [
+      "Run drivers on iPhone",
+      "Run a driver on iPad without Apple's entitlement and your switch in Settings",
+      "Install kernel or arbitrary drivers on Android"
+    ],
+    "reach": 2,
+    "reach_label": "Devices you plug in and approve",
+    "differs": "iPad needs Apple's approval and your switch in Settings; Android only offers a per device USB prompt."
+  },
+  "story": {
+    "what_it_is": "Lets a company run its own device driver as a normal app, instead of changing the system.",
+    "icon": "cpu",
+    "tags": [
+      "Hardware",
+      "iPad",
+      "Approval"
+    ],
+    "marketing": [
+      {
+        "vendor": "Apple",
+        "name": "DriverKit",
+        "pitch": "Build drivers for USB and PCIe style gear that run as apps and need no system changes.",
+        "url": "https://developer.apple.com/documentation/driverkit"
+      }
+    ],
+    "for_you": "You plug in a pro audio box or lab device on an iPad Pro and it just works after you install the maker's app. You do not see the driver, only the device working.",
+    "for_makers": "Hardware makers can support the iPad without a system change. Apple approves each use. This opens the iPad to music studios, labs and scientists. Android does not let apps act as drivers.",
+    "use_cases": [
+      {
+        "type": "creative",
+        "example": "A pro audio interface works with iPad music apps after you install its driver app.",
+        "apps": [
+          "Universal Audio"
+        ]
+      },
+      {
+        "type": "education",
+        "example": "A classroom science kit plugs into an iPad to record data.",
+        "apps": []
+      },
+      {
+        "type": "enterprise",
+        "example": "A tablet runs a barcode scanner and printer for a store.",
+        "apps": []
+      },
+      {
+        "type": "developer",
+        "example": "An engineer tests hardware from an iPad.",
+        "apps": []
+      },
+      {
+        "type": "health",
+        "example": "A lab device streams results to a clinician's iPad.",
+        "apps": []
+      },
+      {
+        "type": "creative",
+        "example": "A video capture card feeds a live editor.",
+        "apps": []
+      },
+      {
+        "type": "security",
+        "example": "A hardware key reader unlocks a company app.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Approval needed",
+      "Drivers have deep access",
+      "M series iPads only"
+    ],
+    "android_note": "Android does not allow apps to act as drivers for arbitrary hardware.",
+    "ios_note": "On iPadOS this only works on iPads with M1 or newer chips. macOS uses the same API."
+  },
+  "technical_bounds": [
+    "iPhone has no DriverKit",
+    "Android lacks driver model but offers USB host"
+  ],
+  "scores": {
+    "sensitivity": 3,
+    "utility": 2,
+    "fingerprint_bits": null,
+    "friction": 3
+  },
+  "value": {
+    "legit_uses": [
+      "Audio interfaces",
+      "Scientific hardware"
+    ],
+    "abuse": [
+      "Privileged hardware access"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2022-09",
+      "platform": "ios",
+      "version": "iPadOS 16",
+      "change": "DriverKit on M series iPads"
+    }
+  ],
+  "related": [
+    "mob.peripherals.bluetooth"
+  ],
+  "refs": [
+    {
+      "t": "apple",
+      "label": "Apple: DriverKit",
+      "url": "https://developer.apple.com/documentation/driverkit"
+    },
+    {
+      "t": "android",
+      "label": "Android: USB host overview",
+      "url": "https://developer.android.com/develop/connectivity/usb/host"
+    }
+  ],
+  "confidence": "inferred"
+}

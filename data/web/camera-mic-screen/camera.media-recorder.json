@@ -1,0 +1,260 @@
+{
+  "id": "web.camera.media-recorder",
+  "name": "MediaRecorder",
+  "kind": "capability",
+  "group": "camera-mic-screen",
+  "subgroup": "Capture",
+  "tags": [
+    "recording"
+  ],
+  "plain": "Records a camera, mic or screen stream to a file in the page.",
+  "meaning": "Turns a live stream into stored audio or video. Needs a stream the person already allowed; the point is the site can keep a copy, upload it, or hold it in memory.",
+  "lifecycle": [
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "new MediaRecorder(stream, {mimeType, videoBitsPerSecond}); start(timeslice); ondataavailable",
+      "bcd": [
+        "api.MediaRecorder"
+      ],
+      "access": {
+        "grant": "none",
+        "prompt_ui": "No prompt of its own; permission comes from the source stream.",
+        "secure_context": true,
+        "user_gesture": false,
+        "persistence": "Follows the stream grant",
+        "revocation": "Stop the tracks or stop the recorder",
+        "iframe": "Frames inherit stream permissions",
+        "steps": [
+          "Get a MediaStream (camera, mic, screen)",
+          "new MediaRecorder(stream)",
+          "start(timeslice)",
+          "ondataavailable gives Blob chunks"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "47",
+          "note": "",
+          "date": "2015-12-01"
+        },
+        "edge": {
+          "s": "y",
+          "v": "79",
+          "note": "",
+          "date": "2020-01-15"
+        },
+        "firefox": {
+          "s": "y",
+          "v": "25",
+          "note": "",
+          "date": "2013-10-29"
+        },
+        "safari": {
+          "s": "y",
+          "v": "14.1",
+          "note": "",
+          "date": "2021-04-26"
+        },
+        "ios_safari": {
+          "s": "y",
+          "v": "14",
+          "note": "",
+          "date": "2020-09-16"
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "47",
+          "note": "",
+          "date": "2015-12-02"
+        },
+        "samsung": {
+          "s": "y",
+          "v": "5.0",
+          "note": "",
+          "date": "2016-12-15"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "binary",
+    "metric": "Encoded audio or video chunks",
+    "update": "every timeslice ms (default 0, one blob at stop)",
+    "fields": [
+      {
+        "name": "mimeType",
+        "type": "string",
+        "unit": "MIME",
+        "range": "video/webm, audio/webm, video/mp4, audio/ogg",
+        "precision": "browser dependent"
+      },
+      {
+        "name": "videoBitsPerSecond",
+        "type": "integer",
+        "unit": "bits per second",
+        "range": "100 kbps to about 25 Mbps",
+        "precision": "1"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can save a camera, mic or screen stream to a file, once you allowed it",
+    "user_action": "You click Record on a page that already has camera, mic or screen access",
+    "can": [
+      "Record video or audio from a stream you already allowed",
+      "Save the recording in the page and offer it to download",
+      "Upload the recording to the site's servers",
+      "Stop and start recording while the tab stays open"
+    ],
+    "cannot": [
+      "Record anything without an allowed camera, mic or screen share first",
+      "Record sources you did not allow",
+      "Show its own prompt; the only prompt is for the camera, mic or screen",
+      "Keep recording once the source stops or the tab closes"
+    ],
+    "reach": 2,
+    "reach_label": "Only streams you allowed",
+    "differs": ""
+  },
+  "story": {
+    "what_it_is": "Lets a page record a live camera, mic or screen stream and keep it as a file.",
+    "icon": "circle-dot",
+    "tags": [
+      "Recording",
+      "Silent",
+      "Camera"
+    ],
+    "marketing": [
+      {
+        "vendor": "Mozilla",
+        "name": "MediaRecorder",
+        "pitch": "Developer docs show how a page can record audio or video streams into chunks and save or upload them.",
+        "url": "https://developer.mozilla.org/en-US/docs/Web/API/MediaRecorder"
+      }
+    ],
+    "for_you": "You do not see a prompt for this itself. It only works on a stream you already allowed, such as your camera. If the site records, you may see a red dot or a Recording note, but it is not required.",
+    "for_makers": "Recording turns a live moment into a product: a saved message, a replay, an upload for later review. It also lets a maker keep a copy of calls for training and compliance. Because it runs in the browser, there is no extra app to build or ship.",
+    "use_cases": [
+      {
+        "type": "video",
+        "example": "In Loom or a similar tool, you press Record, speak and share your tab, and the page saves it as a video file you can send.",
+        "apps": [
+          "Loom",
+          "Screencastify"
+        ]
+      },
+      {
+        "type": "messaging",
+        "example": "A voice note button in a web chat records your voice from the mic and sends it as a short audio clip.",
+        "apps": [
+          "WhatsApp Web",
+          "Telegram Web"
+        ]
+      },
+      {
+        "type": "games",
+        "example": "A browser game lets you press a key to record your last 30 seconds of play, and the page makes a clip to share.",
+        "apps": []
+      },
+      {
+        "type": "education",
+        "example": "A language app records you saying a phrase, then plays it back next to the native speaker so you can compare.",
+        "apps": [
+          "Duolingo",
+          "Babbel"
+        ]
+      },
+      {
+        "type": "enterprise",
+        "example": "A sales call site records the call in the browser and uploads it for coaching, when the host turns recording on.",
+        "apps": [
+          "Gong",
+          "Zoom web"
+        ]
+      },
+      {
+        "type": "security",
+        "example": "A video ID check records a short selfie clip and sends it to a server to confirm you are a live person.",
+        "apps": [
+          "Persona",
+          "Onfido"
+        ]
+      },
+      {
+        "type": "creative",
+        "example": "A podcast tool records your mic locally at high quality, then uploads the file after the show, so a bad connection does not ruin it.",
+        "apps": [
+          "Riverside",
+          "Descript"
+        ]
+      }
+    ],
+    "risks": [
+      "Copy of a call kept without everyone's knowledge",
+      "Recordings stored on a vendor server"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Cannot record without a stream",
+    "Limited to memory and quota",
+    "Container format differs per browser"
+  ],
+  "scores": {
+    "sensitivity": 3,
+    "utility": 4,
+    "fingerprint_bits": null,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Voice notes",
+      "Screen recordings"
+    ],
+    "abuse": [
+      "Persistent hidden recording after consent"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2021-01",
+      "browser": "safari",
+      "version": "14.1",
+      "change": "MediaRecorder ships in Safari"
+    },
+    {
+      "date": "2025-09",
+      "browser": "safari",
+      "version": "26",
+      "change": "ALAC and PCM recording formats"
+    }
+  ],
+  "related": [
+    "web.camera.camera",
+    "web.camera.microphone"
+  ],
+  "refs": [
+    {
+      "t": "mdn",
+      "label": "MDN MediaRecorder",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/MediaRecorder"
+    },
+    {
+      "t": "spec",
+      "label": "W3C MediaStream Recording",
+      "url": "https://www.w3.org/TR/mediastream-recording/"
+    }
+  ],
+  "confidence": "docs"
+}

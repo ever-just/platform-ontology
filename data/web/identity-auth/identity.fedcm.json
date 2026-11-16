@@ -1,0 +1,255 @@
+{
+  "id": "web.identity.fedcm",
+  "name": "FedCM (Federated Credential Management)",
+  "kind": "permission",
+  "group": "identity-auth",
+  "subgroup": "Federated",
+  "tags": [
+    "federated"
+  ],
+  "plain": "Lets a site ask the browser to sign the person in with Google, Apple or similar without third party cookies.",
+  "meaning": "Gives the site an ID token for a chosen identity provider account; the browser mediates the prompt.",
+  "lifecycle": [
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "navigator.credentials.get({identity:{providers:[{configURL,clientId,nonce}],mode:'active'|'passive'}}); navigator.login.setStatus('logged-in')",
+      "permissions_policy": "identity-credentials-get",
+      "bcd": [
+        "api.IdentityCredential"
+      ],
+      "access": {
+        "grant": "prompt",
+        "prompt_ui": "Browser account chooser (passive in the page or active after a click)",
+        "secure_context": true,
+        "user_gesture": false,
+        "persistence": "Per origin",
+        "revocation": "Site settings",
+        "iframe": "Same as top level; cross-origin iframes need a permissions policy where listed",
+        "steps": [
+          "Call the API",
+          "Browser applies its access rules",
+          "Page receives the result"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "108",
+          "note": "",
+          "date": "2022-11-29"
+        },
+        "edge": {
+          "s": "y",
+          "v": "108",
+          "note": "",
+          "date": "2022-12-05"
+        },
+        "firefox": {
+          "s": "n",
+          "v": "",
+          "note": "Login Status only (138)"
+        },
+        "safari": {
+          "s": "n",
+          "v": "",
+          "note": "identity_option member in 27; no IdentityCredential"
+        },
+        "ios_safari": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "108",
+          "note": "",
+          "date": "2022-11-29"
+        },
+        "samsung": {
+          "s": "y",
+          "v": "21.0",
+          "note": "",
+          "date": "2023-05-19"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "object",
+    "metric": "Lets a site ask the browser to sign the person in with Google, Apple or similar without third party cookies.",
+    "update": "on demand",
+    "fields": [
+      {
+        "name": "token",
+        "type": "string",
+        "range": "JWT or structured JSON (143)"
+      },
+      {
+        "name": "isAutoSelected",
+        "type": "boolean",
+        "range": "true or false"
+      },
+      {
+        "name": "accounts",
+        "type": "list",
+        "range": "name, email, picture",
+        "precision": "only shown in the browser UI"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can sign you in with Google, Apple or similar using a browser account picker",
+    "user_action": "You tap Sign in with Google (or similar) or answer a prompt that appears on the page",
+    "can": [
+      "Show a browser box listing accounts you have with a sign in provider",
+      "Receive a sign in token for the account you choose",
+      "Show the prompt on the page itself or after you tap a button"
+    ],
+    "cannot": [
+      "Get your account details before you approve",
+      "Work in Firefox or Safari",
+      "Use third party cookies to track you quietly between sites"
+    ],
+    "reach": 1,
+    "reach_label": "One account, one sign in",
+    "differs": "Chrome, Edge and Samsung Internet support it. Firefox and Safari do not."
+  },
+  "story": {
+    "what_it_is": "A browser run login box that signs you in with Google, Apple or similar, with no cookie tricks.",
+    "icon": "log-in",
+    "tags": [
+      "Sign in",
+      "Asks first",
+      "Privacy"
+    ],
+    "marketing": [
+      {
+        "vendor": "Google Chrome",
+        "name": "Federated Credential Management",
+        "pitch": "Chrome pitches it as keeping one click sign in alive as third party cookies fade, with the browser running the prompt.",
+        "url": "https://developer.chrome.com/docs/identity/fedcm/overview"
+      },
+      {
+        "vendor": "MDN (standards docs)",
+        "name": "FedCM API",
+        "pitch": "Describes a browser mediated way for people to sign in to sites using an identity provider, without tracking by cookies or redirects.",
+        "url": "https://developer.mozilla.org/en-US/docs/Web/API/FedCM_API"
+      }
+    ],
+    "for_you": "You see a small prompt from the browser offering to continue as your account. You tap to agree. Nothing happens until you do.",
+    "for_makers": "Makers keep one tap social login working as third party cookies go away. Sign in conversion stays high and the browser enforces privacy rules for them.",
+    "use_cases": [
+      {
+        "type": "games",
+        "example": "A web game portal shows a prompt so a player signs in and loads a saved profile at once.",
+        "apps": [
+          "Poki"
+        ]
+      },
+      {
+        "type": "media",
+        "example": "A streaming site offers one tap sign in so a viewer resumes where they stopped.",
+        "apps": []
+      },
+      {
+        "type": "shopping",
+        "example": "A store shows the prompt on page load so returning customers reach saved carts faster.",
+        "apps": []
+      },
+      {
+        "type": "news",
+        "example": "A news site uses it to recognize subscribers and skip the paywall.",
+        "apps": []
+      },
+      {
+        "type": "productivity",
+        "example": "A web app embeds the prompt in a sidebar so teammates can join a shared document fast.",
+        "apps": []
+      },
+      {
+        "type": "ads",
+        "example": "Ad and measurement partners lose the old hidden login cookie link, so a visit can no longer be quietly matched to a Google account.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Identity provider may see your visits",
+      "Prompt fatigue"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Chrome and Edge only; Firefox and Safari not shipped (Firefox ships Login Status 138)",
+    "IdP Registration, Fields API and multiple IdPs still on the roadmap",
+    "Safari 27 has options members but no IdentityCredential"
+  ],
+  "scores": {
+    "sensitivity": 4,
+    "utility": 4,
+    "fingerprint_bits": null,
+    "friction": 2
+  },
+  "value": {
+    "legit_uses": [
+      "Sign in with Google",
+      "Delegated login"
+    ],
+    "abuse": [
+      "IdP learns which RP the person visits"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2022-12",
+      "browser": "chrome",
+      "version": "108",
+      "change": "FedCM ships"
+    },
+    {
+      "date": "2023-11",
+      "browser": "chrome",
+      "version": "120",
+      "change": "Login Status API and isAutoSelected"
+    },
+    {
+      "date": "2026-01",
+      "browser": "chrome",
+      "version": "143",
+      "change": "Structured JSON token accepted, stricter client metadata checks"
+    },
+    {
+      "date": "2026-03",
+      "browser": "chrome",
+      "version": "145",
+      "change": "accounts_endpoint enforced, IdentityCredentialError.code renamed to error"
+    }
+  ],
+  "refs": [
+    {
+      "t": "mdn",
+      "label": "MDN FedCM API",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/FedCM_API"
+    },
+    {
+      "t": "spec",
+      "label": "FedCM",
+      "url": "https://www.w3.org/TR/fedcm/"
+    },
+    {
+      "t": "vendor",
+      "label": "Chrome FedCM",
+      "url": "https://developers.google.com/privacy-sandbox/cookies/fedcm"
+    }
+  ],
+  "confidence": "verified"
+}

@@ -1,0 +1,240 @@
+{
+  "id": "web.perf.microarchitectural-timing",
+  "name": "Microarchitectural timing attacks (Spectre, DrawnApart, cache side channels)",
+  "kind": "tracking",
+  "group": "timing-performance",
+  "subgroup": "Side channels",
+  "tags": [
+    "spectre",
+    "cache",
+    "DrawnApart",
+    "GPU-timing",
+    "side-channel"
+  ],
+  "plain": "Uses precise timing to read CPU cache or GPU execution quirks.",
+  "meaning": "Browser JS can run cache side channels (prime+probe), Spectre variants and GPU timing fingerprints (DrawnApart, 2022) that identify a physical GPU by execution unit speeds. Defended by timer coarsening and site isolation.",
+  "lifecycle": [
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "performance.now(), SharedArrayBuffer clocks, WebGL/WebGPU timer queries",
+      "access": {
+        "grant": "none",
+        "prompt_ui": "",
+        "secure_context": false,
+        "user_gesture": false,
+        "persistence": "",
+        "revocation": "",
+        "iframe": "",
+        "steps": [
+          "Build a fine grained clock",
+          "Run timed workloads",
+          "Extract bits or hardware signature"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "1",
+          "note": "",
+          "date": "2008-12-11"
+        },
+        "edge": {
+          "s": "y",
+          "v": "79",
+          "note": "",
+          "date": "2020-01-15"
+        },
+        "firefox": {
+          "s": "y",
+          "v": "1",
+          "note": "",
+          "date": "2004-11-09"
+        },
+        "safari": {
+          "s": "y",
+          "v": "1",
+          "note": "",
+          "date": "2003-06-23"
+        },
+        "ios_safari": {
+          "s": "y",
+          "v": "1",
+          "note": "",
+          "date": "2007-06-29"
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "1",
+          "note": "",
+          "date": ""
+        },
+        "samsung": {
+          "s": "y",
+          "v": "5.0",
+          "note": "",
+          "date": "2016-12-15"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "float",
+    "metric": "Signature vectors",
+    "update": "",
+    "fields": [
+      {
+        "name": "GPU timing vector",
+        "type": "list",
+        "unit": "",
+        "range": "dozens of values",
+        "precision": "needs many seconds"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can use very exact timing to learn how your processor or graphics chip behaves",
+    "user_action": "Nothing. It happens when the page runs, and it takes many tries",
+    "can": [
+      "Run tests that time your processor cache",
+      "Use graphics timing to tell apart physical chips, as the DrawnApart research did in 2022",
+      "Add the result to a device profile"
+    ],
+    "cannot": [
+      "Work well if the browser blurs the clock",
+      "Ask permission first",
+      "Directly open your files or passwords in modern browsers",
+      "Know who you are by itself"
+    ],
+    "reach": 4,
+    "reach_label": "Hard to hide, follows hardware",
+    "differs": ""
+  },
+  "story": {
+    "what_it_is": "A script uses precise timing to read CPU cache or GPU behavior and could leak hidden data or identity.",
+    "icon": "bomb",
+    "tags": [
+      "Security",
+      "Silent",
+      "Attack"
+    ],
+    "marketing": [
+      {
+        "vendor": "web.dev",
+        "name": "Why COOP and COEP",
+        "pitch": "Google explains that browsers added isolation and coarser timers because of Spectre style timing attacks.",
+        "url": "https://web.dev/articles/why-coop-coep"
+      }
+    ],
+    "for_you": "You never see it. After the Spectre discovery, browsers blurred their clocks and walled sites off from each other. These changes protect you from timing attacks that could read secrets.",
+    "for_makers": "For attackers, timing can show what the chip is doing, even across sites. For makers, it means browsers will limit precise timers unless a site proves it is isolated. Researchers also show it can identify specific chips.",
+    "use_cases": [
+      {
+        "type": "security",
+        "example": "Researchers show that a web page could use timing to read data it should not see, which led to Spectre defenses.",
+        "apps": []
+      },
+      {
+        "type": "ads",
+        "example": "A tracker could use GPU timing as a hardware fingerprint, as shown in the DrawnApart research.",
+        "apps": [
+          "DrawnApart (research)"
+        ]
+      },
+      {
+        "type": "games",
+        "example": "A browser game that needs fast threads must now opt in to cross origin isolation to get precise timers.",
+        "apps": []
+      },
+      {
+        "type": "banking",
+        "example": "A bank site is kept apart from other tabs so a bad page cannot time its way into reading balances.",
+        "apps": []
+      },
+      {
+        "type": "developer",
+        "example": "Browser makers make timers coarser, then give them back only to isolated pages.",
+        "apps": [
+          "Chrome",
+          "Firefox",
+          "Safari"
+        ]
+      },
+      {
+        "type": "enterprise",
+        "example": "A company runs a strict browser policy that isolates its web apps from untrusted pages.",
+        "apps": []
+      },
+      {
+        "type": "education",
+        "example": "A university security class demos a timing attack in a lab to teach why timers are blurred.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Can leak secrets or identity",
+      "Browsers defend with blurred timers",
+      "Mostly research and lab"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Largely mitigated by Site Isolation and clock coarsening",
+    "Research prototypes, not seen in typical fingerprinting scripts"
+  ],
+  "scores": {
+    "sensitivity": 3,
+    "utility": 1,
+    "fingerprint_bits": 5,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": "None",
+    "abuse": "Cross-origin data leaks, stable GPU identification"
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2018-01",
+      "browser": "all",
+      "version": "",
+      "change": "Spectre mitigations: timer clamping, site isolation (Chrome 67, Firefox 100 Fission)"
+    },
+    {
+      "date": "2022-01",
+      "browser": "paper",
+      "version": "",
+      "change": "DrawnApart (Laor et al., NDSS 2022) shows 98% GPU re-identification in 8 s"
+    }
+  ],
+  "related": [
+    "web.perf.timer-precision",
+    "web.perf.cross-origin-isolation-timers"
+  ],
+  "refs": [
+    {
+      "t": "paper",
+      "label": "Laor et al., DrawnApart (NDSS 2022)",
+      "url": "https://www.ndss-symposium.org/ndss-paper/drawnapart-a-device-identification-technique-based-on-remote-gpu-fingerprinting/"
+    },
+    {
+      "t": "paper",
+      "label": "Kocher et al., Spectre Attacks (2018)",
+      "url": "https://spectreattack.com/spectre.pdf"
+    },
+    {
+      "t": "paper",
+      "label": "Oren et al., Spy in the Sandbox (CCS 2015)",
+      "url": "https://arxiv.org/abs/1502.07373"
+    }
+  ],
+  "confidence": "docs"
+}

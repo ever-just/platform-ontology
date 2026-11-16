@@ -1,0 +1,199 @@
+{
+  "id": "mob.ads.consent-cmp",
+  "name": "In-app consent platforms (TCF/CMP)",
+  "kind": "capability",
+  "group": "attribution-ads",
+  "subgroup": "SDKs and measurement",
+  "tags": [
+    "consent",
+    "tcf",
+    "gdpr",
+    "ump"
+  ],
+  "plain": "A consent screen the developer shows (in addition to the OS prompt) for EEA, UK and some US laws.",
+  "meaning": "Recorded consent decides what ad SDKs may do. Since 2024 Google requires a certified CMP for ads in the EEA. On iOS it adds a second prompt beside ATT, which Italy called double consent.",
+  "lifecycle": [
+    "on-launch"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "y",
+      "v": "",
+      "permission": "",
+      "protection": "none",
+      "grant": "prompt",
+      "prompt_ui": "",
+      "persistence": "",
+      "revocation": "",
+      "store_policy": "Google EU user consent policy; Play Families",
+      "api_surface": "Google UMP SDK, TCF 2.2 strings in app storage",
+      "note": "Consent string stored in SharedPreferences (IABTCF_)."
+    },
+    "ios": {
+      "s": "y",
+      "v": "",
+      "permission": "",
+      "protection": "none",
+      "grant": "prompt",
+      "prompt_ui": "",
+      "persistence": "",
+      "revocation": "",
+      "store_policy": "ATT remains separate; privacy manifest tracking flag",
+      "api_surface": "UMP SDK, CMP SDKs",
+      "note": "Italy's regulator treats ATT plus a CMP as double consent."
+    }
+  },
+  "web_equivalents": [
+    "web.xsite.tcf-consent-string"
+  ],
+  "data": {
+    "type": "string",
+    "metric": "TCF consent string",
+    "update": "stored locally, refreshed yearly",
+    "fields": [
+      {
+        "name": "IABTCF_TCString",
+        "type": "string",
+        "unit": "",
+        "range": "",
+        "precision": ""
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can show an extra consent screen on top of the phone prompt",
+    "user_action": "You see a Consent screen the first time you open the app, often in the EU or UK",
+    "can": [
+      "Ask you to say yes or no to ads, analytics and sharing",
+      "Store your answer on the phone",
+      "Tell its ad tools what you agreed to",
+      "Show again later if you change your mind"
+    ],
+    "cannot": [
+      "Skip the screen when Google needs a certified one for EEA ads",
+      "Count as your consent if the answer is not recorded",
+      "Replace the phone's own prompt; on iPhone you may see two"
+    ],
+    "reach": 2,
+    "reach_label": "Your choice, passed to the app",
+    "differs": ""
+  },
+  "story": {
+    "what_it_is": "The extra consent screen an app shows, for privacy laws, on top of the phone's own prompt.",
+    "icon": "clipboard-list",
+    "tags": [
+      "Consent",
+      "Ads",
+      "Law"
+    ],
+    "marketing": [],
+    "for_you": "You see a screen asking you to accept or manage cookies and ad choices in an app, often before the app opens. Your answer is saved and sent to ad partners.",
+    "for_makers": "Laws like GDPR require consent before personal ad data is used. Makers use a CMP so ad SDKs only do what the saved choice allows, and Google requires it for ads in the EEA.",
+    "use_cases": [
+      {
+        "type": "news",
+        "example": "A news app asks you to consent to personalized ads before showing articles.",
+        "apps": [
+          "BBC",
+          "The Guardian"
+        ]
+      },
+      {
+        "type": "games",
+        "example": "A free game shows a consent form at first launch, then loads ads based on your answer.",
+        "apps": [
+          "Candy Crush",
+          "Subway Surfers"
+        ]
+      },
+      {
+        "type": "ads",
+        "example": "An ad SDK reads the saved consent string and serves non personalized ads when you say no.",
+        "apps": [
+          "Google AdMob",
+          "AppLovin"
+        ]
+      },
+      {
+        "type": "social",
+        "example": "A social app offers separate toggles for ads, analytics and personalization.",
+        "apps": [
+          "Pinterest"
+        ]
+      },
+      {
+        "type": "shopping",
+        "example": "A retailer stores your consent so it can prove it asked, for audits.",
+        "apps": [
+          "Zalando"
+        ]
+      },
+      {
+        "type": "analytics",
+        "example": "A product team measures how many users accept and tunes the wording.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Dark pattern buttons",
+      "Second prompt next to ATT"
+    ],
+    "android_note": "Android has no system consent screen. Apps use a CMP.",
+    "ios_note": "On iOS the CMP appears beside the ATT prompt, which Apple allows if it is not misleading."
+  },
+  "technical_bounds": [
+    "Two prompts on iOS",
+    "Consent must precede SDK init in EEA"
+  ],
+  "scores": {
+    "sensitivity": 3,
+    "utility": 3,
+    "fingerprint_bits": null,
+    "friction": 2
+  },
+  "value": {
+    "legit_uses": [
+      "Legal basis for ads data"
+    ],
+    "abuse": [
+      "Dark patterns"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2024-01",
+      "platform": "android",
+      "version": "Google policy",
+      "change": "Certified CMP required for ads in EEA and UK (Jan 2024)"
+    },
+    {
+      "date": "2025-12",
+      "platform": "ios",
+      "version": "iOS 26",
+      "change": "Italy fines Apple over double consent"
+    }
+  ],
+  "related": [
+    "mob.attrib.att"
+  ],
+  "refs": [
+    {
+      "t": "vendor",
+      "label": "Google: User Messaging Platform",
+      "url": "https://developers.google.com/admob/android/privacy"
+    },
+    {
+      "t": "vendor",
+      "label": "IAB Europe: TCF",
+      "url": "https://iabeurope.eu/transparency-consent-framework/"
+    }
+  ],
+  "confidence": "docs"
+}

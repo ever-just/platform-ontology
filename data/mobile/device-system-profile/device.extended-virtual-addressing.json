@@ -1,0 +1,171 @@
+{
+  "id": "mob.device.extended-virtual-addressing",
+  "name": "Extended virtual addressing",
+  "kind": "capability",
+  "group": "device-system-profile",
+  "subgroup": "Performance",
+  "tags": [
+    "entitlement",
+    "memory",
+    "performance"
+  ],
+  "plain": "Lets an app use a much larger virtual address space.",
+  "meaning": "Not about people, but part of the entitlement tier: some capabilities are just a switch in the app.",
+  "lifecycle": [
+    "in-session"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "n",
+      "v": "",
+      "permission": "",
+      "protection": "none",
+      "grant": "not-exposed",
+      "prompt_ui": "",
+      "persistence": "",
+      "revocation": "",
+      "store_policy": "",
+      "api_surface": "",
+      "note": "64 bit processes already have a large address space; no switch"
+    },
+    "ios": {
+      "s": "y",
+      "v": "15",
+      "permission": "com.apple.developer.kernel.extended-virtual-addressing",
+      "protection": "entitlement",
+      "grant": "entitlement",
+      "prompt_ui": "No prompt; capability in Xcode",
+      "persistence": "Tied to provisioning",
+      "revocation": "n/a",
+      "store_policy": "",
+      "api_surface": "Xcode capability",
+      "note": "Enables address space beyond default limits"
+    }
+  },
+  "data": {
+    "type": "none",
+    "metric": "Address space limit",
+    "update": "static",
+    "fields": [
+      {
+        "name": "limit",
+        "type": "integer",
+        "unit": "bits",
+        "range": "default 47 bits larger with entitlement",
+        "precision": ""
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can use a larger memory address range on iPhone, but not on Android",
+    "user_action": "Nothing. The developer turns on a setting before the app ships",
+    "can": [
+      "Map more memory than the default limit on iPhone",
+      "Handle very large files or models in heavy apps",
+      "Use it with no prompt after Apple approves the setting"
+    ],
+    "cannot": [
+      "Turn it on from Android; 64 bit apps already have a large range, with no switch",
+      "Use more actual memory than the phone has",
+      "Gain extra access to your data"
+    ],
+    "reach": 1,
+    "reach_label": "A developer setting, no data",
+    "differs": "This setting exists only on iPhone. On Android it is not needed."
+  },
+  "story": {
+    "what_it_is": "A switch that lets a big app use much more memory address space.",
+    "icon": "layers",
+    "tags": [
+      "Developer",
+      "Performance",
+      "iPhone"
+    ],
+    "marketing": [
+      {
+        "vendor": "Apple",
+        "name": "Extended Virtual Addressing entitlement",
+        "pitch": "Developer rule: apps with large memory needs can ask for a bigger virtual address space.",
+        "url": "https://developer.apple.com/documentation/bundleresources/entitlements/com.apple.developer.kernel.extended-virtual-addressing"
+      }
+    ],
+    "for_you": "You will never see it. It simply helps big apps like large games, video editors or maps load huge files without crashing.",
+    "for_makers": "It is a technical switch in the app's settings. Makers turn it on when their app maps big files or large worlds into memory. It does not collect any data about you.",
+    "use_cases": [
+      {
+        "type": "games",
+        "example": "An open world game maps a huge world file into memory so it can stream it smoothly.",
+        "apps": []
+      },
+      {
+        "type": "creative",
+        "example": "A video editor opens a very large project without running out of address space.",
+        "apps": []
+      },
+      {
+        "type": "maps",
+        "example": "A map app loads a large offline map file as one piece.",
+        "apps": []
+      },
+      {
+        "type": "ar-vr",
+        "example": "An AR scene app holds big 3D scans in memory while you scan a room.",
+        "apps": []
+      },
+      {
+        "type": "developer",
+        "example": "A developer who gets random memory errors tries this switch first.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "No privacy impact",
+      "Can mask poor memory use"
+    ],
+    "android_note": "Android has no matching entitlement.",
+    "ios_note": "Needs an Apple entitlement, with no prompt to you."
+  },
+  "technical_bounds": [
+    "Capability only; no user prompt"
+  ],
+  "scores": {
+    "sensitivity": 1,
+    "utility": 2,
+    "fingerprint_bits": null,
+    "friction": 1
+  },
+  "value": {
+    "legit_uses": [
+      "Large games"
+    ],
+    "abuse": [
+      "None"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2021-09",
+      "platform": "ios",
+      "version": "iOS 15",
+      "change": "Extended virtual addressing introduced"
+    }
+  ],
+  "related": [
+    "mob.device.increased-memory-limit"
+  ],
+  "refs": [
+    {
+      "t": "apple",
+      "label": "Apple: extended virtual addressing",
+      "url": "https://developer.apple.com/documentation/bundleresources/entitlements/com.apple.developer.kernel.extended-virtual-addressing"
+    }
+  ],
+  "confidence": "inferred"
+}

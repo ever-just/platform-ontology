@@ -1,0 +1,287 @@
+{
+  "id": "web.auth.passkeys",
+  "name": "Passkeys and WebAuthn sign in",
+  "kind": "capability",
+  "group": "identity-auth",
+  "subgroup": "Signed in",
+  "tags": [
+    "passkey",
+    "webauthn",
+    "fido2",
+    "login"
+  ],
+  "plain": "Phishing resistant sign in with a key stored on the device or password manager.",
+  "meaning": "The site gets a public key, a credential ID, a user handle and a signed challenge, not a secret. Attestation is usually withheld so the device model is not revealed. FIDO Alliance said in 2025 that over 15 billion accounts could use passkeys.",
+  "lifecycle": [
+    "signed-in"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "navigator.credentials.create({publicKey}), get({publicKey, mediation: 'conditional'})",
+      "permissions_policy": "publickey-credentials-get",
+      "bcd": [
+        "api.PublicKeyCredential",
+        "api.CredentialsContainer.create"
+      ],
+      "access": {
+        "grant": "prompt",
+        "prompt_ui": "Browser or OS prompt for passkey with biometric or PIN",
+        "secure_context": true,
+        "user_gesture": false,
+        "persistence": "Credential lives in the authenticator until deleted; syncs through iCloud Keychain or Google Password Manager",
+        "revocation": "Clear site data, browser privacy settings",
+        "iframe": "",
+        "steps": [
+          "Site calls credentials.get",
+          "OS shows passkey chooser",
+          "Person verifies with biometric",
+          "Site checks the signed challenge"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "67",
+          "note": "",
+          "date": "2018-05-29"
+        },
+        "edge": {
+          "s": "y",
+          "v": "18",
+          "note": "",
+          "date": "2018-10-02"
+        },
+        "firefox": {
+          "s": "y",
+          "v": "60",
+          "note": "",
+          "date": "2018-05-09"
+        },
+        "safari": {
+          "s": "y",
+          "v": "13",
+          "note": "",
+          "date": "2019-09-19"
+        },
+        "ios_safari": {
+          "s": "y",
+          "v": "13",
+          "note": "",
+          "date": "2019-09-19"
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "70",
+          "note": "",
+          "date": "2018-10-17"
+        },
+        "samsung": {
+          "s": "y",
+          "v": "10.0",
+          "note": "",
+          "date": "2019-08-22"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "object",
+    "metric": "Public key credential",
+    "update": "on sign in",
+    "fields": [
+      {
+        "name": "credentialId",
+        "type": "binary",
+        "unit": "bytes",
+        "range": "16 to 1023",
+        "precision": "exact"
+      },
+      {
+        "name": "userHandle",
+        "type": "binary",
+        "unit": "bytes",
+        "range": "up to 64",
+        "precision": "exact"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can sign you in with a passkey after your fingerprint, face or PIN",
+    "user_action": "You tap Sign in with a passkey and confirm with your fingerprint, face or PIN",
+    "can": [
+      "Ask your device or password manager to prove it holds your passkey",
+      "Receive a public key, a credential ID and a signed answer for that site",
+      "Sign you in on later visits without you typing a password",
+      "Offer your passkey from a nearby phone or a synced password manager"
+    ],
+    "cannot": [
+      "Get your fingerprint, face or the private key; these never leave your device",
+      "Use your passkey on a different site; each passkey is tied to one site name",
+      "See which phone or laptop model you have, because that detail is usually withheld",
+      "Sign you in without your approval each time"
+    ],
+    "reach": 1,
+    "reach_label": "One sign in, you approve",
+    "differs": "Chrome, Safari, Edge and Firefox all support it. Where passkeys are stored and synced depends on iCloud Keychain, Google Password Manager or another manager."
+  },
+  "story": {
+    "what_it_is": "Sign in with your face, finger or device PIN instead of a password. Nothing secret is sent.",
+    "icon": "key-round",
+    "tags": [
+      "Sign in",
+      "Biometrics",
+      "Security"
+    ],
+    "marketing": [
+      {
+        "vendor": "Apple",
+        "name": "Passkeys",
+        "pitch": "Apple sells passkeys as a safer, easier replacement for passwords, unlocked with Face ID or Touch ID and synced through iCloud Keychain.",
+        "url": "https://developer.apple.com/passkeys/"
+      },
+      {
+        "vendor": "Google",
+        "name": "Passkeys",
+        "pitch": "Google pitches passkeys as sign in with your fingerprint, face or screen lock, and says they resist phishing.",
+        "url": "https://developers.google.com/identity/passkeys"
+      },
+      {
+        "vendor": "FIDO Alliance",
+        "name": "Passkeys",
+        "pitch": "The standards group describes passkeys as a simpler and stronger way to sign in than passwords.",
+        "url": "https://fidoalliance.org/passkeys/"
+      }
+    ],
+    "for_you": "You tap the username box, pick your account from a small list, and unlock with your face, fingerprint or screen PIN. No password to remember. A fake copy of the site cannot trick you into handing anything over.",
+    "for_makers": "Passkeys cut password reset support costs and stop phishing and password reuse attacks. Sites also see higher sign in success and fewer account takeovers, which helps both revenue and trust.",
+    "use_cases": [
+      {
+        "type": "games",
+        "example": "A player opens a console or game account page on the web and signs in with a passkey, so a stolen password can no longer steal their skins and purchases.",
+        "apps": [
+          "PlayStation",
+          "Nintendo Account",
+          "Roblox"
+        ]
+      },
+      {
+        "type": "games",
+        "example": "A cloud gaming site such as Xbox Cloud Gaming lets a person sign in with their Microsoft passkey on a borrowed laptop, then streams a game within a minute.",
+        "apps": [
+          "Xbox Cloud Gaming",
+          "GeForce NOW"
+        ]
+      },
+      {
+        "type": "banking",
+        "example": "A bank website lets a customer approve sign in with a fingerprint on their laptop, with no text message code to intercept.",
+        "apps": []
+      },
+      {
+        "type": "shopping",
+        "example": "A shopper checks out on a phone and unlocks the saved account with Face ID, without typing a password on a tiny keyboard.",
+        "apps": [
+          "Amazon",
+          "eBay"
+        ]
+      },
+      {
+        "type": "productivity",
+        "example": "A work web app such as an online editor or code host signs people in with a passkey stored in their password manager, synced across laptop and phone.",
+        "apps": [
+          "GitHub",
+          "Google Workspace",
+          "1Password"
+        ]
+      },
+      {
+        "type": "security",
+        "example": "A fraud team counts how many accounts are protected by passkeys and treats a passkey sign in as strong proof that the real owner is present.",
+        "apps": []
+      },
+      {
+        "type": "payments",
+        "example": "A payments page asks for a quick passkey check before a large transfer, adding proof it is really you.",
+        "apps": [
+          "PayPal",
+          "Shopify"
+        ]
+      }
+    ],
+    "risks": [
+      "Lock in to one device ecosystem",
+      "Account recovery gets harder"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Site never sees the private key",
+    "Origin bound: works only on the registered domain",
+    "Attestation normally returned as none",
+    "Needs user verification (biometric or PIN)"
+  ],
+  "scores": {
+    "sensitivity": 4,
+    "utility": 5,
+    "fingerprint_bits": null,
+    "friction": 2
+  },
+  "value": {
+    "legit_uses": [
+      "Passwordless login, account takeover defence"
+    ],
+    "abuse": [
+      "Tying an account to a device when attestation is shared"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2019-03",
+      "browser": "all",
+      "version": "",
+      "change": "WebAuthn Level 1 became a W3C Recommendation"
+    },
+    {
+      "date": "2022-10",
+      "browser": "safari",
+      "version": "16",
+      "change": "Passkeys with iCloud Keychain"
+    },
+    {
+      "date": "2023-05",
+      "browser": "chrome",
+      "version": "114",
+      "change": "Passkeys in Google Password Manager across devices"
+    }
+  ],
+  "related": [
+    "web.auth.password-credential-management",
+    "web.auth.dbsc"
+  ],
+  "refs": [
+    {
+      "t": "mdn",
+      "label": "MDN Web Authentication API",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/Web_Authentication_API"
+    },
+    {
+      "t": "spec",
+      "label": "W3C WebAuthn Level 3",
+      "url": "https://www.w3.org/TR/webauthn-3/"
+    },
+    {
+      "t": "vendor",
+      "label": "FIDO Alliance passkeys",
+      "url": "https://fidoalliance.org/passkeys/"
+    }
+  ],
+  "confidence": "docs"
+}

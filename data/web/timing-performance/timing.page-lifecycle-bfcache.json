@@ -1,0 +1,260 @@
+{
+  "id": "web.timing.page-lifecycle-bfcache",
+  "name": "Page Lifecycle and back/forward cache",
+  "kind": "signal",
+  "group": "timing-performance",
+  "subgroup": "Lifecycle",
+  "tags": [
+    "page-lifecycle",
+    "bfcache",
+    "freeze",
+    "pagehide",
+    "visibilitychange"
+  ],
+  "plain": "Tells a page when it is frozen, discarded or restored from the back/forward cache.",
+  "meaning": "A site can see when a tab goes to sleep, was discarded to free memory, or came back instantly from the back button, which reveals how you navigate and how much memory the device has.",
+  "lifecycle": [
+    "in-session",
+    "after-leaving"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "pageshow, pagehide, freeze, resume, document.wasDiscarded, visibilitychange",
+      "bcd": [
+        "api.Document.freeze_event",
+        "api.Document.wasDiscarded",
+        "api.Window.pageshow_event"
+      ],
+      "access": {
+        "grant": "none",
+        "prompt_ui": "None (no browser prompt)",
+        "secure_context": false,
+        "user_gesture": false,
+        "activation": "none",
+        "persistence": "Per page; state follows the lifecycle events until the page is discarded",
+        "revocation": "Nothing to revoke (no permission is stored)",
+        "iframe": "Per frame; the same events fire in iframes",
+        "steps": [
+          "Browser freezes or discards a hidden tab",
+          "Page receives freeze or pagehide (persisted=true for bfcache)",
+          "On return the page receives resume or pageshow",
+          "document.wasDiscarded is true after a discard reload"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "68",
+          "note": "",
+          "date": "2018-07-24"
+        },
+        "edge": {
+          "s": "y",
+          "v": "79",
+          "note": "",
+          "date": "2020-01-15"
+        },
+        "firefox": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "safari": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "ios_safari": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "68",
+          "note": "",
+          "date": "2018-07-24"
+        },
+        "samsung": {
+          "s": "y",
+          "v": "10.0",
+          "note": "",
+          "date": "2019-08-22"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "none",
+    "metric": "",
+    "update": "",
+    "fields": []
+  },
+  "limits": {
+    "headline": "Can tell when your tab sleeps, is discarded or returns from the Back button",
+    "user_action": "You switch away, leave the tab idle, or press Back",
+    "can": [
+      "Learn when a tab is frozen or put to sleep",
+      "Learn when a tab was discarded to free memory",
+      "Learn when a page came back instantly from the Back button",
+      "Guess how you move between pages and how much memory your device has"
+    ],
+    "cannot": [
+      "See which other tabs you have open",
+      "See what you did in other tabs",
+      "Ask permission first",
+      "Keep running after the tab is discarded"
+    ],
+    "reach": 2,
+    "reach_label": "While the page is open or asleep",
+    "differs": "Chrome and Edge support the full set. Firefox and Safari support parts of it."
+  },
+  "story": {
+    "what_it_is": "A page learns when it is frozen, discarded or restored from the back and forward cache.",
+    "icon": "rotate-ccw",
+    "tags": [
+      "Lifecycle",
+      "Silent",
+      "Speed"
+    ],
+    "marketing": [
+      {
+        "vendor": "Google Chrome",
+        "name": "Page Lifecycle API",
+        "pitch": "Chrome describes events that tell a page when the browser freezes or discards it to save memory.",
+        "url": "https://developer.chrome.com/docs/web-platform/page-lifecycle-api"
+      },
+      {
+        "vendor": "web.dev",
+        "name": "Back/forward cache",
+        "pitch": "Google says bfcache makes the Back button instant by keeping a whole page in memory.",
+        "url": "https://web.dev/articles/bfcache"
+      }
+    ],
+    "for_you": "You see it as an instant Back button, and tabs that come back right where you left them. Behind the scenes the page is frozen when hidden and woken up when you return.",
+    "for_makers": "Makers use it to save your work before a tab is frozen and to make the Back button feel instant, which helps sales and speed scores. It also lets ad and analytics scripts know when to send their last report.",
+    "use_cases": [
+      {
+        "type": "shopping",
+        "example": "You press Back from a product page and the search results appear instantly with your scroll position.",
+        "apps": [
+          "Amazon",
+          "eBay"
+        ]
+      },
+      {
+        "type": "productivity",
+        "example": "A web editor saves your draft the moment the tab is frozen, so nothing is lost.",
+        "apps": [
+          "Google Docs",
+          "Notion"
+        ]
+      },
+      {
+        "type": "games",
+        "example": "A browser game pauses and keeps its state when the tab is frozen, then restores it when you return.",
+        "apps": []
+      },
+      {
+        "type": "analytics",
+        "example": "An analytics script sends its last data when the page is hidden, since the unload event is not reliable.",
+        "apps": [
+          "Google Analytics"
+        ]
+      },
+      {
+        "type": "video",
+        "example": "A video site remembers your playback spot when the tab is discarded and reloaded.",
+        "apps": [
+          "YouTube"
+        ]
+      },
+      {
+        "type": "messaging",
+        "example": "A chat app reconnects and catches up on messages when a tab is restored from the cache.",
+        "apps": [
+          "Slack",
+          "Discord"
+        ]
+      },
+      {
+        "type": "news",
+        "example": "A news site refreshes stale content when a cached page is restored, so you do not read old headlines.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Stale data if not handled",
+      "Hidden state saved"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "freeze, resume and wasDiscarded are Chromium only (Chrome 68); pagehide and pageshow work everywhere",
+    "Pages in the back/forward cache cannot run timers, network or most APIs while frozen",
+    "unload handlers block bfcache in several browsers; Chrome has been phasing unload out gradually (check current status)",
+    "Chrome discards background tabs under memory pressure; the time before freeze is not fixed",
+    "beacon via visibilitychange is the reliable last chance to send data"
+  ],
+  "scores": {
+    "sensitivity": 1,
+    "utility": 4,
+    "fingerprint_bits": 2,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Saving state before tabs are frozen",
+      "Restoring app UI after bfcache restore",
+      "Analytics that send on pagehide"
+    ],
+    "abuse": [
+      "Measuring device memory pressure and tab habits",
+      "Sending data as the tab hides"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2018-07",
+      "browser": "chrome",
+      "version": "68",
+      "change": "Page Lifecycle API (freeze, resume, wasDiscarded)"
+    },
+    {
+      "date": "2021-11",
+      "browser": "chrome",
+      "version": "96",
+      "change": "Desktop back/forward cache enabled for most users"
+    }
+  ],
+  "related": [
+    "web.actions.send-beacon",
+    "web.actions.page-visibility-throttling"
+  ],
+  "refs": [
+    {
+      "t": "mdn",
+      "label": "MDN Page Lifecycle API",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/Page_Lifecycle_API"
+    },
+    {
+      "t": "spec",
+      "label": "WICG Page Lifecycle",
+      "url": "https://wicg.github.io/page-lifecycle/"
+    },
+    {
+      "t": "chromestatus",
+      "label": "web.dev back/forward cache",
+      "url": "https://web.dev/articles/bfcache"
+    }
+  ],
+  "confidence": "docs"
+}

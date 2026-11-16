@@ -1,0 +1,198 @@
+{
+  "id": "web.page.javascripts",
+  "name": "Loaded script list (javascripts)",
+  "kind": "signal",
+  "group": "page-actions",
+  "subgroup": "Page context",
+  "tags": [
+    "scripts",
+    "fingerprint"
+  ],
+  "plain": "Lists which scripts the page loaded.",
+  "meaning": "A list of script URLs (up to 2,200 chars) can reveal injected scripts from extensions or tools.",
+  "lifecycle": [
+    "on-arrival",
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "document.scripts / script elements",
+      "access": {
+        "grant": "none",
+        "prompt_ui": "None (no browser prompt)",
+        "secure_context": false,
+        "user_gesture": false,
+        "persistence": "",
+        "revocation": "",
+        "iframe": "",
+        "steps": [
+          "Script reads the value",
+          "Value joins the fingerprint payload"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "",
+          "note": ""
+        },
+        "edge": {
+          "s": "y",
+          "v": "",
+          "note": ""
+        },
+        "firefox": {
+          "s": "y",
+          "v": "",
+          "note": ""
+        },
+        "safari": {
+          "s": "y",
+          "v": "",
+          "note": ""
+        },
+        "ios_safari": {
+          "s": "y",
+          "v": "",
+          "note": ""
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "",
+          "note": ""
+        },
+        "samsung": {
+          "s": "y",
+          "v": "",
+          "note": ""
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "list",
+    "metric": "Loaded script list (javascripts)",
+    "update": "per page",
+    "fields": [
+      {
+        "name": "javascripts",
+        "type": "list",
+        "unit": "",
+        "range": "up to 2200 chars collected",
+        "precision": ""
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can list the scripts loaded on its own page",
+    "user_action": "Nothing. It happens when the page loads or when a tool scans the page.",
+    "can": [
+      "Find which scripts its page loaded, including ones from other companies",
+      "Spot tracking or ad scripts on its own page",
+      "Check that a script loaded as expected"
+    ],
+    "cannot": [
+      "See scripts on other sites or in other tabs",
+      "See what the scripts do inside other pages",
+      "See your browser add ons unless they change the page",
+      "Keep a list of what you visited before"
+    ],
+    "reach": 1,
+    "reach_label": "Only the page itself",
+    "differs": ""
+  },
+  "story": {
+    "what_it_is": "A site can see which scripts are loaded in the page, which can reveal extensions.",
+    "icon": "file-code",
+    "tags": [
+      "Silent",
+      "Fingerprinting",
+      "Security"
+    ],
+    "marketing": [],
+    "for_you": "You never see it. A page can tell if some extensions or tools have added their own scripts to it, which says something about how you browse.",
+    "for_makers": "Fraud and security tools use it to spot injected code, bots and shady extensions. It also adds to a device profile used for tracking.",
+    "use_cases": [
+      {
+        "type": "security",
+        "example": "A bank page spots an injected script from malware that tries to steal logins.",
+        "apps": [
+          "Stripe Radar"
+        ]
+      },
+      {
+        "type": "ads",
+        "example": "An ad network spots scripts from blockers and tracks how many viewers use them.",
+        "apps": []
+      },
+      {
+        "type": "shopping",
+        "example": "A checkout page flags a card skimmer script that was added by an attacker.",
+        "apps": []
+      },
+      {
+        "type": "games",
+        "example": "An anti cheat page spots cheat helper scripts running in a browser game.",
+        "apps": []
+      },
+      {
+        "type": "analytics",
+        "example": "A tag manager audits which scripts load, to remove slow or unauthorized ones.",
+        "apps": [
+          "Google Tag Manager"
+        ]
+      },
+      {
+        "type": "developer",
+        "example": "A developer checks that third party scripts are the ones they approved.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Reveals extensions",
+      "Adds to fingerprint"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Only scripts in the DOM"
+  ],
+  "scores": {
+    "sensitivity": 3,
+    "utility": 3,
+    "fingerprint_bits": 2,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Detect injected scripts"
+    ],
+    "abuse": [
+      "Detect extensions that inject scripts"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": true,
+      "how": "Collector key(s): javascripts. My reading of the key: a list of script sources; the exact field is not described in public write-ups."
+    }
+  },
+  "related": [
+    "web.tracking.linkedin-apfc-fingerprint"
+  ],
+  "refs": [
+    {
+      "t": "github",
+      "label": "mdp/linkedin-extension-fingerprinting (LinkedIn script snapshot and ID list)",
+      "url": "https://github.com/mdp/linkedin-extension-fingerprinting"
+    },
+    {
+      "t": "github",
+      "label": "mdp/linkedin-extension-fingerprinting (LinkedIn script snapshot and ID list)",
+      "url": "https://github.com/mdp/linkedin-extension-fingerprinting"
+    }
+  ],
+  "confidence": "inferred"
+}

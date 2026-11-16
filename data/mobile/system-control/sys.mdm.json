@@ -1,0 +1,201 @@
+{
+  "id": "mob.sys.mdm",
+  "name": "Mobile device management and supervision",
+  "kind": "capability",
+  "group": "system-control",
+  "subgroup": "Enterprise",
+  "tags": [
+    "mdm",
+    "supervised",
+    "declarative-device-management",
+    "abm"
+  ],
+  "plain": "A company server controls the phone's settings, apps and restrictions.",
+  "meaning": "MDM can install apps, set Wi-Fi and VPN, block features and wipe the device. Supervised iOS devices allow tighter control, such as app lockdown and content filters.",
+  "lifecycle": [
+    "background"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "y",
+      "v": "5.0",
+      "api": 21,
+      "permission": "Provisioning for device owner; Android Management API",
+      "protection": "signature",
+      "grant": "enterprise",
+      "prompt_ui": "QR provisioning, zero touch, managed Google Play",
+      "persistence": "Until unenrolled",
+      "revocation": "Settings > Accounts",
+      "store_policy": "Play: managed Google Play",
+      "api_surface": "DevicePolicyManager, Android Enterprise",
+      "note": "Work profile keeps personal data separate; fully managed gives full control."
+    },
+    "ios": {
+      "s": "y",
+      "v": "4.0",
+      "permission": "MDM profile and push certificate",
+      "protection": "managed",
+      "grant": "enterprise",
+      "prompt_ui": "Profile install with consent; Apple Business Manager automatic enrollment",
+      "persistence": "Until removed",
+      "revocation": "Settings > General > VPN & Device Management",
+      "store_policy": "",
+      "api_surface": "MDM protocol, Declarative Device Management, ABM, DEP",
+      "note": "User Enrollment limits what MDM can see."
+    }
+  },
+  "data": {
+    "type": "none",
+    "metric": "Management",
+    "update": "n/a",
+    "fields": [
+      {
+        "name": "restriction",
+        "type": "object",
+        "unit": "settings",
+        "range": "n/a",
+        "precision": "n/a"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can control settings, apps and restrictions on the phone, once a company enrolls it",
+    "user_action": "You enroll the phone with your company by QR code, profile install or automatic setup",
+    "can": [
+      "Install apps",
+      "Set Wi-Fi and VPN",
+      "Block features",
+      "Wipe the device",
+      "Lock down apps and filter content on supervised iPhones"
+    ],
+    "cannot": [
+      "See everything on iPhone with User Enrollment; it limits what the company sees",
+      "See personal data in an Android work profile",
+      "Control the phone without your enrollment steps or Apple Business Manager setup"
+    ],
+    "reach": 4,
+    "reach_label": "Broad, on enrolled phones",
+    "differs": "Android has a work profile or full management; iPhone has User Enrollment and stronger control on supervised phones."
+  },
+  "story": {
+    "what_it_is": "A company server that controls a phone's settings, apps and restrictions.",
+    "icon": "server",
+    "tags": [
+      "Work phone",
+      "Control",
+      "Rules"
+    ],
+    "marketing": [
+      {
+        "vendor": "Apple",
+        "name": "Device management",
+        "pitch": "Apple lets organizations configure, manage and secure iPhones and iPads at scale.",
+        "url": "https://support.apple.com/guide/deployment/welcome/web"
+      }
+    ],
+    "for_you": "At work or school you tap a link to enroll, and the phone starts to follow rules. Your boss may install apps, set Wi-Fi, block features or wipe the device. With personal phones the work part can be kept apart.",
+    "for_makers": "Companies and schools run thousands of phones from one dashboard. They push apps, set VPN and Wi-Fi, block features, and wipe lost devices. Supervised devices give much more control than personal ones.",
+    "use_cases": [
+      {
+        "type": "enterprise",
+        "example": "IT sets up a new hire's phone with email, Wi-Fi and the right apps before the first day.",
+        "apps": [
+          "Jamf",
+          "Microsoft Intune"
+        ]
+      },
+      {
+        "type": "education",
+        "example": "A school locks iPads to learning apps during class.",
+        "apps": []
+      },
+      {
+        "type": "health",
+        "example": "A hospital pushes a clinical app to every nurse's phone.",
+        "apps": []
+      },
+      {
+        "type": "travel",
+        "example": "An airline updates every pilot's tablet at once.",
+        "apps": []
+      },
+      {
+        "type": "delivery",
+        "example": "A courier company installs a route app and blocks other apps on driver phones.",
+        "apps": []
+      },
+      {
+        "type": "security",
+        "example": "A security team wipes a lost phone from a web page.",
+        "apps": []
+      },
+      {
+        "type": "kids",
+        "example": "A parent uses a family device manager to set up a child's phone.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Employer can see and control",
+      "Wipe risk",
+      "Can block personal features"
+    ],
+    "android_note": "A work profile keeps personal data apart, while a fully managed device gives the company full control.",
+    "ios_note": "User Enrollment limits what management can see on a personal iPhone. Supervised devices give much broader control."
+  },
+  "technical_bounds": [
+    "Needs enrollment or supervision"
+  ],
+  "scores": {
+    "sensitivity": 5,
+    "utility": 3,
+    "fingerprint_bits": 1,
+    "friction": 3
+  },
+  "value": {
+    "legit_uses": [
+      "Fleet management"
+    ],
+    "abuse": [
+      "Employer overreach"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2010-06",
+      "platform": "ios",
+      "version": "iOS 4",
+      "change": "MDM introduced"
+    },
+    {
+      "date": "2021-09",
+      "platform": "ios",
+      "version": "iOS 15",
+      "change": "Declarative device management"
+    }
+  ],
+  "related": [
+    "mob.sys.device-admin",
+    "mob.sys.app-pinning"
+  ],
+  "refs": [
+    {
+      "t": "android",
+      "label": "Android Enterprise",
+      "url": "https://developer.android.com/work"
+    },
+    {
+      "t": "apple",
+      "label": "Apple: Device management",
+      "url": "https://developer.apple.com/documentation/devicemanagement"
+    }
+  ],
+  "confidence": "docs"
+}

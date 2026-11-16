@@ -1,0 +1,207 @@
+{
+  "id": "mob.files.photos-limited",
+  "name": "Limited photo access (chosen items only)",
+  "kind": "permission",
+  "group": "files-storage",
+  "subgroup": "Photos and media",
+  "tags": [
+    "limited-grant",
+    "photos",
+    "selected-items"
+  ],
+  "plain": "The person shares only hand-picked photos with the app, not the whole library.",
+  "meaning": "Lets someone give an app a few images without exposing everything. The app sees only chosen assets and cannot tell what else exists.",
+  "lifecycle": [
+    "in-session"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "p",
+      "v": "14",
+      "api": 34,
+      "permission": "READ_MEDIA_VISUAL_USER_SELECTED (with READ_MEDIA_IMAGES, READ_MEDIA_VIDEO)",
+      "protection": "dangerous",
+      "grant": "prompt",
+      "prompt_ui": "Select photos and videos (limited), Allow all, Don't allow",
+      "persistence": "Selection kept until revoked; app may be asked to refresh",
+      "revocation": "Settings > Apps > Permissions > Photos and videos",
+      "store_policy": "Play: apps must handle partial grants without breaking",
+      "api_surface": "MediaStore queries return only selected items",
+      "note": "Apps targeting 33 or lower get the selection treated as the full media grant for the picked items"
+    },
+    "ios": {
+      "s": "y",
+      "v": "14",
+      "permission": "NSPhotoLibraryUsageDescription (PHAuthorizationStatus.limited)",
+      "protection": "prompt",
+      "grant": "picker",
+      "prompt_ui": "Select Photos, Allow Access to All Photos, Don't Allow",
+      "persistence": "Selection persists until the person edits it",
+      "revocation": "Settings > Privacy & Security > Photos > Edit Selected Photos",
+      "store_policy": "App Review 5.1.1: apps must work with a limited library",
+      "api_surface": "PHPhotoLibrary.presentLimitedLibraryPicker(from:) (callback iOS 15), PHPhotoLibraryPreventAutomaticLimitedAccessAlert",
+      "note": "System auto adds assets the app creates with PHAssetCreationRequest to the selection; user albums cannot be fetched or created"
+    }
+  },
+  "web_equivalents": [
+    "web.files.file-input"
+  ],
+  "data": {
+    "type": "list",
+    "metric": "Subset of assets",
+    "update": "on request",
+    "fields": [
+      {
+        "name": "assets",
+        "type": "list",
+        "unit": "items",
+        "range": "chosen by person",
+        "precision": "full resolution"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can see only the photos you hand pick, not your whole library",
+    "user_action": "You tap Select Photos and choose a few in the prompt",
+    "can": [
+      "Open the photos and videos you chose",
+      "Show a button to let you add more photos later on iPhone",
+      "Save and keep photos it makes itself; iPhone adds these to your shared picks",
+      "Use your picks for uploads and editing"
+    ],
+    "cannot": [
+      "See the rest of your library",
+      "Fetch or create your own albums on iPhone while access is limited",
+      "Change which photos are shared",
+      "Keep an old pick if you remove it"
+    ],
+    "reach": 2,
+    "reach_label": "Only photos you hand pick",
+    "differs": "iPhone has had Limited access since iOS 14. Android 14 and newer works similarly; apps aimed at Android 13 or lower treat picks as a normal grant."
+  },
+  "story": {
+    "what_it_is": "Lets you share only hand picked photos with an app.",
+    "icon": "images",
+    "tags": [
+      "Permission",
+      "Asks first",
+      "Photos"
+    ],
+    "marketing": [
+      {
+        "vendor": "Apple",
+        "name": "Limited Photos Library",
+        "pitch": "Pitch: choose exactly which photos an app can see, and change that choice any time.",
+        "url": "https://developer.apple.com/documentation/photokit/phphotolibrary"
+      }
+    ],
+    "for_you": "The pop up lets you choose Select photos. The app sees only the ones you pick, and cannot tell how many others exist. iPhone later reminds you of your picks.",
+    "for_makers": "Makers get what they need for a task without fear. The app must handle a small set of photos, and it cannot nag users into full access.",
+    "use_cases": [
+      {
+        "type": "social",
+        "example": "A social app shows only the five photos you picked.",
+        "apps": []
+      },
+      {
+        "type": "creative",
+        "example": "A photo editor opens just your chosen pictures.",
+        "apps": []
+      },
+      {
+        "type": "shopping",
+        "example": "A visual search app searches with a photo you picked.",
+        "apps": []
+      },
+      {
+        "type": "dating",
+        "example": "A dating app sees only the photos you want on your profile.",
+        "apps": []
+      },
+      {
+        "type": "games",
+        "example": "A game uses a few photos as puzzle images.",
+        "apps": []
+      },
+      {
+        "type": "security",
+        "example": "A vault app protects a handful of private photos.",
+        "apps": []
+      },
+      {
+        "type": "messaging",
+        "example": "A chat app sends only the photos you allowed.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Apps may keep asking for more",
+      "Easy to forget what you shared"
+    ],
+    "android_note": "Android 14 offers a similar choice with partial access.",
+    "ios_note": "Built in as Limited access in the Photos permission since iOS 14."
+  },
+  "technical_bounds": [
+    "Cannot fetch or create user albums in limited mode on iOS",
+    "Existing apps are affected without a code change"
+  ],
+  "scores": {
+    "sensitivity": 3,
+    "utility": 4,
+    "fingerprint_bits": null,
+    "friction": 2
+  },
+  "value": {
+    "legit_uses": [
+      "Social posting",
+      "Profile photo choices"
+    ],
+    "abuse": [
+      "Pressuring users to switch to full access with repeated nags"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2020-09",
+      "platform": "ios",
+      "version": "iOS 14",
+      "change": "Limited library introduced; automatic prompt to revise selection once per app launch"
+    },
+    {
+      "date": "2021-09",
+      "platform": "ios",
+      "version": "iOS 15",
+      "change": "presentLimitedLibraryPicker gains completion handler returning new identifiers"
+    },
+    {
+      "date": "2023-10",
+      "platform": "android",
+      "version": "14 (API 34)",
+      "change": "Partial photo and video access added"
+    }
+  ],
+  "related": [
+    "mob.files.photos-full-library",
+    "mob.files.photo-picker"
+  ],
+  "refs": [
+    {
+      "t": "apple",
+      "label": "Apple: Limited library behavior and picker",
+      "url": "https://developer.apple.com/documentation/photokit/delivering-an-enhanced-privacy-experience-in-your-photos-app"
+    },
+    {
+      "t": "android",
+      "label": "Android 14: Partial access to photos and videos",
+      "url": "https://developer.android.com/about/versions/14/changes/partial-photo-video-access"
+    }
+  ],
+  "confidence": "docs"
+}

@@ -1,0 +1,208 @@
+{
+  "id": "mob.app.purpose-strings",
+  "name": "Purpose strings and review rejection",
+  "kind": "capability",
+  "group": "app-ecosystem",
+  "subgroup": "Policy",
+  "tags": [
+    "purpose-string",
+    "app-review",
+    "5.1.1"
+  ],
+  "plain": "Every iOS privacy prompt needs a written reason in the app, or the app is rejected or crashes.",
+  "meaning": "The string is the only text the person sees about why. Apple reviewers reject vague ones, and a missing key crashes the app.",
+  "lifecycle": [
+    "on-launch"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "y",
+      "v": "6.0",
+      "api": 23,
+      "permission": "None; rationale UI optional",
+      "protection": "none",
+      "grant": "none",
+      "prompt_ui": "Optional rationale shown by app",
+      "persistence": "n/a",
+      "revocation": "n/a",
+      "store_policy": "Play: Data safety form and permission declarations",
+      "api_surface": "shouldShowRequestPermissionRationale",
+      "note": "No system purpose text; Data safety form is declared in Play Console"
+    },
+    "ios": {
+      "s": "y",
+      "v": "10",
+      "permission": "NS*UsageDescription keys in Info.plist",
+      "protection": "prompt",
+      "grant": "prompt",
+      "prompt_ui": "Prompt text comes from the key",
+      "persistence": "n/a",
+      "revocation": "n/a",
+      "store_policy": "App Review 5.1.1 and 5.1.2",
+      "api_surface": "Info.plist",
+      "note": "Missing key for a used API terminates the app; privacy manifests required from spring 2024"
+    }
+  },
+  "data": {
+    "type": "none",
+    "metric": "Info.plist string",
+    "update": "static",
+    "fields": [
+      {
+        "name": "keys",
+        "type": "list",
+        "unit": "NS*UsageDescription",
+        "range": "over 40",
+        "precision": ""
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can't ask for iPhone access without a written reason shown in the prompt",
+    "user_action": "Nothing. You see the reason when the app first asks for a camera, location or photos",
+    "can": [
+      "Show you a sentence explaining why it wants an item, on iPhone",
+      "Show its own explanation before an Android permission box",
+      "Ask again later only if the reason text exists"
+    ],
+    "cannot": [
+      "Ask for a protected item on iPhone with no reason text; the app would close",
+      "Pass App Store review with a vague reason such as We need this",
+      "Change the reason text after release without a new app version"
+    ],
+    "reach": 1,
+    "reach_label": "One sentence you see before choosing",
+    "differs": "iPhone requires the reason text in the app. Android has no system reason text; the developer fills a Data safety form in Play Console instead."
+  },
+  "story": {
+    "what_it_is": "A short written reason an iOS app must show before it asks for something private.",
+    "icon": "file-text",
+    "tags": [
+      "Review rules",
+      "Privacy",
+      "Asks first"
+    ],
+    "marketing": [
+      {
+        "vendor": "Apple",
+        "name": "Purpose strings",
+        "pitch": "Explain in plain words why your app needs access, so people can decide.",
+        "url": "https://developer.apple.com/documentation/bundleresources/protected-resources"
+      }
+    ],
+    "for_you": "The permission pop up has one sentence from the app explaining why it wants your camera, location or contacts. That sentence is often your only clue about what you are agreeing to.",
+    "for_makers": "Apple will reject an app if the reason is vague, and the app crashes if the reason is missing. Good makers write clear sentences that raise yes rates, because people say yes when they see a real benefit.",
+    "use_cases": [
+      {
+        "type": "maps",
+        "example": "A rideshare app writes 'Your location is used to show nearby drivers' so the Allow button feels fair.",
+        "apps": [
+          "Uber",
+          "Lyft"
+        ]
+      },
+      {
+        "type": "social",
+        "example": "A photo sharing app says 'We need camera access so you can post photos' and avoids a rejection.",
+        "apps": [
+          "Instagram",
+          "Snapchat"
+        ]
+      },
+      {
+        "type": "games",
+        "example": "An AR game explains the camera use as 'to place creatures in your world', which lifts tap through on Allow.",
+        "apps": [
+          "Pokemon GO"
+        ]
+      },
+      {
+        "type": "dating",
+        "example": "A dating app writes why it wants location before it shows matches nearby.",
+        "apps": [
+          "Hinge",
+          "Tinder"
+        ]
+      },
+      {
+        "type": "fitness",
+        "example": "A running app writes 'We track your route while you run, even when the screen is off' for the background location prompt.",
+        "apps": [
+          "Strava",
+          "Nike Run Club"
+        ]
+      },
+      {
+        "type": "developer",
+        "example": "An app review team bounces a build because the microphone string only said 'Microphone needed'.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Vague wording tricks people",
+      "Missing keys crash apps"
+    ],
+    "android_note": "Android has no required explanation text, though Google Play asks for a reason in review forms.",
+    "ios_note": "iOS requires one text key for each private feature and shows it in the system prompt."
+  },
+  "technical_bounds": [
+    "Apple may reject vague text",
+    "Data safety form on Google Play"
+  ],
+  "scores": {
+    "sensitivity": 2,
+    "utility": 3,
+    "fingerprint_bits": null,
+    "friction": 1
+  },
+  "value": {
+    "legit_uses": [
+      "Informed consent"
+    ],
+    "abuse": [
+      "Vague or misleading reasons"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2016-09",
+      "platform": "ios",
+      "version": "iOS 10",
+      "change": "Purpose strings required for privacy APIs, crash if missing"
+    },
+    {
+      "date": "2024-05",
+      "platform": "ios",
+      "version": "iOS 17",
+      "change": "Privacy manifests and required reason APIs enforced"
+    }
+  ],
+  "related": [
+    "mob.attrib.att"
+  ],
+  "refs": [
+    {
+      "t": "apple",
+      "label": "Apple: Protected resources",
+      "url": "https://developer.apple.com/documentation/bundleresources/protected-resources"
+    },
+    {
+      "t": "policy",
+      "label": "App Review Guideline 5.1.1",
+      "url": "https://developer.apple.com/app-store/review/guidelines/#data-collection-and-storage"
+    },
+    {
+      "t": "android",
+      "label": "Android: Data safety form",
+      "url": "https://support.google.com/googleplay/android-developer/answer/10787469"
+    }
+  ],
+  "confidence": "docs"
+}

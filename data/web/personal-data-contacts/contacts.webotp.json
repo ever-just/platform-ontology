@@ -1,0 +1,237 @@
+{
+  "id": "web.contacts.webotp",
+  "name": "WebOTP (one time code from SMS)",
+  "kind": "permission",
+  "group": "personal-data-contacts",
+  "subgroup": "Verification",
+  "tags": [
+    "verification"
+  ],
+  "plain": "Lets a page read the one time code from an SMS the person receives.",
+  "meaning": "Reads one matching SMS code that is tied to the site's domain; not the whole SMS inbox.",
+  "lifecycle": [
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "navigator.credentials.get({otp:{transport:['sms']}}) with SMS ending '@example.com #123456'",
+      "permissions_policy": "otp-credentials",
+      "bcd": [
+        "api.OTPCredential"
+      ],
+      "access": {
+        "grant": "prompt",
+        "prompt_ui": "Bottom sheet on Android to allow code sharing",
+        "secure_context": true,
+        "user_gesture": false,
+        "persistence": "Per origin",
+        "revocation": "Site settings",
+        "iframe": "Same as top level; cross-origin iframes need a permissions policy where listed",
+        "steps": [
+          "Call the API",
+          "Browser applies its access rules",
+          "Page receives the result"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "93",
+          "note": "",
+          "date": "2021-08-31"
+        },
+        "edge": {
+          "s": "y",
+          "v": "93",
+          "note": "",
+          "date": "2021-09-02"
+        },
+        "firefox": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "safari": {
+          "s": "n",
+          "v": "",
+          "note": "Safari 27 has otp_option member; OTPCredential absent"
+        },
+        "ios_safari": {
+          "s": "n",
+          "v": "",
+          "note": "Same as Safari"
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "84",
+          "note": "",
+          "date": "2020-07-27"
+        },
+        "samsung": {
+          "s": "y",
+          "v": "14.0",
+          "note": "",
+          "date": "2021-04-17"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "object",
+    "metric": "Lets a page read the one time code from an SMS the person receives.",
+    "update": "on demand",
+    "fields": [
+      {
+        "name": "OTPCredential.code",
+        "type": "string",
+        "range": "4 to 10 digits typical",
+        "precision": "one message"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can see one text message code meant for that site, after you allow it",
+    "user_action": "You ask to log in or confirm a phone number, then tap Allow on the sheet",
+    "can": [
+      "Receive the one time code from a text message that names the site's web address",
+      "Fill in that code for you, so you do not type it",
+      "Ask again each time a new code arrives"
+    ],
+    "cannot": [
+      "Open your other text messages",
+      "Receive a code from a message that does not name the site",
+      "Work on iPhone, Safari or Firefox",
+      "Keep watching for codes after you leave the page"
+    ],
+    "reach": 1,
+    "reach_label": "One code, one moment",
+    "differs": "Works in Chrome, Edge and Samsung Internet on Android. Safari and Firefox do not support it; iPhone shows the code as a keyboard suggestion instead."
+  },
+  "story": {
+    "what_it_is": "A page can read the six digit code from a text message so you do not have to type it.",
+    "icon": "message-square-text",
+    "tags": [
+      "SMS codes",
+      "Asks first",
+      "Convenience"
+    ],
+    "marketing": [
+      {
+        "vendor": "Google Chrome",
+        "name": "WebOTP API",
+        "pitch": "Automatically fills the verification code from an SMS, so signing in on the web is faster.",
+        "url": "https://web.dev/articles/web-otp"
+      },
+      {
+        "vendor": "MDN",
+        "name": "WebOTP API",
+        "pitch": "A way for a page to receive a one time password from a text message, with the person's consent.",
+        "url": "https://developer.mozilla.org/en-US/docs/Web/API/WebOTP_API"
+      }
+    ],
+    "for_you": "You get a text with a code. Your browser shows a small box asking if the site may use it. You tap Allow and the code drops into the form, so you skip copying digits.",
+    "for_makers": "Fewer people give up at sign in or payment. The text uses a special format that names the site's own domain, so only that site can read the code. This lifts sign up rates and cuts support calls.",
+    "use_cases": [
+      {
+        "type": "banking",
+        "example": "You log in to a bank's web page, get a text, and the code fills in after one tap.",
+        "apps": []
+      },
+      {
+        "type": "payments",
+        "example": "You pay online and the card bank texts a one time code. A checkout page reads it so you do not leave the page.",
+        "apps": []
+      },
+      {
+        "type": "shopping",
+        "example": "A shopping site sends a code when you create an account. Chrome on Android offers to fill it, so signup takes seconds.",
+        "apps": []
+      },
+      {
+        "type": "rideshare",
+        "example": "You open a ride booking site on your phone and verify your number. The code fills itself, so you get a car faster.",
+        "apps": []
+      },
+      {
+        "type": "social",
+        "example": "A web social app verifies a new phone number during signup without making you leave the browser to read a text.",
+        "apps": []
+      },
+      {
+        "type": "security",
+        "example": "A site uses it to make two step sign in easier, which makes people more willing to turn it on.",
+        "apps": []
+      },
+      {
+        "type": "games",
+        "example": "A browser game with phone login lets you verify your number and get back to playing in one tap.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Texts can be hijacked by SIM swap",
+      "Only some browsers support it"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "SMS must contain a bound domain line",
+    "Only the first matching message",
+    "No desktop SMS without paired Android"
+  ],
+  "scores": {
+    "sensitivity": 4,
+    "utility": 3,
+    "fingerprint_bits": null,
+    "friction": 2
+  },
+  "value": {
+    "legit_uses": [
+      "2FA fill"
+    ],
+    "abuse": [
+      "Phishing sites without matched domain fail"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2020-12",
+      "browser": "chrome_android",
+      "version": "84",
+      "change": "WebOTP ships on Chrome Android"
+    },
+    {
+      "date": "2021-08",
+      "browser": "chrome",
+      "version": "93",
+      "change": "Desktop Chrome with Android phone as sync source"
+    },
+    {
+      "date": "2026-09",
+      "browser": "safari",
+      "version": "27",
+      "change": "Safari 27 adds an otp_option member only"
+    }
+  ],
+  "refs": [
+    {
+      "t": "mdn",
+      "label": "MDN WebOTP API",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/WebOTP_API"
+    },
+    {
+      "t": "spec",
+      "label": "WebOTP",
+      "url": "https://wicg.github.io/web-otp/"
+    }
+  ],
+  "confidence": "verified"
+}

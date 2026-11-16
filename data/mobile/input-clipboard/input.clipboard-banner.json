@@ -1,0 +1,199 @@
+{
+  "id": "mob.input.clipboard-banner",
+  "name": "Clipboard access banner",
+  "kind": "signal",
+  "group": "input-clipboard",
+  "subgroup": "Clipboard",
+  "tags": [
+    "clipboard",
+    "notice",
+    "transparency"
+  ],
+  "plain": "A banner or toast tells the person that an app read the clipboard.",
+  "meaning": "Transparency tool. Not a gate, but caught many apps reading on launch.",
+  "lifecycle": [
+    "in-session"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "y",
+      "v": "12",
+      "api": 31,
+      "permission": "None",
+      "protection": "none",
+      "grant": "none",
+      "prompt_ui": "Toast Pasted from clipboard",
+      "persistence": "n/a",
+      "revocation": "n/a",
+      "store_policy": "",
+      "api_surface": "ClipboardManager",
+      "note": "Toast shown once per app read"
+    },
+    "ios": {
+      "s": "y",
+      "v": "14",
+      "permission": "None",
+      "protection": "none",
+      "grant": "none",
+      "prompt_ui": "Pasted from App banner at top",
+      "persistence": "n/a",
+      "revocation": "n/a",
+      "store_policy": "",
+      "api_surface": "UIPasteboard",
+      "note": "Banner shows source app name; replaced by prompt from iOS 16"
+    }
+  },
+  "data": {
+    "type": "event",
+    "metric": "Banner event",
+    "update": "per read",
+    "fields": [
+      {
+        "name": "shown",
+        "type": "boolean",
+        "unit": "",
+        "range": "true",
+        "precision": ""
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can't hide a clipboard check, because you see a banner or toast when an app looks",
+    "user_action": "Nothing. The notice appears when an app looks at what you copied",
+    "can": [
+      "Show you a small notice when an app looks at your clipboard",
+      "Show the source app name on iPhone in older versions",
+      "Let you notice an app that checks the clipboard on every launch"
+    ],
+    "cannot": [
+      "Look at your clipboard in secret while the app is in front on Android 12 and newer",
+      "Look at your clipboard in secret on iPhone with iOS 14 and newer; you see a banner or prompt",
+      "Block the app by itself; the notice only warns you"
+    ],
+    "reach": 1,
+    "reach_label": "A warning, not a block",
+    "differs": "Android shows a toast when an app looks. iPhone showed a banner in iOS 14 and replaced it with a prompt in iOS 16."
+  },
+  "story": {
+    "what_it_is": "Your phone shows a short message when an app has read what you copied.",
+    "icon": "bell-ring",
+    "tags": [
+      "Clipboard",
+      "Transparency",
+      "Privacy"
+    ],
+    "marketing": [
+      {
+        "vendor": "Apple",
+        "name": "Paste notification",
+        "pitch": "iOS tells you when an app has pasted from another app, so you see who touches your clipboard.",
+        "url": "https://developer.apple.com/documentation/uikit/uipasteboard"
+      },
+      {
+        "vendor": "Google",
+        "name": "Clipboard access toast",
+        "pitch": "Android 12 and later show a small message when an app reads from the clipboard.",
+        "url": "https://developer.android.com/develop/ui/views/touch-and-input/copy-paste"
+      }
+    ],
+    "for_you": "You see a small banner or toast that says 'App pasted from Other App' or similar. It appears right when it happens, so a quiet read is no longer secret. You decide whether to trust that app.",
+    "for_makers": "Makers must now explain why they read your clipboard, since the banner is public. It scared away many sneaky reads. A well timed read after a button tap feels normal, one on launch looks suspicious.",
+    "use_cases": [
+      {
+        "type": "messaging",
+        "example": "A chat app reads a copied link only after you press paste, so no banner scares you.",
+        "apps": [
+          "Slack"
+        ]
+      },
+      {
+        "type": "games",
+        "example": "A game that reads copied text on every launch triggers a banner and loses trust.",
+        "apps": []
+      },
+      {
+        "type": "shopping",
+        "example": "A shopping app that peeks at copied text on launch would trigger a banner, so careful ones wait until you tap paste.",
+        "apps": []
+      },
+      {
+        "type": "news",
+        "example": "News apps were shown reading the clipboard on launch when the banner first appeared in 2020.",
+        "apps": [
+          "LinkedIn",
+          "TikTok"
+        ]
+      },
+      {
+        "type": "security",
+        "example": "A security tool lists which apps read your clipboard, so you can spot odd behavior.",
+        "apps": []
+      },
+      {
+        "type": "developer",
+        "example": "A developer uses the paste button instead, which needs no banner and no permission.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Banner can be missed",
+      "Does not stop the read"
+    ],
+    "android_note": "Android shows a toast on read, but it does not ask beforehand.",
+    "ios_note": "iPhone shows a banner after the paste and also gates it with an Allow Paste prompt."
+  },
+  "technical_bounds": [
+    "Informative only"
+  ],
+  "scores": {
+    "sensitivity": 2,
+    "utility": 1,
+    "fingerprint_bits": null,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Transparency"
+    ],
+    "abuse": [
+      "None"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2020-09",
+      "platform": "ios",
+      "version": "iOS 14",
+      "change": "Banner introduced"
+    },
+    {
+      "date": "2021-10",
+      "platform": "android",
+      "version": "12 (API 31)",
+      "change": "Toast introduced"
+    }
+  ],
+  "related": [
+    "mob.input.paste-prompt"
+  ],
+  "refs": [
+    {
+      "t": "apple",
+      "label": "Apple: UIPasteboard",
+      "url": "https://developer.apple.com/documentation/uikit/uipasteboard"
+    },
+    {
+      "t": "android",
+      "label": "Android: Clipboard access notice",
+      "url": "https://developer.android.com/about/versions/12/behavior-changes-all#clipboard-access-notification"
+    }
+  ],
+  "confidence": "docs"
+}

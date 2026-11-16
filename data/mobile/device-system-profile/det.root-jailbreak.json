@@ -1,0 +1,190 @@
+{
+  "id": "mob.det.root-jailbreak",
+  "name": "Root and jailbreak detection",
+  "kind": "signal",
+  "group": "device-system-profile",
+  "subgroup": "Integrity",
+  "tags": [
+    "root",
+    "jailbreak",
+    "integrity"
+  ],
+  "plain": "Apps infer root or jailbreak from files, props and attestation; neither OS gives a direct flag.",
+  "meaning": "Rooted or jailbroken phones weaken the sandbox. Banking and game apps lock them out; privacy tool users get caught as false positives.",
+  "lifecycle": [
+    "on-launch",
+    "in-session"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "p",
+      "v": "1.0",
+      "api": 1,
+      "permission": "",
+      "protection": "none",
+      "grant": "none",
+      "prompt_ui": "",
+      "persistence": "",
+      "revocation": "",
+      "store_policy": "",
+      "api_surface": "File checks for su, Build.TAGS test-keys, Play Integrity verdicts",
+      "note": "Checks are heuristic and evadable (Magisk hides)"
+    },
+    "ios": {
+      "s": "p",
+      "v": "2.0",
+      "permission": "none",
+      "protection": "none",
+      "grant": "none",
+      "prompt_ui": "",
+      "persistence": "",
+      "revocation": "",
+      "store_policy": "",
+      "api_surface": "Heuristic and evadable",
+      "note": ""
+    }
+  },
+  "web_equivalents": [
+    "web.device.webdriver-flag"
+  ],
+  "data": {
+    "type": "boolean",
+    "metric": "Rooted flag",
+    "update": "On check",
+    "fields": [
+      {
+        "name": "rooted",
+        "type": "boolean",
+        "unit": "",
+        "range": "true, false",
+        "precision": "1 bit"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can guess if your phone is rooted or jailbroken, but cannot be sure",
+    "user_action": "Nothing. The app checks when it opens, or when you sign in or pay",
+    "can": [
+      "Look for files and tools that rooted or jailbroken phones often have",
+      "Check Android build tags and Play Integrity results",
+      "Block or limit the app if it decides your phone is modified"
+    ],
+    "cannot": [
+      "Get a direct yes or no; neither system gives a flag",
+      "Catch phones that hide the change, such as Magisk on Android",
+      "Catch every modified phone; the checks can be evaded",
+      "See what else you changed on the phone"
+    ],
+    "reach": 1,
+    "reach_label": "A quick check at one moment",
+    "differs": "Android adds Play Integrity verdicts from Google. iPhone apps use guesses only."
+  },
+  "story": {
+    "what_it_is": "Apps look for signs that a phone has been unlocked at a deep level.",
+    "icon": "lock-open",
+    "tags": [
+      "Security",
+      "Silent",
+      "Banking"
+    ],
+    "marketing": [
+      {
+        "vendor": "Google",
+        "name": "Play Integrity API",
+        "pitch": "Developer pitch: check that your app runs on a genuine, unmodified Android device from Google Play.",
+        "url": "https://developer.android.com/google/play/integrity"
+      },
+      {
+        "vendor": "Apple",
+        "name": "App Attest",
+        "pitch": "Developer pitch: confirm requests come from a real, unmodified copy of your app on an Apple device.",
+        "url": "https://developer.apple.com/documentation/devicecheck/establishing-your-app-s-integrity"
+      }
+    ],
+    "for_you": "You never see the check. If your phone is rooted or jailbroken, banking and game apps may refuse to open. The reason is safety, but privacy tool users can get blocked by mistake.",
+    "for_makers": "A modified phone can fake taps, hide malware and steal logins. Makers use it to protect money and fair play. Neither phone gives a direct flag, so apps guess from files and cloud attestation.",
+    "use_cases": [
+      {
+        "type": "banking",
+        "example": "A bank app locks you out on a rooted phone to stop malware from reading the screen.",
+        "apps": []
+      },
+      {
+        "type": "games",
+        "example": "A shooter game bans players on jailbroken phones using speed and aim cheats.",
+        "apps": []
+      },
+      {
+        "type": "payments",
+        "example": "A tap to pay wallet refuses to work on a rooted phone.",
+        "apps": [
+          "Google Wallet"
+        ]
+      },
+      {
+        "type": "media",
+        "example": "A streaming app lowers video quality to standard on a rooted phone to protect licences.",
+        "apps": [
+          "Netflix"
+        ]
+      },
+      {
+        "type": "enterprise",
+        "example": "A work app blocks company mail on a jailbroken phone.",
+        "apps": []
+      },
+      {
+        "type": "security",
+        "example": "A fraud tool raises the risk score of any login from a modified device.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Blocks privacy tool users",
+      "Can be fooled"
+    ],
+    "android_note": "Apps use Play Integrity verdicts, and rooted phones often fail them.",
+    "ios_note": "App Attest and file checks, but Apple gives no direct jailbreak flag."
+  },
+  "technical_bounds": [
+    "Heuristic only"
+  ],
+  "scores": {
+    "sensitivity": 2,
+    "utility": 3,
+    "fingerprint_bits": 2,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Fraud prevention"
+    ],
+    "abuse": [
+      "Lock out power users"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "related": [
+    "mob.id.play-integrity",
+    "mob.id.app-attest"
+  ],
+  "refs": [
+    {
+      "t": "android",
+      "label": "Play Integrity API overview",
+      "url": "https://developer.android.com/google/play/integrity/overview"
+    },
+    {
+      "t": "apple",
+      "label": "Apple: Establishing your app's integrity (App Attest)",
+      "url": "https://developer.apple.com/documentation/devicecheck/establishing-your-app-s-integrity"
+    }
+  ],
+  "confidence": "inferred"
+}

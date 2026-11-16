@@ -1,0 +1,217 @@
+{
+  "id": "web.display.document-pip",
+  "name": "Document Picture-in-Picture",
+  "kind": "action",
+  "group": "display-window",
+  "subgroup": "Windows",
+  "tags": [
+    "floating-window"
+  ],
+  "plain": "Opens a small always-on-top window containing any HTML.",
+  "meaning": "Floats custom page content above other windows (video call controls, timers). A page can keep a floating surface visible while you work elsewhere, so it can also be abused for fake UI.",
+  "lifecycle": [
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "documentPictureInPicture.requestWindow({width,height}); window.documentPictureInPicture.window",
+      "permissions_policy": "picture-in-picture",
+      "bcd": [
+        "api.DocumentPictureInPicture"
+      ],
+      "access": {
+        "grant": "gesture",
+        "prompt_ui": "No prompt; needs a gesture. The floating window shows the origin and is closable.",
+        "secure_context": true,
+        "user_gesture": true,
+        "persistence": "Until closed",
+        "revocation": "Close the window",
+        "iframe": "Needs allow=\"picture-in-picture\"",
+        "steps": [
+          "Click",
+          "documentPictureInPicture.requestWindow()",
+          "Browser opens a floating window",
+          "Move DOM into pipWindow.document"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "116",
+          "note": "",
+          "date": "2023-08-15"
+        },
+        "edge": {
+          "s": "y",
+          "v": "116",
+          "note": "",
+          "date": "2023-08-21"
+        },
+        "firefox": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "safari": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "ios_safari": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "116",
+          "note": "BCD lists no support; agent research says otherwise",
+          "date": "2023-08-15"
+        },
+        "samsung": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "none",
+    "metric": "Floating window handle",
+    "update": "while open",
+    "fields": []
+  },
+  "limits": {
+    "headline": "Can open a small floating window with its own content after you click",
+    "user_action": "You tap a button such as Pop out or Mini player.",
+    "can": [
+      "Open a small always-on-top window with any page content, such as a timer, chat or video controls",
+      "Keep it showing while you use other windows",
+      "Update what it shows as time passes"
+    ],
+    "cannot": [
+      "Open it without a click, tap or keypress",
+      "Hide which site it belongs to, since the window shows the site name",
+      "Stop you from closing it",
+      "Open it on phones or in Firefox and Safari"
+    ],
+    "reach": 2,
+    "reach_label": "Only after you click",
+    "differs": "Chrome and Edge on computers only. Firefox, Safari and phones do not have it."
+  },
+  "story": {
+    "what_it_is": "Opens a small always on top window that can hold any page content, not just video.",
+    "icon": "picture-in-picture-2",
+    "tags": [
+      "Window",
+      "Video calls",
+      "Multitask"
+    ],
+    "marketing": [
+      {
+        "vendor": "Chrome",
+        "name": "Document Picture-in-Picture",
+        "pitch": "Chrome says it lets sites pop out any content into an always on top window, like video calls or timers.",
+        "url": "https://developer.chrome.com/docs/web-platform/document-picture-in-picture"
+      }
+    ],
+    "for_you": "A small window floats above your other apps. It may show a video call, a game, a timer or notes. It stays while you work in another tab.",
+    "for_makers": "It keeps people inside the product when they switch tasks. A video call or a game keeps going on screen. That means longer sessions and fewer missed moments.",
+    "use_cases": [
+      {
+        "type": "video",
+        "example": "A video call keeps the faces and the mute button in a small floating window while you open a spreadsheet.",
+        "apps": [
+          "Google Meet"
+        ]
+      },
+      {
+        "type": "games",
+        "example": "A browser puzzle or trivia game floats the timer and question while you read notes in another tab.",
+        "apps": []
+      },
+      {
+        "type": "live",
+        "example": "A live sports score and chat float over your work so you can follow a match.",
+        "apps": []
+      },
+      {
+        "type": "productivity",
+        "example": "A timer or a notes box floats over every tab while you work.",
+        "apps": []
+      },
+      {
+        "type": "media",
+        "example": "A music site pops out the playlist and controls, not only a video frame.",
+        "apps": []
+      },
+      {
+        "type": "ads",
+        "example": "An ad supported video player keeps a small window open so it keeps getting watch time.",
+        "apps": []
+      },
+      {
+        "type": "education",
+        "example": "A language app keeps flashcards floating beside a lecture video.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Can distract or cover content",
+      "Chromium desktop only"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Chromium desktop only",
+    "One window per tab"
+  ],
+  "scores": {
+    "sensitivity": 2,
+    "utility": 3,
+    "fingerprint_bits": null,
+    "friction": 1
+  },
+  "value": {
+    "legit_uses": [
+      "Video calls",
+      "Notes and timers"
+    ],
+    "abuse": [
+      "Always visible fake prompts"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2023-08",
+      "browser": "chrome",
+      "version": "116",
+      "change": "Document Picture-in-Picture ships"
+    }
+  ],
+  "related": [
+    "web.display.fullscreen"
+  ],
+  "refs": [
+    {
+      "t": "mdn",
+      "label": "MDN Document Picture-in-Picture",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/Document_Picture-in-Picture_API"
+    },
+    {
+      "t": "spec",
+      "label": "WICG Document PiP",
+      "url": "https://wicg.github.io/document-picture-in-picture/"
+    }
+  ],
+  "confidence": "docs"
+}

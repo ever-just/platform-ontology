@@ -1,0 +1,234 @@
+{
+  "id": "web.camera.captured-surface-control",
+  "name": "Captured Surface Control (scroll and zoom the shared tab)",
+  "kind": "permission",
+  "group": "camera-mic-screen",
+  "subgroup": "Capture",
+  "tags": [
+    "capture-controller"
+  ],
+  "plain": "Lets an app scroll and zoom the tab it is capturing.",
+  "meaning": "Gives a meeting app remote scroll and zoom of the person's own shared tab. Needs a separate prompt because it is a control action on top of a view.",
+  "lifecycle": [
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "CaptureController.sendWheel(), setZoomLevel(), getZoomLevel(), oncapturedzoomchange; permission captured-surface-control",
+      "permission_name": "captured-surface-control",
+      "permissions_policy": "captured-surface-control",
+      "bcd": [
+        "api.CaptureController"
+      ],
+      "access": {
+        "grant": "prompt",
+        "prompt_ui": "A permission prompt appears when the controller is first used, only if the captured surface is a same-site tab.",
+        "secure_context": true,
+        "user_gesture": true,
+        "persistence": "Tied to the capture session",
+        "revocation": "Stops with the capture or by revoking in Site settings",
+        "iframe": "Needs captured-surface-control policy for iframes",
+        "steps": [
+          "Pass a CaptureController to getDisplayMedia",
+          "Person picks a tab",
+          "Call sendWheel() or setZoomLevel()",
+          "Browser prompts for control permission"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "109",
+          "note": "",
+          "date": "2023-01-10"
+        },
+        "edge": {
+          "s": "y",
+          "v": "109",
+          "note": "",
+          "date": "2023-01-12"
+        },
+        "firefox": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "safari": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "ios_safari": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "chrome_android": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "samsung": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "event",
+    "metric": "Wheel and zoom control of the captured tab",
+    "update": "on request",
+    "fields": [
+      {
+        "name": "zoom level",
+        "type": "integer",
+        "unit": "percent steps",
+        "range": "25 to 500",
+        "precision": "browser preset steps"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can scroll and zoom the browser tab it is sharing, if from the same site",
+    "user_action": "You share a tab in a presentation or recording tool, then use its scroll or zoom buttons",
+    "can": [
+      "Scroll the shared tab up and down from the controlling app",
+      "Zoom the shared tab in or out",
+      "Check the current zoom level so the controls stay in sync"
+    ],
+    "cannot": [
+      "Control a tab from a different site or a window or screen share",
+      "Do anything before you pick the tab to share",
+      "Click, type or fill forms in the shared tab",
+      "Work in Firefox, Safari, Chrome on Android or iPhone browsers"
+    ],
+    "reach": 1,
+    "reach_label": "One shared tab only",
+    "differs": "Only desktop Chrome and Edge support it."
+  },
+  "story": {
+    "what_it_is": "Lets a meeting app scroll and zoom the tab you are sharing, from inside the call.",
+    "icon": "monitor-up",
+    "tags": [
+      "Screen sharing",
+      "Asks first",
+      "Meetings"
+    ],
+    "marketing": [
+      {
+        "vendor": "Google Chrome",
+        "name": "Captured Surface Control",
+        "pitch": "Chrome describes it as letting a meeting app scroll and zoom the shared tab, so presenters do not switch windows.",
+        "url": "https://developer.chrome.com/docs/web-platform/captured-surface-control"
+      }
+    ],
+    "for_you": "After you share a tab in a call, a second prompt asks if the call site may scroll and zoom that tab. If you allow it, a slide may advance when someone presses a button in the call window, with no tab switch.",
+    "for_makers": "Call sites want presenters and remote helpers to flip slides or zoom a doc from inside the meeting view. It makes a web meeting feel closer to a real room. It is a feature meeting makers can brag about over rivals.",
+    "use_cases": [
+      {
+        "type": "video",
+        "example": "In a Google Meet call, you share a slides tab and move to the next slide from the Meet window without clicking back and forth.",
+        "apps": [
+          "Google Meet",
+          "Google Slides"
+        ]
+      },
+      {
+        "type": "education",
+        "example": "A teacher shares a worksheet tab and a helper student scrolls to the next question in the call view during a remote lesson.",
+        "apps": [
+          "Google Classroom",
+          "Zoom web"
+        ]
+      },
+      {
+        "type": "enterprise",
+        "example": "A sales rep shares a product demo tab, and a colleague on the call zooms in on a chart when asked, with the rep's approval.",
+        "apps": [
+          "Microsoft Teams",
+          "Webex"
+        ]
+      },
+      {
+        "type": "creative",
+        "example": "A designer shares a Figma tab in a review, and the client zooms in on a corner of the design to point out an issue.",
+        "apps": [
+          "Figma",
+          "Miro"
+        ]
+      },
+      {
+        "type": "developer",
+        "example": "An engineer shares a dashboard tab, and a teammate scrolls the log view during a live bug hunt.",
+        "apps": [
+          "Grafana",
+          "Datadog"
+        ]
+      },
+      {
+        "type": "accessibility",
+        "example": "A low vision participant zooms in on the shared tab to read small text without asking the presenter to change anything.",
+        "apps": [
+          "Google Meet"
+        ]
+      }
+    ],
+    "risks": [
+      "Remote control of what is on your screen",
+      "Easy to approve without noticing"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Only for tab capture of a same-origin or permitted document",
+    "No pointer clicks or keyboard injection"
+  ],
+  "scores": {
+    "sensitivity": 3,
+    "utility": 2,
+    "fingerprint_bits": null,
+    "friction": 2
+  },
+  "value": {
+    "legit_uses": [
+      "Presenting slides from a separate control window"
+    ],
+    "abuse": [
+      "Scroll-jacking a shared tab if over-trusted"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2025-04",
+      "browser": "chrome",
+      "version": "136",
+      "change": "Captured Surface Control ships"
+    }
+  ],
+  "related": [
+    "web.camera.display-capture"
+  ],
+  "refs": [
+    {
+      "t": "chromestatus",
+      "label": "Chrome: Captured Surface Control",
+      "url": "https://developer.chrome.com/docs/web-platform/captured-surface-control"
+    },
+    {
+      "t": "spec",
+      "label": "W3C Captured Surface Control",
+      "url": "https://w3c.github.io/mediacapture-surface-control/"
+    }
+  ],
+  "confidence": "docs"
+}

@@ -1,0 +1,207 @@
+{
+  "id": "web.display.color-depth",
+  "name": "Color and pixel depth",
+  "kind": "signal",
+  "group": "display-window",
+  "subgroup": "Screen",
+  "tags": [
+    "screen",
+    "colorDepth"
+  ],
+  "plain": "Bits per pixel the screen reports; almost always 24.",
+  "meaning": "Reported colorDepth is 24 on nearly everything (30 on some wide-gamut Safari setups, 16 or 32 rarely). Low entropy but included in every library.",
+  "lifecycle": [
+    "on-arrival",
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "screen.colorDepth, screen.pixelDepth",
+      "bcd": [
+        "api.Screen.colorDepth"
+      ],
+      "access": {
+        "grant": "none",
+        "prompt_ui": "None",
+        "secure_context": false,
+        "user_gesture": false,
+        "persistence": "read fresh on every page load; nothing stored",
+        "revocation": "none needed (no grant)",
+        "iframe": "Readable from cross-origin iframes too (same values)",
+        "steps": [
+          "Page script reads the value",
+          "No prompt is shown"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "1",
+          "note": "",
+          "date": "2008-12-11"
+        },
+        "edge": {
+          "s": "y",
+          "v": "12",
+          "note": "",
+          "date": "2015-07-29"
+        },
+        "firefox": {
+          "s": "y",
+          "v": "1",
+          "note": "",
+          "date": "2004-11-09"
+        },
+        "safari": {
+          "s": "y",
+          "v": "1",
+          "note": "",
+          "date": "2003-06-23"
+        },
+        "ios_safari": {
+          "s": "y",
+          "v": "1",
+          "note": "",
+          "date": "2007-06-29"
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "18",
+          "note": "",
+          "date": "2012-06-27"
+        },
+        "samsung": {
+          "s": "y",
+          "v": "1.0",
+          "note": "",
+          "date": "2013-04-27"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "object",
+    "metric": "",
+    "update": "static per session",
+    "fields": [
+      {
+        "name": "colorDepth, pixelDepth",
+        "type": "integer",
+        "unit": "bits",
+        "range": "16, 24, 30, 32; 24 on over 95% of browsers",
+        "precision": ""
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can see how many colors your screen reports, almost always 24 bit",
+    "user_action": "Nothing. It happens when the page loads.",
+    "can": [
+      "Check the color depth number your screen reports",
+      "Pick image or video quality to match",
+      "Add the number to a browser fingerprint"
+    ],
+    "cannot": [
+      "Tell which monitor model you have",
+      "See your color profile or calibration",
+      "Learn much that is unique, since nearly every screen says 24"
+    ],
+    "reach": 1,
+    "reach_label": "One number, no prompt",
+    "differs": ""
+  },
+  "story": {
+    "what_it_is": "How many bits of color each screen pixel uses. It is almost always 24.",
+    "icon": "palette",
+    "tags": [
+      "Display",
+      "Silent",
+      "Fingerprint"
+    ],
+    "marketing": [
+      {
+        "vendor": "MDN",
+        "name": "Screen.colorDepth",
+        "pitch": "Documents a read only value that reports the number of bits used to show one color on the screen.",
+        "url": "https://developer.mozilla.org/en-US/docs/Web/API/Screen/colorDepth"
+      }
+    ],
+    "for_you": "You never see this. The page just reads a number from your screen. On almost every device it says 24, so it changes nothing for you.",
+    "for_makers": "Because nearly everyone reports 24, the value tells a site very little. Makers still read it to pick image formats. Fraud teams use odd values to spot fake browsers.",
+    "use_cases": [
+      {
+        "type": "games",
+        "example": "A WebGL game picks the texture setup that fits the screen so colors in fog and fire do not band.",
+        "apps": []
+      },
+      {
+        "type": "analytics",
+        "example": "A dashboard counts how many visitors have unusual displays so designers know what to test.",
+        "apps": []
+      },
+      {
+        "type": "security",
+        "example": "A fraud service sees a browser that claims a depth no real screen reports and flags it as a possible bot.",
+        "apps": []
+      },
+      {
+        "type": "creative",
+        "example": "A photo editor in the browser warns that the screen cannot show all the colors of a file.",
+        "apps": []
+      },
+      {
+        "type": "ads",
+        "example": "An ad network adds the number to a device profile as one small clue among many.",
+        "apps": []
+      },
+      {
+        "type": "video",
+        "example": "A video player decides whether to offer richer color streams.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Tiny fingerprint clue",
+      "Rarely useful"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Spec says return 24"
+  ],
+  "scores": {
+    "sensitivity": 1,
+    "utility": 1,
+    "fingerprint_bits": 0.5,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Legacy"
+    ],
+    "abuse": [
+      "Fingerprint bits"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": true,
+      "how": "Collected as color depth and pixel depth. Read by the LinkedIn APFC fingerprint script (alleged by BrowserGate, partly confirmed by BleepingComputer)."
+    }
+  },
+  "refs": [
+    {
+      "t": "github",
+      "label": "fingerprintjs source: color_depth",
+      "url": "https://github.com/fingerprintjs/fingerprintjs/blob/master/src/sources/color_depth.ts"
+    },
+    {
+      "t": "mdn",
+      "label": "MDN colorDepth",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/Screen/colorDepth"
+    }
+  ],
+  "confidence": "docs"
+}

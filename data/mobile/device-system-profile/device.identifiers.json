@@ -1,0 +1,214 @@
+{
+  "id": "mob.device.identifiers",
+  "name": "App and device identifiers",
+  "kind": "signal",
+  "group": "device-system-profile",
+  "subgroup": "Identifiers",
+  "tags": [
+    "no-prompt",
+    "per-app",
+    "after-uninstall"
+  ],
+  "plain": "IDs the OS gives an app to recognize an install or a vendor's apps.",
+  "meaning": "Lets a company recognize the same install across sessions and link sessions without login. Some survive reinstall (iOS Keychain, backups).",
+  "lifecycle": [
+    "on-launch",
+    "in-session",
+    "after-uninstall"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "y",
+      "v": "8.0",
+      "api": 26,
+      "permission": "",
+      "protection": "none",
+      "grant": "none",
+      "prompt_ui": "No prompt",
+      "persistence": "ANDROID_ID per app signing key; resets on factory reset",
+      "revocation": "Clear data",
+      "store_policy": "Play: Device ID policy",
+      "api_surface": "Settings.Secure.ANDROID_ID, FirebaseInstallations",
+      "note": ""
+    },
+    "ios": {
+      "s": "y",
+      "v": "6",
+      "permission": "",
+      "protection": "none",
+      "grant": "none",
+      "prompt_ui": "No prompt",
+      "persistence": "IDFV persists across apps of one vendor; resets when all vendor apps are removed",
+      "revocation": "Reinstall all vendor apps",
+      "store_policy": "App Review 5.1.2",
+      "api_surface": "UIDevice.identifierForVendor, Keychain",
+      "note": ""
+    }
+  },
+  "web_equivalents": [
+    "web.storage.cookies-first-party"
+  ],
+  "data": {
+    "type": "string",
+    "metric": "Identifier",
+    "update": "stable",
+    "fields": [
+      {
+        "name": "id",
+        "type": "string",
+        "unit": "64 or 128 bit",
+        "range": "n/a",
+        "precision": "n/a"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can use IDs your phone gives it to recognize this install or the developer's apps",
+    "user_action": "Nothing. The app can get them as soon as it opens",
+    "can": [
+      "Use Android ID to recognize you across the same developer's apps",
+      "Use the iPhone vendor ID to recognize you across the same developer's apps",
+      "Use a Firebase install ID to tell one install from another",
+      "Save an ID in the iPhone Keychain so it can stay after a reinstall"
+    ],
+    "cannot": [
+      "Match you across different developers with these IDs",
+      "Show your name or phone number",
+      "Stay the same after a factory reset on Android",
+      "Be turned off with a prompt; the person can only reset or delete apps"
+    ],
+    "reach": 3,
+    "reach_label": "One developer, ongoing",
+    "differs": "Android ID and iPhone vendor ID work the same way but have different reset rules."
+  },
+  "story": {
+    "what_it_is": "IDs the phone gives an app so it can recognize an install or a company's apps.",
+    "icon": "id-card",
+    "tags": [
+      "Silent",
+      "Tracking",
+      "Device"
+    ],
+    "marketing": [
+      {
+        "vendor": "Google",
+        "name": "User data IDs",
+        "pitch": "Developer guide: Android's guidance on which IDs to use, which reset, and which need consent.",
+        "url": "https://developer.android.com/training/articles/user-data-ids"
+      },
+      {
+        "vendor": "Apple",
+        "name": "identifierForVendor",
+        "pitch": "Developer guide: an ID shared by one vendor's apps on a device, reset when they are all deleted.",
+        "url": "https://developer.apple.com/documentation/uikit/uidevice/identifierforvendor"
+      }
+    ],
+    "for_you": "You never see them. They quietly let an app know it is the same phone as yesterday. Some reset when you reinstall, some are shared across one company's apps, and some are hidden if you refuse tracking.",
+    "for_makers": "Makers need an ID to save progress, count users and fight fraud. Ad firms want a stable ID to link activity. The phone makers now limit which IDs apps can read and when.",
+    "use_cases": [
+      {
+        "type": "games",
+        "example": "A game saves your progress against an install ID so a quick restart does not lose your level.",
+        "apps": []
+      },
+      {
+        "type": "ads",
+        "example": "An ad network counts how many different phones saw an ad, so one person is not counted ten times.",
+        "apps": []
+      },
+      {
+        "type": "analytics",
+        "example": "A product team counts daily users and joins crash logs to one install without asking for a login.",
+        "apps": []
+      },
+      {
+        "type": "security",
+        "example": "A bank links a new login to a device ID it has seen before and skips extra checks.",
+        "apps": []
+      },
+      {
+        "type": "shopping",
+        "example": "A store gives a welcome coupon once per install ID.",
+        "apps": []
+      },
+      {
+        "type": "messaging",
+        "example": "A chat app uses an install ID as the address for push notifications.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Lets apps recognize you silently",
+      "Some IDs outlive a reinstall"
+    ],
+    "android_note": "Includes the resettable ad ID, the per signing key Android ID and app set IDs.",
+    "ios_note": "Includes the vendor ID and the ad ID, which needs your tracking permission."
+  },
+  "technical_bounds": [
+    "Hardware IDs are not available to normal apps"
+  ],
+  "scores": {
+    "sensitivity": 3,
+    "utility": 4,
+    "fingerprint_bits": 20,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Session continuity",
+      "Fraud checks"
+    ],
+    "abuse": [
+      "Cross-app linkage"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": true,
+      "how": "Policy 1.5: LinkedIn receives a device identifier and features. Play Data safety lists Device or other IDs; Apple label lists Device ID and User ID as Linked to You."
+    }
+  },
+  "history": [
+    {
+      "date": "2017-08",
+      "platform": "android",
+      "version": "8.0 (API 26)",
+      "change": "ANDROID_ID scoped per app signing key"
+    },
+    {
+      "date": "2013-09",
+      "platform": "ios",
+      "version": "iOS 7",
+      "change": "UDID and MAC address blocked; IDFV introduced"
+    }
+  ],
+  "related": [
+    "mob.ads.aaid",
+    "mob.ads.idfa",
+    "mob.nx.imei-serial"
+  ],
+  "refs": [
+    {
+      "t": "android",
+      "label": "Android: Best practices for unique identifiers",
+      "url": "https://developer.android.com/identity/user-data-ids"
+    },
+    {
+      "t": "apple",
+      "label": "Apple: identifierForVendor",
+      "url": "https://developer.apple.com/documentation/uikit/uidevice/1620059-identifierforvendor"
+    },
+    {
+      "t": "policy",
+      "label": "LinkedIn Privacy Policy (effective 3 Nov 2025)",
+      "url": "https://www.linkedin.com/legal/privacy-policy"
+    },
+    {
+      "t": "vendor",
+      "label": "App Store listing and App Privacy label, LinkedIn (id288429040)",
+      "url": "https://apps.apple.com/us/app/linkedin-professional-network/id288429040"
+    }
+  ],
+  "confidence": "verified"
+}

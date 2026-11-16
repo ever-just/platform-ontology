@@ -1,0 +1,217 @@
+{
+  "id": "web.peripherals.not-exposed-camera-roll",
+  "name": "Bulk photo library and file system",
+  "kind": "not-exposed",
+  "group": "peripherals-hardware",
+  "subgroup": "Not exposed",
+  "tags": [
+    "not exposed"
+  ],
+  "plain": "A site cannot browse your photo library or disk by itself.",
+  "meaning": "Only files the person picks (or a folder they grant) are visible. No silent photo, music or Downloads scan.",
+  "lifecycle": [
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "<input type=file>, showOpenFilePicker(), showDirectoryPicker()",
+      "bcd": [
+        "api.Window.showOpenFilePicker"
+      ],
+      "access": {
+        "grant": "not-exposed",
+        "prompt_ui": "File chooser or folder grant required each time",
+        "secure_context": true,
+        "user_gesture": false,
+        "persistence": "Per origin",
+        "revocation": "Site settings",
+        "iframe": "Same as top level; cross-origin iframes need a permissions policy where listed",
+        "steps": [
+          "Call the API",
+          "Browser applies its access rules",
+          "Page receives the result"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "n",
+          "v": "",
+          "note": "Only via pickers"
+        },
+        "edge": {
+          "s": "n",
+          "v": "",
+          "note": "Only via pickers"
+        },
+        "firefox": {
+          "s": "n",
+          "v": "",
+          "note": "Only via pickers"
+        },
+        "safari": {
+          "s": "n",
+          "v": "",
+          "note": "Only via pickers"
+        },
+        "ios_safari": {
+          "s": "n",
+          "v": "",
+          "note": "Only via pickers"
+        },
+        "chrome_android": {
+          "s": "n",
+          "v": "",
+          "note": "Only via pickers"
+        },
+        "samsung": {
+          "s": "n",
+          "v": "",
+          "note": "Only via pickers"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "object",
+    "metric": "A site cannot browse your photo library or disk by itself.",
+    "update": "on demand",
+    "fields": [
+      {
+        "name": "picked File",
+        "type": "object",
+        "unit": "bytes",
+        "range": "user selected only"
+      },
+      {
+        "name": "directory handle",
+        "type": "object",
+        "range": "one folder tree after Allow"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can't browse your whole photo library or your files on its own",
+    "user_action": "You tap Upload and pick files or a folder yourself each time.",
+    "can": [
+      "Open the files you pick in a file chooser",
+      "Open a folder you pick, in browsers that allow it",
+      "Remember a folder you pick for later in some browsers, if you grant it again"
+    ],
+    "cannot": [
+      "See your photo library or your files without you picking them",
+      "Browse folders or look at file names you did not choose",
+      "Keep access after you close the page in most cases",
+      "Pick files on your behalf without the file chooser"
+    ],
+    "reach": 1,
+    "reach_label": "Only what you pick, each time",
+    "differs": ""
+  },
+  "story": {
+    "what_it_is": "A site cannot browse your photos or files by itself.",
+    "icon": "folder-lock",
+    "tags": [
+      "Not allowed",
+      "Safe by design",
+      "Files"
+    ],
+    "marketing": [],
+    "for_you": "You choose which photo or file to upload. The site sees only what you pick, nothing else on your device.",
+    "for_makers": "Apps wanted to scan whole photo libraries to find faces or sort things and to build profiles. Instead they use a file picker that shows one thing at a time, or ask for one folder.",
+    "use_cases": [
+      {
+        "type": "social",
+        "example": "A photo app wants to scan all your pictures for faces. Instead you pick one image to post.",
+        "apps": [
+          "Instagram web"
+        ]
+      },
+      {
+        "type": "shopping",
+        "example": "A resale site wants to see your gallery. Instead you pick up to ten photos of an item.",
+        "apps": [
+          "Depop",
+          "Etsy"
+        ]
+      },
+      {
+        "type": "productivity",
+        "example": "A cloud drive wants your whole folder. It asks you to choose one folder to sync.",
+        "apps": [
+          "Google Drive",
+          "Dropbox"
+        ]
+      },
+      {
+        "type": "creative",
+        "example": "An editor wants your whole library, but you open each project file by hand.",
+        "apps": [
+          "Photopea"
+        ]
+      },
+      {
+        "type": "security",
+        "example": "Malware wants to scan your documents. The browser will not let a page read files you did not pick.",
+        "apps": []
+      },
+      {
+        "type": "kids",
+        "example": "A school portal asks a child to pick one picture, never the whole camera roll.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Social engineering",
+      "Picking the wrong file"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "No enumeration of photos, contacts, messages or system folders",
+    "Folder grants exclude system folders such as Downloads root and home",
+    "iOS gives only the picker's selected photos"
+  ],
+  "scores": {
+    "sensitivity": 3,
+    "utility": 3,
+    "fingerprint_bits": null,
+    "friction": 2
+  },
+  "value": {
+    "legit_uses": [
+      "Upload flows"
+    ],
+    "abuse": [
+      "Social engineering to pick sensitive files"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2020",
+      "browser": "chrome",
+      "version": "86",
+      "change": "File System Access API (desktop Chrome)"
+    }
+  ],
+  "refs": [
+    {
+      "t": "mdn",
+      "label": "MDN File System Access",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/File_System_API"
+    },
+    {
+      "t": "spec",
+      "label": "File System Access",
+      "url": "https://wicg.github.io/file-system-access/"
+    }
+  ],
+  "confidence": "docs"
+}

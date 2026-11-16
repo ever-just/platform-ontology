@@ -1,0 +1,202 @@
+{
+  "id": "mob.ads.google-ads-app-measurement",
+  "name": "Google Ads app campaign measurement",
+  "kind": "tracking",
+  "group": "attribution-ads",
+  "subgroup": "Google attribution",
+  "tags": [
+    "google-ads",
+    "firebase",
+    "app-campaigns",
+    "play-services"
+  ],
+  "plain": "Google Play services and the Firebase SDK report installs and in-app events straight to Google Ads.",
+  "meaning": "Google already knows the click, the install and the account. The SDK adds in-app events, closing the loop with no third-party MMP.",
+  "lifecycle": [
+    "before-install",
+    "on-launch",
+    "in-session"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "y",
+      "v": "",
+      "permission": "AD_ID for ID use",
+      "protection": "none",
+      "grant": "none",
+      "prompt_ui": "",
+      "persistence": "",
+      "revocation": "",
+      "store_policy": "Data safety must mention ad ID, app activity; consent mode in EEA",
+      "api_surface": "Firebase Analytics, Google Ads conversion linking, Play services",
+      "note": "Uses Play Install Referrer and AAID on Android, SKAN and IDFA (if allowed) on iOS."
+    },
+    "ios": {
+      "s": "y",
+      "v": "",
+      "permission": "NSUserTrackingUsageDescription for IDFA use",
+      "protection": "prompt",
+      "grant": "prompt",
+      "prompt_ui": "",
+      "persistence": "",
+      "revocation": "",
+      "store_policy": "ATT; privacy manifest for Google SDKs",
+      "api_surface": "Firebase Analytics, SKAdNetwork",
+      "note": "iOS conversion modeling and SKAN conversion value mapping inside Google Ads."
+    }
+  },
+  "web_equivalents": [
+    "web.xsite.ad-click-ids"
+  ],
+  "data": {
+    "type": "object",
+    "metric": "Conversion events and ID",
+    "update": "continuous",
+    "fields": [
+      {
+        "name": "gclid / gbraid / wbraid",
+        "type": "string",
+        "unit": "",
+        "range": "click IDs for web and app flows",
+        "precision": ""
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can tell Google Ads about your installs and in app actions",
+    "user_action": "You tap a Google ad, install the app, then use it",
+    "can": [
+      "Tell Google an ad led to an install, using the Play install referrer",
+      "Report in app purchases and events back to Google Ads",
+      "Use the Android ad ID, or the IDFA only if you allow it on iPhone"
+    ],
+    "cannot": [
+      "Send the IDFA on iPhone after you tap Ask App Not to Track",
+      "Send data you did not generate in the app",
+      "Skip Google's own matching; no outside tool is needed"
+    ],
+    "reach": 3,
+    "reach_label": "Ongoing, linked to Google Ads",
+    "differs": "Android uses the install referrer and ad ID. iPhone uses Apple's delayed reports and the IDFA only if allowed."
+  },
+  "story": {
+    "what_it_is": "Google counts installs and in app actions straight from your phone, to prove its ads worked.",
+    "icon": "target",
+    "tags": [
+      "Ads",
+      "Google",
+      "Measurement"
+    ],
+    "marketing": [
+      {
+        "vendor": "Google",
+        "name": "App campaign conversion tracking",
+        "pitch": "Link Google Ads with Firebase to see which ads lead to installs and in app actions.",
+        "url": "https://support.google.com/google-ads/answer/9888656"
+      }
+    ],
+    "for_you": "You tap an ad on Search or YouTube, install the app and play. Google quietly learns that this ad led to your install and, later, to your first purchase.",
+    "for_makers": "Google already knows the click, the Play install and the account, so the SDK only has to add what happens in the app. That closes the loop with no third party tool, and feeds Google's bidding with real results.",
+    "use_cases": [
+      {
+        "type": "games",
+        "example": "A studio runs an app campaign and sees which ads bring players who spend money in week one.",
+        "apps": [
+          "Clash Royale",
+          "Subway Surfers"
+        ]
+      },
+      {
+        "type": "shopping",
+        "example": "A retailer measures how many YouTube viewers install the app and buy within a day.",
+        "apps": [
+          "Walmart",
+          "Wish"
+        ]
+      },
+      {
+        "type": "rideshare",
+        "example": "A ride app measures first ride completions after an ad install, to set its bids.",
+        "apps": [
+          "Uber",
+          "Lyft"
+        ]
+      },
+      {
+        "type": "banking",
+        "example": "A bank counts approved accounts from ads and bids more for similar people.",
+        "apps": [
+          "Chime"
+        ]
+      },
+      {
+        "type": "ads",
+        "example": "Google's automated bidding learns to show ads to people like past buyers.",
+        "apps": [
+          "Google Ads"
+        ]
+      },
+      {
+        "type": "analytics",
+        "example": "A growth team sends the same events to Firebase and Ads and compares the two reports.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Joins ad click to in app behavior",
+      "Hard to opt out except by device reset"
+    ],
+    "android_note": "Uses the Google advertising ID and the Play install referrer.",
+    "ios_note": "On iOS, Google uses SKAdNetwork and consented IDs because of ATT."
+  },
+  "technical_bounds": [
+    "Needs Firebase link to Google Ads",
+    "Consent signals required in EEA"
+  ],
+  "scores": {
+    "sensitivity": 3,
+    "utility": 4,
+    "fingerprint_bits": null,
+    "friction": 1
+  },
+  "value": {
+    "legit_uses": [
+      "Optimizing app install campaigns"
+    ],
+    "abuse": [
+      "Linking across Google properties"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2024-03",
+      "platform": "android",
+      "version": "Play services",
+      "change": "Consent Mode v2 requirements for EEA ads data (mobile and web)"
+    }
+  ],
+  "related": [
+    "mob.ads.firebase-analytics",
+    "mob.attr.install-referrer"
+  ],
+  "refs": [
+    {
+      "t": "vendor",
+      "label": "Firebase: Google Analytics for Firebase",
+      "url": "https://firebase.google.com/docs/analytics"
+    },
+    {
+      "t": "vendor",
+      "label": "Google: Consent mode on apps",
+      "url": "https://developers.google.com/tag-platform/security/guides/app-consent"
+    }
+  ],
+  "confidence": "docs"
+}

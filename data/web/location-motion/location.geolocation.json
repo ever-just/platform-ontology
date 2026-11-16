@@ -1,0 +1,364 @@
+{
+  "id": "web.location.geolocation",
+  "name": "Geolocation",
+  "kind": "permission",
+  "group": "location-motion",
+  "subgroup": "Position",
+  "tags": [
+    "gps",
+    "precise-location",
+    "approximate-location",
+    "secure-context",
+    "one-time-permission"
+  ],
+  "plain": "Asks the person for their device location, precise or approximate.",
+  "meaning": "Tells the site where the person physically is, down to a few meters outdoors: home, workplace, travel, daily routine. Repeated fixes reveal patterns of life.",
+  "lifecycle": [
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "navigator.geolocation.getCurrentPosition(), watchPosition(), clearWatch(); options enableHighAccuracy, timeout, maximumAge",
+      "permission_name": "geolocation",
+      "permissions_policy": "geolocation",
+      "bcd": [
+        "api.Geolocation",
+        "api.Geolocation.getCurrentPosition",
+        "api.Geolocation.watchPosition",
+        "api.GeolocationCoordinates",
+        "api.GeolocationPositionError"
+      ],
+      "access": {
+        "grant": "prompt",
+        "prompt_ui": "Chrome: bubble with Allow while visiting, Allow this time (Chrome 116), Don't allow. Firefox: Allow or Block with optional Remember. Safari: Allow or Don't Allow. Android 12+: Precise or Approximate choice. OS Location Services must also be on.",
+        "secure_context": true,
+        "user_gesture": false,
+        "persistence": "Chrome and Edge: persistent per origin after Allow; Allow this time ends when the tab closes or is backgrounded. Firefox: permanent only if Remember is ticked. Safari: asks again per visit unless set to Allow.",
+        "revocation": "Padlock and Site settings; Chrome Safety Check auto-resets unused permissions; PermissionStatus 'change' event; turning off OS Location Services blocks all sites.",
+        "iframe": "Cross-origin iframes need allow=\"geolocation\"; the decision is keyed to the top-level origin.",
+        "steps": [
+          "Call getCurrentPosition or watchPosition",
+          "Browser checks Permissions Policy and secure context",
+          "Browser shows prompt unless a decision is stored",
+          "OS provider (GPS, Wi-Fi, cell, IP) returns a fix",
+          "Success callback gets GeolocationPosition, or error callback gets code 1 PERMISSION_DENIED, 2 POSITION_UNAVAILABLE, 3 TIMEOUT"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "5",
+          "note": "",
+          "date": "2010-05-25"
+        },
+        "edge": {
+          "s": "y",
+          "v": "12",
+          "note": "",
+          "date": "2015-07-29"
+        },
+        "firefox": {
+          "s": "y",
+          "v": "3.5",
+          "note": "",
+          "date": "2009-06-30"
+        },
+        "safari": {
+          "s": "y",
+          "v": "5",
+          "note": "",
+          "date": "2010-06-07"
+        },
+        "ios_safari": {
+          "s": "y",
+          "v": "3",
+          "note": "",
+          "date": "2009-06-17"
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "18",
+          "note": "Android 12+ lets the person choose Approximate (about 2 km square) or Precise",
+          "date": "2012-06-27"
+        },
+        "samsung": {
+          "s": "y",
+          "v": "1.0",
+          "note": "",
+          "date": "2013-04-27"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "object",
+    "metric": "Coordinates with accuracy radius and optional speed and heading",
+    "update": "one-shot, or continuous via watchPosition (about 1 update per second on GPS)",
+    "fields": [
+      {
+        "name": "latitude",
+        "type": "float",
+        "unit": "degrees",
+        "range": "-90 to 90",
+        "precision": "about 5 m (GPS) to 5 km (IP fallback)"
+      },
+      {
+        "name": "longitude",
+        "type": "float",
+        "unit": "degrees",
+        "range": "-180 to 180",
+        "precision": "same as latitude"
+      },
+      {
+        "name": "accuracy",
+        "type": "float",
+        "unit": "meters",
+        "range": "0 to unbounded (68% confidence radius)",
+        "precision": "typical 5 to 20 m GPS, 20 to 100 m Wi-Fi, 1 to 5 km cell or IP"
+      },
+      {
+        "name": "altitude",
+        "type": "float or null",
+        "unit": "meters",
+        "range": "about -500 to 9000",
+        "precision": "often null on desktop"
+      },
+      {
+        "name": "heading",
+        "type": "float or null",
+        "unit": "degrees from true north",
+        "range": "0 to 360",
+        "precision": "null when speed is 0"
+      },
+      {
+        "name": "speed",
+        "type": "float or null",
+        "unit": "meters per second",
+        "range": "0 to unbounded",
+        "precision": "0.1 m/s"
+      },
+      {
+        "name": "maximumAge",
+        "type": "option",
+        "unit": "ms",
+        "range": "0 (default) to Infinity",
+        "precision": "cached fix up to this age is accepted"
+      },
+      {
+        "name": "timeout",
+        "type": "option",
+        "unit": "ms",
+        "range": "0 to Infinity (default Infinity)",
+        "precision": "prompt time does not count"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can find where your device is, once or while the page is open",
+    "user_action": "You tap Use my location, Find stores near me or a map button, then choose Allow",
+    "can": [
+      "Find your position, precise or approximate where the device lets you choose",
+      "Check your position again while the page stays open",
+      "Remember your answer if you choose Allow while visiting or Remember"
+    ],
+    "cannot": [
+      "Track you in the background while the page is closed",
+      "Use your location after you pick Don't allow or after one time access ends",
+      "Get a precise spot if you choose approximate on Android 12 or later",
+      "Skip the prompt, which always asks first on a new site"
+    ],
+    "reach": 2,
+    "reach_label": "While the page is open",
+    "differs": "Chrome offers Allow this time. Android 12 and later lets you pick precise or approximate. Safari and Firefox offer Allow or Don't Allow with an optional remember."
+  },
+  "story": {
+    "what_it_is": "A site asks where you physically are.",
+    "icon": "map-pin",
+    "tags": [
+      "Location",
+      "Asks first",
+      "Sensitive"
+    ],
+    "marketing": [
+      {
+        "vendor": "MDN (standards docs)",
+        "name": "Geolocation API",
+        "pitch": "Describes the permission that lets a site ask for your location, with a prompt you can allow or block.",
+        "url": "https://developer.mozilla.org/en-US/docs/Web/API/Geolocation_API"
+      },
+      {
+        "vendor": "web.dev (Google)",
+        "name": "User location",
+        "pitch": "Google teaches developers how to ask for and use a person's location on the web.",
+        "url": "https://web.dev/articles/user-location"
+      }
+    ],
+    "for_you": "A prompt says 'Allow this site to know your location?' You choose Allow once, Allow while using, or Block. If you allow, the site may see you within meters. It can also check again later.",
+    "for_makers": "Location powers maps, nearby results and delivery. It lets makers show local prices, stores and weather. It is also valuable for ads and for proving you are in an allowed place, such as a legal betting region.",
+    "use_cases": [
+      {
+        "type": "maps",
+        "example": "A web map centers on your blue dot and gives directions from where you are.",
+        "apps": [
+          "Google Maps",
+          "Apple Maps web"
+        ]
+      },
+      {
+        "type": "delivery",
+        "example": "A food site shows only restaurants that deliver to your spot.",
+        "apps": [
+          "DoorDash",
+          "Uber Eats"
+        ]
+      },
+      {
+        "type": "games",
+        "example": "A location based web game or geocaching page shows treasures near you.",
+        "apps": [
+          "Geocaching.com"
+        ]
+      },
+      {
+        "type": "games",
+        "example": "A betting or fantasy site checks that you are inside a state where play is legal before it lets you bet.",
+        "apps": [
+          "DraftKings",
+          "FanDuel"
+        ]
+      },
+      {
+        "type": "rideshare",
+        "example": "A ride web page sets your pickup point to where you stand.",
+        "apps": [
+          "Uber",
+          "Lyft"
+        ]
+      },
+      {
+        "type": "shopping",
+        "example": "A store site shows the nearest pickup store and stock.",
+        "apps": [
+          "Target",
+          "Home Depot"
+        ]
+      },
+      {
+        "type": "security",
+        "example": "A bank may check that a login location fits your normal area.",
+        "apps": []
+      },
+      {
+        "type": "ads",
+        "example": "An ad network uses repeated fixes to learn your home, work and routine.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Reveals home and work",
+      "Used for ad profiling"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "No location without a visible prompt or a stored grant",
+    "No background geolocation after the tab closes",
+    "Mobile browsers pause or throttle updates in background tabs",
+    "Desktop without GPS returns Wi-Fi or IP estimates (20 m to 5 km)",
+    "Blocked in insecure contexts and in cross-origin iframes without allow"
+  ],
+  "scores": {
+    "sensitivity": 5,
+    "utility": 5,
+    "fingerprint_bits": null,
+    "friction": 2
+  },
+  "value": {
+    "legit_uses": [
+      "Store locator",
+      "Delivery address autofill",
+      "Ride hailing pickup",
+      "Local weather and news",
+      "Payment fraud checks"
+    ],
+    "abuse": [
+      "Home and workplace inference from repeated fixes",
+      "Selling movement data through ad SDKs",
+      "Prompt spam on load to wear users down"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2016-04",
+      "browser": "chrome",
+      "version": "50",
+      "change": "Geolocation restricted to secure contexts"
+    },
+    {
+      "date": "2017-08",
+      "browser": "firefox",
+      "version": "55",
+      "change": "Geolocation restricted to secure contexts"
+    },
+    {
+      "date": "2020-09",
+      "browser": "ios_safari",
+      "version": "14",
+      "change": "iOS 14 adds system Precise Location toggle that applies to Safari websites"
+    },
+    {
+      "date": "2021-10",
+      "browser": "chrome_android",
+      "version": "Android 12",
+      "change": "Approximate vs Precise choice added to the Android location dialog"
+    },
+    {
+      "date": "2023-08",
+      "browser": "chrome",
+      "version": "116",
+      "change": "One-time permission (Allow this time) added for geolocation, camera, microphone"
+    },
+    {
+      "date": "2026-01",
+      "browser": "chrome",
+      "version": "144",
+      "change": "Browser-drawn <geolocation> element ships as an alternative request path"
+    }
+  ],
+  "related": [
+    "web.location.geolocation-element",
+    "web.location.geolocation-iframe",
+    "web.meta.permissions-api"
+  ],
+  "refs": [
+    {
+      "t": "mdn",
+      "label": "MDN Geolocation API",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/Geolocation_API"
+    },
+    {
+      "t": "spec",
+      "label": "W3C Geolocation API",
+      "url": "https://www.w3.org/TR/geolocation/"
+    },
+    {
+      "t": "chromestatus",
+      "label": "Chrome one-time permissions",
+      "url": "https://developer.chrome.com/blog/one-time-permissions"
+    },
+    {
+      "t": "bcd",
+      "label": "BCD api/Geolocation",
+      "url": "https://github.com/mdn/browser-compat-data/blob/main/api/Geolocation.json"
+    }
+  ],
+  "confidence": "docs"
+}

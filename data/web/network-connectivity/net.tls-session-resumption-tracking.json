@@ -1,0 +1,219 @@
+{
+  "id": "web.net.tls-session-resumption-tracking",
+  "name": "TLS session resumption tracking",
+  "kind": "tracking",
+  "group": "network-connectivity",
+  "subgroup": "Supercookies",
+  "tags": [
+    "tls",
+    "session-ticket",
+    "resumption",
+    "psk"
+  ],
+  "plain": "Reuse of a TLS session ticket can link a visitor's connections across sites that share a server.",
+  "meaning": "A session ticket or PSK is a stable ID, so two domains behind one CDN or server can see the same resumption. Sy et al. (ACSAC 2018) found browsers reusing tickets across origins. Chrome partitioned TLS session caches by network isolation key.",
+  "lifecycle": [
+    "on-arrival"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "TLS 1.2 session tickets, TLS 1.3 PSK; session ID",
+      "access": {
+        "grant": "none",
+        "prompt_ui": "",
+        "secure_context": false,
+        "user_gesture": false,
+        "persistence": "",
+        "revocation": "",
+        "iframe": "",
+        "steps": [
+          "Server issues ticket",
+          "Client resumes later",
+          "Server correlates"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "r",
+          "v": "86",
+          "note": "Session cache partitioned by NIK",
+          "date": "2020-10-20"
+        },
+        "edge": {
+          "s": "r",
+          "v": "86",
+          "note": "Session cache partitioned by NIK",
+          "date": "2020-10-09"
+        },
+        "firefox": {
+          "s": "r",
+          "v": "85",
+          "note": "Network partitioning",
+          "date": "2021-01-26"
+        },
+        "safari": {
+          "s": "p",
+          "v": "",
+          "note": ":Mitigation not verified"
+        },
+        "ios_safari": {
+          "s": "p",
+          "v": "",
+          "note": ":Mitigation not verified"
+        },
+        "chrome_android": {
+          "s": "r",
+          "v": "86",
+          "note": "Session cache partitioned by NIK",
+          "date": "2020-10-20"
+        },
+        "samsung": {
+          "s": "r",
+          "v": "14.0",
+          "note": "Session cache partitioned by NIK",
+          "date": "2021-04-17"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "string",
+    "metric": "Ticket or PSK identity",
+    "update": "",
+    "fields": [
+      {
+        "name": "ticket",
+        "type": "string",
+        "unit": "",
+        "range": "opaque",
+        "precision": "exact"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can link your visits across sites on one server if your browser reuses a ticket",
+    "user_action": "Nothing. It happens when you return to a site and the connection resumes",
+    "can": [
+      "See the same resume ticket when you visit two sites behind one server or content network",
+      "Use the ticket as a temporary ID to connect those visits",
+      "Speed up your next connection, which is the real purpose"
+    ],
+    "cannot": [
+      "Link visits on servers that do not share infrastructure",
+      "Keep the link for long, since tickets expire in hours or days",
+      "Work against browsers that keep separate tickets per site, such as Chrome and Firefox",
+      "See your name or what you do on the site"
+    ],
+    "reach": 2,
+    "reach_label": "Short lived link across sites",
+    "differs": "Chrome and Firefox keep tickets separate per site. Safari is partly protected. Older tests showed browsers reusing tickets across sites."
+  },
+  "story": {
+    "what_it_is": "Reusing a saved secure connection ticket can link your visits across sites that share a server.",
+    "icon": "link",
+    "tags": [
+      "Tracking",
+      "Silent",
+      "Network"
+    ],
+    "marketing": [],
+    "for_you": "You never see it. To start faster, your browser reuses a ticket from an earlier secure connection. A server that sees the same ticket from two places can tell they are the same browser.",
+    "for_makers": "Makers who run many sites on one server or provider can link visits without cookies. It is a quiet side effect of speed tricks. Browsers cut it by limiting how long tickets live and by splitting them per site.",
+    "use_cases": [
+      {
+        "type": "ads",
+        "example": "A big ad and content network serving many sites sees the same ticket on each. It joins the visits into one profile even with cookies blocked.",
+        "apps": []
+      },
+      {
+        "type": "analytics",
+        "example": "A hosting provider counts a returning visitor across all customer sites using the same ticket.",
+        "apps": [
+          "Cloudflare"
+        ]
+      },
+      {
+        "type": "security",
+        "example": "A defence service ties a bot's repeated requests to one ticket and blocks it, even if the address changes.",
+        "apps": []
+      },
+      {
+        "type": "media",
+        "example": "A video platform links a viewer across its sites and its player embeds through one reused connection.",
+        "apps": []
+      },
+      {
+        "type": "games",
+        "example": "A game portal hosting many titles on one server links a player's visits across games without a login.",
+        "apps": []
+      },
+      {
+        "type": "social",
+        "example": "A share button provider sees the same ticket on every site that embeds its button.",
+        "apps": []
+      },
+      {
+        "type": "developer",
+        "example": "A privacy researcher tests whether a browser reuses tickets across sites, to see if it leaks.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Cookie free tracking",
+      "Hard to spot or clear"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Ticket lifetime limited by browser (about 24 hours to 7 days)",
+    "Cross-site linking blocked by partitioning"
+  ],
+  "scores": {
+    "sensitivity": 2,
+    "utility": 1,
+    "fingerprint_bits": 3,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": "Faster handshakes",
+    "abuse": "Cross-domain linkage behind shared infrastructure"
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2018-12",
+      "browser": "paper",
+      "version": "",
+      "change": "Sy et al. Tracking Users across the Web via TLS Session Resumption (ACSAC 2018)"
+    },
+    {
+      "date": "2020-10",
+      "browser": "chrome",
+      "version": "86",
+      "change": "TLS session cache partitioned with Network Isolation Key"
+    }
+  ],
+  "related": [
+    "web.net.etag-cache-supercookie"
+  ],
+  "refs": [
+    {
+      "t": "paper",
+      "label": "Sy et al., Tracking Users across the Web via TLS Session Resumption (ACSAC 2018)",
+      "url": "https://dl.acm.org/doi/10.1145/3274694.3274708"
+    },
+    {
+      "t": "rfc",
+      "label": "RFC 8446 TLS 1.3",
+      "url": "https://www.rfc-editor.org/rfc/rfc8446"
+    }
+  ],
+  "confidence": "docs"
+}

@@ -1,0 +1,231 @@
+{
+  "id": "web.camera.region-element-capture",
+  "name": "Region Capture and Element Capture",
+  "kind": "capability",
+  "group": "camera-mic-screen",
+  "subgroup": "Capture",
+  "tags": [
+    "capture"
+  ],
+  "plain": "Crops a screen capture to part of the page, no prompt.",
+  "meaning": "Lets an app crop a tab capture to one element and hide the rest, so a recording shows only that element. Cannot reach beyond the tab capture the person already allowed.",
+  "lifecycle": [
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "CropTarget.fromElement(); track.cropTo(target); RestrictionTarget.fromElement(); track.restrictTo(target)",
+      "permissions_policy": "display-capture",
+      "bcd": [
+        "api.CropTarget",
+        "api.RestrictionTarget"
+      ],
+      "access": {
+        "grant": "gesture",
+        "prompt_ui": "No prompt of its own; it needs an existing tab capture stream.",
+        "secure_context": true,
+        "user_gesture": true,
+        "persistence": "Tied to the capture session",
+        "revocation": "Ends with the capture",
+        "iframe": "Same-origin only",
+        "steps": [
+          "Capture the current tab with getDisplayMedia",
+          "Create a CropTarget or RestrictionTarget from an element",
+          "Call cropTo or restrictTo",
+          "Stream shows only that region"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "104",
+          "note": "Region Capture 104, Element Capture 132",
+          "date": "2022-08-02"
+        },
+        "edge": {
+          "s": "y",
+          "v": "104",
+          "note": "",
+          "date": "2022-08-05"
+        },
+        "firefox": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "safari": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "ios_safari": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "chrome_android": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "samsung": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "stream",
+    "metric": "Cropped or restricted video track",
+    "update": "continuous",
+    "fields": []
+  },
+  "limits": {
+    "headline": "Can crop a screen share to one part of the page, with no extra prompt",
+    "user_action": "You are already sharing the tab, then the app limits the view to one panel",
+    "can": [
+      "Crop your shared tab to show only one box or element",
+      "Hide the rest of the page from the recording or call",
+      "Change which part is shown while you keep sharing"
+    ],
+    "cannot": [
+      "Start any capture on its own; you must already be sharing the tab",
+      "Show anything beyond the tab you chose to share",
+      "Capture other tabs, windows or your screen",
+      "Work in Firefox, Safari or any phone browser"
+    ],
+    "reach": 1,
+    "reach_label": "A piece of one shared tab",
+    "differs": "Only desktop Chrome and Edge support it."
+  },
+  "story": {
+    "what_it_is": "Lets an app crop a tab share to one part of the page, with no extra prompt.",
+    "icon": "crop",
+    "tags": [
+      "Screen sharing",
+      "Silent",
+      "Privacy tool"
+    ],
+    "marketing": [
+      {
+        "vendor": "Google Chrome",
+        "name": "Region Capture",
+        "pitch": "Chrome explains that apps can crop a tab capture to a single element so a recording shows only that part.",
+        "url": "https://developer.chrome.com/docs/web-platform/region-capture"
+      }
+    ],
+    "for_you": "You do not see a new prompt. After you already agreed to share a tab, the app may show just one box, such as a slide, instead of the whole page. It can also hide a sidebar or chat that you did not want in a recording.",
+    "for_makers": "Makers get cleaner recordings and shared views without asking people to crop things by hand. A call app can send only the slide, or a streaming tool can cut out the app around a canvas. It cannot reach past what the person already shared.",
+    "use_cases": [
+      {
+        "type": "video",
+        "example": "In a web call you share a tab with slides, and the call shows only the slide, not the browser tabs or notes next to it.",
+        "apps": [
+          "Google Meet",
+          "Google Slides"
+        ]
+      },
+      {
+        "type": "creative",
+        "example": "A design review tool records just the canvas, so the video does not show the comment panel or your other tabs.",
+        "apps": [
+          "Figma",
+          "Miro"
+        ]
+      },
+      {
+        "type": "games",
+        "example": "A browser game tool records the game canvas only, and leaves out your chat panel when you stream a match.",
+        "apps": []
+      },
+      {
+        "type": "education",
+        "example": "A web classroom records the whiteboard area and leaves out private student names in the side list.",
+        "apps": [
+          "Google Meet",
+          "Zoom web"
+        ]
+      },
+      {
+        "type": "live",
+        "example": "A live event page crops the shared tab to the video player, so a viewer sees the show with no page chrome.",
+        "apps": [
+          "StreamYard"
+        ]
+      },
+      {
+        "type": "developer",
+        "example": "A bug report tool captures only the broken widget on the page and ignores the user's private account details nearby.",
+        "apps": [
+          "Jam.dev",
+          "Sentry feedback"
+        ]
+      }
+    ],
+    "risks": [
+      "Only hides what an app agrees to hide",
+      "Hidden parts may still be in the page"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Needs an existing tab capture",
+    "Not for window or screen capture",
+    "Same-origin elements only"
+  ],
+  "scores": {
+    "sensitivity": 2,
+    "utility": 3,
+    "fingerprint_bits": null,
+    "friction": 1
+  },
+  "value": {
+    "legit_uses": [
+      "Presenting only a slide canvas",
+      "Recording a single widget"
+    ],
+    "abuse": [
+      "None beyond the underlying capture"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2022-04",
+      "browser": "chrome",
+      "version": "104",
+      "change": "Region Capture ships"
+    },
+    {
+      "date": "2024-12",
+      "browser": "chrome",
+      "version": "132",
+      "change": "Element Capture (restrictTo) ships"
+    }
+  ],
+  "related": [
+    "web.camera.display-capture"
+  ],
+  "refs": [
+    {
+      "t": "chromestatus",
+      "label": "Chrome Region Capture",
+      "url": "https://developer.chrome.com/docs/web-platform/region-capture"
+    },
+    {
+      "t": "spec",
+      "label": "W3C Region Capture",
+      "url": "https://w3c.github.io/mediacapture-region/"
+    }
+  ],
+  "confidence": "docs"
+}

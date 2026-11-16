@@ -1,0 +1,233 @@
+{
+  "id": "web.actions.view-transitions",
+  "name": "View Transitions",
+  "kind": "capability",
+  "group": "page-actions",
+  "subgroup": "Interface",
+  "tags": [
+    "view-transitions",
+    "animation"
+  ],
+  "plain": "Animates between page states, including across same-origin navigations.",
+  "meaning": "A site can capture a screenshot of the old and new state and morph between them. Cross-document transitions work only within one origin, so it cannot reveal another site's pixels.",
+  "lifecycle": [
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "document.startViewTransition(); @view-transition { navigation: auto }",
+      "bcd": [
+        "api.Document.startViewTransition",
+        "css.at-rules.view-transition"
+      ],
+      "access": {
+        "grant": "none",
+        "prompt_ui": "None (no browser prompt)",
+        "secure_context": false,
+        "user_gesture": false,
+        "activation": "none",
+        "persistence": "While animating",
+        "revocation": "Nothing to revoke (no permission is stored)",
+        "iframe": "Same-origin cross-document only",
+        "steps": [
+          "Call startViewTransition(update)",
+          "Browser snapshots old state",
+          "Animates to new state"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "111",
+          "note": "",
+          "date": "2023-03-07"
+        },
+        "edge": {
+          "s": "y",
+          "v": "111",
+          "note": "",
+          "date": "2023-03-13"
+        },
+        "firefox": {
+          "s": "y",
+          "v": "144",
+          "note": "",
+          "date": "2025-10-14"
+        },
+        "safari": {
+          "s": "y",
+          "v": "18",
+          "note": "",
+          "date": "2024-09-16"
+        },
+        "ios_safari": {
+          "s": "y",
+          "v": "18",
+          "note": "All iOS browsers use WebKit",
+          "date": "2024-09-16"
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "111",
+          "note": "",
+          "date": "2023-03-07"
+        },
+        "samsung": {
+          "s": "y",
+          "v": "22.0",
+          "note": "",
+          "date": "2023-07-14"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "none",
+    "metric": "",
+    "update": "",
+    "fields": []
+  },
+  "limits": {
+    "headline": "Can animate smoothly between two page screens on its own site",
+    "user_action": "Nothing. It happens when you tap a link or the page updates.",
+    "can": [
+      "Fade or slide between two screens",
+      "Animate a picture moving from a list to a detail page",
+      "Keep a smooth look when you move between pages on the same site"
+    ],
+    "cannot": [
+      "Animate between two different sites",
+      "See what is on the other page before it loads"
+    ],
+    "reach": 1,
+    "reach_label": "Only its own screens",
+    "differs": ""
+  },
+  "story": {
+    "what_it_is": "A page can animate smoothly from one screen to the next.",
+    "icon": "image-play",
+    "tags": [
+      "Animation",
+      "Silent",
+      "Design"
+    ],
+    "marketing": [
+      {
+        "vendor": "Google",
+        "name": "View Transition API",
+        "pitch": "Chrome's docs say it creates smooth animated transitions between views, even across pages.",
+        "url": "https://developer.chrome.com/docs/web-platform/view-transitions"
+      }
+    ],
+    "for_you": "Moving between pages feels like moving inside a phone app: a picture grows into a detail view and nothing flashes white.",
+    "for_makers": "Makers get app like polish with a few lines of code, which helps keep people engaged and makes a site feel premium.",
+    "use_cases": [
+      {
+        "type": "shopping",
+        "example": "A product photo grows from a grid thumbnail into the detail page.",
+        "apps": [
+          "Airbnb",
+          "Shopify stores"
+        ]
+      },
+      {
+        "type": "media",
+        "example": "A movie poster expands into the title page.",
+        "apps": []
+      },
+      {
+        "type": "games",
+        "example": "A browser game cross fades between menus and levels.",
+        "apps": []
+      },
+      {
+        "type": "news",
+        "example": "A story card slides open into the full article.",
+        "apps": []
+      },
+      {
+        "type": "creative",
+        "example": "A portfolio site glides between project pages.",
+        "apps": []
+      },
+      {
+        "type": "productivity",
+        "example": "A web dashboard animates panels as you switch tabs.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Motion sickness",
+      "Slow page switches"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Cross-document transitions are same-origin only (Chrome 126, Safari 18.2)",
+    "Callback timeout about 4 s before the transition is skipped (Chrome)",
+    "Does not read or leak cross-origin pixels; snapshots exclude cross-origin iframes content",
+    "Support: same-document Chrome 111, Safari 18, Firefox 144"
+  ],
+  "scores": {
+    "sensitivity": 1,
+    "utility": 3,
+    "fingerprint_bits": null,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "App-like navigation",
+      "Shared element animations"
+    ],
+    "abuse": [
+      "Hiding loading states",
+      "Jarring animation to disorient"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2023-03",
+      "browser": "chrome",
+      "version": "111",
+      "change": "Same-document view transitions"
+    },
+    {
+      "date": "2024-06",
+      "browser": "chrome",
+      "version": "126",
+      "change": "Cross-document view transitions"
+    },
+    {
+      "date": "2024-09",
+      "browser": "safari",
+      "version": "18",
+      "change": "Same-document view transitions"
+    }
+  ],
+  "refs": [
+    {
+      "t": "mdn",
+      "label": "MDN View Transition API",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/View_Transition_API"
+    },
+    {
+      "t": "spec",
+      "label": "CSS View Transitions",
+      "url": "https://drafts.csswg.org/css-view-transitions-1/"
+    },
+    {
+      "t": "chromestatus",
+      "label": "Chrome View Transitions",
+      "url": "https://developer.chrome.com/docs/web-platform/view-transitions"
+    }
+  ],
+  "confidence": "docs"
+}

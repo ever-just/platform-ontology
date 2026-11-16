@@ -1,0 +1,275 @@
+{
+  "id": "web.actions.autoplay",
+  "name": "Autoplay audio and video",
+  "kind": "action",
+  "group": "page-actions",
+  "subgroup": "Media output",
+  "tags": [
+    "autoplay",
+    "media-engagement",
+    "mei",
+    "muted",
+    "audio"
+  ],
+  "plain": "Starts video or sound automatically; muted video is allowed, sound usually needs prior interaction.",
+  "meaning": "A site can start media without a click. Browsers allow silent autoplay but block surprise sound unless the person has engaged with the site, which shapes ad video and background audio.",
+  "lifecycle": [
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "<video autoplay muted playsinline>; HTMLMediaElement.play(); allow=\"autoplay\"; navigator.getAutoplayPolicy()",
+      "bcd": [
+        "api.HTMLMediaElement.autoplay",
+        "api.HTMLMediaElement.play"
+      ],
+      "access": {
+        "grant": "none",
+        "prompt_ui": "None (no browser prompt)",
+        "secure_context": false,
+        "user_gesture": true,
+        "activation": "sticky",
+        "persistence": "Chrome Media Engagement Index (MEI) score is stored per origin",
+        "revocation": "Nothing to revoke (no permission is stored)",
+        "iframe": "Top frame must delegate with allow=\"autoplay\" for cross-origin iframes",
+        "steps": [
+          "Element has muted attribute or origin has activation or high MEI",
+          "play() resolves or rejects with NotAllowedError",
+          "Handle the rejection and show a play button"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "3",
+          "note": "",
+          "date": "2009-09-15"
+        },
+        "edge": {
+          "s": "y",
+          "v": "12",
+          "note": "",
+          "date": "2015-07-29"
+        },
+        "firefox": {
+          "s": "y",
+          "v": "3.5",
+          "note": "",
+          "date": "2009-06-30"
+        },
+        "safari": {
+          "s": "y",
+          "v": "3.1",
+          "note": "",
+          "date": "2008-03-18"
+        },
+        "ios_safari": {
+          "s": "y",
+          "v": "3",
+          "note": "All iOS browsers use WebKit",
+          "date": "2009-06-17"
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "18",
+          "note": "",
+          "date": "2012-06-27"
+        },
+        "samsung": {
+          "s": "y",
+          "v": "1.0",
+          "note": "",
+          "date": "2013-04-27"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "none",
+    "metric": "",
+    "update": "",
+    "fields": []
+  },
+  "limits": {
+    "headline": "Can start muted video on its own, and sound only after you have interacted",
+    "user_action": "Nothing for muted video. For sound, you tap, click or press a key on the site first",
+    "can": [
+      "Start a silent video without a click",
+      "Start sound after you have clicked, tapped or watched on the site",
+      "Start a clip after you tap Play"
+    ],
+    "cannot": [
+      "Play sound on a first visit without any interaction",
+      "Keep a sound ad alive in a tab you muted",
+      "Override your browser's autoplay setting",
+      "Play a video in the background once the page is hidden on most phones"
+    ],
+    "reach": 2,
+    "reach_label": "Muted video, sound after you interact",
+    "differs": "Safari and iPhone are strict about sound. Chrome and Edge allow sound for sites you used often. Firefox lets you block it."
+  },
+  "story": {
+    "what_it_is": "A page can start video or sound by itself. Muted video is usually fine, sound needs your action first.",
+    "icon": "play",
+    "tags": [
+      "Media",
+      "Silent",
+      "Rules"
+    ],
+    "marketing": [
+      {
+        "vendor": "Google Chrome",
+        "name": "Autoplay policy",
+        "pitch": "Chrome allows muted autoplay, and lets sound autoplay only after you have interacted with the site.",
+        "url": "https://developer.chrome.com/blog/autoplay/"
+      },
+      {
+        "vendor": "WebKit",
+        "name": "New video policies for iOS",
+        "pitch": "Safari lets muted videos play inline automatically, and requires a tap for videos with sound.",
+        "url": "https://webkit.org/blog/6784/new-video-policies-for-ios/"
+      }
+    ],
+    "for_you": "A video on a page may start playing silently as you scroll. Sound normally starts only after you click or tap. Browsers keep this rule to avoid surprise noise.",
+    "for_makers": "Makers use muted autoplay to show previews and grab attention, which raises views and ad time. They ask for a tap before sound. Games need one click before audio. Ads that autoplay can annoy users.",
+    "use_cases": [
+      {
+        "type": "video",
+        "example": "A streaming home page plays a silent trailer behind the title, so browsing feels alive.",
+        "apps": [
+          "Netflix"
+        ]
+      },
+      {
+        "type": "games",
+        "example": "A browser game must wait for your first click or key press before its music and sounds can play.",
+        "apps": []
+      },
+      {
+        "type": "social",
+        "example": "A social feed starts muted clips as you scroll, and you tap to hear them.",
+        "apps": [
+          "Instagram",
+          "TikTok"
+        ]
+      },
+      {
+        "type": "news",
+        "example": "A news site starts a muted video in an article, which many people watch with captions.",
+        "apps": []
+      },
+      {
+        "type": "ads",
+        "example": "A video ad starts muted in the page, and counts a view after a few seconds.",
+        "apps": []
+      },
+      {
+        "type": "shopping",
+        "example": "A store plays a muted product video on the page to show the item in use.",
+        "apps": []
+      },
+      {
+        "type": "live",
+        "example": "A live stream page starts muted and asks you to unmute for sound.",
+        "apps": [
+          "Twitch"
+        ]
+      },
+      {
+        "type": "music",
+        "example": "A music site shows a play button, because the browser blocks sound until you tap.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Annoying sound",
+      "Data use"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Muted autoplay is allowed everywhere (iOS also needs playsinline)",
+    "Chrome 66: audible autoplay needs user activation on the origin, a high MEI score, or an installed PWA; MEI needs roughly 20 visits and a score of about 0.2 to 0.3 (Chromium source)",
+    "MEI counts a play as significant when media plays 7 s or more, is audible, tab active, and video at least 200 by 140 px",
+    "Firefox 66 blocks audible autoplay by default (site exceptions allowed); Safari 11 on macOS and iOS 10 block audible autoplay by default",
+    "Chrome mutes autoplay in cross-origin iframes unless allow=\"autoplay\" is set"
+  ],
+  "scores": {
+    "sensitivity": 1,
+    "utility": 4,
+    "fingerprint_bits": null,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Background hero video (muted)",
+      "Short clips in feeds",
+      "Podcast players after a tap"
+    ],
+    "abuse": [
+      "Auto-playing ads with sound",
+      "Hidden audio tracking pixels"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2017-10",
+      "browser": "safari",
+      "version": "11",
+      "change": "Block audible autoplay by default on macOS"
+    },
+    {
+      "date": "2018-04",
+      "browser": "chrome",
+      "version": "66",
+      "change": "Autoplay policy: muted allowed; audible needs activation, MEI or PWA"
+    },
+    {
+      "date": "2019-03",
+      "browser": "firefox",
+      "version": "66",
+      "change": "Block audible autoplay by default"
+    },
+    {
+      "date": "2020-07",
+      "browser": "chrome",
+      "version": "86",
+      "change": "Autoplay policy for media in background tabs unchanged; play() promise rejection documented widely"
+    }
+  ],
+  "related": [
+    "web.actions.web-audio",
+    "web.actions.speech-synthesis"
+  ],
+  "refs": [
+    {
+      "t": "mdn",
+      "label": "MDN Autoplay guide",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/Media/Guides/Autoplay"
+    },
+    {
+      "t": "chromestatus",
+      "label": "Chrome autoplay policy",
+      "url": "https://developer.chrome.com/blog/autoplay/"
+    },
+    {
+      "t": "webkit",
+      "label": "WebKit new video policies for iOS",
+      "url": "https://webkit.org/blog/6784/new-video-policies-for-ios/"
+    },
+    {
+      "t": "mozilla",
+      "label": "Firefox autoplay blocking",
+      "url": "https://support.mozilla.org/en-US/kb/block-autoplay"
+    }
+  ],
+  "confidence": "docs"
+}

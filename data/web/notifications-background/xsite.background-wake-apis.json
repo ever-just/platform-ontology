@@ -1,0 +1,254 @@
+{
+  "id": "web.xsite.background-wake-apis",
+  "name": "Push, periodic sync and background fetch",
+  "kind": "capability",
+  "group": "notifications-background",
+  "subgroup": "After leaving",
+  "tags": [
+    "push",
+    "periodic-background-sync",
+    "background-fetch",
+    "wake"
+  ],
+  "plain": "Ways a site can wake its service worker after the person leaves: push messages, timed sync, long downloads.",
+  "meaning": "Push needs a notification permission; Periodic Background Sync needs an installed PWA and site engagement, with a minimum of about 12 hours between wakes; Background Fetch shows a download notice. Each lets a site run code with no tab open.",
+  "lifecycle": [
+    "after-leaving"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "PushManager.subscribe(), registration.periodicSync.register(), registration.backgroundFetch.fetch()",
+      "permission_name": "push",
+      "bcd": [
+        "api.PushManager",
+        "api.PeriodicSyncManager",
+        "api.BackgroundFetchManager"
+      ],
+      "access": {
+        "grant": "prompt",
+        "prompt_ui": "None",
+        "secure_context": true,
+        "user_gesture": false,
+        "persistence": "Subscriptions last until the person unsubscribes, clears data, or the push service expires them",
+        "revocation": "Clear site data, browser privacy settings",
+        "iframe": "",
+        "steps": []
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "42",
+          "note": "Push 50, periodic sync 80 for installed PWAs",
+          "date": "2015-04-14"
+        },
+        "edge": {
+          "s": "y",
+          "v": "17",
+          "note": "",
+          "date": "2018-04-30"
+        },
+        "firefox": {
+          "s": "p",
+          "v": "44",
+          "note": "Push only",
+          "date": "2016-01-26"
+        },
+        "safari": {
+          "s": "p",
+          "v": "16",
+          "note": "Push in macOS Safari 16",
+          "date": "2022-09-12"
+        },
+        "ios_safari": {
+          "s": "p",
+          "v": "16.4",
+          "note": "Push only for Home Screen web apps",
+          "date": "2023-03-27"
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "42",
+          "note": "",
+          "date": "2015-04-15"
+        },
+        "samsung": {
+          "s": "y",
+          "v": "4.0",
+          "note": "",
+          "date": "2016-03-11"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "event",
+    "metric": "Push or sync events",
+    "update": "at wake",
+    "fields": [
+      {
+        "name": "min_interval",
+        "type": "integer",
+        "unit": "hours",
+        "range": "about 12 for periodic sync",
+        "precision": "approximate"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can wake a site's background script after you leave, through push, timed sync or downloads",
+    "user_action": "You allow notifications, install a web app, or start a big download",
+    "can": [
+      "Wake the site through a push message once you allow notifications",
+      "Refresh an installed web app about once every 12 hours or more",
+      "Run a large download that shows a progress notice",
+      "Run site code with no tab open for a short time"
+    ],
+    "cannot": [
+      "Use push without your notification permission",
+      "Use timed sync unless the site is installed and you use it often",
+      "Run in the background without limits, since browsers stop it after a short time",
+      "Work the same in Safari and Firefox, which support less"
+    ],
+    "reach": 3,
+    "reach_label": "Brief wakes, if you allow",
+    "differs": "Chrome and Edge support all three. Firefox and Safari, including iPhone browsers, support only some."
+  },
+  "story": {
+    "what_it_is": "Several ways a site can wake its background script after you leave: push messages, timed syncs, long downloads.",
+    "icon": "bell-ring",
+    "tags": [
+      "Background",
+      "Notifications",
+      "Silent"
+    ],
+    "marketing": [
+      {
+        "vendor": "MDN Web Docs",
+        "name": "Push API",
+        "pitch": "Lets a server send messages that wake the web app, even when it is closed.",
+        "url": "https://developer.mozilla.org/en-US/docs/Web/API/Push_API"
+      }
+    ],
+    "for_you": "After you leave the page, the site may still run small bits of code when it gets a push, a timed sync or a download event. You mostly see a notification or fresher content on return.",
+    "for_makers": "Makers use these to stay in touch, keep apps fresh and finish work after the tab closes. They are also a way for a site to run code you did not open. Browsers limit it by permission and by how often you use the site.",
+    "use_cases": [
+      {
+        "type": "messaging",
+        "example": "A web chat wakes on push and shows a new message, so you do not have to open the page.",
+        "apps": [
+          "Slack"
+        ]
+      },
+      {
+        "type": "news",
+        "example": "A news app wakes on a timer to load the latest stories before you open it.",
+        "apps": []
+      },
+      {
+        "type": "video",
+        "example": "A streaming web app finishes a movie download after you close the tab.",
+        "apps": []
+      },
+      {
+        "type": "games",
+        "example": "A browser game wakes on push to tell you a match is ready.",
+        "apps": []
+      },
+      {
+        "type": "ads",
+        "example": "An ad network wakes a site's background script to show a promo notice.",
+        "apps": []
+      },
+      {
+        "type": "analytics",
+        "example": "A site wakes in the background to send queued usage data it could not send before.",
+        "apps": []
+      },
+      {
+        "type": "security",
+        "example": "A bank wakes on push to show a login approval prompt.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Runs after you leave",
+      "Spam and tracking use"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Push requires notification permission",
+    "Periodic sync minimum about 12 hours and only for installed PWAs (Chrome)",
+    "Silent push is not allowed: Chrome and Safari require a user visible notification",
+    "Safari push only for Home Screen web apps on iOS"
+  ],
+  "scores": {
+    "sensitivity": 4,
+    "utility": 4,
+    "fingerprint_bits": null,
+    "friction": 2
+  },
+  "value": {
+    "legit_uses": [
+      "Order updates, offline sync"
+    ],
+    "abuse": [
+      "Re-engagement spam, hidden background work"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2016-04",
+      "browser": "chrome",
+      "version": "50",
+      "change": "Web Push shipped"
+    },
+    {
+      "date": "2019-02",
+      "browser": "chrome",
+      "version": "74",
+      "change": "Background Fetch shipped"
+    },
+    {
+      "date": "2020-02",
+      "browser": "chrome",
+      "version": "80",
+      "change": "Periodic Background Sync for installed PWAs"
+    },
+    {
+      "date": "2023-03",
+      "browser": "safari",
+      "version": "16.4",
+      "change": "Web Push for Home Screen web apps and macOS Safari"
+    }
+  ],
+  "related": [
+    "web.xsite.service-worker-lifetime"
+  ],
+  "refs": [
+    {
+      "t": "mdn",
+      "label": "MDN Push API",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/Push_API"
+    },
+    {
+      "t": "mdn",
+      "label": "MDN Background Synchronization API",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/Background_Synchronization_API"
+    },
+    {
+      "t": "vendor",
+      "label": "web.dev Periodic Background Sync",
+      "url": "https://developer.chrome.com/docs/capabilities/periodic-background-sync"
+    }
+  ],
+  "confidence": "docs"
+}

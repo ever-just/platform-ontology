@@ -1,0 +1,204 @@
+{
+  "id": "mob.bg.fgs-timeouts",
+  "name": "Foreground service timeouts (Android 15)",
+  "kind": "capability",
+  "group": "notifications-background",
+  "subgroup": "Android background limits",
+  "tags": [
+    "foreground-service",
+    "timeout",
+    "6-hours",
+    "android-15"
+  ],
+  "plain": "Some foreground services now stop after 6 hours in 24, and can only restart after a user returns to the app.",
+  "meaning": "A hard cap on long background syncs and media processing. It limits always-running services; Android 17 adds memory and audio limits on top.",
+  "lifecycle": [
+    "background"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "y",
+      "v": "15",
+      "api": 35,
+      "permission": "",
+      "protection": "none",
+      "grant": "none",
+      "prompt_ui": "None",
+      "persistence": "dataSync and mediaProcessing get 6 hours total per 24 h; timer resets when the app is brought to the foreground",
+      "revocation": "n/a",
+      "store_policy": "",
+      "api_surface": "Service.onTimeout(int, int); startForeground throws ForegroundServiceStartNotAllowedException when exhausted",
+      "note": "Service gets a few seconds after onTimeout to call stopSelf() or a RemoteServiceException is thrown; shortService limit about 3 min"
+    },
+    "ios": {
+      "s": "n",
+      "v": "",
+      "permission": "",
+      "protection": "none",
+      "grant": "not-exposed",
+      "prompt_ui": "",
+      "persistence": "",
+      "revocation": "",
+      "store_policy": "",
+      "api_surface": "",
+      "note": "iOS has no foreground service; background modes have no fixed daily cap but suspension is immediate once work ends"
+    }
+  },
+  "data": {
+    "type": "integer",
+    "metric": "Time budget",
+    "update": "Per 24 h",
+    "fields": [
+      {
+        "name": "dataSync",
+        "type": "integer",
+        "unit": "hours",
+        "range": "6",
+        "precision": ""
+      },
+      {
+        "name": "mediaProcessing",
+        "type": "integer",
+        "unit": "hours",
+        "range": "6",
+        "precision": "tracked separately"
+      },
+      {
+        "name": "shortService",
+        "type": "integer",
+        "unit": "minutes",
+        "range": "about 3",
+        "precision": "approx"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can keep some Android services running, but only about 6 hours in 24",
+    "user_action": "Nothing. It happens when an app runs a long sync or media job in the background",
+    "can": [
+      "Keep a long sync or media job going for several hours at a stretch",
+      "Restart a stopped service once you open the app again",
+      "Use a short service for quick tasks, which gets about 3 minutes"
+    ],
+    "cannot": [
+      "Run a data sync service past the daily limit without you opening the app",
+      "Keep working after the system calls time out; the app gets only a few seconds to stop",
+      "Do this on iPhone, which has no foreground services and suspends apps as soon as work ends"
+    ],
+    "reach": 2,
+    "reach_label": "Hard daily time limit on Android 15",
+    "differs": "Android 15 caps some long services. iPhone has no such service type and simply suspends apps when work ends."
+  },
+  "story": {
+    "what_it_is": "Android now stops some always-running background tasks after about 6 hours in a day.",
+    "icon": "timer",
+    "tags": [
+      "Battery",
+      "Background",
+      "Android"
+    ],
+    "marketing": [
+      {
+        "vendor": "Google",
+        "name": "Foreground service timeouts",
+        "pitch": "Android 15 puts a time limit on certain long-running background services so apps cannot drain the battery all day.",
+        "url": "https://developer.android.com/develop/background-work/services/fgs/timeout"
+      }
+    ],
+    "for_you": "You never see it work. Your phone just stops apps from quietly running heavy tasks for hours, so your battery lasts longer. If an app was syncing a huge backup, it may pause until you open it again.",
+    "for_makers": "Makers must design long jobs to finish, save progress and resume. It forces them to move big uploads and media work to smarter tools instead of one endless service.",
+    "use_cases": [
+      {
+        "type": "media",
+        "example": "A video editor exporting a long 4K clip keeps going in the background, then must pause and resume if the export runs past the daily limit.",
+        "apps": [
+          "CapCut",
+          "Google Photos"
+        ]
+      },
+      {
+        "type": "fitness",
+        "example": "A running tracker that keeps a data sync service alive all day must now finish cleanly and restart when you next open it.",
+        "apps": [
+          "Strava"
+        ]
+      },
+      {
+        "type": "games",
+        "example": "A big game download or patch in the background gets paused near the limit and resumes when you return to the game.",
+        "apps": [
+          "Genshin Impact"
+        ]
+      },
+      {
+        "type": "productivity",
+        "example": "A cloud drive uploading thousands of photos overnight switches to scheduled jobs so it is not killed by the timeout.",
+        "apps": [
+          "Google Drive",
+          "Dropbox"
+        ]
+      },
+      {
+        "type": "health",
+        "example": "A health app that copies sensor data from a watch all day has to batch the data instead of running nonstop.",
+        "apps": []
+      },
+      {
+        "type": "enterprise",
+        "example": "A delivery company app that polled for new orders in the background now relies on push messages instead.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Background jobs can stop mid task",
+      "Sync may lag until you reopen the app"
+    ],
+    "android_note": "Applies from Android 15. The app gets a few seconds to wrap up when the timer fires, or it crashes.",
+    "ios_note": "iOS has no equivalent. Apps are simply put to sleep soon after their work ends."
+  },
+  "technical_bounds": [
+    "Applies to apps targeting 35 and above",
+    "Timer resets on foreground"
+  ],
+  "scores": {
+    "sensitivity": 1,
+    "utility": 3,
+    "fingerprint_bits": null,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Limiting battery drain"
+    ],
+    "abuse": [
+      "None"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2024-10",
+      "platform": "android",
+      "version": "15 (API 35)",
+      "change": "6 hour per 24 h timeout for dataSync and mediaProcessing (targetSdk 35)"
+    }
+  ],
+  "related": [
+    "mob.bg.fgs-types",
+    "mob.bg.expedited-uidt"
+  ],
+  "refs": [
+    {
+      "t": "android",
+      "label": "Android: Foreground service timeouts",
+      "url": "https://developer.android.com/develop/background-work/services/fgs/timeout"
+    }
+  ],
+  "confidence": "verified"
+}

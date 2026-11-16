@@ -1,0 +1,250 @@
+{
+  "id": "web.camera.picture-in-picture",
+  "name": "Picture-in-Picture and automatic PiP",
+  "kind": "action",
+  "group": "camera-mic-screen",
+  "subgroup": "Capture",
+  "tags": [
+    "pip"
+  ],
+  "plain": "Pops a video into a small floating window above other apps.",
+  "meaning": "Floats a video over other apps; with camera access, auto PiP can keep a video call visible when the person switches tabs. Chrome gives a separate prompt for camera-based auto PiP.",
+  "lifecycle": [
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "video.requestPictureInPicture(); enterpictureinpicture event; navigator.mediaSession.setActionHandler('enterpictureinpicture')",
+      "permissions_policy": "picture-in-picture",
+      "bcd": [
+        "api.HTMLVideoElement.requestPictureInPicture"
+      ],
+      "access": {
+        "grant": "gesture",
+        "prompt_ui": "Manual PiP needs a click; Chrome 134+ auto PiP for video call sites is gated by the camera or microphone grant and engagement.",
+        "secure_context": true,
+        "user_gesture": true,
+        "persistence": "Per origin for auto PiP",
+        "revocation": "Close the PiP window; Site settings > Automatic picture-in-picture",
+        "iframe": "Needs allow=\"picture-in-picture\" in iframes",
+        "steps": [
+          "User gesture",
+          "Call requestPictureInPicture on a video",
+          "OS floating window opens",
+          "Close or leave to exit"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "69",
+          "note": "",
+          "date": "2018-09-04"
+        },
+        "edge": {
+          "s": "y",
+          "v": "79",
+          "note": "",
+          "date": "2020-01-15"
+        },
+        "firefox": {
+          "s": "n",
+          "v": "Video PiP not supported in Firefox as a web API; browser built-in toggle only",
+          "note": ""
+        },
+        "safari": {
+          "s": "y",
+          "v": "13.1",
+          "note": "",
+          "date": "2020-03-24"
+        },
+        "ios_safari": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "chrome_android": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "samsung": {
+          "s": "y",
+          "v": "20.0",
+          "note": "",
+          "date": "2023-02-10"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "none",
+    "metric": "Floating video window",
+    "update": "continuous",
+    "fields": []
+  },
+  "limits": {
+    "headline": "Can float a video in a small window over your other apps",
+    "user_action": "You click the picture in picture button on a video, or switch tabs during a call",
+    "can": [
+      "Pop a video into a small floating window that stays on top",
+      "Keep a video call visible when you switch tabs, if you allowed camera access",
+      "Let you move and resize the window"
+    ],
+    "cannot": [
+      "Float a video without your click, except automatic mode for video call sites in Chrome 134 and later",
+      "Show anything except the video itself",
+      "Take over the screen or see other windows",
+      "Work in Firefox or on most phone browsers"
+    ],
+    "reach": 1,
+    "reach_label": "One video window",
+    "differs": "Chrome, Edge, Safari and Samsung Internet support it on desktop. Firefox and iPhone browsers do not."
+  },
+  "story": {
+    "what_it_is": "Pops a video out into a small floating window that stays above other apps.",
+    "icon": "picture-in-picture",
+    "tags": [
+      "Video",
+      "Gesture",
+      "Convenience"
+    ],
+    "marketing": [
+      {
+        "vendor": "Google Chrome",
+        "name": "Automatic picture in picture",
+        "pitch": "Chrome describes automatic PiP, so a video call keeps showing in a floating window when you switch tabs.",
+        "url": "https://developer.chrome.com/blog/automatic-picture-in-picture"
+      },
+      {
+        "vendor": "Mozilla",
+        "name": "Picture in Picture API",
+        "pitch": "Developer docs describe how a page can float a video in a small window above other windows.",
+        "url": "https://developer.mozilla.org/en-US/docs/Web/API/Picture-in-Picture_API"
+      }
+    ],
+    "for_you": "You click a button or tab away, and the video shrinks into a floating window in the corner. You can keep watching a lecture or a call while you work in another tab. It often moves and resizes.",
+    "for_makers": "A floating window keeps people in a call or a video while they multitask, which raises time spent and cuts dropped calls. For calls, Chrome gives a separate prompt before auto PiP can start with the camera on. Makers also use it to keep the logo and controls visible.",
+    "use_cases": [
+      {
+        "type": "video",
+        "example": "You are in a Google Meet call, switch to a spreadsheet to find a number, and the call shrinks into a floating window so you do not miss anyone.",
+        "apps": [
+          "Google Meet",
+          "Microsoft Teams"
+        ]
+      },
+      {
+        "type": "media",
+        "example": "You watch a YouTube video, switch to your email, and the video floats on top so you can keep following along.",
+        "apps": [
+          "YouTube",
+          "Netflix web",
+          "Twitch"
+        ]
+      },
+      {
+        "type": "games",
+        "example": "You stream a cloud game or a Twitch match in a floating window while you check your guide or chat in another tab.",
+        "apps": [
+          "Twitch",
+          "Xbox Cloud Gaming"
+        ]
+      },
+      {
+        "type": "live",
+        "example": "A live sports or news stream floats over your work during a big match or a breaking event.",
+        "apps": [
+          "ESPN",
+          "Peacock",
+          "NBC News"
+        ]
+      },
+      {
+        "type": "education",
+        "example": "A recorded lecture floats beside your notes while you type, and you pause it with one click.",
+        "apps": [
+          "Coursera",
+          "Udemy",
+          "Khan Academy"
+        ]
+      },
+      {
+        "type": "productivity",
+        "example": "A Document PiP window floats a timer or sticky notes over your other work while you stay in the flow.",
+        "apps": [
+          "Google Docs"
+        ]
+      }
+    ],
+    "risks": [
+      "Floating window can hide something important",
+      "Auto PiP can show your camera feed while you switch tabs"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Needs a gesture for manual PiP",
+    "Cannot pin to a corner",
+    "Safari desktop supports video only"
+  ],
+  "scores": {
+    "sensitivity": 1,
+    "utility": 3,
+    "fingerprint_bits": null,
+    "friction": 1
+  },
+  "value": {
+    "legit_uses": [
+      "Video calls",
+      "Watching while browsing"
+    ],
+    "abuse": [
+      "Keeping an ad or call overlay visible"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2018-10",
+      "browser": "chrome",
+      "version": "70",
+      "change": "Video Picture-in-Picture ships"
+    },
+    {
+      "date": "2025-03",
+      "browser": "chrome",
+      "version": "134",
+      "change": "Automatic PiP for video conferencing sites"
+    },
+    {
+      "date": "2023-08",
+      "browser": "chrome",
+      "version": "116",
+      "change": "Document Picture-in-Picture"
+    }
+  ],
+  "related": [
+    "web.display.document-pip"
+  ],
+  "refs": [
+    {
+      "t": "mdn",
+      "label": "MDN Picture-in-Picture",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/Picture-in-Picture_API"
+    },
+    {
+      "t": "chromestatus",
+      "label": "Chrome auto PiP",
+      "url": "https://developer.chrome.com/blog/automatic-picture-in-picture"
+    }
+  ],
+  "confidence": "docs"
+}

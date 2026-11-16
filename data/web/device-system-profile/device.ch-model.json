@@ -1,0 +1,224 @@
+{
+  "id": "web.device.ch-model",
+  "name": "Client Hint: device model",
+  "kind": "signal",
+  "group": "device-system-profile",
+  "subgroup": "Client Hints",
+  "tags": [
+    "ua-ch",
+    "android",
+    "model"
+  ],
+  "plain": "Android phone or tablet model name, only when the site asks.",
+  "meaning": "Exposes the exact handset (Pixel 8, SM-S928B). Informs device-specific bugs and ad targeting. iOS never exposes a model; desktop returns an empty string.",
+  "lifecycle": [
+    "on-arrival",
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "getHighEntropyValues(['model']); Sec-CH-UA-Model",
+      "bcd": [
+        "api.NavigatorUAData.getHighEntropyValues"
+      ],
+      "access": {
+        "grant": "none",
+        "prompt_ui": "None",
+        "secure_context": true,
+        "user_gesture": false,
+        "persistence": "read fresh on every page load; nothing stored",
+        "revocation": "none needed (no grant)",
+        "iframe": "Readable from cross-origin iframes too (same values)",
+        "steps": [
+          "Page script reads the value",
+          "No prompt is shown"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "90",
+          "note": "",
+          "date": "2021-04-13"
+        },
+        "edge": {
+          "s": "y",
+          "v": "90",
+          "note": "",
+          "date": "2021-04-15"
+        },
+        "firefox": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "safari": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "ios_safari": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "90",
+          "note": "",
+          "date": "2021-04-13"
+        },
+        "samsung": {
+          "s": "y",
+          "v": "23.0",
+          "note": "",
+          "date": "2023-10-18"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "object",
+    "metric": "",
+    "update": "static per session",
+    "fields": [
+      {
+        "name": "model",
+        "type": "string",
+        "unit": "",
+        "range": "Hundreds of Android model codes; empty on desktop",
+        "precision": "exact marketing or build code"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can see the model name of your Android phone or tablet when it asks",
+    "user_action": "Nothing. The site asks and Chrome on Android answers without a prompt",
+    "can": [
+      "Learn the exact model, such as Pixel 8 or a Samsung code",
+      "Fix bugs or tune the page for that handset",
+      "Use the model for ad targeting",
+      "Spot the same phone again as one clue among several"
+    ],
+    "cannot": [
+      "See an iPhone or iPad model; Apple never shares it",
+      "Get a model name from a desktop; it comes back empty",
+      "Work in Firefox or Safari",
+      "Get an answer until the site asks for it"
+    ],
+    "reach": 2,
+    "reach_label": "Phone model, only when asked",
+    "differs": "Android Chrome shares it. iPhone never does, and desktops return an empty answer."
+  },
+  "story": {
+    "what_it_is": "Tells a site the exact model of your Android phone or tablet when it asks.",
+    "icon": "smartphone",
+    "tags": [
+      "Device model",
+      "Android",
+      "Chrome"
+    ],
+    "marketing": [
+      {
+        "vendor": "Google",
+        "name": "User-Agent Client Hints",
+        "pitch": "Chrome's way of letting sites ask for specifics like model only when they need them.",
+        "url": "https://developer.chrome.com/docs/privacy-sandbox/user-agent/"
+      }
+    ],
+    "for_you": "You never see it. If it works well, a site might avoid a bug that only hits your phone model. If it works badly, it can feed a stored profile about the phone you own.",
+    "for_makers": "Developers use the model to fix bugs that only happen on certain phones. Advertisers can aim at owners of premium handsets. Fraud tools look for fake models used by emulators and farms of cheap devices.",
+    "use_cases": [
+      {
+        "type": "developer",
+        "example": "A bug report from a web app shows it only breaks on one Galaxy model, so the team ships a targeted fix.",
+        "apps": [
+          "Sentry"
+        ]
+      },
+      {
+        "type": "ads",
+        "example": "An accessory seller shows a case for the exact phone model the visitor uses.",
+        "apps": []
+      },
+      {
+        "type": "games",
+        "example": "A browser game turns off particles for a known low-power phone model but keeps them on a flagship.",
+        "apps": []
+      },
+      {
+        "type": "media",
+        "example": "A streaming service chooses an HDR stream only for models that handle it properly.",
+        "apps": [
+          "Netflix"
+        ]
+      },
+      {
+        "type": "security",
+        "example": "A fraud system flags a visit from an emulator model name used by bot farms.",
+        "apps": []
+      },
+      {
+        "type": "shopping",
+        "example": "A web chat support widget prefills your phone model in a help request.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Names the exact device",
+      "Android only, iPhone hides it"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Android Chromium only",
+    "Empty string on desktop and iOS"
+  ],
+  "scores": {
+    "sensitivity": 3,
+    "utility": 3,
+    "fingerprint_bits": 5.5,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Device-specific workarounds"
+    ],
+    "abuse": [
+      "Handset-tier ad targeting",
+      "Resale or income inference"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2023-02",
+      "browser": "chrome",
+      "version": "110",
+      "change": "Android UA shows model as K; hint is the only source"
+    }
+  ],
+  "related": [
+    "web.notexposed.ios-device-model"
+  ],
+  "refs": [
+    {
+      "t": "mdn",
+      "label": "MDN Sec-CH-UA-Model",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/Sec-CH-UA-Model"
+    },
+    {
+      "t": "chromestatus",
+      "label": "Chrome developers: UA CH",
+      "url": "https://developer.chrome.com/docs/privacy-security/user-agent-client-hints"
+    }
+  ],
+  "confidence": "docs"
+}

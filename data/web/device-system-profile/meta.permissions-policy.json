@@ -1,0 +1,244 @@
+{
+  "id": "web.meta.permissions-policy",
+  "name": "Permissions Policy and iframe allow",
+  "kind": "capability",
+  "group": "device-system-profile",
+  "subgroup": "Policy",
+  "tags": [
+    "header",
+    "iframe",
+    "allow"
+  ],
+  "plain": "HTTP header and iframe allow attribute that decide which features a page or frame may use.",
+  "meaning": "Lets a site disable features for itself and its iframes. MDN lists 51 directives; each can be self, a list of origins, or none. A feature blocked here never reaches the user prompt.",
+  "lifecycle": [
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "Permissions-Policy: geolocation=(self); <iframe allow=\"camera; microphone\">; document.featurePolicy",
+      "access": {
+        "grant": "none",
+        "prompt_ui": "Server sent header plus iframe allow attribute; cross-origin frames get a feature only if both parent and frame allow it.",
+        "secure_context": true,
+        "user_gesture": false,
+        "persistence": "Per document",
+        "revocation": "Change header or allow",
+        "iframe": "Controls iframe delegation",
+        "steps": [
+          "Server sets Permissions-Policy header",
+          "Embedder sets allow on iframe",
+          "Browser intersects the policy",
+          "Feature granted to frame or blocked"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "88",
+          "note": "",
+          "date": "2021-01-19"
+        },
+        "edge": {
+          "s": "y",
+          "v": "88",
+          "note": "",
+          "date": "2021-01-21"
+        },
+        "firefox": {
+          "s": "y",
+          "v": "74",
+          "note": "",
+          "date": "2020-03-10"
+        },
+        "safari": {
+          "s": "y",
+          "v": "11.1",
+          "note": "",
+          "date": "2018-04-12"
+        },
+        "ios_safari": {
+          "s": "y",
+          "v": "11.3",
+          "note": "",
+          "date": "2018-03-29"
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "88",
+          "note": "",
+          "date": "2021-01-19"
+        },
+        "samsung": {
+          "s": "y",
+          "v": "12.0",
+          "note": "",
+          "date": "2020-06-19"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "list",
+    "metric": "Feature policy decisions",
+    "update": "per document load",
+    "fields": [
+      {
+        "name": "directives",
+        "type": "integer",
+        "unit": "count",
+        "range": "51 listed on MDN",
+        "precision": "n/a"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can turn features off for itself and its embedded frames",
+    "user_action": "Nothing. The site sets rules in its headers or in an iframe",
+    "can": [
+      "Block features like camera, location, or microphone for itself",
+      "Allow a feature in an iframe only if both sides agree",
+      "Stop embedded ads or widgets from using sensors",
+      "Set 51 or so rules, each for self, listed sites, or none"
+    ],
+    "cannot": [
+      "Give itself more than you allow in the browser",
+      "Turn on a feature you blocked",
+      "Let an embedded frame use a feature the parent blocked",
+      "Skip your pop up for a feature"
+    ],
+    "reach": 1,
+    "reach_label": "Site rules, not your data",
+    "differs": ""
+  },
+  "story": {
+    "what_it_is": "A site rule that says which features the page and its embedded frames are allowed to use.",
+    "icon": "shield-check",
+    "tags": [
+      "Permissions",
+      "Security",
+      "Developer rules"
+    ],
+    "marketing": [
+      {
+        "vendor": "MDN",
+        "name": "Permissions Policy",
+        "pitch": "Docs explain it as a header that lets sites turn browser features on or off for themselves and embeds.",
+        "url": "https://developer.mozilla.org/en-US/docs/Web/HTTP/Permissions_Policy"
+      },
+      {
+        "vendor": "Google",
+        "name": "Permissions Policy",
+        "pitch": "Chrome documents how to control feature access for your page and third party frames.",
+        "url": "https://developer.chrome.com/docs/privacy-sandbox/permissions-policy/"
+      }
+    ],
+    "for_you": "You never see it. Its job is to protect you: a site can promise that an embedded ad or video cannot reach your camera or location. If a site forgets, an embed might not work.",
+    "for_makers": "Sites use it to lock off powerful features from third party frames, such as ads or widgets. It lowers the damage if an embed is hacked. Embedding services must also ask for the access they need through the allow attribute.",
+    "use_cases": [
+      {
+        "type": "video",
+        "example": "A site embeds a video meeting in a frame and allows camera and microphone only for that frame.",
+        "apps": [
+          "Zoom Web SDK"
+        ]
+      },
+      {
+        "type": "ads",
+        "example": "A publisher blocks geolocation and camera for all ad frames so ads cannot reach them.",
+        "apps": []
+      },
+      {
+        "type": "games",
+        "example": "A game portal allows fullscreen and gamepad access only to the game frame.",
+        "apps": [
+          "itch.io"
+        ]
+      },
+      {
+        "type": "payments",
+        "example": "A shop allows the payment request feature only for its payment provider frame.",
+        "apps": [
+          "Stripe"
+        ]
+      },
+      {
+        "type": "security",
+        "example": "A bank turns off camera, microphone and location for its own pages.",
+        "apps": []
+      },
+      {
+        "type": "developer",
+        "example": "A team tests that a third party widget breaks cleanly when a feature is blocked.",
+        "apps": []
+      },
+      {
+        "type": "enterprise",
+        "example": "A company web portal blocks sensors for all embedded dashboards.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "If misconfigured, embeds break",
+      "Only as safe as the site makes it"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Camera, microphone, geolocation default to self",
+    "Directive names vary per browser",
+    "Cannot grant what the user denied"
+  ],
+  "scores": {
+    "sensitivity": 1,
+    "utility": 5,
+    "fingerprint_bits": null,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Locking down embeds"
+    ],
+    "abuse": [
+      "None direct, but misconfiguration over-delegates"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2018-07",
+      "browser": "chrome",
+      "version": "60",
+      "change": "Feature-Policy header ships"
+    },
+    {
+      "date": "2020-07",
+      "browser": "chrome",
+      "version": "88",
+      "change": "Permissions-Policy replaces Feature-Policy"
+    }
+  ],
+  "related": [
+    "web.meta.permissions-api"
+  ],
+  "refs": [
+    {
+      "t": "mdn",
+      "label": "MDN Permissions-Policy",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/Permissions-Policy"
+    },
+    {
+      "t": "spec",
+      "label": "W3C Permissions Policy",
+      "url": "https://www.w3.org/TR/permissions-policy/"
+    }
+  ],
+  "confidence": "verified"
+}

@@ -1,0 +1,223 @@
+{
+  "id": "web.actions.navigation-api",
+  "name": "Navigation API",
+  "kind": "capability",
+  "group": "page-actions",
+  "subgroup": "Windows and navigation",
+  "tags": [
+    "navigation-api",
+    "spa",
+    "history"
+  ],
+  "plain": "Gives a single place to listen to and control same-document navigations.",
+  "meaning": "A single page app can intercept link clicks and back or forward, and list its own history entries. It sees only same-origin entries, so it cannot read browsing history.",
+  "lifecycle": [
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "navigation.navigate(), navigation.intercept(), navigation.entries()",
+      "bcd": [
+        "api.Navigation",
+        "api.NavigateEvent"
+      ],
+      "access": {
+        "grant": "none",
+        "prompt_ui": "None (no browser prompt)",
+        "secure_context": false,
+        "user_gesture": false,
+        "activation": "none",
+        "persistence": "Entries live in the tab session",
+        "revocation": "Nothing to revoke (no permission is stored)",
+        "iframe": "Same-origin entries only",
+        "steps": [
+          "Add navigate event listener",
+          "Call event.intercept()",
+          "Page handles transition"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "102",
+          "note": "",
+          "date": "2022-05-24"
+        },
+        "edge": {
+          "s": "y",
+          "v": "102",
+          "note": "",
+          "date": "2022-05-31"
+        },
+        "firefox": {
+          "s": "y",
+          "v": "147",
+          "note": "",
+          "date": "2026-01-13"
+        },
+        "safari": {
+          "s": "y",
+          "v": "26.2",
+          "note": "",
+          "date": "2025-12-12"
+        },
+        "ios_safari": {
+          "s": "y",
+          "v": "26.2",
+          "note": "All iOS browsers use WebKit",
+          "date": "2025-12-12"
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "102",
+          "note": "",
+          "date": "2022-05-24"
+        },
+        "samsung": {
+          "s": "y",
+          "v": "19.0",
+          "note": "",
+          "date": "2022-11-01"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "none",
+    "metric": "",
+    "update": "",
+    "fields": []
+  },
+  "limits": {
+    "headline": "Can watch and control page changes inside the app, such as when you press Back",
+    "user_action": "Nothing. It happens as you click links, press Back, or move around the app.",
+    "can": [
+      "Notice when you click a link or press Back inside the site",
+      "Update the page without a full reload",
+      "Hold up a page change until a save finishes"
+    ],
+    "cannot": [
+      "Watch what you do on other sites or in other tabs",
+      "Block you from leaving the site",
+      "Change the address to another site's address",
+      "See where you came from outside its own pages"
+    ],
+    "reach": 1,
+    "reach_label": "Only inside its own site",
+    "differs": ""
+  },
+  "story": {
+    "what_it_is": "A modern way for a page to manage its own links and Back button handling.",
+    "icon": "compass",
+    "tags": [
+      "Developer tool",
+      "Silent",
+      "Navigation"
+    ],
+    "marketing": [
+      {
+        "vendor": "Google",
+        "name": "Navigation API",
+        "pitch": "Chrome's docs say the API modernizes single page app routing with one clear set of tools.",
+        "url": "https://developer.chrome.com/docs/web-platform/navigation-api/"
+      }
+    ],
+    "for_you": "You never see it. When it works, apps feel snappier and Back and Forward behave more predictably inside big web apps.",
+    "for_makers": "Makers use it to build cleaner routing than the older history tricks, with animation hooks and a proper list of past entries. It is mostly a developer quality and speed win.",
+    "use_cases": [
+      {
+        "type": "productivity",
+        "example": "A web mail app changes folders without reloading and keeps Back working.",
+        "apps": [
+          "Gmail",
+          "Outlook web"
+        ]
+      },
+      {
+        "type": "media",
+        "example": "A streaming site slides between pages with an animation while loading the next view.",
+        "apps": []
+      },
+      {
+        "type": "shopping",
+        "example": "A store keeps your scroll position when you press Back from a product.",
+        "apps": []
+      },
+      {
+        "type": "developer",
+        "example": "A framework wires its router to the API so one place handles every in page link.",
+        "apps": [
+          "React Router",
+          "Next.js"
+        ]
+      },
+      {
+        "type": "analytics",
+        "example": "A measurement script catches every in page navigation without brittle hacks.",
+        "apps": []
+      },
+      {
+        "type": "live",
+        "example": "A live blog moves between match pages without breaking the real time feed.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Few for readers",
+      "Routing bugs"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "entries() lists only same-origin entries of the current tab",
+    "The same back button hijack mitigations apply (entries without user activation are skippable)",
+    "Cannot read other tabs or other origins' history",
+    "Support per MDN BCD: Chrome 102, Safari 26.2, Firefox 147"
+  ],
+  "scores": {
+    "sensitivity": 1,
+    "utility": 4,
+    "fingerprint_bits": null,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "SPA routers"
+    ],
+    "abuse": [
+      "Back-button trap helpers (blocked by intervention)"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2022-02",
+      "browser": "chrome",
+      "version": "102",
+      "change": "Navigation API ships"
+    }
+  ],
+  "related": [
+    "web.actions.history-pushstate"
+  ],
+  "refs": [
+    {
+      "t": "mdn",
+      "label": "MDN Navigation API",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/Navigation_API"
+    },
+    {
+      "t": "spec",
+      "label": "HTML Standard: Navigation API",
+      "url": "https://html.spec.whatwg.org/multipage/nav-history-apis.html#navigation-api"
+    }
+  ],
+  "confidence": "docs"
+}

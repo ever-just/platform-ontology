@@ -1,0 +1,203 @@
+{
+  "id": "mob.bg.background-url-session",
+  "name": "Background downloads and uploads",
+  "kind": "capability",
+  "group": "notifications-background",
+  "subgroup": "iOS background",
+  "tags": [
+    "urlsession",
+    "download-manager",
+    "transfers"
+  ],
+  "plain": "A system service finishes downloads and uploads for the app even after it is closed.",
+  "meaning": "Lets apps move large files without staying alive. The transfer survives termination but not a force quit, and the system picks the timing.",
+  "lifecycle": [
+    "background"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "y",
+      "v": "1.0",
+      "api": 1,
+      "permission": "INTERNET; DownloadManager no extra permission",
+      "protection": "normal",
+      "grant": "install",
+      "prompt_ui": "Download notification",
+      "persistence": "DownloadManager persists across reboots",
+      "revocation": "Settings > Apps > Downloads",
+      "store_policy": "",
+      "api_surface": "DownloadManager, WorkManager, UIDT jobs",
+      "note": "Android 16 quota changes affect DownloadManager jobs"
+    },
+    "ios": {
+      "s": "y",
+      "v": "7.0",
+      "permission": "",
+      "protection": "none",
+      "grant": "none",
+      "prompt_ui": "None",
+      "persistence": "nsurlsessiond continues after termination but not after force quit",
+      "revocation": "Force quit",
+      "store_policy": "",
+      "api_surface": "URLSessionConfiguration.background(withIdentifier:), isDiscretionary",
+      "note": "System schedules; discretionary transfers wait for Wi-Fi and power"
+    }
+  },
+  "web_equivalents": [
+    "web.notify.background-fetch"
+  ],
+  "data": {
+    "type": "stream",
+    "metric": "Transfer",
+    "update": "System scheduled",
+    "fields": []
+  },
+  "limits": {
+    "headline": "Can finish downloads and uploads for the app even after you close it",
+    "user_action": "You tap Download or Upload, then leave the app",
+    "can": [
+      "Continue large downloads and uploads while the app is closed",
+      "Wait for Wi-Fi or power for lower priority transfers on iPhone",
+      "Retry later if the network drops",
+      "Use Android DownloadManager with no extra permission"
+    ],
+    "cannot": [
+      "Run on a fixed schedule; the system picks the time, and optional transfers wait for Wi-Fi and power",
+      "Skip new Android 16 quotas on some download jobs",
+      "Transfer anything with no internet connection"
+    ],
+    "reach": 3,
+    "reach_label": "File transfers while closed",
+    "differs": "iPhone's system schedules transfers and delays optional ones. Android 16 quotas affect some download jobs."
+  },
+  "story": {
+    "what_it_is": "The phone finishes downloads and uploads for an app even after you leave it.",
+    "icon": "download",
+    "tags": [
+      "Background",
+      "Downloads",
+      "System helps"
+    ],
+    "marketing": [
+      {
+        "vendor": "Apple",
+        "name": "Background downloads",
+        "pitch": "Apple lets a system service finish downloads and uploads for apps even when they are closed.",
+        "url": "https://developer.apple.com/documentation/foundation/downloading-files-in-the-background"
+      },
+      {
+        "vendor": "Google",
+        "name": "WorkManager",
+        "pitch": "Android lets apps schedule reliable background work, such as uploads, that finish later.",
+        "url": "https://developer.android.com/develop/background-work/background-tasks/persistent"
+      }
+    ],
+    "for_you": "You start a big download or upload and put the phone away. It finishes by itself and a notification tells you. If you force quit the app, it usually stops.",
+    "for_makers": "Makers move large files without keeping the app awake, which saves battery. The system picks the best moment. The same tool could move data off your phone while the app is closed, so the system shows limits.",
+    "use_cases": [
+      {
+        "type": "media",
+        "example": "A video app downloads a movie for a flight while your phone is in your bag.",
+        "apps": [
+          "Netflix",
+          "Disney+"
+        ]
+      },
+      {
+        "type": "productivity",
+        "example": "A cloud photo app uploads your camera roll overnight.",
+        "apps": [
+          "Google Photos",
+          "iCloud Photos"
+        ]
+      },
+      {
+        "type": "games",
+        "example": "A game downloads a big update in the background so it is ready when you open it.",
+        "apps": []
+      },
+      {
+        "type": "messaging",
+        "example": "A chat app uploads a long video message after you close the app.",
+        "apps": [
+          "WhatsApp"
+        ]
+      },
+      {
+        "type": "music",
+        "example": "A music app downloads new playlists on Wi-Fi at night.",
+        "apps": [
+          "Spotify"
+        ]
+      },
+      {
+        "type": "security",
+        "example": "A bad app sends your contacts to its server while it looks closed.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Silent upload while closed",
+      "System picks the timing"
+    ],
+    "android_note": "Android uses WorkManager and similar tools, with limits when the phone is in low power mode.",
+    "ios_note": "iPhone's background session survives app termination but not a force quit."
+  },
+  "technical_bounds": [
+    "Cancelled on force quit",
+    "Disabled for App Clips"
+  ],
+  "scores": {
+    "sensitivity": 1,
+    "utility": 3,
+    "fingerprint_bits": null,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Offline media",
+      "Backups"
+    ],
+    "abuse": [
+      "Silent exfiltration while closed"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2013-09",
+      "platform": "ios",
+      "version": "iOS 7",
+      "change": "Background URLSession introduced"
+    },
+    {
+      "date": "2025-06",
+      "platform": "android",
+      "version": "16 (API 36)",
+      "change": "DownloadManager covered by job quota changes"
+    }
+  ],
+  "related": [
+    "mob.bg.workmanager-jobs",
+    "mob.bg.expedited-uidt"
+  ],
+  "refs": [
+    {
+      "t": "apple",
+      "label": "Apple: Downloading files in the background",
+      "url": "https://developer.apple.com/documentation/foundation/downloading-files-in-the-background"
+    },
+    {
+      "t": "android",
+      "label": "Android: Background tasks",
+      "url": "https://developer.android.com/develop/background-work/background-tasks"
+    }
+  ],
+  "confidence": "docs"
+}

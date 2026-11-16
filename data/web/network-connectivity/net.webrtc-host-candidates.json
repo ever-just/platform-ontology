@@ -1,0 +1,248 @@
+{
+  "id": "web.net.webrtc-host-candidates",
+  "name": "WebRTC ICE host candidates (mDNS)",
+  "kind": "signal",
+  "group": "network-connectivity",
+  "subgroup": "WebRTC",
+  "tags": [
+    "webrtc",
+    "ice",
+    "mdns",
+    "local-ip"
+  ],
+  "plain": "WebRTC used to expose the device's local network IP; browsers now hide it behind a random .local name.",
+  "meaning": "RTCPeerConnection gathers ICE host candidates. Since 2019 and 2020 Chrome and Firefox replace private IPs with mDNS .local names, but granting getUserMedia (camera or microphone) restores real addresses.",
+  "lifecycle": [
+    "on-arrival"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "RTCPeerConnection.onicecandidate; media.peerconnection.ice.obfuscate_host_addresses",
+      "bcd": [
+        "api.RTCPeerConnection"
+      ],
+      "access": {
+        "grant": "none",
+        "prompt_ui": "",
+        "secure_context": false,
+        "user_gesture": false,
+        "persistence": "",
+        "revocation": "",
+        "iframe": "",
+        "steps": [
+          "Create RTCPeerConnection and data channel",
+          "Read candidate strings",
+          "Parse IP or mDNS name"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "56",
+          "note": "mDNS default since 75",
+          "date": "2017-01-25"
+        },
+        "edge": {
+          "s": "y",
+          "v": "15",
+          "note": "mDNS default since 75",
+          "date": "2017-04-05"
+        },
+        "firefox": {
+          "s": "y",
+          "v": "44",
+          "note": "mDNS default desktop since 78",
+          "date": "2016-01-26"
+        },
+        "safari": {
+          "s": "y",
+          "v": "11",
+          "note": "",
+          "date": "2017-09-19"
+        },
+        "ios_safari": {
+          "s": "y",
+          "v": "11",
+          "note": "",
+          "date": "2017-09-19"
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "56",
+          "note": "mDNS default since 75",
+          "date": "2017-02-01"
+        },
+        "samsung": {
+          "s": "y",
+          "v": "6.0",
+          "note": "mDNS default since 75",
+          "date": "2017-08-23"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "list",
+    "metric": "ICE candidate strings",
+    "update": "",
+    "fields": [
+      {
+        "name": "host candidate",
+        "type": "string",
+        "unit": "",
+        "range": "private IPv4 or mDNS UUID.local",
+        "precision": "hidden by default in modern browsers"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can try to find your device's home network address, but browsers now hide it",
+    "user_action": "You join a video call or visit a site that sets up a call connection",
+    "can": [
+      "Start a call connection that lists your device's network addresses",
+      "See a random .local name in place of your real home network address in Chrome and Firefox",
+      "See your real home network address if you have also allowed camera or microphone"
+    ],
+    "cannot": [
+      "See your real home network address by default in Chrome and Firefox since 2019 and 2020",
+      "Set this up without a site script running",
+      "See other devices on your network from this alone",
+      "Be sure to bypass a VPN, since modern browsers mask the address"
+    ],
+    "reach": 2,
+    "reach_label": "Hidden unless camera is allowed",
+    "differs": "Chrome and Firefox hide the address by default. Safari asks differently and also shows a masked name unless camera or microphone is allowed."
+  },
+  "story": {
+    "what_it_is": "Video call tech used to show your device's home network address. Browsers now hide it behind a random name.",
+    "icon": "video",
+    "tags": [
+      "Network",
+      "Privacy",
+      "Calls"
+    ],
+    "marketing": [
+      {
+        "vendor": "IETF",
+        "name": "mDNS ICE candidates",
+        "pitch": "Browsers swap your local address for a random .local name, so calls still connect but the real address stays private.",
+        "url": "https://datatracker.ietf.org/doc/draft-ietf-mmusic-mdns-ice-candidates/"
+      }
+    ],
+    "for_you": "On a video call or a multiplayer game you notice nothing. Behind the scenes your browser offers a random name instead of your home network address. Calls still work.",
+    "for_makers": "Makers need these candidate addresses to link two devices directly, which cuts server cost and delay. Hiding the real address stops sites from quietly reading it, but direct links on the same network still work.",
+    "use_cases": [
+      {
+        "type": "video",
+        "example": "Two coworkers on the same office Wi-Fi join a Google Meet call. Their browsers swap random local names and connect straight to each other, which keeps audio crisp.",
+        "apps": [
+          "Google Meet"
+        ]
+      },
+      {
+        "type": "games",
+        "example": "A browser party game uses peer to peer data channels. Players on the same Wi-Fi link directly through hidden local names, so moves arrive with low delay.",
+        "apps": []
+      },
+      {
+        "type": "video",
+        "example": "A cloud gaming stream in a browser sets up a direct media path from the game server to the player. Hidden local names stop the page leaking the player's network layout.",
+        "apps": [
+          "GeForce NOW",
+          "Xbox Cloud Gaming"
+        ]
+      },
+      {
+        "type": "social",
+        "example": "A web chat app starts a voice room. Friends on one network connect with each other without sending audio through the company's servers.",
+        "apps": [
+          "Discord"
+        ]
+      },
+      {
+        "type": "ads",
+        "example": "A tracking script used to read local addresses to tell devices apart. With hidden names it gets a random value that changes, so that trick stops working.",
+        "apps": []
+      },
+      {
+        "type": "enterprise",
+        "example": "A telehealth site lets a doctor and patient talk. It keeps the call direct when possible and avoids storing home addresses in logs.",
+        "apps": []
+      },
+      {
+        "type": "education",
+        "example": "A virtual classroom opens small group rooms. Students in the same school building connect over the local network, so lessons run smoothly.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Older browsers leak addresses",
+      "Hidden names add setup steps"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "getUserMedia permission re-exposes local IPs",
+    "Still leaks IPv6 addresses in some cases"
+  ],
+  "scores": {
+    "sensitivity": 2,
+    "utility": 3,
+    "fingerprint_bits": 3,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": "Peer to peer calls",
+    "abuse": "VPN bypass detection and local IP leak, LAN inventory"
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2019-06",
+      "browser": "chrome",
+      "version": "75",
+      "change": "mDNS host candidates by default"
+    },
+    {
+      "date": "2020-06",
+      "browser": "firefox",
+      "version": "78",
+      "change": "mDNS host candidates by default on desktop"
+    },
+    {
+      "date": "2018-01",
+      "browser": "chrome",
+      "version": "",
+      "change": "WebRTC leak popularized by VPN leak tests"
+    }
+  ],
+  "related": [
+    "web.net.webrtc-stun-public-ip",
+    "web.net.vpn-proxy-tor-detection"
+  ],
+  "refs": [
+    {
+      "t": "rfc",
+      "label": "IETF draft: WebRTC mDNS ICE candidates",
+      "url": "https://datatracker.ietf.org/doc/draft-ietf-mmusic-mdns-ice-candidates/"
+    },
+    {
+      "t": "tool",
+      "label": "BrowserLeaks WebRTC",
+      "url": "https://browserleaks.com/webrtc"
+    },
+    {
+      "t": "mdn",
+      "label": "MDN RTCPeerConnection",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/RTCPeerConnection"
+    }
+  ],
+  "confidence": "docs"
+}

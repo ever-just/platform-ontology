@@ -1,0 +1,208 @@
+{
+  "id": "mob.attr.skadnetwork",
+  "name": "SKAdNetwork and AdAttributionKit",
+  "kind": "tracking",
+  "group": "attribution-ads",
+  "subgroup": "Install attribution",
+  "tags": [
+    "skadnetwork",
+    "adattributionkit",
+    "postbacks",
+    "conversion-value"
+  ],
+  "plain": "Apple's privacy preserving attribution: ad networks learn campaign results from a delayed, noisy postback.",
+  "meaning": "Replaces device level tracking with coarse conversion values after a 0 to 2, 3 to 7 or 8 to 35 day window. AdAttributionKit (iOS 17.4) extends it to alternative stores and re-engagement.",
+  "lifecycle": [
+    "on-launch",
+    "background"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "n",
+      "v": "",
+      "permission": "",
+      "protection": "none",
+      "grant": "not-exposed",
+      "prompt_ui": "None",
+      "persistence": "n/a",
+      "revocation": "",
+      "store_policy": "",
+      "api_surface": "",
+      "note": "Android uses Install Referrer and the Privacy Sandbox Attribution Reporting API"
+    },
+    "ios": {
+      "s": "y",
+      "v": "11.3",
+      "permission": "Ad network IDs in Info.plist (SKAdNetworkItems)",
+      "protection": "none",
+      "grant": "none",
+      "prompt_ui": "None",
+      "persistence": "Postbacks arrive 24 to 48 h after a window closes; up to three postbacks per install in SKAN 4",
+      "revocation": "Not user visible",
+      "store_policy": "App Review 5.1.2",
+      "api_surface": "SKAdNetwork.updatePostbackConversionValue(), AdAttributionKit",
+      "note": "Windows 0 to 2, 3 to 7 and 8 to 35 days; privacy thresholds can yield nil values (docs, from memory)"
+    }
+  },
+  "data": {
+    "type": "object",
+    "metric": "Postback",
+    "update": "Delayed",
+    "fields": [
+      {
+        "name": "windows",
+        "type": "integer",
+        "unit": "days",
+        "range": "0 to 2, 3 to 7, 8 to 35",
+        "precision": "coarse"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can tell an ad network an ad led to an install, in a delayed report",
+    "user_action": "You tap an ad, install the app, then use it for a few days",
+    "can": [
+      "Send a coarse result after a window of 0 to 2, 3 to 7 or 8 to 35 days",
+      "Cover alternative app stores and re-engagement with AdAttributionKit (iOS 17.4)",
+      "Pass a small score about what you did"
+    ],
+    "cannot": [
+      "Give your name or device ID",
+      "Report detail when too few people installed; the result can be empty",
+      "Work on Android; it uses the install referrer"
+    ],
+    "reach": 2,
+    "reach_label": "A delayed, anonymous count",
+    "differs": "iPhone only (iOS 11.3 and later). Android uses the install referrer."
+  },
+  "story": {
+    "what_it_is": "Apple's private ad measurement system, with delayed and noisy reports, and its newer version.",
+    "icon": "target",
+    "tags": [
+      "Ads",
+      "Measurement",
+      "Apple"
+    ],
+    "marketing": [
+      {
+        "vendor": "Apple",
+        "name": "SKAdNetwork and AdAttributionKit",
+        "pitch": "Measure ad conversions while protecting user privacy.",
+        "url": "https://developer.apple.com/documentation/adattributionkit"
+      }
+    ],
+    "for_you": "You never see it. Apple reports to the ad network that an install happened, days later, in a form that cannot point at you.",
+    "for_makers": "After 0 to 2, 3 to 7 and 8 to 35 day windows, networks get coarse values. AdAttributionKit from iOS 17.4 extends this to re-engagement and alternative marketplaces.",
+    "use_cases": [
+      {
+        "type": "games",
+        "example": "A studio measures which ad network brought paying players after a week.",
+        "apps": [
+          "Zynga",
+          "Playrix"
+        ]
+      },
+      {
+        "type": "shopping",
+        "example": "A fashion app learns which video ad brought installs and a first order.",
+        "apps": [
+          "Shein"
+        ]
+      },
+      {
+        "type": "ads",
+        "example": "An ad network proves the install with a signed postback.",
+        "apps": [
+          "AppLovin"
+        ]
+      },
+      {
+        "type": "analytics",
+        "example": "A growth team joins SKAN data with its own sales to estimate the gap.",
+        "apps": [
+          "Singular"
+        ]
+      },
+      {
+        "type": "social",
+        "example": "A social app learns which campaigns brought sign ups.",
+        "apps": [
+          "Snapchat"
+        ]
+      },
+      {
+        "type": "security",
+        "example": "Signatures keep fake networks out.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Coarse and slow",
+      "Small campaigns lose detail"
+    ],
+    "android_note": "Android has no direct counterpart.",
+    "ios_note": "Replaced device level tracking for people who decline ATT."
+  },
+  "technical_bounds": [
+    "Coarse and delayed",
+    "Needs privacy thresholds met"
+  ],
+  "scores": {
+    "sensitivity": 2,
+    "utility": 4,
+    "fingerprint_bits": 2,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Measure ads without device ids"
+    ],
+    "abuse": [
+      "Reidentification attempts"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2018-03",
+      "platform": "ios",
+      "version": "iOS 11.3",
+      "change": "SKAdNetwork introduced"
+    },
+    {
+      "date": "2022-09",
+      "platform": "ios",
+      "version": "iOS 16.1",
+      "change": "SKAdNetwork 4 with multiple postbacks"
+    },
+    {
+      "date": "2024-03",
+      "platform": "ios",
+      "version": "iOS 17.4",
+      "change": "AdAttributionKit introduced"
+    }
+  ],
+  "related": [
+    "mob.attr.install-referrer",
+    "mob.os.reinstall-identifiers"
+  ],
+  "refs": [
+    {
+      "t": "apple",
+      "label": "Apple: AdAttributionKit",
+      "url": "https://developer.apple.com/documentation/adattributionkit"
+    },
+    {
+      "t": "apple",
+      "label": "Apple: SKAdNetwork",
+      "url": "https://developer.apple.com/documentation/storekit/skadnetwork"
+    }
+  ],
+  "confidence": "docs"
+}

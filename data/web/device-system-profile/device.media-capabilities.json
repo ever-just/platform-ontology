@@ -1,0 +1,251 @@
+{
+  "id": "web.device.media-capabilities",
+  "name": "Media Capabilities",
+  "kind": "signal",
+  "group": "device-system-profile",
+  "subgroup": "Media",
+  "tags": [
+    "media",
+    "codecs",
+    "hdr",
+    "power-efficient"
+  ],
+  "plain": "Which video and audio formats decode smoothly and power-efficiently on this device.",
+  "meaning": "Reveals hardware decoder generation, HDR support and codecs (AV1, HEVC, VP9, Dolby) and so GPU and OS tier. Sites use it to pick streams; it also fingerprints the device.",
+  "lifecycle": [
+    "on-arrival",
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "navigator.mediaCapabilities.decodingInfo(), encodingInfo()",
+      "bcd": [
+        "api.MediaCapabilities.decodingInfo"
+      ],
+      "access": {
+        "grant": "none",
+        "prompt_ui": "None",
+        "secure_context": false,
+        "user_gesture": false,
+        "persistence": "read fresh on every page load; nothing stored",
+        "revocation": "none needed (no grant)",
+        "iframe": "Readable from cross-origin iframes too (same values)",
+        "steps": [
+          "Page script reads the value",
+          "No prompt is shown"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "66",
+          "note": "",
+          "date": "2018-04-17"
+        },
+        "edge": {
+          "s": "y",
+          "v": "79",
+          "note": "",
+          "date": "2020-01-15"
+        },
+        "firefox": {
+          "s": "y",
+          "v": "63",
+          "note": "",
+          "date": "2018-10-23"
+        },
+        "safari": {
+          "s": "y",
+          "v": "13",
+          "note": "",
+          "date": "2019-09-19"
+        },
+        "ios_safari": {
+          "s": "y",
+          "v": "13",
+          "note": "",
+          "date": "2019-09-19"
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "66",
+          "note": "",
+          "date": "2018-04-17"
+        },
+        "samsung": {
+          "s": "y",
+          "v": "9.0",
+          "note": "",
+          "date": "2018-09-15"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "object",
+    "metric": "",
+    "update": "static per session",
+    "fields": [
+      {
+        "name": "supported",
+        "type": "boolean",
+        "unit": "",
+        "range": "true or false",
+        "precision": ""
+      },
+      {
+        "name": "smooth",
+        "type": "boolean",
+        "unit": "",
+        "range": "true or false",
+        "precision": ""
+      },
+      {
+        "name": "powerEfficient",
+        "type": "boolean",
+        "unit": "",
+        "range": "true or false",
+        "precision": ""
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can ask how well your device plays each video and audio format",
+    "user_action": "Nothing. It happens when a video page or player loads",
+    "can": [
+      "Check which formats play smoothly and save battery",
+      "Check for HDR and codec support such as AV1, HEVC, or Dolby",
+      "Pick the best stream for your screen",
+      "Guess your graphics tier from the answers"
+    ],
+    "cannot": [
+      "See your videos or watch history",
+      "See your exact graphics card",
+      "Ask about formats the browser does not know",
+      "Change how your device plays video"
+    ],
+    "reach": 2,
+    "reach_label": "Playback abilities, on page load",
+    "differs": ""
+  },
+  "story": {
+    "what_it_is": "Tells a page which video and sound formats play smoothly and use little battery on your device.",
+    "icon": "video",
+    "tags": [
+      "Video",
+      "Battery",
+      "Silent"
+    ],
+    "marketing": [
+      {
+        "vendor": "MDN",
+        "name": "Media Capabilities API",
+        "pitch": "Docs describe it as a way for sites to choose smooth, power-friendly streams.",
+        "url": "https://developer.mozilla.org/en-US/docs/Web/API/Media_Capabilities_API"
+      },
+      {
+        "vendor": "Google",
+        "name": "Media Capabilities on web.dev",
+        "pitch": "Chrome teams say it helps sites pick the best video quality for each device.",
+        "url": "https://web.dev/articles/media-capabilities"
+      }
+    ],
+    "for_you": "You never see it. It helps your video start in the best quality your device can really play, without stutter or a hot laptop. The cost is that the answers also say a lot about your hardware.",
+    "for_makers": "Streaming sites use it to choose between formats like AV1, HEVC and VP9 and to avoid choppy video. It reveals decoder generation, HDR and GPU tier. That makes it useful to measure users and to fingerprint them.",
+    "use_cases": [
+      {
+        "type": "video",
+        "example": "A streaming site picks 4K HDR for a TV-class display and 1080p for a basic laptop.",
+        "apps": [
+          "Netflix",
+          "Disney+"
+        ]
+      },
+      {
+        "type": "video",
+        "example": "A video site chooses AV1 only on devices with a hardware decoder, to save battery.",
+        "apps": [
+          "YouTube"
+        ]
+      },
+      {
+        "type": "games",
+        "example": "A cloud gaming site picks the stream format that your device decodes smoothly for low delay.",
+        "apps": [
+          "Xbox Cloud Gaming",
+          "GeForce NOW"
+        ]
+      },
+      {
+        "type": "live",
+        "example": "A live sports stream drops to a simpler format on a phone that cannot decode the best one smoothly.",
+        "apps": []
+      },
+      {
+        "type": "video",
+        "example": "A video call app selects an encoder that will not overheat your device.",
+        "apps": [
+          "Zoom"
+        ]
+      },
+      {
+        "type": "ads",
+        "example": "A video ad server picks a creative format your device decodes without lag.",
+        "apps": []
+      },
+      {
+        "type": "security",
+        "example": "A fingerprint vendor reads the decoder answers to tell GPU generations apart.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Shows hardware tier",
+      "Useful for fingerprinting"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Answers per queried configuration; nothing listed upfront",
+    "Cannot enumerate all codecs at once"
+  ],
+  "scores": {
+    "sensitivity": 1,
+    "utility": 4,
+    "fingerprint_bits": 3.0,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Adaptive streaming",
+      "Pick HDR stream"
+    ],
+    "abuse": [
+      "Hardware generation inference"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "related": [
+    "web.device.codec-support"
+  ],
+  "refs": [
+    {
+      "t": "mdn",
+      "label": "MDN MediaCapabilities",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/MediaCapabilities"
+    },
+    {
+      "t": "github",
+      "label": "CreepJS (abrahamjuliot)",
+      "url": "https://github.com/abrahamjuliot/creepjs"
+    }
+  ],
+  "confidence": "docs"
+}

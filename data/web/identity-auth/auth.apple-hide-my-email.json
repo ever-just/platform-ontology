@@ -1,0 +1,219 @@
+{
+  "id": "web.auth.apple-hide-my-email",
+  "name": "Apple Hide My Email relay",
+  "kind": "signal",
+  "group": "identity-auth",
+  "subgroup": "Social login",
+  "tags": [
+    "apple",
+    "hide-my-email",
+    "relay",
+    "privaterelay"
+  ],
+  "plain": "A random Apple address that forwards mail to the person's real inbox.",
+  "meaning": "A site sees random@privaterelay.appleid.com and cannot match the person across sites by email. Apple removes trackers inside forwarded mail only partly. The address stops working if the person deactivates it.",
+  "lifecycle": [
+    "signed-in"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "Address of the form xxxx@privaterelay.appleid.com",
+      "access": {
+        "grant": "prompt",
+        "prompt_ui": "None",
+        "secure_context": false,
+        "user_gesture": false,
+        "persistence": "Alias lasts until deactivated by the person",
+        "revocation": "Clear site data, browser privacy settings",
+        "iframe": "",
+        "steps": []
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "1",
+          "note": ":Address works with any browser",
+          "date": "2008-12-11"
+        },
+        "edge": {
+          "s": "y",
+          "v": "1",
+          "note": ":Address works with any browser",
+          "date": ""
+        },
+        "firefox": {
+          "s": "y",
+          "v": "1",
+          "note": ":Address works with any browser",
+          "date": "2004-11-09"
+        },
+        "safari": {
+          "s": "y",
+          "v": "1",
+          "note": ":Address works with any browser",
+          "date": "2003-06-23"
+        },
+        "ios_safari": {
+          "s": "y",
+          "v": "1",
+          "note": ":Address works with any browser",
+          "date": "2007-06-29"
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "1",
+          "note": ":Address works with any browser",
+          "date": ""
+        },
+        "samsung": {
+          "s": "y",
+          "v": "1",
+          "note": ":Address works with any browser",
+          "date": "2013-04-27"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "string",
+    "metric": "Relay email",
+    "update": "per site",
+    "fields": []
+  },
+  "limits": {
+    "headline": "Can only see a random Apple address that forwards mail to your real inbox",
+    "user_action": "You choose Hide My Email when signing up with Apple.",
+    "can": [
+      "Send you email through the random Apple address",
+      "Use that address as your login",
+      "Tell that you use Apple, since the address shows it"
+    ],
+    "cannot": [
+      "See your real email address",
+      "Match your email to other sites, since each site gets a different address",
+      "Keep emailing you after you turn off forwarding in your Apple settings"
+    ],
+    "reach": 1,
+    "reach_label": "A relay address, not your email",
+    "differs": ""
+  },
+  "story": {
+    "what_it_is": "A random Apple address that forwards mail to your real inbox, so a site never learns your email.",
+    "icon": "mail-check",
+    "tags": [
+      "Email",
+      "Privacy",
+      "Apple"
+    ],
+    "marketing": [
+      {
+        "vendor": "Apple",
+        "name": "Sign in with Apple",
+        "pitch": "Apple pitches it as a private way to sign in, with the option to hide your real email from apps and sites.",
+        "url": "https://developer.apple.com/sign-in-with-apple/"
+      }
+    ],
+    "for_you": "On sign up you may tap 'Hide My Email'. The site gets a random address that forwards to you. You can turn it off any time, and spam stops there.",
+    "for_makers": "It cuts sign up friction, because people trust Apple sign in. It also hides the real email, so makers cannot match you across other services or sell the address. They still get a working channel.",
+    "use_cases": [
+      {
+        "type": "shopping",
+        "example": "A store gets a random address that forwards your receipt and offers to your real inbox.",
+        "apps": []
+      },
+      {
+        "type": "games",
+        "example": "A browser game account uses the random address, so the game maker cannot match you to other sites.",
+        "apps": []
+      },
+      {
+        "type": "news",
+        "example": "A newsletter signup uses a relay address you can cancel with one tap.",
+        "apps": []
+      },
+      {
+        "type": "social",
+        "example": "A new social app gets a throwaway address and can only reach you through Apple's forward.",
+        "apps": []
+      },
+      {
+        "type": "ads",
+        "example": "An advertiser cannot match a relay address to your real email, which weakens cross site ad targeting.",
+        "apps": []
+      },
+      {
+        "type": "security",
+        "example": "A fraud team sees a relay address and relies on other signals, such as device and payment.",
+        "apps": []
+      },
+      {
+        "type": "education",
+        "example": "A school app gets a relay address and can still send grade and class emails.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Blocks some mail",
+      "Fraud checks get harder"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Different alias per app or site",
+    "Sender domain must be registered for Sign in with Apple relay",
+    "Replies can be sent through the relay"
+  ],
+  "scores": {
+    "sensitivity": 3,
+    "utility": 3,
+    "fingerprint_bits": null,
+    "friction": 2
+  },
+  "value": {
+    "legit_uses": [
+      "Spam control, privacy"
+    ],
+    "abuse": [
+      "Not applicable"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2019-06",
+      "browser": "safari",
+      "version": "13",
+      "change": "Relay with Sign in with Apple"
+    },
+    {
+      "date": "2021-09",
+      "browser": "safari",
+      "version": "15",
+      "change": "Hide My Email for iCloud+ subscribers"
+    }
+  ],
+  "related": [
+    "web.auth.sign-in-with-apple",
+    "web.xsite.email-hash-identity"
+  ],
+  "refs": [
+    {
+      "t": "vendor",
+      "label": "Apple Hide My Email",
+      "url": "https://support.apple.com/en-us/105078"
+    },
+    {
+      "t": "vendor",
+      "label": "Apple private email relay",
+      "url": "https://developer.apple.com/help/account/capabilities/communicate-with-users-who-use-private-email-relay-service/"
+    }
+  ],
+  "confidence": "docs"
+}

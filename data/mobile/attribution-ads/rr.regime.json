@@ -1,0 +1,212 @@
+{
+  "id": "mob.rr.regime",
+  "name": "Required Reason APIs and privacy manifest",
+  "kind": "capability",
+  "group": "attribution-ads",
+  "subgroup": "Privacy manifests",
+  "tags": [
+    "privacy-manifest",
+    "required-reason-api",
+    "app-review"
+  ],
+  "plain": "Apple requires apps to declare why they use 5 fingerprint-prone API groups, in a privacy manifest file.",
+  "meaning": "Apps must list approved reasons per group in PrivacyInfo.xcprivacy or App Store Connect rejects the upload. Reasons limit use; fingerprinting is banned even with consent.",
+  "lifecycle": [
+    "before-install"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "n",
+      "v": "",
+      "api": "",
+      "permission": "none",
+      "protection": "not-exposed",
+      "grant": "not-exposed",
+      "prompt_ui": "",
+      "persistence": "",
+      "revocation": "",
+      "store_policy": "",
+      "api_surface": "No equivalent; Play data safety form is looser",
+      "note": "Play uses the Data safety section and policy reviews, not per-API reasons"
+    },
+    "ios": {
+      "s": "f",
+      "v": "17.0",
+      "permission": "entitlement",
+      "protection": "entitlement",
+      "grant": "none",
+      "prompt_ui": "",
+      "persistence": "",
+      "revocation": "App Review 5.1.2: fingerprinting banned",
+      "store_policy": "",
+      "api_surface": "5 categories (file timestamp, boot time, disk space, active keyboards, user defaults) and 17 reason codes; enforced 2024-05-01",
+      "note": ""
+    }
+  },
+  "data": {
+    "type": "object",
+    "metric": "Manifest",
+    "update": "At upload",
+    "fields": [
+      {
+        "name": "categories",
+        "type": "integer",
+        "unit": "count",
+        "range": "5",
+        "precision": "exact"
+      },
+      {
+        "name": "reason_codes",
+        "type": "integer",
+        "unit": "count",
+        "range": "17",
+        "precision": "exact"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can only use five fingerprint prone phone details with an approved reason on iPhone",
+    "user_action": "Nothing. Apple checks the reasons when the developer uploads the app",
+    "can": [
+      "Use file times, boot time, disk space, active keyboards and saved settings, with a listed reason",
+      "List the reasons in the privacy manifest file",
+      "Pass review when reasons match how the app works"
+    ],
+    "cannot": [
+      "Use these details to fingerprint you, even with consent",
+      "Be uploaded to the App Store with missing reasons",
+      "Apply on Android; Play uses Data safety and reviews instead"
+    ],
+    "reach": 1,
+    "reach_label": "Rules, not data",
+    "differs": "iPhone only (iOS 17 and later). Android has no required reason list."
+  },
+  "story": {
+    "what_it_is": "The rule that iOS apps must declare why they use certain fingerprint prone APIs, in a privacy file.",
+    "icon": "file-check",
+    "tags": [
+      "Apple rules",
+      "Fingerprinting",
+      "Review"
+    ],
+    "marketing": [
+      {
+        "vendor": "Apple",
+        "name": "Required reason API",
+        "pitch": "Apps must list approved reasons for using certain APIs in the privacy manifest.",
+        "url": "https://developer.apple.com/documentation/bundleresources/describing-use-of-required-reason-api"
+      }
+    ],
+    "for_you": "You do not see it. It is a rule that makes apps declare why they check things like how much disk space you have.",
+    "for_makers": "Apps must list approved reasons per group in PrivacyInfo.xcprivacy, or App Store Connect rejects the upload. Reasons limit use, and fingerprinting is never an approved reason.",
+    "use_cases": [
+      {
+        "type": "games",
+        "example": "A game states that it reads free space only to decide which art to download.",
+        "apps": [
+          "Genshin Impact"
+        ]
+      },
+      {
+        "type": "ads",
+        "example": "An ad SDK drops a check of boot time to avoid a rejection.",
+        "apps": [
+          "AppLovin"
+        ]
+      },
+      {
+        "type": "analytics",
+        "example": "An analytics SDK says it uses uptime only for app speed numbers.",
+        "apps": [
+          "Firebase"
+        ]
+      },
+      {
+        "type": "social",
+        "example": "A photo app states it reads file dates only to sort a gallery.",
+        "apps": [
+          "Instagram"
+        ]
+      },
+      {
+        "type": "security",
+        "example": "Apple reviewers compare declared reasons with real use.",
+        "apps": []
+      },
+      {
+        "type": "developer",
+        "example": "A developer runs the privacy report in Xcode to find missing reasons.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Self reported",
+      "Reasons can be loosely stated"
+    ],
+    "android_note": "Android has no equal. Policy and API limits handle it.",
+    "ios_note": "Enforced when the build is uploaded."
+  },
+  "technical_bounds": [
+    "Third-party SDKs need their own manifests"
+  ],
+  "scores": {
+    "sensitivity": 1,
+    "utility": 3,
+    "fingerprint_bits": null,
+    "friction": 3
+  },
+  "value": {
+    "legit_uses": [
+      "Compliance"
+    ],
+    "abuse": [
+      "None"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2023-06",
+      "platform": "ios",
+      "version": "iOS 17",
+      "change": "Privacy manifests and Required Reason APIs announced at WWDC"
+    },
+    {
+      "date": "2024-05",
+      "platform": "ios",
+      "version": "iOS 17.5",
+      "change": "Missing reasons cause App Store rejection from 2024-05-01"
+    }
+  ],
+  "related": [
+    "mob.rr.file-timestamps",
+    "mob.rr.boot-time",
+    "mob.rr.disk-space",
+    "mob.rr.active-keyboards",
+    "mob.rr.user-defaults"
+  ],
+  "refs": [
+    {
+      "t": "apple",
+      "label": "Apple: Describing use of required reason API",
+      "url": "https://developer.apple.com/documentation/bundleresources/describing-use-of-required-reason-api"
+    },
+    {
+      "t": "apple",
+      "label": "Apple: Privacy manifest files",
+      "url": "https://developer.apple.com/documentation/bundleresources/privacy-manifest-files"
+    },
+    {
+      "t": "policy",
+      "label": "Apple: App Review Guidelines",
+      "url": "https://developer.apple.com/app-store/review/guidelines/"
+    }
+  ],
+  "confidence": "verified"
+}

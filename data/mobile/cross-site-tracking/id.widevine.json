@@ -1,0 +1,178 @@
+{
+  "id": "mob.id.widevine",
+  "name": "Widevine device ID (MediaDrm)",
+  "kind": "tracking",
+  "group": "cross-site-tracking",
+  "subgroup": "Device identifiers",
+  "tags": [
+    "widevine",
+    "mediadrm",
+    "drm-id"
+  ],
+  "plain": "A DRM device ID that some apps read as a stable fingerprint.",
+  "meaning": "Used for DRM licensing; some builds return a device-unique value that can survive factory reset. Recent Android restricts it per app.",
+  "lifecycle": [
+    "on-launch",
+    "in-session"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "p",
+      "v": "4.3",
+      "api": 18,
+      "permission": "",
+      "protection": "none",
+      "grant": "none",
+      "prompt_ui": "",
+      "persistence": "May survive reset on older builds",
+      "revocation": "Not user-clearable",
+      "store_policy": "Play: not for ads",
+      "api_surface": "MediaDrm.getPropertyByteArray(PROPERTY_DEVICE_UNIQUE_ID)",
+      "note": "32-byte value; per-app on recent builds"
+    },
+    "ios": {
+      "s": "n",
+      "v": "",
+      "permission": "none",
+      "protection": "not-exposed",
+      "grant": "not-exposed",
+      "prompt_ui": "",
+      "persistence": "",
+      "revocation": "",
+      "store_policy": "",
+      "api_surface": "FairPlay has no app-readable device ID",
+      "note": "No equivalent"
+    }
+  },
+  "data": {
+    "type": "binary",
+    "metric": "32 bytes",
+    "update": "Static",
+    "fields": [
+      {
+        "name": "id",
+        "type": "binary",
+        "unit": "bytes",
+        "range": "32",
+        "precision": "256 bits"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can tell your Android phone apart using a hidden video protection ID, but not on iPhone",
+    "user_action": "Nothing. An app can ask for it silently when it starts",
+    "can": [
+      "Get a 32 byte ID tied to your phone's video protection system on Android",
+      "Use it as a stable fingerprint across restarts",
+      "Link accounts that share the same phone"
+    ],
+    "cannot": [
+      "Give the same value to every app on recent Android builds; it can differ per app",
+      "Exist on iPhone; FairPlay shows apps no device ID",
+      "Change when you clear app data; it follows the phone, not the app"
+    ],
+    "reach": 4,
+    "reach_label": "Stable phone ID, on Android",
+    "differs": "Android only. iPhone has no equivalent that apps can see."
+  },
+  "story": {
+    "what_it_is": "A hardware ID used by video DRM that apps can sometimes read as a phone fingerprint.",
+    "icon": "tv",
+    "tags": [
+      "Silent",
+      "Video",
+      "Fingerprint"
+    ],
+    "marketing": [
+      {
+        "vendor": "Google",
+        "name": "Widevine DRM",
+        "pitch": "Pitch: content protection that lets streaming services play licensed video safely on Android and the web.",
+        "url": "https://www.widevine.com"
+      }
+    ],
+    "for_you": "You never see it. It works behind the scenes so a protected movie will play, and it may also act as a long lasting tag on your phone that survives clearing app data.",
+    "for_makers": "Streaming services need it to give out licences and set quality levels. Because it can stay the same after a reset, some apps use it as a hard to remove device ID for fraud checks and device tracking.",
+    "use_cases": [
+      {
+        "type": "video",
+        "example": "A streaming app checks your phone's Widevine level before allowing HD or 4K playback.",
+        "apps": [
+          "Netflix",
+          "Disney Plus"
+        ]
+      },
+      {
+        "type": "media",
+        "example": "A service limits how many phones one account can download offline shows to, counting them by device ID.",
+        "apps": []
+      },
+      {
+        "type": "security",
+        "example": "A fraud team blocks an account sharing scam that signs in from the same hardware over and over.",
+        "apps": []
+      },
+      {
+        "type": "games",
+        "example": "A cloud gaming app checks that a phone has secure video decoding before it allows protected streams.",
+        "apps": []
+      },
+      {
+        "type": "ads",
+        "example": "A tracker reads a value that outlives a reset to rebuild a profile after you clear your ad ID.",
+        "apps": []
+      },
+      {
+        "type": "live",
+        "example": "A live sports app uses DRM licences so a match feed cannot be recorded by ripping the stream.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Can survive a factory reset",
+      "Hard to reset on your own"
+    ],
+    "android_note": "Newer Android versions restrict this per app, and some phones now return an app specific value.",
+    "ios_note": "iPhone uses Apple's own FairPlay system, so this ID does not exist there."
+  },
+  "technical_bounds": [
+    "Behavior varies by OEM and version"
+  ],
+  "scores": {
+    "sensitivity": 3,
+    "utility": 2,
+    "fingerprint_bits": 64,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "DRM license server"
+    ],
+    "abuse": [
+      "Persistent ID that survives reset"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "related": [
+    "mob.id.ssaid"
+  ],
+  "refs": [
+    {
+      "t": "android",
+      "label": "Android: MediaDrm",
+      "url": "https://developer.android.com/reference/android/media/MediaDrm"
+    },
+    {
+      "t": "android",
+      "label": "Android: Best practices for unique identifiers",
+      "url": "https://developer.android.com/training/articles/user-data-ids"
+    }
+  ],
+  "confidence": "inferred"
+}

@@ -1,0 +1,175 @@
+{
+  "id": "mob.sensor.eavesdrop",
+  "name": "Motion sensors as a side channel",
+  "kind": "tracking",
+  "group": "location-motion",
+  "subgroup": "Side channel",
+  "tags": [
+    "side-channel",
+    "gyro-eavesdrop"
+  ],
+  "plain": "Motion sensors can pick up nearby speech and typing taps.",
+  "meaning": "Gyroscope and accelerometer pick up speaker vibrations and taps, letting a research app recover digits or speech with no mic permission. This is why Android 12 capped the rate.",
+  "lifecycle": [
+    "in-session"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "p",
+      "v": "1.5",
+      "api": 3,
+      "permission": "",
+      "protection": "none",
+      "grant": "none",
+      "prompt_ui": "",
+      "persistence": "",
+      "revocation": "",
+      "store_policy": "",
+      "api_surface": "Raw sensor streams above 200 Hz",
+      "note": "Rate cap 200 Hz since 12 (API 31) unless declared"
+    },
+    "ios": {
+      "s": "p",
+      "v": "4.0",
+      "permission": "none",
+      "protection": "none",
+      "grant": "none",
+      "prompt_ui": "",
+      "persistence": "",
+      "revocation": "",
+      "store_policy": "",
+      "api_surface": "Safari asks for a motion permission since iOS 12.2.",
+      "note": ""
+    }
+  },
+  "data": {
+    "type": "stream",
+    "metric": "Vibration signal",
+    "update": "200 Hz and above",
+    "fields": [
+      {
+        "name": "sample_rate",
+        "type": "float",
+        "unit": "Hz",
+        "range": "50 to 500",
+        "precision": "device dependent"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can maybe pick up nearby speech or typing taps from motion sensors, in research",
+    "user_action": "Nothing. It happens when an app or page collects fast motion data",
+    "can": [
+      "Collect motion data at a high rate",
+      "Look for patterns that match taps or nearby speech",
+      "Guess a few spoken words or tapped keys in lab tests"
+    ],
+    "cannot": [
+      "Collect above 200 times a second on Android 12 and newer without declaring it",
+      "Get Safari motion data on iPhone without a permission since iOS 12.2",
+      "Match a real microphone for quality",
+      "Work well in noisy daily use; it is mostly a lab result"
+    ],
+    "reach": 2,
+    "reach_label": "Side channel, mostly lab results",
+    "differs": "Android 12 caps the rate at 200 Hz unless declared. Safari on iPhone asks for a motion permission."
+  },
+  "story": {
+    "what_it_is": "Researchers showed that motion sensors can pick up nearby speech and typing taps.",
+    "icon": "ear",
+    "tags": [
+      "Tracking",
+      "Silent",
+      "Research"
+    ],
+    "marketing": [],
+    "for_you": "You would not notice it. Your phone sits on a table and its motion chip feels tiny shakes from your voice or your typing. A rogue app could guess some words or digits without ever asking for the microphone.",
+    "for_makers": "Honest makers have no use for it. It matters because it shows a side door around the mic permission. Android 12 limited how fast sensors can be read, and iPhone prompts for motion on websites.",
+    "use_cases": [
+      {
+        "type": "security",
+        "example": "A research app guessed spoken digits from the gyroscope on a phone lying on a desk (the Gyrophone work).",
+        "apps": []
+      },
+      {
+        "type": "security",
+        "example": "Researchers recovered PIN taps from motion data while the person typed on a banking app.",
+        "apps": []
+      },
+      {
+        "type": "games",
+        "example": "A game that must read motion at high speed could in theory pick up speech, which is why speed is capped.",
+        "apps": []
+      },
+      {
+        "type": "enterprise",
+        "example": "A company bans unknown apps on phones used in sensitive meetings, in case sensors pick up speech.",
+        "apps": []
+      },
+      {
+        "type": "accessibility",
+        "example": "Voice control tools prefer the mic, since the sensor is too weak and noisy for real use.",
+        "apps": []
+      },
+      {
+        "type": "developer",
+        "example": "A platform engineer tests a rate cap to see how far it cuts the leakage.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Speech or PIN inference without the mic",
+      "Sensor access has no prompt"
+    ],
+    "android_note": "Android 12 caps motion sensor speed to 200 Hz unless an app gets a special permission.",
+    "ios_note": "iPhone limits raw motion on web pages and asks the person for permission on Safari."
+  },
+  "technical_bounds": [
+    "Accuracy limited by the sample rate cap"
+  ],
+  "scores": {
+    "sensitivity": 4,
+    "utility": 1,
+    "fingerprint_bits": null,
+    "friction": 1
+  },
+  "value": {
+    "legit_uses": [
+      "None"
+    ],
+    "abuse": [
+      "Speech or PIN inference without mic"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2021-10",
+      "platform": "android",
+      "version": "12 (API 31)",
+      "change": "200 Hz cap added to limit eavesdropping"
+    }
+  ],
+  "related": [
+    "mob.location.motion-sensors-raw"
+  ],
+  "refs": [
+    {
+      "t": "android",
+      "label": "Android 12 behavior changes",
+      "url": "https://developer.android.com/about/versions/12/behavior-changes-12"
+    },
+    {
+      "t": "android",
+      "label": "Android: Sensors overview",
+      "url": "https://developer.android.com/develop/sensors-and-location/sensors/sensors_overview"
+    }
+  ],
+  "confidence": "docs"
+}

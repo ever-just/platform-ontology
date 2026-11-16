@@ -1,0 +1,234 @@
+{
+  "id": "web.storage.opfs",
+  "name": "Origin Private File System",
+  "kind": "capability",
+  "group": "files-storage",
+  "subgroup": "In session",
+  "tags": [
+    "opfs",
+    "file-system",
+    "sqlite-wasm"
+  ],
+  "plain": "A private, fast file area per site that the person cannot browse and that counts against quota.",
+  "meaning": "Hosts SQLite or media caches in the browser. Invisible to the person in the file manager, uses the origin quota, and lasts until site data is cleared. Needs no prompt, unlike the File System Access picker.",
+  "lifecycle": [
+    "in-session",
+    "after-leaving"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "navigator.storage.getDirectory()",
+      "bcd": [
+        "api.StorageManager.getDirectory"
+      ],
+      "access": {
+        "grant": "none",
+        "prompt_ui": "None",
+        "secure_context": true,
+        "user_gesture": false,
+        "persistence": "Same lifetime and quota as other origin storage",
+        "revocation": "Clear site data, browser privacy settings",
+        "iframe": "",
+        "steps": []
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "86",
+          "note": "",
+          "date": "2020-10-20"
+        },
+        "edge": {
+          "s": "y",
+          "v": "86",
+          "note": "",
+          "date": "2020-10-09"
+        },
+        "firefox": {
+          "s": "y",
+          "v": "111",
+          "note": "",
+          "date": "2023-03-14"
+        },
+        "safari": {
+          "s": "y",
+          "v": "15.2",
+          "note": "",
+          "date": "2021-12-13"
+        },
+        "ios_safari": {
+          "s": "y",
+          "v": "15.2",
+          "note": "",
+          "date": "2021-12-13"
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "109",
+          "note": "",
+          "date": "2023-01-10"
+        },
+        "samsung": {
+          "s": "y",
+          "v": "21.0",
+          "note": "",
+          "date": "2023-05-19"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "binary",
+    "metric": "Files in a private directory",
+    "update": "any time",
+    "fields": [
+      {
+        "name": "quota",
+        "type": "integer",
+        "unit": "percent of disk",
+        "range": "10 to 60",
+        "precision": "approximate"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can keep fast private files in the browser that count against its storage limit",
+    "user_action": "Nothing. It happens when the app saves large files, databases or offline data.",
+    "can": [
+      "Store files in a private browser area",
+      "Open and change them quickly",
+      "Use them without a prompt"
+    ],
+    "cannot": [
+      "Show them in your file manager",
+      "See your real files",
+      "Keep more than the site's storage limit",
+      "Share them with other sites"
+    ],
+    "reach": 2,
+    "reach_label": "Its own private area only",
+    "differs": ""
+  },
+  "story": {
+    "what_it_is": "A private, fast file area per site that you cannot browse and that counts against your storage space.",
+    "icon": "hard-drive-download",
+    "tags": [
+      "Storage",
+      "Silent",
+      "Developer"
+    ],
+    "marketing": [
+      {
+        "vendor": "web.dev",
+        "name": "Origin Private File System",
+        "pitch": "Google pitches it as fast, private file storage in the browser for databases and big files.",
+        "url": "https://web.dev/articles/origin-private-file-system"
+      }
+    ],
+    "for_you": "You never see it. It is why some web apps handle big files fast, and why a site can take up storage you cannot find in a folder.",
+    "for_makers": "It gives web apps quick, real file access with no prompt. Makers use it for in browser databases, big media and offline tools. It counts toward the quota the browser sets for each site.",
+    "use_cases": [
+      {
+        "type": "games",
+        "example": "A browser game keeps its big world files and saves here for fast loading.",
+        "apps": []
+      },
+      {
+        "type": "creative",
+        "example": "A web video editor keeps your clips here while you cut them.",
+        "apps": []
+      },
+      {
+        "type": "developer",
+        "example": "A browser database like SQLite keeps its data file here.",
+        "apps": [
+          "SQLite Wasm"
+        ]
+      },
+      {
+        "type": "productivity",
+        "example": "A note or document app keeps its offline library here.",
+        "apps": []
+      },
+      {
+        "type": "media",
+        "example": "A web music or podcast app keeps downloaded episodes here.",
+        "apps": []
+      },
+      {
+        "type": "security",
+        "example": "A hidden ID file here is not shown in any normal browser storage list.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Storage you cannot see",
+      "Can persist an ID"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Not visible to user",
+    "Same quota as IndexedDB",
+    "Sync access handles only in dedicated workers",
+    "No access to the real file system"
+  ],
+  "scores": {
+    "sensitivity": 2,
+    "utility": 4,
+    "fingerprint_bits": 0,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Large local databases (SQLite WASM), game assets"
+    ],
+    "abuse": [
+      "Hidden data stash"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2020-10",
+      "browser": "chrome",
+      "version": "86",
+      "change": "Shipped with File System Access"
+    },
+    {
+      "date": "2022-03",
+      "browser": "safari",
+      "version": "15.2",
+      "change": "Shipped in Safari with worker sync access"
+    },
+    {
+      "date": "2023-03",
+      "browser": "firefox",
+      "version": "111",
+      "change": "Shipped"
+    }
+  ],
+  "related": [
+    "web.storage.indexeddb"
+  ],
+  "refs": [
+    {
+      "t": "mdn",
+      "label": "MDN Origin private file system",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/File_System_API/Origin_private_file_system"
+    },
+    {
+      "t": "spec",
+      "label": "WHATWG File System",
+      "url": "https://fs.spec.whatwg.org/"
+    }
+  ],
+  "confidence": "docs"
+}

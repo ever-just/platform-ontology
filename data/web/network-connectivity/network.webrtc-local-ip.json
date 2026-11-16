@@ -1,0 +1,228 @@
+{
+  "id": "web.network.webrtc-local-ip",
+  "name": "WebRTC local IP discovery",
+  "kind": "signal",
+  "group": "network-connectivity",
+  "subgroup": "Connection",
+  "tags": [
+    "webrtc",
+    "ip",
+    "fingerprint"
+  ],
+  "plain": "Uses a WebRTC peer connection to learn the device's local and public IP addresses.",
+  "meaning": "Can reveal a real IP behind a VPN and LAN addresses. Browsers now often hide local addresses behind mDNS names. LinkedIn uses stun.l.google.com:19302 and an IP regex.",
+  "lifecycle": [
+    "on-arrival",
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "new RTCPeerConnection({iceServers:[{urls:'stun:stun.l.google.com:19302'}]}), onicecandidate",
+      "bcd": [
+        "api.RTCPeerConnection"
+      ],
+      "access": {
+        "grant": "none",
+        "prompt_ui": "None (no browser prompt)",
+        "secure_context": false,
+        "user_gesture": false,
+        "persistence": "",
+        "revocation": "",
+        "iframe": "",
+        "steps": [
+          "Script reads the value",
+          "Value joins the fingerprint payload"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "56",
+          "note": "Local IPs masked by mDNS since about Chrome 75",
+          "date": "2017-01-25"
+        },
+        "edge": {
+          "s": "y",
+          "v": "15",
+          "note": "",
+          "date": "2017-04-05"
+        },
+        "firefox": {
+          "s": "y",
+          "v": "44",
+          "note": "",
+          "date": "2016-01-26"
+        },
+        "safari": {
+          "s": "y",
+          "v": "11",
+          "note": "",
+          "date": "2017-09-19"
+        },
+        "ios_safari": {
+          "s": "y",
+          "v": "11",
+          "note": "",
+          "date": "2017-09-19"
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "56",
+          "note": "",
+          "date": "2017-02-01"
+        },
+        "samsung": {
+          "s": "y",
+          "v": "6.0",
+          "note": "",
+          "date": "2017-08-23"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "list",
+    "metric": "WebRTC local IP discovery",
+    "update": "read on demand",
+    "fields": [
+      {
+        "name": "ip",
+        "type": "list",
+        "unit": "",
+        "range": "local and public candidates",
+        "precision": "exact"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can try to learn your device's home network address and public address through a call setup",
+    "user_action": "Nothing. A page can start a call setup without a pop up",
+    "can": [
+      "Ask an outside server for your public address",
+      "See a masked .local name for your home network address in most browsers",
+      "See your real home network address if you allowed camera or microphone",
+      "Compare addresses to spot a VPN"
+    ],
+    "cannot": [
+      "See your real home network address by default in modern browsers",
+      "Beat a VPN that carries call traffic too",
+      "See other devices on your network from this alone",
+      "Work without a script running on the page"
+    ],
+    "reach": 2,
+    "reach_label": "Mostly hidden, can leak a VPN",
+    "differs": ""
+  },
+  "story": {
+    "what_it_is": "A page can use a call feature to learn your device's home network address and public address.",
+    "icon": "globe",
+    "tags": [
+      "Network",
+      "Silent",
+      "Privacy"
+    ],
+    "marketing": [
+      {
+        "vendor": "MDN Web Docs",
+        "name": "RTCPeerConnection",
+        "pitch": "The call building block that gathers network paths so two browsers can connect directly.",
+        "url": "https://developer.mozilla.org/en-US/docs/Web/API/RTCPeerConnection"
+      }
+    ],
+    "for_you": "You never see it. A page can quietly start a call setup and read the addresses it finds. Modern browsers hide the home address behind a random name, but the public one may still show.",
+    "for_makers": "Makers need these addresses to connect calls and games directly. Tracking and fraud scripts also read them to see past some VPNs. Privacy settings can block this, but may break calls.",
+    "use_cases": [
+      {
+        "type": "video",
+        "example": "Browser video calls such as Google Meet gather addresses so your computer and the other person's can connect directly.",
+        "apps": [
+          "Google Meet"
+        ]
+      },
+      {
+        "type": "games",
+        "example": "A browser multiplayer game with peer to peer links finds addresses of all players so they can connect without a central relay.",
+        "apps": []
+      },
+      {
+        "type": "video",
+        "example": "A cloud gaming page builds a live video path to the game server using the paths found by this feature.",
+        "apps": [
+          "GeForce NOW",
+          "Xbox Cloud Gaming"
+        ]
+      },
+      {
+        "type": "security",
+        "example": "A fraud tool reads the public address found by the call setup to see if it differs from the page request address, which may show a VPN.",
+        "apps": []
+      },
+      {
+        "type": "ads",
+        "example": "A tracking script reads the addresses to tell devices apart, a trick browsers now limit.",
+        "apps": []
+      },
+      {
+        "type": "social",
+        "example": "A web voice chat joins a room and shares your path with friends so audio stays low delay.",
+        "apps": [
+          "Discord"
+        ]
+      },
+      {
+        "type": "developer",
+        "example": "A developer uses a leak test page to check what a site can learn through calls.",
+        "apps": [
+          "BrowserLeaks"
+        ]
+      }
+    ],
+    "risks": [
+      "VPN leak",
+      "Used to unmask visitors"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "mDNS hides host addresses by default",
+    "STUN request also leaks the public IP to Google"
+  ],
+  "scores": {
+    "sensitivity": 4,
+    "utility": 3,
+    "fingerprint_bits": 3,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Peer to peer calls"
+    ],
+    "abuse": [
+      "VPN bypass"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": true,
+      "how": "Collector key(s): webrtc. STUN stun.l.google.com:19302 and IP regex."
+    }
+  },
+  "related": [
+    "web.tracking.linkedin-apfc-fingerprint"
+  ],
+  "refs": [
+    {
+      "t": "mdn",
+      "label": "MDN RTCPeerConnection",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/RTCPeerConnection"
+    },
+    {
+      "t": "github",
+      "label": "mdp/linkedin-extension-fingerprinting (LinkedIn script snapshot and ID list)",
+      "url": "https://github.com/mdp/linkedin-extension-fingerprinting"
+    }
+  ],
+  "confidence": "docs"
+}

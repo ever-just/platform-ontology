@@ -1,0 +1,219 @@
+{
+  "id": "web.display.screen-frame",
+  "name": "Screen frame (taskbar insets)",
+  "kind": "signal",
+  "group": "display-window",
+  "subgroup": "Screen",
+  "tags": [
+    "screen",
+    "availTop",
+    "taskbar"
+  ],
+  "plain": "Offsets between full screen and usable area reveal taskbar or dock size and position.",
+  "meaning": "Shows macOS dock height and side, Windows taskbar edge, notches and system bars. Identifies OS UI settings and multi-monitor layout. Firefox now hides taskbar size by default.",
+  "lifecycle": [
+    "on-arrival",
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "screen.availTop, availLeft, availWidth, availHeight vs width, height",
+      "bcd": [
+        "api.Screen.availTop"
+      ],
+      "access": {
+        "grant": "none",
+        "prompt_ui": "None",
+        "secure_context": false,
+        "user_gesture": false,
+        "persistence": "read fresh on every page load; nothing stored",
+        "revocation": "none needed (no grant)",
+        "iframe": "Readable from cross-origin iframes too (same values)",
+        "steps": [
+          "Page script reads the value",
+          "No prompt is shown"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "1",
+          "note": "",
+          "date": "2008-12-11"
+        },
+        "edge": {
+          "s": "y",
+          "v": "79",
+          "note": "",
+          "date": "2020-01-15"
+        },
+        "firefox": {
+          "s": "y",
+          "v": "1",
+          "note": "Taskbar hiding since 145",
+          "date": "2004-11-09"
+        },
+        "safari": {
+          "s": "y",
+          "v": "1",
+          "note": "",
+          "date": "2003-06-23"
+        },
+        "ios_safari": {
+          "s": "y",
+          "v": "1",
+          "note": "",
+          "date": "2007-06-29"
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "18",
+          "note": "",
+          "date": "2012-06-27"
+        },
+        "samsung": {
+          "s": "y",
+          "v": "1.0",
+          "note": "",
+          "date": "2013-04-27"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "object",
+    "metric": "",
+    "update": "static per session",
+    "fields": [
+      {
+        "name": "top, right, bottom, left insets",
+        "type": "integer",
+        "unit": "CSS px",
+        "range": "0 to about 200",
+        "precision": "exact"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can tell how big your taskbar or dock is and where it sits",
+    "user_action": "Nothing. It happens when the page loads.",
+    "can": [
+      "Compare the full screen size with the usable area",
+      "Guess your operating system and dock position",
+      "Add the result to a browser fingerprint"
+    ],
+    "cannot": [
+      "See which apps are on your dock or taskbar",
+      "See your other monitors without the multi-screen permission",
+      "Move or resize your taskbar"
+    ],
+    "reach": 1,
+    "reach_label": "Four numbers, no prompt",
+    "differs": ""
+  },
+  "story": {
+    "what_it_is": "The gap between your full screen and its usable area reveals where your taskbar or dock sits.",
+    "icon": "frame",
+    "tags": [
+      "Display",
+      "Silent",
+      "Fingerprint"
+    ],
+    "marketing": [
+      {
+        "vendor": "MDN",
+        "name": "Screen availWidth",
+        "pitch": "Documents the width of the screen not taken by system bars like the taskbar.",
+        "url": "https://developer.mozilla.org/en-US/docs/Web/API/Screen/availWidth"
+      }
+    ],
+    "for_you": "You never see it. The page subtracts two numbers and learns how big your taskbar or dock is and which side it is on.",
+    "for_makers": "Makers use it to place popups and windows without hiding them under a taskbar. Trackers like it because taskbar size and side is a rare mix that helps spot your computer again.",
+    "use_cases": [
+      {
+        "type": "games",
+        "example": "A browser game opens a pop out window sized to fit above the taskbar.",
+        "apps": []
+      },
+      {
+        "type": "productivity",
+        "example": "A web app places a floating panel so that the dock does not cover it.",
+        "apps": []
+      },
+      {
+        "type": "security",
+        "example": "A fraud check sees a screen frame that does not match the claimed operating system and flags it as a spoofed device.",
+        "apps": []
+      },
+      {
+        "type": "ads",
+        "example": "A fingerprint script reads the taskbar gap as one more way to separate your computer from others with the same screen.",
+        "apps": []
+      },
+      {
+        "type": "analytics",
+        "example": "A team learns how much usable height they have on typical laptops.",
+        "apps": []
+      },
+      {
+        "type": "enterprise",
+        "example": "A kiosk or signage page can tell it is not running in a normal desktop mode.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Fingerprint clue",
+      "Reveals your setup"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Zero on mobile in fullscreen"
+  ],
+  "scores": {
+    "sensitivity": 1,
+    "utility": 2,
+    "fingerprint_bits": 3.0,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Position popups"
+    ],
+    "abuse": [
+      "OS UI settings fingerprint"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2025-11",
+      "browser": "firefox",
+      "version": "145",
+      "change": "Taskbar and dock size hidden by default"
+    }
+  ],
+  "related": [
+    "web.display.screen-size"
+  ],
+  "refs": [
+    {
+      "t": "github",
+      "label": "fingerprintjs source: screen_frame",
+      "url": "https://github.com/fingerprintjs/fingerprintjs/blob/master/src/sources/screen_frame.ts"
+    },
+    {
+      "t": "mozilla",
+      "label": "Mozilla Security Blog 2026-11-10: harder to fingerprint",
+      "url": "https://blog.mozilla.org/security/2026/11/10/open-research-stronger-privacy-making-firefox-users-harder-to-fingerprint/"
+    }
+  ],
+  "confidence": "docs"
+}

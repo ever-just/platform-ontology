@@ -1,0 +1,246 @@
+{
+  "id": "web.xsite.shared-storage",
+  "name": "Shared Storage API (retired)",
+  "kind": "tracking",
+  "group": "cross-site-tracking",
+  "subgroup": "Privacy Sandbox",
+  "tags": [
+    "shared-storage",
+    "selecturl",
+    "privacy-sandbox",
+    "retired"
+  ],
+  "plain": "Cross-site storage whose values could only be read in a locked worker. Retired Oct 2025.",
+  "meaning": "Let scripts write cross-site values (for example a frequency count) and read them only inside a worklet that output through limited channels (selectURL, Private Aggregation). Disabled starting build 153.0.8001.0; code removal follows.",
+  "lifecycle": [
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "window.sharedStorage.set(), worklet.run(), selectURL()",
+      "permissions_policy": "shared-storage",
+      "bcd": [
+        "api.WindowSharedStorage"
+      ],
+      "access": {
+        "grant": "none",
+        "prompt_ui": "None",
+        "secure_context": false,
+        "user_gesture": false,
+        "persistence": "Entries expire after 30 days, renewable on write",
+        "revocation": "Clear site data, browser privacy settings",
+        "iframe": "",
+        "steps": []
+      },
+      "support": {
+        "chrome": {
+          "s": "r",
+          "v": "153",
+          "note": "Disabled in 153",
+          "date": "2026-09-08"
+        },
+        "edge": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "firefox": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "safari": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "ios_safari": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "chrome_android": {
+          "s": "r",
+          "v": "153",
+          "note": "",
+          "date": "2026-09-08"
+        },
+        "samsung": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "object",
+    "metric": "Key/value pairs readable in worklet only",
+    "update": "writes any time",
+    "fields": [
+      {
+        "name": "entry lifetime",
+        "type": "integer",
+        "unit": "days",
+        "range": "up to 30",
+        "precision": "renewed on write"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can't store cross site data for ads in Chrome anymore, since it was retired in 2025",
+    "user_action": "Nothing. It used to happen in the background on pages with embedded ads",
+    "can": [
+      "Have stored values in the browser that any site could use through a locked worker",
+      "Have helped choose an ad or count reach without naming you"
+    ],
+    "cannot": [
+      "Run in Chrome after retirement",
+      "Work in Edge, Firefox or Safari",
+      "Show stored values to the page directly",
+      "Replace cookies for all ad needs"
+    ],
+    "reach": 1,
+    "reach_label": "Retired",
+    "differs": ""
+  },
+  "story": {
+    "what_it_is": "Chrome storage that held cross site values in a locked room. Retired.",
+    "icon": "database",
+    "tags": [
+      "Storage",
+      "Chrome",
+      "Retired"
+    ],
+    "marketing": [
+      {
+        "vendor": "Google Chrome",
+        "name": "Shared Storage API",
+        "pitch": "Chrome pitched it as unpartitioned storage that could be read only in a locked worklet with limited outputs.",
+        "url": "https://privacysandbox.google.com/blog/update-on-plans-for-privacy-sandbox-technologies"
+      }
+    ],
+    "for_you": "You never saw it. A script could write a value, such as a count, that other sites could read only inside a locked worker. Chrome is turning it off. You will not meet it.",
+    "for_makers": "It was meant to help with things like frequency capping and A/B tests without tracking. Reads had to go through limited paths. With the Privacy Sandbox ad parts retired, it is going away.",
+    "use_cases": [
+      {
+        "type": "ads",
+        "example": "An ad network counted how many times you saw an ad across sites to avoid showing it too often.",
+        "apps": [
+          "Google Ad Manager"
+        ]
+      },
+      {
+        "type": "analytics",
+        "example": "A test tool used it to keep the same A or B design across sites you visit.",
+        "apps": []
+      },
+      {
+        "type": "games",
+        "example": "A game studio could cap how often it showed the same promo across sites.",
+        "apps": []
+      },
+      {
+        "type": "media",
+        "example": "A publisher used it to pick which ad creative to show without a profile.",
+        "apps": []
+      },
+      {
+        "type": "shopping",
+        "example": "A retailer used it to know a visitor saw a sale ad on a partner site.",
+        "apps": []
+      },
+      {
+        "type": "social",
+        "example": "A social login widget could have stored a flag across sites, read only in a safe room.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Retired in Chrome",
+      "Never widely adopted"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Reads only inside a worklet",
+    "selectURL leaks log2(n) bits capped at about 12 bits per 24 hours per top-level site (budget)",
+    "No direct script access to values",
+    "Chrome only"
+  ],
+  "scores": {
+    "sensitivity": 3,
+    "utility": 2,
+    "fingerprint_bits": null,
+    "friction": 3
+  },
+  "value": {
+    "legit_uses": [
+      "Cross-site A/B tests, frequency caps (historical)"
+    ],
+    "abuse": [
+      "Cross-site counters tied to fingerprints"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2023-09",
+      "browser": "chrome",
+      "version": "117",
+      "change": "Shipped"
+    },
+    {
+      "date": "2025-10",
+      "browser": "chrome",
+      "version": "141",
+      "change": "Retirement announced (Private Aggregation including Shared Storage)"
+    },
+    {
+      "date": "2026-01",
+      "browser": "chrome",
+      "version": "144",
+      "change": "Deprecation per release notes"
+    },
+    {
+      "date": "2026-09",
+      "browser": "chrome",
+      "version": "153",
+      "change": "Disabled from 153.0.8001.0, code removal without staged rollout (post dated Sep 30 2026)"
+    }
+  ],
+  "related": [
+    "web.xsite.private-aggregation",
+    "web.xsite.fenced-frames"
+  ],
+  "refs": [
+    {
+      "t": "vendor",
+      "label": "Privacy Sandbox: Update on plans (Oct 17, 2025)",
+      "url": "https://privacysandbox.google.com/blog/update-on-plans-for-privacy-sandbox-technologies"
+    },
+    {
+      "t": "vendor",
+      "label": "Privacy Sandbox feature status page (updated Aug 14, 2026)",
+      "url": "https://privacysandbox.google.com/overview/status"
+    },
+    {
+      "t": "news",
+      "label": "Privacy Sandbox history and removal timeline (checked Oct 2, 2026)",
+      "url": "https://hidekazu-konishi.com/entry/privacy_sandbox_history_and_timeline.html"
+    },
+    {
+      "t": "spec",
+      "label": "Shared Storage explainer",
+      "url": "https://github.com/WICG/shared-storage"
+    }
+  ],
+  "confidence": "verified"
+}

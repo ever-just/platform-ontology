@@ -1,0 +1,240 @@
+{
+  "id": "web.tracking.linkedin-apfc-fingerprint",
+  "name": "APFC / DNA device fingerprint (abuse prevention features)",
+  "kind": "tracking",
+  "group": "rendering-fingerprint",
+  "subgroup": "Composite fingerprint",
+  "tags": [
+    "fingerprint",
+    "apfc",
+    "encrypted-payload",
+    "browsergate",
+    "fingerprintjs2"
+  ],
+  "plain": "Collects about 48 device and browser traits, encrypts them, and attaches them to later requests.",
+  "meaning": "Builds a device fingerprint from hardware, display, locale, rendering and storage traits. Because it is encrypted with a LinkedIn key and sent as a header, people and researchers cannot easily see what leaves the browser.",
+  "lifecycle": [
+    "on-arrival",
+    "in-session",
+    "signed-in"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "Fingerprint2.js derived collector; RSA encrypt (key apfcDfPK); compressToBase64; globalThis.apfcDf; header on API calls; /platform-telemetry/li/apfcDf, /apfc/collect",
+      "access": {
+        "grant": "none",
+        "prompt_ui": "None (no browser prompt)",
+        "secure_context": false,
+        "user_gesture": false,
+        "persistence": "Cookies li_bapfcc and li_odapfcc 2 years (control how many features are collected); li_apfcdc 10 hours (triggering)",
+        "revocation": "",
+        "iframe": "",
+        "steps": [
+          "Collector gathers about 47 keyed features plus the getFeatures meta item (48 in BrowserGate's count)",
+          "Each feature has a dataLimit (e.g. webgl 6, fonts 1500, userAgent 1500)",
+          "Result is RSA encrypted with a key delivered from apfcDfPK, compressed and stored in globalThis.apfcDf",
+          "Attached as an HTTP header to later API requests (LIX flag sync.apfc.headers) and posted to telemetry endpoints",
+          "Server side flags (pemberly.tracking.fireApfcEvent, pemberly.tracking.apfc.network.interceptor) switch it on"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "",
+          "note": ""
+        },
+        "edge": {
+          "s": "y",
+          "v": "",
+          "note": ""
+        },
+        "firefox": {
+          "s": "y",
+          "v": "",
+          "note": ""
+        },
+        "safari": {
+          "s": "y",
+          "v": "",
+          "note": ""
+        },
+        "ios_safari": {
+          "s": "y",
+          "v": "",
+          "note": ""
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "",
+          "note": ""
+        },
+        "samsung": {
+          "s": "y",
+          "v": "",
+          "note": ""
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "object",
+    "metric": "Encrypted blob of about 48 features",
+    "update": "per page or session",
+    "fields": [
+      {
+        "name": "features",
+        "type": "object",
+        "unit": "features",
+        "range": "47 keys plus getFeatures",
+        "precision": "names verified in public script snapshot"
+      },
+      {
+        "name": "apfcDf",
+        "type": "binary",
+        "unit": "bytes",
+        "range": "unknown (encrypted, compressed)",
+        "precision": "opaque to the user"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can collect about 48 device traits and send them in secret with later requests",
+    "user_action": "Nothing. It happens when a LinkedIn page loads",
+    "can": [
+      "Collect about 48 traits about your hardware, screen, language, drawing and storage",
+      "Lock the result with a LinkedIn key",
+      "Attach it to later requests as a header, so it is hard to see",
+      "Link your visits to one device profile"
+    ],
+    "cannot": [
+      "Ask permission first",
+      "Be seen or checked by you in plain form",
+      "See your files or private messages",
+      "Be cleared by deleting cookies alone"
+    ],
+    "reach": 4,
+    "reach_label": "Follows your device across visits",
+    "differs": ""
+  },
+  "story": {
+    "what_it_is": "LinkedIn's abuse prevention code collects around 48 device and browser traits, encrypts them and sends them with later requests.",
+    "icon": "fingerprint",
+    "tags": [
+      "Tracking",
+      "Anti fraud",
+      "Silent"
+    ],
+    "marketing": [],
+    "for_you": "You never see it. When you use a site that loads this code, your browser quietly collects about 48 traits and sends them in an encrypted bundle. It is meant to catch fake accounts and scrapers.",
+    "for_makers": "LinkedIn says this is for abuse prevention. Fraud teams use it to spot fake accounts and scraping at scale. Privacy researchers point out that the same data can also work as a durable device ID.",
+    "use_cases": [
+      {
+        "type": "social",
+        "example": "A professional network blocks a scraper that creates thousands of fake profiles to collect names and job titles.",
+        "apps": [
+          "LinkedIn"
+        ]
+      },
+      {
+        "type": "security",
+        "example": "A site compares your device bundle with past logins and asks for a code if it looks new.",
+        "apps": []
+      },
+      {
+        "type": "ads",
+        "example": "An ad system could use a similar bundle to recognize a device, which is why privacy groups watch it.",
+        "apps": []
+      },
+      {
+        "type": "dating",
+        "example": "A dating app uses a device bundle to ban scammers who keep making new profiles.",
+        "apps": []
+      },
+      {
+        "type": "shopping",
+        "example": "A marketplace spots one person running hundreds of seller accounts from the same laptop.",
+        "apps": []
+      },
+      {
+        "type": "banking",
+        "example": "A bank adds a device trait bundle to its risk score at login.",
+        "apps": []
+      },
+      {
+        "type": "analytics",
+        "example": "A research team compares the traits collected and shows which are most unique.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Hard to opt out",
+      "Encrypted so hard to inspect",
+      "Doubles as a device ID"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Cannot be decrypted by the page or user (private key is server side)",
+    "Feature count and set may change between releases",
+    "Public snapshot may differ from production"
+  ],
+  "scores": {
+    "sensitivity": 4,
+    "utility": 3,
+    "fingerprint_bits": 30,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Bot and fake account detection",
+      "Account takeover defense"
+    ],
+    "abuse": [
+      "Cross-session device identification",
+      "Profiling beyond security needs"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": true,
+      "how": "Core fingerprint stack. The 47 collector keys plus getFeatures give the 48 named by BrowserGate. Names verified in the public mdp snapshot; the count and that production matches today are from BrowserGate and not independently confirmed."
+    }
+  },
+  "related": [
+    "web.tracking.linkedin-cookies-antiabuse",
+    "web.fingerprint.spoofing-detection",
+    "web.render.canvas",
+    "web.render.webgl",
+    "web.render.audio-context"
+  ],
+  "refs": [
+    {
+      "t": "github",
+      "label": "mdp/linkedin-extension-fingerprinting (LinkedIn script snapshot and ID list)",
+      "url": "https://github.com/mdp/linkedin-extension-fingerprinting"
+    },
+    {
+      "t": "news",
+      "label": "BrowserGate: how it works (48 feature table)",
+      "url": "https://browsergate.eu/how-it-works/"
+    },
+    {
+      "t": "vendor",
+      "label": "LinkedIn cookie table",
+      "url": "https://www.linkedin.com/legal/l/cookie-table"
+    },
+    {
+      "t": "news",
+      "label": "BleepingComputer: LinkedIn scans for 6,000+ Chrome extensions",
+      "url": "https://www.bleepingcomputer.com/news/security/linkedin-secretely-scans-for-6-000-plus-chrome-extensions-collects-data/"
+    },
+    {
+      "t": "news",
+      "label": "The Next Web: BrowserGate",
+      "url": "https://thenextweb.com/news/linkedin-browsergate-extension-scanning-privacy-fingerprint"
+    }
+  ],
+  "confidence": "verified"
+}

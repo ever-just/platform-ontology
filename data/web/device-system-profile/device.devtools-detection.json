@@ -1,0 +1,207 @@
+{
+  "id": "web.device.devtools-detection",
+  "name": "DevTools open detection",
+  "kind": "signal",
+  "group": "device-system-profile",
+  "subgroup": "Browser state",
+  "tags": [
+    "devtools",
+    "anti-debug",
+    "heuristic"
+  ],
+  "plain": "Heuristics that guess when the browser developer tools are open.",
+  "meaning": "Used by anti-scraping and anti-cheat code. Methods: window outer minus inner size over about 160 px, console getter traps, debugger timing. Easily false-positive when docked or zoomed.",
+  "lifecycle": [
+    "on-arrival",
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "outerWidth - innerWidth, console.log getter, debugger timing",
+      "access": {
+        "grant": "none",
+        "prompt_ui": "None",
+        "secure_context": false,
+        "user_gesture": false,
+        "persistence": "read fresh on every page load; nothing stored",
+        "revocation": "none needed (no grant)",
+        "iframe": "Readable from cross-origin iframes too (same values)",
+        "steps": [
+          "Page script reads the value",
+          "No prompt is shown"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "1",
+          "note": "",
+          "date": "2008-12-11"
+        },
+        "edge": {
+          "s": "y",
+          "v": "12",
+          "note": "",
+          "date": "2015-07-29"
+        },
+        "firefox": {
+          "s": "y",
+          "v": "1",
+          "note": "",
+          "date": "2004-11-09"
+        },
+        "safari": {
+          "s": "y",
+          "v": "1",
+          "note": "",
+          "date": "2003-06-23"
+        },
+        "ios_safari": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "chrome_android": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "samsung": {
+          "s": "y",
+          "v": "1.0",
+          "note": "",
+          "date": "2013-04-27"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "object",
+    "metric": "",
+    "update": "static per session",
+    "fields": [
+      {
+        "name": "devtoolsOpen",
+        "type": "boolean",
+        "unit": "",
+        "range": "inferred",
+        "precision": "heuristic"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can guess when your browser developer tools are open, but often gets it wrong",
+    "user_action": "Nothing. It runs in the background while the page is open",
+    "can": [
+      "Guess from window size changes that a side panel is open",
+      "Use timing and console tricks to spot open tools",
+      "Block content or end a session when it thinks tools are open",
+      "Flag you as a possible scraper or cheater"
+    ],
+    "cannot": [
+      "Work on iPhone or Chrome on Android",
+      "See what you do inside the tools",
+      "Be sure; docked panels and zoom cause false alarms",
+      "Stop you from closing the tools"
+    ],
+    "reach": 2,
+    "reach_label": "A guess, while the page is open",
+    "differs": "Works on desktop Chrome, Edge, Firefox, and Safari. It does not work on iPhone or Chrome on Android."
+  },
+  "story": {
+    "what_it_is": "Guesses whether you have the browser's developer tools open.",
+    "icon": "bug",
+    "tags": [
+      "Developer tools",
+      "Silent",
+      "Anti-cheat"
+    ],
+    "marketing": [],
+    "for_you": "You never see it. You may notice a page that suddenly goes blank, redirects away or freezes when you press F12. It can also fire by mistake if your window is oddly sized.",
+    "for_makers": "Sites that fear scraping, cheating or copying want to know when someone inspects the code. They react by hiding content, adding delays or flagging the visit. It is easy to fool, but common in anti-bot and game protection.",
+    "use_cases": [
+      {
+        "type": "games",
+        "example": "A browser game with paid items blanks the screen if the developer tools are open, to stop people editing score or coins.",
+        "apps": []
+      },
+      {
+        "type": "security",
+        "example": "An anti-scraping script sees the tools open and serves empty data to the visitor.",
+        "apps": [
+          "PerimeterX",
+          "DataDome"
+        ]
+      },
+      {
+        "type": "media",
+        "example": "A streaming page pauses playback when it thinks someone is capturing the video stream.",
+        "apps": []
+      },
+      {
+        "type": "education",
+        "example": "An online exam page flags students who open developer tools during a timed test.",
+        "apps": []
+      },
+      {
+        "type": "shopping",
+        "example": "A ticket sale page ends the session when it sees tools open during a drop, as a bot defence.",
+        "apps": []
+      },
+      {
+        "type": "developer",
+        "example": "A tool maker uses the same check to show debug info only when developer tools are open.",
+        "apps": []
+      },
+      {
+        "type": "ads",
+        "example": "An ad verification script avoids sending data when it detects a person inspecting it.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "False alarms for curious people",
+      "Used to hinder security research"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "No standard API",
+    "Mobile browsers have no devtools signal"
+  ],
+  "scores": {
+    "sensitivity": 1,
+    "utility": 2,
+    "fingerprint_bits": 0.3,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Anti-scraping"
+    ],
+    "abuse": [
+      "Chilling inspection"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "refs": [
+    {
+      "t": "github",
+      "label": "CreepJS (abrahamjuliot)",
+      "url": "https://github.com/abrahamjuliot/creepjs"
+    },
+    {
+      "t": "mdn",
+      "label": "MDN outerWidth",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/Window/outerWidth"
+    }
+  ],
+  "confidence": "inferred"
+}

@@ -1,0 +1,202 @@
+{
+  "id": "mob.policy.photo-video",
+  "name": "Play photo and video permissions policy",
+  "kind": "capability",
+  "group": "app-ecosystem",
+  "subgroup": "Play permission declarations",
+  "tags": [
+    "photo-picker",
+    "read-media-images",
+    "media-permissions"
+  ],
+  "plain": "Apps may not request broad photo or video access unless it is their core purpose; the Photo Picker is the default.",
+  "meaning": "Google's 2024 policy forces most apps to the Photo Picker. Broad READ_MEDIA_IMAGES or READ_MEDIA_VIDEO needs a declaration and approval. iOS offers a limited library and PHPicker.",
+  "lifecycle": [
+    "in-session"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "p",
+      "v": "13",
+      "api": 33,
+      "permission": "READ_MEDIA_IMAGES, READ_MEDIA_VIDEO, READ_MEDIA_VISUAL_USER_SELECTED (14)",
+      "protection": "dangerous",
+      "grant": "none",
+      "prompt_ui": "",
+      "persistence": "",
+      "revocation": "",
+      "store_policy": "Photo and video declaration; deadline 28 Jan 2025 (extended to May 2025); approved only if Photo Picker is not enough",
+      "api_surface": "Android Photo Picker (ActivityResultContracts.PickVisualMedia)",
+      "note": "Android 14 added selected photos access."
+    },
+    "ios": {
+      "s": "y",
+      "v": "14.0",
+      "permission": "NSPhotoLibraryUsageDescription",
+      "protection": "prompt",
+      "grant": "prompt",
+      "prompt_ui": "Limited Library choice",
+      "persistence": "",
+      "revocation": "",
+      "store_policy": "",
+      "api_surface": "PHPickerViewController (no permission), PHPhotoLibrary",
+      "note": "PHPicker needs no prompt since iOS 14."
+    }
+  },
+  "data": {
+    "type": "object",
+    "metric": "Media items",
+    "update": "on demand",
+    "fields": [
+      {
+        "name": "image/video",
+        "type": "binary",
+        "unit": "",
+        "range": "",
+        "precision": ""
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can open only the photos you pick, unless Google approves broad photo access",
+    "user_action": "You tap Add photo and choose from the picker, or tap Allow access to your library",
+    "can": [
+      "Show the system photo picker so you choose some photos",
+      "See only the selected photos on Android 14 and later or Limited Library on iPhone",
+      "Use your full library if the app got Google approval for a core purpose"
+    ],
+    "cannot": [
+      "See photos you did not pick, when you chose limited access",
+      "Ask for broad photo or video access on Play without a declaration and approval",
+      "Ask on iPhone for more than Limited Library if you pick Select Photos"
+    ],
+    "reach": 2,
+    "reach_label": "Only what you pick, unless approved",
+    "differs": "Android 13 and later separates photos and videos; Android 14 added selected photos access. iPhone has Limited Library and a picker that needs no prompt."
+  },
+  "story": {
+    "what_it_is": "Google's rule that most apps must use the Photo Picker instead of reading all photos.",
+    "icon": "images",
+    "tags": [
+      "Photos",
+      "Play rules",
+      "Asks first"
+    ],
+    "marketing": [
+      {
+        "vendor": "Google",
+        "name": "Photo Picker",
+        "pitch": "Let people choose the photos they share, so apps do not need broad access to the library.",
+        "url": "https://developer.android.com/training/data-storage/shared/photopicker"
+      },
+      {
+        "vendor": "Google",
+        "name": "Photo and video permissions policy",
+        "pitch": "Broad media access is for apps whose core purpose needs it.",
+        "url": "https://support.google.com/googleplay/android-developer/answer/14115180"
+      }
+    ],
+    "for_you": "You pick the photos you want to share and the app sees only those. You do not need to give it your whole gallery.",
+    "for_makers": "Photo libraries hold faces, places and documents, so Google pushes most apps to the picker. Only gallery or editing apps can ask for full access, which keeps people more willing to say yes.",
+    "use_cases": [
+      {
+        "type": "social",
+        "example": "You choose three beach photos for a post and the app cannot see your other pictures.",
+        "apps": [
+          "Instagram",
+          "Facebook"
+        ]
+      },
+      {
+        "type": "messaging",
+        "example": "A chat app sends one photo you pick, with no broad library access.",
+        "apps": [
+          "WhatsApp",
+          "Telegram"
+        ]
+      },
+      {
+        "type": "creative",
+        "example": "A photo editor asks for full access because browsing every picture is its core feature.",
+        "apps": [
+          "Lightroom",
+          "Snapseed"
+        ]
+      },
+      {
+        "type": "games",
+        "example": "A game asks you to pick an avatar photo from the picker.",
+        "apps": [
+          "Roblox"
+        ]
+      },
+      {
+        "type": "banking",
+        "example": "A banking app reads a check photo you select when depositing.",
+        "apps": [
+          "Chase"
+        ]
+      },
+      {
+        "type": "security",
+        "example": "A backup app that really needs all media must file a declaration and get approval.",
+        "apps": [
+          "Google Photos",
+          "Dropbox"
+        ]
+      }
+    ],
+    "risks": [
+      "Hidden location data in photos",
+      "Face data in libraries"
+    ],
+    "android_note": "Android 14 added 'selected photos only' and the system Photo Picker.",
+    "ios_note": "iOS has a limited library choice and a system picker that needs no permission."
+  },
+  "technical_bounds": [
+    "Declared exceptions only",
+    "Picker is default"
+  ],
+  "scores": {
+    "sensitivity": 4,
+    "utility": 3,
+    "fingerprint_bits": null,
+    "friction": 3
+  },
+  "value": {
+    "legit_uses": [
+      "Gallery and editing apps"
+    ],
+    "abuse": [
+      "Mass media harvesting"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2024-08",
+      "platform": "android",
+      "version": "Play policy",
+      "change": "Photo and video permissions policy announced, deadline 2025"
+    }
+  ],
+  "refs": [
+    {
+      "t": "android",
+      "label": "Play: Photo and video permissions",
+      "url": "https://support.google.com/googleplay/android-developer/answer/14115180"
+    },
+    {
+      "t": "android",
+      "label": "Android: Photo Picker",
+      "url": "https://developer.android.com/training/data-storage/shared/photopicker"
+    }
+  ],
+  "confidence": "docs"
+}

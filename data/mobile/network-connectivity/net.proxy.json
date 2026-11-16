@@ -1,0 +1,171 @@
+{
+  "id": "mob.net.proxy",
+  "name": "System proxy settings",
+  "kind": "signal",
+  "group": "network-connectivity",
+  "subgroup": "Connectivity",
+  "tags": [
+    "proxy"
+  ],
+  "plain": "Reads the HTTP proxy configured on the device.",
+  "meaning": "Shows corporate or debugging proxies and can indicate traffic inspection.",
+  "lifecycle": [
+    "on-launch",
+    "in-session"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "y",
+      "v": "1.0",
+      "api": 1,
+      "permission": "",
+      "protection": "none",
+      "grant": "none",
+      "prompt_ui": "",
+      "persistence": "",
+      "revocation": "",
+      "store_policy": "",
+      "api_surface": "ProxyInfo via ConnectivityManager.getDefaultProxy(); System.getProperty(http.proxyHost)",
+      "note": "Host, port, PAC URL"
+    },
+    "ios": {
+      "s": "y",
+      "v": "2.0",
+      "permission": "none",
+      "protection": "none",
+      "grant": "none",
+      "prompt_ui": "",
+      "persistence": "",
+      "revocation": "",
+      "store_policy": "",
+      "api_surface": "Dictionary of HTTP, HTTPS, PAC settings",
+      "note": ""
+    }
+  },
+  "web_equivalents": [
+    "web.net.vpn-proxy-tor-detection"
+  ],
+  "data": {
+    "type": "object",
+    "metric": "Proxy config",
+    "update": "On change",
+    "fields": [
+      {
+        "name": "host",
+        "type": "string",
+        "unit": "",
+        "range": "hostname",
+        "precision": "exact"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can see if your phone sends web traffic through a proxy",
+    "user_action": "Nothing. It happens when the app opens a network connection",
+    "can": [
+      "See the proxy host, port and any PAC script address",
+      "Route its traffic through the same proxy",
+      "Spot a work or school network setup"
+    ],
+    "cannot": [
+      "See the traffic that goes through the proxy",
+      "Change your proxy settings",
+      "See a proxy set by a VPN app in every case"
+    ],
+    "reach": 1,
+    "reach_label": "Proxy settings",
+    "differs": ""
+  },
+  "story": {
+    "what_it_is": "An app can see whether your phone sends its web traffic through a proxy.",
+    "icon": "network",
+    "tags": [
+      "Network",
+      "Silent",
+      "Work"
+    ],
+    "marketing": [],
+    "for_you": "You do not see it. If you use a work or school network with a proxy, apps can tell. It may show that someone is inspecting the traffic of your phone, or that a developer is testing.",
+    "for_makers": "Makers use it to help with support and to spot tools that sit between the app and the server. Banks and games use the flag to detect people who intercept traffic to cheat. It is a weak but useful signal.",
+    "use_cases": [
+      {
+        "type": "enterprise",
+        "example": "A work app notes that the phone uses a company proxy and picks safe settings.",
+        "apps": []
+      },
+      {
+        "type": "banking",
+        "example": "A bank app refuses to run when a proxy is set, to stop someone reading its traffic.",
+        "apps": []
+      },
+      {
+        "type": "games",
+        "example": "A mobile game blocks players who use a proxy tool to edit the game's messages.",
+        "apps": []
+      },
+      {
+        "type": "developer",
+        "example": "A developer sets a proxy on a test phone to watch the app's requests and fix a bug.",
+        "apps": [
+          "Charles Proxy"
+        ]
+      },
+      {
+        "type": "security",
+        "example": "A fraud tool sees a proxy that matches a known scam setup and raises the risk score.",
+        "apps": []
+      },
+      {
+        "type": "utilities",
+        "example": "A support tool shows a help article when a proxy breaks the connection.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Flags privacy tool users",
+      "Weak fingerprint bit"
+    ],
+    "android_note": "Android apps can read the system proxy setting with no prompt.",
+    "ios_note": "iPhone apps can read the system proxy settings through the network settings, with no prompt."
+  },
+  "technical_bounds": [
+    "Does not reveal VPN proxies"
+  ],
+  "scores": {
+    "sensitivity": 2,
+    "utility": 2,
+    "fingerprint_bits": 1,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Support, debugging"
+    ],
+    "abuse": [
+      "Detect interception tools"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "related": [
+    "mob.net.vpn"
+  ],
+  "refs": [
+    {
+      "t": "android",
+      "label": "Android: ConnectivityManager",
+      "url": "https://developer.android.com/reference/android/net/ConnectivityManager"
+    },
+    {
+      "t": "apple",
+      "label": "Apple: ProcessInfo",
+      "url": "https://developer.apple.com/documentation/foundation/processinfo"
+    }
+  ],
+  "confidence": "docs"
+}

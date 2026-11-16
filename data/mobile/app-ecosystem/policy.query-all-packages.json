@@ -1,0 +1,204 @@
+{
+  "id": "mob.policy.query-all-packages",
+  "name": "Play QUERY_ALL_PACKAGES policy",
+  "kind": "capability",
+  "group": "app-ecosystem",
+  "subgroup": "Play permission declarations",
+  "tags": [
+    "query-all-packages",
+    "package-visibility",
+    "installed-apps"
+  ],
+  "plain": "Apps that want to list every installed app must justify it to Google.",
+  "meaning": "Since Android 11 apps see only a filtered set of other apps. QUERY_ALL_PACKAGES gives a full list, so Play requires a declared core purpose such as security, device management or file managers.",
+  "lifecycle": [
+    "before-install",
+    "in-session"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "p",
+      "v": "11",
+      "api": 30,
+      "permission": "QUERY_ALL_PACKAGES",
+      "protection": "normal",
+      "grant": "install",
+      "prompt_ui": "",
+      "persistence": "",
+      "revocation": "",
+      "store_policy": "Policy effective 5 Aug 2021; core purpose declaration; alternative <queries> or intent filters",
+      "api_surface": "Play Console > Declaration form; <queries> manifest element",
+      "note": "Installed apps list is a known ads signal; policy limits resale."
+    },
+    "ios": {
+      "s": "p",
+      "v": "",
+      "permission": "",
+      "protection": "none",
+      "grant": "none",
+      "prompt_ui": "",
+      "persistence": "",
+      "revocation": "",
+      "store_policy": "",
+      "api_surface": "LSApplicationQueriesSchemes (50 schemes), canOpenURL",
+      "note": "No installed apps API; probing is limited to declared schemes."
+    }
+  },
+  "web_equivalents": [
+    "web.notexposed.installed-apps"
+  ],
+  "data": {
+    "type": "list",
+    "metric": "Package names",
+    "update": "on demand",
+    "fields": [
+      {
+        "name": "packageName",
+        "type": "string",
+        "unit": "",
+        "range": "",
+        "precision": ""
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can see every installed app on Android only if Google approves the reason",
+    "user_action": "Nothing. It happens when the app asks for the full list in the background",
+    "can": [
+      "List all apps for security, device management or file manager uses, if approved",
+      "See a small filtered set of apps on Android 11 and later without approval",
+      "Check a few named apps on iPhone, up to 50 link types"
+    ],
+    "cannot": [
+      "Use the list for ads or resale",
+      "Get the full list without a declared main purpose",
+      "List apps at all on iPhone"
+    ],
+    "reach": 4,
+    "reach_label": "All your apps, if approved",
+    "differs": "Android has this permission with a Play review. iPhone has no installed app list at all."
+  },
+  "story": {
+    "what_it_is": "Google's rule that apps need an approved reason to see every app on your phone.",
+    "icon": "package-search",
+    "tags": [
+      "Installed apps",
+      "Play rules",
+      "Android"
+    ],
+    "marketing": [
+      {
+        "vendor": "Google",
+        "name": "QUERY_ALL_PACKAGES policy",
+        "pitch": "Only apps whose core purpose needs the full list of installed apps may request it.",
+        "url": "https://support.google.com/googleplay/android-developer/answer/10158779"
+      }
+    ],
+    "for_you": "You never get a prompt. The phone just hides most other apps from every app by default, so a game cannot guess that you have a dating or health app.",
+    "for_makers": "The full list helps with security, device management and some anti fraud. Google makes teams explain the need and prove it, or use narrow package queries instead.",
+    "use_cases": [
+      {
+        "type": "security",
+        "example": "An antivirus scans the whole device for malware and keeps the right to see all apps.",
+        "apps": [
+          "Lookout",
+          "Bitdefender"
+        ]
+      },
+      {
+        "type": "enterprise",
+        "example": "A work phone management app lists apps to enforce company rules.",
+        "apps": [
+          "Microsoft Intune"
+        ]
+      },
+      {
+        "type": "banking",
+        "example": "A bank asks about a few remote access apps by name and does not request the full list.",
+        "apps": [
+          "Revolut"
+        ]
+      },
+      {
+        "type": "games",
+        "example": "A game uses a narrow query to find the publisher's launcher and offers a bonus.",
+        "apps": [
+          "Epic Games"
+        ]
+      },
+      {
+        "type": "ads",
+        "example": "An SDK was caught gathering app lists for interest profiles, a use Play rejects.",
+        "apps": []
+      },
+      {
+        "type": "utilities",
+        "example": "A launcher app needs all apps to show them, which Google allows as its core purpose.",
+        "apps": [
+          "Nova Launcher"
+        ]
+      }
+    ],
+    "risks": [
+      "Reveals sensitive interests",
+      "Used for ad profiling"
+    ],
+    "android_note": "Since Android 11 apps see only a filtered set of apps unless approved.",
+    "ios_note": "iOS apps cannot see other apps at all except by checking a few declared schemes."
+  },
+  "technical_bounds": [
+    "Core purpose required",
+    "Apple blocks it entirely"
+  ],
+  "scores": {
+    "sensitivity": 4,
+    "utility": 3,
+    "fingerprint_bits": 12,
+    "friction": 3
+  },
+  "value": {
+    "legit_uses": [
+      "Antivirus, launchers, device management"
+    ],
+    "abuse": [
+      "Interest profiling from app lists"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2020-09",
+      "platform": "android",
+      "version": "Android 11 (API 30)",
+      "change": "Package visibility filter"
+    },
+    {
+      "date": "2021-08",
+      "platform": "android",
+      "version": "Play policy",
+      "change": "QUERY_ALL_PACKAGES declaration"
+    }
+  ],
+  "related": [
+    "mob.eco.custom-url-schemes"
+  ],
+  "refs": [
+    {
+      "t": "android",
+      "label": "Play: Package visibility policy",
+      "url": "https://support.google.com/googleplay/android-developer/answer/10158779"
+    },
+    {
+      "t": "android",
+      "label": "Android: Package visibility",
+      "url": "https://developer.android.com/training/package-visibility"
+    }
+  ],
+  "confidence": "docs"
+}

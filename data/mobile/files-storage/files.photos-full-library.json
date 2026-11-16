@@ -1,0 +1,231 @@
+{
+  "id": "mob.files.photos-full-library",
+  "name": "Photo library, full access",
+  "kind": "permission",
+  "group": "files-storage",
+  "subgroup": "Photos and media",
+  "tags": [
+    "runtime-permission",
+    "photos",
+    "nsphotolibraryusagedescription"
+  ],
+  "plain": "Reads and edits every photo and video in the shared library.",
+  "meaning": "Exposes the whole camera roll: faces, places (EXIF GPS), screenshots of IDs and bank pages, dates that map out a life. Apps rarely need all of it.",
+  "lifecycle": [
+    "in-session"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "y",
+      "v": "13",
+      "api": 33,
+      "permission": "READ_MEDIA_IMAGES, READ_MEDIA_VIDEO (API 33); READ_EXTERNAL_STORAGE up to API 32",
+      "protection": "dangerous",
+      "grant": "prompt",
+      "prompt_ui": "Allow or Don't allow per media type; Android 14 adds Select photos and videos",
+      "persistence": "Until revoked; auto-reset after months unused (Android 11+)",
+      "revocation": "Settings > Apps > Permissions > Photos and videos",
+      "store_policy": "Play: broad photo and video access policy (2024) limits it to apps whose core function needs it",
+      "api_surface": "MediaStore, ContentResolver",
+      "note": "Android 10 scoped storage hid other apps' files; GPS in EXIF needs ACCESS_MEDIA_LOCATION"
+    },
+    "ios": {
+      "s": "y",
+      "v": "8",
+      "permission": "NSPhotoLibraryUsageDescription",
+      "protection": "prompt",
+      "grant": "prompt",
+      "prompt_ui": "Select Photos, Allow Access to All Photos, Don't Allow (iOS 14+)",
+      "persistence": "Until revoked",
+      "revocation": "Settings > Privacy & Security > Photos",
+      "store_policy": "App Review 5.1.1(ii): purpose string must explain use; missing key crashes the app",
+      "api_surface": "PHPhotoLibrary.requestAuthorization(for: .readWrite), PHAsset, PHAssetCollection",
+      "note": "Without the key the first PhotoKit call terminates the app"
+    }
+  },
+  "web_equivalents": [
+    "web.files.file-input"
+  ],
+  "data": {
+    "type": "list",
+    "metric": "Asset metadata and pixels",
+    "update": "on request, with change observer",
+    "fields": [
+      {
+        "name": "assets",
+        "type": "list",
+        "unit": "items",
+        "range": "0 to whole library",
+        "precision": "full resolution original"
+      },
+      {
+        "name": "creationDate",
+        "type": "datetime",
+        "unit": "ms",
+        "range": "any",
+        "precision": "to the second"
+      },
+      {
+        "name": "location",
+        "type": "float pair",
+        "unit": "degrees",
+        "range": "EXIF GPS",
+        "precision": "about 5 m"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can see and change every photo and video in your library once you allow full access",
+    "user_action": "You tap Allow access to all photos or Allow all, often for backup or editing",
+    "can": [
+      "List and open every photo and video",
+      "Upload your whole library for backup or sync",
+      "Edit photos and save new versions",
+      "Create albums on iPhone"
+    ],
+    "cannot": [
+      "Open other apps' private folders on Android 10 and newer",
+      "See photo locations on Android without the separate media location permission",
+      "Skip the permission on iPhone; the app stops without the right setting",
+      "Keep access after you turn it off in Settings"
+    ],
+    "reach": 4,
+    "reach_label": "Whole library, anytime",
+    "differs": "Android 14 and iPhone iOS 14 both let you pick only some photos. Older Android is all or nothing per media type."
+  },
+  "story": {
+    "what_it_is": "Lets an app read and change every photo and video in your library.",
+    "icon": "images",
+    "tags": [
+      "Permission",
+      "Asks first",
+      "Photos"
+    ],
+    "marketing": [],
+    "for_you": "A pop up asks to access all photos. If you allow full access, the app can see every picture and video, including faces, places and screenshots of IDs and bank pages.",
+    "for_makers": "Needed by apps that manage a whole library, like backup or cleaning tools. Most apps do not need all of it, and both platforms now push them toward pickers.",
+    "use_cases": [
+      {
+        "type": "utilities",
+        "example": "A cloud backup app uploads every new photo to your account.",
+        "apps": [
+          "Google Photos",
+          "iCloud"
+        ]
+      },
+      {
+        "type": "creative",
+        "example": "A photo editor shows your whole library and edits any picture.",
+        "apps": [
+          "Lightroom"
+        ]
+      },
+      {
+        "type": "utilities",
+        "example": "A cleaner app finds duplicates and blurry shots to delete.",
+        "apps": []
+      },
+      {
+        "type": "social",
+        "example": "A memories app builds a slideshow from your year of photos.",
+        "apps": []
+      },
+      {
+        "type": "security",
+        "example": "A bad app might scan for pictures of IDs or cards.",
+        "apps": []
+      },
+      {
+        "type": "kids",
+        "example": "A family album app shows kid photos to grandparents.",
+        "apps": []
+      },
+      {
+        "type": "ads",
+        "example": "An ad firm could use photos to guess interests if an app shared them.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Sees faces and documents",
+      "Reveals places and dates"
+    ],
+    "android_note": "Needs READ_MEDIA_IMAGES and READ_MEDIA_VIDEO, and Play restricts it.",
+    "ios_note": "Full access gives read and write to the entire library."
+  },
+  "technical_bounds": [
+    "Both platforms now let the user narrow the grant to chosen items",
+    "Apps that only need to pick a file are steered to the system picker"
+  ],
+  "scores": {
+    "sensitivity": 5,
+    "utility": 4,
+    "fingerprint_bits": null,
+    "friction": 2
+  },
+  "value": {
+    "legit_uses": [
+      "Photo editors",
+      "Backup and gallery apps"
+    ],
+    "abuse": [
+      "Scraping ID photos and screenshots",
+      "Harvesting EXIF location history"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2020-09",
+      "platform": "ios",
+      "version": "iOS 14",
+      "change": "Limited library added; apps using the old call get .authorized for a limited grant"
+    },
+    {
+      "date": "2023-08",
+      "platform": "android",
+      "version": "13 (API 33)",
+      "change": "READ_EXTERNAL_STORAGE replaced by granular media permissions"
+    },
+    {
+      "date": "2023-10",
+      "platform": "android",
+      "version": "14 (API 34)",
+      "change": "Partial access via READ_MEDIA_VISUAL_USER_SELECTED"
+    }
+  ],
+  "related": [
+    "mob.files.photos-limited",
+    "mob.files.photo-picker",
+    "mob.files.photos-add-only"
+  ],
+  "refs": [
+    {
+      "t": "apple",
+      "label": "Apple: Delivering an enhanced privacy experience in your Photos app",
+      "url": "https://developer.apple.com/documentation/photokit/delivering-an-enhanced-privacy-experience-in-your-photos-app"
+    },
+    {
+      "t": "android",
+      "label": "Android: Photo and video permissions",
+      "url": "https://developer.android.com/training/data-storage/shared/media"
+    },
+    {
+      "t": "android",
+      "label": "Android: Behavior changes 14 (partial access)",
+      "url": "https://developer.android.com/about/versions/14/changes/partial-photo-video-access"
+    },
+    {
+      "t": "apple",
+      "label": "Apple: Protected resources keys",
+      "url": "https://developer.apple.com/documentation/bundleresources/protected-resources"
+    }
+  ],
+  "confidence": "docs"
+}

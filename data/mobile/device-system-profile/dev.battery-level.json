@@ -1,0 +1,210 @@
+{
+  "id": "mob.dev.battery-level",
+  "name": "Battery level and charging state",
+  "kind": "signal",
+  "group": "device-system-profile",
+  "subgroup": "Power",
+  "tags": [
+    "no-prompt",
+    "battery",
+    "charging"
+  ],
+  "plain": "Reads battery percent and whether the phone is plugged in, with no prompt.",
+  "meaning": "Shows routine (charging overnight at home) and pairs with other signals to track a device. Apps use it for power-aware sync; Olejnik et al. showed level and discharge time can tag a device briefly.",
+  "lifecycle": [
+    "on-launch",
+    "in-session"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "y",
+      "v": "1.0",
+      "api": 1,
+      "permission": "",
+      "protection": "none",
+      "grant": "none",
+      "prompt_ui": "",
+      "persistence": "",
+      "revocation": "",
+      "store_policy": "",
+      "api_surface": "ACTION_BATTERY_CHANGED sticky broadcast; BatteryManager.getIntProperty(BATTERY_PROPERTY_CAPACITY) (API 21)",
+      "note": "Level is integer 0 to 100; plugged type AC, USB, wireless"
+    },
+    "ios": {
+      "s": "y",
+      "v": "3.0",
+      "permission": "",
+      "protection": "none",
+      "grant": "none",
+      "prompt_ui": "",
+      "persistence": "",
+      "revocation": "",
+      "store_policy": "",
+      "api_surface": "UIDevice.batteryLevel, batteryState; set isBatteryMonitoringEnabled = true",
+      "note": "Returns -1.0 in the simulator or when monitoring is off"
+    }
+  },
+  "web_equivalents": [
+    "web.device.battery-status"
+  ],
+  "data": {
+    "type": "float",
+    "metric": "Battery level and plug state",
+    "update": "On change (broadcast or notification)",
+    "fields": [
+      {
+        "name": "level",
+        "type": "integer",
+        "unit": "percent",
+        "range": "0 to 100",
+        "precision": "1 percent steps"
+      },
+      {
+        "name": "ios_battery_level",
+        "type": "float",
+        "unit": "fraction",
+        "range": "-1.0, 0.0 to 1.0",
+        "precision": "1 percent steps (pre iOS 8: 5 percent)"
+      },
+      {
+        "name": "state",
+        "type": "enum",
+        "unit": "",
+        "range": "unplugged, charging, full, unknown",
+        "precision": "4 values"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can see your battery percent and if the phone is charging, with no prompt",
+    "user_action": "Nothing. The app checks while it is open",
+    "can": [
+      "See your battery level from 0 to 100",
+      "See if the phone is plugged in and whether it is on a charger, USB or wireless (Android)",
+      "Watch the level change while the app is open",
+      "Use it to change app behavior, such as pausing downloads"
+    ],
+    "cannot": [
+      "See battery health or cycle count",
+      "Get a real level in the iPhone simulator, which returns minus one",
+      "See your level on iPhone unless it turns monitoring on first",
+      "Show your exact reading to others by itself"
+    ],
+    "reach": 2,
+    "reach_label": "While the app is open",
+    "differs": "Android shares the level through a system broadcast. iPhone apps must turn on battery monitoring first."
+  },
+  "story": {
+    "what_it_is": "An app can see your battery percent and whether you are charging.",
+    "icon": "battery-charging",
+    "tags": [
+      "Battery",
+      "Silent",
+      "Context"
+    ],
+    "marketing": [],
+    "for_you": "You never get asked. The app might delay a big download until you plug in. It might also learn that you charge overnight at home.",
+    "for_makers": "Makers use it for smart syncing and to avoid draining your phone. Combined with other signals, battery level and charge state can tag a device for a short time.",
+    "use_cases": [
+      {
+        "type": "games",
+        "example": "A game lowers frame rate and effects when your battery is below 20 percent.",
+        "apps": []
+      },
+      {
+        "type": "media",
+        "example": "A video app offers to download shows only while you are plugged in.",
+        "apps": []
+      },
+      {
+        "type": "fitness",
+        "example": "A running app warns you that your battery may not last the whole workout.",
+        "apps": []
+      },
+      {
+        "type": "maps",
+        "example": "A navigation app suggests plugging in because your battery is low on a long trip.",
+        "apps": []
+      },
+      {
+        "type": "ads",
+        "example": "An ad firm adds battery level to a short term device signature.",
+        "apps": []
+      },
+      {
+        "type": "rideshare",
+        "example": "A ride app tells a driver to charge before accepting a long trip.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Shows your routine",
+      "Can help tag a device"
+    ],
+    "android_note": "Read through a standard broadcast with no permission.",
+    "ios_note": "Read through UIDevice battery monitoring, with no prompt."
+  },
+  "technical_bounds": [
+    "No prompt on either platform",
+    "Fingerprint use is time limited because the level changes"
+  ],
+  "scores": {
+    "sensitivity": 1,
+    "utility": 3,
+    "fingerprint_bits": 2,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Defer sync on low battery",
+      "Show charge reminders"
+    ],
+    "abuse": [
+      "Short-lived device tag",
+      "Infer home location from charging times"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2015-10",
+      "platform": "android",
+      "version": "5.0 (API 21)",
+      "change": "BATTERY_PROPERTY_CAPACITY property added"
+    },
+    {
+      "date": "2014-09",
+      "platform": "ios",
+      "version": "iOS 8",
+      "change": "Battery level moved from 5 percent to 1 percent steps"
+    }
+  ],
+  "related": [
+    "mob.dev.battery-health",
+    "mob.dev.low-power"
+  ],
+  "refs": [
+    {
+      "t": "android",
+      "label": "Android: BatteryManager",
+      "url": "https://developer.android.com/reference/android/os/BatteryManager"
+    },
+    {
+      "t": "apple",
+      "label": "Apple: UIDevice",
+      "url": "https://developer.apple.com/documentation/uikit/uidevice"
+    },
+    {
+      "t": "paper",
+      "label": "Olejnik et al.: The leaking battery",
+      "url": "https://eprint.iacr.org/2015/616"
+    }
+  ],
+  "confidence": "verified"
+}

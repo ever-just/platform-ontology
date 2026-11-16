@@ -1,0 +1,214 @@
+{
+  "id": "web.locale.language",
+  "name": "Browser language",
+  "kind": "signal",
+  "group": "locale-preferences",
+  "subgroup": "Locale",
+  "tags": [
+    "language",
+    "fingerprint"
+  ],
+  "plain": "Reads the language the browser asks pages to use.",
+  "meaning": "Reveals language, region and sometimes nationality. Order of preferred languages narrows identity.",
+  "lifecycle": [
+    "on-arrival",
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "navigator.language, navigator.languages; Accept-Language",
+      "bcd": [
+        "api.Navigator.language"
+      ],
+      "access": {
+        "grant": "none",
+        "prompt_ui": "None (no browser prompt)",
+        "secure_context": false,
+        "user_gesture": false,
+        "persistence": "",
+        "revocation": "",
+        "iframe": "",
+        "steps": [
+          "Script reads the value",
+          "Value joins the fingerprint payload"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "1",
+          "note": "",
+          "date": "2008-12-11"
+        },
+        "edge": {
+          "s": "y",
+          "v": "12",
+          "note": "",
+          "date": "2015-07-29"
+        },
+        "firefox": {
+          "s": "y",
+          "v": "1",
+          "note": "",
+          "date": "2004-11-09"
+        },
+        "safari": {
+          "s": "y",
+          "v": "1",
+          "note": "",
+          "date": "2003-06-23"
+        },
+        "ios_safari": {
+          "s": "y",
+          "v": "1",
+          "note": "",
+          "date": "2007-06-29"
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "18",
+          "note": "",
+          "date": "2012-06-27"
+        },
+        "samsung": {
+          "s": "y",
+          "v": "1.0",
+          "note": "",
+          "date": "2013-04-27"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "string",
+    "metric": "Browser language",
+    "update": "static",
+    "fields": [
+      {
+        "name": "language",
+        "type": "string",
+        "unit": "",
+        "range": "BCP 47",
+        "precision": ""
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can see which language your browser asks pages to use",
+    "user_action": "Nothing. It happens when the page loads",
+    "can": [
+      "See your preferred language and region",
+      "Show the page in that language",
+      "Guess your country or background from the order of languages"
+    ],
+    "cannot": [
+      "See your exact location from it",
+      "Know languages you did not set in the browser",
+      "Show a permission pop up; there is none"
+    ],
+    "reach": 1,
+    "reach_label": "One browser setting",
+    "differs": ""
+  },
+  "story": {
+    "what_it_is": "The page can read the language your browser asks for.",
+    "icon": "languages",
+    "tags": [
+      "Language",
+      "Always on"
+    ],
+    "marketing": [],
+    "for_you": "A site shows itself in your language, or suggests you switch. You rarely think about how it knew. It does not ask.",
+    "for_makers": "Makers localize the page, prices and support. Ad and fraud systems use language and region as basic targeting and risk signals.",
+    "use_cases": [
+      {
+        "type": "games",
+        "example": "A game site shows menus in your language and picks a nearby server region.",
+        "apps": [
+          "Roblox",
+          "Miniclip"
+        ]
+      },
+      {
+        "type": "media",
+        "example": "A streaming site chooses subtitles and the home page for your region.",
+        "apps": [
+          "Netflix"
+        ]
+      },
+      {
+        "type": "shopping",
+        "example": "A store shows the right currency and language at once.",
+        "apps": [
+          "Amazon"
+        ]
+      },
+      {
+        "type": "news",
+        "example": "A news site serves local editions based on the language setting.",
+        "apps": []
+      },
+      {
+        "type": "ads",
+        "example": "An ad network targets campaigns by language and region.",
+        "apps": []
+      },
+      {
+        "type": "security",
+        "example": "A fraud tool flags a login where language does not match the usual pattern.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Hints at nationality",
+      "Part of a fingerprint"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Cannot see all installed languages"
+  ],
+  "scores": {
+    "sensitivity": 2,
+    "utility": 3,
+    "fingerprint_bits": 4,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Localize"
+    ],
+    "abuse": [
+      "Fingerprint input"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": true,
+      "how": "Collector key(s): language. BleepingComputer confirms language."
+    }
+  },
+  "related": [
+    "web.tracking.linkedin-apfc-fingerprint"
+  ],
+  "refs": [
+    {
+      "t": "mdn",
+      "label": "MDN language",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/Navigator/language"
+    },
+    {
+      "t": "news",
+      "label": "BleepingComputer: LinkedIn scans for 6,000+ Chrome extensions",
+      "url": "https://www.bleepingcomputer.com/news/security/linkedin-secretely-scans-for-6-000-plus-chrome-extensions-collects-data/"
+    },
+    {
+      "t": "github",
+      "label": "mdp/linkedin-extension-fingerprinting (LinkedIn script snapshot and ID list)",
+      "url": "https://github.com/mdp/linkedin-extension-fingerprinting"
+    }
+  ],
+  "confidence": "docs"
+}

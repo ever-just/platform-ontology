@@ -1,0 +1,218 @@
+{
+  "id": "web.notexposed.browsing-history",
+  "name": "Browsing history",
+  "kind": "not-exposed",
+  "group": "device-system-profile",
+  "subgroup": "History",
+  "tags": [
+    "not-exposed",
+    "history",
+    "visited"
+  ],
+  "plain": "Sites cannot read which other sites you visited.",
+  "meaning": ":visited styling is limited since Chrome 51 and Firefox 4 (getComputedStyle lies, only color changes) so history sniffing no longer works. Proxies: cache timing, HSTS and partitioned storage are now keyed per site, and referrer shows only the prior page.",
+  "lifecycle": [
+    "on-arrival",
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "none",
+      "access": {
+        "grant": "not-exposed",
+        "prompt_ui": "None",
+        "secure_context": false,
+        "user_gesture": false,
+        "persistence": "read fresh on every page load; nothing stored",
+        "revocation": "not applicable",
+        "iframe": "Readable from cross-origin iframes too (same values)",
+        "steps": [
+          "Page script reads the value",
+          "No prompt is shown"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "edge": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "firefox": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "safari": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "ios_safari": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "chrome_android": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "samsung": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "none",
+    "metric": "",
+    "update": "static per session",
+    "fields": [
+      {
+        "name": "proxy: :visited style",
+        "type": "string",
+        "unit": "",
+        "range": "only color properties, always reported as unvisited",
+        "precision": ""
+      },
+      {
+        "name": "proxy: document.referrer",
+        "type": "string",
+        "unit": "",
+        "range": "previous page, trimmed to origin by default (strict-origin-when-cross-origin)",
+        "precision": ""
+      },
+      {
+        "name": "proxy: history.length",
+        "type": "string",
+        "unit": "",
+        "range": "number of entries in this tab, 0 to 50",
+        "precision": ""
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can't see which other sites you have visited",
+    "user_action": "Nothing. Pages have no way to ask for this",
+    "can": [
+      "See the one page that sent you here",
+      "Keep its own visit history inside its own site",
+      "Use timing tricks that are mostly closed now"
+    ],
+    "cannot": [
+      "See your history list",
+      "Tell which links you visited by their color",
+      "See other sites you opened",
+      "Use shared cache tricks; storage is now split per site"
+    ],
+    "reach": 1,
+    "reach_label": "Only the page before",
+    "differs": ""
+  },
+  "story": {
+    "what_it_is": "Sites cannot read which other sites you have visited.",
+    "icon": "history",
+    "tags": [
+      "Blocked",
+      "History",
+      "Privacy"
+    ],
+    "marketing": [
+      {
+        "vendor": "Mozilla",
+        "name": "Plugging the CSS history leak",
+        "pitch": "Mozilla explained changes that stopped sites from sniffing visited links in your history.",
+        "url": "https://blog.mozilla.org/security/2010/03/31/plugging-the-css-history-leak/"
+      }
+    ],
+    "for_you": "Other websites cannot see where else you have been. Links you visited may be a different color, but sites cannot read that color. Your history stays with you.",
+    "for_makers": "History is the richest ad and profiling data there is, so many tried to sniff it using link colors. Browsers closed the trick years ago. Sites now rely on cookies, logins, timing tricks and their own logs for the same kind of insight.",
+    "use_cases": [
+      {
+        "type": "ads",
+        "example": "An ad network wanted to know if you visited a rival store and now uses cookies on its own network instead.",
+        "apps": []
+      },
+      {
+        "type": "security",
+        "example": "A phishing site used to check which bank sites you visited, which no longer works.",
+        "apps": []
+      },
+      {
+        "type": "shopping",
+        "example": "A retailer wanted to know which competitors you checked and tracks its own visits only.",
+        "apps": []
+      },
+      {
+        "type": "news",
+        "example": "A paywall wanted to see how many articles you read elsewhere and counts only its own.",
+        "apps": []
+      },
+      {
+        "type": "games",
+        "example": "A game portal wanted to recommend games from your history, and only uses what you play on it.",
+        "apps": []
+      },
+      {
+        "type": "analytics",
+        "example": "A researcher showed that cache timing can hint at visited sites, which is why browsers now split caches by site.",
+        "apps": []
+      },
+      {
+        "type": "banking",
+        "example": "A bank wanted to learn which other banks you use and cannot.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Old tricks no longer work",
+      "Partial hints through timing and logins remain"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "History leaks sexuality, health"
+  ],
+  "scores": {
+    "sensitivity": 5,
+    "utility": 2,
+    "fingerprint_bits": 0.0,
+    "friction": 3
+  },
+  "value": {
+    "legit_uses": [
+      "None: the browser deliberately withholds it"
+    ],
+    "abuse": [
+      "Historic sniffing attacks; now mitigated"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "refs": [
+    {
+      "t": "vendor",
+      "label": "Mozilla: Privacy-related changes coming to CSS :visited",
+      "url": "https://hacks.mozilla.org/2010/03/privacy-related-changes-coming-to-css-vistited/"
+    },
+    {
+      "t": "mdn",
+      "label": "MDN history.length",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/History/length"
+    }
+  ],
+  "confidence": "docs"
+}

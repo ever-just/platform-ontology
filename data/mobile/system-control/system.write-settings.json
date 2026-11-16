@@ -1,0 +1,168 @@
+{
+  "id": "mob.system.write-settings",
+  "name": "Modify system settings",
+  "kind": "permission",
+  "group": "system-control",
+  "subgroup": "Settings",
+  "tags": [
+    "special-access",
+    "write-settings"
+  ],
+  "plain": "Lets the app change system settings like brightness and ringtone.",
+  "meaning": "Allows changing display brightness, ringtones and timeouts. A minor privacy risk but often requested.",
+  "lifecycle": [
+    "in-session"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "y",
+      "v": "6.0",
+      "api": 23,
+      "permission": "WRITE_SETTINGS",
+      "protection": "special",
+      "grant": "settings",
+      "prompt_ui": "Settings toggle: Modify system settings",
+      "persistence": "Until revoked",
+      "revocation": "Settings > Special app access > Modify system settings",
+      "store_policy": "Play: justified only",
+      "api_surface": "Settings.System.canWrite",
+      "note": "Special access since Android 6.0."
+    },
+    "ios": {
+      "s": "p",
+      "v": "2.0",
+      "permission": "none",
+      "protection": "none",
+      "grant": "none",
+      "prompt_ui": "none",
+      "persistence": "n/a",
+      "revocation": "n/a",
+      "store_policy": "App Review 2.5",
+      "api_surface": "UIScreen.brightness",
+      "note": "Apps may set screen brightness only; no other settings."
+    }
+  },
+  "data": {
+    "type": "event",
+    "metric": "Settings write",
+    "update": "on demand",
+    "fields": []
+  },
+  "limits": {
+    "headline": "Can change brightness, ringtone and screen timeout on Android; iPhone allows only brightness",
+    "user_action": "You switch on Modify system settings for the app in Settings",
+    "can": [
+      "Change the screen brightness",
+      "Change the ringtone and screen timeout (Android)",
+      "Set brightness on iPhone with no prompt"
+    ],
+    "cannot": [
+      "Change these on Android before you switch it on in Settings",
+      "Change anything but brightness on iPhone",
+      "Touch your security settings"
+    ],
+    "reach": 2,
+    "reach_label": "A few display and sound settings",
+    "differs": "Android needs a Settings switch; iPhone allows brightness only, with no prompt."
+  },
+  "story": {
+    "what_it_is": "Lets an app change system settings like brightness, ringtone and screen timeout.",
+    "icon": "settings",
+    "tags": [
+      "Settings",
+      "Permission",
+      "Android"
+    ],
+    "marketing": [],
+    "for_you": "The app asks for special access to modify settings. If you allow it, it can change screen brightness or set a ringtone. You will see the change but may not know which app did it.",
+    "for_makers": "Utility apps want to control brightness and sounds. It is a low risk request, but it is often used to look more useful. The permission needs a special screen, not a normal prompt.",
+    "use_cases": [
+      {
+        "type": "utilities",
+        "example": "A brightness app lowers the screen for night reading.",
+        "apps": []
+      },
+      {
+        "type": "media",
+        "example": "A reader app sets a screen timeout so the screen stays on.",
+        "apps": [
+          "Kindle"
+        ]
+      },
+      {
+        "type": "music",
+        "example": "A ringtone app sets a song as your ringtone.",
+        "apps": [
+          "Zedge"
+        ]
+      },
+      {
+        "type": "fitness",
+        "example": "A workout app brightens the screen outdoors.",
+        "apps": []
+      },
+      {
+        "type": "accessibility",
+        "example": "A low vision app makes the screen brighter and text larger.",
+        "apps": []
+      },
+      {
+        "type": "games",
+        "example": "A game dims the screen to save battery.",
+        "apps": []
+      },
+      {
+        "type": "kids",
+        "example": "A parent app sets sound and screen limits.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Annoying changes",
+      "Can hide behind a utility",
+      "Minor privacy impact"
+    ],
+    "android_note": "A special access screen has been needed since Android 6.",
+    "ios_note": "iPhone apps can only set screen brightness. They cannot change other settings."
+  },
+  "technical_bounds": [
+    "iOS only allows brightness"
+  ],
+  "scores": {
+    "sensitivity": 1,
+    "utility": 2,
+    "fingerprint_bits": null,
+    "friction": 3
+  },
+  "value": {
+    "legit_uses": [
+      "Brightness controls"
+    ],
+    "abuse": [
+      "Annoyance abuse"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2015-10",
+      "platform": "android",
+      "version": "6.0 (API 23)",
+      "change": "WRITE_SETTINGS made special access"
+    }
+  ],
+  "refs": [
+    {
+      "t": "android",
+      "label": "Android: Settings.ACTION_MANAGE_WRITE_SETTINGS",
+      "url": "https://developer.android.com/reference/android/provider/Settings#ACTION_MANAGE_WRITE_SETTINGS"
+    }
+  ],
+  "confidence": "docs"
+}

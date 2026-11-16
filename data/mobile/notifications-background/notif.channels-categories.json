@@ -1,0 +1,209 @@
+{
+  "id": "mob.notif.channels-categories",
+  "name": "Notification channels and categories",
+  "kind": "capability",
+  "group": "notifications-background",
+  "subgroup": "Permission and presentation",
+  "tags": [
+    "notifications",
+    "per-type-controls",
+    "importance"
+  ],
+  "plain": "Splits alerts into types the person can silence one by one.",
+  "meaning": "Gives control over each kind of message (promotions vs receipts). It also stops an app turning off everything: a person can mute marketing and keep security alerts.",
+  "lifecycle": [
+    "background"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "y",
+      "v": "8.0",
+      "api": 26,
+      "permission": "",
+      "protection": "none",
+      "grant": "install",
+      "prompt_ui": "Channel settings page per type",
+      "persistence": "Channel stays; importance cannot be raised by the app after the first creation",
+      "revocation": "Settings > Apps > Notifications > channels; deleting a channel keeps user settings",
+      "store_policy": "",
+      "api_surface": "NotificationChannel, NotificationChannelGroup",
+      "note": "Android 8 requires a channel for every notification"
+    },
+    "ios": {
+      "s": "p",
+      "v": "10.0",
+      "permission": "",
+      "protection": "none",
+      "grant": "none",
+      "prompt_ui": "Per app settings plus in-app settings link",
+      "persistence": "Per app; categories only describe actions, not user visible channels",
+      "revocation": "",
+      "store_policy": "UNNotificationCategory, thread-id, providesAppNotificationSettings",
+      "api_surface": "iOS has no per-type user controls beyond the app's own settings page and grouping",
+      "note": ""
+    }
+  },
+  "web_equivalents": [
+    "web.notify.notifications"
+  ],
+  "data": {
+    "type": "object",
+    "metric": "Channel",
+    "update": "On creation",
+    "fields": [
+      {
+        "name": "importance",
+        "type": "enum",
+        "unit": "",
+        "range": "MIN, LOW, DEFAULT, HIGH",
+        "precision": ""
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can sort its alerts into types you can silence one by one",
+    "user_action": "You open the app's notification settings and switch a type on or off",
+    "can": [
+      "Split alerts into types, like messages, promotions and reminders",
+      "Let you change sound, vibration and importance for each type",
+      "Link you from inside the app to its notification settings"
+    ],
+    "cannot": [
+      "Turn a type back on after you switched it off",
+      "Skip channels on Android 8 or later; every alert needs one",
+      "Change your per type choices without you opening Settings"
+    ],
+    "reach": 1,
+    "reach_label": "Only what you switch on",
+    "differs": "Android requires a channel for every alert. iPhone uses per app settings plus an in app link."
+  },
+  "story": {
+    "what_it_is": "Settings that split an app's alerts into types so you can mute some and keep others.",
+    "icon": "bell-ring",
+    "tags": [
+      "Notifications",
+      "Control",
+      "Settings"
+    ],
+    "marketing": [
+      {
+        "vendor": "Google",
+        "name": "Notification channels",
+        "pitch": "Android lets people control each type of notification for an app, such as promotions versus receipts.",
+        "url": "https://developer.android.com/develop/ui/views/notifications/channels"
+      }
+    ],
+    "for_you": "You open an app's alert settings and see switches like Order updates and Promotions. You can silence the noisy kind and keep the useful kind.",
+    "for_makers": "Makers separate marketing from must have alerts to avoid being muted entirely. A well labeled channel keeps people from turning off everything.",
+    "use_cases": [
+      {
+        "type": "messaging",
+        "example": "A chat app has separate channels for messages, calls and group mentions.",
+        "apps": [
+          "WhatsApp",
+          "Slack"
+        ]
+      },
+      {
+        "type": "delivery",
+        "example": "A food app splits order updates from deals, so you can mute deals.",
+        "apps": [
+          "DoorDash"
+        ]
+      },
+      {
+        "type": "games",
+        "example": "A game splits event reminders from friend invites and daily rewards.",
+        "apps": [
+          "Clash Royale"
+        ]
+      },
+      {
+        "type": "banking",
+        "example": "A bank keeps fraud alerts on a channel that stays on while promos are off.",
+        "apps": []
+      },
+      {
+        "type": "news",
+        "example": "A news app lets you choose breaking news but skip opinion pieces.",
+        "apps": [
+          "NYT"
+        ]
+      },
+      {
+        "type": "shopping",
+        "example": "A shopping app keeps order alerts apart from sales alerts.",
+        "apps": [
+          "Amazon"
+        ]
+      },
+      {
+        "type": "smart-home",
+        "example": "A security camera app marks door alarms as high priority and routine clips as low.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Promos hidden in an important channel",
+      "Many switches to manage"
+    ],
+    "android_note": "Android 8 and up requires a channel for every alert.",
+    "ios_note": "iOS has categories plus a link to the app's own settings."
+  },
+  "technical_bounds": [
+    "Android cannot downgrade user chosen importance upward",
+    "iOS lacks a user-visible per-type switch"
+  ],
+  "scores": {
+    "sensitivity": 1,
+    "utility": 4,
+    "fingerprint_bits": null,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Separate marketing from transactional"
+    ],
+    "abuse": [
+      "Hiding promos in a transactional channel"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2017-08",
+      "platform": "android",
+      "version": "8.0 (API 26)",
+      "change": "Notification channels required for every notification"
+    },
+    {
+      "date": "2018-08",
+      "platform": "android",
+      "version": "9 (API 28)",
+      "change": "Notification channel groups can be blocked; blocked channels hide in the shade"
+    }
+  ],
+  "related": [
+    "mob.notifications.post-notifications",
+    "mob.notif.time-sensitive"
+  ],
+  "refs": [
+    {
+      "t": "android",
+      "label": "Android: Create and manage notification channels",
+      "url": "https://developer.android.com/develop/ui/views/notifications/channels"
+    },
+    {
+      "t": "apple",
+      "label": "Apple: UNNotificationCategory",
+      "url": "https://developer.apple.com/documentation/usernotifications/unnotificationcategory"
+    }
+  ],
+  "confidence": "docs"
+}

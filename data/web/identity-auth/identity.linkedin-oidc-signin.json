@@ -1,0 +1,228 @@
+{
+  "id": "web.identity.linkedin-oidc-signin",
+  "name": "Sign In with LinkedIn (OpenID Connect)",
+  "kind": "permission",
+  "group": "identity-auth",
+  "subgroup": "Federated sign in",
+  "tags": [
+    "oidc",
+    "oauth",
+    "sign-in",
+    "identity"
+  ],
+  "plain": "Lets a site sign people in with their LinkedIn account and receive basic profile data.",
+  "meaning": "After the person approves, the site gets a stable pairwise ID, name, photo, locale and optionally a verified email. It does not verify real world identity.",
+  "lifecycle": [
+    "signed-in"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "GET https://www.linkedin.com/oauth/v2/authorization; POST /oauth/v2/accessToken; GET https://api.linkedin.com/v2/userinfo",
+      "access": {
+        "grant": "prompt",
+        "prompt_ui": "LinkedIn consent screen listing scopes",
+        "secure_context": true,
+        "user_gesture": true,
+        "persistence": "Access token lifetime set by LinkedIn; consent until revoked in LinkedIn settings",
+        "revocation": "LinkedIn account permitted services",
+        "iframe": "Redirect flow, not for iframes",
+        "steps": [
+          "Site redirects with scope openid profile email",
+          "Person signs in and consents",
+          "Site exchanges the code for tokens (RS256 id_token, jwks at /oauth/openid/jwks)",
+          "Site calls userinfo"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "",
+          "note": ""
+        },
+        "edge": {
+          "s": "y",
+          "v": "",
+          "note": ""
+        },
+        "firefox": {
+          "s": "y",
+          "v": "",
+          "note": ""
+        },
+        "safari": {
+          "s": "y",
+          "v": "",
+          "note": ""
+        },
+        "ios_safari": {
+          "s": "y",
+          "v": "",
+          "note": ""
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "",
+          "note": ""
+        },
+        "samsung": {
+          "s": "y",
+          "v": "",
+          "note": ""
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "object",
+    "metric": "OIDC claims",
+    "update": "per sign in",
+    "fields": [
+      {
+        "name": "sub",
+        "type": "string",
+        "unit": "",
+        "range": "pairwise",
+        "precision": "stable per app"
+      },
+      {
+        "name": "name, given_name, family_name",
+        "type": "string",
+        "unit": "",
+        "range": "",
+        "precision": ""
+      },
+      {
+        "name": "picture",
+        "type": "string",
+        "unit": "URL",
+        "range": "",
+        "precision": ""
+      },
+      {
+        "name": "locale",
+        "type": "string",
+        "unit": "",
+        "range": "",
+        "precision": ""
+      },
+      {
+        "name": "email",
+        "type": "string",
+        "unit": "",
+        "range": "optional",
+        "precision": ""
+      },
+      {
+        "name": "email_verified",
+        "type": "boolean",
+        "unit": "",
+        "range": "optional",
+        "precision": ""
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can sign you in with LinkedIn and get your name, photo and email",
+    "user_action": "You tap Sign in with LinkedIn and approve the LinkedIn consent screen",
+    "can": [
+      "Receive a stable ID for you that is unique to that site",
+      "Get your name, photo, language and, if you allow, a verified email",
+      "Create or sign in to your account on that site"
+    ],
+    "cannot": [
+      "Prove who you are in real life",
+      "See your work history, connections or posts",
+      "Get anything beyond the permissions listed on the consent screen"
+    ],
+    "reach": 2,
+    "reach_label": "Basic profile you approve",
+    "differs": ""
+  },
+  "story": {
+    "what_it_is": "Sign in with LinkedIn: you approve, and the site learns your name, photo and maybe email.",
+    "icon": "badge-check",
+    "tags": [
+      "Sign in",
+      "LinkedIn",
+      "Asks first"
+    ],
+    "marketing": [],
+    "for_you": "You are sent to a LinkedIn page that lists what the site wants (basic profile, email). You press Allow and you are sent back signed in. The site never sees your LinkedIn password.",
+    "for_makers": "Makers of work apps skip password systems and get a real name and picture. Leads and trials arrive with cleaner data, and the site can personalize the first screen.",
+    "use_cases": [
+      {
+        "type": "productivity",
+        "example": "A resume builder fills in a person's name, photo and email with one LinkedIn click, then offers to import their job history.",
+        "apps": []
+      },
+      {
+        "type": "enterprise",
+        "example": "A webinar or whitepaper form is replaced with a LinkedIn sign in so the sales team gets a real contact.",
+        "apps": []
+      },
+      {
+        "type": "education",
+        "example": "An online course site signs in learners with LinkedIn so they can add a certificate to their profile.",
+        "apps": [
+          "Coursera"
+        ]
+      },
+      {
+        "type": "social",
+        "example": "An alumni or events platform imports names and photos so attendees look familiar in the guest list.",
+        "apps": []
+      },
+      {
+        "type": "games",
+        "example": "A career focused web game or hackathon portal uses it to register players with a real name.",
+        "apps": []
+      },
+      {
+        "type": "ads",
+        "example": "B2B marketers use the verified email to match leads to ad campaigns and measure conversions.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Shares work identity",
+      "Name tied to real person"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Does not verify identity",
+    "email and email_verified are optional",
+    "Subject is pairwise: not matchable across apps"
+  ],
+  "scores": {
+    "sensitivity": 4,
+    "utility": 4,
+    "fingerprint_bits": null,
+    "friction": 2
+  },
+  "value": {
+    "legit_uses": [
+      "One click sign up",
+      "Prefilled profile"
+    ],
+    "abuse": [
+      "Profile scraping, contact harvesting"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": true,
+      "how": "LinkedIn as identity provider for third party sites; part of the data flow around LinkedIn but not a fingerprinting method."
+    }
+  },
+  "refs": [
+    {
+      "t": "vendor",
+      "label": "Microsoft Learn: Sign In with LinkedIn v2",
+      "url": "https://learn.microsoft.com/en-us/linkedin/consumer/integrations/self-serve/sign-in-with-linkedin-v2"
+    }
+  ],
+  "confidence": "verified"
+}

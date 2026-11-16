@@ -1,0 +1,201 @@
+{
+  "id": "web.notexposed.os-username",
+  "name": "OS username and home folder",
+  "kind": "not-exposed",
+  "group": "device-system-profile",
+  "subgroup": "Identity",
+  "tags": [
+    "not-exposed",
+    "username",
+    "pii"
+  ],
+  "plain": "Pages cannot see your computer login name.",
+  "meaning": "No web API exposes it. Proxies: file-picker display names after the user chooses a file, a downloaded file path in a native dialog, and rare leaks in error messages from extensions or file:// URLs.",
+  "lifecycle": [
+    "on-arrival",
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "none",
+      "access": {
+        "grant": "not-exposed",
+        "prompt_ui": "None",
+        "secure_context": false,
+        "user_gesture": false,
+        "persistence": "read fresh on every page load; nothing stored",
+        "revocation": "not applicable",
+        "iframe": "Readable from cross-origin iframes too (same values)",
+        "steps": [
+          "Page script reads the value",
+          "No prompt is shown"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "edge": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "firefox": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "safari": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "ios_safari": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "chrome_android": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "samsung": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "none",
+    "metric": "",
+    "update": "static per session",
+    "fields": [
+      {
+        "name": "proxy: File System Access picker",
+        "type": "string",
+        "unit": "",
+        "range": "page gets file name and handle only after user choice, never a full path",
+        "precision": ""
+      },
+      {
+        "name": "proxy: file:// URL",
+        "type": "string",
+        "unit": "",
+        "range": "pages loaded from disk can show a path in location",
+        "precision": ""
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can't see your computer login name or home folder",
+    "user_action": "Nothing. Pages have no way to ask for this",
+    "can": [
+      "See the name of a file you pick, if it includes your name",
+      "Get your name only if you type it in",
+      "Get hints from rare leaks in extension or local file errors"
+    ],
+    "cannot": [
+      "See the account name from the browser",
+      "See folder paths",
+      "See your home folder",
+      "See a path from a downloaded file"
+    ],
+    "reach": 1,
+    "reach_label": "Nothing unless you type it",
+    "differs": ""
+  },
+  "story": {
+    "what_it_is": "Pages cannot see your computer login name or home folder.",
+    "icon": "user-round",
+    "tags": [
+      "Blocked",
+      "Identity",
+      "Privacy"
+    ],
+    "marketing": [],
+    "for_you": "A website does not know your computer user name. It might learn your name only if you type it or if you pick a file and the file name includes it.",
+    "for_makers": "The username often contains a real name. The web gives no API for it. Sites use sign-in forms instead.",
+    "use_cases": [
+      {
+        "type": "productivity",
+        "example": "A web app wanted the computer user name to greet you and asks for a profile name.",
+        "apps": []
+      },
+      {
+        "type": "enterprise",
+        "example": "A company portal wanted the login name for single sign on and uses an identity provider.",
+        "apps": []
+      },
+      {
+        "type": "security",
+        "example": "A malicious page wanted to read the name from file paths and cannot.",
+        "apps": []
+      },
+      {
+        "type": "games",
+        "example": "A browser game wanted your OS name for a leaderboard and uses a typed nickname.",
+        "apps": []
+      },
+      {
+        "type": "ads",
+        "example": "An ad vendor wanted a real name for matching and uses email hashes instead.",
+        "apps": []
+      },
+      {
+        "type": "education",
+        "example": "An exam site wanted to confirm the logged in student and uses school sign-in.",
+        "apps": []
+      },
+      {
+        "type": "developer",
+        "example": "A web tool wanted the home folder path to suggest defaults and shows a file picker.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Names can leak through file names"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Real name often in username"
+  ],
+  "scores": {
+    "sensitivity": 5,
+    "utility": 2,
+    "fingerprint_bits": 0.0,
+    "friction": 3
+  },
+  "value": {
+    "legit_uses": [
+      "None: the browser deliberately withholds it"
+    ],
+    "abuse": [
+      "Sites attempt proxies to recover it"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "related": [
+    "web.notexposed.file-paths"
+  ],
+  "refs": [
+    {
+      "t": "mdn",
+      "label": "MDN File System Access API",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/File_System_API"
+    }
+  ],
+  "confidence": "docs"
+}

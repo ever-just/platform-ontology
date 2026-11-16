@@ -1,0 +1,220 @@
+{
+  "id": "mob.hw.watch-companion",
+  "name": "Wear OS and watchOS companion apps",
+  "kind": "capability",
+  "group": "peripherals-hardware",
+  "subgroup": "Wearables",
+  "tags": [
+    "wearos",
+    "watchos",
+    "companion",
+    "watchconnectivity",
+    "data-layer"
+  ],
+  "plain": "Pairs a watch app with the phone app and syncs data between them.",
+  "meaning": "Moves a person's health, location and messages to the wrist and back. Companion sync can carry more than the phone app would ask for directly.",
+  "lifecycle": [
+    "in-session",
+    "background"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "y",
+      "v": "4.3",
+      "api": 18,
+      "permission": "No permission; Wearable Data Layer needs matching package and signing key",
+      "protection": "none",
+      "grant": "none",
+      "prompt_ui": "None for sync; runtime permissions apply for sensors",
+      "persistence": "n/a",
+      "revocation": "Uninstall watch app",
+      "store_policy": "",
+      "api_surface": "Wearable Data Layer (MessageClient, DataClient), Health Services, Wear OS 6",
+      "note": "Wear OS 6 is based on Android 16."
+    },
+    "ios": {
+      "s": "y",
+      "v": "9.0",
+      "permission": "None; HealthKit and sensors have own prompts",
+      "protection": "none",
+      "grant": "none",
+      "prompt_ui": "None for sync",
+      "persistence": "n/a",
+      "revocation": "Watch app on iPhone > uninstall",
+      "store_policy": "",
+      "api_surface": "WatchConnectivity WCSession, independent watch apps (watchOS 6), HealthKit",
+      "note": "watchOS 6 allowed standalone apps; watchOS 26 adds Live Activity and workout API updates."
+    }
+  },
+  "data": {
+    "type": "event",
+    "metric": "Messages and files",
+    "update": "varies",
+    "fields": [
+      {
+        "name": "transfer size",
+        "type": "integer",
+        "unit": "bytes",
+        "range": "100 KB data item (Android), 65 KB userInfo (watchOS)",
+        "precision": "exact"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can sync data between the phone app and watch app; sensors keep their own prompts",
+    "user_action": "You install the watch app and open it on your wrist",
+    "can": [
+      "Send messages and data between the phone and the watch",
+      "Run a standalone watch app on its own",
+      "Move health, location or message info to the wrist when you allowed it on the phone"
+    ],
+    "cannot": [
+      "Skip the HealthKit or sensor prompts",
+      "Sync with an Android app that has a different package or signing key",
+      "Count on phone permissions carrying over to the watch sensors"
+    ],
+    "reach": 3,
+    "reach_label": "Ongoing sync between your devices",
+    "differs": "Android needs a matching package and signing key; iPhone uses WatchConnectivity and allows standalone watch apps since watchOS 6."
+  },
+  "story": {
+    "what_it_is": "A watch app that pairs with the phone app and shares data between them.",
+    "icon": "watch",
+    "tags": [
+      "Wearables",
+      "Health",
+      "Syncs"
+    ],
+    "marketing": [
+      {
+        "vendor": "Apple",
+        "name": "watchOS",
+        "pitch": "Build apps that run on Apple Watch, work on their own and keep in step with the iPhone app.",
+        "url": "https://developer.apple.com/watchos/"
+      },
+      {
+        "vendor": "Google",
+        "name": "Wear OS",
+        "pitch": "Wear OS is Google's watch platform, with apps that can sync with Android phones.",
+        "url": "https://wearos.google.com/"
+      }
+    ],
+    "for_you": "You see messages, workouts or maps on your wrist and tap a reply. Behind the scenes your health numbers, location and notifications move between the watch and phone.",
+    "for_makers": "A watch app keeps people glancing at the brand all day. It collects steady health and activity data and can send alerts. The link between the watch and phone often carries more than the person sees.",
+    "use_cases": [
+      {
+        "type": "fitness",
+        "example": "A running app shows your pace on the wrist and saves the route to your phone when you finish.",
+        "apps": [
+          "Strava",
+          "Nike Run Club"
+        ]
+      },
+      {
+        "type": "health",
+        "example": "A diabetes app shows your glucose level on the watch face and warns you before a drop.",
+        "apps": []
+      },
+      {
+        "type": "maps",
+        "example": "A map app buzzes your wrist for each turn so you do not look at the phone.",
+        "apps": [
+          "Google Maps"
+        ]
+      },
+      {
+        "type": "music",
+        "example": "A music app lets you control playback on the phone from the watch.",
+        "apps": [
+          "Spotify"
+        ]
+      },
+      {
+        "type": "messaging",
+        "example": "A chat app lets you read and reply by voice on the wrist.",
+        "apps": [
+          "WhatsApp"
+        ]
+      },
+      {
+        "type": "smart-home",
+        "example": "A home app lets you unlock the door or turn on lights from the watch.",
+        "apps": []
+      },
+      {
+        "type": "payments",
+        "example": "A wallet app taps to pay with the watch when your phone is in a bag.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Health data collected all day",
+      "Sync can carry extra data",
+      "Always on location"
+    ],
+    "android_note": "Wear OS 6 is based on Android 16.",
+    "ios_note": "watchOS 6 allowed watch apps that work on their own. watchOS 26 added Live Activity and workout API updates."
+  },
+  "technical_bounds": [
+    "Sensors require their own permissions on each device"
+  ],
+  "scores": {
+    "sensitivity": 3,
+    "utility": 3,
+    "fingerprint_bits": 2,
+    "friction": 1
+  },
+  "value": {
+    "legit_uses": [
+      "Fitness",
+      "Notifications mirror"
+    ],
+    "abuse": [
+      "Data egress via companion"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2015-04",
+      "platform": "ios",
+      "version": "watchOS 1",
+      "change": "Apple Watch apps launch"
+    },
+    {
+      "date": "2019-09",
+      "platform": "ios",
+      "version": "watchOS 6",
+      "change": "Independent watch apps and App Store"
+    },
+    {
+      "date": "2025-09",
+      "platform": "android",
+      "version": "Wear OS 6 (Android 16)",
+      "change": "Wear OS 6 with Pixel Watch 4"
+    }
+  ],
+  "related": [
+    "mob.hw.accessory-setup",
+    "mob.app.carplay"
+  ],
+  "refs": [
+    {
+      "t": "android",
+      "label": "Android: Wear OS",
+      "url": "https://developer.android.com/wear"
+    },
+    {
+      "t": "apple",
+      "label": "Apple: WatchConnectivity",
+      "url": "https://developer.apple.com/documentation/watchconnectivity"
+    }
+  ],
+  "confidence": "docs"
+}

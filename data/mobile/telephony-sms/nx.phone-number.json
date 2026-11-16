@@ -1,0 +1,178 @@
+{
+  "id": "mob.nx.phone-number",
+  "name": "Own phone number",
+  "kind": "not-exposed",
+  "group": "telephony-sms",
+  "subgroup": "Hardware IDs",
+  "tags": [
+    "phone-number",
+    "blocked"
+  ],
+  "plain": "Android gives it behind a runtime permission; iOS has no API.",
+  "meaning": "The number is a strong identity key, so iOS never exposes it and Android gates it behind a restricted permission set.",
+  "lifecycle": [
+    "on-launch",
+    "in-session"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "n",
+      "v": "1.0",
+      "api": 1,
+      "permission": "READ_PHONE_NUMBERS (API 26) or READ_PHONE_STATE",
+      "protection": "dangerous",
+      "grant": "not-exposed",
+      "prompt_ui": "",
+      "persistence": "Until revoked",
+      "revocation": "Settings > Apps > Permissions",
+      "store_policy": "Play: restricted permission declaration",
+      "api_surface": "TelephonyManager.getLine1Number()",
+      "note": "May return empty if the carrier does not store it"
+    },
+    "ios": {
+      "s": "n",
+      "v": "",
+      "permission": "none",
+      "protection": "not-exposed",
+      "grant": "not-exposed",
+      "prompt_ui": "",
+      "persistence": "",
+      "revocation": "",
+      "store_policy": "",
+      "api_surface": "No public API",
+      "note": "Apps must ask the person or verify by SMS or Sign in with Apple"
+    }
+  },
+  "data": {
+    "type": "string",
+    "metric": "Phone number",
+    "update": "N/A",
+    "fields": []
+  },
+  "limits": {
+    "headline": "Can't get the phone's own number on iPhone; Android allows it behind a restricted permission",
+    "user_action": "You type your number, or verify it with a text code or Sign in with Apple",
+    "can": [
+      "Ask you to type your number",
+      "Check it with a text code or Sign in with Apple",
+      "Get it on Android with the phone numbers permission if the carrier stores it"
+    ],
+    "cannot": [
+      "Get the number on iPhone",
+      "Get it on Android without the permission prompt",
+      "Get it when the carrier does not store it on the SIM"
+    ],
+    "reach": 1,
+    "reach_label": "Blocked on iPhone, gated on Android",
+    "differs": "Android gives it behind a permission; iPhone offers no way to get it."
+  },
+  "story": {
+    "what_it_is": "The phone's own number is hidden. Android sometimes shares it behind a prompt, iPhone never does.",
+    "icon": "phone",
+    "tags": [
+      "Blocked",
+      "Phone number",
+      "Identity"
+    ],
+    "marketing": [],
+    "for_you": "An app that wants your number has to ask you to type it, or text you a code. You are rarely asked to hand it over from the phone itself. That keeps your number out of the wrong hands.",
+    "for_makers": "A phone number is a strong identity key and links accounts across the web. Apps wanted it for sign up and fraud checks. Platforms stopped giving it out silently, so apps verify by text or by Sign in with Apple.",
+    "use_cases": [
+      {
+        "type": "messaging",
+        "example": "A chat app wanted your number to find friends and now texts you a code.",
+        "apps": [
+          "WhatsApp",
+          "Signal"
+        ]
+      },
+      {
+        "type": "security",
+        "example": "A bank wanted to match your number against its records and asks you to verify.",
+        "apps": []
+      },
+      {
+        "type": "social",
+        "example": "A social app wanted your number to link to the address book and asks first.",
+        "apps": []
+      },
+      {
+        "type": "rideshare",
+        "example": "A rideshare app wanted your number to call the driver and uses an anonymous line.",
+        "apps": [
+          "Uber"
+        ]
+      },
+      {
+        "type": "delivery",
+        "example": "A food app wanted your number for the courier and masks it.",
+        "apps": []
+      },
+      {
+        "type": "ads",
+        "example": "An ad network wanted a number to track you and cannot read it.",
+        "apps": []
+      },
+      {
+        "type": "payments",
+        "example": "A payment app uses the number as a login and checks it by text.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Phone numbers link accounts",
+      "SMS codes can be intercepted",
+      "Empty or wrong values"
+    ],
+    "android_note": "Android may return the number behind a runtime permission, but it can be empty if the carrier does not store it.",
+    "ios_note": "iPhone has no API for the number. Apps must ask the person, verify by SMS, or use Sign in with Apple."
+  },
+  "technical_bounds": [
+    "iOS: not available at all"
+  ],
+  "scores": {
+    "sensitivity": 5,
+    "utility": 2,
+    "fingerprint_bits": null,
+    "friction": 2
+  },
+  "value": {
+    "legit_uses": [
+      "Auto-fill verification"
+    ],
+    "abuse": [
+      "Contact graph keys"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2017-08",
+      "platform": "android",
+      "version": "8.0 (API 26)",
+      "change": "READ_PHONE_NUMBERS split from READ_PHONE_STATE"
+    }
+  ],
+  "related": [
+    "mob.nx.imei-serial"
+  ],
+  "refs": [
+    {
+      "t": "android",
+      "label": "Android: TelephonyManager",
+      "url": "https://developer.android.com/reference/android/telephony/TelephonyManager"
+    },
+    {
+      "t": "android",
+      "label": "Android 10 privacy changes",
+      "url": "https://developer.android.com/about/versions/10/privacy/changes"
+    }
+  ],
+  "confidence": "docs"
+}

@@ -1,0 +1,225 @@
+{
+  "id": "mob.bg.expedited-uidt",
+  "name": "Expedited and user-initiated long jobs",
+  "kind": "capability",
+  "group": "notifications-background",
+  "subgroup": "Android background limits",
+  "tags": [
+    "expedited",
+    "uidt",
+    "continued-processing",
+    "long-running"
+  ],
+  "plain": "Jobs that start soon or run long after a user action: Android expedited and UIDT, iOS 26 continued processing.",
+  "meaning": "These are the sanctioned ways to finish work the person started (upload, export). They need a visible progress surface, so apps can no longer quietly continue large jobs.",
+  "lifecycle": [
+    "background",
+    "in-session"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "y",
+      "v": "12",
+      "api": 31,
+      "permission": "RUN_USER_INITIATED_JOBS (API 34, normal)",
+      "protection": "normal",
+      "grant": "install",
+      "prompt_ui": "Notification with progress required for UIDT",
+      "persistence": "Per job; stopped if the user stops it in the task manager",
+      "revocation": "Task manager 'Stop'",
+      "store_policy": "",
+      "api_surface": "WorkManager setExpedited, JobInfo.Builder.setUserInitiated(true)",
+      "note": "Expedited quota per 24 h: Active 30 min, Working 15, Frequent 10, Rare 10, Restricted 5; UIDT has no fixed quota but needs a network constraint and notification"
+    },
+    "ios": {
+      "s": "y",
+      "v": "26.0",
+      "permission": "BGTaskSchedulerPermittedIdentifiers with continued-processing prefix; GPU entitlement for GPU work",
+      "protection": "entitlement",
+      "grant": "entitlement",
+      "prompt_ui": "Live Activity style progress UI",
+      "persistence": "Tasks showing little progress are terminated first; starts in the foreground",
+      "revocation": "Swipe or user cancel",
+      "store_policy": "",
+      "api_surface": "BGContinuedProcessingTask, ProgressReporting",
+      "note": "Starts from a foreground user action; must report progress; separate GPU entitlement"
+    }
+  },
+  "web_equivalents": [
+    "web.notify.background-fetch"
+  ],
+  "data": {
+    "type": "object",
+    "metric": "Job quota",
+    "update": "Per 24 h",
+    "fields": [
+      {
+        "name": "expedited_active",
+        "type": "integer",
+        "unit": "min",
+        "range": "30",
+        "precision": ""
+      },
+      {
+        "name": "expedited_restricted",
+        "type": "integer",
+        "unit": "min",
+        "range": "5",
+        "precision": ""
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can run jobs soon or for a long time after you tap something, with daily limits",
+    "user_action": "You tap Export, Upload or Process and the app keeps working after you leave",
+    "can": [
+      "Start an expedited job that runs soon on Android",
+      "Run a long task started by you (user initiated job) on Android 14 and newer",
+      "Continue processing after you leave on iOS 26",
+      "Show progress while the job runs"
+    ],
+    "cannot": [
+      "Run past the daily quota for expedited jobs on Android (30 minutes at best, 5 when restricted)",
+      "Start a long job on iPhone without a foreground tap",
+      "Skip showing progress on iPhone with iOS 26",
+      "Use the GPU in the background without the Apple GPU entitlement"
+    ],
+    "reach": 3,
+    "reach_label": "Long jobs you started",
+    "differs": "Android has daily quotas for expedited work and long jobs need a network constraint. iPhone 26 continued processing starts only from a foreground action."
+  },
+  "story": {
+    "what_it_is": "Allowed ways to finish long jobs you started, like uploads or exports, with a visible progress notice.",
+    "icon": "hourglass",
+    "tags": [
+      "Background",
+      "Jobs",
+      "Visible"
+    ],
+    "marketing": [
+      {
+        "vendor": "Google",
+        "name": "User initiated data transfers",
+        "pitch": "Android lets apps run long transfers you start, with a notification you can see and stop.",
+        "url": "https://developer.android.com/develop/background-work/background-tasks/uidt"
+      },
+      {
+        "vendor": "Apple",
+        "name": "Continued processing tasks",
+        "pitch": "iOS 26 lets an app keep working on a job you start, with progress shown on screen.",
+        "url": "https://developer.apple.com/documentation/backgroundtasks/bgcontinuedprocessingtask"
+      }
+    ],
+    "for_you": "You start a big upload, a video export or a backup and then leave the app. You see a progress notice and can stop it. You are never in the dark about a long job.",
+    "for_makers": "Makers get a proper way to finish heavy work after you leave the app. In return they must show progress. This stops apps from quietly running large jobs in the background.",
+    "use_cases": [
+      {
+        "type": "creative",
+        "example": "A video editor finishes exporting your clip after you switch apps.",
+        "apps": [
+          "CapCut",
+          "LumaFusion"
+        ]
+      },
+      {
+        "type": "productivity",
+        "example": "A cloud app uploads a big folder and shows a progress bar in the notifications.",
+        "apps": [
+          "Google Drive",
+          "Dropbox"
+        ]
+      },
+      {
+        "type": "games",
+        "example": "A game finishes downloading a large patch while you check messages.",
+        "apps": []
+      },
+      {
+        "type": "social",
+        "example": "A social app uploads a long video post after you leave.",
+        "apps": [
+          "Instagram",
+          "TikTok"
+        ]
+      },
+      {
+        "type": "fitness",
+        "example": "A fitness app syncs a long workout file after the run.",
+        "apps": []
+      },
+      {
+        "type": "ads",
+        "example": "A hidden kit used to run big jobs quietly, which new rules forbid.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Hidden long jobs",
+      "Battery and data use"
+    ],
+    "android_note": "Android has expedited jobs for short urgent work and user initiated transfers for long ones.",
+    "ios_note": "iOS 26 adds continued processing for jobs you start in the app."
+  },
+  "technical_bounds": [
+    "Both need visible progress",
+    "iOS tasks are terminated first if progress is low"
+  ],
+  "scores": {
+    "sensitivity": 1,
+    "utility": 4,
+    "fingerprint_bits": null,
+    "friction": 1
+  },
+  "value": {
+    "legit_uses": [
+      "Large upload or export"
+    ],
+    "abuse": [
+      "None"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2021-10",
+      "platform": "android",
+      "version": "12 (API 31)",
+      "change": "Expedited jobs introduced"
+    },
+    {
+      "date": "2023-10",
+      "platform": "android",
+      "version": "14 (API 34)",
+      "change": "User-initiated data transfer jobs introduced"
+    },
+    {
+      "date": "2025-09",
+      "platform": "ios",
+      "version": "iOS 26",
+      "change": "BGContinuedProcessingTask lets foreground started work continue with progress UI"
+    }
+  ],
+  "related": [
+    "mob.bg.workmanager-jobs",
+    "mob.bg.ios-refresh-processing"
+  ],
+  "refs": [
+    {
+      "t": "android",
+      "label": "Android: User-initiated data transfer jobs",
+      "url": "https://developer.android.com/develop/background-work/background-tasks/uidt"
+    },
+    {
+      "t": "apple",
+      "label": "Apple: BGContinuedProcessingTask",
+      "url": "https://developer.apple.com/documentation/backgroundtasks/bgcontinuedprocessingtask"
+    }
+  ],
+  "confidence": "verified"
+}

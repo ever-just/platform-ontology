@@ -1,0 +1,189 @@
+{
+  "id": "mob.loc.installed-fonts",
+  "name": "Installed and custom fonts",
+  "kind": "signal",
+  "group": "locale-preferences",
+  "subgroup": "Appearance",
+  "tags": [
+    "fonts",
+    "fingerprint"
+  ],
+  "plain": "Lists fonts: Android reads the system font dir, iOS lists system families and installed profiles.",
+  "meaning": "The set of fonts is a classic fingerprint. iOS 13 added user-installable fonts, so the list can differ per person.",
+  "lifecycle": [
+    "on-launch",
+    "in-session"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "p",
+      "v": "1.0",
+      "api": 1,
+      "permission": "",
+      "protection": "none",
+      "grant": "none",
+      "prompt_ui": "",
+      "persistence": "",
+      "revocation": "",
+      "store_policy": "",
+      "api_surface": "Typeface.SYSTEM_FONT_MAP (API 29), /system/fonts listing; user fonts via downloadable fonts",
+      "note": "Mostly OEM defaults, low variation"
+    },
+    "ios": {
+      "s": "p",
+      "v": "13.0",
+      "permission": "none",
+      "protection": "none",
+      "grant": "none",
+      "prompt_ui": "",
+      "persistence": "",
+      "revocation": "",
+      "store_policy": "",
+      "api_surface": "User-installed fonts (iOS 13) appear in the list",
+      "note": ""
+    }
+  },
+  "web_equivalents": [
+    "web.device.installed-fonts",
+    "web.input.local-fonts"
+  ],
+  "data": {
+    "type": "list",
+    "metric": "Font names",
+    "update": "Static",
+    "fields": [
+      {
+        "name": "families",
+        "type": "list",
+        "unit": "",
+        "range": "50 to 300",
+        "precision": "exact"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can see which fonts your phone has, a small but telling device detail",
+    "user_action": "Nothing. It happens when the app or page draws its text",
+    "can": [
+      "List the system fonts on the phone",
+      "On iPhone, see fonts you installed yourself (iOS 13 and newer)",
+      "Use the font list as one clue in a device fingerprint"
+    ],
+    "cannot": [
+      "See the content or documents in those fonts",
+      "Install fonts for you",
+      "Tell phones apart reliably; most phones show the same defaults"
+    ],
+    "reach": 1,
+    "reach_label": "A list of fonts",
+    "differs": "Android lists mostly maker defaults. iPhone also shows user installed fonts from iOS 13."
+  },
+  "story": {
+    "what_it_is": "An app can list the fonts on your phone, which differ a little from phone to phone.",
+    "icon": "type",
+    "tags": [
+      "Fonts",
+      "Silent",
+      "Fingerprint"
+    ],
+    "marketing": [],
+    "for_you": "You do not see it. Most people never notice fonts. It matters only because a long list of fonts can quietly mark your phone.",
+    "for_makers": "Makers need fonts for text. The font list is also a classic tracking trick, since people who install custom fonts or profiles stand out. It is more useful on iPhone since iOS 13 lets people add fonts.",
+    "use_cases": [
+      {
+        "type": "creative",
+        "example": "A design app checks which fonts are installed and offers extra ones to download.",
+        "apps": [
+          "Canva",
+          "Adobe Fresco"
+        ]
+      },
+      {
+        "type": "productivity",
+        "example": "A document app shows your own fonts in the picker.",
+        "apps": [
+          "Pages",
+          "Google Docs"
+        ]
+      },
+      {
+        "type": "social",
+        "example": "A story app lets you pick a font from your phone for your text.",
+        "apps": [
+          "Instagram"
+        ]
+      },
+      {
+        "type": "games",
+        "example": "A game that shows chat in many languages checks for fonts that can draw each script.",
+        "apps": []
+      },
+      {
+        "type": "analytics",
+        "example": "A tracker lists fonts and combines them with the model and screen size to make a unique phone ID.",
+        "apps": []
+      },
+      {
+        "type": "security",
+        "example": "An anti fraud tool notices a font list that matches a fake emulator.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Strong fingerprint signal",
+      "Reveals custom installs"
+    ],
+    "android_note": "Android apps can read the system font folder with few limits.",
+    "ios_note": "iPhone apps list system font families and can see custom fonts from installed profiles or apps."
+  },
+  "technical_bounds": [
+    "OEM defaults reduce entropy"
+  ],
+  "scores": {
+    "sensitivity": 1,
+    "utility": 2,
+    "fingerprint_bits": 5,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Render text"
+    ],
+    "abuse": [
+      "Fingerprint"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2019-09",
+      "platform": "ios",
+      "version": "iOS 13",
+      "change": "User-installed fonts via Settings"
+    }
+  ],
+  "refs": [
+    {
+      "t": "android",
+      "label": "Android: Build",
+      "url": "https://developer.android.com/reference/android/os/Build"
+    },
+    {
+      "t": "apple",
+      "label": "Apple: UIDevice",
+      "url": "https://developer.apple.com/documentation/uikit/uidevice"
+    },
+    {
+      "t": "paper",
+      "label": "Kurtz et al.: Fingerprinting Mobile Devices Using Personalized Configurations (PoPETs 2016)",
+      "url": "https://petsymposium.org/popets/2016/popets-2015-0027.php"
+    }
+  ],
+  "confidence": "inferred"
+}

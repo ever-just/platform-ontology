@@ -1,0 +1,212 @@
+{
+  "id": "web.tracking.linkedin-spectroscopy-dom-scan",
+  "name": "Spectroscopy DOM scan for extension traces",
+  "kind": "tracking",
+  "group": "device-system-profile",
+  "subgroup": "Browser extensions",
+  "tags": [
+    "extension-detection",
+    "dom-scan",
+    "browsergate",
+    "anti-abuse"
+  ],
+  "plain": "Walks the page's own DOM looking for chrome-extension:// strings that extensions inject.",
+  "meaning": "Finds extensions that modify the page even when they hide their files from fetch probes. A passive second way to learn which add-ons the person runs while using the site.",
+  "lifecycle": [
+    "in-session",
+    "signed-in"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "recursive DOM walk (scanDOMForPrefix) over text nodes and attributes; SpectroscopyEvent",
+      "access": {
+        "grant": "none",
+        "prompt_ui": "None (no browser prompt)",
+        "secure_context": false,
+        "user_gesture": false,
+        "persistence": "Per page; cookie spectroscopyId is session scoped",
+        "revocation": "",
+        "iframe": "",
+        "steps": [
+          "Recurse through DOM nodes, text and attribute values",
+          "Match the prefix chrome-extension:// and extract the 32 char ID",
+          "Fire SpectroscopyEvent with the found IDs",
+          "Cookie spectroscopyId set for the session (LinkedIn: used to catch malicious activity through browser extensions)"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "",
+          "note": "Chromium only in practice"
+        },
+        "edge": {
+          "s": "y",
+          "v": "79",
+          "note": "",
+          "date": "2020-01-15"
+        },
+        "firefox": {
+          "s": "p",
+          "v": "",
+          "note": "Would only see moz-extension strings if scanned for"
+        },
+        "safari": {
+          "s": "p",
+          "v": "",
+          "note": ""
+        },
+        "ios_safari": {
+          "s": "p",
+          "v": "",
+          "note": ""
+        },
+        "chrome_android": {
+          "s": "p",
+          "v": "",
+          "note": ""
+        },
+        "samsung": {
+          "s": "p",
+          "v": "",
+          "note": ""
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "list",
+    "metric": "Extension IDs seen in DOM",
+    "update": "on DOM scan",
+    "fields": [
+      {
+        "name": "extension_ids",
+        "type": "list",
+        "unit": "IDs",
+        "range": "0 to a handful",
+        "precision": "32 char each"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can look through its own page for traces that extensions leave behind",
+    "user_action": "Nothing. It happens while the page loads and changes.",
+    "can": [
+      "Scan the page's own text and settings for extension web addresses",
+      "Spot extensions that add things to the page, such as grammar or shopping tools",
+      "Report any matches back to its servers"
+    ],
+    "cannot": [
+      "See extensions that never touch the page",
+      "See your tabs, history or data on other sites",
+      "See inside an extension or its private data"
+    ],
+    "reach": 2,
+    "reach_label": "Only traces left on its own page",
+    "differs": "Works best in Chrome and Edge. Other browsers only partly leave these traces."
+  },
+  "story": {
+    "what_it_is": "A page reads its own hidden text and tags to find leftovers that your browser add-ons have injected.",
+    "icon": "scan-search",
+    "tags": [
+      "Extensions",
+      "Silent",
+      "Tracking"
+    ],
+    "marketing": [],
+    "for_you": "You never see it. Some add-ons write small marks into every page you open, like a stamp. The site reads its own page and notices the stamps.",
+    "for_makers": "It costs almost nothing to run and makes no extra network requests, so it is very hard to spot. Makers use it to spot bots and rule breaking tools. Critics say it also builds a profile of the person.",
+    "use_cases": [
+      {
+        "type": "security",
+        "example": "A social site scans its own page for marks left by an automation add-on that scrolls feeds and copies profiles.",
+        "apps": [
+          "LinkedIn"
+        ]
+      },
+      {
+        "type": "ads",
+        "example": "An ad vendor looks for marks from ad blockers on the page to decide whether to show a polite 'please turn off your ad blocker' wall.",
+        "apps": []
+      },
+      {
+        "type": "shopping",
+        "example": "A price comparison site checks for coupon add-on marks so it can change how it shows deals.",
+        "apps": []
+      },
+      {
+        "type": "analytics",
+        "example": "A measurement team learns that 20 percent of visitors run a grammar helper that rewrites forms, and explains odd typing data.",
+        "apps": []
+      },
+      {
+        "type": "security",
+        "example": "A bank or fraud service looks for marks left by remote control or screen recording add-ons during a login.",
+        "apps": []
+      },
+      {
+        "type": "games",
+        "example": "A game site spots add-ons that inject overlays into the page, which can be used to cheat in browser games.",
+        "apps": []
+      },
+      {
+        "type": "enterprise",
+        "example": "A company checks that staff browsers run the approved security add-on before showing a work app.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Quiet profiling",
+      "Hard to notice",
+      "Add-ons can be personal"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Sees only extensions that inject visible traces into the DOM",
+    "No access to extension storage or pages"
+  ],
+  "scores": {
+    "sensitivity": 3,
+    "utility": 2,
+    "fingerprint_bits": 6,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Spot extensions injecting content into the app"
+    ],
+    "abuse": [
+      "Profiling by installed extensions"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": true,
+      "how": "Cookie table lists spectroscopyId as catching malicious activity through browser extensions. Code in the public snapshot has scanDOMForPrefix and parseFoundString for chrome-extension:// and fires SpectroscopyEvent."
+    }
+  },
+  "related": [
+    "web.tracking.linkedin-extension-probe"
+  ],
+  "refs": [
+    {
+      "t": "github",
+      "label": "mdp/linkedin-extension-fingerprinting (LinkedIn script snapshot and ID list)",
+      "url": "https://github.com/mdp/linkedin-extension-fingerprinting"
+    },
+    {
+      "t": "vendor",
+      "label": "LinkedIn cookie table",
+      "url": "https://www.linkedin.com/legal/l/cookie-table"
+    },
+    {
+      "t": "news",
+      "label": "BrowserGate: how it works (48 feature table)",
+      "url": "https://browsergate.eu/how-it-works/"
+    }
+  ],
+  "confidence": "verified"
+}

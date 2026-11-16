@@ -1,0 +1,262 @@
+{
+  "id": "web.device.plugins-mimetypes",
+  "name": "navigator.plugins and mimeTypes",
+  "kind": "signal",
+  "group": "device-system-profile",
+  "subgroup": "Browser identity",
+  "tags": [
+    "plugins",
+    "legacy",
+    "fingerprint-reduced"
+  ],
+  "plain": "List of browser plugins and MIME types; now a fixed list of 5 PDF viewers.",
+  "meaning": "Once the strongest fingerprint (15.4 bits, Flash and Java era). Since Chrome 94 and Firefox 99 it returns a hardcoded PDF list, so it now mostly flags headless or odd browsers.",
+  "lifecycle": [
+    "on-arrival",
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "navigator.plugins, navigator.mimeTypes",
+      "bcd": [
+        "api.Navigator.plugins",
+        "api.Navigator.mimeTypes"
+      ],
+      "access": {
+        "grant": "none",
+        "prompt_ui": "None",
+        "secure_context": false,
+        "user_gesture": false,
+        "persistence": "read fresh on every page load; nothing stored",
+        "revocation": "none needed (no grant)",
+        "iframe": "Readable from cross-origin iframes too (same values)",
+        "steps": [
+          "Page script reads the value",
+          "No prompt is shown"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "1",
+          "note": "Hardcoded list since 94",
+          "date": "2008-12-11"
+        },
+        "edge": {
+          "s": "y",
+          "v": "12",
+          "note": "",
+          "date": "2015-07-29"
+        },
+        "firefox": {
+          "s": "y",
+          "v": "1",
+          "note": "",
+          "date": "2004-11-09"
+        },
+        "safari": {
+          "s": "y",
+          "v": "1",
+          "note": "",
+          "date": "2003-06-23"
+        },
+        "ios_safari": {
+          "s": "y",
+          "v": "1",
+          "note": "",
+          "date": "2007-06-29"
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "18",
+          "note": "",
+          "date": "2012-06-27"
+        },
+        "samsung": {
+          "s": "y",
+          "v": "1.0",
+          "note": "",
+          "date": "2013-04-27"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "object",
+    "metric": "",
+    "update": "static per session",
+    "fields": [
+      {
+        "name": "plugins",
+        "type": "list",
+        "unit": "",
+        "range": "5 entries: PDF Viewer, Chrome PDF Viewer, Chromium PDF Viewer, Microsoft Edge PDF Viewer, WebKit built-in PDF",
+        "precision": "hardcoded"
+      },
+      {
+        "name": "mimeTypes",
+        "type": "list",
+        "unit": "",
+        "range": "application/pdf, text/pdf",
+        "precision": "hardcoded"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can see a fixed list of 5 PDF viewers, so it no longer tells you apart",
+    "user_action": "Nothing. It happens when the page loads",
+    "can": [
+      "Get the same hard coded list of PDF viewers",
+      "Spot a headless or odd browser when the list looks wrong",
+      "Check it with other signs of automation"
+    ],
+    "cannot": [
+      "See real plugins; Chrome 94 and Firefox 99 stopped listing them",
+      "See add ons or extensions",
+      "Tell regular visitors apart; the list is the same",
+      "See which Flash or Java version you have; those plugins are gone"
+    ],
+    "reach": 1,
+    "reach_label": "A fixed list for everyone",
+    "differs": ""
+  },
+  "story": {
+    "what_it_is": "The list of browser plugins, now a fixed list of five PDF viewers in modern browsers.",
+    "icon": "puzzle",
+    "tags": [
+      "Browser",
+      "Legacy",
+      "Bot checks"
+    ],
+    "marketing": [
+      {
+        "vendor": "MDN",
+        "name": "Navigator.plugins",
+        "pitch": "Docs say the list is now a fixed set for PDF viewing, kept only for compatibility.",
+        "url": "https://developer.mozilla.org/en-US/docs/Web/API/Navigator/plugins"
+      }
+    ],
+    "for_you": "You never see it. It used to list tools like Flash and Java, which made people very easy to tell apart. Now every browser says the same five PDF viewers, so it hardly tells anything.",
+    "for_makers": "In the Flash era this was one of the strongest fingerprints. Now sites mostly use it to spot automation, because a headless browser often gives an empty or odd list. It also shows that a browser is being faked.",
+    "use_cases": [
+      {
+        "type": "security",
+        "example": "A bot defence service flags a visitor with zero plugins as probably headless.",
+        "apps": [
+          "Cloudflare",
+          "DataDome"
+        ]
+      },
+      {
+        "type": "ads",
+        "example": "An ad fraud vendor discards ad views from clients with empty plugin lists.",
+        "apps": [
+          "DoubleVerify"
+        ]
+      },
+      {
+        "type": "games",
+        "example": "A browser games portal blocks automated clients farming rewards when the plugin list looks fake.",
+        "apps": []
+      },
+      {
+        "type": "shopping",
+        "example": "A ticket seller adds a missing plugin list to its bot score during a high demand sale.",
+        "apps": []
+      },
+      {
+        "type": "analytics",
+        "example": "A traffic report removes visits that look like headless tools.",
+        "apps": []
+      },
+      {
+        "type": "developer",
+        "example": "An old site still reads the list to choose a PDF viewer, which now always works.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Almost no value to people",
+      "Odd lists get you flagged"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "No installed-software list any more",
+    "Empty array can flag headless"
+  ],
+  "scores": {
+    "sensitivity": 1,
+    "utility": 1,
+    "fingerprint_bits": 1.0,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Legacy compatibility"
+    ],
+    "abuse": [
+      "Bot detection"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": true,
+      "how": "Collected as plugins and MIME types. Read by the LinkedIn APFC fingerprint script (48 features, alleged by BrowserGate, partly confirmed by BleepingComputer)."
+    }
+  },
+  "history": [
+    {
+      "date": "2010-01",
+      "browser": "paper",
+      "version": "",
+      "change": "Panopticlick measures plugins list at 15.4 bits"
+    },
+    {
+      "date": "2020-09",
+      "browser": "chrome",
+      "version": "",
+      "change": "Flash plugins end of life; NPAPI gone since Chrome 45"
+    },
+    {
+      "date": "2021-09",
+      "browser": "chrome",
+      "version": "94",
+      "change": "Plugins and mimeTypes return fixed PDF entries when PDF viewer enabled"
+    },
+    {
+      "date": "2022-03",
+      "browser": "firefox",
+      "version": "99",
+      "change": "Same fixed list shipped"
+    }
+  ],
+  "related": [
+    "web.device.pdf-viewer-enabled"
+  ],
+  "refs": [
+    {
+      "t": "paper",
+      "label": "AmIUnique: Beauty and the Beast, Laperdrix et al. 2016 (attribute entropy)",
+      "url": "https://hal.inria.fr/hal-01285470"
+    },
+    {
+      "t": "paper",
+      "label": "Eckersley, How unique is your web browser (2010)",
+      "url": "https://coveryourtracks.eff.org/static/browser-uniqueness.pdf"
+    },
+    {
+      "t": "mdn",
+      "label": "MDN plugins",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/Navigator/plugins"
+    },
+    {
+      "t": "github",
+      "label": "fingerprintjs source: plugins",
+      "url": "https://github.com/fingerprintjs/fingerprintjs/blob/master/src/sources/plugins.ts"
+    }
+  ],
+  "confidence": "verified"
+}

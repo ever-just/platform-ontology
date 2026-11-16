@@ -1,0 +1,182 @@
+{
+  "id": "mob.ads.uninstall-tracking",
+  "name": "Uninstall tracking via push",
+  "kind": "tracking",
+  "group": "attribution-ads",
+  "subgroup": "SDKs and measurement",
+  "tags": [
+    "uninstall",
+    "push",
+    "fcm",
+    "apns"
+  ],
+  "plain": "Apps or MMPs detect an uninstall by noticing a push token has stopped working.",
+  "meaning": "A silent push fails after uninstall, so the vendor learns when someone dropped the app. Used for retention and retargeting audiences.",
+  "lifecycle": [
+    "background",
+    "after-uninstall"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "y",
+      "v": "",
+      "permission": "POST_NOTIFICATIONS not needed for silent data push",
+      "protection": "none",
+      "grant": "none",
+      "prompt_ui": "",
+      "persistence": "",
+      "revocation": "",
+      "store_policy": "Play: disclose; no policy ban",
+      "api_surface": "FCM data message, UNREGISTERED error, MMP uninstall measurement",
+      "note": "FCM tokens become invalid on uninstall; the error appears within days."
+    },
+    "ios": {
+      "s": "p",
+      "v": "",
+      "permission": "Remote notification background mode",
+      "protection": "none",
+      "grant": "none",
+      "prompt_ui": "",
+      "persistence": "",
+      "revocation": "",
+      "store_policy": "App Review 5.1.1(ix); silent push should not be abused",
+      "api_surface": "APNs silent push, 410 Unregistered",
+      "note": "iOS limits silent push delivery; Apple throttles background pushes, so signals are partial."
+    }
+  },
+  "data": {
+    "type": "event",
+    "metric": "Uninstall detected",
+    "update": "daily batch",
+    "fields": []
+  },
+  "limits": {
+    "headline": "Can tell when you delete the app by noticing that its push messages fail",
+    "user_action": "You delete the app. The company learns within days",
+    "can": [
+      "Notice a push message fails after you delete the app",
+      "Use that signal to send reminders or ads elsewhere",
+      "Send silent test pushes on Android and see the error within days"
+    ],
+    "cannot": [
+      "See why you deleted the app",
+      "Get a certain answer on iPhone; Apple limits silent pushes",
+      "See it right away on Android; the error shows in days"
+    ],
+    "reach": 2,
+    "reach_label": "After you delete the app",
+    "differs": "Android shows invalid push tokens within days. iPhone limits silent pushes, so signals are partial."
+  },
+  "story": {
+    "what_it_is": "A company learns you deleted its app, because messages sent to your phone stop working.",
+    "icon": "trash-2",
+    "tags": [
+      "Tracking",
+      "Silent",
+      "Push"
+    ],
+    "marketing": [],
+    "for_you": "You never see it. If you delete an app, the company may know within a day and may try to win you back with an ad or an email.",
+    "for_makers": "A silent push message fails once the app is removed, so tools flag the install as gone. Makers use it to measure retention, spot bad releases and build lists of lapsed users for ads.",
+    "use_cases": [
+      {
+        "type": "games",
+        "example": "A game studio sees a spike in uninstalls after an update that added a harder level and rolls it back.",
+        "apps": [
+          "Candy Crush",
+          "Clash of Clans"
+        ]
+      },
+      {
+        "type": "shopping",
+        "example": "A retailer sends a 'we miss you' email and an ad to people who deleted the app.",
+        "apps": [
+          "Shein",
+          "Wish"
+        ]
+      },
+      {
+        "type": "ads",
+        "example": "An attribution tool reports uninstall rates by ad source so advertisers stop buying low quality traffic.",
+        "apps": [
+          "AppsFlyer",
+          "Adjust"
+        ]
+      },
+      {
+        "type": "media",
+        "example": "A streaming app learns which show launches cause deletions.",
+        "apps": [
+          "Netflix"
+        ]
+      },
+      {
+        "type": "rideshare",
+        "example": "A ride app offers a free ride to people who deleted it.",
+        "apps": [
+          "Lyft"
+        ]
+      },
+      {
+        "type": "security",
+        "example": "Fraud teams find ad sources with many installs that vanish in hours.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Reveals you left",
+      "Used for retargeting"
+    ],
+    "android_note": "Android reports a failed push token when an app is removed.",
+    "ios_note": "iOS push services also stop delivering, though Apple keeps timing vague."
+  },
+  "technical_bounds": [
+    "Delayed days; incomplete on iOS",
+    "Needs push token"
+  ],
+  "scores": {
+    "sensitivity": 3,
+    "utility": 3,
+    "fingerprint_bits": null,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Retention analysis"
+    ],
+    "abuse": [
+      "Retargeting after uninstall"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2019-09",
+      "platform": "ios",
+      "version": "iOS 13",
+      "change": "Silent push throttling reduces reliability of uninstall tracking"
+    }
+  ],
+  "related": [
+    "mob.ads.mmp-appsflyer"
+  ],
+  "refs": [
+    {
+      "t": "android",
+      "label": "Firebase: FCM token lifecycle",
+      "url": "https://firebase.google.com/docs/cloud-messaging/manage-tokens"
+    },
+    {
+      "t": "apple",
+      "label": "Apple: APNs responses",
+      "url": "https://developer.apple.com/documentation/usernotifications/handling-notification-responses-from-apns"
+    }
+  ],
+  "confidence": "docs"
+}

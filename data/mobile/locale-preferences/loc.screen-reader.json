@@ -1,0 +1,195 @@
+{
+  "id": "mob.loc.screen-reader",
+  "name": "Screen reader and assistive services flags",
+  "kind": "signal",
+  "group": "locale-preferences",
+  "subgroup": "Accessibility",
+  "tags": [
+    "accessibility",
+    "talkback",
+    "voiceover"
+  ],
+  "plain": "Tells whether TalkBack or VoiceOver, Switch Control and similar are running.",
+  "meaning": "Discloses disability: a special-category fact. Apps need it to adapt, but it is a sensitive inference and Play restricts using the Accessibility API for it.",
+  "lifecycle": [
+    "on-launch",
+    "in-session"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "y",
+      "v": "4.0",
+      "api": 14,
+      "permission": "",
+      "protection": "none",
+      "grant": "none",
+      "prompt_ui": "",
+      "persistence": "",
+      "revocation": "",
+      "store_policy": "",
+      "api_surface": "AccessibilityManager.isEnabled(), isTouchExplorationEnabled(), getEnabledAccessibilityServiceList()",
+      "note": "Includes list of enabled service IDs"
+    },
+    "ios": {
+      "s": "y",
+      "v": "3.0",
+      "permission": "none",
+      "protection": "none",
+      "grant": "none",
+      "prompt_ui": "",
+      "persistence": "",
+      "revocation": "",
+      "store_policy": "",
+      "api_surface": "One boolean per service",
+      "note": ""
+    }
+  },
+  "web_equivalents": [
+    "web.locale.accessibility-inference"
+  ],
+  "data": {
+    "type": "object",
+    "metric": "Assistive flags",
+    "update": "On change",
+    "fields": [
+      {
+        "name": "talkback_on",
+        "type": "boolean",
+        "unit": "",
+        "range": "true, false",
+        "precision": "1 bit"
+      },
+      {
+        "name": "enabled_services",
+        "type": "list",
+        "unit": "package id",
+        "range": "0 to 10",
+        "precision": "exact"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can tell whether TalkBack, VoiceOver or similar helpers are switched on",
+    "user_action": "Nothing. It happens when the app draws or when you turn a helper on",
+    "can": [
+      "Check if a screen reader is on",
+      "Check for Switch Control and similar services",
+      "List the enabled accessibility service IDs on Android",
+      "Adjust its screens for assistive technology"
+    ],
+    "cannot": [
+      "See what the screen reader is saying",
+      "Turn the helper off",
+      "Show you a prompt; none is used for these checks"
+    ],
+    "reach": 1,
+    "reach_label": "One setting per helper",
+    "differs": "Android also lists the IDs of enabled services. iPhone gives one yes or no per service."
+  },
+  "story": {
+    "what_it_is": "An app can tell if a screen reader or other assistive tool is on.",
+    "icon": "ear",
+    "tags": [
+      "Accessibility",
+      "Silent",
+      "Sensitive"
+    ],
+    "marketing": [
+      {
+        "vendor": "Apple",
+        "name": "VoiceOver",
+        "pitch": "Apple's screen reader describes what is on screen so blind and low vision people can use their iPhone.",
+        "url": "https://www.apple.com/accessibility/vision/"
+      },
+      {
+        "vendor": "Google",
+        "name": "TalkBack",
+        "pitch": "Android's screen reader speaks what is on screen and helps people who are blind or have low vision.",
+        "url": "https://support.google.com/accessibility/android/answer/6283677"
+      }
+    ],
+    "for_you": "You turn on VoiceOver or TalkBack and your phone speaks what you touch. Apps may adapt their screens to work better with it. You never see the app notice, but it can learn you use assistive tech.",
+    "for_makers": "Makers need this to avoid broken screens for blind users and to skip tricky captchas. It also reveals a disability, which is a very sensitive fact. Google limits who may use the accessibility service for anything else.",
+    "use_cases": [
+      {
+        "type": "games",
+        "example": "A game adds audio cues and simpler menus when a screen reader is on.",
+        "apps": []
+      },
+      {
+        "type": "banking",
+        "example": "A bank app swaps a drag slider for buttons that a screen reader can use.",
+        "apps": []
+      },
+      {
+        "type": "shopping",
+        "example": "A shop gives product images spoken descriptions for people using VoiceOver.",
+        "apps": []
+      },
+      {
+        "type": "social",
+        "example": "A social app reads out alt text for photos as the person scrolls.",
+        "apps": [
+          "Instagram"
+        ]
+      },
+      {
+        "type": "security",
+        "example": "A sign up flow skips a visual captcha when it sees a screen reader.",
+        "apps": []
+      },
+      {
+        "type": "analytics",
+        "example": "A tracker records the flag, which would reveal a disability if used for profiling.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Discloses a disability",
+      "Misuse for profiling"
+    ],
+    "android_note": "Android apps can see if TalkBack and other accessibility services are on, and Play restricts how they may use that API.",
+    "ios_note": "iPhone apps can see if VoiceOver, Switch Control and similar tools are on with no prompt."
+  },
+  "technical_bounds": [
+    "Android exposes the service package list; iOS exposes booleans"
+  ],
+  "scores": {
+    "sensitivity": 5,
+    "utility": 3,
+    "fingerprint_bits": 2,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Adapt UI",
+      "Skip captchas"
+    ],
+    "abuse": [
+      "Disability profiling"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "related": [
+    "mob.loc.display-accessibility"
+  ],
+  "refs": [
+    {
+      "t": "android",
+      "label": "Android: AccessibilityManager",
+      "url": "https://developer.android.com/reference/android/view/accessibility/AccessibilityManager"
+    },
+    {
+      "t": "apple",
+      "label": "Apple: UIAccessibility",
+      "url": "https://developer.apple.com/documentation/uikit/uiaccessibility"
+    }
+  ],
+  "confidence": "docs"
+}

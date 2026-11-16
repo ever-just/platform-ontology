@@ -1,0 +1,209 @@
+{
+  "id": "web.locale.zoom-text-size",
+  "name": "Browser zoom and default text size",
+  "kind": "signal",
+  "group": "locale-preferences",
+  "subgroup": "Accessibility",
+  "tags": [
+    "zoom",
+    "font-size",
+    "accessibility"
+  ],
+  "plain": "Infers page zoom and the person's default font size from layout measurements.",
+  "meaning": "Zoom (50% to 500%) from devicePixelRatio and window size; default font size (usually 16 px, but 12 to 24 px settable) from computed em. Large values suggest low vision or older users.",
+  "lifecycle": [
+    "on-arrival",
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "devicePixelRatio, outerWidth/innerWidth, getComputedStyle(root).fontSize, matchMedia(resolution)",
+      "access": {
+        "grant": "none",
+        "prompt_ui": "None",
+        "secure_context": false,
+        "user_gesture": false,
+        "persistence": "read fresh on every page load; nothing stored",
+        "revocation": "none needed (no grant)",
+        "iframe": "Readable from cross-origin iframes too (same values)",
+        "steps": [
+          "Page script reads the value",
+          "No prompt is shown"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "1",
+          "note": "",
+          "date": "2008-12-11"
+        },
+        "edge": {
+          "s": "y",
+          "v": "12",
+          "note": "",
+          "date": "2015-07-29"
+        },
+        "firefox": {
+          "s": "y",
+          "v": "1",
+          "note": "",
+          "date": "2004-11-09"
+        },
+        "safari": {
+          "s": "y",
+          "v": "3",
+          "note": "",
+          "date": "2007-10-26"
+        },
+        "ios_safari": {
+          "s": "y",
+          "v": "3.2",
+          "note": "",
+          "date": "2010-04-03"
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "18",
+          "note": "",
+          "date": "2012-06-27"
+        },
+        "samsung": {
+          "s": "y",
+          "v": "1.0",
+          "note": "",
+          "date": "2013-04-27"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "object",
+    "metric": "",
+    "update": "static per session",
+    "fields": [
+      {
+        "name": "zoom",
+        "type": "float",
+        "unit": "percent",
+        "range": "25 to 500 (steps 25,33,50,67,75,80,90,100,110,125,150,175,200,250,300,400,500)",
+        "precision": ""
+      },
+      {
+        "name": "default font size",
+        "type": "float",
+        "unit": "px",
+        "range": "9, 12, 16, 20, 24 presets",
+        "precision": ""
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can guess your page zoom and your default text size from how pages lay out",
+    "user_action": "Nothing. It happens as the page measures itself while loading",
+    "can": [
+      "Guess your zoom, from 50% to 500%",
+      "Guess your default text size, often 16 pixels but set between 12 and 24",
+      "Hint that you may have low vision or be an older user when sizes are large"
+    ],
+    "cannot": [
+      "Know for sure that you have low vision",
+      "See your other accessibility settings from this alone",
+      "Show a permission pop up; there is none"
+    ],
+    "reach": 1,
+    "reach_label": "One layout check",
+    "differs": ""
+  },
+  "story": {
+    "what_it_is": "The page can work out your zoom level and default text size.",
+    "icon": "zoom-in",
+    "tags": [
+      "Display",
+      "Silent",
+      "Accessibility"
+    ],
+    "marketing": [],
+    "for_you": "Pages look the right size for you when you zoom in or enlarge text. You do not see that the page measured those choices. They may hint that you have low vision.",
+    "for_makers": "Makers measure layout to keep pages usable. Trackers use zoom and font size as a unique clue, and they may guess age or vision needs.",
+    "use_cases": [
+      {
+        "type": "games",
+        "example": "A browser game rescales its canvas when a player zooms in, so buttons stay clickable.",
+        "apps": []
+      },
+      {
+        "type": "accessibility",
+        "example": "A site increases spacing and button sizes when it sees large text.",
+        "apps": []
+      },
+      {
+        "type": "media",
+        "example": "A video site picks bigger controls when it sees a high zoom.",
+        "apps": []
+      },
+      {
+        "type": "ads",
+        "example": "An ad profile may guess an older user from large default text.",
+        "apps": []
+      },
+      {
+        "type": "analytics",
+        "example": "A fingerprinting script uses zoom and font size as extra clues.",
+        "apps": []
+      },
+      {
+        "type": "security",
+        "example": "A fraud tool flags unusual display settings as an emulator or bot.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Reveals vision needs",
+      "Part of a fingerprint"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "No direct API",
+    "Safari iOS Dynamic Type affects CSS only with -apple-system-body"
+  ],
+  "scores": {
+    "sensitivity": 1,
+    "utility": 3,
+    "fingerprint_bits": 2.5,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Respect larger text"
+    ],
+    "abuse": [
+      "Age or disability inference"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "related": [
+    "web.display.device-pixel-ratio"
+  ],
+  "refs": [
+    {
+      "t": "github",
+      "label": "CreepJS (abrahamjuliot)",
+      "url": "https://github.com/abrahamjuliot/creepjs"
+    },
+    {
+      "t": "github",
+      "label": "fingerprintjs source: font_preferences",
+      "url": "https://github.com/fingerprintjs/fingerprintjs/blob/master/src/sources/font_preferences.ts"
+    }
+  ],
+  "confidence": "inferred"
+}

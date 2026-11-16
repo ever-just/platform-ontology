@@ -1,0 +1,213 @@
+{
+  "id": "mob.notif.ongoing-foreground",
+  "name": "Ongoing and foreground service notifications",
+  "kind": "capability",
+  "group": "notifications-background",
+  "subgroup": "Live surfaces",
+  "tags": [
+    "ongoing",
+    "foreground-service",
+    "transparency"
+  ],
+  "plain": "A notification the person cannot easily swipe away that shows background work is running.",
+  "meaning": "It makes background activity visible. Android 14 let people swipe most of these away, but the Task Manager (Android 13+) still lists the foreground app.",
+  "lifecycle": [
+    "in-session",
+    "background"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "y",
+      "v": "8.0",
+      "api": 26,
+      "permission": "FOREGROUND_SERVICE; type specific permission on 14+",
+      "protection": "normal",
+      "grant": "install",
+      "prompt_ui": "Foreground service notification; Task Manager lists active apps (Android 13+)",
+      "persistence": "Visible while the service runs; Android 14 lets users dismiss most",
+      "revocation": "Task manager 'Stop' button",
+      "store_policy": "",
+      "api_surface": "Service.startForeground(), Notification.FLAG_ONGOING_EVENT",
+      "note": "Android 12 delays display of non-essential FGS notifications by about 10 s"
+    },
+    "ios": {
+      "s": "p",
+      "v": "16.1",
+      "permission": "",
+      "protection": "none",
+      "grant": "none",
+      "prompt_ui": "Live Activity or audio indicator",
+      "persistence": "Controlled by the OS",
+      "revocation": "",
+      "store_policy": "",
+      "api_surface": "Live Activities; Control Center now playing; location blue pill",
+      "note": "iOS has no generic persistent notification; use of background modes shows system indicators instead"
+    }
+  },
+  "data": {
+    "type": "boolean",
+    "metric": "Notification ongoing",
+    "update": "Per notification",
+    "fields": [
+      {
+        "name": "ongoing",
+        "type": "boolean",
+        "unit": "",
+        "range": "true or false",
+        "precision": ""
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can show a notification you cannot easily swipe away while background work runs",
+    "user_action": "You start something long, like music, a download or navigation",
+    "can": [
+      "Show an ongoing alert while a background service is running",
+      "Appear in Android's Task Manager list of active apps on Android 13 or newer",
+      "Show a Live Activity or audio indicator on iPhone instead"
+    ],
+    "cannot": [
+      "Hide that the app is running on Android",
+      "Show every foreground alert right away; Android 12 delays unimportant ones by about 10 seconds",
+      "Make a generic permanent alert on iPhone, which has none"
+    ],
+    "reach": 2,
+    "reach_label": "While work runs, visible to you",
+    "differs": "Android shows a persistent foreground notification. iPhone shows system indicators or Live Activities instead."
+  },
+  "story": {
+    "what_it_is": "A notification that stays put to show an app is doing work in the background.",
+    "icon": "pin",
+    "tags": [
+      "Notifications",
+      "Background",
+      "Transparency"
+    ],
+    "marketing": [
+      {
+        "vendor": "Google",
+        "name": "Foreground services",
+        "pitch": "Google documents the foreground service notification as the visible sign that an app is doing ongoing work.",
+        "url": "https://developer.android.com/develop/background-work/services/fgs"
+      }
+    ],
+    "for_you": "You see a music player or a navigation card that does not go away. It is a clear sign that something is running, and on Android you can check the Task Manager.",
+    "for_makers": "Makers use it to keep tasks alive and avoid being killed by the system. It can also be a trick if an app hides behind a persistent notification.",
+    "use_cases": [
+      {
+        "type": "music",
+        "example": "A player keeps a notification with play and pause while you work.",
+        "apps": [
+          "Spotify"
+        ]
+      },
+      {
+        "type": "maps",
+        "example": "A navigation app shows the next turn in the notification.",
+        "apps": [
+          "Google Maps"
+        ]
+      },
+      {
+        "type": "fitness",
+        "example": "A run tracker keeps a notification so you can pause from the shade.",
+        "apps": [
+          "Strava"
+        ]
+      },
+      {
+        "type": "messaging",
+        "example": "A call app keeps an ongoing call notification with a hang up button.",
+        "apps": [
+          "WhatsApp"
+        ]
+      },
+      {
+        "type": "games",
+        "example": "A game download shows a progress notification until it is done.",
+        "apps": [
+          "Google Play Games"
+        ]
+      },
+      {
+        "type": "smart-home",
+        "example": "A security app keeps a notification that says Home mode active.",
+        "apps": []
+      },
+      {
+        "type": "utilities",
+        "example": "A VPN app shows a key icon while it protects your traffic.",
+        "apps": [
+          "Proton VPN"
+        ]
+      }
+    ],
+    "risks": [
+      "Can hide long running work",
+      "Clutters the shade"
+    ],
+    "android_note": "From Android 14 people can swipe away most of these. Task Manager lists active apps from Android 13.",
+    "ios_note": "iOS has no generic persistent notification. It shows system indicators for audio or location instead."
+  },
+  "technical_bounds": [
+    "Android 12 defers display; Android 14 can be swiped away"
+  ],
+  "scores": {
+    "sensitivity": 1,
+    "utility": 3,
+    "fingerprint_bits": null,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Music, navigation"
+    ],
+    "abuse": [
+      "Hiding in a persistent notification to avoid kills"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2022-08",
+      "platform": "android",
+      "version": "13 (API 33)",
+      "change": "Foreground Services Task Manager lists active apps with stop button"
+    },
+    {
+      "date": "2023-10",
+      "platform": "android",
+      "version": "14 (API 34)",
+      "change": "Users can dismiss most ongoing foreground service notifications"
+    },
+    {
+      "date": "2021-10",
+      "platform": "android",
+      "version": "12 (API 31)",
+      "change": "FGS notification deferred about 10 s for short work"
+    }
+  ],
+  "related": [
+    "mob.bg.fgs-types",
+    "mob.notif.android-live-updates"
+  ],
+  "refs": [
+    {
+      "t": "android",
+      "label": "Android: Foreground services overview",
+      "url": "https://developer.android.com/develop/background-work/services/fgs"
+    },
+    {
+      "t": "android",
+      "label": "Android: Foreground service types",
+      "url": "https://developer.android.com/develop/background-work/services/fgs/service-types"
+    }
+  ],
+  "confidence": "docs"
+}

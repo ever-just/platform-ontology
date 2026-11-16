@@ -1,0 +1,180 @@
+{
+  "id": "mob.loc.timezone",
+  "name": "Timezone",
+  "kind": "signal",
+  "group": "locale-preferences",
+  "subgroup": "Locale",
+  "tags": [
+    "timezone",
+    "coarse-location"
+  ],
+  "plain": "Reads the timezone and UTC offset with no prompt.",
+  "meaning": "A coarse location proxy (about 400 IANA zones; usually the country or region) that survives a location permission denial.",
+  "lifecycle": [
+    "on-launch",
+    "in-session"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "y",
+      "v": "1.0",
+      "api": 1,
+      "permission": "",
+      "protection": "none",
+      "grant": "none",
+      "prompt_ui": "",
+      "persistence": "",
+      "revocation": "",
+      "store_policy": "",
+      "api_surface": "TimeZone.getDefault(), ZoneId.systemDefault()",
+      "note": "IANA ID like America/Chicago; offset in minutes"
+    },
+    "ios": {
+      "s": "y",
+      "v": "2.0",
+      "permission": "none",
+      "protection": "none",
+      "grant": "none",
+      "prompt_ui": "",
+      "persistence": "",
+      "revocation": "",
+      "store_policy": "",
+      "api_surface": "IANA ID",
+      "note": ""
+    }
+  },
+  "web_equivalents": [
+    "web.locale.timezone"
+  ],
+  "data": {
+    "type": "string",
+    "metric": "IANA timezone",
+    "update": "On change",
+    "fields": [
+      {
+        "name": "tz",
+        "type": "string",
+        "unit": "IANA",
+        "range": "about 400 values",
+        "precision": "exact"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can see your timezone and its offset from UTC, with no prompt",
+    "user_action": "Nothing. It happens when the app shows dates and times",
+    "can": [
+      "Find your timezone name, such as America/Chicago",
+      "See your offset from UTC in minutes",
+      "Show times in your local zone"
+    ],
+    "cannot": [
+      "See your exact location",
+      "Change your clock",
+      "Tell your city on its own; it only narrows to a region"
+    ],
+    "reach": 1,
+    "reach_label": "A timezone name",
+    "differs": ""
+  },
+  "story": {
+    "what_it_is": "An app sees your timezone, which hints at what part of the world you are in.",
+    "icon": "globe",
+    "tags": [
+      "Location",
+      "Silent",
+      "Fingerprint"
+    ],
+    "marketing": [],
+    "for_you": "You do not see it. Apps simply show the right local time for you. It still works even if you say no to location, so it quietly tells them roughly where you are.",
+    "for_makers": "Makers need your timezone to show times, run schedules and send messages at a good hour. It is also a free, coarse location clue that survives a denied location permission, and a mismatch with your IP address is a classic fraud signal.",
+    "use_cases": [
+      {
+        "type": "messaging",
+        "example": "A chat app shows 'last seen 9:14 PM' in your time, not the sender's.",
+        "apps": [
+          "WhatsApp",
+          "Telegram"
+        ]
+      },
+      {
+        "type": "games",
+        "example": "A game resets its daily rewards at your local midnight and times live events to your hour.",
+        "apps": [
+          "Clash of Clans",
+          "Fortnite"
+        ]
+      },
+      {
+        "type": "travel",
+        "example": "A flight app converts departure and arrival times to your timezone.",
+        "apps": [
+          "Google Flights"
+        ]
+      },
+      {
+        "type": "productivity",
+        "example": "A calendar app moves your meetings when you land in a new timezone.",
+        "apps": [
+          "Google Calendar"
+        ]
+      },
+      {
+        "type": "ads",
+        "example": "An ad system sends push ads at 8 AM your time, and uses the timezone as a coarse location.",
+        "apps": []
+      },
+      {
+        "type": "security",
+        "example": "A bank notices your phone says Tokyo while your IP is in Ohio, and asks for extra proof.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Coarse location leak",
+      "Fingerprint bit"
+    ],
+    "android_note": "Android apps read the timezone and offset with no prompt.",
+    "ios_note": "iPhone apps read the timezone and offset with no prompt."
+  },
+  "technical_bounds": [
+    "Cannot be spoofed per app on either platform"
+  ],
+  "scores": {
+    "sensitivity": 2,
+    "utility": 3,
+    "fingerprint_bits": 4,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Schedule display"
+    ],
+    "abuse": [
+      "Coarse location inference"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "related": [
+    "mob.loc.language-region"
+  ],
+  "refs": [
+    {
+      "t": "android",
+      "label": "Android: Locale and language",
+      "url": "https://developer.android.com/guide/topics/resources/localization"
+    },
+    {
+      "t": "apple",
+      "label": "Apple: Locale",
+      "url": "https://developer.apple.com/documentation/foundation/locale"
+    }
+  ],
+  "confidence": "inferred"
+}

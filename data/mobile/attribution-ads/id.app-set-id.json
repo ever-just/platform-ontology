@@ -1,0 +1,185 @@
+{
+  "id": "mob.id.app-set-id",
+  "name": "App Set ID",
+  "kind": "tracking",
+  "group": "attribution-ads",
+  "subgroup": "Advertising",
+  "tags": [
+    "app-set-id",
+    "developer-scoped"
+  ],
+  "plain": "A resettable per-developer ID on Android, not for ads.",
+  "meaning": "Links installs of one developer's apps for analytics and fraud with no prompt and no ad use. Resets after 13 months idle.",
+  "lifecycle": [
+    "on-launch",
+    "in-session"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "y",
+      "v": "6.0",
+      "api": 23,
+      "permission": "",
+      "protection": "none",
+      "grant": "none",
+      "prompt_ui": "",
+      "persistence": "Until reset or 13 months idle",
+      "revocation": "Reinstall all apps",
+      "store_policy": "Play: not for ads",
+      "api_surface": "AppSet.getClient().getAppSetIdInfo() (Play services)",
+      "note": "Scope APP or DEVELOPER; resets after 13 months of inactivity"
+    },
+    "ios": {
+      "s": "n",
+      "v": "",
+      "permission": "none",
+      "protection": "not-exposed",
+      "grant": "not-exposed",
+      "prompt_ui": "",
+      "persistence": "",
+      "revocation": "",
+      "store_policy": "",
+      "api_surface": "No equivalent",
+      "note": "IDFV is similar"
+    }
+  },
+  "data": {
+    "type": "string",
+    "metric": "UUID",
+    "update": "Static",
+    "fields": [
+      {
+        "name": "id",
+        "type": "string",
+        "unit": "UUID",
+        "range": "36 chars",
+        "precision": "122 bits"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can recognise your Android phone across one developer's apps, not for ads",
+    "user_action": "Nothing. It happens when the app starts",
+    "can": [
+      "Link installs from the same developer for analytics and fraud checks",
+      "Keep the same ID across reinstalls while another app from that developer stays",
+      "Work with no prompt"
+    ],
+    "cannot": [
+      "Be used for ads",
+      "Follow you into other companies' apps",
+      "Stay the same after 13 months of no use",
+      "Work on iPhone; IDFV is similar there"
+    ],
+    "reach": 3,
+    "reach_label": "Across one developer's apps",
+    "differs": "Android only. iPhone has IDFV, which does the same job."
+  },
+  "story": {
+    "what_it_is": "A resettable Android ID for one developer's apps, meant for analytics and fraud, not ads.",
+    "icon": "fingerprint",
+    "tags": [
+      "Developer ID",
+      "Silent",
+      "Android"
+    ],
+    "marketing": [
+      {
+        "vendor": "Google",
+        "name": "App Set ID",
+        "pitch": "A reset, per developer ID for analytics and fraud prevention, with no ad use allowed.",
+        "url": "https://developer.android.com/design-for-safety/ads/appsetid"
+      }
+    ],
+    "for_you": "You never see it. It lets one company know that two of its apps are on the same phone, so a trial or a limit applies once.",
+    "for_makers": "It needs no prompt and cannot be used for ad targeting. It links installs of one developer's apps for analytics and fraud, and it resets after 13 months idle.",
+    "use_cases": [
+      {
+        "type": "games",
+        "example": "A studio with several games gives a one time welcome gift per phone across all of them.",
+        "apps": [
+          "Zynga"
+        ]
+      },
+      {
+        "type": "security",
+        "example": "A fraud team sees one phone register 30 fake accounts across its apps and blocks it.",
+        "apps": [
+          "Uber"
+        ]
+      },
+      {
+        "type": "analytics",
+        "example": "A company with a main app and a lite app counts one user instead of two.",
+        "apps": [
+          "Google"
+        ]
+      },
+      {
+        "type": "productivity",
+        "example": "Sister apps sync settings quietly.",
+        "apps": [
+          "Microsoft"
+        ]
+      },
+      {
+        "type": "shopping",
+        "example": "A store avoids sending the same coupon twice.",
+        "apps": []
+      },
+      {
+        "type": "developer",
+        "example": "A developer groups crash reports by device across apps.",
+        "apps": [
+          "Crashlytics"
+        ]
+      }
+    ],
+    "risks": [
+      "Linked across one company's apps",
+      "Resets only after long idle"
+    ],
+    "android_note": "Android only, and it resets after 13 months without use.",
+    "ios_note": "iOS has the IDFV instead."
+  },
+  "technical_bounds": [
+    "Cannot be used for ads"
+  ],
+  "scores": {
+    "sensitivity": 2,
+    "utility": 2,
+    "fingerprint_bits": 122,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Analytics, fraud"
+    ],
+    "abuse": [
+      "Linking one developer's apps"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "related": [
+    "mob.id.idfv"
+  ],
+  "refs": [
+    {
+      "t": "android",
+      "label": "Android: Best practices for unique identifiers",
+      "url": "https://developer.android.com/training/articles/user-data-ids"
+    },
+    {
+      "t": "android",
+      "label": "Android: Advertising ID",
+      "url": "https://developer.android.com/identity/user-data-ids"
+    }
+  ],
+  "confidence": "docs"
+}

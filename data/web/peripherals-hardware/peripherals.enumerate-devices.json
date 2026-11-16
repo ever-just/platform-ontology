@@ -1,0 +1,227 @@
+{
+  "id": "web.peripherals.enumerate-devices",
+  "name": "enumerateDevices (camera, mic, speakers count)",
+  "kind": "signal",
+  "group": "peripherals-hardware",
+  "subgroup": "Media devices",
+  "tags": [
+    "media-devices",
+    "fingerprint"
+  ],
+  "plain": "Lists the kinds and counts of cameras, microphones and speakers (labels only after permission).",
+  "meaning": "Counts of cameras and microphones separate laptops from desktops and show headset use. Without permission labels and IDs are empty.",
+  "lifecycle": [
+    "on-arrival",
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "navigator.mediaDevices.enumerateDevices()",
+      "bcd": [
+        "api.MediaDevices.enumerateDevices"
+      ],
+      "access": {
+        "grant": "none",
+        "prompt_ui": "None (no browser prompt)",
+        "secure_context": false,
+        "user_gesture": false,
+        "persistence": "",
+        "revocation": "",
+        "iframe": "",
+        "steps": [
+          "Script reads the value",
+          "Value joins the fingerprint payload"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "47",
+          "note": "",
+          "date": "2015-12-01"
+        },
+        "edge": {
+          "s": "y",
+          "v": "12",
+          "note": "",
+          "date": "2015-07-29"
+        },
+        "firefox": {
+          "s": "y",
+          "v": "116",
+          "note": "",
+          "date": "2023-08-01"
+        },
+        "safari": {
+          "s": "y",
+          "v": "11",
+          "note": "",
+          "date": "2017-09-19"
+        },
+        "ios_safari": {
+          "s": "y",
+          "v": "11",
+          "note": "",
+          "date": "2017-09-19"
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "47",
+          "note": "",
+          "date": "2015-12-02"
+        },
+        "samsung": {
+          "s": "y",
+          "v": "5.0",
+          "note": "",
+          "date": "2016-12-15"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "list",
+    "metric": "enumerateDevices (camera, mic, speakers count)",
+    "update": "on device change",
+    "fields": [
+      {
+        "name": "kind",
+        "type": "enum",
+        "unit": "",
+        "range": "audioinput, audiooutput, videoinput",
+        "precision": ""
+      },
+      {
+        "name": "deviceId",
+        "type": "string",
+        "unit": "",
+        "range": "empty without permission",
+        "precision": ""
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can count your cameras, microphones and speakers, but names stay hidden until you allow",
+    "user_action": "Nothing. It happens when the page loads, like a video call lobby.",
+    "can": [
+      "Count how many cameras, microphones and speakers you have",
+      "Tell which kinds of devices are plugged in",
+      "Show device names once you allow camera or microphone access"
+    ],
+    "cannot": [
+      "See device names before you allow camera or microphone access",
+      "Turn on your camera or microphone by itself",
+      "See other gadgets such as printers or USB devices",
+      "Record anything"
+    ],
+    "reach": 1,
+    "reach_label": "A count, names after you allow",
+    "differs": ""
+  },
+  "story": {
+    "what_it_is": "A page can list how many cameras, mics and speakers you have.",
+    "icon": "video",
+    "tags": [
+      "Silent",
+      "Fingerprinting",
+      "Hardware"
+    ],
+    "marketing": [
+      {
+        "vendor": "Mozilla",
+        "name": "MediaDevices.enumerateDevices()",
+        "pitch": "MDN says it returns a list of connected media inputs and outputs, with names hidden until permission.",
+        "url": "https://developer.mozilla.org/en-US/docs/Web/API/MediaDevices/enumerateDevices"
+      }
+    ],
+    "for_you": "You never see it. A call app uses it to show a list of your mics and cameras. A page can also see how many you have without asking.",
+    "for_makers": "Makers need it to offer 'pick your camera' menus. Fraud and tracking tools use the count as one more detail that sets your device apart.",
+    "use_cases": [
+      {
+        "type": "video",
+        "example": "A call app shows a menu of your microphones and cameras.",
+        "apps": [
+          "Google Meet",
+          "Zoom web",
+          "Microsoft Teams"
+        ]
+      },
+      {
+        "type": "games",
+        "example": "A browser game checks if you have a mic before offering voice chat.",
+        "apps": [
+          "Discord web"
+        ]
+      },
+      {
+        "type": "live",
+        "example": "A streaming site lists your webcams so you pick one.",
+        "apps": [
+          "Twitch"
+        ]
+      },
+      {
+        "type": "security",
+        "example": "A fraud tool sees that a visitor has no camera or mic, typical of a bot server.",
+        "apps": []
+      },
+      {
+        "type": "education",
+        "example": "An online exam tool checks that a camera and mic exist.",
+        "apps": []
+      },
+      {
+        "type": "ads",
+        "example": "An ad system adds device counts to its fingerprint of you.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Fingerprinting",
+      "Names after permission"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "No labels without a media permission",
+    "IDs reset when site data is cleared"
+  ],
+  "scores": {
+    "sensitivity": 3,
+    "utility": 3,
+    "fingerprint_bits": 4,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Show device pickers"
+    ],
+    "abuse": [
+      "Fingerprint input"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": true,
+      "how": "Collector key(s): enumerateDevices. dataLimit 22."
+    }
+  },
+  "related": [
+    "web.tracking.linkedin-apfc-fingerprint"
+  ],
+  "refs": [
+    {
+      "t": "mdn",
+      "label": "MDN enumerateDevices",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/MediaDevices/enumerateDevices"
+    },
+    {
+      "t": "github",
+      "label": "mdp/linkedin-extension-fingerprinting (LinkedIn script snapshot and ID list)",
+      "url": "https://github.com/mdp/linkedin-extension-fingerprinting"
+    }
+  ],
+  "confidence": "docs"
+}

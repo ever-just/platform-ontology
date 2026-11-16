@@ -1,0 +1,262 @@
+{
+  "id": "mob.network.wifi-info",
+  "name": "Connected Wi-Fi name and BSSID",
+  "kind": "permission",
+  "group": "network-connectivity",
+  "subgroup": "Network",
+  "tags": [
+    "entitlement",
+    "ssid",
+    "bssid",
+    "location-gated"
+  ],
+  "plain": "Reads the name and ID of the Wi-Fi network the phone is on, which gives away place.",
+  "meaning": "SSID and BSSID are lookup keys for geolocation databases, so apps need location permission to read them.",
+  "lifecycle": [
+    "in-session",
+    "on-launch"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "p",
+      "v": "8.1",
+      "api": 27,
+      "permission": "ACCESS_WIFI_STATE (normal) plus ACCESS_FINE_LOCATION; NEARBY_WIFI_DEVICES (API 33) for scans",
+      "protection": "dangerous",
+      "grant": "prompt",
+      "prompt_ui": "Precise location prompt",
+      "persistence": "Until revoked",
+      "revocation": "Settings > Apps > Permissions > Location",
+      "store_policy": "Play: location policy applies to Wi-Fi scanning",
+      "api_surface": "WifiManager.getConnectionInfo, ConnectivityManager callback with FLAG_INCLUDE_LOCATION_INFO",
+      "note": "Location services must be on; SSID returns <unknown ssid> without grant; scan throttle 4 scans per 2 minutes foreground"
+    },
+    "ios": {
+      "s": "f",
+      "v": "12",
+      "permission": "com.apple.developer.networking.wifi-info plus Precise Location (iOS 13), or hotspot config, VPN or MDM",
+      "protection": "entitlement",
+      "grant": "entitlement",
+      "prompt_ui": "Precise location prompt; Wi-Fi Info capability in Xcode",
+      "persistence": "Until revoked",
+      "revocation": "Settings > Privacy & Security > Location Services",
+      "store_policy": "App Review 5.1.1",
+      "api_surface": "NEHotspotNetwork.fetchCurrent, CNCopyCurrentNetworkInfo",
+      "note": "Without entitlement and location the call returns nil"
+    }
+  },
+  "web_equivalents": [
+    "web.notexposed.wifi-ssid"
+  ],
+  "data": {
+    "type": "object",
+    "metric": "SSID, BSSID, RSSI",
+    "update": "per call",
+    "fields": [
+      {
+        "name": "ssid",
+        "type": "string",
+        "unit": "",
+        "range": "up to 32 bytes",
+        "precision": ""
+      },
+      {
+        "name": "bssid",
+        "type": "string",
+        "unit": "MAC",
+        "range": "6 bytes",
+        "precision": "unique per access point"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can see your Wi-Fi name, but only with location access and extra approval",
+    "user_action": "You tap Allow Location when the app asks to see your Wi-Fi",
+    "can": [
+      "See the Wi-Fi name (SSID) and BSSID on Android after Location is allowed",
+      "See the current Wi-Fi name on iPhone with the entitlement and Precise Location",
+      "Use the Wi-Fi name to guess a place such as home or work"
+    ],
+    "cannot": [
+      "See the name on Android when Location services are off (you get unknown ssid)",
+      "See the name on iPhone without the Apple entitlement and Precise Location",
+      "Scan more than 4 times per 2 minutes in the foreground on Android",
+      "Get the name if you decline Location"
+    ],
+    "reach": 2,
+    "reach_label": "Your Wi-Fi name, with location",
+    "differs": "Android needs a Location grant. iPhone needs a special Apple entitlement plus Precise Location, or hotspot, VPN or MDM role."
+  },
+  "story": {
+    "what_it_is": "An app can read the name and ID of your Wi-Fi network, which gives away where you are.",
+    "icon": "wifi",
+    "tags": [
+      "Wi-Fi",
+      "Asks first",
+      "Location"
+    ],
+    "marketing": [],
+    "for_you": "You see a location prompt if an app wants to read your Wi-Fi name. If you allow it, the app can tell whether you are at home or in a cafe. If you deny it, the name comes back as unknown.",
+    "for_makers": "Makers need the name for device setup and diagnostics. The router ID can be looked up in a database to find a street address, so platforms put it behind the location permission.",
+    "use_cases": [
+      {
+        "type": "smart-home",
+        "example": "A smart bulb app reads your home Wi-Fi name so it can send it to the new bulb.",
+        "apps": [
+          "Philips Hue",
+          "TP-Link Kasa"
+        ]
+      },
+      {
+        "type": "utilities",
+        "example": "A Wi-Fi tool shows the name, channel and speed of the network you are on.",
+        "apps": [
+          "Speedtest"
+        ]
+      },
+      {
+        "type": "travel",
+        "example": "A hotel app notices you joined the hotel Wi-Fi and shows a welcome screen.",
+        "apps": []
+      },
+      {
+        "type": "enterprise",
+        "example": "A work app turns on features only at the office network.",
+        "apps": []
+      },
+      {
+        "type": "ads",
+        "example": "A data broker reads the router ID and looks up your street address in a database.",
+        "apps": []
+      },
+      {
+        "type": "security",
+        "example": "A security tool warns you when you join an open network with a familiar name that has a new ID.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Home and work location",
+      "Address lookup from router ID"
+    ],
+    "android_note": "Android hides the network name unless the app has location permission and location is on.",
+    "ios_note": "iPhone needs the Access Wi-Fi Information entitlement and location permission to read it."
+  },
+  "technical_bounds": [
+    "Apple requires both entitlement and location",
+    "Android requires location services to be on",
+    "Location services must be on",
+    "iOS needs an entitlement Apple must approve"
+  ],
+  "scores": {
+    "sensitivity": 4,
+    "utility": 3,
+    "fingerprint_bits": 6,
+    "friction": 3
+  },
+  "value": {
+    "legit_uses": [
+      "Smart device onboarding",
+      "Wi-Fi diagnostics"
+    ],
+    "abuse": [
+      "Indoor location via BSSID lookup"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2022-08",
+      "platform": "android",
+      "version": "13 (API 33)",
+      "change": "NEARBY_WIFI_DEVICES added"
+    },
+    {
+      "date": "2022-08",
+      "platform": "android",
+      "version": "13 (API 33)",
+      "change": "NEARBY_WIFI_DEVICES permission added"
+    },
+    {
+      "date": "2020-09",
+      "platform": "ios",
+      "version": "iOS 14",
+      "change": "NEHotspotNetwork.fetchCurrent added; CNCopyCurrentNetworkInfo deprecated"
+    },
+    {
+      "date": "2019-09",
+      "platform": "ios",
+      "version": "iOS 13",
+      "change": "Precise location also required"
+    },
+    {
+      "date": "2019-09",
+      "platform": "android",
+      "version": "10 (API 29)",
+      "change": "Now needs ACCESS_FINE_LOCATION"
+    },
+    {
+      "date": "2018-09",
+      "platform": "ios",
+      "version": "iOS 12",
+      "change": "wifi-info entitlement required"
+    },
+    {
+      "date": "2018-04",
+      "platform": "android",
+      "version": "8.1 (API 27)",
+      "change": "SSID needs location permission and location on"
+    },
+    {
+      "date": "2018-03",
+      "platform": "android",
+      "version": "8.1 (API 27)",
+      "change": "Location permission required to see SSID"
+    }
+  ],
+  "related": [
+    "mob.network.local-network",
+    "mob.network.hotspot-configuration",
+    "mob.net.wifi-link",
+    "mob.net.wifi-scan"
+  ],
+  "refs": [
+    {
+      "t": "apple",
+      "label": "Apple: NEHotspotNetwork",
+      "url": "https://developer.apple.com/documentation/networkextension/nehotspotnetwork"
+    },
+    {
+      "t": "android",
+      "label": "Android: Wi-Fi scanning and permissions",
+      "url": "https://developer.android.com/develop/connectivity/wifi/wifi-scan"
+    },
+    {
+      "t": "apple",
+      "label": "Apple: Wi-Fi info entitlement",
+      "url": "https://developer.apple.com/documentation/bundleresources/entitlements/com.apple.developer.networking.wifi-info"
+    },
+    {
+      "t": "android",
+      "label": "Android: Wi-Fi permissions",
+      "url": "https://developer.android.com/develop/connectivity/wifi/wifi-permissions"
+    },
+    {
+      "t": "android",
+      "label": "Android: WifiInfo",
+      "url": "https://developer.android.com/reference/android/net/wifi/WifiInfo"
+    },
+    {
+      "t": "policy",
+      "label": "Apple Support: Control access to Wi-Fi information and Private Wi-Fi addresses",
+      "url": "https://support.apple.com/en-us/102509"
+    }
+  ],
+  "confidence": "docs"
+}

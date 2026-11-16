@@ -1,0 +1,215 @@
+{
+  "id": "mob.net.local-ip",
+  "name": "Local IP addresses and DNS servers",
+  "kind": "signal",
+  "group": "network-connectivity",
+  "subgroup": "Connectivity",
+  "tags": [
+    "local-ip",
+    "dns",
+    "local-network"
+  ],
+  "plain": "Reads the phone's LAN addresses and DNS servers; Android 17 adds a local network permission.",
+  "meaning": "LAN IP and DNS often reveal the router and network type; local network access also lets apps scan other devices at home (50 Ways to Leak Your Data).",
+  "lifecycle": [
+    "on-launch",
+    "in-session"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "p",
+      "v": "1.0",
+      "api": 1,
+      "permission": "ACCESS_LOCAL_NETWORK (Android 17, API 37) for LAN traffic; INTERNET for the rest",
+      "protection": "dangerous",
+      "grant": "prompt",
+      "prompt_ui": "",
+      "persistence": "Until revoked",
+      "revocation": "Settings > Apps > Permissions",
+      "store_policy": "Play: policy",
+      "api_surface": "NetworkInterface.getNetworkInterfaces(), LinkProperties.getDnsServers()",
+      "note": "LAN scanning is restricted in Android 17 via a runtime permission"
+    },
+    "ios": {
+      "s": "p",
+      "v": "14.0",
+      "permission": "prompt",
+      "protection": "prompt",
+      "grant": "none",
+      "prompt_ui": "",
+      "persistence": "Settings > Privacy > Local Network",
+      "revocation": "App Review 5.1.1",
+      "store_policy": "",
+      "api_surface": "Own address readable with no prompt; talking to LAN devices prompts (iOS 14)",
+      "note": "Until revoked"
+    }
+  },
+  "web_equivalents": [
+    "web.net.webrtc-host-candidates"
+  ],
+  "data": {
+    "type": "list",
+    "metric": "Addresses, DNS",
+    "update": "On change",
+    "fields": [
+      {
+        "name": "addresses",
+        "type": "list",
+        "unit": "IP",
+        "range": "1 to 4",
+        "precision": "exact"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can see your phone's home network address and DNS servers, with limits in Android 17",
+    "user_action": "Nothing, or you tap Allow when the app asks to find devices on your network",
+    "can": [
+      "See the phone's own private network address",
+      "List the DNS servers the phone uses",
+      "Scan or talk to home devices on Android 16 and older",
+      "Talk to local devices on iPhone after you approve"
+    ],
+    "cannot": [
+      "Scan your home network on Android 17 without Local network permission",
+      "Talk to local devices on iPhone if you decline",
+      "See your router password",
+      "Identify other devices without the permission"
+    ],
+    "reach": 2,
+    "reach_label": "Home network info, with limits",
+    "differs": "Android 17 adds a permission for local network traffic. iPhone asks since iOS 14."
+  },
+  "story": {
+    "what_it_is": "An app can see the addresses of your phone and your router on your home network.",
+    "icon": "router",
+    "tags": [
+      "Network",
+      "Silent",
+      "Home"
+    ],
+    "marketing": [
+      {
+        "vendor": "Apple",
+        "name": "Local network privacy",
+        "pitch": "Apple asks permission before apps can find and talk to devices on your home network.",
+        "url": "https://developer.apple.com/documentation/technotes/tn3179-understanding-local-network-privacy"
+      }
+    ],
+    "for_you": "You do not see it. Apps use it to find a TV to cast to or a printer on your Wi-Fi. It can also reveal the type of router and map your home devices.",
+    "for_makers": "Makers need it to connect to smart speakers, TVs and printers. It also lets an app learn what is in your house. Researchers found apps that quietly scanned local devices to build a profile.",
+    "use_cases": [
+      {
+        "type": "media",
+        "example": "A video app finds your TV on Wi-Fi so you can cast a show from your phone.",
+        "apps": [
+          "YouTube",
+          "Netflix"
+        ]
+      },
+      {
+        "type": "smart-home",
+        "example": "A smart home app discovers lights and speakers on the same network.",
+        "apps": [
+          "Google Home",
+          "Philips Hue"
+        ]
+      },
+      {
+        "type": "games",
+        "example": "A local multiplayer game finds a friend's phone on the same Wi-Fi for a party game.",
+        "apps": []
+      },
+      {
+        "type": "music",
+        "example": "A music app finds speakers around the house and plays on them.",
+        "apps": [
+          "Sonos",
+          "Spotify"
+        ]
+      },
+      {
+        "type": "ads",
+        "example": "An ad kit lists devices on your network and ties them to your phone.",
+        "apps": []
+      },
+      {
+        "type": "security",
+        "example": "A security app scans your network to find an unknown camera.",
+        "apps": [
+          "Fing"
+        ]
+      }
+    ],
+    "risks": [
+      "Maps your home devices",
+      "Hidden scanning"
+    ],
+    "android_note": "Android 17 adds a local network permission, so apps will have to ask first.",
+    "ios_note": "iPhone has asked for local network permission since iOS 14, and shows a prompt the first time."
+  },
+  "technical_bounds": [
+    "Own address visible with no prompt"
+  ],
+  "scores": {
+    "sensitivity": 3,
+    "utility": 2,
+    "fingerprint_bits": 3,
+    "friction": 2
+  },
+  "value": {
+    "legit_uses": [
+      "Smart home, casting"
+    ],
+    "abuse": [
+      "Map home devices to a person"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2020-09",
+      "platform": "ios",
+      "version": "iOS 14",
+      "change": "Local Network prompt added"
+    },
+    {
+      "date": "2026-06",
+      "platform": "android",
+      "version": "17 (API 37)",
+      "change": "ACCESS_LOCAL_NETWORK runtime permission"
+    }
+  ],
+  "related": [
+    "mob.net.public-ip"
+  ],
+  "refs": [
+    {
+      "t": "android",
+      "label": "Android: Local network permission",
+      "url": "https://developer.android.com/privacy-and-security/local-network-permission"
+    },
+    {
+      "t": "android",
+      "label": "Android 17 behavior changes",
+      "url": "https://developer.android.com/about/versions/17/behavior-changes-17"
+    },
+    {
+      "t": "policy",
+      "label": "Apple Support: Control access to Wi-Fi information and Private Wi-Fi addresses",
+      "url": "https://support.apple.com/en-us/102509"
+    },
+    {
+      "t": "paper",
+      "label": "Reardon et al.: 50 Ways to Leak Your Data (USENIX Security 2019)",
+      "url": "https://www.usenix.org/conference/usenixsecurity19/presentation/reardon"
+    }
+  ],
+  "confidence": "docs"
+}

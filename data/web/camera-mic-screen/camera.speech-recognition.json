@@ -1,0 +1,262 @@
+{
+  "id": "web.camera.speech-recognition",
+  "name": "Web Speech recognition",
+  "kind": "permission",
+  "group": "camera-mic-screen",
+  "subgroup": "Capture",
+  "tags": [
+    "voice",
+    "stt"
+  ],
+  "plain": "Turns microphone audio into text.",
+  "meaning": "Uses the microphone to transcribe speech. In Chrome the audio is sent to a Google service by default, so spoken words leave the device unless on-device recognition is chosen.",
+  "lifecycle": [
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "new webkitSpeechRecognition() or SpeechRecognition; recognition.start(); processLocally; SpeechRecognition.available(); install()",
+      "permission_name": "microphone",
+      "permissions_policy": "microphone; on-device-speech-recognition",
+      "bcd": [
+        "api.SpeechRecognition"
+      ],
+      "access": {
+        "grant": "prompt",
+        "prompt_ui": "Microphone prompt on first start(); Chrome shows the mic indicator; on-device mode needs a downloaded language pack.",
+        "secure_context": true,
+        "user_gesture": true,
+        "persistence": "Same as microphone permission",
+        "revocation": "Revoke microphone",
+        "iframe": "Needs allow=\"microphone\"",
+        "steps": [
+          "Create the recognizer",
+          "recognition.start() from gesture",
+          "Microphone prompt",
+          "result events carry transcript text and confidence"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "139",
+          "note": "webkit prefix",
+          "date": "2025-08-05"
+        },
+        "edge": {
+          "s": "y",
+          "v": "139",
+          "note": "webkit prefix",
+          "date": "2025-08-07"
+        },
+        "firefox": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "safari": {
+          "s": "p",
+          "v": "14.1",
+          "note": "webkit prefix, Siri based",
+          "date": "2021-04-26"
+        },
+        "ios_safari": {
+          "s": "p",
+          "v": "14.5",
+          "note": "iOS dictation, webkit prefix",
+          "date": "2021-04-26"
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "139",
+          "note": "",
+          "date": "2025-08-05"
+        },
+        "samsung": {
+          "s": "y",
+          "v": "30.0",
+          "note": "",
+          "date": "2026-05-11"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "event",
+    "metric": "Transcript with confidence",
+    "update": "continuous or one-shot",
+    "fields": [
+      {
+        "name": "transcript",
+        "type": "string",
+        "unit": "text",
+        "range": "any",
+        "precision": "words"
+      },
+      {
+        "name": "confidence",
+        "type": "float",
+        "unit": "0 to 1",
+        "range": "0 to 1",
+        "precision": "0.01"
+      },
+      {
+        "name": "maxAlternatives",
+        "type": "integer",
+        "unit": "count",
+        "range": "1 to 10",
+        "precision": "1"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can turn your spoken words into text while you speak and the tab is open",
+    "user_action": "You click the microphone or Dictate button and allow the microphone",
+    "can": [
+      "Turn your speech into text as you talk",
+      "Use the words to fill a box, search or run a voice command",
+      "Work on the device itself in Chrome when the language pack is downloaded"
+    ],
+    "cannot": [
+      "Start without the microphone prompt on first use",
+      "Listen after you stop or leave the tab",
+      "Keep your audio private in Chrome by default; audio may go to a speech service unless on device mode is used",
+      "Work in Firefox, and only partly in Safari and iPhone browsers"
+    ],
+    "reach": 2,
+    "reach_label": "While you dictate",
+    "differs": "Chrome, Edge and Samsung Internet support it fully. Safari and iPhone browsers support part of it. Firefox does not."
+  },
+  "story": {
+    "what_it_is": "Turns what you say into text, using your microphone.",
+    "icon": "captions",
+    "tags": [
+      "Microphone",
+      "Asks first",
+      "Cloud"
+    ],
+    "marketing": [
+      {
+        "vendor": "Mozilla",
+        "name": "SpeechRecognition",
+        "pitch": "Developer docs describe how a page can turn spoken words into text, with limits on which browsers support it.",
+        "url": "https://developer.mozilla.org/en-US/docs/Web/API/SpeechRecognition"
+      }
+    ],
+    "for_you": "You allow the microphone, then speak, and your words appear as text or trigger a command. In Chrome, your voice is usually sent to a Google service to be turned into words, so it leaves your device.",
+    "for_makers": "Voice typing and voice commands make forms, search and games hands free. A maker gets a speech feature without training a model. The cost is that voice audio often goes to a third party cloud, which is a privacy and legal question.",
+    "use_cases": [
+      {
+        "type": "accessibility",
+        "example": "A person with a hand injury dictates a whole email with their voice and sees the words appear in the draft.",
+        "apps": [
+          "Gmail",
+          "Google Docs voice typing"
+        ]
+      },
+      {
+        "type": "games",
+        "example": "A word game or trivia site lets you shout your answer instead of typing it, and the page checks the words.",
+        "apps": []
+      },
+      {
+        "type": "education",
+        "example": "A reading practice site listens as a child reads aloud, and highlights words they say right or wrong.",
+        "apps": [
+          "Google Read Along"
+        ]
+      },
+      {
+        "type": "productivity",
+        "example": "You say a note or a to do item into a web app, and it saves the words in a list.",
+        "apps": [
+          "Google Keep",
+          "Notion web"
+        ]
+      },
+      {
+        "type": "shopping",
+        "example": "You say a product name into a store search bar instead of typing, and results appear.",
+        "apps": [
+          "Amazon web",
+          "Google Shopping"
+        ]
+      },
+      {
+        "type": "video",
+        "example": "A video call tool turns speech into live captions for people who are deaf or in a noisy place.",
+        "apps": [
+          "Google Meet captions"
+        ]
+      },
+      {
+        "type": "smart-home",
+        "example": "A web dashboard for your home lets you say turn on the lights and sends the command.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Spoken words may go to a cloud service",
+      "Always listening mode can hear private talk"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Cloud processing by default in Chromium",
+    "Needs mic permission and gesture",
+    "Firefox has no support"
+  ],
+  "scores": {
+    "sensitivity": 5,
+    "utility": 3,
+    "fingerprint_bits": null,
+    "friction": 2
+  },
+  "value": {
+    "legit_uses": [
+      "Voice search",
+      "Dictation"
+    ],
+    "abuse": [
+      "Voice data leaving the device"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2013-01",
+      "browser": "chrome",
+      "version": "25",
+      "change": "webkitSpeechRecognition ships"
+    },
+    {
+      "date": "2025-09",
+      "browser": "chrome",
+      "version": "139",
+      "change": "processLocally and install() for on-device models (exact version unconfirmed)"
+    }
+  ],
+  "related": [
+    "web.camera.microphone"
+  ],
+  "refs": [
+    {
+      "t": "mdn",
+      "label": "MDN SpeechRecognition",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/SpeechRecognition"
+    },
+    {
+      "t": "spec",
+      "label": "W3C Web Speech API",
+      "url": "https://webaudio.github.io/web-speech-api/"
+    }
+  ],
+  "confidence": "docs"
+}

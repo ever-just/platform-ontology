@@ -1,0 +1,235 @@
+{
+  "id": "web.camera.usermedia-element",
+  "name": "HTML <usermedia> element (camera and microphone)",
+  "kind": "permission",
+  "group": "camera-mic-screen",
+  "subgroup": "Capture",
+  "tags": [
+    "capability-element",
+    "chrome-only"
+  ],
+  "plain": "A browser-drawn button that asks for camera or microphone; the click is the request.",
+  "meaning": "Same power as getUserMedia, but the request starts from a button the site cannot disguise. Aims to cut prompt spam and make recovery after a block possible.",
+  "lifecycle": [
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "<usermedia type=\"camera microphone\" onstream=...>; element.stream; setConstraints()",
+      "permission_name": "camera, microphone",
+      "permissions_policy": "camera; microphone",
+      "bcd": [
+        "api.HTMLUserMediaElement"
+      ],
+      "access": {
+        "grant": "prompt",
+        "prompt_ui": "Browser-drawn button with fixed label and icon; click opens the normal camera or microphone prompt.",
+        "secure_context": true,
+        "user_gesture": true,
+        "persistence": "Same stored permissions as getUserMedia",
+        "revocation": "Same as camera and microphone",
+        "iframe": "Needs allow=\"camera; microphone\" in cross-origin iframes",
+        "steps": [
+          "Add <usermedia> to the page",
+          "Person clicks the browser-drawn button",
+          "Browser prompts",
+          "stream event delivers a MediaStream"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "151",
+          "note": "Origin trial from 144, announced available 2026-06",
+          "date": "2026-07-28"
+        },
+        "edge": {
+          "s": "y",
+          "v": "151",
+          "note": "",
+          "date": "2026-07-31"
+        },
+        "firefox": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "safari": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "ios_safari": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "151",
+          "note": "",
+          "date": "2026-07-28"
+        },
+        "samsung": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "stream",
+    "metric": "MediaStream delivered through an element",
+    "update": "continuous",
+    "fields": []
+  },
+  "limits": {
+    "headline": "Can ask for camera or microphone through a button the browser draws itself",
+    "user_action": "You click the browser made Use camera or Use microphone button on the page",
+    "can": [
+      "Show a browser drawn button that starts the camera or microphone request",
+      "Let you retry after you blocked access earlier, since the click is a clear request",
+      "Open the normal camera or microphone prompt"
+    ],
+    "cannot": [
+      "Change the button's label or icon to look like something else",
+      "Turn the camera or microphone on without your click and approval",
+      "Skip the normal prompt",
+      "Work in Firefox, Safari or iPhone browsers"
+    ],
+    "reach": 1,
+    "reach_label": "One click, then the usual prompt",
+    "differs": "Only Chrome, Edge and Chrome on Android support it for now."
+  },
+  "story": {
+    "what_it_is": "A browser drawn button that a site cannot fake; clicking it asks for camera or microphone.",
+    "icon": "square-mouse-pointer",
+    "tags": [
+      "Camera",
+      "Microphone",
+      "New"
+    ],
+    "marketing": [
+      {
+        "vendor": "W3C WICG",
+        "name": "Page Embedded Permission Control",
+        "pitch": "A proposal for a browser built button so permission requests start from a real click, not a pop up the site fakes.",
+        "url": "https://github.com/WICG/PEPC"
+      }
+    ],
+    "for_you": "You see a normal looking button that says something like Use camera. It is drawn by the browser, so the site cannot change what it says. Clicking it starts the permission request, which is clearer than a surprise pop up.",
+    "for_makers": "Makers get a cleaner way to ask, and fewer people who block by mistake because the pop up appeared too early. If someone has blocked the camera, the button lets them change that in one place. It also reduces spam prompts that hurt trust in all sites.",
+    "use_cases": [
+      {
+        "type": "video",
+        "example": "A call site shows a Use camera button in the pre join screen, and a click is the request, so you know exactly why it is asking.",
+        "apps": [
+          "Google Meet",
+          "Zoom web"
+        ]
+      },
+      {
+        "type": "security",
+        "example": "An ID check page shows a browser drawn camera button so a phisher cannot fake the request to look like your bank.",
+        "apps": [
+          "Onfido",
+          "Persona"
+        ]
+      },
+      {
+        "type": "games",
+        "example": "A browser game with face control shows a clear Enable camera button on the title screen, and not a prompt at page load.",
+        "apps": []
+      },
+      {
+        "type": "social",
+        "example": "A web camera effect page shows a button for the camera and another for the microphone, so you pick one without a pile of pop ups.",
+        "apps": [
+          "Snapchat web",
+          "Instagram web"
+        ]
+      },
+      {
+        "type": "shopping",
+        "example": "A try on page makes you click Use camera to start the live view, which feels like your choice.",
+        "apps": [
+          "Warby Parker",
+          "Sephora"
+        ]
+      },
+      {
+        "type": "enterprise",
+        "example": "A telehealth waiting room shows the button, so a patient who blocked the camera before can fix it in one click.",
+        "apps": [
+          "Doxy.me",
+          "Teladoc"
+        ]
+      }
+    ],
+    "risks": [
+      "Still new and not in every browser",
+      "People may click without reading"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Cannot be hidden, resized or restyled to deceive",
+    "Chrome only for now"
+  ],
+  "scores": {
+    "sensitivity": 5,
+    "utility": 4,
+    "fingerprint_bits": null,
+    "friction": 1
+  },
+  "value": {
+    "legit_uses": [
+      "Clearer consent for calls",
+      "Recovery from earlier block"
+    ],
+    "abuse": [
+      "None beyond getUserMedia"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2025-12",
+      "browser": "chrome",
+      "version": "144",
+      "change": "<permission> style elements, including <usermedia>, enter origin trial"
+    },
+    {
+      "date": "2026-06",
+      "browser": "chrome",
+      "version": "151",
+      "change": "<usermedia> announced available (an earlier M149 launch was cancelled)"
+    }
+  ],
+  "related": [
+    "web.camera.camera",
+    "web.camera.microphone",
+    "web.location.geolocation-element"
+  ],
+  "refs": [
+    {
+      "t": "github",
+      "label": "WICG PEPC explainer",
+      "url": "https://github.com/WICG/PEPC"
+    },
+    {
+      "t": "chromestatus",
+      "label": "Chrome developer blog",
+      "url": "https://developer.chrome.com/blog"
+    }
+  ],
+  "confidence": "inferred"
+}

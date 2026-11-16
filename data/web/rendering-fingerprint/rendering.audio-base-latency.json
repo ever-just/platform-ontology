@@ -1,0 +1,227 @@
+{
+  "id": "web.rendering.audio-base-latency",
+  "name": "Audio base latency",
+  "kind": "signal",
+  "group": "rendering-fingerprint",
+  "subgroup": "Audio",
+  "tags": [
+    "audio",
+    "latency",
+    "fingerprintjs"
+  ],
+  "plain": "AudioContext.baseLatency reveals the audio stack and hardware.",
+  "meaning": "Typical values 0.005 to 0.04 seconds depending on OS and driver (macOS about 0.01, Windows 0.01 to 0.03, Android up to 0.04). Mild hardware signal; read without playing sound.",
+  "lifecycle": [
+    "on-arrival",
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "new AudioContext().baseLatency",
+      "access": {
+        "grant": "none",
+        "prompt_ui": "None",
+        "secure_context": false,
+        "user_gesture": false,
+        "persistence": "read fresh on every page load; nothing stored",
+        "revocation": "none needed (no grant)",
+        "iframe": "Readable from cross-origin iframes too (same values)",
+        "steps": [
+          "Page script reads the value",
+          "No prompt is shown"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "58",
+          "note": "",
+          "date": "2017-04-19"
+        },
+        "edge": {
+          "s": "y",
+          "v": "79",
+          "note": "",
+          "date": "2020-01-15"
+        },
+        "firefox": {
+          "s": "y",
+          "v": "70",
+          "note": "",
+          "date": "2019-10-22"
+        },
+        "safari": {
+          "s": "y",
+          "v": "14.1",
+          "note": "",
+          "date": "2021-04-26"
+        },
+        "ios_safari": {
+          "s": "y",
+          "v": "14.5",
+          "note": "",
+          "date": "2021-04-26"
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "58",
+          "note": "",
+          "date": "2017-04-25"
+        },
+        "samsung": {
+          "s": "y",
+          "v": "7.0",
+          "note": "",
+          "date": "2018-03-16"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "object",
+    "metric": "",
+    "update": "static per session",
+    "fields": [
+      {
+        "name": "baseLatency",
+        "type": "float",
+        "unit": "seconds",
+        "range": "0 to about 0.1",
+        "precision": "double precision"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can measure your audio delay to guess your system and audio hardware",
+    "user_action": "Nothing. It happens when the page loads",
+    "can": [
+      "Check the audio delay, usually 0.005 to 0.04 seconds",
+      "Guess your system, such as macOS, Windows or Android",
+      "Do this without playing any sound"
+    ],
+    "cannot": [
+      "Listen to you or record sound",
+      "Ask permission first",
+      "Name your exact headphones or speakers",
+      "Know who you are by itself"
+    ],
+    "reach": 2,
+    "reach_label": "Silent, mild hardware clue",
+    "differs": ""
+  },
+  "story": {
+    "what_it_is": "A page reads how long your audio system takes to start sound, which hints at your hardware.",
+    "icon": "timer",
+    "tags": [
+      "Audio",
+      "Silent",
+      "Hardware"
+    ],
+    "marketing": [
+      {
+        "vendor": "MDN",
+        "name": "AudioContext.baseLatency",
+        "pitch": "Reports the delay the audio system adds, so apps can keep sound and visuals in sync.",
+        "url": "https://developer.mozilla.org/en-US/docs/Web/API/AudioContext/baseLatency"
+      }
+    ],
+    "for_you": "You never see a prompt. You just get better timed sound in games and music apps. The same number can quietly tell a site if you use a phone, a laptop or a studio sound card.",
+    "for_makers": "Real time audio apps need this number to line sound up with the screen. Trackers and fraud tools add it to a device profile since it differs by hardware and operating system.",
+    "use_cases": [
+      {
+        "type": "games",
+        "example": "A browser rhythm game uses your audio delay to shift the note timing so the beat matches what you hear.",
+        "apps": []
+      },
+      {
+        "type": "music",
+        "example": "A web music maker adjusts its recording delay so a track recorded from the mic lines up with the backing.",
+        "apps": [
+          "BandLab",
+          "Soundtrap"
+        ]
+      },
+      {
+        "type": "video",
+        "example": "A video call tool tunes its audio buffer to avoid echo and lag on your headset.",
+        "apps": [
+          "Google Meet",
+          "Zoom web client"
+        ]
+      },
+      {
+        "type": "live",
+        "example": "A live streaming page keeps the sound and the picture aligned by checking audio output delay.",
+        "apps": [
+          "Twitch"
+        ]
+      },
+      {
+        "type": "security",
+        "example": "A fraud tool sees an audio delay typical of a virtual machine and raises the risk.",
+        "apps": []
+      },
+      {
+        "type": "ads",
+        "example": "A tracker puts the delay value in a device ID along with other audio numbers.",
+        "apps": []
+      },
+      {
+        "type": "education",
+        "example": "A web music lesson app checks delay so it can tell you whether you played in time.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Reveals audio hardware",
+      "Adds to a device ID"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Does not need microphone"
+  ],
+  "scores": {
+    "sensitivity": 1,
+    "utility": 1,
+    "fingerprint_bits": 2.0,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Latency tuning"
+    ],
+    "abuse": [
+      "Hardware fingerprint"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2025-09",
+      "browser": "safari",
+      "version": "26",
+      "change": "Web audio readback restricted for known fingerprinters"
+    }
+  ],
+  "refs": [
+    {
+      "t": "github",
+      "label": "fingerprintjs source: audio_base_latency",
+      "url": "https://github.com/fingerprintjs/fingerprintjs/blob/master/src/sources/audio_base_latency.ts"
+    },
+    {
+      "t": "webkit",
+      "label": "WebKit features in Safari 26.0 (fingerprinting protection)",
+      "url": "https://webkit.org/blog/17333/webkit-features-in-safari-26-0/"
+    }
+  ],
+  "confidence": "docs"
+}

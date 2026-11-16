@@ -1,0 +1,184 @@
+{
+  "id": "mob.id.play-integrity",
+  "name": "Play Integrity verdicts",
+  "kind": "capability",
+  "group": "identity-auth",
+  "subgroup": "Attestation",
+  "tags": [
+    "play-integrity",
+    "root-detection"
+  ],
+  "plain": "Google returns a signed verdict on the device, app, and account integrity.",
+  "meaning": "Verdict levels (BASIC, DEVICE, STRONG) tell servers if a phone is rooted, an emulator, or running an altered app. STRONG (Android 13+) needs hardware-backed signals and a recent patch.",
+  "lifecycle": [
+    "signed-in",
+    "on-launch"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "y",
+      "v": "6.0",
+      "api": 23,
+      "permission": "",
+      "protection": "none",
+      "grant": "none",
+      "prompt_ui": "Default quota 10,000 requests per day (adjustable)",
+      "persistence": "Per request",
+      "revocation": "",
+      "store_policy": "Play policy",
+      "api_surface": "IntegrityManager.requestIntegrityToken (Play Integrity API)",
+      "note": "MEETS_BASIC_INTEGRITY, MEETS_DEVICE_INTEGRITY, MEETS_STRONG_INTEGRITY; STRONG needs a security patch within the last 12 months"
+    },
+    "ios": {
+      "s": "n",
+      "v": "",
+      "permission": "none",
+      "protection": "not-exposed",
+      "grant": "not-exposed",
+      "prompt_ui": "",
+      "persistence": "",
+      "revocation": "",
+      "store_policy": "",
+      "api_surface": "Use App Attest",
+      "note": "See App Attest entry"
+    }
+  },
+  "web_equivalents": [
+    "web.device.webdriver-flag"
+  ],
+  "data": {
+    "type": "object",
+    "metric": "Verdict",
+    "update": "Per request",
+    "fields": [
+      {
+        "name": "deviceIntegrity",
+        "type": "enum",
+        "unit": "",
+        "range": "BASIC, DEVICE, STRONG",
+        "precision": "3 levels"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can ask Google whether the phone and app look genuine and unmodified",
+    "user_action": "Nothing. It happens when you sign in, pay, or do something the app wants to protect",
+    "can": [
+      "Ask Google for a signed verdict on the device, the app, and the Play license",
+      "See whether the phone passes basic, device, or strong integrity",
+      "Block actions on rooted, emulated or tampered devices"
+    ],
+    "cannot": [
+      "See who you are or your Google account details",
+      "See other apps on your phone",
+      "Give a strong verdict if the security patch is older than about 12 months",
+      "Work on iPhone; App Attest does that job"
+    ],
+    "reach": 2,
+    "reach_label": "A verdict about the device and app",
+    "differs": "Only Android has Play Integrity. iPhone uses App Attest."
+  },
+  "story": {
+    "what_it_is": "Google tells a server whether the phone, the app and the account look genuine.",
+    "icon": "shield-check",
+    "tags": [
+      "Anti fraud",
+      "Silent",
+      "Identity"
+    ],
+    "marketing": [
+      {
+        "vendor": "Google",
+        "name": "Play Integrity API",
+        "pitch": "Google helps apps detect risky or fake devices and apps so they can fight fraud, cheating and abuse.",
+        "url": "https://developer.android.com/google/play/integrity"
+      }
+    ],
+    "for_you": "You never see it. It runs in the background when you log in, buy something or play online. It can make a game or bank app refuse to run on a rooted phone or a custom system.",
+    "for_makers": "Makers get a signed answer from Google about whether the device is real, the app is untouched and it was installed from Google Play. They use it to cut cheaters, bots and card fraud. It also locks out some honest users with custom software.",
+    "use_cases": [
+      {
+        "type": "games",
+        "example": "A shooter checks the phone before a ranked match so cheat tool users are blocked.",
+        "apps": [
+          "PUBG Mobile",
+          "Call of Duty Mobile"
+        ]
+      },
+      {
+        "type": "banking",
+        "example": "A bank app refuses to open on a rooted phone, because malware could read the screen.",
+        "apps": []
+      },
+      {
+        "type": "payments",
+        "example": "A payments app verifies the device before it approves a high value transfer.",
+        "apps": []
+      },
+      {
+        "type": "shopping",
+        "example": "A sale app limits scripted bots grabbing limited stock by checking each request.",
+        "apps": []
+      },
+      {
+        "type": "media",
+        "example": "A streaming app uses it to block pirated, repackaged copies of the app.",
+        "apps": []
+      },
+      {
+        "type": "social",
+        "example": "A new sign up is checked for emulators so one person cannot create thousands of fake accounts.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Locks out custom ROM users",
+      "False alarms block honest people"
+    ],
+    "android_note": "This is the Google service for Android, and the strongest verdict needs a recent security update and hardware signals.",
+    "ios_note": "iPhone has no version. Apps use Apple App Attest for the same job."
+  },
+  "technical_bounds": [
+    "Server-side verdict"
+  ],
+  "scores": {
+    "sensitivity": 2,
+    "utility": 4,
+    "fingerprint_bits": null,
+    "friction": 1
+  },
+  "value": {
+    "legit_uses": [
+      "Fraud and cheat checks"
+    ],
+    "abuse": [
+      "Lock out custom ROMs"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2023-04",
+      "platform": "android",
+      "version": "13 (API 33)",
+      "change": "Strong verdict requires hardware-backed boot signals and recent patch"
+    }
+  ],
+  "related": [
+    "mob.id.app-attest"
+  ],
+  "refs": [
+    {
+      "t": "android",
+      "label": "Play Integrity API overview",
+      "url": "https://developer.android.com/google/play/integrity/overview"
+    }
+  ],
+  "confidence": "docs"
+}

@@ -1,0 +1,250 @@
+{
+  "id": "web.storage.localstorage",
+  "name": "localStorage",
+  "kind": "capability",
+  "group": "files-storage",
+  "subgroup": "In session",
+  "tags": [
+    "localstorage",
+    "web-storage",
+    "persistent"
+  ],
+  "plain": "A browser store of up to about 5 MB per site that scripts read at any time and that survives restarts.",
+  "meaning": "Holds settings, drafts, and very often a tracker's visitor ID that is re-created if the cookie is deleted. It is not sent to servers on its own, but every script on the page can read it. A common 'respawn' source for IDs.",
+  "lifecycle": [
+    "in-session",
+    "after-leaving"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "window.localStorage.setItem(k, v)",
+      "bcd": [
+        "api.Window.localStorage"
+      ],
+      "access": {
+        "grant": "none",
+        "prompt_ui": "None",
+        "secure_context": false,
+        "user_gesture": false,
+        "persistence": "Until cleared by user or evicted. Safari deletes script written storage after 7 days of Safari use without a user visit",
+        "revocation": "Clear site data, browser privacy settings",
+        "iframe": "",
+        "steps": []
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "4",
+          "note": "",
+          "date": "2010-01-25"
+        },
+        "edge": {
+          "s": "y",
+          "v": "12",
+          "note": "",
+          "date": "2015-07-29"
+        },
+        "firefox": {
+          "s": "y",
+          "v": "3.5",
+          "note": "",
+          "date": "2009-06-30"
+        },
+        "safari": {
+          "s": "y",
+          "v": "4",
+          "note": "",
+          "date": "2009-06-08"
+        },
+        "ios_safari": {
+          "s": "y",
+          "v": "3.2",
+          "note": "",
+          "date": "2010-04-03"
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "18",
+          "note": "",
+          "date": "2012-06-27"
+        },
+        "samsung": {
+          "s": "y",
+          "v": "1.0",
+          "note": "",
+          "date": "2013-04-27"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "string",
+    "metric": "Key value strings",
+    "update": "any time",
+    "fields": [
+      {
+        "name": "quota",
+        "type": "integer",
+        "unit": "MiB",
+        "range": "about 5 per origin",
+        "precision": "approximate"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can keep up to about 5 MB of text notes per site, until cleared",
+    "user_action": "Nothing. It happens as you use the site or change settings.",
+    "can": [
+      "Remember settings, drafts and sign in tokens",
+      "Keep them after you restart the browser",
+      "Use them again on every visit"
+    ],
+    "cannot": [
+      "Let other sites see them",
+      "Hold large files",
+      "Keep them after you clear site data or close a private window",
+      "Keep them in Safari after 7 days of use without a visit"
+    ],
+    "reach": 2,
+    "reach_label": "Its own notes only",
+    "differs": "Safari may delete it after 7 days of use without a visit. Chrome and Firefox do not."
+  },
+  "story": {
+    "what_it_is": "A store of up to about 5 MB per site that scripts can read any time and that survives restarts.",
+    "icon": "hard-drive",
+    "tags": [
+      "Storage",
+      "Settings",
+      "Silent"
+    ],
+    "marketing": [
+      {
+        "vendor": "MDN",
+        "name": "Web Storage API",
+        "pitch": "Documents how sites save small amounts of data in the browser for later visits.",
+        "url": "https://developer.mozilla.org/en-US/docs/Web/API/Web_Storage_API"
+      }
+    ],
+    "for_you": "You never see it. It is why a site remembers your dark mode, your last search or your game score the next time you come back.",
+    "for_makers": "It is the easiest way to keep small settings, so it is everywhere. It is also a place where trackers store IDs, because it survives restarts and any script on the page can read it.",
+    "use_cases": [
+      {
+        "type": "games",
+        "example": "A word game or puzzle keeps your streak and best score here.",
+        "apps": [
+          "Wordle",
+          "2048"
+        ]
+      },
+      {
+        "type": "productivity",
+        "example": "A to do list app remembers your tasks without needing an account.",
+        "apps": []
+      },
+      {
+        "type": "shopping",
+        "example": "A store remembers the items you recently viewed.",
+        "apps": []
+      },
+      {
+        "type": "social",
+        "example": "A social site remembers a draft post that you did not send.",
+        "apps": []
+      },
+      {
+        "type": "ads",
+        "example": "A tracking script stores a visitor ID and your last ad click here.",
+        "apps": []
+      },
+      {
+        "type": "analytics",
+        "example": "A site analytics script keeps a session ID here to link visits together.",
+        "apps": [
+          "Google Analytics"
+        ]
+      },
+      {
+        "type": "education",
+        "example": "A learning site remembers where you stopped in a lesson.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Hidden trackers",
+      "Readable by any script"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "About 5 MiB per origin in Chrome, Firefox and Safari",
+    "Synchronous API blocks the main thread",
+    "Not shared across origins or (3P) partitions",
+    "No expiry set by the API",
+    "Not available in workers"
+  ],
+  "scores": {
+    "sensitivity": 3,
+    "utility": 5,
+    "fingerprint_bits": 0,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "User settings, offline drafts, feature flags"
+    ],
+    "abuse": [
+      "Respawning tracking IDs after cookie deletion"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2020-03",
+      "browser": "safari",
+      "version": "13.1",
+      "change": "ITP 7 day cap on script writable storage applied to localStorage"
+    },
+    {
+      "date": "2023-07",
+      "browser": "chrome",
+      "version": "115",
+      "change": "Third party localStorage partitioned by top level site"
+    },
+    {
+      "date": "2022-07",
+      "browser": "firefox",
+      "version": "103",
+      "change": "Total Cookie Protection partitions it for all users"
+    }
+  ],
+  "related": [
+    "web.storage.sessionstorage",
+    "web.storage.indexeddb",
+    "web.xsite.safari-7-day-storage-cap"
+  ],
+  "refs": [
+    {
+      "t": "mdn",
+      "label": "MDN Window.localStorage",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage"
+    },
+    {
+      "t": "mdn",
+      "label": "MDN Storage quotas and eviction",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/Storage_API/Storage_quotas_and_eviction_criteria"
+    },
+    {
+      "t": "webkit",
+      "label": "WebKit Tracking Prevention",
+      "url": "https://webkit.org/tracking-prevention/"
+    }
+  ],
+  "confidence": "verified"
+}

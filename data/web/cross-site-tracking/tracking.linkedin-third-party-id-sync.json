@@ -1,0 +1,208 @@
+{
+  "id": "web.tracking.linkedin-third-party-id-sync",
+  "name": "Third party ID sync cookies in LinkedIn's table",
+  "kind": "tracking",
+  "group": "cross-site-tracking",
+  "subgroup": "Cookies",
+  "tags": [
+    "cookie",
+    "third-party",
+    "dsp",
+    "id-sync"
+  ],
+  "plain": "Ad partner cookies (Adobe, ID5, Xandr, Yahoo, Microsoft, Google) set through LinkedIn's ad stack.",
+  "meaning": "Shows LinkedIn acting as a demand side platform: other ad networks write IDs that LinkedIn uses to resolve people across sites. Observation data is kept at most 90 days per LinkedIn.",
+  "lifecycle": [
+    "before-visit",
+    "on-arrival",
+    "after-leaving"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "Set-Cookie aam_uuid, demdex, ID5, Xandr, TripleLift, Rubicon, Magnite, Claritas, MUID, ms_click_id, _gcl_*, ar_debug",
+      "access": {
+        "grant": "none",
+        "prompt_ui": "None (no browser prompt)",
+        "secure_context": false,
+        "user_gesture": false,
+        "persistence": "Varies by vendor (see LinkedIn table)",
+        "revocation": "",
+        "iframe": "",
+        "steps": [
+          "Ad slot or pixel loads vendor tags",
+          "Vendor sets ID cookies",
+          "IDs are matched in LinkedIn's identity graph"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "",
+          "note": ""
+        },
+        "edge": {
+          "s": "y",
+          "v": "",
+          "note": ""
+        },
+        "firefox": {
+          "s": "y",
+          "v": "",
+          "note": ""
+        },
+        "safari": {
+          "s": "y",
+          "v": "",
+          "note": ""
+        },
+        "ios_safari": {
+          "s": "y",
+          "v": "",
+          "note": ""
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "",
+          "note": ""
+        },
+        "samsung": {
+          "s": "y",
+          "v": "",
+          "note": ""
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "list",
+    "metric": "Partner IDs",
+    "update": "per sync",
+    "fields": [
+      {
+        "name": "ids",
+        "type": "list",
+        "unit": "",
+        "range": "10 or more vendors",
+        "precision": "varies"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can set partner cookies that let ad companies match you to their records",
+    "user_action": "Nothing. It happens when you visit LinkedIn or a site using LinkedIn ads",
+    "can": [
+      "Store cookies from ad partners such as Adobe, ID5, Xandr, Yahoo, Microsoft and Google",
+      "Swap IDs between LinkedIn and those partners",
+      "Help partners recognize you on other sites"
+    ],
+    "cannot": [
+      "Work where third party cookies are blocked",
+      "Follow you after you clear cookies",
+      "Know your name without a login at a partner",
+      "Reach another device unless a login links it"
+    ],
+    "reach": 4,
+    "reach_label": "IDs shared across ad partners",
+    "differs": "Safari and Firefox block most of these by default. Chrome allows them unless you change settings."
+  },
+  "story": {
+    "what_it_is": "Ad partners write their own IDs in your browser, and LinkedIn uses them to recognise you.",
+    "icon": "share-2",
+    "tags": [
+      "Ads",
+      "Cookies",
+      "Partners"
+    ],
+    "marketing": [],
+    "for_you": "You never see it. Partners like Adobe, Google and Yahoo place small ID files in your browser as part of LinkedIn's ad system. LinkedIn can then match you across other sites, for up to about three months of data.",
+    "for_makers": "This makes LinkedIn work like a buyer of ads on the wider web, not just its own site. Matching IDs lets it reach the same person on other sites and prove results. It also gives partners a larger view of people.",
+    "use_cases": [
+      {
+        "type": "ads",
+        "example": "A business sees its LinkedIn ads reach the same person who later sees its display ad on a news site.",
+        "apps": [
+          "LinkedIn Ads"
+        ]
+      },
+      {
+        "type": "analytics",
+        "example": "A marketer sees one combined count of people reached across LinkedIn and partner ad networks.",
+        "apps": [
+          "Adobe Analytics"
+        ]
+      },
+      {
+        "type": "media",
+        "example": "A publisher sells ad space that LinkedIn bids on, using synced IDs to price the visitor.",
+        "apps": [
+          "Yahoo",
+          "Xandr"
+        ]
+      },
+      {
+        "type": "shopping",
+        "example": "A shopper browsing a store gets matched to a partner ID, so a related ad appears elsewhere.",
+        "apps": []
+      },
+      {
+        "type": "security",
+        "example": "Partners use the shared IDs to spot invalid traffic that appears under many IDs at once.",
+        "apps": []
+      },
+      {
+        "type": "games",
+        "example": "A person reads a news site on a game break, and an ad partner ID helps LinkedIn show a related ad to the same person.",
+        "apps": [
+          "LinkedIn Games"
+        ]
+      }
+    ],
+    "risks": [
+      "Builds a profile across many sites",
+      "Many companies hold your ID"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Exact graph is not public",
+    "In Designated Countries off-site collection only with consent (per LinkedIn)"
+  ],
+  "scores": {
+    "sensitivity": 4,
+    "utility": 3,
+    "fingerprint_bits": null,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Ad delivery and measurement"
+    ],
+    "abuse": [
+      "Cross-site identity resolution"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": true,
+      "how": "Cookie table lists these vendor cookies; LinkedIn help page describes off-LinkedIn identity resolution with probabilistic matching."
+    }
+  },
+  "related": [
+    "web.tracking.linkedin-cookies-ad-sync"
+  ],
+  "refs": [
+    {
+      "t": "vendor",
+      "label": "LinkedIn cookie table",
+      "url": "https://www.linkedin.com/legal/l/cookie-table"
+    },
+    {
+      "t": "vendor",
+      "label": "LinkedIn Help: identity resolution",
+      "url": "https://www.linkedin.com/help/learning/answer/a7154788"
+    }
+  ],
+  "confidence": "docs"
+}

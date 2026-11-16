@@ -1,0 +1,220 @@
+{
+  "id": "web.perf.performance-memory",
+  "name": "performance.memory (legacy heap size)",
+  "kind": "signal",
+  "group": "timing-performance",
+  "subgroup": "Memory",
+  "tags": [
+    "memory",
+    "heap",
+    "jsHeapSizeLimit",
+    "legacy"
+  ],
+  "plain": "Reads JavaScript heap sizes in Chrome.",
+  "meaning": "Exposes usedJSHeapSize, totalJSHeapSize and jsHeapSizeLimit, which cluster by device RAM and OS (about 4 GB on 64-bit desktop, 2 GB on mobile). Values are quantized.",
+  "lifecycle": [
+    "on-arrival"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "performance.memory.jsHeapSizeLimit; totalJSHeapSize; usedJSHeapSize",
+      "bcd": [
+        "api.Performance.memory"
+      ],
+      "access": {
+        "grant": "none",
+        "prompt_ui": "",
+        "secure_context": false,
+        "user_gesture": false,
+        "persistence": "",
+        "revocation": "",
+        "iframe": "",
+        "steps": [
+          "Read performance.memory"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "7",
+          "note": "",
+          "date": "2010-10-19"
+        },
+        "edge": {
+          "s": "y",
+          "v": "79",
+          "note": "",
+          "date": "2020-01-15"
+        },
+        "firefox": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "safari": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "ios_safari": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "18",
+          "note": "",
+          "date": "2012-06-27"
+        },
+        "samsung": {
+          "s": "y",
+          "v": "1.0",
+          "note": "",
+          "date": "2013-04-27"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "object",
+    "metric": "3 integers (bucketed in non-isolated contexts)",
+    "update": "",
+    "fields": [
+      {
+        "name": "jsHeapSizeLimit",
+        "type": "integer",
+        "unit": "bytes",
+        "range": "2147483648 to 4294967296",
+        "precision": "bucketed"
+      },
+      {
+        "name": "usedJSHeapSize",
+        "type": "integer",
+        "unit": "bytes",
+        "range": "1 MB to 4 GB",
+        "precision": "bucketed to about 10 KB or quantized"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can see how much memory the page uses, in Chrome and Edge",
+    "user_action": "Nothing. It happens when the page asks",
+    "can": [
+      "Get used, total and limit sizes for the page's memory",
+      "Guess your device memory, around 4 GB on desktop and 2 GB on phones",
+      "Find memory leaks in its own page"
+    ],
+    "cannot": [
+      "See other tabs or apps",
+      "Get exact values, since they are rounded",
+      "Work in Firefox or Safari",
+      "Ask permission first"
+    ],
+    "reach": 2,
+    "reach_label": "Silent, rough device memory",
+    "differs": "Only Chrome and Edge. Firefox and Safari do not support it."
+  },
+  "story": {
+    "what_it_is": "An older Chrome feature that reports the size of JavaScript memory, rounded to blur the exact number.",
+    "icon": "memory-stick",
+    "tags": [
+      "Memory",
+      "Silent",
+      "Chrome only"
+    ],
+    "marketing": [],
+    "for_you": "You never see it. It lets a site learn roughly how much memory your tab uses, and a rounded value hints at how much memory your device has. Newer tools have mostly replaced it.",
+    "for_makers": "Developers used it to catch leaks, but it is not precise and not standard. Some fraud and tracking tools read it as a clue to your device class. Chrome blurs the numbers to limit this.",
+    "use_cases": [
+      {
+        "type": "developer",
+        "example": "A developer logs memory use in a test to check that an app does not leak over time.",
+        "apps": []
+      },
+      {
+        "type": "games",
+        "example": "A browser game watches heap growth to know when to free textures before the tab crashes.",
+        "apps": []
+      },
+      {
+        "type": "security",
+        "example": "A bot detector sees a heap size that is typical of a headless browser.",
+        "apps": []
+      },
+      {
+        "type": "ads",
+        "example": "A tracker adds the rounded heap limit to a device ID, since it varies by device memory.",
+        "apps": []
+      },
+      {
+        "type": "productivity",
+        "example": "A web office app warns you to save when memory use gets high.",
+        "apps": []
+      },
+      {
+        "type": "analytics",
+        "example": "A monitoring script records heap size at each page view to find slow releases.",
+        "apps": [
+          "Datadog RUM"
+        ]
+      },
+      {
+        "type": "video",
+        "example": "A video call site checks memory on old laptops to decide on lighter effects.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Chrome only",
+      "Hints at device memory"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Chromium only",
+    "Non-standard"
+  ],
+  "scores": {
+    "sensitivity": 2,
+    "utility": 3,
+    "fingerprint_bits": 2,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": "Developer diagnostics",
+    "abuse": "Adds RAM class signal"
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2019-01",
+      "browser": "chrome",
+      "version": "",
+      "change": "Values quantized and bucketed to limit fingerprinting"
+    }
+  ],
+  "related": [
+    "web.perf.measure-user-agent-memory"
+  ],
+  "refs": [
+    {
+      "t": "mdn",
+      "label": "MDN Performance.memory",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/Performance/memory"
+    },
+    {
+      "t": "github",
+      "label": "FingerprintJS",
+      "url": "https://github.com/fingerprintjs/fingerprintjs"
+    }
+  ],
+  "confidence": "docs"
+}

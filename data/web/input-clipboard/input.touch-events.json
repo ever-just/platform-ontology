@@ -1,0 +1,244 @@
+{
+  "id": "web.input.touch-events",
+  "name": "Touch events and touch point count",
+  "kind": "signal",
+  "group": "input-clipboard",
+  "subgroup": "Pointer",
+  "tags": [
+    "touch",
+    "maxtouchpoints",
+    "mobile"
+  ],
+  "plain": "Reports finger positions and the number of touch points the device supports.",
+  "meaning": "navigator.maxTouchPoints separates phones, tablets and touch laptops from plain desktops, a common fingerprint input. Touch radius and force add small device level detail.",
+  "lifecycle": [
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "touchstart/move/end; Touch.radiusX, radiusY, force; navigator.maxTouchPoints; 'ontouchstart' in window",
+      "bcd": [
+        "api.TouchEvent",
+        "api.Touch",
+        "api.Navigator.maxTouchPoints"
+      ],
+      "access": {
+        "grant": "none",
+        "prompt_ui": "None (no browser prompt)",
+        "secure_context": false,
+        "user_gesture": false,
+        "activation": "none",
+        "persistence": "While touching",
+        "revocation": "Nothing to revoke (no permission is stored)",
+        "iframe": "Events go to the touched frame",
+        "steps": [
+          "Person touches the screen",
+          "touchstart and touchmove fire",
+          "Page reads clientX, clientY, radiusX and force"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "22",
+          "note": "",
+          "date": "2012-09-25"
+        },
+        "edge": {
+          "s": "y",
+          "v": "79",
+          "note": "",
+          "date": "2020-01-15"
+        },
+        "firefox": {
+          "s": "y",
+          "v": "52",
+          "note": "",
+          "date": "2017-03-07"
+        },
+        "safari": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "ios_safari": {
+          "s": "y",
+          "v": "3.2",
+          "note": "All iOS browsers use WebKit",
+          "date": "2010-04-03"
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "25",
+          "note": "",
+          "date": "2013-02-27"
+        },
+        "samsung": {
+          "s": "y",
+          "v": "1.5",
+          "note": "",
+          "date": "2013-09-25"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "none",
+    "metric": "",
+    "update": "",
+    "fields": []
+  },
+  "limits": {
+    "headline": "Can see your finger touches and how many touch points your device supports",
+    "user_action": "Nothing. It happens when you touch the screen, and the touch count is checked on load",
+    "can": [
+      "See where and when your fingers touch the page",
+      "Tell a phone, tablet or touch laptop apart from a plain desktop",
+      "Learn small details like touch size where supported"
+    ],
+    "cannot": [
+      "See touches on other pages or apps",
+      "See touches while the page is in the background",
+      "Work in desktop Safari, which does not have touch events"
+    ],
+    "reach": 2,
+    "reach_label": "Touches on that page",
+    "differs": "Chrome, Firefox and Safari on iPhone support them. Safari on Mac does not."
+  },
+  "story": {
+    "what_it_is": "The page sees finger touches and how many touch points your device supports.",
+    "icon": "hand",
+    "tags": [
+      "Touch",
+      "Silent",
+      "Device"
+    ],
+    "marketing": [
+      {
+        "vendor": "MDN (standards docs)",
+        "name": "Touch events",
+        "pitch": "Describes events for touch screens that tell pages when and where fingers touch, move and lift.",
+        "url": "https://developer.mozilla.org/en-US/docs/Web/API/Touch_events"
+      }
+    ],
+    "for_you": "You tap, swipe and pinch and the page responds. You do not see that the site also learned how many fingers your device can track. That number helps it tell a phone from a laptop.",
+    "for_makers": "Touch drives mobile games, maps and drawing. The touch point count also helps sites guess device type and block fake browsers, so it shows up in fingerprints.",
+    "use_cases": [
+      {
+        "type": "games",
+        "example": "A mobile browser game turns finger drags into movement and taps into actions, with several fingers at once.",
+        "apps": [
+          "Wordle (NYT)",
+          "2048"
+        ]
+      },
+      {
+        "type": "games",
+        "example": "A cloud gaming site draws on screen controller buttons for touch players.",
+        "apps": [
+          "Xbox Cloud Gaming",
+          "GeForce NOW"
+        ]
+      },
+      {
+        "type": "maps",
+        "example": "A web map lets you pinch to zoom and two finger rotate.",
+        "apps": [
+          "Google Maps"
+        ]
+      },
+      {
+        "type": "creative",
+        "example": "A drawing app supports multitouch gestures for zoom and undo.",
+        "apps": [
+          "Figma",
+          "Procreate-style web apps"
+        ]
+      },
+      {
+        "type": "analytics",
+        "example": "A site checks touch points to split phone, tablet and desktop traffic.",
+        "apps": [
+          "Google Analytics"
+        ]
+      },
+      {
+        "type": "security",
+        "example": "A fraud check flags a browser that claims to be a phone but reports zero touch points.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Helps identify device type",
+      "Part of a fingerprint"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "maxTouchPoints is 0 on no touch hardware, commonly 5 on phones, 10 on tablets and laptops (up to 20 on some)",
+    "TouchEvent constructors exist only on touch capable devices in Chromium; Safari desktop has no TouchEvent",
+    "force is 0 to 1 where hardware supports it; radius may be 0 on devices that do not report contact area",
+    "touchstart and touchmove listeners on window default to passive in Chrome 56 and Safari 11.1 (cannot cancel scroll)",
+    "Cannot read touches outside the page or on the browser UI"
+  ],
+  "scores": {
+    "sensitivity": 2,
+    "utility": 4,
+    "fingerprint_bits": 1,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Gestures",
+      "Mobile games",
+      "Draw and sign pads"
+    ],
+    "abuse": [
+      "Touch device detection in fingerprints",
+      "Touch heat maps"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2017-01",
+      "browser": "chrome",
+      "version": "56",
+      "change": "Document level touch listeners passive by default"
+    },
+    {
+      "date": "2018-03",
+      "browser": "safari",
+      "version": "11.1",
+      "change": "Passive touch listeners default"
+    }
+  ],
+  "related": [
+    "web.input.pointer-events"
+  ],
+  "refs": [
+    {
+      "t": "mdn",
+      "label": "MDN Touch events",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/Touch_events"
+    },
+    {
+      "t": "spec",
+      "label": "W3C Touch Events",
+      "url": "https://www.w3.org/TR/touch-events/"
+    },
+    {
+      "t": "mdn",
+      "label": "MDN maxTouchPoints",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/Navigator/maxTouchPoints"
+    }
+  ],
+  "confidence": "docs"
+}

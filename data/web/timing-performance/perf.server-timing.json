@@ -1,0 +1,229 @@
+{
+  "id": "web.perf.server-timing",
+  "name": "Server-Timing header",
+  "kind": "signal",
+  "group": "timing-performance",
+  "subgroup": "Performance API",
+  "tags": [
+    "Server-Timing",
+    "header",
+    "backend-timing"
+  ],
+  "plain": "Servers send timing metrics to the page through a response header.",
+  "meaning": "Lets a backend or CDN expose database, cache and edge timings to client JavaScript, for monitoring or for leaking server state when cross-origin readable.",
+  "lifecycle": [
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "Server-Timing: db;dur=53, cache;desc=\"hit\"; PerformanceResourceTiming.serverTiming",
+      "bcd": [
+        "api.PerformanceServerTiming",
+        "http.headers.Server-Timing"
+      ],
+      "access": {
+        "grant": "none",
+        "prompt_ui": "",
+        "secure_context": false,
+        "user_gesture": false,
+        "persistence": "",
+        "revocation": "",
+        "iframe": "",
+        "steps": [
+          "Server adds Server-Timing header",
+          "Browser parses into serverTiming entries",
+          "Script reads name, duration, description"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "65",
+          "note": "",
+          "date": "2018-03-06"
+        },
+        "edge": {
+          "s": "y",
+          "v": "79",
+          "note": "",
+          "date": "2020-01-15"
+        },
+        "firefox": {
+          "s": "y",
+          "v": "61",
+          "note": "",
+          "date": "2018-06-26"
+        },
+        "safari": {
+          "s": "y",
+          "v": "16.4",
+          "note": "",
+          "date": "2023-03-27"
+        },
+        "ios_safari": {
+          "s": "y",
+          "v": "16.4",
+          "note": "",
+          "date": "2023-03-27"
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "65",
+          "note": "",
+          "date": "2018-03-06"
+        },
+        "samsung": {
+          "s": "y",
+          "v": "9.0",
+          "note": "",
+          "date": "2018-09-15"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "list",
+    "metric": "Each metric name plus dur in ms",
+    "update": "",
+    "fields": [
+      {
+        "name": "duration",
+        "type": "float",
+        "unit": "ms",
+        "range": "0 to unbounded",
+        "precision": "as sent by server"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can pass timing numbers from the server to page scripts",
+    "user_action": "Nothing. It happens as the page loads",
+    "can": [
+      "Send database, cache and edge time numbers in a response header",
+      "Let page code see those numbers",
+      "Show server details when another site allows other sites to see them"
+    ],
+    "cannot": [
+      "Show you the numbers by itself",
+      "See your files",
+      "Ask permission first",
+      "Show another site's timings without that site's approval"
+    ],
+    "reach": 1,
+    "reach_label": "Server numbers only",
+    "differs": ""
+  },
+  "story": {
+    "what_it_is": "A website's server sends timing numbers to the page, such as how long the database took.",
+    "icon": "server",
+    "tags": [
+      "Speed",
+      "Debugging",
+      "Silent"
+    ],
+    "marketing": [
+      {
+        "vendor": "MDN",
+        "name": "Server-Timing header",
+        "pitch": "Explains how servers can pass timing about their work to the browser for tools and analytics.",
+        "url": "https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Server-Timing"
+      }
+    ],
+    "for_you": "You never see it. When a page loads, the server may say it took 120 ms to look something up. That number goes into the browser tools and helps the team fix slow pages.",
+    "for_makers": "Teams use it to see exactly where a page spends time, in the server, cache or database, right from real visitors. It also lets edge networks report cache hits, so teams can tune them.",
+    "use_cases": [
+      {
+        "type": "shopping",
+        "example": "A retailer sees that a product page waits 400 ms on its stock database, and speeds it up.",
+        "apps": []
+      },
+      {
+        "type": "developer",
+        "example": "A developer reads timing in browser tools to see if a slow page is the server or the network.",
+        "apps": []
+      },
+      {
+        "type": "analytics",
+        "example": "A monitoring service collects server timing from real visitors and charts slow steps.",
+        "apps": [
+          "Datadog RUM",
+          "New Relic"
+        ]
+      },
+      {
+        "type": "news",
+        "example": "A news site learns that its CDN missed the cache for a viral story and fixes the rules.",
+        "apps": [
+          "Cloudflare",
+          "Fastly"
+        ]
+      },
+      {
+        "type": "games",
+        "example": "A game site checks how long the matchmaking call takes before a player joins a lobby.",
+        "apps": []
+      },
+      {
+        "type": "banking",
+        "example": "A bank tracks how long each login step takes on the server to find slow spots.",
+        "apps": []
+      },
+      {
+        "type": "security",
+        "example": "A site sees that server time spikes during an attack and uses the numbers to respond.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Can expose internals",
+      "Seen by scripts on the page"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Cross-origin requires Timing-Allow-Origin",
+    "Not a fingerprint, reveals server side state"
+  ],
+  "scores": {
+    "sensitivity": 1,
+    "utility": 3,
+    "fingerprint_bits": 1,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": "Performance debugging and CDN diagnostics (Cloudflare, Fastly, Vercel)",
+    "abuse": "Server can tag visitors for correlation, cross-origin side channels with TAO"
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2023-03",
+      "browser": "safari",
+      "version": "16.4",
+      "change": "Server-Timing supported"
+    }
+  ],
+  "related": [
+    "web.perf.navigation-resource-timing"
+  ],
+  "refs": [
+    {
+      "t": "mdn",
+      "label": "MDN Server-Timing",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Server-Timing"
+    },
+    {
+      "t": "spec",
+      "label": "W3C Server Timing",
+      "url": "https://www.w3.org/TR/server-timing/"
+    }
+  ],
+  "confidence": "docs"
+}

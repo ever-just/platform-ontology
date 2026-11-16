@@ -1,0 +1,273 @@
+{
+  "id": "web.peripherals.webhid",
+  "name": "WebHID",
+  "kind": "permission",
+  "group": "peripherals-hardware",
+  "subgroup": "HID",
+  "tags": [
+    "hid",
+    "gamepad",
+    "chooser"
+  ],
+  "plain": "Lets a site read and write raw reports from a keyboard, pad or other HID device the person picks.",
+  "meaning": "Gives full access to exotic input hardware (Stream Decks, game controllers, 3D mice, medical devices) beyond what the OS exposes. The device list and report data can identify the hardware and its state.",
+  "lifecycle": [
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "navigator.hid.requestDevice({filters}), getDevices(), device.open(), sendReport(), oninputreport",
+      "permission_name": "hid",
+      "permissions_policy": "hid",
+      "bcd": [
+        "api.HID",
+        "api.HIDDevice",
+        "api.Navigator.hid"
+      ],
+      "access": {
+        "grant": "picker",
+        "prompt_ui": "Chooser listing HID devices that match filters",
+        "secure_context": true,
+        "user_gesture": true,
+        "persistence": "Per origin and device; getDevices() returns granted devices",
+        "revocation": "Site settings, chooser, device.forget() (Chrome 100+)",
+        "iframe": "Needs allow=\"hid\"; workers supported from Chrome 131",
+        "steps": [
+          "Click",
+          "requestDevice() with usagePage/usage filters",
+          "open()",
+          "Listen for inputreport events and call sendReport() or sendFeatureReport()"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "89",
+          "note": "",
+          "date": "2021-03-02"
+        },
+        "edge": {
+          "s": "y",
+          "v": "89",
+          "note": "",
+          "date": "2021-03-04"
+        },
+        "firefox": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "safari": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "ios_safari": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "chrome_android": {
+          "s": "n",
+          "v": "",
+          "note": "No WebHID on Android"
+        },
+        "samsung": {
+          "s": "n",
+          "v": "",
+          "note": "No WebHID on Android"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "stream",
+    "metric": "Raw HID input, output and feature reports",
+    "update": "event per report; device rate (125 to 1000 Hz typical)",
+    "fields": [
+      {
+        "name": "vendorId",
+        "type": "integer",
+        "range": "0 to 65535"
+      },
+      {
+        "name": "productId",
+        "type": "integer",
+        "range": "0 to 65535"
+      },
+      {
+        "name": "productName",
+        "type": "string",
+        "range": "device defined"
+      },
+      {
+        "name": "collections[].usagePage / usage",
+        "type": "integer",
+        "range": "HID usage tables"
+      },
+      {
+        "name": "reportId",
+        "type": "integer",
+        "range": "0 to 255"
+      },
+      {
+        "name": "data",
+        "type": "binary",
+        "unit": "bytes",
+        "range": "report size per descriptor (often 8 to 64)"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can talk to one keyboard, pad or other device you pick from a list",
+    "user_action": "You tap Connect device and pick one from the chooser.",
+    "can": [
+      "Show devices that match what the site asks for",
+      "Get the buttons, keys and sensor data of the one you pick",
+      "Send commands such as lights or settings to it"
+    ],
+    "cannot": [
+      "Use devices you did not pick",
+      "Work with your normal keyboard and mouse, which browsers keep blocked",
+      "Work in Firefox, Safari or on phones",
+      "Keep access after you remove the permission"
+    ],
+    "reach": 2,
+    "reach_label": "One device you pick",
+    "differs": "Only desktop Chrome and Edge support it. Firefox, Safari and phone browsers do not."
+  },
+  "story": {
+    "what_it_is": "A site can read and write raw data from a keyboard, pad or other device you pick.",
+    "icon": "usb",
+    "tags": [
+      "Hardware",
+      "You pick",
+      "Games"
+    ],
+    "marketing": [
+      {
+        "vendor": "Google",
+        "name": "WebHID",
+        "pitch": "Chrome's docs say WebHID lets pages talk to special keyboards, gamepads and other human interface devices.",
+        "url": "https://developer.chrome.com/docs/capabilities/hid"
+      }
+    ],
+    "for_you": "A picker shows devices like a controller or macro pad. You choose one, and the page can use all its special buttons and lights.",
+    "for_makers": "Makers can support odd or high end devices that the standard gamepad tool misses. It is how a web page can set up a keyboard or a PlayStation controller.",
+    "use_cases": [
+      {
+        "type": "games",
+        "example": "A web page reads every button on a PlayStation controller and updates its firmware.",
+        "apps": []
+      },
+      {
+        "type": "creative",
+        "example": "A web page lets you remap keys on a custom keyboard.",
+        "apps": [
+          "VIA",
+          "QMK"
+        ]
+      },
+      {
+        "type": "enterprise",
+        "example": "A web point of sale reads a barcode or card reader.",
+        "apps": []
+      },
+      {
+        "type": "accessibility",
+        "example": "A web app uses a special switch device for people with limited movement.",
+        "apps": []
+      },
+      {
+        "type": "live",
+        "example": "A stream deck style pad controls scenes from a web page.",
+        "apps": [
+          "Elgato"
+        ]
+      },
+      {
+        "type": "security",
+        "example": "A bad page could ask for a keyboard device and read what you type on it, so the picker matters.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Keystroke exposure",
+      "Not on Safari"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Chrome blocks FIDO security keys, and usages for keyboards and mice are blocklisted so a site cannot capture keystrokes",
+    "Not available on Android Chrome, Firefox, Safari",
+    "Needs HTTPS",
+    "Blocklist maintained in Chromium hid_blocklist"
+  ],
+  "scores": {
+    "sensitivity": 4,
+    "utility": 3,
+    "fingerprint_bits": null,
+    "friction": 2
+  },
+  "value": {
+    "legit_uses": [
+      "Game controller remapping",
+      "LED and macro keyboards (VIA, QMK)",
+      "Lab and medical hardware"
+    ],
+    "abuse": [
+      "Hardware fingerprinting after one grant",
+      "Social engineering around a fake device setup"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2021-03",
+      "browser": "chrome",
+      "version": "89",
+      "change": "WebHID ships on desktop Chrome and Edge"
+    },
+    {
+      "date": "2022-01",
+      "browser": "chrome",
+      "version": "100",
+      "change": "device.forget()"
+    },
+    {
+      "date": "2024-11",
+      "browser": "chrome",
+      "version": "131",
+      "change": "WebHID in dedicated and shared workers"
+    }
+  ],
+  "related": [
+    "web.peripherals.webusb",
+    "web.peripherals.gamepad"
+  ],
+  "refs": [
+    {
+      "t": "mdn",
+      "label": "MDN WebHID API",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/WebHID_API"
+    },
+    {
+      "t": "spec",
+      "label": "WebHID spec",
+      "url": "https://wicg.github.io/webhid/"
+    },
+    {
+      "t": "vendor",
+      "label": "Chrome WebHID guide",
+      "url": "https://developer.chrome.com/docs/capabilities/hid"
+    }
+  ],
+  "confidence": "verified"
+}

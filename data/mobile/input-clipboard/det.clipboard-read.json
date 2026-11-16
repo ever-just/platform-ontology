@@ -1,0 +1,268 @@
+{
+  "id": "mob.det.clipboard-read",
+  "name": "Clipboard read",
+  "kind": "signal",
+  "group": "input-clipboard",
+  "subgroup": "Clipboard",
+  "tags": [
+    "clipboard",
+    "paste-prompt",
+    "privacy-toast",
+    "paste",
+    "universal-clipboard",
+    "notice"
+  ],
+  "plain": "Android shows a toast on read; iOS 16 asks Allow Paste; reading the change count is silent.",
+  "meaning": "Clipboards hold passwords, 2FA codes and crypto addresses. Both OSes added visible signals so silent reads stop.",
+  "lifecycle": [
+    "on-launch",
+    "in-session"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "y",
+      "v": "10",
+      "api": 29,
+      "permission": "",
+      "protection": "none",
+      "grant": "none",
+      "prompt_ui": "Android 12 shows a toast when another app's clip is read",
+      "persistence": "n/a",
+      "revocation": "No setting; keep sensitive text flagged",
+      "store_policy": "",
+      "api_surface": "ClipboardManager.getPrimaryClip(); ClipDescription.EXTRA_IS_SENSITIVE (API 33)",
+      "note": "Foreground only since 10; toast on read since Android 12; sensitive flag hides content in previews (Android 13)"
+    },
+    "ios": {
+      "s": "p",
+      "v": "14.0",
+      "permission": "prompt",
+      "protection": "prompt",
+      "grant": "none",
+      "prompt_ui": "Paste banner (iOS 14); Allow Paste prompt (iOS 16)",
+      "persistence": "Settings > Apps > Paste from Other Apps",
+      "revocation": "App Review: no silent reads",
+      "store_policy": "App Review 5.1.1",
+      "api_surface": "iOS 14 paste banner; iOS 16 Allow Paste prompt; changeCount readable with no prompt",
+      "note": "Silent reads from other apps are now announced"
+    }
+  },
+  "web_equivalents": [
+    "web.input.clipboard-read"
+  ],
+  "data": {
+    "type": "string",
+    "metric": "Clipboard text",
+    "update": "On read",
+    "fields": [
+      {
+        "name": "text",
+        "type": "string",
+        "unit": "",
+        "range": "up to MBs",
+        "precision": "exact"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can see what you copied while the app is open, and you may get a notice",
+    "user_action": "You tap Paste, or the app checks your clipboard when it opens",
+    "can": [
+      "Look at the text or link you last copied while the app is in front",
+      "Check whether the clipboard changed, silently, on iPhone",
+      "Auto fill a copied code or link into a field"
+    ],
+    "cannot": [
+      "See the clipboard while the app is in the background (Android 10 and newer)",
+      "Do it unnoticed: Android 12 and newer shows a toast, and iOS 16 and newer asks Allow Paste",
+      "Show hidden contents in previews when the copied item is marked sensitive (Android 13)",
+      "See copies from other apps on iPhone without your Allow Paste choice"
+    ],
+    "reach": 2,
+    "reach_label": "What you last copied, while open",
+    "differs": "Android shows a small toast. iPhone asks Allow Paste from iOS 16, though a paste button skips the prompt. The change counter can be checked without any prompt."
+  },
+  "story": {
+    "what_it_is": "An app reads what you last copied, and the phone may or may not tell you.",
+    "icon": "clipboard",
+    "tags": [
+      "Clipboard",
+      "Privacy",
+      "Silent"
+    ],
+    "marketing": [
+      {
+        "vendor": "Apple",
+        "name": "Paste permission alert",
+        "pitch": "iOS 16 asks before an app reads what you copied from another app, to protect your privacy.",
+        "url": "https://developer.apple.com/documentation/uikit/uipasteboard"
+      },
+      {
+        "vendor": "Google",
+        "name": "Clipboard access toast",
+        "pitch": "Android 12 shows a short message when an app reads the clipboard.",
+        "url": "https://developer.android.com/develop/ui/views/touch-and-input/copy-paste"
+      }
+    ],
+    "for_you": "You copy a code, a password or a link, and any app may peek at it. Today you may see a small message when an app does. Reading only the change count, which tells an app that something new was copied, stays invisible.",
+    "for_makers": "Makers use paste to fill a code or link and make flows smooth. Bad actors have used it to grab crypto addresses and passwords. Platforms added alerts after many apps were caught reading it on launch.",
+    "use_cases": [
+      {
+        "type": "messaging",
+        "example": "A chat app sees a copied invite link and offers to open the group straight away.",
+        "apps": [
+          "WhatsApp",
+          "Telegram"
+        ]
+      },
+      {
+        "type": "payments",
+        "example": "A bank app fills in a one time code you just copied from a text message.",
+        "apps": []
+      },
+      {
+        "type": "shopping",
+        "example": "A shopping app spots a copied product link and offers to show the price.",
+        "apps": []
+      },
+      {
+        "type": "games",
+        "example": "A game notices a copied friend code and adds the friend in one tap.",
+        "apps": []
+      },
+      {
+        "type": "security",
+        "example": "A malicious app swaps a copied crypto wallet address for the thief's address.",
+        "apps": []
+      },
+      {
+        "type": "ads",
+        "example": "An ad SDK reads the copied text to learn what you are interested in, which regulators call abuse.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Copied passwords exposed",
+      "Crypto address swap"
+    ],
+    "android_note": "Android 12 and later show a toast when another app reads your clipboard, but there is no prompt to block it.",
+    "ios_note": "iPhone shows an Allow Paste prompt for paste from other apps, and apps can read the change count without a prompt."
+  },
+  "technical_bounds": [
+    "Foreground only on both platforms",
+    "Can only be read while foregrounded"
+  ],
+  "scores": {
+    "sensitivity": 5,
+    "utility": 3,
+    "fingerprint_bits": 1,
+    "friction": 2
+  },
+  "value": {
+    "legit_uses": [
+      "Paste codes"
+    ],
+    "abuse": [
+      "Steal crypto addresses and passwords"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": true,
+      "how": "July 2020: iOS 14 beta banners showed LinkedIn's iPhone and iPad apps reading the clipboard after each keystroke. VP Engineering Erran Berger said the app only compared clipboard text with the typed text, stored and sent nothing, and a fix was submitted. Bauer v. LinkedIn (N.D. Cal., 5:20-cv-04599) was filed 10 July 2020; outcome unverified."
+    }
+  },
+  "history": [
+    {
+      "date": "2022-09",
+      "platform": "ios",
+      "version": "iOS 16",
+      "change": "Allow Paste prompt"
+    },
+    {
+      "date": "2022-09",
+      "platform": "ios",
+      "version": "iOS 16",
+      "change": "Allow Paste prompt for cross-app pastes"
+    },
+    {
+      "date": "2022-08",
+      "platform": "android",
+      "version": "13 (API 33)",
+      "change": "Sensitive clip flag"
+    },
+    {
+      "date": "2021-10",
+      "platform": "android",
+      "version": "12 (API 31)",
+      "change": "Toast shown on clipboard read"
+    },
+    {
+      "date": "2021-10",
+      "platform": "android",
+      "version": "12 (API 31)",
+      "change": "Toast when an app reads another app's clip"
+    },
+    {
+      "date": "2020-09",
+      "platform": "ios",
+      "version": "iOS 14",
+      "change": "Paste banner and detectPatterns"
+    },
+    {
+      "date": "2020-09",
+      "platform": "ios",
+      "version": "iOS 14",
+      "change": "Paste banner exposed apps reading the clipboard on launch"
+    },
+    {
+      "date": "2019-09",
+      "platform": "android",
+      "version": "10 (API 29)",
+      "change": "Background clipboard read blocked"
+    },
+    {
+      "date": "2019-09",
+      "platform": "android",
+      "version": "10 (API 29)",
+      "change": "Only focused app or default keyboard can read clipboard"
+    }
+  ],
+  "related": [
+    "mob.device.identifiers"
+  ],
+  "refs": [
+    {
+      "t": "android",
+      "label": "Android: ClipboardManager",
+      "url": "https://developer.android.com/reference/android/content/ClipboardManager"
+    },
+    {
+      "t": "apple",
+      "label": "Apple: UIPasteboard",
+      "url": "https://developer.apple.com/documentation/uikit/uipasteboard"
+    },
+    {
+      "t": "android",
+      "label": "Android 12 behavior changes",
+      "url": "https://developer.android.com/about/versions/12/behavior-changes-12"
+    },
+    {
+      "t": "android",
+      "label": "Android 13 behavior changes",
+      "url": "https://developer.android.com/about/versions/13/behavior-changes-13"
+    },
+    {
+      "t": "android",
+      "label": "Android: Copy and paste",
+      "url": "https://developer.android.com/develop/ui/views/touch-and-input/copy-paste"
+    },
+    {
+      "t": "news",
+      "label": "The Register: LinkedIn sued over iOS clipboard reads (2020)",
+      "url": "https://www.theregister.com/2020/07/13/linkedin_lawsuit/"
+    }
+  ],
+  "confidence": "verified"
+}

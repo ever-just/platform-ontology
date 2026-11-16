@@ -1,0 +1,231 @@
+{
+  "id": "web.ai.webnn",
+  "name": "WebNN (neural network API)",
+  "kind": "capability",
+  "group": "on-device-ai",
+  "subgroup": "Compute",
+  "tags": [
+    "compute"
+  ],
+  "plain": "Runs machine learning models on the device's NPU, GPU or CPU.",
+  "meaning": "Lets a page run AI locally. Reveals hardware class through speed and supported ops.",
+  "lifecycle": [
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "navigator.ml.createContext(); builder.build(); context.dispatch()",
+      "bcd": [
+        "api.Navigator.ml"
+      ],
+      "access": {
+        "grant": "origin-trial",
+        "prompt_ui": "Origin trial in Chrome and Edge",
+        "secure_context": true,
+        "user_gesture": true,
+        "persistence": "Per origin",
+        "revocation": "Site settings",
+        "iframe": "Same as top level; cross-origin iframes need a permissions policy where listed",
+        "steps": [
+          "Call the API",
+          "Browser applies its access rules",
+          "Page receives the result"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "f",
+          "v": "112",
+          "note": "Behind flag. "
+        },
+        "edge": {
+          "s": "f",
+          "v": "112",
+          "note": "Behind flag. "
+        },
+        "firefox": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "safari": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "ios_safari": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "chrome_android": {
+          "s": "f",
+          "v": "112",
+          "note": "Behind flag. "
+        },
+        "samsung": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "object",
+    "metric": "Runs machine learning models on the device's NPU, GPU or CPU.",
+    "update": "on demand",
+    "fields": [
+      {
+        "name": "deviceType",
+        "type": "enum",
+        "range": "cpu, gpu, npu"
+      },
+      {
+        "name": "powerPreference",
+        "type": "enum",
+        "range": "default, high-performance, low-power"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can run AI models on your device's chips, but only in Chrome and Edge testing",
+    "user_action": "Nothing. It happens when a page in the trial loads an AI feature",
+    "can": [
+      "Run AI models on your device's AI chip, graphics chip or main chip",
+      "Tell your hardware class from speed and supported steps",
+      "Keep the work on your device"
+    ],
+    "cannot": [
+      "Work for most visitors, since it is only an origin trial",
+      "Work in Firefox, Safari or on iPhone",
+      "Work on Samsung Internet",
+      "Skip browser limits that guard your device"
+    ],
+    "reach": 2,
+    "reach_label": "Your chips, in testing only",
+    "differs": "Only Chrome and Edge, in a testing trial. Not in Firefox, Safari or on phones."
+  },
+  "story": {
+    "what_it_is": "A page can run AI models using your device's AI chip, graphics chip or processor.",
+    "icon": "brain-circuit",
+    "tags": [
+      "AI",
+      "On device",
+      "Performance"
+    ],
+    "marketing": [
+      {
+        "vendor": "W3C",
+        "name": "Web Neural Network API",
+        "pitch": "A standard that lets web apps run machine learning models fast on the device's best chip.",
+        "url": "https://www.w3.org/TR/webnn/"
+      }
+    ],
+    "for_you": "You never see a prompt. Features like background blur, noise removal and photo effects run faster and use less battery. Everything stays on your device.",
+    "for_makers": "Makers use it to run image, audio and language models locally with chip speed. It cuts server costs and keeps data private. It is in testing, so it is not widely available.",
+    "use_cases": [
+      {
+        "type": "video",
+        "example": "A video call blurs your background and cancels noise using the AI chip, with low battery use.",
+        "apps": [
+          "Google Meet",
+          "Microsoft Teams"
+        ]
+      },
+      {
+        "type": "games",
+        "example": "A browser game uses a model to upscale graphics or run smart opponents on the device.",
+        "apps": []
+      },
+      {
+        "type": "creative",
+        "example": "A web photo editor removes a background in a second using the AI chip.",
+        "apps": []
+      },
+      {
+        "type": "accessibility",
+        "example": "A captions tool turns speech to text live on your device.",
+        "apps": []
+      },
+      {
+        "type": "security",
+        "example": "A site detects faces for login on the device, with no photo upload.",
+        "apps": []
+      },
+      {
+        "type": "shopping",
+        "example": "A virtual try on page runs a body or face model locally.",
+        "apps": []
+      },
+      {
+        "type": "developer",
+        "example": "A developer ships one model that picks the fastest chip on each device.",
+        "apps": []
+      },
+      {
+        "type": "education",
+        "example": "A study tool reads handwriting from a photo offline.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "In testing",
+      "Device details leak"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Flag only in BCD (112)",
+    "Android excluded from trial"
+  ],
+  "scores": {
+    "sensitivity": 1,
+    "utility": 3,
+    "fingerprint_bits": 3,
+    "friction": 3
+  },
+  "value": {
+    "legit_uses": [
+      "Local ML inference"
+    ],
+    "abuse": [
+      "Hardware fingerprint"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2026-02",
+      "browser": "chrome",
+      "version": "146",
+      "change": "Origin trial begins (paused after release blockers; window M147 to M149)"
+    },
+    {
+      "date": "2026-01",
+      "browser": "chrome",
+      "version": "",
+      "change": "W3C Candidate Recommendation updated 22 Jan 2026"
+    }
+  ],
+  "refs": [
+    {
+      "t": "spec",
+      "label": "WebNN",
+      "url": "https://www.w3.org/TR/webnn/"
+    },
+    {
+      "t": "mdn",
+      "label": "MDN ML",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/ML"
+    }
+  ],
+  "confidence": "docs"
+}

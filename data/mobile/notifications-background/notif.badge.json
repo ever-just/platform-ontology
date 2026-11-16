@@ -1,0 +1,204 @@
+{
+  "id": "mob.notif.badge",
+  "name": "App icon badge count",
+  "kind": "capability",
+  "group": "notifications-background",
+  "subgroup": "Permission and presentation",
+  "tags": [
+    "badge",
+    "notifications",
+    "launcher"
+  ],
+  "plain": "Shows an unread number on the app icon.",
+  "meaning": "A constant nudge to re-open the app. iOS needs alert-style permission for badges; Android launchers derive badges from active notifications, not from a number the app can set.",
+  "lifecycle": [
+    "background"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "p",
+      "v": "8.0",
+      "api": 26,
+      "permission": "",
+      "protection": "none",
+      "grant": "none",
+      "prompt_ui": "Launcher dot or count from notifications",
+      "persistence": "Disappears when notifications are cleared",
+      "revocation": "Settings > Notifications > Allow notification dot",
+      "store_policy": "",
+      "api_surface": "NotificationChannel.setShowBadge(), Notification.setNumber()",
+      "note": "Vendor extensions (Samsung, Xiaomi) differ"
+    },
+    "ios": {
+      "s": "y",
+      "v": "1.0",
+      "permission": "UNAuthorizationOptions.badge",
+      "protection": "prompt",
+      "grant": "prompt",
+      "prompt_ui": "Badges toggle in the permission prompt",
+      "persistence": "Until cleared or revoked",
+      "revocation": "Settings > Notifications > Badges",
+      "store_policy": "App Review 4.5.4: no numbers for ads",
+      "api_surface": "UNUserNotificationCenter.setBadgeCount (iOS 16)",
+      "note": "setBadgeCount replaced applicationIconBadgeNumber"
+    }
+  },
+  "web_equivalents": [
+    "web.notify.badging"
+  ],
+  "data": {
+    "type": "integer",
+    "metric": "Badge number",
+    "update": "Server or app set",
+    "fields": [
+      {
+        "name": "count",
+        "type": "integer",
+        "unit": "",
+        "range": "0 to a large integer",
+        "precision": "exact"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can show a number on the app icon, if you allow badges",
+    "user_action": "You allow notifications and the Badges switch when the app asks",
+    "can": [
+      "Show a count of unread items on the icon",
+      "Clear or change the count when you open the app",
+      "Show a dot or count on the Android icon, depending on your launcher"
+    ],
+    "cannot": [
+      "Show a badge on iPhone if you turned Badges off",
+      "Show exactly the same way on every Android launcher; Samsung and Xiaomi differ",
+      "Tell the app anything about you; it only shows a number"
+    ],
+    "reach": 1,
+    "reach_label": "A single number on the icon",
+    "differs": "iPhone has a Badges toggle in the permission prompt. Android shows a dot or count that depends on the launcher."
+  },
+  "story": {
+    "what_it_is": "The little red number on an app icon that shows unread items.",
+    "icon": "bell-dot",
+    "tags": [
+      "Notifications",
+      "Nudge",
+      "Home screen"
+    ],
+    "marketing": [
+      {
+        "vendor": "Apple",
+        "name": "Badges",
+        "pitch": "Apple lets apps show a number on the icon to tell you something new is waiting, if you allow it.",
+        "url": "https://developer.apple.com/documentation/usernotifications/unusernotificationcenter/setbadgecount(_:withcompletionhandler:)"
+      }
+    ],
+    "for_you": "You see a number or dot on the icon and feel the urge to clear it. It tells you something is waiting without a sound.",
+    "for_makers": "Makers know a red badge is one of the strongest nudges to reopen an app. It lifts daily use, so some apps are accused of making badges that never go away.",
+    "use_cases": [
+      {
+        "type": "messaging",
+        "example": "Your chat app shows 12 on the icon so you see how many messages you missed.",
+        "apps": [
+          "WhatsApp",
+          "Slack"
+        ]
+      },
+      {
+        "type": "social",
+        "example": "A social app shows a count of likes and follows to pull you back.",
+        "apps": [
+          "Instagram",
+          "Facebook"
+        ]
+      },
+      {
+        "type": "productivity",
+        "example": "An email app shows unread messages so you can triage from the home screen.",
+        "apps": [
+          "Gmail",
+          "Outlook"
+        ]
+      },
+      {
+        "type": "shopping",
+        "example": "A shopping app shows a dot when a wishlist item goes on sale.",
+        "apps": [
+          "Amazon"
+        ]
+      },
+      {
+        "type": "games",
+        "example": "A game shows a badge when a free daily gift is ready to collect.",
+        "apps": [
+          "Pokemon GO",
+          "Candy Crush"
+        ]
+      },
+      {
+        "type": "ads",
+        "example": "A growth team tests badge counts to see what brings back lapsed users.",
+        "apps": []
+      },
+      {
+        "type": "banking",
+        "example": "A bank app shows a dot for a new statement or security notice.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "A nagging nudge",
+      "Can pressure you to keep checking"
+    ],
+    "android_note": "Android launchers show a dot or count taken from active notifications, not a number the app sets.",
+    "ios_note": "iOS needs you to allow badges in the permission prompt."
+  },
+  "technical_bounds": [
+    "Cannot be set directly on stock Android"
+  ],
+  "scores": {
+    "sensitivity": 1,
+    "utility": 2,
+    "fingerprint_bits": null,
+    "friction": 2
+  },
+  "value": {
+    "legit_uses": [
+      "Unread count"
+    ],
+    "abuse": [
+      "Dark pattern nagging"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2022-09",
+      "platform": "ios",
+      "version": "iOS 16",
+      "change": "setBadgeCount(_:) added; applicationIconBadgeNumber deprecated"
+    }
+  ],
+  "related": [
+    "mob.notifications.post-notifications"
+  ],
+  "refs": [
+    {
+      "t": "apple",
+      "label": "Apple: UNUserNotificationCenter.setBadgeCount",
+      "url": "https://developer.apple.com/documentation/usernotifications/unusernotificationcenter/setbadgecount(_:withcompletionhandler:)"
+    },
+    {
+      "t": "android",
+      "label": "Android: Notification badge",
+      "url": "https://developer.android.com/develop/ui/views/notifications/badges"
+    }
+  ],
+  "confidence": "docs"
+}

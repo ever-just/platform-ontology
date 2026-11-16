@@ -1,0 +1,252 @@
+{
+  "id": "web.xsite.service-worker-lifetime",
+  "name": "Service worker lifetime",
+  "kind": "capability",
+  "group": "notifications-background",
+  "subgroup": "After leaving",
+  "tags": [
+    "service-worker",
+    "lifetime",
+    "offline",
+    "background"
+  ],
+  "plain": "A background script registered by a site that persists after the tab is closed.",
+  "meaning": "It can intercept every request, serve cached content, and wake for push or sync even when no page is open. The browser stops it after about 30 seconds idle, but the registration stays until cleared. Safari deletes it after 7 days of non use.",
+  "lifecycle": [
+    "after-leaving",
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "navigator.serviceWorker.register(url)",
+      "bcd": [
+        "api.ServiceWorkerContainer.register"
+      ],
+      "access": {
+        "grant": "none",
+        "prompt_ui": "None",
+        "secure_context": true,
+        "user_gesture": false,
+        "persistence": "Registration persists with no fixed expiry. Script checked for update at most every 24 hours. Idle stop after about 30 s (Chrome)",
+        "revocation": "Clear site data, browser privacy settings",
+        "iframe": "",
+        "steps": []
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "40",
+          "note": "",
+          "date": "2015-01-21"
+        },
+        "edge": {
+          "s": "y",
+          "v": "17",
+          "note": "",
+          "date": "2018-04-30"
+        },
+        "firefox": {
+          "s": "y",
+          "v": "44",
+          "note": "",
+          "date": "2016-01-26"
+        },
+        "safari": {
+          "s": "y",
+          "v": "11.1",
+          "note": "",
+          "date": "2018-04-12"
+        },
+        "ios_safari": {
+          "s": "y",
+          "v": "11.3",
+          "note": "",
+          "date": "2018-03-29"
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "40",
+          "note": "",
+          "date": "2015-01-21"
+        },
+        "samsung": {
+          "s": "y",
+          "v": "4.0",
+          "note": "",
+          "date": "2016-03-11"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "object",
+    "metric": "Registration and cache",
+    "update": "persists across visits",
+    "fields": [
+      {
+        "name": "idle_stop",
+        "type": "integer",
+        "unit": "seconds",
+        "range": "about 30",
+        "precision": "approximate"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can keep a background helper script for a site that stays after you close the tab",
+    "user_action": "Nothing. It is set up the first time you visit a site that uses one",
+    "can": [
+      "Intercept the site's own requests and serve saved copies",
+      "Wake for push or sync when you allow them",
+      "Keep the helper registered until you clear it or the site removes it",
+      "Make a site load fast and work offline"
+    ],
+    "cannot": [
+      "See other sites' requests or data, since it is limited to the one site",
+      "Stay running, as the browser stops it after about 30 seconds idle",
+      "Last in Safari beyond 7 days without a visit",
+      "Survive when you clear that site's data"
+    ],
+    "reach": 3,
+    "reach_label": "Registered until cleared",
+    "differs": "Safari deletes a site's helper after 7 days without use. Chrome, Edge and Firefox keep it until cleared."
+  },
+  "story": {
+    "what_it_is": "A background script a site installs, which stays on your device after you close the tab.",
+    "icon": "server",
+    "tags": [
+      "Background",
+      "Silent",
+      "Offline"
+    ],
+    "marketing": [
+      {
+        "vendor": "WebKit",
+        "name": "Tracking prevention",
+        "pitch": "Safari limits how long background scripts and site data can live for sites you do not use.",
+        "url": "https://webkit.org/tracking-prevention/"
+      }
+    ],
+    "for_you": "You never see it. A site you visited can leave a small helper that makes it load faster and work offline. It can also stay around for a long time unless the browser clears it.",
+    "for_makers": "Makers use it for offline, caching, push and fast loads. It acts like a tiny server on your device. It can also keep an identity link or run tracking code, so browsers limit its lifetime.",
+    "use_cases": [
+      {
+        "type": "news",
+        "example": "A news site caches pages so you can read offline on a plane.",
+        "apps": [
+          "The Guardian"
+        ]
+      },
+      {
+        "type": "games",
+        "example": "A browser game caches its files, so it starts in a second the next time and works offline.",
+        "apps": []
+      },
+      {
+        "type": "productivity",
+        "example": "A web editor like Google Docs keeps its code locally so it opens fast and works offline.",
+        "apps": [
+          "Google Docs"
+        ]
+      },
+      {
+        "type": "shopping",
+        "example": "A store caches its catalog so browsing feels instant on a weak signal.",
+        "apps": [
+          "AliExpress"
+        ]
+      },
+      {
+        "type": "ads",
+        "example": "An ad or tracking script installs a helper to survive cookie clearing and measure visits later.",
+        "apps": []
+      },
+      {
+        "type": "messaging",
+        "example": "A web chat uses a helper to receive push messages when the tab is closed.",
+        "apps": []
+      },
+      {
+        "type": "security",
+        "example": "A malicious site installs a helper that keeps showing spam alerts after you leave.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Persists after leaving",
+      "Can hide tracking"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Idle termination about 30 s, single event up to about 5 min (Chrome)",
+    "HTTPS only",
+    "Same origin scope",
+    "Safari 7 day cap on registrations without user visit",
+    "Cleared by Clear site data"
+  ],
+  "scores": {
+    "sensitivity": 3,
+    "utility": 5,
+    "fingerprint_bits": null,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Offline apps, push, performance"
+    ],
+    "abuse": [
+      "Persistent hidden request interception, tracker caching"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2015-01",
+      "browser": "chrome",
+      "version": "40",
+      "change": "Shipped"
+    },
+    {
+      "date": "2018-03",
+      "browser": "safari",
+      "version": "11.1",
+      "change": "Shipped in Safari"
+    },
+    {
+      "date": "2020-03",
+      "browser": "safari",
+      "version": "13.1",
+      "change": "ITP 7 day storage cap covers registrations"
+    }
+  ],
+  "related": [
+    "web.xsite.background-wake-apis",
+    "web.storage.cache-storage"
+  ],
+  "refs": [
+    {
+      "t": "mdn",
+      "label": "MDN Service Worker API",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/Service_Worker_API"
+    },
+    {
+      "t": "spec",
+      "label": "Service Workers spec",
+      "url": "https://w3c.github.io/ServiceWorker/"
+    },
+    {
+      "t": "webkit",
+      "label": "WebKit Tracking Prevention",
+      "url": "https://webkit.org/tracking-prevention/"
+    }
+  ],
+  "confidence": "docs"
+}

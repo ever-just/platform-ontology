@@ -1,0 +1,265 @@
+{
+  "id": "mob.hw.ble-central",
+  "name": "Bluetooth LE scan and connect",
+  "kind": "permission",
+  "group": "peripherals-hardware",
+  "subgroup": "Bluetooth",
+  "tags": [
+    "ble",
+    "nearby-devices",
+    "runtime-permission",
+    "gatt"
+  ],
+  "plain": "Scans for nearby BLE devices and connects to read or write their data.",
+  "meaning": "Shows which gadgets, wearables, trackers and beacons are near the person. Scan results and device names can act as an indoor location or an identity of what the person owns.",
+  "lifecycle": [
+    "in-session",
+    "background"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "y",
+      "v": "4.3",
+      "api": 18,
+      "permission": "BLUETOOTH_SCAN, BLUETOOTH_CONNECT (API 31); before that BLUETOOTH, BLUETOOTH_ADMIN plus location",
+      "protection": "dangerous",
+      "grant": "prompt",
+      "prompt_ui": "Nearby devices prompt (Android 12+); location prompt before that",
+      "persistence": "Until revoked; auto-reset if unused for months",
+      "revocation": "Settings > Apps > Permissions > Nearby devices",
+      "store_policy": "Play: no special declaration; neverForLocation flag lets a scan app skip the location link",
+      "api_surface": "BluetoothLeScanner, BluetoothGatt, CompanionDeviceManager",
+      "note": "Android 12 stopped requiring location for BLE scans if the manifest says neverForLocation."
+    },
+    "ios": {
+      "s": "y",
+      "v": "5.0",
+      "permission": "NSBluetoothAlwaysUsageDescription",
+      "protection": "prompt",
+      "grant": "prompt",
+      "prompt_ui": "Allow app to find and connect to Bluetooth accessories? (Allow / Don't Allow)",
+      "persistence": "Until revoked",
+      "revocation": "Settings > Privacy & Security > Bluetooth",
+      "store_policy": "App Review 5.1.1: purpose string required",
+      "api_surface": "CoreBluetooth CBCentralManager",
+      "note": "Since iOS 13 the prompt is per app. Scan results for unknown apps are rate limited in the background and need explicit service UUID filters."
+    }
+  },
+  "web_equivalents": [
+    "web.peripherals.web-bluetooth",
+    "web.notexposed.bluetooth-nearby"
+  ],
+  "data": {
+    "type": "list",
+    "metric": "Advertisement and GATT data",
+    "update": "continuous while scanning",
+    "fields": [
+      {
+        "name": "rssi",
+        "type": "integer",
+        "unit": "dBm",
+        "range": "-100 to 0",
+        "precision": "1 dBm"
+      },
+      {
+        "name": "advertising data",
+        "type": "binary",
+        "unit": "bytes",
+        "range": "31 bytes legacy, 255 extended (BLE 5)",
+        "precision": "raw"
+      },
+      {
+        "name": "device address",
+        "type": "string",
+        "unit": "MAC",
+        "range": "random and rotating on both OS",
+        "precision": "iOS shows only a per-app UUID"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can find and connect to nearby Bluetooth gadgets once you allow Bluetooth",
+    "user_action": "You tap Connect to device or Scan for gadgets",
+    "can": [
+      "Scan for nearby Bluetooth LE devices such as wearables, trackers and beacons",
+      "Connect to a device and exchange data with it",
+      "See device names, which can hint at what you own",
+      "Guess rough indoor position from nearby beacons"
+    ],
+    "cannot": [
+      "Scan before you answer the Bluetooth prompt",
+      "Scan freely in the background on iPhone; scans must name services and are rate limited",
+      "Learn your location from scans on Android 12 and later when the app declares it does not use them for location"
+    ],
+    "reach": 2,
+    "reach_label": "Nearby gadgets, while you use it",
+    "differs": "iPhone shows one Bluetooth prompt per app; Android 12 and later shows Nearby devices, and older Android also needed location."
+  },
+  "story": {
+    "what_it_is": "Lets an app scan for nearby Bluetooth LE gadgets and connect to read or send data.",
+    "icon": "bluetooth",
+    "tags": [
+      "Bluetooth",
+      "Nearby",
+      "Gadgets"
+    ],
+    "marketing": [
+      {
+        "vendor": "Google",
+        "name": "Bluetooth Low Energy",
+        "pitch": "Connect Android to low power devices like heart rate bands and sensors.",
+        "url": "https://developer.android.com/develop/connectivity/bluetooth/ble/ble-overview"
+      },
+      {
+        "vendor": "Apple",
+        "name": "Core Bluetooth",
+        "pitch": "Talk to low energy Bluetooth gadgets from your iPhone or iPad app.",
+        "url": "https://developer.apple.com/documentation/corebluetooth"
+      }
+    ],
+    "for_you": "The app asks to find nearby Bluetooth devices. If you say yes, it can connect to your heart band, lock or tracker. The phone shows a small dot or icon when it is scanning.",
+    "for_makers": "This is the gateway for every smart gadget the maker sells. Without it, the hardware is useless. Scans can also show which gadgets and beacons are around, which is helpful for stores and risky for privacy.",
+    "use_cases": [
+      {
+        "type": "fitness",
+        "example": "A heart rate strap streams your pulse live to a cycling app during a ride.",
+        "apps": [
+          "Strava",
+          "Peloton"
+        ]
+      },
+      {
+        "type": "health",
+        "example": "A medical device sends glucose readings to a diabetes app every few minutes.",
+        "apps": [
+          "Dexcom"
+        ]
+      },
+      {
+        "type": "smart-home",
+        "example": "A smart lock opens when you walk up and the app connects in the background.",
+        "apps": [
+          "August"
+        ]
+      },
+      {
+        "type": "games",
+        "example": "A party game uses nearby phones as controllers or a toy robot connects over Bluetooth.",
+        "apps": [
+          "Sphero"
+        ]
+      },
+      {
+        "type": "shopping",
+        "example": "A store app picks up a beacon at the shoe aisle and shows a coupon.",
+        "apps": [
+          "Target"
+        ]
+      },
+      {
+        "type": "utilities",
+        "example": "A tracker finder app scans for lost keys.",
+        "apps": [
+          "Tile"
+        ]
+      },
+      {
+        "type": "analytics",
+        "example": "A store counts how many phones walk by, which is a form of foot traffic measurement.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Maps the gadgets near you",
+      "Location by the back door",
+      "Rogue devices"
+    ],
+    "android_note": "Android 12 no longer needs location for BLE scans if the app promises it will not use them to find you.",
+    "ios_note": "On iOS the prompt is per app. Background scans must name the device type they look for and are rate limited."
+  },
+  "technical_bounds": [
+    "Background scans must filter by service UUID on iOS",
+    "Android 8+ throttles background scans (about 5 starts in 30 seconds)",
+    "Hardware MAC addresses are hidden from apps on iOS and randomized on Android"
+  ],
+  "scores": {
+    "sensitivity": 4,
+    "utility": 5,
+    "fingerprint_bits": 6,
+    "friction": 2
+  },
+  "value": {
+    "legit_uses": [
+      "Fitness bands",
+      "Smart locks",
+      "Medical devices",
+      "Item finders"
+    ],
+    "abuse": [
+      "Scanning for nearby phones or tags to build a presence trail",
+      "Beacon based store tracking"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": true,
+      "how": "LinkedIn Android and iOS apps declare Bluetooth for headsets and Nearby features (seed research)"
+    }
+  },
+  "history": [
+    {
+      "date": "2012-10",
+      "platform": "android",
+      "version": "4.3 (API 18)",
+      "change": "BLE central role added"
+    },
+    {
+      "date": "2013-09",
+      "platform": "ios",
+      "version": "iOS 7",
+      "change": "Background BLE scanning limited to apps that list service UUIDs"
+    },
+    {
+      "date": "2019-09",
+      "platform": "ios",
+      "version": "iOS 13",
+      "change": "Bluetooth permission prompt added; apps can no longer scan silently"
+    },
+    {
+      "date": "2021-10",
+      "platform": "android",
+      "version": "12 (API 31)",
+      "change": "BLUETOOTH_SCAN, BLUETOOTH_CONNECT, BLUETOOTH_ADVERTISE replace the old permissions and the location link"
+    },
+    {
+      "date": "2024-09",
+      "platform": "ios",
+      "version": "iOS 18",
+      "change": "AccessorySetupKit offers a picker that avoids the broad Bluetooth prompt"
+    }
+  ],
+  "related": [
+    "mob.hw.accessory-setup",
+    "mob.peripherals.ble-advertise",
+    "mob.hw.bluetooth-classic"
+  ],
+  "refs": [
+    {
+      "t": "android",
+      "label": "Android: Bluetooth permissions",
+      "url": "https://developer.android.com/develop/connectivity/bluetooth/bt-permissions"
+    },
+    {
+      "t": "apple",
+      "label": "Apple: Core Bluetooth",
+      "url": "https://developer.apple.com/documentation/corebluetooth"
+    },
+    {
+      "t": "apple",
+      "label": "Apple: Core Bluetooth background execution modes",
+      "url": "https://developer.apple.com/library/archive/documentation/NetworkingInternetWeb/Conceptual/CoreBluetooth_concepts/CoreBluetoothBackgroundProcessingForIOSApps/PerformingTasksWhileYourAppIsInTheBackground.html"
+    }
+  ],
+  "confidence": "verified"
+}

@@ -1,0 +1,216 @@
+{
+  "id": "mob.files.photo-picker",
+  "name": "Photo picker",
+  "kind": "picker",
+  "group": "files-storage",
+  "subgroup": "Media",
+  "tags": [
+    "picker",
+    "no-permission",
+    "photos",
+    "system-ui"
+  ],
+  "plain": "A system gallery picker that returns only chosen photos with no permission.",
+  "meaning": "Reveals only the items the person selects. Recommended by both platforms.",
+  "lifecycle": [
+    "in-session"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "y",
+      "v": "13",
+      "api": 33,
+      "permission": "none",
+      "protection": "none",
+      "grant": "picker",
+      "prompt_ui": "System photo picker with selection",
+      "persistence": "Per selection; Android 14+ retains access",
+      "revocation": "n/a",
+      "store_policy": "Play: preferred over READ_MEDIA_* for most apps",
+      "api_surface": "ActivityResultContracts.PickVisualMedia, MediaStore.ACTION_PICK_IMAGES",
+      "note": "Backported to older versions through Google Play services."
+    },
+    "ios": {
+      "s": "y",
+      "v": "14",
+      "permission": "none",
+      "protection": "none",
+      "grant": "picker",
+      "prompt_ui": "System picker UI",
+      "persistence": "Per selection",
+      "revocation": "n/a",
+      "store_policy": "App Review 5.1.1",
+      "api_surface": "PHPickerViewController, PhotosPicker (SwiftUI)",
+      "note": "Runs out of process."
+    }
+  },
+  "web_equivalents": [
+    "web.files.file-input"
+  ],
+  "data": {
+    "type": "list",
+    "metric": "Selected media URIs",
+    "update": "on demand",
+    "fields": []
+  },
+  "limits": {
+    "headline": "Can open only the photos you pick from a system gallery, with no permission asked",
+    "user_action": "You tap Choose photo or Attach image and select photos in the system picker",
+    "can": [
+      "Open the one or more photos you pick",
+      "Upload or edit the chosen photos",
+      "Work with no permission prompt at all",
+      "Work on older Android versions through Google Play services"
+    ],
+    "cannot": [
+      "See any photo you did not tap",
+      "Browse your gallery itself; the system does that in its own window",
+      "Keep access after the pick, except to the files you chose",
+      "Open your whole library"
+    ],
+    "reach": 1,
+    "reach_label": "Only what you pick, once",
+    "differs": ""
+  },
+  "story": {
+    "what_it_is": "A system window that hands an app only the photos you choose.",
+    "icon": "images",
+    "tags": [
+      "Picker",
+      "No prompt",
+      "Photos"
+    ],
+    "marketing": [
+      {
+        "vendor": "Google",
+        "name": "Android photo picker",
+        "pitch": "Developer pitch: a safe, simple way for users to pick photos and videos with no permission needed.",
+        "url": "https://developer.android.com/training/data-storage/shared/photopicker"
+      },
+      {
+        "vendor": "Apple",
+        "name": "PHPicker",
+        "pitch": "Developer pitch: a system picker that lets people choose photos without giving an app access to the whole library.",
+        "url": "https://developer.apple.com/documentation/photokit/phpickerviewcontroller"
+      }
+    ],
+    "for_you": "You tap Add photo and the system gallery opens. You pick a few pictures and the app gets only those. No scary permission pop up shows, and the app cannot see anything else.",
+    "for_makers": "Makers skip the permission step and the store review burden. They still get what they need for posts and uploads. Both platforms now push apps toward this picker.",
+    "use_cases": [
+      {
+        "type": "social",
+        "example": "You post three pictures to a feed and the app sees only those three.",
+        "apps": [
+          "Instagram"
+        ]
+      },
+      {
+        "type": "messaging",
+        "example": "A chat app sends a photo with no gallery permission.",
+        "apps": [
+          "WhatsApp"
+        ]
+      },
+      {
+        "type": "shopping",
+        "example": "A reviews page lets you add a product photo.",
+        "apps": []
+      },
+      {
+        "type": "games",
+        "example": "A game lets you set a profile avatar from one photo.",
+        "apps": []
+      },
+      {
+        "type": "banking",
+        "example": "A bank app takes one picture of a check from your gallery.",
+        "apps": []
+      },
+      {
+        "type": "dating",
+        "example": "A dating app lets you add profile pictures one at a time.",
+        "apps": []
+      },
+      {
+        "type": "creative",
+        "example": "A collage app lets you pick a few photos to start a project.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "App still sees what you pick",
+      "Photos can contain places"
+    ],
+    "android_note": "The system photo picker needs no permission, and works back through Google Play services.",
+    "ios_note": "PHPicker needs no permission and runs outside the app."
+  },
+  "technical_bounds": [
+    "No permission required",
+    "Backported through Play services",
+    "Metadata like GPS may still be inside the file"
+  ],
+  "scores": {
+    "sensitivity": 3,
+    "utility": 4,
+    "fingerprint_bits": null,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Profile photos",
+      "Attachments"
+    ],
+    "abuse": [
+      "None specific"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": true,
+      "how": "Uses pickers for posting photos"
+    }
+  },
+  "history": [
+    {
+      "date": "2022-09",
+      "platform": "android",
+      "version": "13 (API 33)",
+      "change": "Photo picker with Play services backport to Android 4.4"
+    },
+    {
+      "date": "2022-08",
+      "platform": "android",
+      "version": "13 (API 33)",
+      "change": "Photo picker introduced"
+    },
+    {
+      "date": "2020-09",
+      "platform": "ios",
+      "version": "iOS 14",
+      "change": "PHPickerViewController introduced"
+    },
+    {
+      "date": "2020-09",
+      "platform": "ios",
+      "version": "iOS 14",
+      "change": "PHPicker introduced"
+    }
+  ],
+  "related": [
+    "mob.files.media-images"
+  ],
+  "refs": [
+    {
+      "t": "android",
+      "label": "Android: Photo picker",
+      "url": "https://developer.android.com/training/data-storage/shared/photopicker"
+    },
+    {
+      "t": "apple",
+      "label": "Apple: PHPickerViewController",
+      "url": "https://developer.apple.com/documentation/photokit/phpickerviewcontroller"
+    }
+  ],
+  "confidence": "docs"
+}

@@ -1,0 +1,212 @@
+{
+  "id": "mob.display.pip",
+  "name": "Picture in picture",
+  "kind": "capability",
+  "group": "display-window",
+  "subgroup": "Window",
+  "tags": [
+    "no-permission",
+    "pip",
+    "video"
+  ],
+  "plain": "Lets video keep playing in a small window while the user uses other apps.",
+  "meaning": "A small floating window. Android lets users disable it per app; iOS supports PiP via AVKit.",
+  "lifecycle": [
+    "in-session"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "y",
+      "v": "8.0",
+      "api": 26,
+      "permission": "none (android:supportsPictureInPicture)",
+      "protection": "none",
+      "grant": "settings",
+      "prompt_ui": "System enters PiP on action; user toggle per app",
+      "persistence": "Until user disables",
+      "revocation": "Settings > Special app access > Picture in picture",
+      "store_policy": "Play: none",
+      "api_surface": "Activity.enterPictureInPictureMode, setAutoEnterEnabled (API 31)",
+      "note": "Android 12 added auto-enter and seamless resize."
+    },
+    "ios": {
+      "s": "y",
+      "v": "9.0",
+      "permission": "UIBackgroundModes audio, AVKit",
+      "protection": "none",
+      "grant": "none",
+      "prompt_ui": "System PiP control",
+      "persistence": "n/a",
+      "revocation": "Settings > General > Picture in Picture",
+      "store_policy": "App Review 2.5.4",
+      "api_surface": "AVPictureInPictureController",
+      "note": "iPhone PiP since iOS 14."
+    }
+  },
+  "web_equivalents": [
+    "web.display.picture-in-picture",
+    "web.camera.picture-in-picture"
+  ],
+  "data": {
+    "type": "event",
+    "metric": "PiP window",
+    "update": "per session",
+    "fields": []
+  },
+  "limits": {
+    "headline": "Can keep a video playing in a small window while you use other apps",
+    "user_action": "You tap Picture in Picture or swipe home while a video plays",
+    "can": [
+      "Keep a video or call in a small window above other apps",
+      "Start the window on its own when you leave the app, on Android 12 and newer",
+      "Let you move, resize and close the window",
+      "Work on iPhone since iOS 14 for apps with background audio"
+    ],
+    "cannot": [
+      "Show the window if you turned Picture in Picture off for the app on Android",
+      "Run on iPhone without the background audio setting the app declares",
+      "Stay up after you close it; you control the window",
+      "See other apps' screens"
+    ],
+    "reach": 2,
+    "reach_label": "While the video plays",
+    "differs": "Android 12 added auto-enter and seamless resize. iPhone has had it since iOS 14."
+  },
+  "story": {
+    "what_it_is": "Keeps a video playing in a small window while you use other apps.",
+    "icon": "picture-in-picture-2",
+    "tags": [
+      "Video",
+      "Feature",
+      "Multitasking"
+    ],
+    "marketing": [
+      {
+        "vendor": "Google",
+        "name": "Picture in picture",
+        "pitch": "Developer guide: let users keep watching a video in a small floating window as they use other apps.",
+        "url": "https://developer.android.com/develop/ui/views/picture-in-picture"
+      },
+      {
+        "vendor": "Apple",
+        "name": "Picture in Picture",
+        "pitch": "Developer guide: let video keep playing in a floating window so people can use other apps at the same time.",
+        "url": "https://developer.apple.com/documentation/avkit/avpictureinpicturecontroller"
+      }
+    ],
+    "for_you": "You start a video call or movie, go to another app, and a small window keeps playing in the corner. You can drag it, resize it or close it. It feels like real multitasking.",
+    "for_makers": "Keeps people watching or on a call while they multitask, which raises time spent and fewer drop offs. Makers must turn it on, and on Android you can turn it off per app.",
+    "use_cases": [
+      {
+        "type": "video",
+        "example": "You watch a show and answer a text, and the show keeps playing in a corner.",
+        "apps": [
+          "YouTube",
+          "Netflix"
+        ]
+      },
+      {
+        "type": "video",
+        "example": "A video call shrinks to a corner window so you can open a notes app and keep talking.",
+        "apps": [
+          "FaceTime",
+          "Zoom"
+        ]
+      },
+      {
+        "type": "maps",
+        "example": "Navigation shrinks to a small window so you can check a message and still see turns.",
+        "apps": [
+          "Google Maps"
+        ]
+      },
+      {
+        "type": "live",
+        "example": "A sports app keeps a live game in a corner while you check scores.",
+        "apps": []
+      },
+      {
+        "type": "games",
+        "example": "A cloud gaming or streaming app keeps your friend's stream in a small window while you play.",
+        "apps": []
+      },
+      {
+        "type": "education",
+        "example": "A lecture video stays in view while you take notes in another app.",
+        "apps": []
+      },
+      {
+        "type": "ads",
+        "example": "Ad makers note that PiP can pause or hide ads, so some services limit it to paid plans.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Can distract while driving",
+      "Hidden window may keep camera on"
+    ],
+    "android_note": "Turn on per app, and users can disable it for any app in Settings.",
+    "ios_note": "Supported for video through AVKit, and for video calls on newer systems."
+  },
+  "technical_bounds": [
+    "User can disable per app",
+    "Video playback only on iOS"
+  ],
+  "scores": {
+    "sensitivity": 1,
+    "utility": 3,
+    "fingerprint_bits": null,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Video playback"
+    ],
+    "abuse": [
+      "Persistent ads"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2017-08",
+      "platform": "android",
+      "version": "8.0 (API 26)",
+      "change": "Picture in picture on phones"
+    },
+    {
+      "date": "2021-10",
+      "platform": "android",
+      "version": "12 (API 31)",
+      "change": "Auto-enter and seamless resize"
+    },
+    {
+      "date": "2020-09",
+      "platform": "ios",
+      "version": "iOS 14",
+      "change": "PiP on iPhone"
+    }
+  ],
+  "related": [
+    "mob.display.overlay"
+  ],
+  "refs": [
+    {
+      "t": "android",
+      "label": "Android: Picture in picture",
+      "url": "https://developer.android.com/develop/ui/views/picture-in-picture"
+    },
+    {
+      "t": "apple",
+      "label": "Apple: AVPictureInPictureController",
+      "url": "https://developer.apple.com/documentation/avkit/avpictureinpicturecontroller"
+    }
+  ],
+  "confidence": "docs"
+}

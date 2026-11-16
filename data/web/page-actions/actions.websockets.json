@@ -1,0 +1,244 @@
+{
+  "id": "web.actions.websockets",
+  "name": "WebSockets",
+  "kind": "capability",
+  "group": "page-actions",
+  "subgroup": "Network channels",
+  "tags": [
+    "websocket",
+    "realtime",
+    "network"
+  ],
+  "plain": "Opens a two-way live connection to a server, with no prompt.",
+  "meaning": "A site can keep a persistent channel to its server for chat, live data or telemetry. It is not covered by CORS, and the connection ends when the tab closes.",
+  "lifecycle": [
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "new WebSocket('wss://...'); WebSocketStream (Chrome origin trial history)",
+      "bcd": [
+        "api.WebSocket"
+      ],
+      "access": {
+        "grant": "none",
+        "prompt_ui": "None (no browser prompt)",
+        "secure_context": false,
+        "user_gesture": false,
+        "activation": "none",
+        "persistence": "Lives with the page; closed on unload; BFCache closes it",
+        "revocation": "Nothing to revoke (no permission is stored)",
+        "iframe": "Governed by CSP connect-src; no iframe flag needed",
+        "steps": [
+          "Page calls new WebSocket(url)",
+          "Browser performs HTTP upgrade with Origin header",
+          "Messages flow both ways"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "5",
+          "note": "",
+          "date": "2010-05-25"
+        },
+        "edge": {
+          "s": "y",
+          "v": "12",
+          "note": "",
+          "date": "2015-07-29"
+        },
+        "firefox": {
+          "s": "y",
+          "v": "11",
+          "note": "",
+          "date": "2012-03-13"
+        },
+        "safari": {
+          "s": "y",
+          "v": "5",
+          "note": "",
+          "date": "2010-06-07"
+        },
+        "ios_safari": {
+          "s": "y",
+          "v": "4.2",
+          "note": "All iOS browsers use WebKit",
+          "date": "2010-11-22"
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "18",
+          "note": "",
+          "date": "2012-06-27"
+        },
+        "samsung": {
+          "s": "y",
+          "v": "1.0",
+          "note": "",
+          "date": "2013-04-27"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "none",
+    "metric": "",
+    "update": "",
+    "fields": []
+  },
+  "limits": {
+    "headline": "Can keep a live two way link to a server, with no pop up",
+    "user_action": "Nothing. It happens when the page loads, like chat, live scores or games.",
+    "can": [
+      "Send and get messages in both directions at once",
+      "Keep the link open while the page is open",
+      "Update the page right away with new data"
+    ],
+    "cannot": [
+      "Stay connected after you close the tab",
+      "Reach your files or other apps",
+      "Keep running well in a hidden tab; browsers may slow or drop it"
+    ],
+    "reach": 2,
+    "reach_label": "While the page is open",
+    "differs": ""
+  },
+  "story": {
+    "what_it_is": "A page can keep a live two way line open to a server, with no prompt.",
+    "icon": "radio-tower",
+    "tags": [
+      "Real time",
+      "Silent",
+      "Games"
+    ],
+    "marketing": [
+      {
+        "vendor": "Mozilla",
+        "name": "WebSockets API",
+        "pitch": "MDN says WebSockets let a page and a server send messages back and forth without repeated requests.",
+        "url": "https://developer.mozilla.org/en-US/docs/Web/API/WebSockets_API"
+      }
+    ],
+    "for_you": "You never see it. Chat messages, live scores and multiplayer moves arrive the instant they happen, with no refresh.",
+    "for_makers": "Makers use it for anything live: chat, trading, games, dashboards. It keeps a steady line open, which is faster than asking again and again.",
+    "use_cases": [
+      {
+        "type": "games",
+        "example": "A browser shooter or io game sends your position to the server and gets everyone else's back many times a second.",
+        "apps": [
+          "Agar.io",
+          "Krunker.io",
+          "Slither.io"
+        ]
+      },
+      {
+        "type": "messaging",
+        "example": "A chat app delivers a message the second someone sends it.",
+        "apps": [
+          "Slack",
+          "Discord web",
+          "WhatsApp Web"
+        ]
+      },
+      {
+        "type": "banking",
+        "example": "A trading page streams live prices and fills.",
+        "apps": [
+          "Coinbase",
+          "Robinhood web"
+        ]
+      },
+      {
+        "type": "live",
+        "example": "Twitch chat flows through a live connection, so messages appear as they happen.",
+        "apps": [
+          "Twitch"
+        ]
+      },
+      {
+        "type": "productivity",
+        "example": "A shared doc editor sends every keystroke to teammates in real time.",
+        "apps": [
+          "Google Docs",
+          "Figma"
+        ]
+      },
+      {
+        "type": "security",
+        "example": "A fraud tool streams behaviour signals from a login page to a scoring server as you type.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Always on line",
+      "Streams tracking data"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Origin header is sent but no CORS check: servers must validate Origin",
+    "Mixed content: ws:// from an HTTPS page is blocked (Chrome, Firefox, Safari)",
+    "Per-host connection limits: Firefox 200 (network.websocket.max-connections); Chrome around 255 per renderer",
+    "Blocked ports list (about 70 ports such as 25, 110, 6667) applies",
+    "No backpressure in the classic API (messages buffer in bufferedAmount)",
+    "Closed when the tab goes into BFCache and not reconnected automatically"
+  ],
+  "scores": {
+    "sensitivity": 1,
+    "utility": 5,
+    "fingerprint_bits": null,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Chat",
+      "Live dashboards",
+      "Multiplayer games"
+    ],
+    "abuse": [
+      "Persistent telemetry channel",
+      "Cross-site WebSocket hijacking when Origin unchecked"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2011-10",
+      "browser": "chrome",
+      "version": "16",
+      "change": "RFC 6455 final protocol"
+    },
+    {
+      "date": "2016-12",
+      "browser": "chrome",
+      "version": "57",
+      "change": "WebSocket origin check for localhost still permitted"
+    }
+  ],
+  "refs": [
+    {
+      "t": "mdn",
+      "label": "MDN WebSockets API",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/WebSockets_API"
+    },
+    {
+      "t": "spec",
+      "label": "RFC 6455",
+      "url": "https://www.rfc-editor.org/rfc/rfc6455"
+    },
+    {
+      "t": "spec",
+      "label": "WHATWG WebSockets",
+      "url": "https://websockets.spec.whatwg.org/"
+    }
+  ],
+  "confidence": "docs"
+}

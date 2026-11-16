@@ -1,0 +1,235 @@
+{
+  "id": "web.xsite.outbound-link-decoration",
+  "name": "Outbound link decoration",
+  "kind": "tracking",
+  "group": "cross-site-tracking",
+  "subgroup": "After leaving",
+  "tags": [
+    "link-decoration",
+    "gl",
+    "fbclid",
+    "cross-domain-tracking"
+  ],
+  "plain": "Adding an ID to a link's URL so the next site can read it and link the visit.",
+  "meaning": "Meta adds fbclid to outbound clicks; Google's linker adds _gl with first party cookie IDs valid for a short time (about 2 minutes). The next site turns the ID into its own cookie. Safari caps such cookies at 24 hours, Firefox and Brave strip known params.",
+  "lifecycle": [
+    "after-leaving",
+    "before-visit"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "Link href with ?_gl=, ?fbclid=, ?gclid= or ?msclkid=",
+      "access": {
+        "grant": "none",
+        "prompt_ui": "None",
+        "secure_context": false,
+        "user_gesture": false,
+        "persistence": "Parameter valid for the click; resulting cookie 24 h (Safari) to 400 days",
+        "revocation": "Clear site data, browser privacy settings",
+        "iframe": "",
+        "steps": []
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "1",
+          "note": "Any browser unless params are stripped",
+          "date": "2008-12-11"
+        },
+        "edge": {
+          "s": "y",
+          "v": "1",
+          "note": "Any browser unless params are stripped",
+          "date": ""
+        },
+        "firefox": {
+          "s": "y",
+          "v": "1",
+          "note": "Any browser unless params are stripped",
+          "date": "2004-11-09"
+        },
+        "safari": {
+          "s": "y",
+          "v": "1",
+          "note": "Any browser unless params are stripped",
+          "date": "2003-06-23"
+        },
+        "ios_safari": {
+          "s": "y",
+          "v": "1",
+          "note": "Any browser unless params are stripped",
+          "date": "2007-06-29"
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "1",
+          "note": "Any browser unless params are stripped",
+          "date": ""
+        },
+        "samsung": {
+          "s": "y",
+          "v": "1",
+          "note": "Any browser unless params are stripped",
+          "date": "2013-04-27"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "string",
+    "metric": "Decorated ID",
+    "update": "per click",
+    "fields": []
+  },
+  "limits": {
+    "headline": "Can add an ID to a link so the next site can recognize your visit",
+    "user_action": "You click a link on a page that adds an ID to the web address",
+    "can": [
+      "Add a code to the address of an outbound link",
+      "Let the next site match the visit to the first",
+      "Pass campaign details, such as which ad or email you came from"
+    ],
+    "cannot": [
+      "Follow you without a click on that link",
+      "Be seen if you copy only the clean address",
+      "Work when the browser removes known codes",
+      "Name you; the code is only a label"
+    ],
+    "reach": 2,
+    "reach_label": "One click between sites",
+    "differs": ""
+  },
+  "story": {
+    "what_it_is": "Adding an ID to the end of a link so the next site can recognise you.",
+    "icon": "link-2",
+    "tags": [
+      "Links",
+      "Ads",
+      "Click ID"
+    ],
+    "marketing": [
+      {
+        "vendor": "Apple",
+        "name": "Tracking prevention",
+        "pitch": "WebKit says Safari limits cookies made from decorated links, since they can be used to follow people.",
+        "url": "https://webkit.org/tracking-prevention/"
+      }
+    ],
+    "for_you": "You click a link in a post or ad, and a code is added to the address. The next site reads it and starts to track you with its own cookie. Safari caps such cookies at a day.",
+    "for_makers": "Meta adds fbclid to outbound clicks, and Google adds _gl to link its own domains. The next site turns the ID into a cookie it controls. That makes tracking work after third party cookies are blocked.",
+    "use_cases": [
+      {
+        "type": "social",
+        "example": "You click a link in a Facebook post. Meta adds fbclid so the news site can tell the click came from Facebook.",
+        "apps": [
+          "Facebook",
+          "Instagram"
+        ]
+      },
+      {
+        "type": "ads",
+        "example": "A Google ad adds a gclid to the link, so the store can credit a sale to the exact ad.",
+        "apps": [
+          "Google Ads"
+        ]
+      },
+      {
+        "type": "analytics",
+        "example": "A company with two domains adds _gl so Analytics sees one visitor and not two.",
+        "apps": [
+          "Google Analytics"
+        ]
+      },
+      {
+        "type": "games",
+        "example": "A game portal adds an ID to links to an affiliate store, so a purchase is credited.",
+        "apps": []
+      },
+      {
+        "type": "shopping",
+        "example": "An influencer link adds a code that tells a shop which creator brought you.",
+        "apps": [
+          "Amazon Associates"
+        ]
+      },
+      {
+        "type": "security",
+        "example": "Firefox and Brave strip known IDs from links, which is how they fight the practice.",
+        "apps": [
+          "Firefox",
+          "Brave"
+        ]
+      }
+    ],
+    "risks": [
+      "Link IDs can leak when shared",
+      "Defeated by some browsers"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Cannot read the other site's cookies",
+    "Safari 24 h cap on script cookies after tracker decoration",
+    "Firefox Query Parameter Stripping (102+) in ETP Strict and private windows",
+    "Often stripped by privacy tools"
+  ],
+  "scores": {
+    "sensitivity": 4,
+    "utility": 4,
+    "fingerprint_bits": null,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Cross-domain analytics, affiliate attribution"
+    ],
+    "abuse": [
+      "Passing user IDs through URLs to evade partitioning"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2019-02",
+      "browser": "safari",
+      "version": "12.1",
+      "change": "ITP 2.1 and 2.2 capped link decorated cookies"
+    },
+    {
+      "date": "2022-06",
+      "browser": "firefox",
+      "version": "102",
+      "change": "Query Parameter Stripping added"
+    }
+  ],
+  "related": [
+    "web.xsite.navigational-tracking",
+    "web.xsite.click-id-stripping",
+    "web.xsite.ad-click-ids"
+  ],
+  "refs": [
+    {
+      "t": "webkit",
+      "label": "WebKit Tracking Prevention",
+      "url": "https://webkit.org/tracking-prevention/"
+    },
+    {
+      "t": "mdn",
+      "label": "MDN Firefox Query Parameter Stripping",
+      "url": "https://support.mozilla.org/en-US/kb/enhanced-tracking-protection-firefox-desktop"
+    },
+    {
+      "t": "vendor",
+      "label": "Google Analytics cross-domain linker",
+      "url": "https://support.google.com/analytics/answer/10071811"
+    }
+  ],
+  "confidence": "docs"
+}

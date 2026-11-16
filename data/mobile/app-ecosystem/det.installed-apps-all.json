@@ -1,0 +1,237 @@
+{
+  "id": "mob.det.installed-apps-all",
+  "name": "Full installed-app list (QUERY_ALL_PACKAGES)",
+  "kind": "signal",
+  "group": "app-ecosystem",
+  "subgroup": "Package visibility",
+  "tags": [
+    "installed-apps",
+    "play-policy",
+    "restricted",
+    "query-all-packages",
+    "play-restricted",
+    "url-schemes"
+  ],
+  "plain": "Android can list every installed app only with a special permission Play restricts; iOS cannot at all.",
+  "meaning": "The installed-app list reveals religion, health, finance, dating and politics. Android 11 hides it by default; Play approves QUERY_ALL_PACKAGES for a short list of uses.",
+  "lifecycle": [
+    "on-launch",
+    "in-session"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "f",
+      "v": "11",
+      "api": 30,
+      "permission": "QUERY_ALL_PACKAGES",
+      "protection": "normal",
+      "grant": "install",
+      "prompt_ui": "No prompt; Play review for QUERY_ALL_PACKAGES",
+      "persistence": "Static",
+      "revocation": "Cannot be revoked by user",
+      "store_policy": "Play: QUERY_ALL_PACKAGES policy, needs core purpose declaration",
+      "api_surface": "PackageManager.getInstalledPackages(), getInstalledApplications()",
+      "note": "Default list is filtered to a small visible set; Play requires a declaration and approval"
+    },
+    "ios": {
+      "s": "n",
+      "v": "9",
+      "permission": "none",
+      "protection": "not-exposed",
+      "grant": "not-exposed",
+      "prompt_ui": "No prompt",
+      "persistence": "Static",
+      "revocation": "n/a",
+      "store_policy": "App Review 5.1.1",
+      "api_surface": "No API lists installed apps",
+      "note": "Only canOpenURL probes for up to 50 schemes"
+    }
+  },
+  "web_equivalents": [
+    "web.notexposed.installed-apps",
+    "web.contacts.get-installed-related-apps"
+  ],
+  "data": {
+    "type": "list",
+    "metric": "Package names",
+    "update": "On read",
+    "fields": [
+      {
+        "name": "packages",
+        "type": "list",
+        "unit": "package ID",
+        "range": "50 to 400 per phone",
+        "precision": "exact"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can't list every app on iPhone; on Android only with special store approval",
+    "user_action": "Nothing. It happens in the background when the app asks for the app list",
+    "can": [
+      "Use a full app list on Android if the store approved a security, device management or file manager reason",
+      "See a small filtered set of apps on Android 11 and later without approval",
+      "Check up to 50 named link types on iPhone"
+    ],
+    "cannot": [
+      "List all apps on iPhone at all",
+      "Get the full list on Android without Play approval",
+      "Use the full list for ads or selling data without breaking the store policy"
+    ],
+    "reach": 1,
+    "reach_label": "Blocked on iPhone, approval only on Android",
+    "differs": "iPhone has no way at all. Android allows it only with the special all apps permission, which Google approves for few uses."
+  },
+  "story": {
+    "what_it_is": "The full list of every app on your phone, which only some Android apps may read.",
+    "icon": "package-search",
+    "tags": [
+      "Installed apps",
+      "Sensitive",
+      "Android"
+    ],
+    "marketing": [
+      {
+        "vendor": "Google",
+        "name": "Package visibility",
+        "pitch": "Android 11 hides other apps by default, and Play limits full app list access to approved purposes.",
+        "url": "https://developer.android.com/training/package-visibility"
+      }
+    ],
+    "for_you": "You never see a prompt for it. If an app got the full list, it could tell you take diabetes apps, dating apps or prayer apps, so Android hides it by default.",
+    "for_makers": "A full app list is a rich profile for ads and risk scoring. Antivirus, device management and some banking apps truly need it, so Play approves it only for a short list of cases.",
+    "use_cases": [
+      {
+        "type": "security",
+        "example": "An antivirus app scans every installed app for malware and warns you.",
+        "apps": [
+          "Lookout",
+          "Malwarebytes"
+        ]
+      },
+      {
+        "type": "enterprise",
+        "example": "A work phone management tool checks which apps staff have installed to meet company rules.",
+        "apps": [
+          "Microsoft Intune",
+          "Android Enterprise"
+        ]
+      },
+      {
+        "type": "banking",
+        "example": "A banking app scans for remote access apps that criminals use to take over accounts.",
+        "apps": [
+          "Barclays"
+        ]
+      },
+      {
+        "type": "games",
+        "example": "A cheat detection service scans for modding tools next to a competitive mobile game.",
+        "apps": [
+          "PUBG Mobile"
+        ]
+      },
+      {
+        "type": "ads",
+        "example": "A shady ad SDK sells the app list to data brokers as a sign of income and interests.",
+        "apps": []
+      },
+      {
+        "type": "utilities",
+        "example": "A device cleaner app finds big unused apps and suggests deletion.",
+        "apps": [
+          "Files by Google"
+        ]
+      }
+    ],
+    "risks": [
+      "Reveals religion, health, politics",
+      "Sold by data brokers"
+    ],
+    "android_note": "Android 11 and later hides most apps unless the app asks and Play approves the special permission.",
+    "ios_note": "iOS never gives apps a list of other apps at all."
+  },
+  "technical_bounds": [
+    "Play review gates the permission",
+    "Visibility is filtered by default on Android 11+"
+  ],
+  "scores": {
+    "sensitivity": 4,
+    "utility": 3,
+    "fingerprint_bits": 10,
+    "friction": 3
+  },
+  "value": {
+    "legit_uses": [
+      "Antivirus, device management"
+    ],
+    "abuse": [
+      "Profiling by installed apps"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": true,
+      "how": "Play Data safety lists Installed apps under App activity as collected. Reason not stated; Facebook share and login SDKs and share intents are common causes. Unverified."
+    }
+  },
+  "history": [
+    {
+      "date": "2022-05",
+      "platform": "android",
+      "version": "",
+      "change": "Play policy restricts QUERY_ALL_PACKAGES"
+    },
+    {
+      "date": "2020-09",
+      "platform": "android",
+      "version": "11 (API 30)",
+      "change": "Package visibility filtering introduced"
+    },
+    {
+      "date": "2020-09",
+      "platform": "android",
+      "version": "11 (API 30)",
+      "change": "Package visibility filtering added"
+    },
+    {
+      "date": "2015-09",
+      "platform": "ios",
+      "version": "iOS 9",
+      "change": "canOpenURL limited to 50 declared schemes"
+    }
+  ],
+  "related": [
+    "mob.det.app-probing",
+    "mob.os.share-sheet"
+  ],
+  "refs": [
+    {
+      "t": "android",
+      "label": "Android: Package visibility",
+      "url": "https://developer.android.com/training/package-visibility"
+    },
+    {
+      "t": "policy",
+      "label": "Google Play: package visibility policy",
+      "url": "https://support.google.com/googleplay/android-developer/answer/10158779"
+    },
+    {
+      "t": "android",
+      "label": "Android 11 privacy features",
+      "url": "https://developer.android.com/about/versions/11/privacy"
+    },
+    {
+      "t": "apple",
+      "label": "Apple: LSApplicationQueriesSchemes",
+      "url": "https://developer.apple.com/documentation/bundleresources/information-property-list/lsapplicationqueriesschemes"
+    },
+    {
+      "t": "vendor",
+      "label": "Google Play Data safety, LinkedIn (com.linkedin.android)",
+      "url": "https://play.google.com/store/apps/datasafety?id=com.linkedin.android&hl=en_US"
+    }
+  ],
+  "confidence": "verified"
+}

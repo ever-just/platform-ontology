@@ -1,0 +1,293 @@
+{
+  "id": "web.perf.timer-precision",
+  "name": "High resolution timer precision",
+  "kind": "signal",
+  "group": "timing-performance",
+  "subgroup": "Timers",
+  "tags": [
+    "performance.now",
+    "timer",
+    "spectre",
+    "resolution"
+  ],
+  "plain": "performance.now() returns a clock whose coarseness depends on browser and isolation.",
+  "meaning": "Timer resolution is a deliberate defense against timing attacks. The resolution itself tells a site the browser and whether privacy mode or cross-origin isolation is on, and limits attacks like cache timing.",
+  "lifecycle": [
+    "on-arrival"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "performance.now(); Date.now(); crossOriginIsolated",
+      "bcd": [
+        "api.Performance.now"
+      ],
+      "access": {
+        "grant": "none",
+        "prompt_ui": "",
+        "secure_context": false,
+        "user_gesture": false,
+        "persistence": "",
+        "revocation": "",
+        "iframe": "",
+        "steps": [
+          "Call performance.now() in a tight loop",
+          "Compute smallest nonzero delta",
+          "Infer resolution and jitter"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "24",
+          "note": "",
+          "date": "2013-01-10"
+        },
+        "edge": {
+          "s": "y",
+          "v": "12",
+          "note": "",
+          "date": "2015-07-29"
+        },
+        "firefox": {
+          "s": "y",
+          "v": "15",
+          "note": "",
+          "date": "2012-08-28"
+        },
+        "safari": {
+          "s": "y",
+          "v": "8",
+          "note": "",
+          "date": "2014-10-16"
+        },
+        "ios_safari": {
+          "s": "y",
+          "v": "9",
+          "note": "",
+          "date": "2015-09-16"
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "25",
+          "note": "",
+          "date": "2013-02-27"
+        },
+        "samsung": {
+          "s": "y",
+          "v": "1.5",
+          "note": "",
+          "date": "2013-09-25"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "float",
+    "metric": "Milliseconds since time origin, fractional",
+    "update": "",
+    "fields": [
+      {
+        "name": "performance.now() Chrome default",
+        "type": "float",
+        "unit": "ms",
+        "range": "0 to unbounded",
+        "precision": "100 microseconds (jittered)"
+      },
+      {
+        "name": "Chrome cross-origin isolated",
+        "type": "float",
+        "unit": "ms",
+        "range": "0 to unbounded",
+        "precision": "5 microseconds"
+      },
+      {
+        "name": "Firefox default",
+        "type": "float",
+        "unit": "ms",
+        "range": "0 to unbounded",
+        "precision": "1 ms (RFP: 16.67 ms)"
+      },
+      {
+        "name": "Safari",
+        "type": "float",
+        "unit": "ms",
+        "range": "0 to unbounded",
+        "precision": "1 ms"
+      },
+      {
+        "name": "Firefox cross-origin isolated",
+        "type": "float",
+        "unit": "ms",
+        "range": "0 to unbounded",
+        "precision": "20 microseconds"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can use a clock whose sharpness shows your browser and privacy mode",
+    "user_action": "Nothing. It happens when the page loads",
+    "can": [
+      "Check how fine the page timer is",
+      "Guess your browser from that sharpness",
+      "Tell if privacy mode or cross origin protection is on"
+    ],
+    "cannot": [
+      "Get a very sharp clock without extra protections",
+      "Ask permission first",
+      "See your files",
+      "Know who you are by itself"
+    ],
+    "reach": 2,
+    "reach_label": "Silent, browser clue only",
+    "differs": ""
+  },
+  "story": {
+    "what_it_is": "performance.now() gives a very fast clock, but browsers deliberately make it coarser unless the site is isolated.",
+    "icon": "timer",
+    "tags": [
+      "Timing",
+      "Silent",
+      "Security"
+    ],
+    "marketing": [
+      {
+        "vendor": "MDN",
+        "name": "performance.now()",
+        "pitch": "Returns a high resolution time for measuring how long things take, with precision limited for security.",
+        "url": "https://developer.mozilla.org/en-US/docs/Web/API/Performance/now"
+      },
+      {
+        "vendor": "web.dev",
+        "name": "Why COOP and COEP",
+        "pitch": "Google explains that precise timers return only on pages that prove they are isolated from other sites.",
+        "url": "https://web.dev/articles/why-coop-coep"
+      }
+    ],
+    "for_you": "You never see it. It is why games and videos stay in sync. Browsers blur this clock on purpose to protect you from timing attacks, so most pages get a slightly rounded time.",
+    "for_makers": "Games, audio tools and animation need good timing to run smoothly. Browsers round the timer to stop attacks and fingerprinting, and give a finer clock only to isolated pages. The rounding level is also a clue about your browser.",
+    "use_cases": [
+      {
+        "type": "games",
+        "example": "A browser game uses the clock to step physics at an even rate, so movement does not jitter.",
+        "apps": [
+          "Krunker.io",
+          "Shell Shockers"
+        ]
+      },
+      {
+        "type": "music",
+        "example": "A web synth or DAW uses precise time to line up notes on the beat.",
+        "apps": [
+          "Soundtrap",
+          "BandLab"
+        ]
+      },
+      {
+        "type": "video",
+        "example": "A video call tool measures delay to adjust how it buffers voice and picture.",
+        "apps": [
+          "Google Meet"
+        ]
+      },
+      {
+        "type": "analytics",
+        "example": "A speed monitoring tool uses it to time page steps from real visitors.",
+        "apps": [
+          "Datadog RUM"
+        ]
+      },
+      {
+        "type": "security",
+        "example": "Researchers have shown fine timers can be abused for timing attacks, so browsers round them.",
+        "apps": []
+      },
+      {
+        "type": "ads",
+        "example": "A tracker tests how coarse the clock is to guess which browser and privacy mode you use.",
+        "apps": []
+      },
+      {
+        "type": "creative",
+        "example": "A web animation tool uses precise timing to keep previews smooth.",
+        "apps": [
+          "Figma"
+        ]
+      }
+    ],
+    "risks": [
+      "Precision hints at your browser",
+      "Fine timers raise attack risk"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Cannot get nanosecond timing without cross-origin isolation (and still limited to about 5 microseconds)",
+    "Jitter added per page, repeated sampling can average it out"
+  ],
+  "scores": {
+    "sensitivity": 1,
+    "utility": 3,
+    "fingerprint_bits": 1,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": "Profiling and animation timing",
+    "abuse": "Side-channel attacks need finer timers; resolution fingerprints browser mode"
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2018-01",
+      "browser": "all",
+      "version": "",
+      "change": "Spectre: Chrome, Firefox, Safari coarsen performance.now() and Date; SharedArrayBuffer disabled"
+    },
+    {
+      "date": "2021-05",
+      "browser": "chrome",
+      "version": "91",
+      "change": "100 microsecond cap on all platforms; 5 microseconds if cross-origin isolated"
+    },
+    {
+      "date": "2018-03",
+      "browser": "firefox",
+      "version": "60",
+      "change": "1 ms precision default"
+    },
+    {
+      "date": "2021-01",
+      "browser": "firefox",
+      "version": "79",
+      "change": "Finer 20 microsecond precision only when cross-origin isolated"
+    }
+  ],
+  "related": [
+    "web.perf.cross-origin-isolation-timers",
+    "web.perf.cache-timing-history-sniffing"
+  ],
+  "refs": [
+    {
+      "t": "mdn",
+      "label": "MDN Performance.now()",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/Performance/now"
+    },
+    {
+      "t": "vendor",
+      "label": "Chrome: Aligning timers with cross-origin isolation",
+      "url": "https://developer.chrome.com/blog/cross-origin-isolated-hr-timers"
+    },
+    {
+      "t": "spec",
+      "label": "W3C High Resolution Time",
+      "url": "https://www.w3.org/TR/hr-time-3/"
+    }
+  ],
+  "confidence": "verified"
+}

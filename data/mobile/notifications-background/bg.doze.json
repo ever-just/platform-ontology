@@ -1,0 +1,206 @@
+{
+  "id": "mob.bg.doze",
+  "name": "Doze and idle mode",
+  "kind": "capability",
+  "group": "notifications-background",
+  "subgroup": "Android background limits",
+  "tags": [
+    "doze",
+    "idle",
+    "alarms",
+    "network-off"
+  ],
+  "plain": "When the phone is still and unplugged, Android delays jobs, alarms and network to save battery.",
+  "meaning": "Explains why background trackers go quiet at night. Apps get brief maintenance windows; only high priority push, exact alarms and foreground services run freely.",
+  "lifecycle": [
+    "background"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "y",
+      "v": "6.0",
+      "api": 23,
+      "permission": "REQUEST_IGNORE_BATTERY_OPTIMIZATIONS (Play-restricted)",
+      "protection": "normal",
+      "grant": "settings",
+      "prompt_ui": "Settings > Battery > Unrestricted removes the app from optimization",
+      "persistence": "Doze deepens over hours; maintenance windows get longer",
+      "revocation": "Settings > Apps > Battery usage",
+      "store_policy": "Play: ignore battery optimizations only for apps whose core function breaks otherwise",
+      "api_surface": "PowerManager.isDeviceIdleMode(), isIgnoringBatteryOptimizations()",
+      "note": "While-idle alarms limited to 7 per hour; network and wakelocks suspended except in maintenance windows"
+    },
+    "ios": {
+      "s": "p",
+      "v": "6.0",
+      "permission": "",
+      "protection": "none",
+      "grant": "none",
+      "prompt_ui": "Low Power Mode toggle only",
+      "persistence": "n/a",
+      "revocation": "Settings > Battery",
+      "store_policy": "",
+      "api_surface": "ProcessInfo.isLowPowerModeEnabled, NSProcessInfoPowerStateDidChange",
+      "note": "iOS suspends apps within seconds of backgrounding; no Doze concept; Low Power Mode reduces fetch and push"
+    }
+  },
+  "web_equivalents": [
+    "web.notify.system-wake-lock",
+    "web.xsite.background-wake-apis"
+  ],
+  "data": {
+    "type": "object",
+    "metric": "Doze limits",
+    "update": "Static",
+    "fields": [
+      {
+        "name": "while_idle_alarms",
+        "type": "integer",
+        "unit": "per hour",
+        "range": "7",
+        "precision": "system"
+      },
+      {
+        "name": "exempt",
+        "type": "list",
+        "unit": "",
+        "range": "high priority FCM, exact alarm, FGS",
+        "precision": ""
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can't force the phone to stay awake; Doze delays jobs, alarms and network",
+    "user_action": "Nothing. It happens when the phone sits still and unplugged",
+    "can": [
+      "Check if the phone is in idle mode or ignores battery limits",
+      "Ask you to exempt it from battery optimization",
+      "Run short jobs during maintenance windows on Android",
+      "Use Low Power Mode status on iPhone"
+    ],
+    "cannot": [
+      "Run network jobs while Doze is on, except in maintenance windows",
+      "Set more than about 7 alarms per hour while the phone is idle",
+      "Avoid iPhone suspending it within seconds of leaving the app",
+      "Exempt itself without your choice in Settings"
+    ],
+    "reach": 2,
+    "reach_label": "Limited by battery saving",
+    "differs": "Android has Doze and idle mode. iPhone has no Doze but suspends apps quickly and slows work in Low Power Mode."
+  },
+  "story": {
+    "what_it_is": "When your phone sits still and unplugged, Android pauses most app work to save battery.",
+    "icon": "battery-low",
+    "tags": [
+      "Background",
+      "Battery",
+      "Android"
+    ],
+    "marketing": [
+      {
+        "vendor": "Google",
+        "name": "Doze and App Standby",
+        "pitch": "Android saves battery by deferring background work when the device is idle.",
+        "url": "https://developer.android.com/training/monitoring-device-state/doze-standby"
+      }
+    ],
+    "for_you": "You notice it as better battery life overnight. It may also delay a message or an alarm by some minutes. Only high priority messages, exact alarms and some services get through.",
+    "for_makers": "Makers must plan around it: they use high priority push, exact alarms and foreground services for urgent work. Some apps ask users to switch off battery limits, which Google discourages.",
+    "use_cases": [
+      {
+        "type": "messaging",
+        "example": "A chat app receives a message through a high priority push while the phone sleeps.",
+        "apps": [
+          "WhatsApp",
+          "Signal"
+        ]
+      },
+      {
+        "type": "productivity",
+        "example": "A calendar app rings a meeting alarm on time using an exact alarm.",
+        "apps": [
+          "Google Calendar"
+        ]
+      },
+      {
+        "type": "fitness",
+        "example": "A step tracker batches data and syncs when the phone wakes.",
+        "apps": []
+      },
+      {
+        "type": "games",
+        "example": "A game that wants energy refilled uses a timed notification rather than a background job.",
+        "apps": []
+      },
+      {
+        "type": "security",
+        "example": "A bad app asks you to turn off battery limits so it can keep running at night.",
+        "apps": []
+      },
+      {
+        "type": "smart-home",
+        "example": "A security camera app uses high priority alerts to wake the phone when motion is seen.",
+        "apps": [
+          "Ring"
+        ]
+      }
+    ],
+    "risks": [
+      "Evading Doze with prompts",
+      "Delayed alerts"
+    ],
+    "android_note": "This is Android only, with Doze and App Standby buckets that decide how often an app can run.",
+    "ios_note": "iPhone has no Doze, but it limits background work through its own scheduler."
+  },
+  "technical_bounds": [
+    "Maintenance windows lengthen over time",
+    "FCM high priority is the sanctioned wake path"
+  ],
+  "scores": {
+    "sensitivity": 1,
+    "utility": 4,
+    "fingerprint_bits": null,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Battery life"
+    ],
+    "abuse": [
+      "Evading Doze with battery opt-out prompts"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2015-10",
+      "platform": "android",
+      "version": "6.0 (API 23)",
+      "change": "Doze mode introduced"
+    },
+    {
+      "date": "2016-08",
+      "platform": "android",
+      "version": "7.0 (API 24)",
+      "change": "Doze on the go (screen off, moving)"
+    }
+  ],
+  "related": [
+    "mob.bg.standby-buckets",
+    "mob.notif.fcm-priority"
+  ],
+  "refs": [
+    {
+      "t": "android",
+      "label": "Android: Optimize for Doze and App Standby",
+      "url": "https://developer.android.com/training/monitoring-device-state/doze-standby"
+    }
+  ],
+  "confidence": "verified"
+}

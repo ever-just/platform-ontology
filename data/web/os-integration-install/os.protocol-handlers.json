@@ -1,0 +1,226 @@
+{
+  "id": "web.os.protocol-handlers",
+  "name": "Protocol Handlers",
+  "kind": "capability",
+  "group": "os-integration-install",
+  "subgroup": "Links",
+  "tags": [
+    "links"
+  ],
+  "plain": "Lets a site or installed app handle links like mailto: or web+music:.",
+  "meaning": "Opens links with that scheme in the site after the person approves.",
+  "lifecycle": [
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "navigator.registerProtocolHandler(scheme,url); manifest protocol_handlers",
+      "bcd": [
+        "manifests.webapp.protocol_handlers"
+      ],
+      "access": {
+        "grant": "prompt",
+        "prompt_ui": "Handler registration prompt",
+        "secure_context": true,
+        "user_gesture": true,
+        "persistence": "Per origin",
+        "revocation": "Site settings",
+        "iframe": "Same as top level; cross-origin iframes need a permissions policy where listed",
+        "steps": [
+          "Call the API",
+          "Browser applies its access rules",
+          "Page receives the result"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "96",
+          "note": "",
+          "date": "2021-11-15"
+        },
+        "edge": {
+          "s": "y",
+          "v": "96",
+          "note": "",
+          "date": "2021-11-19"
+        },
+        "firefox": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "safari": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "ios_safari": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "chrome_android": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "samsung": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "object",
+    "metric": "Lets a site or installed app handle links like mailto: or web+music:.",
+    "update": "on demand",
+    "fields": [
+      {
+        "name": "scheme",
+        "type": "string",
+        "range": "mailto, web+*, ..."
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can open links like mailto: in the site after you approve it",
+    "user_action": "You tap a mailto: or similar link and approve the site as its handler",
+    "can": [
+      "Open that kind of link in the site after you approve",
+      "Handle custom link types like web+music:",
+      "Ask again if you change your mind in settings"
+    ],
+    "cannot": [
+      "Take over links without your approval",
+      "Work in Firefox for most link types, Safari or on phones",
+      "Open links in other apps",
+      "Hijack links from sites you never approved"
+    ],
+    "reach": 2,
+    "reach_label": "One link type, if you approve",
+    "differs": "Chrome and Edge on computers ask first. Firefox, Safari and phones do not support it."
+  },
+  "story": {
+    "what_it_is": "A site can ask to open links like mailto: or custom web+ links, so clicking them opens that site.",
+    "icon": "link",
+    "tags": [
+      "Permission",
+      "Links",
+      "Asks first"
+    ],
+    "marketing": [
+      {
+        "vendor": "MDN Web Docs",
+        "name": "registerProtocolHandler",
+        "pitch": "Lets a site or installed app register to handle certain link types, like mail links.",
+        "url": "https://developer.mozilla.org/en-US/docs/Web/API/Navigator/registerProtocolHandler"
+      }
+    ],
+    "for_you": "You may see a small prompt asking to let a site open links of one type, such as mail links. If you allow, clicking such a link opens that site. You can change it in browser settings.",
+    "for_makers": "Makers of web mail, chat and calendar apps want to be the default for those links. It makes their web app part of daily flow. It needs an allow, to stop sites from hijacking links.",
+    "use_cases": [
+      {
+        "type": "messaging",
+        "example": "Gmail asks to handle mailto links, so clicking an email address anywhere opens a new Gmail draft.",
+        "apps": [
+          "Gmail"
+        ]
+      },
+      {
+        "type": "video",
+        "example": "A meeting site registers to open meeting links, so clicking one opens its web app.",
+        "apps": [
+          "Zoom",
+          "Microsoft Teams"
+        ]
+      },
+      {
+        "type": "music",
+        "example": "A web music player handles a custom music link type, so a shared link starts the song.",
+        "apps": []
+      },
+      {
+        "type": "games",
+        "example": "A web game launcher handles invite links so a click opens the right game room.",
+        "apps": []
+      },
+      {
+        "type": "productivity",
+        "example": "A web calendar app handles calendar links to add events.",
+        "apps": [
+          "Google Calendar"
+        ]
+      },
+      {
+        "type": "social",
+        "example": "A chat web app handles chat invites from messages and web pages.",
+        "apps": [
+          "Discord",
+          "Telegram Web"
+        ]
+      },
+      {
+        "type": "security",
+        "example": "A malicious site tries to take over mail links to capture drafts. The prompt gives you a chance to refuse.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Link hijack risk",
+      "Easy to click allow"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Safari ignores it",
+    "Custom schemes must start with web+",
+    "Manifest handlers desktop only"
+  ],
+  "scores": {
+    "sensitivity": 2,
+    "utility": 2,
+    "fingerprint_bits": null,
+    "friction": 1
+  },
+  "value": {
+    "legit_uses": [
+      "Mailto handlers"
+    ],
+    "abuse": [
+      "Link hijacking"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2010",
+      "browser": "chrome",
+      "version": "13",
+      "change": "registerProtocolHandler"
+    },
+    {
+      "date": "2021",
+      "browser": "chrome",
+      "version": "96",
+      "change": "Manifest protocol_handlers on desktop"
+    }
+  ],
+  "refs": [
+    {
+      "t": "mdn",
+      "label": "MDN registerProtocolHandler",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/Navigator/registerProtocolHandler"
+    }
+  ],
+  "confidence": "verified"
+}

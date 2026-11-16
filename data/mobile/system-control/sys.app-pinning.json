@@ -1,0 +1,191 @@
+{
+  "id": "mob.sys.app-pinning",
+  "name": "Kiosk and app pinning",
+  "kind": "capability",
+  "group": "system-control",
+  "subgroup": "Enterprise",
+  "tags": [
+    "kiosk",
+    "lock-task",
+    "guided-access",
+    "single-app-mode"
+  ],
+  "plain": "Locks the phone to one app.",
+  "meaning": "Used for kiosks and exams. Android has screen pinning for users and lock task for device owners; iOS has Guided Access and supervised Single App Mode.",
+  "lifecycle": [
+    "in-session"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "y",
+      "v": "5.0",
+      "api": 21,
+      "permission": "None (screen pinning); device owner for lock task",
+      "protection": "none",
+      "grant": "enterprise",
+      "prompt_ui": "Pin dialog; device owner whitelist",
+      "persistence": "Until exit",
+      "revocation": "Settings > Security > App pinning",
+      "store_policy": "",
+      "api_surface": "Activity.startLockTask, DevicePolicyManager.setLockTaskPackages",
+      "note": "Lock task can disable status bar and nav."
+    },
+    "ios": {
+      "s": "y",
+      "v": "6.0",
+      "permission": "MDM Single App Mode payload; ASAM (autonomous) via UIAccessibility.requestGuidedAccessSession",
+      "protection": "managed",
+      "grant": "enterprise",
+      "prompt_ui": "Guided Access triple click; ASAM needs supervision",
+      "persistence": "Until exit",
+      "revocation": "Settings > Accessibility > Guided Access",
+      "store_policy": "",
+      "api_surface": "UIAccessibility.requestGuidedAccessSession, MDM",
+      "note": "Exam apps use ASAM on supervised devices."
+    }
+  },
+  "data": {
+    "type": "none",
+    "metric": "State",
+    "update": "n/a",
+    "fields": [
+      {
+        "name": "pinned",
+        "type": "boolean",
+        "unit": "state",
+        "range": "n/a",
+        "precision": "n/a"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can lock the phone to one app when you pin it or a company allows it",
+    "user_action": "You pin the screen, or triple click to start Guided Access",
+    "can": [
+      "Keep you inside one app, like a kiosk or an exam",
+      "Hide the status bar and navigation (Android lock task, company set)",
+      "Run exam apps in single app mode on supervised iPhones"
+    ],
+    "cannot": [
+      "Lock the phone without your pin step or company control",
+      "Use lock task on Android unless the company is the device owner",
+      "Use autonomous single app mode on iPhone unless it is supervised"
+    ],
+    "reach": 3,
+    "reach_label": "Ongoing, until unpinned",
+    "differs": "Android has screen pinning for you and lock task for device owners; iPhone has Guided Access and supervised Single App Mode."
+  },
+  "story": {
+    "what_it_is": "Locks the phone to a single app, for kiosks, exams and kids.",
+    "icon": "pin",
+    "tags": [
+      "Kiosk",
+      "Control",
+      "Lock"
+    ],
+    "marketing": [],
+    "for_you": "A pin icon appears and the phone stays on one app. You cannot swipe away until you unlock with a gesture or a code. It feels like a locked room for that app.",
+    "for_makers": "Schools, shops and tests need a phone that cannot wander. Pinning keeps the screen on the task and blocks notifications and the home screen. Fleet owners use a stronger lock mode on company devices.",
+    "use_cases": [
+      {
+        "type": "education",
+        "example": "A student takes an online exam and cannot open other apps.",
+        "apps": []
+      },
+      {
+        "type": "enterprise",
+        "example": "A store uses a tablet as a point of sale and it stays on the sales app.",
+        "apps": [
+          "Square"
+        ]
+      },
+      {
+        "type": "kids",
+        "example": "A parent pins a phone to a learning game so a child cannot wander.",
+        "apps": []
+      },
+      {
+        "type": "travel",
+        "example": "An airport kiosk keeps the check in app on screen all day.",
+        "apps": []
+      },
+      {
+        "type": "health",
+        "example": "A hospital tablet stays on a patient intake form.",
+        "apps": []
+      },
+      {
+        "type": "games",
+        "example": "A museum game kiosk is locked on the exhibit app.",
+        "apps": []
+      },
+      {
+        "type": "security",
+        "example": "A phone loan to a stranger is pinned to the phone dialer to make a call.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Hard to exit if you forget the code",
+      "Can trap a screen",
+      "Used for control"
+    ],
+    "android_note": "Android has screen pinning for users and lock task mode for device owners, which can also hide the status bar and navigation.",
+    "ios_note": "iPhone has Guided Access for users and Single App Mode on supervised devices, used by exam apps."
+  },
+  "technical_bounds": [
+    "Third party apps cannot self pin on unmanaged devices on iOS"
+  ],
+  "scores": {
+    "sensitivity": 3,
+    "utility": 3,
+    "fingerprint_bits": 1,
+    "friction": 3
+  },
+  "value": {
+    "legit_uses": [
+      "Kiosks",
+      "Testing"
+    ],
+    "abuse": [
+      "Trapping users"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2014-10",
+      "platform": "android",
+      "version": "5.0",
+      "change": "Screen pinning"
+    },
+    {
+      "date": "2016-09",
+      "platform": "ios",
+      "version": "iOS 9",
+      "change": "Single App Mode via MDM"
+    }
+  ],
+  "related": [
+    "mob.sys.mdm"
+  ],
+  "refs": [
+    {
+      "t": "android",
+      "label": "Android: Lock task mode",
+      "url": "https://developer.android.com/work/dpc/dedicated-devices/lock-task-mode"
+    },
+    {
+      "t": "apple",
+      "label": "Apple: Single app mode",
+      "url": "https://developer.apple.com/documentation/uikit/uiaccessibility/requestguidedaccesssession(enabled:completionhandler:)"
+    }
+  ],
+  "confidence": "docs"
+}

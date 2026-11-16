@@ -1,0 +1,212 @@
+{
+  "id": "web.render.gpu-timing-drawnapart",
+  "name": "GPU timing fingerprint (DrawnApart)",
+  "kind": "tracking",
+  "group": "rendering-fingerprint",
+  "subgroup": "WebGL",
+  "tags": [
+    "gpu",
+    "timing",
+    "execution-units",
+    "drawnapart"
+  ],
+  "plain": "Times many identical GPU draw calls to expose per-chip speed differences.",
+  "meaning": "Manufacturing variation in execution units makes even identical GPU models slightly different. DrawnApart separated identical GPUs after only 150 ms of drawing and remained stable for weeks.",
+  "lifecycle": [
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "WebGL drawArrays loops; performance.now(); WebGPU compute",
+      "access": {
+        "grant": "none",
+        "prompt_ui": "",
+        "secure_context": false,
+        "user_gesture": false,
+        "persistence": "",
+        "revocation": "",
+        "iframe": "",
+        "steps": [
+          "Run vertex-heavy draw loops",
+          "Time each pass with high resolution timers",
+          "Classify with a trained model"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "9",
+          "note": "",
+          "date": "2011-02-03"
+        },
+        "edge": {
+          "s": "y",
+          "v": "79",
+          "note": "",
+          "date": "2020-01-15"
+        },
+        "firefox": {
+          "s": "y",
+          "v": "4",
+          "note": "",
+          "date": "2011-03-22"
+        },
+        "safari": {
+          "s": "y",
+          "v": "8",
+          "note": "",
+          "date": "2014-10-16"
+        },
+        "ios_safari": {
+          "s": "y",
+          "v": "8",
+          "note": "",
+          "date": "2014-09-17"
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "9",
+          "note": "",
+          "date": ""
+        },
+        "samsung": {
+          "s": "y",
+          "v": "5.0",
+          "note": "",
+          "date": "2016-12-15"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "hash",
+    "metric": "Vector of per-pass timings",
+    "update": "",
+    "fields": [
+      {
+        "name": "duration",
+        "type": "float",
+        "unit": "ms",
+        "range": "0.1 to 100",
+        "precision": "timer precision limited"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can time many GPU drawing jobs to tell apart even identical graphics chips",
+    "user_action": "Nothing. It happens when the page loads",
+    "can": [
+      "Run many identical drawing tasks and time each one",
+      "Spot tiny speed differences between two chips of the same model",
+      "Separate identical GPUs after only about 150 ms of drawing",
+      "Recognise the same device again on later visits"
+    ],
+    "cannot": [
+      "Show anything on your screen",
+      "Work if graphics tests are blocked",
+      "Ask permission first",
+      "Know who you are by itself"
+    ],
+    "reach": 4,
+    "reach_label": "Hard to hide, follows your hardware",
+    "differs": ""
+  },
+  "story": {
+    "what_it_is": "A script times many identical GPU drawing jobs to expose tiny speed differences between individual graphics chips.",
+    "icon": "microchip",
+    "tags": [
+      "Silent",
+      "Graphics chip",
+      "Tracking"
+    ],
+    "marketing": [],
+    "for_you": "You never see it. Your graphics chip does a brief busy job, and how long each part takes is a little different from the next chip, even of the same model. It acts as a hardware level ID.",
+    "for_makers": "Researchers showed this can tell apart two identical phones or laptops. It matters because it keeps working when other signals are hidden. Ad and fraud tools may adopt it, so browsers are working to blur timers.",
+    "use_cases": [
+      {
+        "type": "security",
+        "example": "A fraud engine tries to recognize one specific laptop even if its software looks brand new.",
+        "apps": []
+      },
+      {
+        "type": "ads",
+        "example": "An ad tracker could separate two people who both own the same new iPhone model.",
+        "apps": []
+      },
+      {
+        "type": "games",
+        "example": "A browser benchmark times your GPU to pick settings, and it is the same measure that can leak identity.",
+        "apps": []
+      },
+      {
+        "type": "analytics",
+        "example": "A research team tests how many devices can be told apart by their graphics timing alone.",
+        "apps": [
+          "DrawnApart (research)"
+        ]
+      },
+      {
+        "type": "creative",
+        "example": "A web 3D modeling app times its draw calls to adjust detail so the view stays smooth.",
+        "apps": []
+      },
+      {
+        "type": "banking",
+        "example": "A bank looks for stable hardware traits so a new login on a stolen password stands out.",
+        "apps": []
+      },
+      {
+        "type": "developer",
+        "example": "A browser maker adds timer rounding so these tricks give less precise results.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Hard to hide hardware traits",
+      "Mostly in research so far"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Needs repeated GPU load and good timers",
+    "Research prototype, not known in mass deployment"
+  ],
+  "scores": {
+    "sensitivity": 4,
+    "utility": 1,
+    "fingerprint_bits": 6,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": "None",
+    "abuse": "Per-device tracking beyond GPU model"
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2022-02",
+      "browser": "paper",
+      "version": "",
+      "change": "Laor et al. NDSS 2022 present DrawnApart; improve tracking duration 67% over software fingerprints"
+    }
+  ],
+  "related": [
+    "web.render.webgl-render-hash",
+    "web.perf.timer-precision"
+  ],
+  "refs": [
+    {
+      "t": "paper",
+      "label": "Laor et al., DrawnApart (NDSS 2022)",
+      "url": "https://arxiv.org/abs/2201.09956"
+    }
+  ],
+  "confidence": "verified"
+}

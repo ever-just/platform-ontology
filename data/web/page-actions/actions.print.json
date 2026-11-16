@@ -1,0 +1,218 @@
+{
+  "id": "web.actions.print",
+  "name": "Open the print dialog",
+  "kind": "action",
+  "group": "page-actions",
+  "subgroup": "Device output",
+  "tags": [
+    "print",
+    "beforeprint",
+    "kiosk"
+  ],
+  "plain": "Opens the system print dialog for the page, no click required in most browsers.",
+  "meaning": "A site can ask to print itself or a hidden frame. It cannot choose a printer or print silently, and it cannot read what the person does in the dialog.",
+  "lifecycle": [
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "window.print(); beforeprint/afterprint events; @media print",
+      "bcd": [
+        "api.Window.print",
+        "api.Window.beforeprint_event"
+      ],
+      "access": {
+        "grant": "none",
+        "prompt_ui": "None (no browser prompt)",
+        "secure_context": false,
+        "user_gesture": false,
+        "activation": "none",
+        "persistence": "One-shot",
+        "revocation": "Nothing to revoke (no permission is stored)",
+        "iframe": "Sandboxed frames need allow-modals; cross-origin frames print only their own content",
+        "steps": [
+          "Script calls window.print()",
+          "Browser opens print preview",
+          "afterprint fires when the dialog closes"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "1",
+          "note": "",
+          "date": "2008-12-11"
+        },
+        "edge": {
+          "s": "y",
+          "v": "12",
+          "note": "",
+          "date": "2015-07-29"
+        },
+        "firefox": {
+          "s": "y",
+          "v": "1",
+          "note": "",
+          "date": "2004-11-09"
+        },
+        "safari": {
+          "s": "y",
+          "v": "1.1",
+          "note": "",
+          "date": "2003-10-24"
+        },
+        "ios_safari": {
+          "s": "y",
+          "v": "1",
+          "note": "All iOS browsers use WebKit",
+          "date": "2007-06-29"
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "18",
+          "note": "",
+          "date": "2012-06-27"
+        },
+        "samsung": {
+          "s": "y",
+          "v": "1.0",
+          "note": "",
+          "date": "2013-04-27"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "none",
+    "metric": "",
+    "update": "",
+    "fields": []
+  },
+  "limits": {
+    "headline": "Can open your print window, without a click in most browsers",
+    "user_action": "Nothing in most cases. It happens when the page runs a print command, or you tap Print.",
+    "can": [
+      "Open the print dialog for the current page",
+      "Format the page for print with its own print styles",
+      "Let you save the page as a PDF from the print window"
+    ],
+    "cannot": [
+      "Print without you pressing Print in the dialog",
+      "Pick a printer or change the settings for you",
+      "See what printer you use or what your printer is called",
+      "Print in the background after you leave the page"
+    ],
+    "reach": 1,
+    "reach_label": "Opens the dialog, you decide",
+    "differs": ""
+  },
+  "story": {
+    "what_it_is": "A page can open your print window, usually without asking.",
+    "icon": "printer",
+    "tags": [
+      "Print",
+      "No prompt",
+      "Annoying"
+    ],
+    "marketing": [],
+    "for_you": "A receipt or ticket page may open the print box by itself. You can always cancel it. Nothing prints until you confirm.",
+    "for_makers": "Makers use it for receipts, tickets and reports, so you get a clean paper version in one step. Print style sheets also let one page look right on screen and on paper.",
+    "use_cases": [
+      {
+        "type": "travel",
+        "example": "After booking, a boarding pass page opens the print box so you can print it.",
+        "apps": [
+          "Ryanair",
+          "Booking.com"
+        ]
+      },
+      {
+        "type": "banking",
+        "example": "A statement page offers a print button with a layout cleaned for paper.",
+        "apps": []
+      },
+      {
+        "type": "shopping",
+        "example": "An order confirmation has a Print receipt button.",
+        "apps": [
+          "Amazon"
+        ]
+      },
+      {
+        "type": "education",
+        "example": "A school portal prints a certificate or a worksheet.",
+        "apps": []
+      },
+      {
+        "type": "productivity",
+        "example": "An online document tool prints a neat version without the toolbars.",
+        "apps": [
+          "Google Docs"
+        ]
+      },
+      {
+        "type": "enterprise",
+        "example": "A warehouse tool prints shipping labels as soon as an order is packed.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Surprise print dialogs",
+      "Printing private data"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Blocks the page until the dialog is dismissed in most browsers",
+    "Cannot print silently, choose the printer, or read the print result (no kiosk printing without enterprise policy)",
+    "Chrome ignores print() in sandboxed iframes lacking allow-modals",
+    "Repeated print() calls are not rate limited in the spec; Chrome limits when the tab is in the background",
+    "Page cannot read the printed output or the printer list"
+  ],
+  "scores": {
+    "sensitivity": 1,
+    "utility": 3,
+    "fingerprint_bits": null,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Receipts",
+      "Invoices",
+      "Tickets"
+    ],
+    "abuse": [
+      "Print dialog spam",
+      "Distraction loops"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2023-01",
+      "browser": "chrome",
+      "version": "112",
+      "change": "Print from sandboxed iframes requires allow-modals"
+    }
+  ],
+  "refs": [
+    {
+      "t": "mdn",
+      "label": "MDN print",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/Window/print"
+    },
+    {
+      "t": "spec",
+      "label": "HTML Standard: print()",
+      "url": "https://html.spec.whatwg.org/multipage/timers-and-user-prompts.html#dom-print"
+    }
+  ],
+  "confidence": "docs"
+}

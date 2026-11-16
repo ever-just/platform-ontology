@@ -1,0 +1,218 @@
+{
+  "id": "web.net.client-ip",
+  "name": "Client IP address",
+  "kind": "signal",
+  "group": "network-connectivity",
+  "subgroup": "Addressing",
+  "tags": [
+    "ip",
+    "ipv4",
+    "ipv6",
+    "server-side"
+  ],
+  "plain": "Every request carries the sender's public IP address.",
+  "meaning": "The server sees the IP (or the proxy or relay address). IPv4 gives about 32 bits at most; an IPv6 /64 gives up to 64. It is the base for geolocation, ISP and VPN checks, and rate limits. Shared NAT and CGNAT blur it.",
+  "lifecycle": [
+    "on-arrival"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "TCP/IP source address; X-Forwarded-For at proxies",
+      "access": {
+        "grant": "none",
+        "prompt_ui": "",
+        "secure_context": false,
+        "user_gesture": false,
+        "persistence": "",
+        "revocation": "",
+        "iframe": "",
+        "steps": [
+          "Browser connects",
+          "Server reads the socket peer address",
+          "Join with GeoIP and ASN databases"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "1",
+          "note": "",
+          "date": "2008-12-11"
+        },
+        "edge": {
+          "s": "y",
+          "v": "79",
+          "note": "",
+          "date": "2020-01-15"
+        },
+        "firefox": {
+          "s": "y",
+          "v": "1",
+          "note": "",
+          "date": "2004-11-09"
+        },
+        "safari": {
+          "s": "y",
+          "v": "1",
+          "note": "",
+          "date": "2003-06-23"
+        },
+        "ios_safari": {
+          "s": "y",
+          "v": "1",
+          "note": "",
+          "date": "2007-06-29"
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "1",
+          "note": "",
+          "date": ""
+        },
+        "samsung": {
+          "s": "y",
+          "v": "5.0",
+          "note": "",
+          "date": "2016-12-15"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "string",
+    "metric": "IPv4 dotted quad or IPv6",
+    "update": "",
+    "fields": [
+      {
+        "name": "ip",
+        "type": "string",
+        "unit": "",
+        "range": "IPv4 or IPv6",
+        "precision": "exact"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can see the public internet address your connection uses",
+    "user_action": "Nothing. Every site you visit gets it when you connect",
+    "can": [
+      "See your IP address, or your VPN, proxy or relay address",
+      "Guess your country and city from it",
+      "Check your internet company and spot VPNs",
+      "Limit how many requests one address can make"
+    ],
+    "cannot": [
+      "Find your street address or name",
+      "See your device's private home network address",
+      "Be sure it is you; shared connections and carrier networks blur it"
+    ],
+    "reach": 4,
+    "reach_label": "Every connection, a stable ID",
+    "differs": ""
+  },
+  "story": {
+    "what_it_is": "Every site you visit sees your internet address.",
+    "icon": "wifi",
+    "tags": [
+      "Network",
+      "Always on",
+      "Location"
+    ],
+    "marketing": [],
+    "for_you": "You never see it, but every site you visit receives your network address. It shows your internet provider and rough area. A VPN or relay swaps it for another address.",
+    "for_makers": "Makers need it to send you the page. They also use it for rough location, rate limits, abuse blocking and fraud, and ads use it to link visits from the same home or office.",
+    "use_cases": [
+      {
+        "type": "games",
+        "example": "A multiplayer game server uses your address to place you in a region and connect you with nearby players.",
+        "apps": [
+          "Roblox",
+          "Krunker.io"
+        ]
+      },
+      {
+        "type": "games",
+        "example": "A cloud gaming service uses your address to pick the closest data center for the lowest lag.",
+        "apps": [
+          "GeForce NOW",
+          "Xbox Cloud Gaming"
+        ]
+      },
+      {
+        "type": "media",
+        "example": "A streaming service uses it to decide which shows are licensed in your country.",
+        "apps": [
+          "Netflix",
+          "Disney+"
+        ]
+      },
+      {
+        "type": "security",
+        "example": "A website blocks an address that tries a password thousands of times.",
+        "apps": []
+      },
+      {
+        "type": "ads",
+        "example": "An ad network links visits from one household address to guess that devices belong together.",
+        "apps": []
+      },
+      {
+        "type": "analytics",
+        "example": "A site counts unique visitors and cities by address.",
+        "apps": [
+          "Google Analytics"
+        ]
+      },
+      {
+        "type": "banking",
+        "example": "A bank flags a login from an address it has never seen for that customer.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Reveals rough location",
+      "Links your visits"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Hidden by VPN, Tor, iCloud Private Relay, Chrome IP Protection and corporate proxies",
+    "CGNAT shares one IP among hundreds of users"
+  ],
+  "scores": {
+    "sensitivity": 3,
+    "utility": 5,
+    "fingerprint_bits": 4,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": "Rate limiting, abuse prevention, geo compliance",
+    "abuse": "Cross-site tracking when combined with other signals"
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "related": [
+    "web.net.ip-geolocation",
+    "web.net.asn-isp-hosting",
+    "web.net.ip-masking"
+  ],
+  "refs": [
+    {
+      "t": "rfc",
+      "label": "RFC 791 Internet Protocol",
+      "url": "https://www.rfc-editor.org/rfc/rfc791"
+    },
+    {
+      "t": "rfc",
+      "label": "RFC 4941 IPv6 privacy extensions",
+      "url": "https://www.rfc-editor.org/rfc/rfc4941"
+    }
+  ],
+  "confidence": "docs"
+}

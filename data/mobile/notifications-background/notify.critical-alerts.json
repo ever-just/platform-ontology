@@ -1,0 +1,227 @@
+{
+  "id": "mob.notify.critical-alerts",
+  "name": "Critical alerts",
+  "kind": "capability",
+  "group": "notifications-background",
+  "subgroup": "Alerts",
+  "tags": [
+    "entitlement",
+    "dnd-bypass",
+    "notification",
+    "notifications",
+    "critical"
+  ],
+  "plain": "A notification that rings through Do Not Disturb, Focus and the mute switch.",
+  "meaning": "For emergencies like glucose alarms. Powerful enough that Apple demands justification.",
+  "lifecycle": [
+    "background"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "p",
+      "v": "6.0",
+      "api": 23,
+      "permission": "ACCESS_NOTIFICATION_POLICY (special) to bypass DND; USE_FULL_SCREEN_INTENT limited by Play",
+      "protection": "special",
+      "grant": "settings",
+      "prompt_ui": "Do Not Disturb access page in Settings",
+      "persistence": "Until revoked",
+      "revocation": "Settings > Notifications > Do Not Disturb access",
+      "store_policy": "Play: full screen intent restricted to calling and alarm apps (Android 14)",
+      "api_surface": "NotificationChannel.setBypassDnd, NotificationManager",
+      "note": "User must also allow channel to bypass DND"
+    },
+    "ios": {
+      "s": "f",
+      "v": "12",
+      "permission": "com.apple.developer.usernotifications.critical-alerts",
+      "protection": "entitlement",
+      "grant": "entitlement",
+      "prompt_ui": "Separate permission prompt for Critical Alerts",
+      "persistence": "Until revoked",
+      "revocation": "Settings > Notifications > App",
+      "store_policy": "Apple approves case by case",
+      "api_surface": "UNAuthorizationOptions.criticalAlert, UNNotificationSound.defaultCritical",
+      "note": "Apple request form required; time sensitive notifications (iOS 15) need only a capability"
+    }
+  },
+  "web_equivalents": [
+    "web.notify.notifications"
+  ],
+  "data": {
+    "type": "event",
+    "metric": "Alert",
+    "update": "per notification",
+    "fields": [
+      {
+        "name": "volume",
+        "type": "float",
+        "unit": "0 to 1",
+        "range": "app set",
+        "precision": ""
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can ring through Do Not Disturb, Focus and the mute switch, if Apple approves the app",
+    "user_action": "You tap Allow on a separate Critical Alerts prompt, or give Do Not Disturb access on Android",
+    "can": [
+      "Sound an alert even when Focus or the mute switch is on",
+      "Warn you about things like a health reading or emergency",
+      "Bypass Do Not Disturb on Android once you grant it"
+    ],
+    "cannot": [
+      "Do this on iPhone without Apple's special approval for the app",
+      "Do this if you decline the Critical Alerts prompt",
+      "Bypass Do Not Disturb on Android unless you also allow that channel to"
+    ],
+    "reach": 2,
+    "reach_label": "Only for the rare urgent alert",
+    "differs": "iPhone needs a special Apple approval plus its own prompt. Android needs Do Not Disturb access and a channel that is allowed to bypass."
+  },
+  "story": {
+    "what_it_is": "An alert that rings through silent mode, Do Not Disturb and Focus.",
+    "icon": "siren",
+    "tags": [
+      "Notifications",
+      "Safety",
+      "Asks first"
+    ],
+    "marketing": [
+      {
+        "vendor": "Apple",
+        "name": "Critical Alerts",
+        "pitch": "Apple lets approved health and safety apps send alerts that sound even when the phone is silenced.",
+        "url": "https://developer.apple.com/documentation/usernotifications/unauthorizationoptions/criticalalert"
+      }
+    ],
+    "for_you": "Your phone sounds off at night even on silent because a blood sugar or home alarm app sent a critical alert. You see a separate permission prompt for it.",
+    "for_makers": "Makers of health and safety apps need it for alarms that cannot be missed. Apple asks for a justification, because it is powerful and could be abused.",
+    "use_cases": [
+      {
+        "type": "health",
+        "example": "A glucose monitor wakes a sleeping person when sugar drops too low.",
+        "apps": [
+          "Dexcom",
+          "Freestyle Libre"
+        ]
+      },
+      {
+        "type": "security",
+        "example": "A home alarm sounds on your phone when a smoke or break in alert fires.",
+        "apps": [
+          "SimpliSafe",
+          "Ring Alarm"
+        ]
+      },
+      {
+        "type": "smart-home",
+        "example": "A water leak sensor alerts you at 3 am.",
+        "apps": [
+          "Flo by Moen"
+        ]
+      },
+      {
+        "type": "health",
+        "example": "A medical device app warns of a pump or heart rhythm problem.",
+        "apps": []
+      },
+      {
+        "type": "enterprise",
+        "example": "A hospital paging app alerts a nurse to a code blue.",
+        "apps": []
+      },
+      {
+        "type": "live",
+        "example": "An emergency alert app warns of a local storm.",
+        "apps": []
+      },
+      {
+        "type": "games",
+        "example": "A game cannot get this and uses normal alerts, since Apple reserves it for safety.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Spam that breaks through",
+      "Wakes you in the night"
+    ],
+    "android_note": "Android has no exact match. A user can allow a channel to bypass Do Not Disturb.",
+    "ios_note": "iOS requires Apple approval and a separate prompt."
+  },
+  "technical_bounds": [
+    "Apple requires a form and approval",
+    "User may disable per app",
+    "Apple must approve the entitlement",
+    "The person can still disable per app"
+  ],
+  "scores": {
+    "sensitivity": 3,
+    "utility": 4,
+    "fingerprint_bits": null,
+    "friction": 3
+  },
+  "value": {
+    "legit_uses": [
+      "Medical alarms",
+      "Security alerts"
+    ],
+    "abuse": [
+      "Spam that bypasses Focus"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2021-09",
+      "platform": "ios",
+      "version": "iOS 15",
+      "change": "Time sensitive interruption level"
+    },
+    {
+      "date": "2018-09",
+      "platform": "ios",
+      "version": "iOS 12",
+      "change": "Critical alerts introduced"
+    },
+    {
+      "date": "2018-09",
+      "platform": "ios",
+      "version": "iOS 12",
+      "change": "Critical alerts introduced with Apple entitlement"
+    }
+  ],
+  "related": [
+    "mob.system.focus-status",
+    "mob.notif.time-sensitive"
+  ],
+  "refs": [
+    {
+      "t": "apple",
+      "label": "Apple: criticalAlert option",
+      "url": "https://developer.apple.com/documentation/usernotifications/unauthorizationoptions/criticalalert"
+    },
+    {
+      "t": "android",
+      "label": "Android: Notification Do Not Disturb access",
+      "url": "https://developer.android.com/reference/android/Manifest.permission#ACCESS_NOTIFICATION_POLICY"
+    },
+    {
+      "t": "apple",
+      "label": "Apple: Critical alerts entitlement",
+      "url": "https://developer.apple.com/documentation/bundleresources/entitlements/com.apple.developer.usernotifications.critical-alerts"
+    },
+    {
+      "t": "apple",
+      "label": "Apple: Generating a remote notification",
+      "url": "https://developer.apple.com/documentation/usernotifications/generating-a-remote-notification"
+    }
+  ],
+  "confidence": "docs"
+}

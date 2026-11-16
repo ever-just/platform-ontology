@@ -1,0 +1,239 @@
+{
+  "id": "web.net.ip-masking",
+  "name": "IP masking (Private Relay, IP Protection, Tor)",
+  "kind": "signal",
+  "group": "network-connectivity",
+  "subgroup": "Anonymity",
+  "tags": [
+    "private-relay",
+    "ip-protection",
+    "tor",
+    "proxy"
+  ],
+  "plain": "Some browsers route traffic through relays so sites do not see the visitor's real IP.",
+  "meaning": "iCloud Private Relay (Safari, iCloud+ subscribers) uses two hops with a coarse egress location. Chrome IP Protection proxies selected third-party traffic in Incognito for known trackers. Tor routes everything over 3 hops.",
+  "lifecycle": [
+    "on-arrival"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "OHTTP-style multi-hop relays; MASQUE; Tor circuits",
+      "access": {
+        "grant": "none",
+        "prompt_ui": "",
+        "secure_context": false,
+        "user_gesture": false,
+        "persistence": "",
+        "revocation": "",
+        "iframe": "",
+        "steps": [
+          "Browser sends traffic to a relay",
+          "Relay forwards to destination",
+          "Site sees relay egress IP"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "p",
+          "v": "",
+          "note": ":IP Protection for third-party traffic in Incognito (rolling out)"
+        },
+        "edge": {
+          "s": "p",
+          "v": "",
+          "note": ":IP Protection for third-party traffic in Incognito (rolling out)"
+        },
+        "firefox": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "safari": {
+          "s": "y",
+          "v": "15",
+          "note": "iCloud Private Relay requires iCloud+",
+          "date": "2021-09-20"
+        },
+        "ios_safari": {
+          "s": "y",
+          "v": "15",
+          "note": "",
+          "date": "2021-09-20"
+        },
+        "chrome_android": {
+          "s": "p",
+          "v": "",
+          "note": ":IP Protection for third-party traffic in Incognito (rolling out)"
+        },
+        "samsung": {
+          "s": "p",
+          "v": "",
+          "note": ":IP Protection for third-party traffic in Incognito (rolling out)"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "string",
+    "metric": "Relay egress IP",
+    "update": "",
+    "fields": [
+      {
+        "name": "egress ip",
+        "type": "string",
+        "unit": "",
+        "range": "relay pool",
+        "precision": "shared by many users"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can see only a relay's address when you browse with Private Relay, IP Protection or Tor",
+    "user_action": "You turn on iCloud Private Relay, use Tor Browser, or browse in Chrome Incognito with IP Protection",
+    "can": [
+      "See the relay's internet address instead of your home address",
+      "Guess your rough area from the coarse location a relay shares",
+      "Treat relay traffic as higher risk and ask extra questions or block it"
+    ],
+    "cannot": [
+      "Learn your real home address when the relay is working",
+      "Tell that a relay is in use with certainty, since a site can only guess from known relay lists",
+      "Get this from Firefox, which has no built in relay feature",
+      "Break the relay for you; the protection stays on until you switch it off"
+    ],
+    "reach": 1,
+    "reach_label": "Only the relay's address",
+    "differs": "Private Relay is Safari with iCloud+; IP Protection is limited to Chrome Incognito and known trackers; Firefox has no built in relay."
+  },
+  "story": {
+    "what_it_is": "Some browsers and services hide your real internet address behind a relay so sites see a different one.",
+    "icon": "shield",
+    "tags": [
+      "Privacy",
+      "Network",
+      "Silent"
+    ],
+    "marketing": [
+      {
+        "vendor": "Apple",
+        "name": "iCloud Private Relay",
+        "pitch": "Sends your browsing through two relays so no single party knows both who you are and which sites you visit.",
+        "url": "https://support.apple.com/en-us/102602"
+      },
+      {
+        "vendor": "Tor Project",
+        "name": "Tor Browser",
+        "pitch": "Bounces your traffic through volunteer servers so websites cannot see where you really connect from.",
+        "url": "https://www.torproject.org/"
+      }
+    ],
+    "for_you": "You usually notice nothing. Pages load as normal, but a site may think you are in a nearby city, not your own. Some sites may ask extra questions or block you because your address looks hidden.",
+    "for_makers": "Makers see the relay's address, not the visitor's home address. That breaks easy location guessing, ad targeting by address and per-person rate limits. Teams must decide whether to trust, challenge or block these visitors.",
+    "use_cases": [
+      {
+        "type": "media",
+        "example": "A Safari user with Private Relay on opens a news site. The site sees a shared regional address, so it shows a broad local edition, not street level local ads.",
+        "apps": [
+          "Safari"
+        ]
+      },
+      {
+        "type": "games",
+        "example": "A player in a browser shooter connects through a relay. The game server sees a relay address, so matchmaking picks a server by relay region and ping can rise a few milliseconds.",
+        "apps": []
+      },
+      {
+        "type": "video",
+        "example": "Cloud gaming in the browser, such as Xbox Cloud Gaming or GeForce NOW, checks region before starting. A masked address can show the wrong country or add lag, so the player may be told the service is unavailable.",
+        "apps": [
+          "Xbox Cloud Gaming",
+          "GeForce NOW"
+        ]
+      },
+      {
+        "type": "ads",
+        "example": "An ad network normally buys local ads by address. With masking, it only knows the broad area, so it falls back to page topic ads and reports less precise location data.",
+        "apps": []
+      },
+      {
+        "type": "security",
+        "example": "A bank sees a login from a relay address it has never seen. It may ask for a code by text, because relays hide the usual signals of where the person lives.",
+        "apps": []
+      },
+      {
+        "type": "shopping",
+        "example": "A store applies country pricing and tax by address. A masked visitor may see another region's price until they enter a shipping address at checkout.",
+        "apps": []
+      },
+      {
+        "type": "analytics",
+        "example": "A site counts unique visitors by address. Many people share one relay address, so the count is lower and the city report is blurrier.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Wrong location shown",
+      "Blocked by fraud rules"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Only protects against sites, not the relay operator",
+    "Relay IPs appear on VPN lists and trigger blocks",
+    "Chrome IP Protection covers listed third-party domains only (reported)"
+  ],
+  "scores": {
+    "sensitivity": 2,
+    "utility": 4,
+    "fingerprint_bits": 3,
+    "friction": 1
+  },
+  "value": {
+    "legit_uses": "IP privacy",
+    "abuse": "Fraud and bot blockers treat relays as high risk"
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2021-09",
+      "browser": "safari",
+      "version": "15",
+      "change": "iCloud Private Relay beta"
+    },
+    {
+      "date": "2025-01",
+      "browser": "chrome",
+      "version": "",
+      "change": "IP Protection roll out in Incognito (approximate, unverified)"
+    }
+  ],
+  "related": [
+    "web.net.client-ip",
+    "web.net.vpn-proxy-tor-detection"
+  ],
+  "refs": [
+    {
+      "t": "vendor",
+      "label": "Apple iCloud Private Relay overview",
+      "url": "https://www.apple.com/icloud/docs/iCloud_Private_Relay_Overview_Dec2021.pdf"
+    },
+    {
+      "t": "vendor",
+      "label": "Chrome IP Protection explainer",
+      "url": "https://github.com/GoogleChrome/ip-protection"
+    },
+    {
+      "t": "vendor",
+      "label": "Tor Project",
+      "url": "https://www.torproject.org/"
+    }
+  ],
+  "confidence": "docs"
+}

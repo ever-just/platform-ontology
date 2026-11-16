@@ -1,0 +1,279 @@
+{
+  "id": "web.display.window-management",
+  "name": "Window Management (multi-screen)",
+  "kind": "permission",
+  "group": "display-window",
+  "subgroup": "Screens",
+  "tags": [
+    "multi-monitor",
+    "fingerprint"
+  ],
+  "plain": "Asks to see all connected monitors and place windows on them.",
+  "meaning": "Reveals how many screens you have, their sizes, positions, labels and scale. That is a strong device fingerprint and lets a site open fullscreen windows on a chosen monitor.",
+  "lifecycle": [
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "window.getScreenDetails(); screen.isExtended; ScreenDetails.screens; screenschange event",
+      "permission_name": "window-management",
+      "permissions_policy": "window-management",
+      "bcd": [
+        "api.Window.getScreenDetails",
+        "api.Screen.isExtended"
+      ],
+      "access": {
+        "grant": "prompt",
+        "prompt_ui": "Chrome prompt: Manage windows on all your displays, Allow or Block. screen.isExtended is readable without a prompt.",
+        "secure_context": true,
+        "user_gesture": true,
+        "persistence": "Persistent per origin",
+        "revocation": "Site settings; Permissions API window-management",
+        "iframe": "Needs allow=\"window-management\" in iframes",
+        "steps": [
+          "Check screen.isExtended (no prompt)",
+          "Call getScreenDetails() from a gesture",
+          "Permission prompt",
+          "Read ScreenDetailed objects",
+          "Open or fullscreen on a chosen screen"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "100",
+          "note": "Window Management API ships as window-placement in 100, renamed in 111",
+          "date": "2022-03-29"
+        },
+        "edge": {
+          "s": "y",
+          "v": "100",
+          "note": "",
+          "date": "2022-04-01"
+        },
+        "firefox": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "safari": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "ios_safari": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "100",
+          "note": "",
+          "date": "2022-03-29"
+        },
+        "samsung": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "object",
+    "metric": "ScreenDetails with one ScreenDetailed per monitor",
+    "update": "on call plus change events",
+    "fields": [
+      {
+        "name": "isExtended",
+        "type": "boolean",
+        "unit": "none",
+        "range": "true or false",
+        "precision": "1 bit, no prompt"
+      },
+      {
+        "name": "width/height/availWidth/availHeight",
+        "type": "integer",
+        "unit": "pixels",
+        "range": "per screen",
+        "precision": "about 10 bits per value"
+      },
+      {
+        "name": "left/top/availLeft/availTop",
+        "type": "integer",
+        "unit": "pixels",
+        "range": "may be negative",
+        "precision": "reveals layout"
+      },
+      {
+        "name": "devicePixelRatio",
+        "type": "float",
+        "unit": "ratio",
+        "range": "about 1 to 4",
+        "precision": "few bits"
+      },
+      {
+        "name": "label",
+        "type": "string",
+        "unit": "text",
+        "range": "monitor name",
+        "precision": "high entropy"
+      },
+      {
+        "name": "isPrimary/isInternal",
+        "type": "boolean",
+        "unit": "none",
+        "range": "true or false",
+        "precision": "1 bit each"
+      },
+      {
+        "name": "colorDepth",
+        "type": "integer",
+        "unit": "bits",
+        "range": "24 or 30",
+        "precision": "1 bit"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can see all your connected screens and place windows on them, if you allow",
+    "user_action": "You click Use all screens or Present on second monitor, then Allow.",
+    "can": [
+      "List your screens with their size and position",
+      "Open windows on the screen you choose",
+      "Go fullscreen on a chosen monitor",
+      "Tell that more than one screen is attached, without asking you"
+    ],
+    "cannot": [
+      "List your screens before you click Allow",
+      "See your windows from other apps",
+      "Work in Firefox or Safari"
+    ],
+    "reach": 2,
+    "reach_label": "While you use it, after Allow",
+    "differs": "Chrome and Edge on computers only. Firefox and Safari do not have it."
+  },
+  "story": {
+    "what_it_is": "Asks to see all your connected monitors and place windows on them.",
+    "icon": "monitor-up",
+    "tags": [
+      "Screens",
+      "Asks first",
+      "Multitask"
+    ],
+    "marketing": [
+      {
+        "vendor": "Chrome",
+        "name": "Window Management API",
+        "pitch": "Chrome says it lets web apps see and use multiple screens, for example presentations across displays.",
+        "url": "https://developer.chrome.com/docs/capabilities/web-apis/window-management"
+      }
+    ],
+    "for_you": "Your browser asks, 'Manage windows on all your displays?' If you say yes, the site can open its own windows on each screen, like speaker notes on one and slides on another.",
+    "for_makers": "It lets web apps compete with desktop apps in setups with many screens. It also reveals your layout of monitors, so browsers ask first.",
+    "use_cases": [
+      {
+        "type": "productivity",
+        "example": "A slide app puts the presentation on the projector and speaker notes on your laptop screen.",
+        "apps": [
+          "Google Slides"
+        ]
+      },
+      {
+        "type": "games",
+        "example": "A browser flight or racing game opens a map, dashboard or chat on a second monitor.",
+        "apps": []
+      },
+      {
+        "type": "enterprise",
+        "example": "A trading or operations dashboard opens charts across several monitors in one click.",
+        "apps": []
+      },
+      {
+        "type": "creative",
+        "example": "A video or music editor in the browser puts the timeline on one screen and the preview on another.",
+        "apps": []
+      },
+      {
+        "type": "live",
+        "example": "A web control room for live events opens one window per camera on a wall of screens.",
+        "apps": []
+      },
+      {
+        "type": "security",
+        "example": "A security camera web page opens many feeds across a monitor wall.",
+        "apps": []
+      },
+      {
+        "type": "education",
+        "example": "A lecture tool shows slides to students and notes to the teacher.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Reveals monitor layout",
+      "Can scatter windows"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Chromium desktop only",
+    "Requires a gesture",
+    "Fullscreen on chosen screen still needs a gesture"
+  ],
+  "scores": {
+    "sensitivity": 3,
+    "utility": 3,
+    "fingerprint_bits": 6,
+    "friction": 2
+  },
+  "value": {
+    "legit_uses": [
+      "Presentation tools",
+      "Trading and control rooms"
+    ],
+    "abuse": [
+      "Multi-monitor fingerprint",
+      "Placing fullscreen pages over other windows"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2022-03",
+      "browser": "chrome",
+      "version": "100",
+      "change": "Window Placement API ships as window-placement permission"
+    },
+    {
+      "date": "2023-03",
+      "browser": "chrome",
+      "version": "111",
+      "change": "Renamed Window Management, permission name window-management"
+    }
+  ],
+  "related": [
+    "web.display.fullscreen"
+  ],
+  "refs": [
+    {
+      "t": "mdn",
+      "label": "MDN Window Management API",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/Window_Management_API"
+    },
+    {
+      "t": "spec",
+      "label": "W3C Window Management",
+      "url": "https://www.w3.org/TR/window-management/"
+    }
+  ],
+  "confidence": "docs"
+}

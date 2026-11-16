@@ -1,0 +1,235 @@
+{
+  "id": "web.display.theme-color",
+  "name": "Theme color for browser UI",
+  "kind": "action",
+  "group": "display-window",
+  "subgroup": "Browser chrome",
+  "tags": [
+    "theme-color",
+    "meta",
+    "browser-ui",
+    "pwa"
+  ],
+  "plain": "Tints the browser's address bar or tab strip with a color the page picks.",
+  "meaning": "A site can suggest a colour for the browser toolbar to match its brand. The tag is write only: it reveals nothing about the person, and the browser may ignore it.",
+  "lifecycle": [
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "<meta name=\"theme-color\" content=\"#fff\" media=\"(prefers-color-scheme: dark)\">",
+      "bcd": [
+        "html.elements.meta.name.theme-color"
+      ],
+      "access": {
+        "grant": "none",
+        "prompt_ui": "None (no browser prompt)",
+        "secure_context": false,
+        "user_gesture": false,
+        "activation": "none",
+        "persistence": "Per page; the browser re-reads it on navigation or when the tag changes",
+        "revocation": "Nothing to revoke (no permission is stored)",
+        "iframe": "Only the top-level page's tag is used; iframes cannot set it",
+        "steps": [
+          "Page includes a theme-color meta tag",
+          "Browser tints its toolbar on supported platforms"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "p",
+          "v": "73",
+          "note": "Desktop: installed PWAs only",
+          "date": "2019-03-12"
+        },
+        "edge": {
+          "s": "p",
+          "v": "79",
+          "note": "Partial implementation per MDN BCD",
+          "date": "2020-01-15"
+        },
+        "firefox": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "safari": {
+          "s": "y",
+          "v": "15",
+          "note": "From Safari 26, installed web apps only",
+          "date": "2021-09-20"
+        },
+        "ios_safari": {
+          "s": "y",
+          "v": "15",
+          "note": "All iOS browsers use WebKit",
+          "date": "2021-09-20"
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "92",
+          "note": "",
+          "date": "2021-07-20"
+        },
+        "samsung": {
+          "s": "y",
+          "v": "6.2",
+          "note": "",
+          "date": "2017-10-26"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "none",
+    "metric": "",
+    "update": "",
+    "fields": []
+  },
+  "limits": {
+    "headline": "Can tint your browser's address bar or tab strip with a color it picks",
+    "user_action": "Nothing. It happens when the page loads.",
+    "can": [
+      "Set the color of the address bar or tab strip",
+      "Pick a different color for dark mode",
+      "Match the page's look"
+    ],
+    "cannot": [
+      "Change the browser's buttons, menus or other parts",
+      "See anything about you",
+      "Set a color in Firefox, which ignores it"
+    ],
+    "reach": 1,
+    "reach_label": "One color, no prompt",
+    "differs": "Firefox ignores it. Chrome on computers only shows it in some window styles."
+  },
+  "story": {
+    "what_it_is": "A page picks a color to tint your browser's address bar or tab strip.",
+    "icon": "paintbrush",
+    "tags": [
+      "Branding",
+      "Display",
+      "Phone"
+    ],
+    "marketing": [
+      {
+        "vendor": "MDN",
+        "name": "theme-color meta tag",
+        "pitch": "Documents the tag a page uses to suggest a color for the browser toolbar.",
+        "url": "https://developer.mozilla.org/en-US/docs/Web/HTML/Element/meta/name/theme-color"
+      }
+    ],
+    "for_you": "You see your browser bar change to match the site, such as green for a banking site or black for dark mode. It looks like part of the page.",
+    "for_makers": "Makers use it for brand feel and to make web apps look native. It can also swap with dark mode. It is harmless, though a fake color can add to the look of a copycat site.",
+    "use_cases": [
+      {
+        "type": "social",
+        "example": "A social site tints your phone address bar blue so it looks like its own app.",
+        "apps": []
+      },
+      {
+        "type": "games",
+        "example": "A browser game turns the browser bar black to blend with its dark menu.",
+        "apps": []
+      },
+      {
+        "type": "shopping",
+        "example": "A store paints the bar in its brand color on every product page.",
+        "apps": []
+      },
+      {
+        "type": "media",
+        "example": "A music site uses the album art color for the bar while a track plays.",
+        "apps": []
+      },
+      {
+        "type": "productivity",
+        "example": "A note app changes its bar color when you switch to dark mode.",
+        "apps": []
+      },
+      {
+        "type": "security",
+        "example": "A copycat bank page paints the bar the same color as the real bank to feel trusted.",
+        "apps": []
+      },
+      {
+        "type": "news",
+        "example": "A news site uses a red bar during live coverage.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Lookalike scams",
+      "Cosmetic only"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Chrome for Android (92) and Samsung Internet (6.2) tint the toolbar; Chrome Android skips it on devices with native dark mode unless the page is an installed app",
+    "Desktop Chrome (73) uses it only for installed PWA title bars",
+    "Safari 15 used it for the tab bar; from Safari 26 only installed web apps use it",
+    "Firefox desktop and Firefox for Android do not support it",
+    "A media attribute lets pages offer different colours for light and dark",
+    "The browser may ignore the colour for contrast or privacy"
+  ],
+  "scores": {
+    "sensitivity": 1,
+    "utility": 2,
+    "fingerprint_bits": null,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Brand consistency",
+      "Installed web app polish"
+    ],
+    "abuse": [
+      "Mimicking system chrome colours to look trustworthy"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2021-09",
+      "browser": "safari",
+      "version": "15",
+      "change": "Safari 15 uses theme-color for the tab bar on macOS and iOS"
+    },
+    {
+      "date": "2021-07",
+      "browser": "chrome_android",
+      "version": "92",
+      "change": "Chrome for Android actually applies the colour"
+    },
+    {
+      "date": "2019-03",
+      "browser": "chrome",
+      "version": "73",
+      "change": "Desktop Chrome applies it only to installed PWAs"
+    }
+  ],
+  "related": [
+    "web.actions.tab-title-favicon",
+    "web.display.display-mode"
+  ],
+  "refs": [
+    {
+      "t": "mdn",
+      "label": "MDN theme-color",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/meta/name/theme-color"
+    },
+    {
+      "t": "webkit",
+      "label": "WebKit Safari 15 features",
+      "url": "https://webkit.org/blog/11648/new-webkit-features-in-safari-15/"
+    }
+  ],
+  "confidence": "docs"
+}

@@ -1,0 +1,265 @@
+{
+  "id": "web.perf.navigation-resource-timing",
+  "name": "Navigation and Resource Timing",
+  "kind": "signal",
+  "group": "timing-performance",
+  "subgroup": "Performance API",
+  "tags": [
+    "performance",
+    "timing",
+    "PerformanceResourceTiming",
+    "TAO"
+  ],
+  "plain": "Reports DNS, connect, TLS and download timings for the page and each resource.",
+  "meaning": "Reveals connection speed and CDN behavior, whether a request hit the cache, protocol (h2, h3) and TLS reuse. Cross-origin detail needs the Timing-Allow-Origin header, otherwise sizes and phases are zeroed.",
+  "lifecycle": [
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "performance.getEntriesByType('navigation'|'resource'); PerformanceObserver",
+      "bcd": [
+        "api.PerformanceResourceTiming",
+        "api.PerformanceNavigationTiming"
+      ],
+      "access": {
+        "grant": "none",
+        "prompt_ui": "",
+        "secure_context": false,
+        "user_gesture": false,
+        "persistence": "",
+        "revocation": "",
+        "iframe": "",
+        "steps": [
+          "Read PerformanceNavigationTiming and resource entries",
+          "Check nextHopProtocol, transferSize, responseStart, connectStart",
+          "Send to analytics"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "29",
+          "note": "",
+          "date": "2013-08-20"
+        },
+        "edge": {
+          "s": "y",
+          "v": "12",
+          "note": "",
+          "date": "2015-07-29"
+        },
+        "firefox": {
+          "s": "y",
+          "v": "35",
+          "note": "",
+          "date": "2015-01-13"
+        },
+        "safari": {
+          "s": "y",
+          "v": "11",
+          "note": "",
+          "date": "2017-09-19"
+        },
+        "ios_safari": {
+          "s": "y",
+          "v": "11",
+          "note": "",
+          "date": "2017-09-19"
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "29",
+          "note": "",
+          "date": "2013-08-21"
+        },
+        "samsung": {
+          "s": "y",
+          "v": "2.0",
+          "note": "",
+          "date": "2014-10-17"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "list",
+    "metric": "One entry per resource, about 20 timestamps each",
+    "update": "",
+    "fields": [
+      {
+        "name": "duration",
+        "type": "float",
+        "unit": "ms",
+        "range": "0 to 60000",
+        "precision": "5 microseconds to 1 ms (timer limited)"
+      },
+      {
+        "name": "transferSize",
+        "type": "integer",
+        "unit": "bytes",
+        "range": "0 to GB",
+        "precision": "exact for same origin or TAO; 0 if cached"
+      },
+      {
+        "name": "nextHopProtocol",
+        "type": "string",
+        "unit": "",
+        "range": "h2, h3, http/1.1",
+        "precision": "exact"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can see how fast the page and each file loaded for you",
+    "user_action": "Nothing. It happens as the page loads",
+    "can": [
+      "Get timings for DNS, connection, security setup and download",
+      "Learn your connection speed and if a file came from cache",
+      "Learn the web protocol used, such as h2 or h3",
+      "Get full detail for outside files only if their site allows it"
+    ],
+    "cannot": [
+      "See what is inside other sites' files",
+      "Ask permission first",
+      "Know who you are by itself",
+      "See full outside detail without that site's approval"
+    ],
+    "reach": 2,
+    "reach_label": "Silent, while the page loads",
+    "differs": ""
+  },
+  "story": {
+    "what_it_is": "Browsers report timings for the page and each file it loads: DNS, connection, security handshake and download.",
+    "icon": "timer",
+    "tags": [
+      "Speed",
+      "Silent",
+      "Measurement"
+    ],
+    "marketing": [
+      {
+        "vendor": "MDN",
+        "name": "Navigation timing",
+        "pitch": "Describes how pages can read detailed timings about how they loaded.",
+        "url": "https://developer.mozilla.org/en-US/docs/Web/API/Performance_API/Navigation_timing"
+      },
+      {
+        "vendor": "MDN",
+        "name": "Resource timing",
+        "pitch": "Describes how pages can measure the timing of each file they request.",
+        "url": "https://developer.mozilla.org/en-US/docs/Web/API/Performance_API/Resource_timing"
+      }
+    ],
+    "for_you": "You never see it. Sites quietly collect how fast each page and image loaded for you. Your slow connection is turned into data that helps them fix slow pages.",
+    "for_makers": "It is the base of web speed monitoring. Teams compare load times by country, network and device. It also lets ad and tracker scripts see timing of other files, so browsers limit cross site detail.",
+    "use_cases": [
+      {
+        "type": "analytics",
+        "example": "A monitoring service collects load times from real visitors and shows a map of the slowest regions.",
+        "apps": [
+          "Datadog RUM",
+          "New Relic",
+          "Cloudflare Web Analytics"
+        ]
+      },
+      {
+        "type": "shopping",
+        "example": "A retailer finds that its image server is slow in one country and adds a closer cache.",
+        "apps": []
+      },
+      {
+        "type": "video",
+        "example": "A video site checks how long the first video segment takes to arrive and adjusts quality.",
+        "apps": [
+          "YouTube",
+          "Netflix"
+        ]
+      },
+      {
+        "type": "games",
+        "example": "A game portal measures asset download times to see how long players wait before playing.",
+        "apps": []
+      },
+      {
+        "type": "ads",
+        "example": "An ad network measures how long each ad takes to load and drops slow ad partners.",
+        "apps": []
+      },
+      {
+        "type": "security",
+        "example": "A fraud tool compares timing with the claimed location. A login that says Paris but loads like Asia looks odd.",
+        "apps": []
+      },
+      {
+        "type": "news",
+        "example": "A news site measures third party script times to learn which tags slow the page.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Can hint at your location",
+      "Cross site limits apply"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Cross-origin detail zeroed without TAO",
+    "Buffer limited to 250 resource entries by default",
+    "Cannot see response bodies"
+  ],
+  "scores": {
+    "sensitivity": 2,
+    "utility": 4,
+    "fingerprint_bits": 3,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": "Real user monitoring, Core Web Vitals",
+    "abuse": "Infer cache state, ISP speed, VPN latency"
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2020-01",
+      "browser": "chrome",
+      "version": "",
+      "change": "Cross-origin entries reduced without Timing-Allow-Origin"
+    },
+    {
+      "date": "2023-09",
+      "browser": "chrome",
+      "version": "",
+      "change": "Resource timing gets responseStatus and contentType"
+    }
+  ],
+  "related": [
+    "web.perf.server-timing",
+    "web.perf.cache-timing-history-sniffing"
+  ],
+  "refs": [
+    {
+      "t": "mdn",
+      "label": "MDN Resource Timing",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/Performance_API/Resource_timing"
+    },
+    {
+      "t": "spec",
+      "label": "W3C Resource Timing",
+      "url": "https://www.w3.org/TR/resource-timing/"
+    },
+    {
+      "t": "spec",
+      "label": "W3C Navigation Timing",
+      "url": "https://www.w3.org/TR/navigation-timing-2/"
+    }
+  ],
+  "confidence": "docs"
+}

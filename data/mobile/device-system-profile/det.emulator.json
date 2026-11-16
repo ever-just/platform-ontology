@@ -1,0 +1,170 @@
+{
+  "id": "mob.det.emulator",
+  "name": "Emulator and simulator detection",
+  "kind": "signal",
+  "group": "device-system-profile",
+  "subgroup": "Integrity",
+  "tags": [
+    "emulator",
+    "simulator"
+  ],
+  "plain": "Apps read build fields and hardware traits to spot emulators.",
+  "meaning": "Used to block bots and farms. A real phone with unusual build fields can be flagged by mistake.",
+  "lifecycle": [
+    "on-launch",
+    "in-session"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "p",
+      "v": "1.0",
+      "api": 1,
+      "permission": "",
+      "protection": "none",
+      "grant": "none",
+      "prompt_ui": "",
+      "persistence": "",
+      "revocation": "",
+      "store_policy": "",
+      "api_surface": "Build.FINGERPRINT starting with generic, Build.HARDWARE goldfish or ranchu, sensors list",
+      "note": "Heuristic"
+    },
+    "ios": {
+      "s": "y",
+      "v": "2.0",
+      "permission": "none",
+      "protection": "none",
+      "grant": "none",
+      "prompt_ui": "",
+      "persistence": "",
+      "revocation": "",
+      "store_policy": "",
+      "api_surface": "Reliable for the official simulator",
+      "note": ""
+    }
+  },
+  "web_equivalents": [
+    "web.device.webdriver-flag"
+  ],
+  "data": {
+    "type": "boolean",
+    "metric": "Emulator flag",
+    "update": "On check",
+    "fields": [
+      {
+        "name": "emulator",
+        "type": "boolean",
+        "unit": "",
+        "range": "true, false",
+        "precision": "1 bit"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can tell if the app is running on a fake phone used for testing",
+    "user_action": "Nothing. The app checks when it starts or when you sign in",
+    "can": [
+      "Spot the official iPhone Simulator reliably",
+      "Guess an Android emulator from build names and hardware clues",
+      "Block or limit features when it thinks it is on a fake device"
+    ],
+    "cannot": [
+      "Always catch Android emulators; the test is a guess and can be fooled",
+      "Tell you apart from a real phone in many cases",
+      "Learn anything personal from this check alone"
+    ],
+    "reach": 1,
+    "reach_label": "A quick check at one moment",
+    "differs": "iPhone Simulator is easy to detect. Android emulators are guessed from clues, which can be faked."
+  },
+  "story": {
+    "what_it_is": "Apps try to tell if they run on a real phone or a fake one on a computer.",
+    "icon": "smartphone",
+    "tags": [
+      "Fraud",
+      "Silent",
+      "Security"
+    ],
+    "marketing": [],
+    "for_you": "You do not see it. If you run an app on a computer or an unusual phone, it may refuse to open or hide some features. Most real phones pass without notice.",
+    "for_makers": "Emulators let fraudsters run hundreds of fake users. Makers check build fields and hardware to block bots, fake installs and cheaters. Real phones with odd settings can get flagged by mistake.",
+    "use_cases": [
+      {
+        "type": "games",
+        "example": "A game rewards daily logins, so it blocks emulators that run many fake accounts for bonuses.",
+        "apps": []
+      },
+      {
+        "type": "ads",
+        "example": "An ad network discards installs that came from emulators because no real person will buy.",
+        "apps": []
+      },
+      {
+        "type": "banking",
+        "example": "A bank app refuses to open on an emulator where malware testers hunt for flaws.",
+        "apps": []
+      },
+      {
+        "type": "shopping",
+        "example": "A retailer stops bots that use emulators to grab limited sneakers.",
+        "apps": []
+      },
+      {
+        "type": "rideshare",
+        "example": "A ride app blocks fake driver accounts run from emulated phones.",
+        "apps": []
+      },
+      {
+        "type": "developer",
+        "example": "Developers run their own app on emulators to test, and turn the check off for those builds.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Can block real users",
+      "Easy to dodge"
+    ],
+    "android_note": "Checks look at build fields and sensors. Play Integrity gives a verdict.",
+    "ios_note": "iOS apps know when they run on the Simulator, which is easy to tell on a Mac."
+  },
+  "technical_bounds": [
+    "Heuristic only"
+  ],
+  "scores": {
+    "sensitivity": 1,
+    "utility": 2,
+    "fingerprint_bits": 1,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Fraud prevention"
+    ],
+    "abuse": [
+      "False positives"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "related": [
+    "mob.det.root-jailbreak"
+  ],
+  "refs": [
+    {
+      "t": "android",
+      "label": "Android: Build",
+      "url": "https://developer.android.com/reference/android/os/Build"
+    },
+    {
+      "t": "android",
+      "label": "Play Integrity API overview",
+      "url": "https://developer.android.com/google/play/integrity/overview"
+    }
+  ],
+  "confidence": "inferred"
+}

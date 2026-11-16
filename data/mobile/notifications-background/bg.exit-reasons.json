@@ -1,0 +1,218 @@
+{
+  "id": "mob.bg.exit-reasons",
+  "name": "Why the process ended (exit reasons)",
+  "kind": "signal",
+  "group": "notifications-background",
+  "subgroup": "Platform quirks",
+  "tags": [
+    "exit-reason",
+    "diagnostics",
+    "memory",
+    "android-17"
+  ],
+  "plain": "Apps can read why they were killed: Android ApplicationExitInfo, iOS MetricKit exit metrics.",
+  "meaning": "Lets apps and SDKs learn whether the system, the user or a crash ended a session. Android 17 adds a memory limiter reason; it also exposes behavior to the person's device.",
+  "lifecycle": [
+    "in-session",
+    "background"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "y",
+      "v": "11",
+      "api": 30,
+      "permission": "",
+      "protection": "none",
+      "grant": "none",
+      "prompt_ui": "None",
+      "persistence": "Records kept for a short history (about the last 16 exits)",
+      "revocation": "n/a",
+      "store_policy": "",
+      "api_surface": "ActivityManager.getHistoricalProcessExitReasons()",
+      "note": "Reasons: REASON_LOW_MEMORY, REASON_USER_REQUESTED, REASON_EXCESSIVE_RESOURCE_USAGE, REASON_OTHER ('MemoryLimiter:AnonSwap' on 17)"
+    },
+    "ios": {
+      "s": "y",
+      "v": "14.0",
+      "permission": "",
+      "protection": "none",
+      "grant": "none",
+      "prompt_ui": "None",
+      "persistence": "Delivered in daily MetricKit payloads",
+      "revocation": "n/a",
+      "store_policy": "",
+      "api_surface": "MXAppExitMetric (MetricKit)",
+      "note": "Counts foreground and background exits by reason, delivered about once per 24 h"
+    }
+  },
+  "web_equivalents": [
+    "web.notify.idle-detection"
+  ],
+  "data": {
+    "type": "list",
+    "metric": "Exit records",
+    "update": "On demand",
+    "fields": [
+      {
+        "name": "reason",
+        "type": "enum",
+        "unit": "",
+        "range": "LOW_MEMORY, CRASH, USER_REQUESTED, OTHER",
+        "precision": ""
+      },
+      {
+        "name": "records",
+        "type": "integer",
+        "unit": "count",
+        "range": "about 16",
+        "precision": "approx"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can learn why the system last ended the app, such as low memory",
+    "user_action": "Nothing. It happens the next time the app starts or a report arrives",
+    "can": [
+      "List recent reasons the app was ended on Android, such as low memory or you swiping it away",
+      "Get exit counts by reason on iPhone through MetricKit",
+      "Fix crashes and memory problems with the reports"
+    ],
+    "cannot": [
+      "See why other apps ended",
+      "See your data or activity",
+      "Get iPhone reports faster than about once per 24 hours"
+    ],
+    "reach": 1,
+    "reach_label": "About this app only",
+    "differs": "Android lists recent exits one by one. iPhone gives counts about once a day."
+  },
+  "story": {
+    "what_it_is": "An app can read why it was closed: by you, by a crash or by the system.",
+    "icon": "circle-help",
+    "tags": [
+      "Background",
+      "Crash reports",
+      "Silent"
+    ],
+    "marketing": [
+      {
+        "vendor": "Google",
+        "name": "ApplicationExitInfo",
+        "pitch": "Android tells apps why a previous process ended, such as a crash or low memory.",
+        "url": "https://developer.android.com/reference/android/app/ApplicationExitInfo"
+      },
+      {
+        "vendor": "Apple",
+        "name": "MetricKit",
+        "pitch": "Apple reports crash and exit data to apps so they can fix problems.",
+        "url": "https://developer.apple.com/documentation/metrickit"
+      }
+    ],
+    "for_you": "You do not see it. When an app crashes or gets killed, it can learn why and later fix the bug. You may see fewer crashes over time.",
+    "for_makers": "Makers use it to find crashes, out of memory kills and battery problems. It also shows how you use the phone. Patterns of exits can serve as a quiet device profile.",
+    "use_cases": [
+      {
+        "type": "developer",
+        "example": "A developer sees that many users hit a memory kill on one phone model and fixes it.",
+        "apps": [
+          "Firebase Crashlytics",
+          "Sentry"
+        ]
+      },
+      {
+        "type": "games",
+        "example": "A game studio finds that a level crashes older phones and lowers its graphics.",
+        "apps": []
+      },
+      {
+        "type": "media",
+        "example": "A video app notes that the system closed it during long playback and reduces memory use.",
+        "apps": []
+      },
+      {
+        "type": "fitness",
+        "example": "A run tracker learns that the phone killed it mid run and starts a foreground service.",
+        "apps": [
+          "Strava"
+        ]
+      },
+      {
+        "type": "analytics",
+        "example": "An analytics kit stores exit patterns to tell phones apart.",
+        "apps": []
+      },
+      {
+        "type": "security",
+        "example": "A security tool notices repeated kills that match a tampering attempt.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Fingerprinting by exit pattern",
+      "Shows how you use the phone"
+    ],
+    "android_note": "Android 17 adds a memory limiter reason to ApplicationExitInfo.",
+    "ios_note": "iPhone reports exit data in aggregate through MetricKit."
+  },
+  "technical_bounds": [
+    "Android keeps a short history",
+    "iOS gives daily aggregates only"
+  ],
+  "scores": {
+    "sensitivity": 1,
+    "utility": 3,
+    "fingerprint_bits": null,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Crash analytics"
+    ],
+    "abuse": [
+      "Fingerprinting by exit patterns"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2020-09",
+      "platform": "android",
+      "version": "11 (API 30)",
+      "change": "ApplicationExitInfo introduced"
+    },
+    {
+      "date": "2020-09",
+      "platform": "ios",
+      "version": "iOS 14",
+      "change": "MXAppExitMetric added to MetricKit"
+    },
+    {
+      "date": "2026-06",
+      "platform": "android",
+      "version": "17 (API 37)",
+      "change": "App memory limits report REASON_OTHER with MemoryLimiter:AnonSwap"
+    }
+  ],
+  "related": [
+    "mob.bg.force-stop"
+  ],
+  "refs": [
+    {
+      "t": "android",
+      "label": "Android: ApplicationExitInfo",
+      "url": "https://developer.android.com/reference/android/app/ApplicationExitInfo"
+    },
+    {
+      "t": "apple",
+      "label": "Apple: MXAppExitMetric",
+      "url": "https://developer.apple.com/documentation/metrickit/mxappexitmetric"
+    }
+  ],
+  "confidence": "docs"
+}

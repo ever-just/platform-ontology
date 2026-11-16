@@ -1,0 +1,255 @@
+{
+  "id": "web.storage.indexeddb",
+  "name": "IndexedDB",
+  "kind": "capability",
+  "group": "files-storage",
+  "subgroup": "In session",
+  "tags": [
+    "indexeddb",
+    "database",
+    "quota"
+  ],
+  "plain": "A large browser database that can hold gigabytes of structured data for one site.",
+  "meaning": "Stores app data, offline caches and, for trackers, bigger profiles or IDs that survive cookie clearing. Quota is a share of free disk, so a site can fill hundreds of MB without a prompt.",
+  "lifecycle": [
+    "in-session",
+    "after-leaving"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "indexedDB.open(name, version)",
+      "bcd": [
+        "api.IDBFactory",
+        "api.IDBDatabase"
+      ],
+      "access": {
+        "grant": "none",
+        "prompt_ui": "None",
+        "secure_context": false,
+        "user_gesture": false,
+        "persistence": "Best effort: kept until the user clears it or the browser evicts under disk pressure. Safari applies the 7 day cap",
+        "revocation": "Clear site data, browser privacy settings",
+        "iframe": "",
+        "steps": []
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "24",
+          "note": "",
+          "date": "2013-01-10"
+        },
+        "edge": {
+          "s": "y",
+          "v": "12",
+          "note": "",
+          "date": "2015-07-29"
+        },
+        "firefox": {
+          "s": "y",
+          "v": "16",
+          "note": "",
+          "date": "2012-10-09"
+        },
+        "safari": {
+          "s": "y",
+          "v": "8",
+          "note": "",
+          "date": "2014-10-16"
+        },
+        "ios_safari": {
+          "s": "y",
+          "v": "8",
+          "note": "",
+          "date": "2014-09-17"
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "25",
+          "note": "",
+          "date": "2013-02-27"
+        },
+        "samsung": {
+          "s": "y",
+          "v": "1.5",
+          "note": "",
+          "date": "2013-09-25"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "object",
+    "metric": "Records in object stores",
+    "update": "any time",
+    "fields": [
+      {
+        "name": "quota",
+        "type": "integer",
+        "unit": "percent of disk",
+        "range": "10 to 60",
+        "precision": "approximate"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can keep gigabytes of organized data for its own site in your browser",
+    "user_action": "Nothing. It happens as the site saves your work or caches data.",
+    "can": [
+      "Store lots of structured data, such as messages, notes or a catalog",
+      "Keep it between visits",
+      "Work offline with it"
+    ],
+    "cannot": [
+      "Let other sites see it",
+      "Hold more than the site's storage limit",
+      "Keep it after you clear site data",
+      "Keep it after a private window closes"
+    ],
+    "reach": 2,
+    "reach_label": "Its own storage only",
+    "differs": ""
+  },
+  "story": {
+    "what_it_is": "A large browser database that can hold gigabytes of organized data for one site.",
+    "icon": "database",
+    "tags": [
+      "Storage",
+      "Offline",
+      "Developer"
+    ],
+    "marketing": [
+      {
+        "vendor": "web.dev",
+        "name": "Storage for the web",
+        "pitch": "Google explains IndexedDB as the main place for large offline data in web apps.",
+        "url": "https://web.dev/articles/storage-for-the-web"
+      },
+      {
+        "vendor": "MDN",
+        "name": "IndexedDB API",
+        "pitch": "Documents the browser database that sites use to store large amounts of structured data.",
+        "url": "https://developer.mozilla.org/en-US/docs/Web/API/IndexedDB_API"
+      }
+    ],
+    "for_you": "You never see it. It is why a web app has your emails or notes ready offline, and why a game keeps big progress without logging in.",
+    "for_makers": "It is the main database of the web. Makers use it for offline apps, game saves and caches. It can also hold an ID that survives clearing cookies in some cases.",
+    "use_cases": [
+      {
+        "type": "games",
+        "example": "A browser game made with Unity or Emscripten stores its save files and downloaded levels here.",
+        "apps": [
+          "Unity WebGL games"
+        ]
+      },
+      {
+        "type": "productivity",
+        "example": "A web email or notes app keeps all your messages here for fast, offline search.",
+        "apps": [
+          "Gmail"
+        ]
+      },
+      {
+        "type": "creative",
+        "example": "A web design tool keeps your open file safe between visits.",
+        "apps": [
+          "Figma"
+        ]
+      },
+      {
+        "type": "media",
+        "example": "A web music app keeps your downloaded songs here.",
+        "apps": []
+      },
+      {
+        "type": "messaging",
+        "example": "A web chat app stores recent chat history for a quick start.",
+        "apps": [
+          "Slack",
+          "WhatsApp Web"
+        ]
+      },
+      {
+        "type": "ads",
+        "example": "A tracking script keeps a hidden visitor ID here to bring you back after cookie clearing.",
+        "apps": []
+      },
+      {
+        "type": "security",
+        "example": "A web wallet or password tool keeps encrypted data here.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Hidden persistent ID",
+      "Large local data"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Chrome: up to about 60% of total disk per origin",
+    "Firefox: about 10% of disk per site group, up to 10 GiB",
+    "Safari 17+: up to about 60% of disk per origin in the browser",
+    "Eviction is least recently used across origins",
+    "Partitioned in third party frames"
+  ],
+  "scores": {
+    "sensitivity": 3,
+    "utility": 5,
+    "fingerprint_bits": 0,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Offline apps, large local data"
+    ],
+    "abuse": [
+      "Cookie respawn store, large fingerprint caches"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2023-07",
+      "browser": "chrome",
+      "version": "115",
+      "change": "Third party IndexedDB partitioned"
+    },
+    {
+      "date": "2023-09",
+      "browser": "safari",
+      "version": "17",
+      "change": "Quota model changed: per origin share of disk plus 7 day cap kept"
+    }
+  ],
+  "related": [
+    "web.storage.localstorage",
+    "web.storage.cache-storage",
+    "web.storage.opfs"
+  ],
+  "refs": [
+    {
+      "t": "mdn",
+      "label": "MDN IndexedDB API",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/IndexedDB_API"
+    },
+    {
+      "t": "mdn",
+      "label": "MDN Storage quotas and eviction",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/Storage_API/Storage_quotas_and_eviction_criteria"
+    },
+    {
+      "t": "webkit",
+      "label": "WebKit: Updates to Storage Policy",
+      "url": "https://webkit.org/blog/14403/updates-to-storage-policy/"
+    }
+  ],
+  "confidence": "verified"
+}

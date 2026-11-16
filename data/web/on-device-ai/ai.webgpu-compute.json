@@ -1,0 +1,264 @@
+{
+  "id": "web.ai.webgpu-compute",
+  "name": "WebGPU compute",
+  "kind": "capability",
+  "group": "on-device-ai",
+  "subgroup": "Compute",
+  "tags": [
+    "compute"
+  ],
+  "plain": "Lets a page run general GPU compute shaders.",
+  "meaning": "Used for local AI and rendering. Reveals GPU class and limits.",
+  "lifecycle": [
+    "on-arrival",
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "navigator.gpu.requestAdapter(); device.createComputePipeline(...)",
+      "bcd": [
+        "api.GPU"
+      ],
+      "access": {
+        "grant": "none",
+        "prompt_ui": "None",
+        "secure_context": true,
+        "user_gesture": true,
+        "persistence": "Per origin",
+        "revocation": "Site settings",
+        "iframe": "Same as top level; cross-origin iframes need a permissions policy where listed",
+        "steps": [
+          "Call the API",
+          "Browser applies its access rules",
+          "Page receives the result"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "144",
+          "note": "Supported on ChromeOS, macOS, Windows, and Linux (Intel Gen12+ GPUs only).",
+          "date": "2026-01-13"
+        },
+        "edge": {
+          "s": "y",
+          "v": "144",
+          "note": "Supported on ChromeOS, macOS, Windows, and Linux (Intel Gen12+ GPUs only).",
+          "date": "2026-01-21"
+        },
+        "firefox": {
+          "s": "p",
+          "v": "141",
+          "note": "Supports all contexts except service workers. See <a href=\"https://bugzil.la/1942431\">bug 1942431</a>. Supports Windows since Firefox 141. See <a href=\"https://",
+          "date": "2025-07-22"
+        },
+        "safari": {
+          "s": "y",
+          "v": "26",
+          "note": "",
+          "date": "2025-09-15"
+        },
+        "ios_safari": {
+          "s": "y",
+          "v": "26",
+          "note": "",
+          "date": "2025-09-15"
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "121",
+          "note": "",
+          "date": "2024-01-23"
+        },
+        "samsung": {
+          "s": "y",
+          "v": "25.0",
+          "note": "",
+          "date": "2024-04-24"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "object",
+    "metric": "Lets a page run general GPU compute shaders.",
+    "update": "on demand",
+    "fields": [
+      {
+        "name": "adapter.limits",
+        "type": "object",
+        "range": "maxBufferSize, maxComputeWorkgroupsPerDimension (65535)"
+      },
+      {
+        "name": "adapter.info",
+        "type": "object",
+        "range": "vendor, architecture, device, description",
+        "precision": "coarsened by default"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can use your graphics chip for heavy math, and learn what kind of chip you have",
+    "user_action": "Nothing. It happens when a page loads a game, an AI feature or a 3D view",
+    "can": [
+      "Run AI models and 3D graphics on your graphics chip",
+      "Learn the rough class and limits of your chip",
+      "Run mining scripts that use your chip, which is an abuse"
+    ],
+    "cannot": [
+      "Skip your browser's safety limits",
+      "See your files or other apps",
+      "Work in Firefox on most computers yet",
+      "Run on a page forever without slowing your device, since browsers may pause it"
+    ],
+    "reach": 3,
+    "reach_label": "Your graphics chip, while open",
+    "differs": "Chrome, Edge and Safari support it, including iPhone. Firefox support is partial."
+  },
+  "story": {
+    "what_it_is": "A page can use your graphics chip for heavy math, not only for pictures.",
+    "icon": "cpu",
+    "tags": [
+      "Graphics",
+      "Performance",
+      "Silent"
+    ],
+    "marketing": [
+      {
+        "vendor": "MDN Web Docs",
+        "name": "WebGPU API",
+        "pitch": "Gives web apps modern, fast access to the graphics chip for rich 3D, and general computing.",
+        "url": "https://developer.mozilla.org/en-US/docs/Web/API/WebGPU_API"
+      }
+    ],
+    "for_you": "You never see a prompt. Heavy pages feel faster and games look better. Your fan may spin up, and the page may use more battery.",
+    "for_makers": "Makers use the GPU for 3D games, video effects, photo editing and running AI models in the page. It makes web apps rival desktop ones. It also exposes details of your graphics chip, which adds to a fingerprint, and can be abused for hidden mining.",
+    "use_cases": [
+      {
+        "type": "games",
+        "example": "A browser 3D game uses compute shaders for physics and crowds, so thousands of units move smoothly in a tab.",
+        "apps": [
+          "Babylon.js demos",
+          "PlayCanvas"
+        ]
+      },
+      {
+        "type": "video",
+        "example": "A browser video editor applies filters and effects to 4K clips using the graphics chip.",
+        "apps": []
+      },
+      {
+        "type": "creative",
+        "example": "A web design or photo tool uses it for blur, filters and live preview.",
+        "apps": [
+          "Figma"
+        ]
+      },
+      {
+        "type": "developer",
+        "example": "A page runs a small AI model for image search directly in the browser with GPU speed.",
+        "apps": []
+      },
+      {
+        "type": "video",
+        "example": "A cloud gaming or video call page runs background blur and upscaling on the GPU.",
+        "apps": [
+          "Google Meet"
+        ]
+      },
+      {
+        "type": "analytics",
+        "example": "A web data tool draws millions of points in a chart using GPU math.",
+        "apps": []
+      },
+      {
+        "type": "ads",
+        "example": "A tracking script reads the GPU name and speed to add to a device fingerprint.",
+        "apps": []
+      },
+      {
+        "type": "security",
+        "example": "A hidden crypto mining script uses the GPU on a hacked site.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Fingerprinting",
+      "Hidden mining"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Not all GPUs supported",
+    "Memory limits"
+  ],
+  "scores": {
+    "sensitivity": 1,
+    "utility": 5,
+    "fingerprint_bits": 5,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "ML inference",
+      "Games"
+    ],
+    "abuse": [
+      "GPU fingerprinting",
+      "Cryptomining"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2023-05",
+      "browser": "chrome",
+      "version": "113",
+      "change": "WebGPU ships on desktop"
+    },
+    {
+      "date": "2024",
+      "browser": "chrome",
+      "version": "121",
+      "change": "Android"
+    },
+    {
+      "date": "2025-09",
+      "browser": "safari",
+      "version": "26",
+      "change": "Safari 26"
+    },
+    {
+      "date": "2025",
+      "browser": "firefox",
+      "version": "141",
+      "change": "Windows"
+    },
+    {
+      "date": "2026-09",
+      "browser": "safari",
+      "version": "27",
+      "change": "Subgroups and new limits"
+    }
+  ],
+  "refs": [
+    {
+      "t": "mdn",
+      "label": "MDN WebGPU API",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/WebGPU_API"
+    },
+    {
+      "t": "spec",
+      "label": "WebGPU",
+      "url": "https://www.w3.org/TR/webgpu/"
+    }
+  ],
+  "confidence": "verified"
+}

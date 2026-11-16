@@ -1,0 +1,241 @@
+{
+  "id": "web.xsite.sendbeacon",
+  "name": "navigator.sendBeacon",
+  "kind": "capability",
+  "group": "cross-site-tracking",
+  "subgroup": "After leaving",
+  "tags": [
+    "sendbeacon",
+    "beacon",
+    "analytics",
+    "pagehide"
+  ],
+  "plain": "Sends a small POST that the browser delivers even while the person is leaving the page.",
+  "meaning": "Lets analytics report time on page, scroll depth and exit clicks after the tab is closed or navigated away. No response is readable. The person cannot see or stop it, and it carries cookies for the target origin.",
+  "lifecycle": [
+    "after-leaving"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "navigator.sendBeacon(url, data)",
+      "bcd": [
+        "api.Navigator.sendBeacon"
+      ],
+      "access": {
+        "grant": "none",
+        "prompt_ui": "None",
+        "secure_context": false,
+        "user_gesture": false,
+        "persistence": "Fire and forget; queued by the browser until sent",
+        "revocation": "Clear site data, browser privacy settings",
+        "iframe": "",
+        "steps": []
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "39",
+          "note": "",
+          "date": "2014-11-18"
+        },
+        "edge": {
+          "s": "y",
+          "v": "14",
+          "note": "",
+          "date": "2016-08-02"
+        },
+        "firefox": {
+          "s": "y",
+          "v": "31",
+          "note": "",
+          "date": "2014-07-22"
+        },
+        "safari": {
+          "s": "y",
+          "v": "11.1",
+          "note": "",
+          "date": "2018-04-12"
+        },
+        "ios_safari": {
+          "s": "y",
+          "v": "11.3",
+          "note": "",
+          "date": "2018-03-29"
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "42",
+          "note": "",
+          "date": "2015-04-15"
+        },
+        "samsung": {
+          "s": "y",
+          "v": "4.0",
+          "note": "",
+          "date": "2016-03-11"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "event",
+    "metric": "Beacon request",
+    "update": "at page exit",
+    "fields": [
+      {
+        "name": "payload",
+        "type": "integer",
+        "unit": "bytes",
+        "range": "up to about 65536",
+        "precision": "exact"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can send a small report that the browser delivers even as you leave the page",
+    "user_action": "Nothing. It happens when you close or leave a page",
+    "can": [
+      "Send a small message as the page closes",
+      "Report time spent, clicks or errors",
+      "Deliver the message even after the tab is gone"
+    ],
+    "cannot": [
+      "Send large amounts of data, since there is a size limit",
+      "Get a reply back to the page",
+      "Run if a blocker stops the request",
+      "Show a prompt or any sign"
+    ],
+    "reach": 2,
+    "reach_label": "A last report, as you leave",
+    "differs": ""
+  },
+  "story": {
+    "what_it_is": "Sends a small message that the browser delivers even as you leave the page.",
+    "icon": "send",
+    "tags": [
+      "Analytics",
+      "Silent",
+      "Page exit"
+    ],
+    "marketing": [
+      {
+        "vendor": "Mozilla",
+        "name": "sendBeacon",
+        "pitch": "Developer docs describe it as a way to send a small amount of data in the background, even on page exit.",
+        "url": "https://developer.mozilla.org/en-US/docs/Web/API/Navigator/sendBeacon"
+      }
+    ],
+    "for_you": "You never see it. You close a tab or click away, and the page sends a last note that gets delivered. You cannot read it, stop it or know what it held.",
+    "for_makers": "Normal requests are cut off when a page closes. sendBeacon lets analytics finish a report about time on page, scrolls or exits. It is simple, so it is everywhere.",
+    "use_cases": [
+      {
+        "type": "analytics",
+        "example": "A news site sends how long you read and how far you scrolled when you leave the article.",
+        "apps": [
+          "Google Analytics",
+          "Chartbeat"
+        ]
+      },
+      {
+        "type": "games",
+        "example": "A browser game sends final stats when you close the tab, so the server records your run.",
+        "apps": []
+      },
+      {
+        "type": "video",
+        "example": "A video site sends your watch time so it can resume next visit.",
+        "apps": [
+          "YouTube",
+          "Vimeo"
+        ]
+      },
+      {
+        "type": "ads",
+        "example": "An ad tag reports that an ad was seen for 2 seconds.",
+        "apps": [
+          "Google Ad Manager"
+        ]
+      },
+      {
+        "type": "security",
+        "example": "A fraud tool sends last mouse and key data on exit from a checkout page.",
+        "apps": [
+          "Sift"
+        ]
+      },
+      {
+        "type": "developer",
+        "example": "An app sends crash and speed data as the tab closes.",
+        "apps": [
+          "Sentry",
+          "Datadog"
+        ]
+      }
+    ],
+    "risks": [
+      "Hard to see or stop",
+      "Carries cookies to the target site"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "About 64 KiB of queued beacon and keepalive data per page (Chrome)",
+    "POST only, response not readable",
+    "Returns false if the data is refused",
+    "Blocked by tracker blockers"
+  ],
+  "scores": {
+    "sensitivity": 3,
+    "utility": 4,
+    "fingerprint_bits": null,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Exit analytics, error logs"
+    ],
+    "abuse": [
+      "Post-visit tracking that survives page close"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2014-11",
+      "browser": "chrome",
+      "version": "39",
+      "change": "Shipped"
+    },
+    {
+      "date": "2018-03",
+      "browser": "safari",
+      "version": "11.1",
+      "change": "Shipped in Safari"
+    }
+  ],
+  "related": [
+    "web.xsite.fetch-keepalive",
+    "web.xsite.fetchlater",
+    "web.xsite.page-lifecycle-events"
+  ],
+  "refs": [
+    {
+      "t": "mdn",
+      "label": "MDN Navigator.sendBeacon",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/Navigator/sendBeacon"
+    },
+    {
+      "t": "spec",
+      "label": "W3C Beacon",
+      "url": "https://www.w3.org/TR/beacon/"
+    }
+  ],
+  "confidence": "verified"
+}

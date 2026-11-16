@@ -1,0 +1,243 @@
+{
+  "id": "web.xsite.chips-partitioned-cookies",
+  "name": "CHIPS partitioned cookies",
+  "kind": "capability",
+  "group": "cross-site-tracking",
+  "subgroup": "Before the visit",
+  "tags": [
+    "chips",
+    "partitioned",
+    "cookie-attribute"
+  ],
+  "plain": "Lets an embedded service keep a cookie that is private to each top-level site where it is embedded.",
+  "meaning": "A widget (chat, maps, payments) can remember state per embedding site without a cross-site ID. Capped at 10 KiB per partition, so it cannot build a cross-site profile. Supported on Chrome 114 and later; Firefox also ships it.",
+  "lifecycle": [
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "Set-Cookie: ...; Secure; Partitioned (SameSite=None implied)",
+      "bcd": [
+        "http.headers.Set-Cookie.Partitioned"
+      ],
+      "access": {
+        "grant": "none",
+        "prompt_ui": "None",
+        "secure_context": false,
+        "user_gesture": false,
+        "persistence": "Same lifetime rules as normal cookies; up to 400 days in Chrome",
+        "revocation": "Clear site data, browser privacy settings",
+        "iframe": "",
+        "steps": []
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "114",
+          "note": "",
+          "date": "2023-05-30"
+        },
+        "edge": {
+          "s": "y",
+          "v": "114",
+          "note": "",
+          "date": "2023-06-02"
+        },
+        "firefox": {
+          "s": "y",
+          "v": "141",
+          "note": "Verify exact milestone",
+          "date": "2025-07-22"
+        },
+        "safari": {
+          "s": "n",
+          "v": "",
+          "note": "Blocks third-party cookies anyway"
+        },
+        "ios_safari": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "114",
+          "note": "",
+          "date": "2023-05-30"
+        },
+        "samsung": {
+          "s": "y",
+          "v": "23.0",
+          "note": "",
+          "date": "2023-10-18"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "string",
+    "metric": "Cookie with Partitioned attribute",
+    "update": "set by response or script",
+    "fields": [
+      {
+        "name": "size cap",
+        "type": "integer",
+        "unit": "bytes",
+        "range": "0 to 10240 per partition",
+        "precision": "exact"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can keep a cookie for an embedded service, separate for each site it appears on",
+    "user_action": "Nothing. It happens when a page includes an embedded chat, map or video",
+    "can": [
+      "Save a cookie inside an embedded service on a page",
+      "Keep that cookie separate for each top level site",
+      "Remember a chat or login state on that one site"
+    ],
+    "cannot": [
+      "Share the cookie with the same service on other sites",
+      "Be used to follow you across sites",
+      "Work in Safari and iPhone browsers, which have no CHIPS",
+      "Survive if you clear cookies"
+    ],
+    "reach": 2,
+    "reach_label": "One service on one site",
+    "differs": "Chrome, Edge, Firefox and Samsung Internet support it. Safari and iPhone browsers do not."
+  },
+  "story": {
+    "what_it_is": "A cookie for an embedded widget that is kept apart for each site it appears on.",
+    "icon": "archive",
+    "tags": [
+      "Cookies",
+      "Privacy",
+      "Embeds"
+    ],
+    "marketing": [
+      {
+        "vendor": "Google Chrome",
+        "name": "CHIPS",
+        "pitch": "Chrome describes it as a way for embedded services to keep cookies that are split per top level site.",
+        "url": "https://developers.google.com/privacy-sandbox/cookies/chips"
+      }
+    ],
+    "for_you": "You do not see it. A chat box, map or payment widget on a site can remember you on that site only. It cannot use the same cookie to know you on another site.",
+    "for_makers": "Widgets still need to remember state, like a chat session or a login, after third party cookies went away. Splitting the cookie per site gives them that without a cross site profile. The 10 KiB cap makes it hard to store much.",
+    "use_cases": [
+      {
+        "type": "payments",
+        "example": "A payment widget remembers your cart on one store without knowing which other stores you visit.",
+        "apps": [
+          "Stripe",
+          "PayPal"
+        ]
+      },
+      {
+        "type": "social",
+        "example": "A chat widget on a shop keeps your chat open as you move between pages of that shop only.",
+        "apps": [
+          "Intercom",
+          "Drift"
+        ]
+      },
+      {
+        "type": "maps",
+        "example": "An embedded map remembers your zoom and layers on a hotel site, but not across other sites.",
+        "apps": [
+          "Google Maps",
+          "Mapbox"
+        ]
+      },
+      {
+        "type": "video",
+        "example": "An embedded video player remembers your volume and captions on a news site.",
+        "apps": [
+          "YouTube",
+          "Vimeo"
+        ]
+      },
+      {
+        "type": "games",
+        "example": "An embedded game on a portal saves your progress for that portal only, and does not follow you to other portals.",
+        "apps": [
+          "itch.io",
+          "Poki"
+        ]
+      },
+      {
+        "type": "security",
+        "example": "A bot checking widget keeps a short session on each site separately, which stops it from building a cross site list of visitors.",
+        "apps": [
+          "Cloudflare Turnstile"
+        ]
+      }
+    ],
+    "risks": [
+      "Still allows tracking within one site",
+      "Only for embedded content"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Key is the top-level site, so the same iframe on another site sees a different jar",
+    "10240 bytes max per partition for all CHIPS cookies of that embedded origin",
+    "Must be Secure",
+    "Safari blocks all third-party cookies so the attribute is moot there"
+  ],
+  "scores": {
+    "sensitivity": 2,
+    "utility": 4,
+    "fingerprint_bits": 0.0,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Embedded chat widgets",
+      "Per-site payment iframes",
+      "CDN session affinity"
+    ],
+    "abuse": [
+      "Not for cross-site tracking by design"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2023-07",
+      "browser": "chrome",
+      "version": "114",
+      "change": "CHIPS on by default (origin trial ran Chrome 100 to 116)"
+    },
+    {
+      "date": "2025-07",
+      "browser": "firefox",
+      "version": "141",
+      "change": "Firefox ships partitioned cookie attribute (verify exact milestone)"
+    }
+  ],
+  "related": [
+    "web.xsite.third-party-cookies-status",
+    "web.storage.storage-partitioning"
+  ],
+  "refs": [
+    {
+      "t": "vendor",
+      "label": "Privacy Sandbox CHIPS",
+      "url": "https://developers.google.com/privacy-sandbox/cookies/chips"
+    },
+    {
+      "t": "mdn",
+      "label": "MDN Cookies Partitioned",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/Privacy/Guides/Third-party_cookies#partitioned_cookies"
+    }
+  ],
+  "confidence": "docs"
+}

@@ -1,0 +1,221 @@
+{
+  "id": "mob.notif.rich-media",
+  "name": "Rich notification media attachments",
+  "kind": "capability",
+  "group": "notifications-background",
+  "subgroup": "Permission and presentation",
+  "tags": [
+    "notifications",
+    "attachments",
+    "size-limit"
+  ],
+  "plain": "Attaches images, audio or video to an iOS alert: 10 MB, 5 MB and 50 MB limits.",
+  "meaning": "Fetched media can reveal when and where an alert was shown through the request. Android notifications show images via BigPictureStyle with no published size cap.",
+  "lifecycle": [
+    "background"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "y",
+      "v": "4.1",
+      "api": 16,
+      "permission": "",
+      "protection": "none",
+      "grant": "install",
+      "prompt_ui": "None",
+      "persistence": "Downloaded by the app; memory bound",
+      "revocation": "n/a",
+      "store_policy": "",
+      "api_surface": "NotificationCompat.BigPictureStyle",
+      "note": "No published size limit; large bitmaps bound by memory"
+    },
+    "ios": {
+      "s": "y",
+      "v": "10.0",
+      "permission": "",
+      "protection": "none",
+      "grant": "none",
+      "prompt_ui": "None",
+      "persistence": "Attachment files are moved into the notification store; cleaned after dismissal",
+      "revocation": "n/a",
+      "store_policy": "",
+      "api_surface": "UNNotificationAttachment",
+      "note": "Audio 5 MB (AIFF, WAV, MP3, M4A), image 10 MB (JPEG, GIF, PNG), movie 50 MB (MPEG, MPEG-2, MP4, AVI)"
+    }
+  },
+  "data": {
+    "type": "object",
+    "metric": "Attachment limits",
+    "update": "Static",
+    "fields": [
+      {
+        "name": "audio",
+        "type": "integer",
+        "unit": "MB",
+        "range": "5",
+        "precision": ""
+      },
+      {
+        "name": "image",
+        "type": "integer",
+        "unit": "MB",
+        "range": "10",
+        "precision": ""
+      },
+      {
+        "name": "movie",
+        "type": "integer",
+        "unit": "MB",
+        "range": "50",
+        "precision": ""
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can attach pictures, sound or video to an iPhone alert, within size limits",
+    "user_action": "You get a push with a photo, clip or audio attached",
+    "can": [
+      "Show an image up to 10 MB, like JPEG, GIF or PNG",
+      "Attach audio up to 5 MB or a movie up to 50 MB",
+      "Show large images on Android, limited only by memory"
+    ],
+    "cannot": [
+      "Attach files bigger than 10 MB, 5 MB or 50 MB for image, audio or movie",
+      "Use file types outside the allowed list",
+      "Show media if notifications are off for the app"
+    ],
+    "reach": 1,
+    "reach_label": "One attachment per alert",
+    "differs": "iPhone sets size limits by type. Android has no published size limit but depends on memory."
+  },
+  "story": {
+    "what_it_is": "Alerts that carry a picture, sound or short video.",
+    "icon": "image",
+    "tags": [
+      "Notifications",
+      "Media",
+      "Tracking"
+    ],
+    "marketing": [
+      {
+        "vendor": "Apple",
+        "name": "Notification attachments",
+        "pitch": "Apple lets alerts include images, audio or video that appear when the alert is expanded.",
+        "url": "https://developer.apple.com/documentation/usernotifications/unnotificationattachment"
+      },
+      {
+        "vendor": "Google",
+        "name": "Expandable notifications",
+        "pitch": "Android lets alerts expand to show a large picture or longer text.",
+        "url": "https://developer.android.com/develop/ui/views/notifications/expanded"
+      }
+    ],
+    "for_you": "You see a photo in the alert, like your delivery driver or a news picture. You may not know the picture was loaded from a web address that tells the sender it was shown.",
+    "for_makers": "Makers get richer, more clickable alerts. The picture link can also carry a hidden ID that shows when and from where the alert was opened.",
+    "use_cases": [
+      {
+        "type": "delivery",
+        "example": "A food app shows a photo of your order with the alert.",
+        "apps": [
+          "DoorDash"
+        ]
+      },
+      {
+        "type": "news",
+        "example": "A news app shows a big photo with the headline.",
+        "apps": [
+          "NYT",
+          "BBC"
+        ]
+      },
+      {
+        "type": "social",
+        "example": "A social app shows the photo someone sent you.",
+        "apps": [
+          "Instagram"
+        ]
+      },
+      {
+        "type": "shopping",
+        "example": "A store shows a product picture in a price drop alert.",
+        "apps": [
+          "Amazon"
+        ]
+      },
+      {
+        "type": "music",
+        "example": "A music app shows album art and a short audio preview.",
+        "apps": [
+          "Spotify"
+        ]
+      },
+      {
+        "type": "ads",
+        "example": "A marketing tool hides a tracking pixel in the image link to know the alert was seen.",
+        "apps": []
+      },
+      {
+        "type": "live",
+        "example": "A sports app shows a short highlight video clip with the score alert.",
+        "apps": [
+          "ESPN"
+        ]
+      }
+    ],
+    "risks": [
+      "Tracking pixels in image links",
+      "Uses data"
+    ],
+    "android_note": "Android shows big pictures with no published size cap.",
+    "ios_note": "iOS limits attachments to 10 MB for images, 5 MB for audio and 50 MB for video."
+  },
+  "technical_bounds": [
+    "Fetching the media requires network work inside the extension window"
+  ],
+  "scores": {
+    "sensitivity": 2,
+    "utility": 3,
+    "fingerprint_bits": null,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Order photos",
+      "Previews"
+    ],
+    "abuse": [
+      "Tracking pixels in attachment URLs"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2016-09",
+      "platform": "ios",
+      "version": "iOS 10",
+      "change": "Media attachments via UNNotificationAttachment"
+    }
+  ],
+  "related": [
+    "mob.notif.service-extension"
+  ],
+  "refs": [
+    {
+      "t": "apple",
+      "label": "Apple: UNNotificationAttachment",
+      "url": "https://developer.apple.com/documentation/usernotifications/unnotificationattachment"
+    },
+    {
+      "t": "android",
+      "label": "Android: Expandable notifications",
+      "url": "https://developer.android.com/develop/ui/views/notifications/expanded"
+    }
+  ],
+  "confidence": "verified"
+}

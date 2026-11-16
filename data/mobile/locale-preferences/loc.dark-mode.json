@@ -1,0 +1,187 @@
+{
+  "id": "mob.loc.dark-mode",
+  "name": "Dark mode and theme",
+  "kind": "signal",
+  "group": "locale-preferences",
+  "subgroup": "Appearance",
+  "tags": [
+    "dark-mode",
+    "theme"
+  ],
+  "plain": "Reads whether the system uses dark or light appearance.",
+  "meaning": "Weak habit signal; one bit, but often scheduled so it also hints at sunset time.",
+  "lifecycle": [
+    "on-launch",
+    "in-session"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "y",
+      "v": "10",
+      "api": 29,
+      "permission": "",
+      "protection": "none",
+      "grant": "none",
+      "prompt_ui": "",
+      "persistence": "",
+      "revocation": "",
+      "store_policy": "",
+      "api_surface": "Configuration.uiMode (UI_MODE_NIGHT_MASK)",
+      "note": "Boolean"
+    },
+    "ios": {
+      "s": "y",
+      "v": "13.0",
+      "permission": "none",
+      "protection": "none",
+      "grant": "none",
+      "prompt_ui": "",
+      "persistence": "",
+      "revocation": "",
+      "store_policy": "",
+      "api_surface": "light or dark",
+      "note": ""
+    }
+  },
+  "web_equivalents": [
+    "web.display.prefers-color-scheme"
+  ],
+  "data": {
+    "type": "boolean",
+    "metric": "Dark mode on",
+    "update": "On change",
+    "fields": [
+      {
+        "name": "night",
+        "type": "boolean",
+        "unit": "",
+        "range": "true, false",
+        "precision": "1 bit"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can see whether your phone is in dark or light mode",
+    "user_action": "Nothing. It happens when the app opens or you switch themes",
+    "can": [
+      "Check if the system uses dark or light appearance",
+      "Switch its own colors to match"
+    ],
+    "cannot": [
+      "Change your phone's theme",
+      "See your wallpaper, brightness or schedule",
+      "Tell who you are on its own, but it is one bit in a fingerprint"
+    ],
+    "reach": 1,
+    "reach_label": "One yes or no",
+    "differs": ""
+  },
+  "story": {
+    "what_it_is": "An app sees whether your phone is in dark or light appearance.",
+    "icon": "moon-star",
+    "tags": [
+      "Settings",
+      "Silent",
+      "Look and feel"
+    ],
+    "marketing": [
+      {
+        "vendor": "Apple",
+        "name": "Dark Mode",
+        "pitch": "Apple's system wide dark look that apps can follow so screens are easier on the eyes at night.",
+        "url": "https://developer.apple.com/design/human-interface-guidelines/dark-mode"
+      },
+      {
+        "vendor": "Google",
+        "name": "Dark theme",
+        "pitch": "Android lets apps follow a system dark theme, which can save battery on OLED screens.",
+        "url": "https://developer.android.com/develop/ui/views/theming/darktheme"
+      }
+    ],
+    "for_you": "You flip a switch or let the phone change at sunset, and apps follow. Your eyes thank you at night. You never see the apps read the setting.",
+    "for_makers": "Makers want apps to feel native and to save battery. The setting is a single bit, but it often follows a schedule, so it can hint at sunset time and where you are.",
+    "use_cases": [
+      {
+        "type": "media",
+        "example": "A video app turns its menus dark when you watch at night so the screen is easier to look at.",
+        "apps": [
+          "Netflix",
+          "YouTube"
+        ]
+      },
+      {
+        "type": "games",
+        "example": "A game picks a darker menu theme when your phone is in dark mode.",
+        "apps": []
+      },
+      {
+        "type": "messaging",
+        "example": "A chat app switches its bubbles to dark colors to match your phone.",
+        "apps": [
+          "Telegram",
+          "Signal"
+        ]
+      },
+      {
+        "type": "news",
+        "example": "A reading app follows dark mode so late night reading is calmer.",
+        "apps": [
+          "Apple News"
+        ]
+      },
+      {
+        "type": "analytics",
+        "example": "A tracker adds dark mode to a profile, which helps match the same phone across sites.",
+        "apps": []
+      },
+      {
+        "type": "ads",
+        "example": "An advertiser changes ad colors at night so ads blend in with the app.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Adds one fingerprint bit",
+      "Hints at schedule"
+    ],
+    "android_note": "Android apps read it through the night mode setting, and many follow it automatically.",
+    "ios_note": "iPhone apps read it from the user interface style, and may change when the schedule flips."
+  },
+  "technical_bounds": [
+    "Low entropy"
+  ],
+  "scores": {
+    "sensitivity": 1,
+    "utility": 1,
+    "fingerprint_bits": 1,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Match theme"
+    ],
+    "abuse": [
+      "Fingerprint bit"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "refs": [
+    {
+      "t": "android",
+      "label": "Android: Settings.Secure",
+      "url": "https://developer.android.com/reference/android/provider/Settings.Secure"
+    },
+    {
+      "t": "apple",
+      "label": "Apple: UIAccessibility",
+      "url": "https://developer.apple.com/documentation/uikit/uiaccessibility"
+    }
+  ],
+  "confidence": "docs"
+}

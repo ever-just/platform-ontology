@@ -1,0 +1,223 @@
+{
+  "id": "web.notexposed.exact-ram",
+  "name": "Exact RAM size",
+  "kind": "not-exposed",
+  "group": "device-system-profile",
+  "subgroup": "Hardware",
+  "tags": [
+    "not-exposed",
+    "ram",
+    "memory"
+  ],
+  "plain": "Only a capped RAM figure exists; exact memory is hidden.",
+  "meaning": "deviceMemory returns 0.25 to 8 GB (capped, Chromium, secure context, power of two rounding), so a 64 GB workstation looks like 8. Firefox and Safari expose nothing. Memory pressure is not readable.",
+  "lifecycle": [
+    "on-arrival",
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "navigator.deviceMemory (cap of 8)",
+      "access": {
+        "grant": "not-exposed",
+        "prompt_ui": "None",
+        "secure_context": false,
+        "user_gesture": false,
+        "persistence": "read fresh on every page load; nothing stored",
+        "revocation": "not applicable",
+        "iframe": "Readable from cross-origin iframes too (same values)",
+        "steps": [
+          "Page script reads the value",
+          "No prompt is shown"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "edge": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "firefox": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "safari": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "ios_safari": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "chrome_android": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "samsung": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "none",
+    "metric": "",
+    "update": "static per session",
+    "fields": [
+      {
+        "name": "proxy: deviceMemory",
+        "type": "string",
+        "unit": "",
+        "range": "0.25, 0.5, 1, 2, 4, 8 GB only",
+        "precision": ""
+      },
+      {
+        "name": "proxy: performance.memory.jsHeapSizeLimit",
+        "type": "string",
+        "unit": "",
+        "range": "heap limit, Chromium, hints at RAM class",
+        "precision": ""
+      },
+      {
+        "name": "proxy: measureUserAgentSpecificMemory",
+        "type": "string",
+        "unit": "",
+        "range": "cross-origin isolated only",
+        "precision": ""
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can't see your exact RAM size; only a rounded number capped at 8 GB",
+    "user_action": "Nothing. It happens when the page loads in Chrome or Edge",
+    "can": [
+      "See memory as 0.25 up to 8 GB in Chrome and Edge on HTTPS pages",
+      "Guess your RAM class from the JavaScript memory limit",
+      "Send a lighter page to low memory devices"
+    ],
+    "cannot": [
+      "See more than 8 GB; a 64 GB machine looks like 8",
+      "See memory in Firefox or Safari",
+      "See how much memory is free",
+      "See memory pressure"
+    ],
+    "reach": 1,
+    "reach_label": "A rounded, capped number",
+    "differs": "Chrome and Edge share a capped number. Firefox and Safari share nothing."
+  },
+  "story": {
+    "what_it_is": "Sites cannot see your exact memory. They get a capped, rounded number at best.",
+    "icon": "memory-stick",
+    "tags": [
+      "Blocked",
+      "Memory",
+      "Privacy"
+    ],
+    "marketing": [
+      {
+        "vendor": "MDN",
+        "name": "Navigator.deviceMemory",
+        "pitch": "Docs explain that the value is rounded and capped, so it only hints at memory.",
+        "url": "https://developer.mozilla.org/en-US/docs/Web/API/Navigator/deviceMemory"
+      }
+    ],
+    "for_you": "A 64 GB workstation looks like an 8 GB laptop to a website. Firefox and Safari share nothing at all. Your exact memory stays private.",
+    "for_makers": "Exact memory would be a precise device clue and a wealth signal. The web caps and rounds it, which still lets sites pick a light or heavy page. That is enough for performance but not for precise tracking.",
+    "use_cases": [
+      {
+        "type": "games",
+        "example": "A browser game wanted exact RAM for texture choices and uses the capped hint plus a quick speed test.",
+        "apps": []
+      },
+      {
+        "type": "creative",
+        "example": "A browser design tool wanted real memory to warn about huge files and relies on error handling.",
+        "apps": [
+          "Figma"
+        ]
+      },
+      {
+        "type": "video",
+        "example": "A video call app wanted exact RAM to plan background blur and watches performance instead.",
+        "apps": [
+          "Zoom"
+        ]
+      },
+      {
+        "type": "ads",
+        "example": "An ad vendor wanted exact RAM to guess income and sees only the capped number.",
+        "apps": []
+      },
+      {
+        "type": "security",
+        "example": "A fraud tool wanted exact RAM to spot virtual machines and uses other signals.",
+        "apps": []
+      },
+      {
+        "type": "developer",
+        "example": "A web app team wanted real memory for crash reports and logs the capped value.",
+        "apps": [
+          "Sentry"
+        ]
+      },
+      {
+        "type": "productivity",
+        "example": "A big spreadsheet app wanted exact RAM and instead loads data in chunks.",
+        "apps": [
+          "Google Sheets"
+        ]
+      }
+    ],
+    "risks": [
+      "Capped number still hints at a device tier"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Capped to limit fingerprinting"
+  ],
+  "scores": {
+    "sensitivity": 2,
+    "utility": 2,
+    "fingerprint_bits": 0.0,
+    "friction": 3
+  },
+  "value": {
+    "legit_uses": [
+      "None: the browser deliberately withholds it"
+    ],
+    "abuse": [
+      "Sites attempt proxies to recover it"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "related": [
+    "web.device.device-memory"
+  ],
+  "refs": [
+    {
+      "t": "mdn",
+      "label": "MDN deviceMemory",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/Navigator/deviceMemory"
+    }
+  ],
+  "confidence": "docs"
+}

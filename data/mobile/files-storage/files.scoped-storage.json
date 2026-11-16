@@ -1,0 +1,202 @@
+{
+  "id": "mob.files.scoped-storage",
+  "name": "Scoped storage and shared files",
+  "kind": "capability",
+  "group": "files-storage",
+  "subgroup": "Storage access",
+  "tags": [
+    "scoped-storage",
+    "mediastore",
+    "manage-external-storage",
+    "saf"
+  ],
+  "plain": "Android apps see their own folder and shared media through MediaStore; all files access needs a special grant.",
+  "meaning": "Since Android 10, apps no longer roam the whole shared storage. Photos and files come through MediaStore, document picker or the all files grant. iOS apps see only their own sandbox.",
+  "lifecycle": [
+    "in-session"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "y",
+      "v": "10",
+      "api": 29,
+      "permission": "READ_MEDIA_IMAGES, READ_MEDIA_VIDEO, READ_MEDIA_AUDIO (API 33), READ_MEDIA_VISUAL_USER_SELECTED (API 34), MANAGE_EXTERNAL_STORAGE",
+      "protection": "dangerous",
+      "grant": "prompt",
+      "prompt_ui": "Allow selected or all photos; All files access in Settings",
+      "persistence": "Persistent until revoked; selected photos grant is session limited",
+      "revocation": "Settings > Permissions",
+      "store_policy": "Play: all files access needs declaration; photo picker preferred",
+      "api_surface": "MediaStore, Storage Access Framework, Photo Picker",
+      "note": "Enforced for target 11 (API 30); MANAGE_EXTERNAL_STORAGE restricted by Play"
+    },
+    "ios": {
+      "s": "y",
+      "v": "2.0",
+      "permission": "NSPhotoLibraryUsageDescription for photos; none for sandbox",
+      "protection": "prompt",
+      "grant": "prompt",
+      "prompt_ui": "Photos permission prompt with limited access",
+      "persistence": "Sandbox is private by default; photo access persists until revoked",
+      "revocation": "Settings > Privacy > Photos",
+      "store_policy": "App Review 5.1.1",
+      "api_surface": "App sandbox, UIDocumentPicker, PHPickerViewController",
+      "note": "No access to other apps' files; limited photo library selection from iOS 14"
+    }
+  },
+  "web_equivalents": [
+    "web.storage.opfs"
+  ],
+  "data": {
+    "type": "event",
+    "metric": "Granted URI",
+    "update": "Per grant",
+    "fields": []
+  },
+  "limits": {
+    "headline": "Can open its own folder and shared media only, not everyone's files, on Android",
+    "user_action": "You tap Allow on a photos prompt or pick files in the system chooser",
+    "can": [
+      "Use its own private folder with no permission",
+      "Open shared photos, videos and music after you allow them",
+      "Open files you pick with the system file chooser or Photo Picker",
+      "Ask for All files access in Settings, for apps that truly need it"
+    ],
+    "cannot": [
+      "Open other apps' files; the sandbox blocks them",
+      "Use the old storage permission on Android 11 and newer",
+      "Get All files access without Google Play approval",
+      "Open iPhone files outside the sandbox without the picker"
+    ],
+    "reach": 2,
+    "reach_label": "Own folder plus what you allow",
+    "differs": "Android scoped storage became mandatory for apps targeting Android 11. iPhone has always sandboxed apps and adds limited photo picks since iOS 14."
+  },
+  "story": {
+    "what_it_is": "Android keeps each app in its own folder, and shared files go through system tools.",
+    "icon": "folder-lock",
+    "tags": [
+      "Storage",
+      "Android",
+      "Privacy"
+    ],
+    "marketing": [
+      {
+        "vendor": "Google",
+        "name": "Scoped storage",
+        "pitch": "Developer guide: apps see their own folder and shared media only through system APIs, to protect user privacy.",
+        "url": "https://developer.android.com/about/versions/11/privacy/storage"
+      }
+    ],
+    "for_you": "Apps can no longer wander through your whole storage. They see their own folder, and photos and files only through the system. You may see more pickers and fewer scary pop ups.",
+    "for_makers": "Makers must use system tools for shared files and ask for special access for anything wider. It limits data grabs and makes file handling more uniform.",
+    "use_cases": [
+      {
+        "type": "media",
+        "example": "A music player reads songs through the system media store, not by browsing folders.",
+        "apps": []
+      },
+      {
+        "type": "social",
+        "example": "A photo app saves edited pictures to a shared pictures folder through the system.",
+        "apps": []
+      },
+      {
+        "type": "games",
+        "example": "A game keeps its save files inside its private folder, safe from other apps.",
+        "apps": []
+      },
+      {
+        "type": "utilities",
+        "example": "A file manager asks for All files access to see every folder.",
+        "apps": [
+          "Files by Google"
+        ]
+      },
+      {
+        "type": "security",
+        "example": "A bad app can no longer read other apps' downloads without permission.",
+        "apps": []
+      },
+      {
+        "type": "productivity",
+        "example": "A notes app uses the document picker to open files from other places.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Breaks some old apps",
+      "Special grants widen the door"
+    ],
+    "android_note": "Introduced in Android 10 and enforced in Android 11.",
+    "ios_note": "iPhone apps only ever see their own sandbox."
+  },
+  "technical_bounds": [
+    "No broad file read without a special grant",
+    "Cannot read other apps' sandboxes"
+  ],
+  "scores": {
+    "sensitivity": 4,
+    "utility": 4,
+    "fingerprint_bits": null,
+    "friction": 2
+  },
+  "value": {
+    "legit_uses": [
+      "Attach a photo",
+      "Document upload"
+    ],
+    "abuse": [
+      "Bulk file scraping"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2019-09",
+      "platform": "android",
+      "version": "10 (API 29)",
+      "change": "Scoped storage introduced"
+    },
+    {
+      "date": "2020-09",
+      "platform": "android",
+      "version": "11 (API 30)",
+      "change": "Scoped storage enforced for target 11"
+    },
+    {
+      "date": "2020-09",
+      "platform": "ios",
+      "version": "iOS 14",
+      "change": "Limited Photos access and PHPicker introduced"
+    }
+  ],
+  "related": [
+    "mob.files.cache-eviction",
+    "mob.files.data-protection"
+  ],
+  "refs": [
+    {
+      "t": "android",
+      "label": "Android: Scoped storage",
+      "url": "https://developer.android.com/training/data-storage"
+    },
+    {
+      "t": "apple",
+      "label": "Apple: Accessing files from the iOS and iPadOS Files app",
+      "url": "https://developer.apple.com/documentation/uikit/view_controllers/providing_access_to_directories"
+    },
+    {
+      "t": "policy",
+      "label": "Google Play: All files access policy",
+      "url": "https://support.google.com/googleplay/android-developer/answer/10467955"
+    }
+  ],
+  "confidence": "docs"
+}

@@ -1,0 +1,212 @@
+{
+  "id": "mob.bg.background-audio",
+  "name": "Background audio and media playback",
+  "kind": "capability",
+  "group": "notifications-background",
+  "subgroup": "Background modes",
+  "tags": [
+    "audio",
+    "mediaplayback",
+    "focus",
+    "android-17"
+  ],
+  "plain": "Apps can keep playing sound with the screen off; Android 17 adds new limits for apps that target it.",
+  "meaning": "Used for music, podcasts and navigation prompts. Android 17 hardens background audio playback, focus and volume so quiet apps cannot hijack the speaker.",
+  "lifecycle": [
+    "background",
+    "in-session"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "y",
+      "v": "5.0",
+      "api": 21,
+      "permission": "FOREGROUND_SERVICE_MEDIA_PLAYBACK; exact alarm permission with USAGE_ALARM",
+      "protection": "normal",
+      "grant": "install",
+      "prompt_ui": "Media notification; Android 17 blocks background audio unless a while-in-use FGS is held",
+      "persistence": "While the media session is active",
+      "revocation": "Task manager",
+      "store_policy": "Play: no covert audio",
+      "api_surface": "MediaSessionService, AudioFocusRequest",
+      "note": "Android 17 (target 37): background audio needs a foreground service with while-in-use capability, or the exact alarm permission with USAGE_ALARM"
+    },
+    "ios": {
+      "s": "y",
+      "v": "4.0",
+      "permission": "audio in UIBackgroundModes; AVAudioSession playback category",
+      "protection": "entitlement",
+      "grant": "entitlement",
+      "prompt_ui": "Now Playing and control center",
+      "persistence": "While session active; suspended when audio stops",
+      "revocation": "Remove capability",
+      "store_policy": "App Review 2.5.4",
+      "api_surface": "AVAudioSession, MPNowPlayingInfoCenter",
+      "note": "Audio mode is not a pass for silent loops; App Review rejects silent audio trick"
+    }
+  },
+  "web_equivalents": [
+    "web.notify.screen-wake-lock"
+  ],
+  "data": {
+    "type": "event",
+    "metric": "Audio focus",
+    "update": "In session",
+    "fields": [
+      {
+        "name": "focus",
+        "type": "enum",
+        "unit": "",
+        "range": "gain, loss, duck",
+        "precision": ""
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can keep playing sound with the screen off, with new limits in Android 17",
+    "user_action": "You start music, a podcast or a call, then lock your phone or switch apps",
+    "can": [
+      "Keep audio playing with the screen off",
+      "Show lock screen controls and now playing info",
+      "Keep playing through a foreground service on Android",
+      "Play alarms with the exact alarm permission on Android 17"
+    ],
+    "cannot": [
+      "Play silent audio just to stay alive; App Review rejects it on iPhone",
+      "Start background audio on Android 17 without a foreground service or alarm permission",
+      "Play after you stop the media session",
+      "Ignore other apps that take audio focus"
+    ],
+    "reach": 3,
+    "reach_label": "Sound while the app is hidden",
+    "differs": "iPhone needs the audio background mode. Android needs a media foreground service and gets stricter limits for apps that target Android 17."
+  },
+  "story": {
+    "what_it_is": "An app keeps playing sound with the screen off or while you use another app.",
+    "icon": "music",
+    "tags": [
+      "Background",
+      "Audio",
+      "Battery"
+    ],
+    "marketing": [
+      {
+        "vendor": "Google",
+        "name": "Background playback",
+        "pitch": "Android media apps keep playing audio in the background, with controls on the lock screen.",
+        "url": "https://developer.android.com/media/media3/session/background-playback"
+      },
+      {
+        "vendor": "Apple",
+        "name": "Now playing",
+        "pitch": "Apple lets music and podcasts keep playing with the screen locked and shows controls on the lock screen.",
+        "url": "https://developer.apple.com/documentation/avfoundation"
+      }
+    ],
+    "for_you": "You press play, lock your phone and the music keeps going. You see controls on the lock screen. You never need to keep the app open.",
+    "for_makers": "Makers of music, podcasts and navigation apps need this. Some apps abuse it by playing silent audio to stay alive. Android 17 tightens limits for apps that target it, so quiet apps cannot hold the speaker.",
+    "use_cases": [
+      {
+        "type": "music",
+        "example": "A music app plays your playlist in your pocket while you walk.",
+        "apps": [
+          "Spotify",
+          "Apple Music"
+        ]
+      },
+      {
+        "type": "media",
+        "example": "A podcast app plays on a commute and remembers the spot.",
+        "apps": [
+          "Pocket Casts",
+          "Overcast"
+        ]
+      },
+      {
+        "type": "maps",
+        "example": "A navigation app speaks turn directions while the screen is off.",
+        "apps": [
+          "Google Maps",
+          "Waze"
+        ]
+      },
+      {
+        "type": "fitness",
+        "example": "A workout app plays coaching cues while you run.",
+        "apps": [
+          "Peloton",
+          "Nike Run Club"
+        ]
+      },
+      {
+        "type": "games",
+        "example": "A game keeps its voice chat running while you open another app.",
+        "apps": [
+          "Discord"
+        ]
+      },
+      {
+        "type": "security",
+        "example": "A sneaky app plays silence on loop to stop the system from stopping it.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Silent audio to stay alive",
+      "Battery drain"
+    ],
+    "android_note": "Android 17 adds new limits on background audio, focus and volume for apps that target it.",
+    "ios_note": "iPhone needs the audio background mode and a visible media session."
+  },
+  "technical_bounds": [
+    "Silent audio loops are rejected by App Review",
+    "Android 17 limits background audio start"
+  ],
+  "scores": {
+    "sensitivity": 2,
+    "utility": 4,
+    "fingerprint_bits": null,
+    "friction": 1
+  },
+  "value": {
+    "legit_uses": [
+      "Music",
+      "Podcasts"
+    ],
+    "abuse": [
+      "Silent audio to stay alive"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2026-06",
+      "platform": "android",
+      "version": "17 (API 37)",
+      "change": "Background audio playback, focus and volume restrictions for apps targeting 37"
+    }
+  ],
+  "related": [
+    "mob.bg.fgs-types",
+    "mob.bg.ios-modes"
+  ],
+  "refs": [
+    {
+      "t": "android",
+      "label": "Android 17 behavior changes: all apps",
+      "url": "https://developer.android.com/about/versions/17/behavior-changes-all"
+    },
+    {
+      "t": "apple",
+      "label": "Apple: Configuring background execution modes",
+      "url": "https://developer.apple.com/documentation/xcode/configuring-background-execution-modes"
+    }
+  ],
+  "confidence": "verified"
+}

@@ -1,0 +1,242 @@
+{
+  "id": "mob.location.background",
+  "name": "Background location",
+  "kind": "permission",
+  "group": "location-motion",
+  "subgroup": "Position",
+  "tags": [
+    "background",
+    "runtime-permission",
+    "all-the-time",
+    "play-restricted"
+  ],
+  "plain": "Lets the app read location when it is closed or not on screen.",
+  "meaning": "Builds a continuous movement history: home, work, visits, trips. The strongest location grant, and the one platforms push users to avoid.",
+  "lifecycle": [
+    "background"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "y",
+      "v": "10",
+      "api": 29,
+      "permission": "ACCESS_BACKGROUND_LOCATION; foreground services need type location",
+      "protection": "dangerous",
+      "grant": "prompt",
+      "prompt_ui": "Android 11+: no in-app dialog; app sends the user to Settings to choose Allow all the time",
+      "persistence": "Until revoked; auto-reset after months unused",
+      "revocation": "Settings > Apps > Permissions > Location > Allow all the time",
+      "store_policy": "Play: declaration form plus review; must be core to the app (policy since 2020, enforced 2021)",
+      "api_surface": "ACCESS_BACKGROUND_LOCATION with FusedLocationProviderClient, Geofencing API",
+      "note": "Android 10 had a dialog; Android 11 moved it to Settings. Foreground-service location needs user to have granted foreground access first."
+    },
+    "ios": {
+      "s": "y",
+      "v": "8.0",
+      "permission": "NSLocationAlwaysAndWhenInUseUsageDescription, UIBackgroundModes: location",
+      "protection": "prompt",
+      "grant": "prompt",
+      "prompt_ui": "Always prompt is deferred (iOS 13+): app asks While Using first, then iOS shows Keep While Using or Change to Always later",
+      "persistence": "Until revoked; iOS shows periodic reminders (map of recorded locations)",
+      "revocation": "Settings > Privacy & Security > Location Services",
+      "store_policy": "App Review 2.5.4 and 5.1.1: background location only for features that need it",
+      "api_surface": "CLLocationManager.startMonitoringSignificantLocationChanges, allowsBackgroundLocationUpdates, CLMonitor (iOS 17)",
+      "note": "Blue pill or arrow appears while a background session is active; significant change monitoring wakes a terminated app."
+    }
+  },
+  "web_equivalents": [
+    "web.location.geolocation"
+  ],
+  "data": {
+    "type": "object",
+    "metric": "Location fixes while the app is not visible",
+    "update": "Android: a few per hour in background (API 26+ throttling); iOS: significant change about 500 m, or continuous",
+    "fields": [
+      {
+        "name": "latitude",
+        "type": "float",
+        "unit": "degrees",
+        "range": "-90 to 90",
+        "precision": "about 3 to 5 m (GNSS)"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can follow your location when the app is closed, after you choose Always allow",
+    "user_action": "You tap Always Allow, or choose Allow all the time in Settings",
+    "can": [
+      "Keep your location updates running with the app closed",
+      "Alert you when you enter or leave a place (geofence)",
+      "Wake the app on a big move, even if it was ended, on iPhone",
+      "Show a blue pill or arrow on iPhone while it runs"
+    ],
+    "cannot": [
+      "Run in the background without a second step on Android 11 and newer, where Settings holds the setting",
+      "Hide that it is tracking; iPhone shows an indicator and Android shows a notice for foreground services",
+      "Use background location before you grant foreground location",
+      "Keep going after you pick While using the app or turn it off"
+    ],
+    "reach": 4,
+    "reach_label": "Everywhere you go, anytime",
+    "differs": "Android 11 and newer sends you to Settings for the second step. iPhone asks, then reminds you from time to time."
+  },
+  "story": {
+    "what_it_is": "An app can read your location even when it is closed or not on the screen.",
+    "icon": "navigation",
+    "tags": [
+      "Location",
+      "Asks first",
+      "Sensitive"
+    ],
+    "marketing": [
+      {
+        "vendor": "Google",
+        "name": "Background location",
+        "pitch": "Android needs a separate step and a clear reason before apps can use location in the background.",
+        "url": "https://developer.android.com/training/location/permissions"
+      },
+      {
+        "vendor": "Apple",
+        "name": "Always location",
+        "pitch": "Apple asks you to choose Always, While Using the App, or Never so you control background access.",
+        "url": "https://support.apple.com/en-us/102515"
+      }
+    ],
+    "for_you": "You see a prompt that says Always or Allow all the time. If you agree, the app can follow you all day, and you may see a blue bar or arrow on the status bar. It keeps working even when you forget about it.",
+    "for_makers": "Makers need it for tasks that must work when you are not looking: trip tracking, geofence alerts and sharing location with family. It also creates a full movement history, and the data can be sold. Platforms push users to avoid this setting.",
+    "use_cases": [
+      {
+        "type": "fitness",
+        "example": "A run tracker keeps recording your route when your phone is in your pocket and the screen is off.",
+        "apps": [
+          "Strava",
+          "Komoot"
+        ]
+      },
+      {
+        "type": "maps",
+        "example": "A family app shows where each person is in near real time and alerts you when they arrive home.",
+        "apps": [
+          "Life360"
+        ]
+      },
+      {
+        "type": "rideshare",
+        "example": "A driver app keeps sharing the car's location between trips so riders see it move.",
+        "apps": [
+          "Uber Driver",
+          "Lyft Driver"
+        ]
+      },
+      {
+        "type": "games",
+        "example": "An AR game keeps counting distance and spawns things when you walk with the app closed.",
+        "apps": [
+          "Pikmin Bloom",
+          "Pokemon GO"
+        ]
+      },
+      {
+        "type": "delivery",
+        "example": "A delivery app lets a customer watch a courier come closer even when the courier's phone is locked.",
+        "apps": [
+          "DoorDash",
+          "Instacart"
+        ]
+      },
+      {
+        "type": "ads",
+        "example": "A hidden software kit logs your movements all day and sells them to data brokers.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Full movement history",
+      "Sold to data brokers",
+      "Used for stalking"
+    ],
+    "android_note": "Android 10 and later need a separate Allow all the time step, and Play requires a stated reason and review.",
+    "ios_note": "iPhone asks for While Using first, then later offers Always, and shows a blue indicator when an app uses it."
+  },
+  "technical_bounds": [
+    "Apps cannot jump straight to Always on either platform",
+    "Visible indicator on iOS; Android shows a foreground notification for foreground services"
+  ],
+  "scores": {
+    "sensitivity": 5,
+    "utility": 4,
+    "fingerprint_bits": null,
+    "friction": 3
+  },
+  "value": {
+    "legit_uses": [
+      "Fitness route tracking",
+      "Geofence reminders",
+      "Fleet tracking"
+    ],
+    "abuse": [
+      "Silent movement logs sold to brokers",
+      "Covert tracking of a partner"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2019-09",
+      "platform": "android",
+      "version": "10 (API 29)",
+      "change": "ACCESS_BACKGROUND_LOCATION split out of foreground location"
+    },
+    {
+      "date": "2020-09",
+      "platform": "android",
+      "version": "11 (API 30)",
+      "change": "No in-app dialog; users must grant All the time in Settings"
+    },
+    {
+      "date": "2017-08",
+      "platform": "android",
+      "version": "8.0 (API 26)",
+      "change": "Background location updates throttled to a few per hour"
+    },
+    {
+      "date": "2019-09",
+      "platform": "ios",
+      "version": "iOS 13",
+      "change": "Always becomes a deferred second prompt with a map reminder"
+    }
+  ],
+  "related": [
+    "mob.location.precise",
+    "mob.location.approximate"
+  ],
+  "refs": [
+    {
+      "t": "android",
+      "label": "Android: Access location in the background",
+      "url": "https://developer.android.com/develop/sensors-and-location/location/permissions/background"
+    },
+    {
+      "t": "policy",
+      "label": "Google Play: Use of location permissions (background location)",
+      "url": "https://support.google.com/googleplay/android-developer/answer/9799150"
+    },
+    {
+      "t": "apple",
+      "label": "Apple: Requesting authorization to use location services",
+      "url": "https://developer.apple.com/documentation/corelocation/requesting-authorization-to-use-location-services"
+    },
+    {
+      "t": "android",
+      "label": "Android: Request location permissions",
+      "url": "https://developer.android.com/develop/sensors-and-location/location/permissions"
+    }
+  ],
+  "confidence": "verified"
+}

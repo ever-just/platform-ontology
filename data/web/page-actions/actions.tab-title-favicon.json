@@ -1,0 +1,236 @@
+{
+  "id": "web.actions.tab-title-favicon",
+  "name": "Change tab title and icon",
+  "kind": "action",
+  "group": "page-actions",
+  "subgroup": "Attention",
+  "tags": [
+    "title",
+    "favicon",
+    "badge",
+    "tabnabbing"
+  ],
+  "plain": "Changes the tab title and icon at any time, including while the tab is in the background.",
+  "meaning": "A site can animate the title, add unread counts, or swap the favicon. It is a no-prompt way to draw attention from a hidden tab; scammers also use it to mimic other sites.",
+  "lifecycle": [
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "document.title = ...; <link rel=icon>; navigator.setAppBadge()",
+      "bcd": [
+        "api.Document.title",
+        "api.Navigator.setAppBadge"
+      ],
+      "access": {
+        "grant": "none",
+        "prompt_ui": "None (no browser prompt)",
+        "secure_context": false,
+        "user_gesture": false,
+        "activation": "none",
+        "persistence": "Until navigation",
+        "revocation": "Nothing to revoke (no permission is stored)",
+        "iframe": "Frames cannot change the top document title",
+        "steps": [
+          "Script sets document.title or the icon href",
+          "Tab strip updates",
+          "App badge needs an installed PWA (Chrome desktop 81)"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "1",
+          "note": "",
+          "date": "2008-12-11"
+        },
+        "edge": {
+          "s": "y",
+          "v": "12",
+          "note": "",
+          "date": "2015-07-29"
+        },
+        "firefox": {
+          "s": "y",
+          "v": "1",
+          "note": "",
+          "date": "2004-11-09"
+        },
+        "safari": {
+          "s": "y",
+          "v": "4",
+          "note": "",
+          "date": "2009-06-08"
+        },
+        "ios_safari": {
+          "s": "y",
+          "v": "3.2",
+          "note": "All iOS browsers use WebKit",
+          "date": "2010-04-03"
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "18",
+          "note": "",
+          "date": "2012-06-27"
+        },
+        "samsung": {
+          "s": "y",
+          "v": "1.0",
+          "note": "",
+          "date": "2013-04-27"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "none",
+    "metric": "",
+    "update": "",
+    "fields": []
+  },
+  "limits": {
+    "headline": "Can change its tab name and small icon at any time",
+    "user_action": "Nothing. It happens as you use the page, even when the tab is hidden.",
+    "can": [
+      "Change the tab name, such as to show a new message count",
+      "Swap the small icon in the tab",
+      "Change them even when you are in another tab"
+    ],
+    "cannot": [
+      "Change the title or icon of other sites or tabs",
+      "Change what is in your bookmarks without you saving it",
+      "Hide the real site address in the address bar"
+    ],
+    "reach": 1,
+    "reach_label": "Its own tab only",
+    "differs": ""
+  },
+  "story": {
+    "what_it_is": "A page can change its tab name, icon and badge, even when you are looking elsewhere.",
+    "icon": "tag",
+    "tags": [
+      "Silent",
+      "Attention",
+      "Messages"
+    ],
+    "marketing": [
+      {
+        "vendor": "Google",
+        "name": "Badging API",
+        "pitch": "Chrome's docs say the badging API lets an installed web app show a number on its icon.",
+        "url": "https://developer.chrome.com/docs/capabilities/web-apis/badging"
+      }
+    ],
+    "for_you": "Your tab shows '(3) Inbox' or blinks a dot when something new arrives. You feel pulled back to check it, even though you never asked for alerts.",
+    "for_makers": "Makers use it as a free attention nudge: unread counts, call status, game turns. It works without any permission, so it reaches everyone.",
+    "use_cases": [
+      {
+        "type": "messaging",
+        "example": "Your mail tab shows an unread count and flashes when a new email arrives.",
+        "apps": [
+          "Gmail",
+          "Slack"
+        ]
+      },
+      {
+        "type": "live",
+        "example": "A live auction tab shows 'Outbid!' in its title so you notice.",
+        "apps": [
+          "eBay"
+        ]
+      },
+      {
+        "type": "games",
+        "example": "A browser strategy game flashes 'Your turn' in the tab title.",
+        "apps": [
+          "Chess.com"
+        ]
+      },
+      {
+        "type": "video",
+        "example": "A video call shows who is speaking in the tab icon.",
+        "apps": [
+          "Google Meet"
+        ]
+      },
+      {
+        "type": "ads",
+        "example": "A shady site changes its title and icon to look like a bank or a warning.",
+        "apps": []
+      },
+      {
+        "type": "productivity",
+        "example": "A project tool shows a spinner icon while it saves.",
+        "apps": [
+          "Notion"
+        ]
+      }
+    ],
+    "risks": [
+      "Nagging",
+      "Fake looking tabs"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "No limit on title length in the DOM; tab strips truncate to about the first 20 to 40 characters",
+    "Favicon cache may delay updates (Chrome, Safari cache aggressively)",
+    "Badging API works only for installed apps in Chrome and Safari 17 Home Screen web apps; no prompt in installed apps for the numeric badge but notifications permission is needed on iOS",
+    "Page cannot flash the taskbar or play a system sound without media or notification permission"
+  ],
+  "scores": {
+    "sensitivity": 1,
+    "utility": 3,
+    "fingerprint_bits": null,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Unread counts",
+      "Status in tab",
+      "Dark and light favicons"
+    ],
+    "abuse": [
+      "Fake site favicon",
+      "Tab title swap after the person leaves (tabnabbing)"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2020-03",
+      "browser": "chrome",
+      "version": "81",
+      "change": "Badging API for installed PWAs on desktop"
+    }
+  ],
+  "related": [
+    "web.os.badging"
+  ],
+  "refs": [
+    {
+      "t": "mdn",
+      "label": "MDN title",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/Document/title"
+    },
+    {
+      "t": "mdn",
+      "label": "MDN Badging API",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/Badging_API"
+    },
+    {
+      "t": "spec",
+      "label": "W3C Badging API",
+      "url": "https://w3c.github.io/badging/"
+    }
+  ],
+  "confidence": "docs"
+}

@@ -1,0 +1,228 @@
+{
+  "id": "web.input.local-fonts",
+  "name": "Local Font Access",
+  "kind": "permission",
+  "group": "input-clipboard",
+  "subgroup": "Fonts",
+  "tags": [
+    "fingerprint"
+  ],
+  "plain": "Asks to list every font installed on the device.",
+  "meaning": "Reveals the full list of installed fonts and raw font files, which identifies the device and installed software. Gated by prompt because font lists were a long-standing fingerprint.",
+  "lifecycle": [
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "window.queryLocalFonts({postscriptNames}); FontData.blob()",
+      "permission_name": "local-fonts",
+      "permissions_policy": "local-fonts",
+      "bcd": [
+        "api.Window.queryLocalFonts"
+      ],
+      "access": {
+        "grant": "prompt",
+        "prompt_ui": "Chrome prompt: See fonts on your device, Allow or Block; needs a gesture.",
+        "secure_context": true,
+        "user_gesture": true,
+        "persistence": "Persistent per origin",
+        "revocation": "Site settings",
+        "iframe": "Needs allow=\"local-fonts\" in iframes",
+        "steps": [
+          "User gesture",
+          "queryLocalFonts()",
+          "Permission prompt",
+          "Array of FontData with family, fullName, postscriptName, style, blob()"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "103",
+          "note": "",
+          "date": "2022-06-21"
+        },
+        "edge": {
+          "s": "y",
+          "v": "103",
+          "note": "",
+          "date": "2022-06-23"
+        },
+        "firefox": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "safari": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "ios_safari": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "chrome_android": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "samsung": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "list",
+    "metric": "Installed fonts",
+    "update": "on call",
+    "fields": [
+      {
+        "name": "family, fullName, postscriptName, style",
+        "type": "string",
+        "unit": "text",
+        "range": "any",
+        "precision": "name"
+      },
+      {
+        "name": "blob",
+        "type": "binary",
+        "unit": "bytes",
+        "range": "font file",
+        "precision": "raw"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can list the fonts installed on your computer, after you allow it",
+    "user_action": "You tap a font picker button and choose Allow when Chrome asks",
+    "can": [
+      "See the names of all installed fonts",
+      "Open the font files so the page can use them",
+      "Show your own fonts in a design or editing tool"
+    ],
+    "cannot": [
+      "Do this without a tap and your Allow",
+      "See the list in Firefox or Safari",
+      "Keep access after you pick Block"
+    ],
+    "reach": 2,
+    "reach_label": "Once you allow it for that site",
+    "differs": "Chrome and Edge on desktop only. Firefox, Safari and phones do not support it."
+  },
+  "story": {
+    "what_it_is": "A site asks to list the fonts installed on your computer.",
+    "icon": "type",
+    "tags": [
+      "Fonts",
+      "Asks first",
+      "Fingerprint"
+    ],
+    "marketing": [
+      {
+        "vendor": "Google Chrome",
+        "name": "Local Font Access API",
+        "pitch": "Chrome pitches it as a way for design and editing web apps to use fonts installed on the computer, as desktop apps do.",
+        "url": "https://developer.chrome.com/docs/capabilities/web-apis/local-fonts"
+      }
+    ],
+    "for_you": "A prompt asks whether the site can see fonts on your device. If you allow, it can list them and use them in your design. If you say no, you only get the standard web fonts.",
+    "for_makers": "Design and publishing tools need access to a person's own fonts, especially brand fonts. The same list of fonts is a strong fingerprint, which is why browsers ask first.",
+    "use_cases": [
+      {
+        "type": "creative",
+        "example": "A web design tool lets a designer pick a licensed brand font that is installed on their laptop.",
+        "apps": [
+          "Figma",
+          "Canva"
+        ]
+      },
+      {
+        "type": "productivity",
+        "example": "A web document editor shows a user's own fonts so a file looks the same as on the desktop.",
+        "apps": [
+          "Google Docs",
+          "Word for the web"
+        ]
+      },
+      {
+        "type": "creative",
+        "example": "A photo or video web editor loads installed fonts so titles match a project made earlier on the desktop.",
+        "apps": [
+          "Photopea"
+        ]
+      },
+      {
+        "type": "games",
+        "example": "A level editor or branded card game maker uses local fonts for custom text in a creation tool.",
+        "apps": []
+      },
+      {
+        "type": "analytics",
+        "example": "A fingerprinting script reads the list of fonts to build a nearly unique ID for the device.",
+        "apps": []
+      },
+      {
+        "type": "security",
+        "example": "A fraud tool compares fonts with the claimed device model, since a Mac should not show Windows fonts.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Font list identifies your device",
+      "Exposes installed software"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Chromium desktop only",
+    "Needs gesture and prompt"
+  ],
+  "scores": {
+    "sensitivity": 3,
+    "utility": 3,
+    "fingerprint_bits": 8,
+    "friction": 2
+  },
+  "value": {
+    "legit_uses": [
+      "Design tools"
+    ],
+    "abuse": [
+      "Font fingerprinting"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": "LinkedIn probes fonts by metric measurement, not through this permission"
+    }
+  },
+  "history": [
+    {
+      "date": "2022-06",
+      "browser": "chrome",
+      "version": "103",
+      "change": "queryLocalFonts ships"
+    }
+  ],
+  "refs": [
+    {
+      "t": "mdn",
+      "label": "MDN queryLocalFonts",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/Window/queryLocalFonts"
+    },
+    {
+      "t": "spec",
+      "label": "WICG Local Font Access",
+      "url": "https://wicg.github.io/local-font-access/"
+    }
+  ],
+  "confidence": "docs"
+}

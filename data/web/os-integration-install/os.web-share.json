@@ -1,0 +1,246 @@
+{
+  "id": "web.os.web-share",
+  "name": "Web Share",
+  "kind": "action",
+  "group": "os-integration-install",
+  "subgroup": "Sharing",
+  "tags": [
+    "sharing"
+  ],
+  "plain": "Opens the phone's native share sheet with text, a link or files.",
+  "meaning": "The person picks the target app. The site does not learn which one.",
+  "lifecycle": [
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "navigator.share({title,text,url,files}), navigator.canShare()",
+      "permissions_policy": "web-share",
+      "bcd": [
+        "api.Navigator.share"
+      ],
+      "access": {
+        "grant": "gesture",
+        "prompt_ui": "OS share sheet",
+        "secure_context": true,
+        "user_gesture": true,
+        "persistence": "Per origin",
+        "revocation": "Site settings",
+        "iframe": "Same as top level; cross-origin iframes need a permissions policy where listed",
+        "steps": [
+          "Call the API",
+          "Browser applies its access rules",
+          "Page receives the result"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "128",
+          "note": "",
+          "date": "2024-08-20"
+        },
+        "edge": {
+          "s": "y",
+          "v": "93",
+          "note": "",
+          "date": "2021-09-02"
+        },
+        "firefox": {
+          "s": "f",
+          "v": "71",
+          "note": "Behind flag. "
+        },
+        "safari": {
+          "s": "y",
+          "v": "12.1",
+          "note": "",
+          "date": "2019-03-25"
+        },
+        "ios_safari": {
+          "s": "y",
+          "v": "12.2",
+          "note": "",
+          "date": "2019-03-25"
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "61",
+          "note": "",
+          "date": "2017-09-05"
+        },
+        "samsung": {
+          "s": "y",
+          "v": "8.0",
+          "note": "",
+          "date": "2018-07-18"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "object",
+    "metric": "Opens the phone's native share sheet with text, a link or files.",
+    "update": "on demand",
+    "fields": [
+      {
+        "name": "files",
+        "type": "list",
+        "unit": "bytes",
+        "range": "platform limit; images, video, audio, pdf, text"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can open your phone's share sheet with a link, text or files, only after a tap",
+    "user_action": "You tap a Share button on the page",
+    "can": [
+      "Open the share sheet with text, a link or files",
+      "Let you pick the app to send to",
+      "Share one item at a time"
+    ],
+    "cannot": [
+      "Open the share sheet without a tap",
+      "See which app you picked",
+      "Share anything you did not offer",
+      "Work in Firefox on most computers yet"
+    ],
+    "reach": 1,
+    "reach_label": "One share, one tap",
+    "differs": "Chrome, Edge, Safari and phone browsers support it. Firefox support is limited."
+  },
+  "story": {
+    "what_it_is": "A page can open your phone's normal share sheet with a link, text or file.",
+    "icon": "share-2",
+    "tags": [
+      "Sharing",
+      "Asks first",
+      "Capability"
+    ],
+    "marketing": [
+      {
+        "vendor": "web.dev",
+        "name": "Web Share API",
+        "pitch": "Lets a site hand off a link, text or file to the share sheet, so you can send it with any app on your device.",
+        "url": "https://web.dev/articles/web-share"
+      }
+    ],
+    "for_you": "You tap a Share button, and your device's own share menu appears. You pick an app or a person. Nothing is shared until you choose.",
+    "for_makers": "Makers skip building buttons for each network, which saves work and clutters less. Share events bring new visitors. It must start from a tap, so it cannot fire by itself.",
+    "use_cases": [
+      {
+        "type": "news",
+        "example": "A news article has one Share button that opens the share sheet for any chat or social app.",
+        "apps": [
+          "BBC News"
+        ]
+      },
+      {
+        "type": "games",
+        "example": "A browser game shares your high score with a friend through your messages app.",
+        "apps": []
+      },
+      {
+        "type": "shopping",
+        "example": "A store shares a product link with a friend for a gift idea.",
+        "apps": [
+          "Etsy"
+        ]
+      },
+      {
+        "type": "music",
+        "example": "A music site shares a track to your story or chat.",
+        "apps": []
+      },
+      {
+        "type": "travel",
+        "example": "A travel site shares a trip plan with a travel partner.",
+        "apps": []
+      },
+      {
+        "type": "creative",
+        "example": "A web photo tool shares an edited picture through the share sheet.",
+        "apps": []
+      },
+      {
+        "type": "social",
+        "example": "A social site shares a post link to another app.",
+        "apps": [
+          "Pinterest"
+        ]
+      },
+      {
+        "type": "productivity",
+        "example": "A document site shares a view link with a coworker in one tap.",
+        "apps": [
+          "Google Docs"
+        ]
+      }
+    ],
+    "risks": [
+      "Can leak private links",
+      "Easy to share by mistake"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Needs user gesture",
+    "Firefox only behind a flag",
+    "Cannot read the chosen target"
+  ],
+  "scores": {
+    "sensitivity": 1,
+    "utility": 4,
+    "fingerprint_bits": null,
+    "friction": 1
+  },
+  "value": {
+    "legit_uses": [
+      "Share buttons"
+    ],
+    "abuse": [
+      "None notable"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2016",
+      "browser": "chrome",
+      "version": "61",
+      "change": "Android share"
+    },
+    {
+      "date": "2024-08",
+      "browser": "chrome",
+      "version": "128",
+      "change": "Desktop Chrome"
+    },
+    {
+      "date": "2018",
+      "browser": "safari",
+      "version": "12.1",
+      "change": "Safari"
+    }
+  ],
+  "refs": [
+    {
+      "t": "mdn",
+      "label": "MDN Web Share API",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/Web_Share_API"
+    },
+    {
+      "t": "spec",
+      "label": "Web Share",
+      "url": "https://www.w3.org/TR/web-share/"
+    }
+  ],
+  "confidence": "verified"
+}

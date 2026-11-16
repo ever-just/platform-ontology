@@ -1,0 +1,205 @@
+{
+  "id": "web.display.prefers-reduced-data",
+  "name": "prefers-reduced-data",
+  "kind": "signal",
+  "group": "display-window",
+  "subgroup": "CSS media features",
+  "tags": [
+    "media-query",
+    "preferences",
+    "accessibility"
+  ],
+  "plain": "User wants less data use (data saver).",
+  "meaning": "Pairs with Save-Data. Still behind a flag in Chrome, so almost always no-preference.",
+  "lifecycle": [
+    "on-arrival",
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "matchMedia('(prefers-reduced-data: reduce)')",
+      "bcd": [
+        "css.at-rules.media.prefers-reduced-data"
+      ],
+      "access": {
+        "grant": "none",
+        "prompt_ui": "None",
+        "secure_context": false,
+        "user_gesture": false,
+        "persistence": "read fresh on every page load; nothing stored",
+        "revocation": "none needed (no grant)",
+        "iframe": "Readable from cross-origin iframes too (same values)",
+        "steps": [
+          "Page script reads the value",
+          "No prompt is shown"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "f",
+          "v": "",
+          "note": ""
+        },
+        "edge": {
+          "s": "f",
+          "v": "",
+          "note": ""
+        },
+        "firefox": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "safari": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "ios_safari": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "chrome_android": {
+          "s": "f",
+          "v": "",
+          "note": ""
+        },
+        "samsung": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "object",
+    "metric": "",
+    "update": "static per session",
+    "fields": [
+      {
+        "name": "prefers-reduced-data",
+        "type": "enum",
+        "unit": "",
+        "range": "no-preference, reduce",
+        "precision": ""
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can tell if you asked for less data use, where the browser supports it",
+    "user_action": "Nothing. It happens when the page loads.",
+    "can": [
+      "Check whether a data saver setting is on",
+      "Send smaller images and skip autoplay video",
+      "Add the answer to a browser fingerprint"
+    ],
+    "cannot": [
+      "See your data plan or how much you have used",
+      "Get an answer in Safari or on iPhone",
+      "Get an answer in Chrome unless that hidden setting is switched on"
+    ],
+    "reach": 1,
+    "reach_label": "One yes or no, rarely on",
+    "differs": "Only Chrome based browsers and Firefox have it, and only behind a hidden setting. Safari does not."
+  },
+  "story": {
+    "what_it_is": "Tells a page you want it to use less data, such as in a data saver mode.",
+    "icon": "wifi-off",
+    "tags": [
+      "Data saver",
+      "Display",
+      "Silent"
+    ],
+    "marketing": [
+      {
+        "vendor": "MDN",
+        "name": "prefers-reduced-data",
+        "pitch": "Documents a media feature that lets pages send lighter content when the person wants to save data.",
+        "url": "https://developer.mozilla.org/en-US/docs/Web/CSS/@media/prefers-reduced-data"
+      }
+    ],
+    "for_you": "You never see the check. If you turned on data saver, a site may skip big videos and use smaller pictures to save your plan.",
+    "for_makers": "Makers use it to cut weight for people on slow or costly mobile plans. It also tells them the person may be in a place with weak internet, which is a small private clue.",
+    "use_cases": [
+      {
+        "type": "video",
+        "example": "A news site shows still images instead of auto playing video when data saver is on.",
+        "apps": []
+      },
+      {
+        "type": "games",
+        "example": "A browser game loads smaller textures and skips cut scenes so it starts faster on a weak connection.",
+        "apps": []
+      },
+      {
+        "type": "ads",
+        "example": "An ad network sends a lighter ad or none when a user wants to save data.",
+        "apps": []
+      },
+      {
+        "type": "shopping",
+        "example": "A store loads small thumbnails and delays the product video in data saver mode.",
+        "apps": []
+      },
+      {
+        "type": "social",
+        "example": "A social app turns off auto play and loads lower quality photos.",
+        "apps": []
+      },
+      {
+        "type": "education",
+        "example": "A learning site offers a text version of a lesson for students on limited plans.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Hints at your data plan",
+      "Rarely supported"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Flag only"
+  ],
+  "scores": {
+    "sensitivity": 1,
+    "utility": 3,
+    "fingerprint_bits": 0.1,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Respect OS theme and accessibility needs",
+      "Adapt layout"
+    ],
+    "abuse": [
+      "Infer disability or setting for fingerprinting"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "related": [
+    "web.locale.accessibility-inference"
+  ],
+  "refs": [
+    {
+      "t": "mdn",
+      "label": "MDN prefers-reduced-data",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/CSS/@media/prefers-reduced-data"
+    },
+    {
+      "t": "spec",
+      "label": "CSS Media Queries Level 5",
+      "url": "https://www.w3.org/TR/mediaqueries-5/"
+    }
+  ],
+  "confidence": "docs"
+}

@@ -1,0 +1,215 @@
+{
+  "id": "mob.sys.accessibility-service",
+  "name": "Accessibility Service (read and control the screen)",
+  "kind": "capability",
+  "group": "system-control",
+  "subgroup": "Screen control",
+  "tags": [
+    "accessibility",
+    "screen-reader",
+    "automation",
+    "malware-abuse"
+  ],
+  "plain": "Lets an app read other apps' screens and tap for the user.",
+  "meaning": "The most powerful non-system capability on Android: it can read text, click and type in any app. Criminal malware abuses it, so Play restricts it to real accessibility tools.",
+  "lifecycle": [
+    "background"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "y",
+      "v": "1.6",
+      "api": 4,
+      "permission": "BIND_ACCESSIBILITY_SERVICE (special, enabled in Settings)",
+      "protection": "special",
+      "grant": "settings",
+      "prompt_ui": "Settings > Accessibility > Installed apps; full control warning",
+      "persistence": "Until disabled",
+      "revocation": "Settings > Accessibility",
+      "store_policy": "Play: Accessibility API policy (declaration, isAccessibilityTool, 2022)",
+      "api_surface": "AccessibilityService, AccessibilityNodeInfo, performGlobalAction",
+      "note": "Android 13 restricted settings blocks sideloaded apps from enabling it; Android 17 hides sensitive fields from non-tool services."
+    },
+    "ios": {
+      "s": "p",
+      "v": "",
+      "permission": "Assistive tech via Switch Control, Voice Control (system); no third party screen reader of other apps",
+      "protection": "system",
+      "grant": "none",
+      "prompt_ui": "Apple Accessibility APIs apply within the app; no cross app control",
+      "persistence": "n/a",
+      "revocation": "Settings > Accessibility",
+      "store_policy": "",
+      "api_surface": "UIAccessibility (in app), AccessibilityUIServer is system only",
+      "note": "iOS has no equivalent; third party assistive apps use Switch Control or Guided Access."
+    }
+  },
+  "data": {
+    "type": "stream",
+    "metric": "UI tree and events",
+    "update": "continuous",
+    "fields": [
+      {
+        "name": "node",
+        "type": "object",
+        "unit": "text, bounds, actions",
+        "range": "any app",
+        "precision": "exact"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can see and tap other apps' screens on Android, once you turn it on",
+    "user_action": "You open Settings, then Accessibility, pick the app and accept the full control warning",
+    "can": [
+      "See text on the screen of any app",
+      "Tap, swipe and type in other apps",
+      "Do actions like Back and Home for you"
+    ],
+    "cannot": [
+      "Turn itself on; you must switch it on in Settings",
+      "Be enabled in a sideloaded app on Android 13 and later until you allow restricted settings",
+      "See sensitive fields on Android 17 unless it is a real accessibility tool",
+      "Control other apps on iPhone"
+    ],
+    "reach": 4,
+    "reach_label": "Everything on screen, once on",
+    "differs": "Android lets an enabled service see and control any app; iPhone has no matching cross app control."
+  },
+  "story": {
+    "what_it_is": "A powerful Android tool that lets an app read other apps' screens and tap on your behalf.",
+    "icon": "accessibility",
+    "tags": [
+      "Accessibility",
+      "Android",
+      "Powerful"
+    ],
+    "marketing": [
+      {
+        "vendor": "Google",
+        "name": "Accessibility services",
+        "pitch": "Build tools that help people with disabilities use their phone, by reading screens and acting for them.",
+        "url": "https://developer.android.com/guide/topics/ui/accessibility/service"
+      }
+    ],
+    "for_you": "A special settings screen asks you to turn it on, with a scary warning. Once on, a helper can read what is on the screen and tap for you. A screen reader speaks every button aloud.",
+    "for_makers": "Screen readers and switch tools could not exist without it. Automation apps use it to click and type. Because it sees everything, criminals use it to steal bank logins, so Android adds more warnings and limits.",
+    "use_cases": [
+      {
+        "type": "accessibility",
+        "example": "A blind person uses TalkBack to hear every button read aloud.",
+        "apps": [
+          "TalkBack"
+        ]
+      },
+      {
+        "type": "accessibility",
+        "example": "A person with limited movement uses Switch Access to control the phone with one button.",
+        "apps": [
+          "Switch Access"
+        ]
+      },
+      {
+        "type": "productivity",
+        "example": "An automation app fills in forms and taps buttons for you.",
+        "apps": [
+          "Tasker"
+        ]
+      },
+      {
+        "type": "security",
+        "example": "A password manager fills login forms in other apps.",
+        "apps": [
+          "1Password",
+          "Bitwarden"
+        ]
+      },
+      {
+        "type": "games",
+        "example": "A game helper app taps the screen for you, which many games ban.",
+        "apps": []
+      },
+      {
+        "type": "security",
+        "example": "Malware reads a bank code from the screen and moves money, which is why it is dangerous.",
+        "apps": []
+      },
+      {
+        "type": "enterprise",
+        "example": "A support tool lets an agent see and control your screen when you ask for help.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Can read everything on screen",
+      "Used by banking malware",
+      "Hard to tell good from bad"
+    ],
+    "android_note": "Android 13 blocks sideloaded apps from enabling it, and Android 17 hides sensitive fields from non tool services.",
+    "ios_note": "iPhone has no matching tool. Assistive apps use Switch Control or Guided Access."
+  },
+  "technical_bounds": [
+    "Cannot read secure FLAG_SECURE content in all cases"
+  ],
+  "scores": {
+    "sensitivity": 5,
+    "utility": 4,
+    "fingerprint_bits": 3,
+    "friction": 3
+  },
+  "value": {
+    "legit_uses": [
+      "Screen readers",
+      "Switch access",
+      "Automation"
+    ],
+    "abuse": [
+      "Banking trojans",
+      "Auto granting permissions"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2022-07",
+      "platform": "android",
+      "version": "Play policy",
+      "change": "Accessibility API declaration required"
+    },
+    {
+      "date": "2022-10",
+      "platform": "android",
+      "version": "13",
+      "change": "Restricted settings for sideloaded apps"
+    },
+    {
+      "date": "2025-09",
+      "platform": "android",
+      "version": "16",
+      "change": "Advanced Protection blocks non tool accessibility apps"
+    }
+  ],
+  "related": [
+    "mob.sys.restricted-settings",
+    "mob.display.overlay"
+  ],
+  "refs": [
+    {
+      "t": "android",
+      "label": "Android: AccessibilityService",
+      "url": "https://developer.android.com/guide/topics/ui/accessibility/service"
+    },
+    {
+      "t": "policy",
+      "label": "Play: Accessibility API policy",
+      "url": "https://support.google.com/googleplay/android-developer/answer/10964491"
+    }
+  ],
+  "confidence": "docs"
+}

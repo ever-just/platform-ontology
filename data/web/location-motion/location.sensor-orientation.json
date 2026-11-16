@@ -1,0 +1,236 @@
+{
+  "id": "web.location.sensor-orientation",
+  "name": "AbsoluteOrientationSensor and RelativeOrientationSensor",
+  "kind": "permission",
+  "group": "location-motion",
+  "subgroup": "Generic Sensor API",
+  "tags": [
+    "generic-sensor",
+    "secure-context"
+  ],
+  "plain": "Fused device orientation as a quaternion or rotation matrix.",
+  "meaning": "Gives exact device attitude relative to Earth (absolute) or to its start pose (relative). Same privacy class as DeviceOrientation but easier to use for 3D scenes.",
+  "lifecycle": [
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "new AbsoluteOrientationSensor({frequency}); new RelativeOrientationSensor(); quaternion; populateMatrix()",
+      "permission_name": "accelerometer, gyroscope, magnetometer (absolute); accelerometer, gyroscope (relative)",
+      "permissions_policy": "accelerometer",
+      "bcd": [
+        "api.AbsoluteOrientationSensor",
+        "api.RelativeOrientationSensor",
+        "api.OrientationSensor"
+      ],
+      "access": {
+        "grant": "prompt",
+        "prompt_ui": "Chromium shows no bubble: access follows the Motion sensors site setting (default Allow) plus the Permissions API name. Safari and Firefox do not ship the API.",
+        "secure_context": true,
+        "user_gesture": false,
+        "persistence": "Site setting Allow or Block per origin",
+        "revocation": "chrome://settings/content/sensors; Permissions API 'change' event",
+        "iframe": "Cross-origin iframes blocked unless allow=\"accelerometer\"; page must be focused and visible",
+        "steps": [
+          "Check isSecureContext and Permissions Policy",
+          "Construct the sensor with {frequency: 60}",
+          "sensor.start()",
+          "'reading' events fire; 'error' event on NotAllowedError or NotReadableError"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "67",
+          "note": "",
+          "date": "2018-05-29"
+        },
+        "edge": {
+          "s": "y",
+          "v": "79",
+          "note": "",
+          "date": "2020-01-15"
+        },
+        "firefox": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "safari": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "ios_safari": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "67",
+          "note": "",
+          "date": "2018-05-31"
+        },
+        "samsung": {
+          "s": "y",
+          "v": "9.0",
+          "note": "",
+          "date": "2018-09-15"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "event",
+    "metric": "Sensor readings at the requested frequency",
+    "update": "up to 60 Hz (Chrome caps frequency)",
+    "fields": [
+      {
+        "name": "quaternion",
+        "type": "list of 4 floats",
+        "unit": "unit quaternion",
+        "range": "-1 to 1",
+        "precision": "float32"
+      },
+      {
+        "name": "frequency",
+        "type": "float",
+        "unit": "Hz",
+        "range": "1 to 60",
+        "precision": "1 Hz"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can find which way your device is facing and tilted in 3D",
+    "user_action": "Nothing in most browsers. Chrome allows it by default unless you changed Motion sensors in site settings",
+    "can": [
+      "Find the device's tilt and facing, compared with the Earth or with where it started",
+      "Move a 3D scene, map or AR view as you turn the phone",
+      "Give smoother results than basic tilt events"
+    ],
+    "cannot": [
+      "Run in Firefox or Safari, which do not support it",
+      "Show a prompt in Chrome; there is none by default",
+      "Know where you are on the map from it",
+      "Measure orientation while the page is closed"
+    ],
+    "reach": 2,
+    "reach_label": "While the page is open",
+    "differs": "Chrome, Edge and Samsung Internet support it. Safari and Firefox do not."
+  },
+  "story": {
+    "what_it_is": "The page gets your exact device angle, from sensors blended together.",
+    "icon": "compass",
+    "tags": [
+      "Motion",
+      "Sensors",
+      "3D"
+    ],
+    "marketing": [
+      {
+        "vendor": "Google Chrome",
+        "name": "Generic Sensor API",
+        "pitch": "Chrome describes a common way for web pages to read motion and environment sensors such as accelerometer and gyroscope.",
+        "url": "https://developer.chrome.com/docs/capabilities/web-apis/generic-sensor"
+      }
+    ],
+    "for_you": "A 3D scene or map matches the way you hold your phone with no jitter. On many phones there is no prompt. It is the same data as tilt, just smoother.",
+    "for_makers": "Makers use it for smooth 3D, AR and camera control. It has the same privacy class as tilt and motion events, so it can be fingerprinted and can leak typing.",
+    "use_cases": [
+      {
+        "type": "games",
+        "example": "A browser 3D game or VR cardboard view turns the camera exactly with your head or phone.",
+        "apps": []
+      },
+      {
+        "type": "ar-vr",
+        "example": "A web AR page keeps a 3D model locked to your room as you move.",
+        "apps": [
+          "8th Wall",
+          "Model Viewer"
+        ]
+      },
+      {
+        "type": "maps",
+        "example": "A map uses full orientation to show a street view pointing where you face.",
+        "apps": [
+          "Google Street View"
+        ]
+      },
+      {
+        "type": "media",
+        "example": "A virtual tour or 360 video lets you look around by moving your phone.",
+        "apps": []
+      },
+      {
+        "type": "analytics",
+        "example": "A tracker records orientation as part of a motion profile.",
+        "apps": []
+      },
+      {
+        "type": "security",
+        "example": "A site checks for steady human hand motion to catch emulators.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Same leaks as tilt data",
+      "Fingerprint clue"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Absolute needs three sensor permissions, relative needs two",
+    "Needs focus and secure context"
+  ],
+  "scores": {
+    "sensitivity": 3,
+    "utility": 3,
+    "fingerprint_bits": 3,
+    "friction": 1
+  },
+  "value": {
+    "legit_uses": [
+      "3D model viewers",
+      "Panoramas"
+    ],
+    "abuse": [
+      "Same as DeviceOrientation"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2018-05",
+      "browser": "chrome",
+      "version": "67",
+      "change": "Orientation sensors ship with the Generic Sensor API"
+    }
+  ],
+  "related": [
+    "web.location.device-orientation",
+    "web.location.sensor-accelerometer"
+  ],
+  "refs": [
+    {
+      "t": "mdn",
+      "label": "MDN AbsoluteOrientationSensor",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/AbsoluteOrientationSensor"
+    },
+    {
+      "t": "spec",
+      "label": "W3C Orientation Sensor",
+      "url": "https://www.w3.org/TR/orientation-sensor/"
+    }
+  ],
+  "confidence": "docs"
+}

@@ -1,0 +1,233 @@
+{
+  "id": "web.os.badging",
+  "name": "Badging API",
+  "kind": "action",
+  "group": "os-integration-install",
+  "subgroup": "Notification surface",
+  "tags": [
+    "notification surface"
+  ],
+  "plain": "Shows a number or dot on the app icon.",
+  "meaning": "Alerts the person to unread items without a notification. Cannot read badge state.",
+  "lifecycle": [
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "navigator.setAppBadge(count), clearAppBadge()",
+      "bcd": [
+        "api.Navigator.setAppBadge"
+      ],
+      "access": {
+        "grant": "install",
+        "prompt_ui": "None; needs installed app and sometimes notification permission",
+        "secure_context": true,
+        "user_gesture": false,
+        "persistence": "Per origin",
+        "revocation": "Site settings",
+        "iframe": "Same as top level; cross-origin iframes need a permissions policy where listed",
+        "steps": [
+          "Call the API",
+          "Browser applies its access rules",
+          "Page receives the result"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "81",
+          "note": "Windows and macOS since Chrome 81. ChromeOS since Chrome 91. Linux offers no universal badging API on the operating system level.",
+          "date": "2020-04-07"
+        },
+        "edge": {
+          "s": "y",
+          "v": "81",
+          "note": "Windows and macOS since Edge 81. ChromeOS since Edge 91. Linux offers no universal badging API on the operating system level.",
+          "date": "2020-04-13"
+        },
+        "firefox": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "safari": {
+          "s": "y",
+          "v": "17",
+          "note": "Badging is supported for installed web apps on macOS Sonoma and higher. Passing <code>0</code> as an argument will clear the badge instead of displaying an unnu",
+          "date": "2023-09-18"
+        },
+        "ios_safari": {
+          "s": "y",
+          "v": "16.4",
+          "note": "Badging is supported for web apps saved to the home screen. Passing <code>0</code> as an argument will clear the badge instead of displaying an unnumbered dot.",
+          "date": "2023-03-27"
+        },
+        "chrome_android": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "samsung": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "object",
+    "metric": "Shows a number or dot on the app icon.",
+    "update": "on demand",
+    "fields": [
+      {
+        "name": "count",
+        "type": "integer",
+        "range": "0 to 2^53-1; 0 clears",
+        "precision": "icon shows digits up to OS limit"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can show a number or dot on an installed app's icon, but can't check it",
+    "user_action": "You install the web app and, on iPhone, allow notifications",
+    "can": [
+      "Show an unread count or dot on the app icon",
+      "Update it when something new arrives",
+      "Clear it once you open the item"
+    ],
+    "cannot": [
+      "Work for a site that is not installed as an app",
+      "Check what number is already showing",
+      "Work in Firefox",
+      "Work on iPhone without notification permission"
+    ],
+    "reach": 1,
+    "reach_label": "A badge on one icon",
+    "differs": "Chrome, Edge and Safari support it for installed apps. iPhone also needs notification permission. Firefox does not."
+  },
+  "story": {
+    "what_it_is": "An installed web app can show a number or dot on its app icon.",
+    "icon": "badge-check",
+    "tags": [
+      "Installed apps",
+      "Notifications",
+      "Silent"
+    ],
+    "marketing": [
+      {
+        "vendor": "web.dev",
+        "name": "Badging API",
+        "pitch": "Installed web apps can show a badge on the icon to say there is something new.",
+        "url": "https://web.dev/articles/badging-api"
+      }
+    ],
+    "for_you": "You see a small number or dot on the app icon in the dock or taskbar. It tells you there are new items. There is no pop up to dismiss.",
+    "for_makers": "Makers use it to draw you back. A count on the icon is a low cost nudge that works with push messages. It only works for installed web apps.",
+    "use_cases": [
+      {
+        "type": "messaging",
+        "example": "A chat web app installed on your PC shows how many unread chats you have.",
+        "apps": [
+          "Slack",
+          "Telegram Web"
+        ]
+      },
+      {
+        "type": "productivity",
+        "example": "A web mail app shows a count of unread mail on its icon.",
+        "apps": [
+          "Gmail"
+        ]
+      },
+      {
+        "type": "games",
+        "example": "A browser game shows a dot when a turn or reward is waiting.",
+        "apps": []
+      },
+      {
+        "type": "social",
+        "example": "A social web app shows the number of new replies.",
+        "apps": [
+          "X"
+        ]
+      },
+      {
+        "type": "shopping",
+        "example": "A store app shows a dot when a deal or order update arrives.",
+        "apps": []
+      },
+      {
+        "type": "productivity",
+        "example": "A task app shows how many tasks are due.",
+        "apps": [
+          "Todoist"
+        ]
+      },
+      {
+        "type": "news",
+        "example": "A news app shows unread top stories.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Nagging counts",
+      "Only installed apps"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "No badge on Chrome Android",
+    "iOS needs web push permission",
+    "Installed app only"
+  ],
+  "scores": {
+    "sensitivity": 1,
+    "utility": 3,
+    "fingerprint_bits": null,
+    "friction": 1
+  },
+  "value": {
+    "legit_uses": [
+      "Chat and mail apps"
+    ],
+    "abuse": [
+      "Nag badges"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2020-05",
+      "browser": "chrome",
+      "version": "81",
+      "change": "Badging API on desktop"
+    },
+    {
+      "date": "2023-09",
+      "browser": "safari",
+      "version": "17",
+      "change": "macOS Safari (iOS 16.4)"
+    }
+  ],
+  "refs": [
+    {
+      "t": "mdn",
+      "label": "MDN Badging API",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/Badging_API"
+    },
+    {
+      "t": "spec",
+      "label": "Badging API",
+      "url": "https://w3c.github.io/badging/"
+    }
+  ],
+  "confidence": "verified"
+}

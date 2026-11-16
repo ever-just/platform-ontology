@@ -1,0 +1,221 @@
+{
+  "id": "web.input.selection",
+  "name": "Text selection and caret",
+  "kind": "signal",
+  "group": "input-clipboard",
+  "subgroup": "Text",
+  "tags": [
+    "selection",
+    "caret",
+    "selectionchange"
+  ],
+  "plain": "Lets the page see what is selected inside itself and move the cursor; nothing outside the page.",
+  "meaning": "A site knows which of its own words the person highlights, which reveals interest and reading focus. It cannot see a selection in another tab or app.",
+  "lifecycle": [
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "window.getSelection(); selectionchange event; input.selectionStart; Range.getBoundingClientRect()",
+      "bcd": [
+        "api.Window.getSelection",
+        "api.Document.selectionchange_event",
+        "api.Selection"
+      ],
+      "access": {
+        "grant": "none",
+        "prompt_ui": "None (no browser prompt)",
+        "secure_context": false,
+        "user_gesture": false,
+        "activation": "none",
+        "persistence": "Live while the page has focus",
+        "revocation": "Nothing to revoke (no permission is stored)",
+        "iframe": "Frames see only their own selection; selection in a cross-origin iframe is hidden from the parent",
+        "steps": [
+          "Person selects text",
+          "selectionchange fires on the document",
+          "Page reads the Selection and Range"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "1",
+          "note": "",
+          "date": "2008-12-11"
+        },
+        "edge": {
+          "s": "y",
+          "v": "12",
+          "note": "",
+          "date": "2015-07-29"
+        },
+        "firefox": {
+          "s": "y",
+          "v": "1",
+          "note": "",
+          "date": "2004-11-09"
+        },
+        "safari": {
+          "s": "y",
+          "v": "1",
+          "note": "",
+          "date": "2003-06-23"
+        },
+        "ios_safari": {
+          "s": "y",
+          "v": "1",
+          "note": "All iOS browsers use WebKit",
+          "date": "2007-06-29"
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "18",
+          "note": "",
+          "date": "2012-06-27"
+        },
+        "samsung": {
+          "s": "y",
+          "v": "1.0",
+          "note": "",
+          "date": "2013-04-27"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "none",
+    "metric": "",
+    "update": "",
+    "fields": []
+  },
+  "limits": {
+    "headline": "Can see which of its own words you highlight and move your text cursor",
+    "user_action": "You highlight text or click in a box on the page",
+    "can": [
+      "See the text you select on the page",
+      "Move the cursor or change the selection on its own page",
+      "Guess what you are interested in from what you highlight"
+    ],
+    "cannot": [
+      "See selections in other tabs or apps",
+      "See what you select when the page is in the background",
+      "Show a permission pop up; there is none"
+    ],
+    "reach": 2,
+    "reach_label": "Only text on its own page",
+    "differs": ""
+  },
+  "story": {
+    "what_it_is": "The page sees which of its own words you highlight and where your text cursor is.",
+    "icon": "text-select",
+    "tags": [
+      "Reading",
+      "Silent"
+    ],
+    "marketing": [],
+    "for_you": "You highlight text to copy, look up or share. A small menu may pop up near it. You did not know the page could tell which words you picked. It cannot see selections in other tabs or apps.",
+    "for_makers": "Makers use selection to show a share, quote or highlight menu. Reading apps remember highlights and analytics tools learn what people find interesting.",
+    "use_cases": [
+      {
+        "type": "media",
+        "example": "A long read site shows a 'share this quote' button when a reader highlights a sentence.",
+        "apps": [
+          "Medium",
+          "The Atlantic"
+        ]
+      },
+      {
+        "type": "education",
+        "example": "An e-reader or course page saves a student's highlights and notes for later.",
+        "apps": [
+          "Kindle Cloud Reader",
+          "Perusall"
+        ]
+      },
+      {
+        "type": "productivity",
+        "example": "A document editor uses selection to show a bold or link toolbar.",
+        "apps": [
+          "Google Docs",
+          "Notion"
+        ]
+      },
+      {
+        "type": "games",
+        "example": "A word game or learning site checks which word a player picked from a passage.",
+        "apps": []
+      },
+      {
+        "type": "analytics",
+        "example": "A publisher counts which lines get highlighted most to see what resonates.",
+        "apps": []
+      },
+      {
+        "type": "ads",
+        "example": "A dictionary or search widget can show an ad or lookup for the exact words you picked.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Reveals what you find interesting",
+      "Highlights recorded"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Sees selection inside its own document (and same-origin frames) only",
+    "Cannot read the selection from the address bar, other tabs, other apps or browser UI",
+    "Password fields: selected text of a password input is not exposed by getSelection().toString() but is readable via the field's value to the page owner",
+    "selectionchange has no rate limit; it can fire many times per second while dragging",
+    "Firefox returns the selection inside inputs only through selectionStart and selectionEnd"
+  ],
+  "scores": {
+    "sensitivity": 2,
+    "utility": 4,
+    "fingerprint_bits": null,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Quote and share tools",
+      "Dictionary lookups",
+      "Rich text editors"
+    ],
+    "abuse": [
+      "Tracking what people highlight (reading attention)"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2011",
+      "browser": "firefox",
+      "version": "8",
+      "change": "selectionchange event"
+    }
+  ],
+  "related": [
+    "web.input.keyboard-events"
+  ],
+  "refs": [
+    {
+      "t": "mdn",
+      "label": "MDN Selection",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/Selection"
+    },
+    {
+      "t": "spec",
+      "label": "W3C Selection API",
+      "url": "https://www.w3.org/TR/selection-api/"
+    }
+  ],
+  "confidence": "docs"
+}

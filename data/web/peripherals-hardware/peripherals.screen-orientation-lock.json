@@ -1,0 +1,236 @@
+{
+  "id": "web.peripherals.screen-orientation-lock",
+  "name": "Screen Orientation lock",
+  "kind": "action",
+  "group": "peripherals-hardware",
+  "subgroup": "Display hardware",
+  "tags": [
+    "display hardware"
+  ],
+  "plain": "Forces the screen into portrait or landscape.",
+  "meaning": "Controls how the person holds the phone. It reads nothing, but it can trap a page in one orientation.",
+  "lifecycle": [
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "screen.orientation.lock('landscape'), unlock(), screen.orientation.type",
+      "bcd": [
+        "api.ScreenOrientation.lock"
+      ],
+      "access": {
+        "grant": "gesture",
+        "prompt_ui": "No prompt; page must be fullscreen on Chrome Android (or installed PWA)",
+        "secure_context": true,
+        "user_gesture": true,
+        "persistence": "Per origin",
+        "revocation": "Site settings",
+        "iframe": "Same as top level; cross-origin iframes need a permissions policy where listed",
+        "steps": [
+          "Call the API",
+          "Browser applies its access rules",
+          "Page receives the result"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "p",
+          "v": "38",
+          "note": "Always throws <code>NotSupportedError</code>.",
+          "date": "2014-10-07"
+        },
+        "edge": {
+          "s": "p",
+          "v": "79",
+          "note": "Always throws <code>NotSupportedError</code>.",
+          "date": "2020-01-15"
+        },
+        "firefox": {
+          "s": "y",
+          "v": "144",
+          "note": "",
+          "date": "2025-10-14"
+        },
+        "safari": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "ios_safari": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "38",
+          "note": "",
+          "date": "2014-10-08"
+        },
+        "samsung": {
+          "s": "y",
+          "v": "3.0",
+          "note": "",
+          "date": "2015-04-10"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "object",
+    "metric": "Forces the screen into portrait or landscape.",
+    "update": "on demand",
+    "fields": [
+      {
+        "name": "type",
+        "type": "enum",
+        "range": "portrait-primary, portrait-secondary, landscape-primary, landscape-secondary"
+      },
+      {
+        "name": "angle",
+        "type": "integer",
+        "unit": "degrees",
+        "range": "0, 90, 180, 270"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can lock your screen to portrait or landscape, but only in full screen",
+    "user_action": "You tap Full screen or open an installed web app, then start a game or video.",
+    "can": [
+      "Lock the screen to portrait or landscape",
+      "Unlock it again when you leave full screen",
+      "Work in installed web apps on Android"
+    ],
+    "cannot": [
+      "Lock the screen unless the page is full screen or installed on Android",
+      "Work in Safari, including on iPhone",
+      "Stay locked after you leave the page",
+      "Override your phone's own rotation lock in every case"
+    ],
+    "reach": 2,
+    "reach_label": "While in full screen or installed",
+    "differs": "Android Chrome and Edge allow it in full screen. Safari and iPhone do not."
+  },
+  "story": {
+    "what_it_is": "A page can force your screen to stay in portrait or landscape.",
+    "icon": "smartphone",
+    "tags": [
+      "Games",
+      "Needs a click",
+      "Video"
+    ],
+    "marketing": [
+      {
+        "vendor": "Mozilla",
+        "name": "ScreenOrientation.lock()",
+        "pitch": "MDN says the lock method locks the screen into a chosen orientation, usually in fullscreen.",
+        "url": "https://developer.mozilla.org/en-US/docs/Web/API/ScreenOrientation/lock"
+      }
+    ],
+    "for_you": "You go full screen in a game or video and the phone flips to landscape and stays there, even if you tilt it.",
+    "for_makers": "Makers use it for games and video where one way up is better. It reads nothing from you, but it can trap you in one view if misused.",
+    "use_cases": [
+      {
+        "type": "games",
+        "example": "A browser racing game locks to landscape so steering with tilt works.",
+        "apps": []
+      },
+      {
+        "type": "games",
+        "example": "Cloud gaming on a phone browser forces landscape for the controls.",
+        "apps": [
+          "Xbox Cloud Gaming",
+          "GeForce NOW"
+        ]
+      },
+      {
+        "type": "video",
+        "example": "A video player locks to landscape when you go full screen.",
+        "apps": [
+          "YouTube",
+          "Netflix"
+        ]
+      },
+      {
+        "type": "creative",
+        "example": "A camera tool keeps a photo in the right direction.",
+        "apps": []
+      },
+      {
+        "type": "productivity",
+        "example": "A web document scanner keeps pages upright.",
+        "apps": []
+      },
+      {
+        "type": "ads",
+        "example": "A sneaky ad forces landscape to fill the screen.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Trapped orientation",
+      "Not on iPhone"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Fullscreen or installed PWA required on Chrome",
+    "No effect on desktop",
+    "iOS Safari does not implement lock()"
+  ],
+  "scores": {
+    "sensitivity": 1,
+    "utility": 3,
+    "fingerprint_bits": null,
+    "friction": 1
+  },
+  "value": {
+    "legit_uses": [
+      "Games",
+      "Video players",
+      "Camera tools"
+    ],
+    "abuse": [
+      "Orientation trap"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2014",
+      "browser": "chrome",
+      "version": "38",
+      "change": "lock() ships on Android, fullscreen only"
+    },
+    {
+      "date": "2026",
+      "browser": "firefox",
+      "version": "144",
+      "change": "Firefox ships lock()"
+    }
+  ],
+  "related": [
+    "web.peripherals.vibration"
+  ],
+  "refs": [
+    {
+      "t": "mdn",
+      "label": "MDN ScreenOrientation.lock",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/ScreenOrientation/lock"
+    },
+    {
+      "t": "spec",
+      "label": "Screen Orientation",
+      "url": "https://www.w3.org/TR/screen-orientation/"
+    }
+  ],
+  "confidence": "verified"
+}

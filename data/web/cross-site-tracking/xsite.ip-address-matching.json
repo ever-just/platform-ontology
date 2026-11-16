@@ -1,0 +1,229 @@
+{
+  "id": "web.xsite.ip-address-matching",
+  "name": "IP address and device matching",
+  "kind": "tracking",
+  "group": "cross-site-tracking",
+  "subgroup": "Before the visit",
+  "tags": [
+    "ip-address",
+    "probabilistic",
+    "household-graph"
+  ],
+  "plain": "Sites and ad vendors link visits and devices by shared IP address and basic device traits.",
+  "meaning": "A visit's IP reveals city level location and the ISP; matched with user agent and time it joins phone and laptop on the same Wi-Fi into one household. Needs no cookie; breaks with VPN, Private Relay or mobile CGNAT.",
+  "lifecycle": [
+    "before-visit",
+    "on-arrival"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "TCP source address; X-Forwarded-For; WebRTC (blocked mDNS)",
+      "access": {
+        "grant": "none",
+        "prompt_ui": "None",
+        "secure_context": false,
+        "user_gesture": false,
+        "persistence": "Per request; vendors retain logs for weeks to years",
+        "revocation": "Clear site data, browser privacy settings",
+        "iframe": "",
+        "steps": []
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "1",
+          "note": "Server side; independent of browser",
+          "date": "2008-12-11"
+        },
+        "edge": {
+          "s": "y",
+          "v": "1",
+          "note": "Server side; independent of browser",
+          "date": ""
+        },
+        "firefox": {
+          "s": "y",
+          "v": "1",
+          "note": "Server side; independent of browser",
+          "date": "2004-11-09"
+        },
+        "safari": {
+          "s": "y",
+          "v": "1",
+          "note": "Server side; independent of browser",
+          "date": "2003-06-23"
+        },
+        "ios_safari": {
+          "s": "y",
+          "v": "1",
+          "note": "Server side; independent of browser",
+          "date": "2007-06-29"
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "1",
+          "note": "Server side; independent of browser",
+          "date": ""
+        },
+        "samsung": {
+          "s": "y",
+          "v": "1",
+          "note": "Server side; independent of browser",
+          "date": "2013-04-27"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "string",
+    "metric": "IP address",
+    "update": "per request",
+    "fields": [
+      {
+        "name": "ip",
+        "type": "string",
+        "unit": "IPv4 or IPv6",
+        "range": "any",
+        "precision": "city level geolocation"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can link visits and devices that share your network address and basic device traits",
+    "user_action": "Nothing. It happens whenever you visit a site or load an ad",
+    "can": [
+      "Tell which visits come from the same network",
+      "Link devices that share a home or office address",
+      "Use device traits like browser and screen size to refine the match"
+    ],
+    "cannot": [
+      "Pin down your exact home address, only an approximate area",
+      "Tell people on the same network apart for sure",
+      "Work well if you use a VPN or a private relay",
+      "Follow you when your address changes, though traits may still match"
+    ],
+    "reach": 3,
+    "reach_label": "Devices on the same network",
+    "differs": "iPhone Private Relay and VPNs hide the real address."
+  },
+  "story": {
+    "what_it_is": "Sites and ad firms link your visits and devices by their shared IP address.",
+    "icon": "wifi",
+    "tags": [
+      "Network",
+      "Silent",
+      "Ads"
+    ],
+    "marketing": [],
+    "for_you": "You never see it. Every site you visit sees your IP address, which shows your city and internet provider. Your phone and laptop on the same Wi-Fi can look like one household.",
+    "for_makers": "IP needs no cookie and no consent box. Matched with device clues, it links phone and laptop. A VPN, Private Relay or shared mobile network can break the link.",
+    "use_cases": [
+      {
+        "type": "ads",
+        "example": "An ad system shows a TV ad on your phone after you searched on your laptop on the same Wi-Fi.",
+        "apps": [
+          "Google Ads",
+          "Meta"
+        ]
+      },
+      {
+        "type": "analytics",
+        "example": "A site counts a visit by city and internet provider, with no cookie at all.",
+        "apps": [
+          "Plausible",
+          "Fathom"
+        ]
+      },
+      {
+        "type": "security",
+        "example": "A bank flags a login from a new country or a known VPN address and asks for extra proof.",
+        "apps": [
+          "Chase",
+          "Stripe Radar"
+        ]
+      },
+      {
+        "type": "games",
+        "example": "A multiplayer web game matches you with nearby players, and bans cheaters by IP.",
+        "apps": [
+          "Agar.io",
+          "Krunker"
+        ]
+      },
+      {
+        "type": "media",
+        "example": "A streaming site blocks videos by country, using the IP to place you.",
+        "apps": [
+          "Netflix",
+          "BBC iPlayer"
+        ]
+      },
+      {
+        "type": "shopping",
+        "example": "A shop shows prices in your currency and local stores, based on IP.",
+        "apps": [
+          "Amazon",
+          "IKEA"
+        ]
+      }
+    ],
+    "risks": [
+      "Shows rough location",
+      "Links devices in one home"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Shared by many people behind NAT",
+    "IPv6 privacy addresses rotate daily",
+    "iCloud Private Relay and VPNs hide it",
+    "City level accuracy typically 70 to 95% depending on database"
+  ],
+  "scores": {
+    "sensitivity": 3,
+    "utility": 4,
+    "fingerprint_bits": 6.0,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Geo content, fraud detection, rate limits"
+    ],
+    "abuse": [
+      "Cross-device probabilistic tracking"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2021-09",
+      "browser": "safari",
+      "version": "15",
+      "change": "iCloud Private Relay launched for paid iCloud users"
+    }
+  ],
+  "related": [
+    "web.xsite.ip-protection",
+    "web.auth.cross-device-linking"
+  ],
+  "refs": [
+    {
+      "t": "paper",
+      "label": "Mozilla/EFF on IP address as identifier",
+      "url": "https://coveryourtracks.eff.org/learn"
+    },
+    {
+      "t": "vendor",
+      "label": "Apple iCloud Private Relay overview",
+      "url": "https://support.apple.com/en-us/102602"
+    }
+  ],
+  "confidence": "docs"
+}

@@ -1,0 +1,239 @@
+{
+  "id": "mob.bg.region-monitoring",
+  "name": "Region monitoring and geofences",
+  "kind": "capability",
+  "group": "notifications-background",
+  "subgroup": "Location in background",
+  "tags": [
+    "geofence",
+    "region",
+    "20-regions",
+    "100-geofences"
+  ],
+  "plain": "Wakes the app when the device enters or leaves a circle: 20 regions on iOS, 100 geofences on Android.",
+  "meaning": "Lets a retailer know when someone arrives at a store or leaves home. The caps force apps to rotate regions, and the OS keeps them even after the app is closed.",
+  "lifecycle": [
+    "background"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "y",
+      "v": "1.0",
+      "api": 1,
+      "permission": "ACCESS_FINE_LOCATION and ACCESS_BACKGROUND_LOCATION (target 29+)",
+      "protection": "dangerous",
+      "grant": "prompt",
+      "prompt_ui": "Allow all the time (Settings)",
+      "persistence": "Re-register after reboot, uninstall and reinstall, data clear or Play services data clear",
+      "revocation": "Settings > Location",
+      "store_policy": "Play: background location review",
+      "api_surface": "Geofencing API (GeofencingClient)",
+      "note": "100 geofences per app per device user; recommended radius 100 to 150 m; Wi-Fi accuracy 20 to 50 m; background latency 2 to 3 min on average, up to 6 min if stationary"
+    },
+    "ios": {
+      "s": "y",
+      "v": "4.0",
+      "permission": "NSLocationAlwaysAndWhenInUseUsageDescription",
+      "protection": "prompt",
+      "grant": "prompt",
+      "prompt_ui": "Always authorization",
+      "persistence": "Persist until stopped or reboot; relaunch after termination; app must recreate the monitor",
+      "revocation": "Settings > Privacy > Location",
+      "store_policy": "App Review 5.1.1",
+      "api_surface": "CLMonitor (iOS 17), CLCircularRegion",
+      "note": "20 regions or conditions per app; monitoring needs a device unlock after reboot"
+    }
+  },
+  "data": {
+    "type": "integer",
+    "metric": "Region cap",
+    "update": "Static",
+    "fields": [
+      {
+        "name": "ios_max_regions",
+        "type": "integer",
+        "unit": "count",
+        "range": "20",
+        "precision": "system"
+      },
+      {
+        "name": "android_max_geofences",
+        "type": "integer",
+        "unit": "count",
+        "range": "100",
+        "precision": "system"
+      },
+      {
+        "name": "android_latency",
+        "type": "integer",
+        "unit": "minutes",
+        "range": "2 to 6",
+        "precision": "approx"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can wake the app when you enter or leave set places, up to 20 on iPhone",
+    "user_action": "You turn on place reminders, home arrival alerts, or a store offer feature, and allow Always location",
+    "can": [
+      "Wake the app when you cross into or out of a circle it set",
+      "Send you a reminder when you arrive or leave, even with the app closed",
+      "Watch up to 20 places on iPhone, or 100 on Android"
+    ],
+    "cannot": [
+      "Watch more places than the limit allows",
+      "Know your exact route; it only learns that you crossed an edge",
+      "Do this without Always location on Android or iPhone",
+      "React instantly; Android can take about 2 to 3 minutes, and small circles are less precise"
+    ],
+    "reach": 3,
+    "reach_label": "Ongoing, but only for set places",
+    "differs": "iPhone allows 20 regions and may need a device unlock after reboot. Android allows 100 geofences, with a 2 to 3 minute average delay."
+  },
+  "story": {
+    "what_it_is": "The phone can wake an app when you enter or leave a map circle, even if the app is closed.",
+    "icon": "map-pin",
+    "tags": [
+      "Location",
+      "Asks first",
+      "Background"
+    ],
+    "marketing": [
+      {
+        "vendor": "Apple",
+        "name": "Region monitoring",
+        "pitch": "Apple lets apps watch circular areas and be told when you cross them, to power place based features.",
+        "url": "https://developer.apple.com/documentation/corelocation/monitoring-the-user-s-proximity-to-geographic-regions"
+      },
+      {
+        "vendor": "Google",
+        "name": "Geofencing",
+        "pitch": "Google pitches geofencing as a way to react when a device enters or exits an area around a place.",
+        "url": "https://developer.android.com/develop/sensors-and-location/location/geofencing"
+      }
+    ],
+    "for_you": "You walk into a store and get a welcome offer, or your home lights come on as you reach your street. It only works if you allow location all the time.",
+    "for_makers": "Makers get a cheap way to react to arrival without draining the battery. Stores, smart home and delivery apps use it, but it can also build a record of the places someone visits.",
+    "use_cases": [
+      {
+        "type": "shopping",
+        "example": "Your coffee app pings you with a free pastry offer as you walk near a shop.",
+        "apps": [
+          "Starbucks",
+          "Target"
+        ]
+      },
+      {
+        "type": "smart-home",
+        "example": "Your thermostat starts heating the house when you come within a mile of home.",
+        "apps": [
+          "Nest",
+          "Ecobee"
+        ]
+      },
+      {
+        "type": "delivery",
+        "example": "A grocery pickup app tells the store you have arrived so the order comes out to the car.",
+        "apps": [
+          "Walmart",
+          "Chick-fil-A"
+        ]
+      },
+      {
+        "type": "games",
+        "example": "A location game wakes up when you reach a real park so a rare creature or event can start.",
+        "apps": [
+          "Pokemon GO",
+          "Ingress"
+        ]
+      },
+      {
+        "type": "fitness",
+        "example": "A gym app checks you in when you walk through the door.",
+        "apps": [
+          "Planet Fitness"
+        ]
+      },
+      {
+        "type": "ads",
+        "example": "An ad company counts how many people who saw an ad later walked into the store.",
+        "apps": []
+      },
+      {
+        "type": "enterprise",
+        "example": "A work app clocks field crews in and out when they enter a job site.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Can log sensitive places like clinics",
+      "Needs location all the time"
+    ],
+    "android_note": "Up to 100 geofences per app. Alerts can lag a few minutes.",
+    "ios_note": "Up to 20 regions per app. It needs Always location access and a phone unlock after restart."
+  },
+  "technical_bounds": [
+    "Needs Always authorization on both platforms",
+    "Android geofences are lost at reboot until re-registered"
+  ],
+  "scores": {
+    "sensitivity": 5,
+    "utility": 4,
+    "fingerprint_bits": null,
+    "friction": 3
+  },
+  "value": {
+    "legit_uses": [
+      "Store arrival",
+      "Home automation"
+    ],
+    "abuse": [
+      "Tracking visits to sensitive places"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2010-06",
+      "platform": "ios",
+      "version": "iOS 4",
+      "change": "Region monitoring introduced (later 20 region cap documented)"
+    },
+    {
+      "date": "2013-06",
+      "platform": "android",
+      "version": "Play services 3.1",
+      "change": "Geofencing API introduced"
+    },
+    {
+      "date": "2019-09",
+      "platform": "android",
+      "version": "10 (API 29)",
+      "change": "Background location permission required for geofences"
+    }
+  ],
+  "related": [
+    "mob.bg.significant-location",
+    "mob.bg.visit-monitoring",
+    "mob.notifications.boot-completed"
+  ],
+  "refs": [
+    {
+      "t": "android",
+      "label": "Android: Create and monitor geofences",
+      "url": "https://developer.android.com/develop/sensors-and-location/location/geofencing"
+    },
+    {
+      "t": "apple",
+      "label": "Apple: Monitoring the user's proximity to geographic regions",
+      "url": "https://developer.apple.com/documentation/corelocation/monitoring-the-user-s-proximity-to-geographic-regions"
+    }
+  ],
+  "confidence": "verified"
+}

@@ -1,0 +1,230 @@
+{
+  "id": "mob.notif.fcm-delivery",
+  "name": "FCM message delivery: payload, TTL, collapse",
+  "kind": "capability",
+  "group": "notifications-background",
+  "subgroup": "Push",
+  "tags": [
+    "push",
+    "fcm",
+    "payload-limit",
+    "ttl"
+  ],
+  "plain": "Google's push channel: 4 KB payload, up to 4 weeks held, delivered through Play services.",
+  "meaning": "A server can nudge an Android install with small data. Limits shape what a marketer can do: little payload, and queued messages expire or collapse, so apps fetch the real content after the nudge.",
+  "lifecycle": [
+    "background"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "y",
+      "v": "1.0",
+      "api": 1,
+      "permission": "INTERNET, com.google.android.c2dm.permission.RECEIVE (handled by Play services)",
+      "protection": "normal",
+      "grant": "install",
+      "prompt_ui": "None for data messages; notification messages need POST_NOTIFICATIONS on 13+",
+      "persistence": "Messages are stored while offline: default TTL 4 weeks (0 to 2,419,200 s); up to 100 pending messages per device then a full resync",
+      "revocation": "Per app: notifications off, force stop, uninstall",
+      "store_policy": "Play services required; not on China devices without Google Mobile Services",
+      "api_surface": "FirebaseMessagingService.onMessageReceived()",
+      "note": "Payload limit 4096 bytes (data), 2 KB for topic messages; 4 collapse keys per device; rate limits per device apply"
+    },
+    "ios": {
+      "s": "n",
+      "v": "",
+      "permission": "",
+      "protection": "none",
+      "grant": "not-exposed",
+      "prompt_ui": "",
+      "persistence": "",
+      "revocation": "",
+      "store_policy": "",
+      "api_surface": "",
+      "note": "Apple equivalent is APNs; see mob.notif.apns-delivery"
+    }
+  },
+  "web_equivalents": [
+    "web.notify.push-api"
+  ],
+  "data": {
+    "type": "object",
+    "metric": "Push message",
+    "update": "Per message",
+    "fields": [
+      {
+        "name": "payload",
+        "type": "binary",
+        "unit": "binary",
+        "range": "0 to 4096",
+        "precision": "exact"
+      },
+      {
+        "name": "ttl",
+        "type": "integer",
+        "unit": "seconds",
+        "range": "0 to 2419200",
+        "precision": "1 s"
+      },
+      {
+        "name": "collapse_key",
+        "type": "string",
+        "unit": "key",
+        "range": "max 4 distinct per device",
+        "precision": "exact"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can send alerts to an Android phone through Google, up to 4 KB per message",
+    "user_action": "You allow notifications on Android 13 or newer, or just install the app",
+    "can": [
+      "Send a message that can wait up to 4 weeks if you are offline",
+      "Replace an older message with a newer one using a collapse key",
+      "Send data to the app quietly without showing an alert"
+    ],
+    "cannot": [
+      "Show a visible alert on Android 13 or newer if you said Don't allow",
+      "Send more than about 4 KB, or 2 KB to topics",
+      "Hold messages longer than 4 weeks",
+      "Use this on iPhone, where Apple's own system does the job"
+    ],
+    "reach": 3,
+    "reach_label": "Ongoing, whenever the app's server sends",
+    "differs": "Android uses Google's FCM. iPhone uses Apple's APNs."
+  },
+  "story": {
+    "what_it_is": "Google's push system that carries small messages from an app's server to an Android phone.",
+    "icon": "send-horizontal",
+    "tags": [
+      "Push",
+      "Android",
+      "Messaging"
+    ],
+    "marketing": [
+      {
+        "vendor": "Google",
+        "name": "Firebase Cloud Messaging",
+        "pitch": "Google describes FCM as a cross platform way to deliver messages reliably, with options for how long they live.",
+        "url": "https://firebase.google.com/docs/cloud-messaging/customize-messages/setting-message-lifespan"
+      }
+    ],
+    "for_you": "You see an alert appear almost instantly. If your phone is off, it can be held for up to four weeks and then drop. Repeated alerts may be merged into one.",
+    "for_makers": "Makers use it for chat, orders and news. The size limit is small, so the push just nudges and the app downloads the real content after.",
+    "use_cases": [
+      {
+        "type": "messaging",
+        "example": "A chat app sends a tiny nudge, and the app then fetches and shows the message.",
+        "apps": [
+          "WhatsApp",
+          "Telegram"
+        ]
+      },
+      {
+        "type": "delivery",
+        "example": "An order app updates your food status with a message that replaces the older one.",
+        "apps": [
+          "Uber Eats"
+        ]
+      },
+      {
+        "type": "games",
+        "example": "A game tells you a friend beat your score, with a short life so it is not stale.",
+        "apps": [
+          "Words With Friends"
+        ]
+      },
+      {
+        "type": "shopping",
+        "example": "A store sends a flash sale alert with a time limit.",
+        "apps": [
+          "Amazon"
+        ]
+      },
+      {
+        "type": "news",
+        "example": "A news app sends a breaking story and merges older ones.",
+        "apps": [
+          "Google News"
+        ]
+      },
+      {
+        "type": "security",
+        "example": "A login app sends a sign in approval push to your phone.",
+        "apps": [
+          "Duo",
+          "Google"
+        ]
+      },
+      {
+        "type": "ads",
+        "example": "A marketer sends a campaign push and counts opens as a measure.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Opens and delivery can be tracked",
+      "Spam if overused"
+    ],
+    "android_note": "Android only. Alerts need permission from Android 13 on.",
+    "ios_note": "iOS uses APNs."
+  },
+  "technical_bounds": [
+    "4 KB payload ceiling",
+    "Messages to an app in the stopped state are not delivered until the user opens the app",
+    "Normal priority is deferred in Doze"
+  ],
+  "scores": {
+    "sensitivity": 2,
+    "utility": 5,
+    "fingerprint_bits": null,
+    "friction": 1
+  },
+  "value": {
+    "legit_uses": [
+      "Chat nudges",
+      "Order updates"
+    ],
+    "abuse": [
+      "Notification spam"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": true,
+      "how": "LinkedIn Android app uses FCM for notifications"
+    }
+  },
+  "history": [
+    {
+      "date": "2024-07",
+      "platform": "android",
+      "version": "FCM",
+      "change": "Legacy API sunset begins; HTTP v1 and OAuth2 tokens required"
+    },
+    {
+      "date": "2022-08",
+      "platform": "android",
+      "version": "13 (API 33)",
+      "change": "Visible notifications additionally need POST_NOTIFICATIONS"
+    }
+  ],
+  "related": [
+    "mob.notif.fcm-priority",
+    "mob.notif.push-token-registration"
+  ],
+  "refs": [
+    {
+      "t": "vendor",
+      "label": "FCM: Message lifetime and delivery options",
+      "url": "https://firebase.google.com/docs/cloud-messaging/customize-messages/setting-message-lifespan"
+    },
+    {
+      "t": "vendor",
+      "label": "FCM: Receive messages on Android",
+      "url": "https://firebase.google.com/docs/cloud-messaging/android/receive"
+    }
+  ],
+  "confidence": "docs"
+}

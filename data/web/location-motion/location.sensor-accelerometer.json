@@ -1,0 +1,246 @@
+{
+  "id": "web.location.sensor-accelerometer",
+  "name": "Accelerometer, LinearAccelerationSensor, GravitySensor",
+  "kind": "permission",
+  "group": "location-motion",
+  "subgroup": "Generic Sensor API",
+  "tags": [
+    "generic-sensor",
+    "secure-context"
+  ],
+  "plain": "Reads device acceleration, with or without gravity, as a stream.",
+  "meaning": "Shows how the phone moves and rests: walking cadence, vehicle vibration, on a table or in a pocket. Sensor noise can fingerprint the hardware.",
+  "lifecycle": [
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "new Accelerometer({frequency, referenceFrame}); new LinearAccelerationSensor(); new GravitySensor()",
+      "permission_name": "accelerometer",
+      "permissions_policy": "accelerometer",
+      "bcd": [
+        "api.Accelerometer",
+        "api.LinearAccelerationSensor",
+        "api.GravitySensor"
+      ],
+      "access": {
+        "grant": "prompt",
+        "prompt_ui": "Chromium shows no bubble: access follows the Motion sensors site setting (default Allow) plus the Permissions API name. Safari and Firefox do not ship the API.",
+        "secure_context": true,
+        "user_gesture": false,
+        "persistence": "Site setting Allow or Block per origin",
+        "revocation": "chrome://settings/content/sensors; Permissions API 'change' event",
+        "iframe": "Cross-origin iframes blocked unless allow=\"accelerometer\"; page must be focused and visible",
+        "steps": [
+          "Check isSecureContext and Permissions Policy",
+          "Construct the sensor with {frequency: 60}",
+          "sensor.start()",
+          "'reading' events fire; 'error' event on NotAllowedError or NotReadableError"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "67",
+          "note": "",
+          "date": "2018-05-29"
+        },
+        "edge": {
+          "s": "y",
+          "v": "79",
+          "note": "",
+          "date": "2020-01-15"
+        },
+        "firefox": {
+          "s": "n",
+          "v": "DeviceMotion events only",
+          "note": ""
+        },
+        "safari": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "ios_safari": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "67",
+          "note": "",
+          "date": "2018-05-31"
+        },
+        "samsung": {
+          "s": "y",
+          "v": "9.0",
+          "note": "",
+          "date": "2018-09-15"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "event",
+    "metric": "Sensor readings at the requested frequency",
+    "update": "up to 60 Hz (Chrome caps frequency)",
+    "fields": [
+      {
+        "name": "x, y, z",
+        "type": "float",
+        "unit": "m/s2",
+        "range": "about -78 to 78 hardware limit",
+        "precision": "about 0.01"
+      },
+      {
+        "name": "frequency",
+        "type": "float",
+        "unit": "Hz",
+        "range": "1 to 60 (Chrome cap)",
+        "precision": "1 Hz"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can feel how your device moves and rests while the page is open",
+    "user_action": "Nothing in most browsers. Chrome allows it by default unless you changed Motion sensors in site settings",
+    "can": [
+      "Measure movement with or without gravity",
+      "Spot walking, riding in a vehicle, or lying on a table",
+      "Move a game or view as you shake or tilt"
+    ],
+    "cannot": [
+      "Run in Firefox or Safari, which do not support it",
+      "Show a prompt in Chrome; there is none by default",
+      "Measure movement while the page is closed",
+      "Know your location from it"
+    ],
+    "reach": 2,
+    "reach_label": "While the page is open",
+    "differs": "Chrome, Edge and Samsung Internet support it. Safari and Firefox do not."
+  },
+  "story": {
+    "what_it_is": "The page reads a live stream of how your device moves and which way is down.",
+    "icon": "activity",
+    "tags": [
+      "Motion",
+      "Sensors",
+      "Silent"
+    ],
+    "marketing": [
+      {
+        "vendor": "Google Chrome",
+        "name": "Generic Sensor API",
+        "pitch": "Chrome describes a common way for web pages to read motion and environment sensors such as accelerometer and gyroscope.",
+        "url": "https://developer.chrome.com/docs/capabilities/web-apis/generic-sensor"
+      }
+    ],
+    "for_you": "You shake or walk and a web app reacts, for example a step counter or a ball that rolls. On many phones there is no big prompt. Tiny differences in the sensor can also make your device recognizable.",
+    "for_makers": "Makers use it for tilt controls, step counting and gestures. Trackers use sensor noise as a fingerprint, and researchers showed walking patterns and keystrokes can be guessed from it.",
+    "use_cases": [
+      {
+        "type": "games",
+        "example": "A browser racing or maze game lets you steer by tilting your phone.",
+        "apps": []
+      },
+      {
+        "type": "fitness",
+        "example": "A web fitness page counts steps or jumps and times your reps.",
+        "apps": []
+      },
+      {
+        "type": "health",
+        "example": "A fall detection or walking test page uses motion to check balance.",
+        "apps": []
+      },
+      {
+        "type": "ar-vr",
+        "example": "A web AR scene keeps a model steady as you move your phone.",
+        "apps": [
+          "8th Wall"
+        ]
+      },
+      {
+        "type": "security",
+        "example": "A fraud tool checks for natural motion, since a bot farm phone sits perfectly still.",
+        "apps": []
+      },
+      {
+        "type": "analytics",
+        "example": "A fingerprinting script uses sensor noise to recognize a phone across sites.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Sensor noise fingerprints devices",
+      "Can leak typing"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Chrome caps at 60 Hz",
+    "Stops when the page is hidden",
+    "Not in Firefox or Safari"
+  ],
+  "scores": {
+    "sensitivity": 3,
+    "utility": 3,
+    "fingerprint_bits": 5,
+    "friction": 1
+  },
+  "value": {
+    "legit_uses": [
+      "Motion-controlled games",
+      "Activity recognition PWAs"
+    ],
+    "abuse": [
+      "Hardware fingerprinting from calibration error",
+      "Keystroke inference side channels"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2018-05",
+      "browser": "chrome",
+      "version": "67",
+      "change": "Generic Sensor API and Accelerometer ship"
+    },
+    {
+      "date": "2019",
+      "browser": "firefox",
+      "version": "n/a",
+      "change": "Mozilla and WebKit declined Generic Sensor citing fingerprinting"
+    }
+  ],
+  "related": [
+    "web.location.device-orientation",
+    "web.location.sensor-gyroscope"
+  ],
+  "refs": [
+    {
+      "t": "mdn",
+      "label": "MDN Accelerometer",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/Accelerometer"
+    },
+    {
+      "t": "spec",
+      "label": "W3C Accelerometer",
+      "url": "https://www.w3.org/TR/accelerometer/"
+    },
+    {
+      "t": "chromestatus",
+      "label": "Chrome Generic Sensor guide",
+      "url": "https://developer.chrome.com/docs/capabilities/web-apis/generic-sensor"
+    }
+  ],
+  "confidence": "docs"
+}

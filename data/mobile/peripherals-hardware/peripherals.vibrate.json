@@ -1,0 +1,210 @@
+{
+  "id": "mob.peripherals.vibrate",
+  "name": "Vibration and haptics",
+  "kind": "action",
+  "group": "peripherals-hardware",
+  "subgroup": "Haptics",
+  "tags": [
+    "normal-permission",
+    "haptics",
+    "haptic",
+    "vibrate",
+    "vibrator",
+    "taptic"
+  ],
+  "plain": "Lets the app vibrate the phone.",
+  "meaning": "A harmless-looking motor trigger; no sensitive data. Android requires a manifest permission; iOS needs none.",
+  "lifecycle": [
+    "in-session"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "y",
+      "v": "1.0",
+      "api": 1,
+      "permission": "VIBRATE",
+      "protection": "normal",
+      "grant": "install",
+      "prompt_ui": "None (granted at install)",
+      "persistence": "Not revocable",
+      "revocation": "n/a",
+      "store_policy": "Play: none",
+      "api_surface": "Vibrator, VibrationEffect (API 26)",
+      "note": "Not required for haptic feedback via View.performHapticFeedback."
+    },
+    "ios": {
+      "s": "y",
+      "v": "10",
+      "permission": "none",
+      "protection": "none",
+      "grant": "none",
+      "prompt_ui": "None",
+      "persistence": "n/a",
+      "revocation": "n/a",
+      "store_policy": "none",
+      "api_surface": "UIImpactFeedbackGenerator, Core Haptics",
+      "note": "Taptic engine; hardware dependent."
+    }
+  },
+  "web_equivalents": [
+    "web.actions.vibrate",
+    "web.peripherals.vibration"
+  ],
+  "data": {
+    "type": "event",
+    "metric": "Vibration trigger",
+    "update": "on demand",
+    "fields": []
+  },
+  "limits": {
+    "headline": "Can make the phone buzz, with no prompt and no personal data",
+    "user_action": "Nothing. It happens when the app gives feedback, like a tap or an alert",
+    "can": [
+      "Buzz the phone",
+      "Play tap style feedback through the Taptic engine (iPhone)",
+      "Use a haptic pattern on Android 8 and later"
+    ],
+    "cannot": [
+      "See any of your data",
+      "Work on devices without the vibration motor",
+      "Ask you first; Android grants it at install and iPhone needs nothing"
+    ],
+    "reach": 1,
+    "reach_label": "A buzz, nothing more",
+    "differs": "Android needs a manifest permission, granted at install; iPhone needs none."
+  },
+  "story": {
+    "what_it_is": "Lets the app make the phone buzz.",
+    "icon": "vibrate",
+    "tags": [
+      "Haptics",
+      "No data",
+      "Feedback"
+    ],
+    "marketing": [
+      {
+        "vendor": "Apple",
+        "name": "Core Haptics",
+        "pitch": "Add custom touch feedback with the phone's taptic engine.",
+        "url": "https://developer.apple.com/documentation/corehaptics"
+      },
+      {
+        "vendor": "Google",
+        "name": "Haptics on Android",
+        "pitch": "Design touch feedback that feels natural on Android.",
+        "url": "https://developer.android.com/develop/ui/views/haptics"
+      }
+    ],
+    "for_you": "Your phone buzzes when a message comes in, a button clicks or a game explosion goes off. You rarely see a prompt, since it reads nothing about you.",
+    "for_makers": "Touch feedback makes apps feel solid and guides eyes away from the screen. It is used in games, maps and alerts. It carries no personal data, but it can annoy people and drain the battery.",
+    "use_cases": [
+      {
+        "type": "games",
+        "example": "A racing game rumbles when you hit a wall and a shooter thumps with each shot.",
+        "apps": [
+          "Call of Duty Mobile"
+        ]
+      },
+      {
+        "type": "maps",
+        "example": "A map buzzes in a pattern for left and right turns.",
+        "apps": [
+          "Apple Maps"
+        ]
+      },
+      {
+        "type": "messaging",
+        "example": "A chat app taps you for a new message and a heart reaction.",
+        "apps": [
+          "WhatsApp"
+        ]
+      },
+      {
+        "type": "music",
+        "example": "A music app syncs buzzes to a drum beat.",
+        "apps": []
+      },
+      {
+        "type": "accessibility",
+        "example": "A blind user feels different patterns for each type of alert.",
+        "apps": []
+      },
+      {
+        "type": "fitness",
+        "example": "A running app buzzes at each mile.",
+        "apps": []
+      },
+      {
+        "type": "payments",
+        "example": "A payment confirmation gives a gentle click so you know it went through.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Annoying buzzes",
+      "Battery use",
+      "Covers for hidden alerts"
+    ],
+    "android_note": "Android needs a manifest permission for the vibrate call, but not for haptic feedback on views.",
+    "ios_note": "iPhone uses the taptic engine and the result depends on the hardware."
+  },
+  "technical_bounds": [
+    "User controls system vibration settings",
+    "Background vibration is limited to notifications and foreground services",
+    "Android 13 can silence vibration when media haptics are off"
+  ],
+  "scores": {
+    "sensitivity": 1,
+    "utility": 2,
+    "fingerprint_bits": 1,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Feedback"
+    ],
+    "abuse": [
+      "Annoyance"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2021-10",
+      "platform": "android",
+      "version": "12 (API 31)",
+      "change": "Haptic composition primitives and haptic coupled audio"
+    },
+    {
+      "date": "2019-09",
+      "platform": "ios",
+      "version": "iOS 13",
+      "change": "Core Haptics custom patterns"
+    },
+    {
+      "date": "2017-08",
+      "platform": "android",
+      "version": "8.0 (API 26)",
+      "change": "VibrationEffect introduced"
+    }
+  ],
+  "refs": [
+    {
+      "t": "android",
+      "label": "Android: Haptics",
+      "url": "https://developer.android.com/develop/ui/views/haptics"
+    },
+    {
+      "t": "apple",
+      "label": "Apple: Core Haptics",
+      "url": "https://developer.apple.com/documentation/corehaptics"
+    }
+  ],
+  "confidence": "docs"
+}

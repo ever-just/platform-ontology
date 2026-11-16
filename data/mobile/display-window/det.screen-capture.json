@@ -1,0 +1,195 @@
+{
+  "id": "mob.det.screen-capture",
+  "name": "Screenshot and screen recording detection",
+  "kind": "signal",
+  "group": "display-window",
+  "subgroup": "Display",
+  "tags": [
+    "screenshot",
+    "screen-record"
+  ],
+  "plain": "Apps are told when the person takes a screenshot or records the screen.",
+  "meaning": "Lets a chat, bank or media app react to capture. Reveals the person kept a copy. Android 14 added screenshot detection; iOS has had it since iOS 7.",
+  "lifecycle": [
+    "on-launch",
+    "in-session"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "y",
+      "v": "14",
+      "api": 34,
+      "permission": "DETECT_SCREEN_CAPTURE (normal)",
+      "protection": "normal",
+      "grant": "install",
+      "prompt_ui": "",
+      "persistence": "",
+      "revocation": "",
+      "store_policy": "",
+      "api_surface": "Activity.registerScreenCaptureCallback; WindowManager.addScreenRecordingCallback (API 35)",
+      "note": "Screenshot detection since 14; recording detection since 15"
+    },
+    "ios": {
+      "s": "y",
+      "v": "7.0",
+      "permission": "none",
+      "protection": "none",
+      "grant": "none",
+      "prompt_ui": "",
+      "persistence": "",
+      "revocation": "",
+      "store_policy": "",
+      "api_surface": "Notified after the screenshot is taken; isCaptured true during recording or mirroring",
+      "note": ""
+    }
+  },
+  "data": {
+    "type": "event",
+    "metric": "Capture event",
+    "update": "On event",
+    "fields": [
+      {
+        "name": "captured",
+        "type": "boolean",
+        "unit": "",
+        "range": "true, false",
+        "precision": "1 bit"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can tell when you take a screenshot or record the screen, but not stop you",
+    "user_action": "You take a screenshot or start a screen recording while the app is open",
+    "can": [
+      "Get told when you take a screenshot, on Android 14 and newer, and iPhone",
+      "Get told while the screen is being recorded or mirrored",
+      "Show a warning or hide private content during recording"
+    ],
+    "cannot": [
+      "Stop the screenshot on iPhone; the app learns after it is taken",
+      "See the screenshot or recording itself",
+      "Detect screen recording on Android 14 or older; it needs Android 15",
+      "Detect captures from another device pointed at the screen"
+    ],
+    "reach": 2,
+    "reach_label": "While the app is open",
+    "differs": "Android 14 added screenshot detection and Android 15 added recording detection. iPhone has had both for years."
+  },
+  "story": {
+    "what_it_is": "Apps are told when you take a screenshot or record your screen.",
+    "icon": "scan-eye",
+    "tags": [
+      "Silent",
+      "Privacy",
+      "Screenshots"
+    ],
+    "marketing": [
+      {
+        "vendor": "Google",
+        "name": "Screenshot detection",
+        "pitch": "Android 14 feature page: apps can register a callback to learn when the user takes a screenshot.",
+        "url": "https://developer.android.com/about/versions/14/features"
+      }
+    ],
+    "for_you": "You take a screenshot of a chat and the other person gets a note, or the app shows a warning. You may not know the app noticed. Some apps also blank the screen during a recording.",
+    "for_makers": "Chat, banking and video apps use it to protect private content and warn senders. Streaming firms use it to guard protected shows. It also tells makers that you kept a copy.",
+    "use_cases": [
+      {
+        "type": "messaging",
+        "example": "A chat app tells the sender when you screenshot a disappearing message.",
+        "apps": [
+          "Snapchat"
+        ]
+      },
+      {
+        "type": "banking",
+        "example": "A bank app shows a warning after a screenshot of your balance or card number.",
+        "apps": []
+      },
+      {
+        "type": "video",
+        "example": "A streaming app blanks protected video if you record the screen.",
+        "apps": [
+          "Netflix"
+        ]
+      },
+      {
+        "type": "games",
+        "example": "A game reacts to a screenshot by showing a share prompt to post your score.",
+        "apps": []
+      },
+      {
+        "type": "dating",
+        "example": "A dating app warns a match when someone captures their photo.",
+        "apps": []
+      },
+      {
+        "type": "enterprise",
+        "example": "A work app logs screenshots of confidential documents for auditing.",
+        "apps": []
+      },
+      {
+        "type": "security",
+        "example": "A fraud tool treats a screen recording while a bank app is open as a possible scam.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Reveals that you kept a copy",
+      "Can be bypassed by a camera"
+    ],
+    "android_note": "Android 14 added a callback for screenshot detection, with a normal permission.",
+    "ios_note": "iOS has told apps about screenshots since iOS 7 and recording state since iOS 11."
+  },
+  "technical_bounds": [
+    "After the fact on iOS"
+  ],
+  "scores": {
+    "sensitivity": 2,
+    "utility": 2,
+    "fingerprint_bits": 1,
+    "friction": 1
+  },
+  "value": {
+    "legit_uses": [
+      "Protect sensitive content"
+    ],
+    "abuse": [
+      "Social pressure"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2023-10",
+      "platform": "android",
+      "version": "14 (API 34)",
+      "change": "Screenshot detection callback"
+    },
+    {
+      "date": "2017-09",
+      "platform": "ios",
+      "version": "iOS 11",
+      "change": "UIScreen.isCaptured added"
+    }
+  ],
+  "refs": [
+    {
+      "t": "android",
+      "label": "Android: Screen capture detection",
+      "url": "https://developer.android.com/about/versions/14/features/screenshot-detection"
+    },
+    {
+      "t": "apple",
+      "label": "Apple: UIScreen",
+      "url": "https://developer.apple.com/documentation/uikit/uiscreen"
+    }
+  ],
+  "confidence": "docs"
+}

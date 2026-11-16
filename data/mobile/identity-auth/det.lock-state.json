@@ -1,0 +1,183 @@
+{
+  "id": "mob.det.lock-state",
+  "name": "Device lock and passcode state",
+  "kind": "signal",
+  "group": "identity-auth",
+  "subgroup": "Security state",
+  "tags": [
+    "passcode",
+    "keyguard"
+  ],
+  "plain": "Reads whether the phone has a screen lock and whether it is locked.",
+  "meaning": "A phone with no lock is a risk flag; banking apps change flows on it.",
+  "lifecycle": [
+    "on-launch",
+    "in-session"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "y",
+      "v": "1.5",
+      "api": 3,
+      "permission": "",
+      "protection": "none",
+      "grant": "none",
+      "prompt_ui": "",
+      "persistence": "",
+      "revocation": "",
+      "store_policy": "",
+      "api_surface": "KeyguardManager.isDeviceSecure(), isKeyguardLocked(), isDeviceLocked()",
+      "note": "isDeviceSecure API 23"
+    },
+    "ios": {
+      "s": "p",
+      "v": "4.0",
+      "permission": "none",
+      "protection": "none",
+      "grant": "none",
+      "prompt_ui": "",
+      "persistence": "",
+      "revocation": "",
+      "store_policy": "",
+      "api_surface": "No direct passcode-set API; probe by saving a Keychain item that needs a passcode",
+      "note": ""
+    }
+  },
+  "data": {
+    "type": "boolean",
+    "metric": "Lock state",
+    "update": "On check",
+    "fields": [
+      {
+        "name": "secure",
+        "type": "boolean",
+        "unit": "",
+        "range": "true, false",
+        "precision": "1 bit"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can tell if your phone has a screen lock and whether it is locked now",
+    "user_action": "Nothing. It happens when the app checks device security",
+    "can": [
+      "Check if the phone is protected by a PIN, pattern, password or biometric",
+      "Check if the screen is locked right now (Android)",
+      "Use the answer to allow or refuse sensitive features",
+      "On iPhone, guess that a passcode exists by trying to save a protected item"
+    ],
+    "cannot": [
+      "See your PIN, pattern or passcode",
+      "Unlock the phone",
+      "On iPhone, ask directly whether a passcode is set; there is no direct way to ask"
+    ],
+    "reach": 1,
+    "reach_label": "A yes or no about your lock",
+    "differs": "Android answers directly. iPhone has no direct question, so apps use an indirect test."
+  },
+  "story": {
+    "what_it_is": "An app can tell whether your phone has a screen lock and whether it is locked right now.",
+    "icon": "lock",
+    "tags": [
+      "Security",
+      "Silent",
+      "Device"
+    ],
+    "marketing": [
+      {
+        "vendor": "Google",
+        "name": "Device security checks",
+        "pitch": "Android shows apps whether the device is protected by a lock screen so sensitive features can be limited.",
+        "url": "https://developer.android.com/reference/android/app/KeyguardManager"
+      }
+    ],
+    "for_you": "You do not see this check. You notice only that some apps, like a wallet or work app, refuse to run until you set a screen lock. Some also hide your data the moment the phone locks.",
+    "for_makers": "Apps that hold money or private data want a lock on the phone before they show it. It is cheap to check and lowers the chance that a lost phone becomes a stolen account.",
+    "use_cases": [
+      {
+        "type": "banking",
+        "example": "A bank app will not open on a phone with no passcode, because anyone who picks it up could move money.",
+        "apps": []
+      },
+      {
+        "type": "payments",
+        "example": "A mobile wallet asks you to set a screen lock before it will store a card for tap to pay.",
+        "apps": [
+          "Google Wallet"
+        ]
+      },
+      {
+        "type": "enterprise",
+        "example": "A work email app blocks company mail on any phone that has no screen lock, as set by IT.",
+        "apps": [
+          "Microsoft Outlook",
+          "Intune Company Portal"
+        ]
+      },
+      {
+        "type": "health",
+        "example": "A health app holding test results refuses to show them on an unlocked phone, or locks itself after a short time.",
+        "apps": []
+      },
+      {
+        "type": "smart-home",
+        "example": "A smart lock app only lets you issue a digital key if the phone itself is protected by a code.",
+        "apps": [
+          "Apple Home",
+          "August"
+        ]
+      },
+      {
+        "type": "security",
+        "example": "A fraud engine marks sessions from phones with no lock as higher risk and asks for extra proof.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Risk scoring of people",
+      "Reveals weak setup"
+    ],
+    "android_note": "Android apps can ask if a lock is set (KeyguardManager) and whether the device is currently locked.",
+    "ios_note": "iPhone apps can learn whether a passcode is set only indirectly, by asking the system to check, and cannot see the lock status itself."
+  },
+  "technical_bounds": [
+    "iOS probe is indirect"
+  ],
+  "scores": {
+    "sensitivity": 2,
+    "utility": 3,
+    "fingerprint_bits": 1,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Risk signals"
+    ],
+    "abuse": [
+      "Little"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "related": [
+    "mob.det.biometric-enrolled"
+  ],
+  "refs": [
+    {
+      "t": "android",
+      "label": "Android: KeyguardManager",
+      "url": "https://developer.android.com/reference/android/app/KeyguardManager"
+    },
+    {
+      "t": "apple",
+      "label": "Apple: Keychain services",
+      "url": "https://developer.apple.com/documentation/security/keychain-services"
+    }
+  ],
+  "confidence": "docs"
+}

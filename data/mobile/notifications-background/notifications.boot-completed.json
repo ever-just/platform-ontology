@@ -1,0 +1,194 @@
+{
+  "id": "mob.notifications.boot-completed",
+  "name": "Run at startup",
+  "kind": "capability",
+  "group": "notifications-background",
+  "subgroup": "Startup",
+  "tags": [
+    "normal-permission",
+    "boot",
+    "autostart",
+    "reschedule"
+  ],
+  "plain": "Lets the app start in the background after the phone reboots.",
+  "meaning": "Lets apps resume tasks after reboot. Android 15 restricts launching certain foreground services from boot receivers.",
+  "lifecycle": [
+    "background"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "y",
+      "v": "1.0",
+      "api": 1,
+      "permission": "RECEIVE_BOOT_COMPLETED",
+      "protection": "normal",
+      "grant": "install",
+      "prompt_ui": "None (granted at install)",
+      "persistence": "Not revocable",
+      "revocation": "n/a",
+      "store_policy": "Play: none",
+      "api_surface": "BroadcastReceiver BOOT_COMPLETED, LOCKED_BOOT_COMPLETED",
+      "note": "Android 15 (API 35) blocks some foreground service types from boot receivers (for example mediaPlayback, camera, microphone, dataSync, mediaProjection, phoneCall)."
+    },
+    "ios": {
+      "s": "n",
+      "v": "",
+      "permission": "",
+      "protection": "none",
+      "grant": "not-exposed",
+      "prompt_ui": "none",
+      "persistence": "none",
+      "revocation": "",
+      "store_policy": "none",
+      "api_surface": "none",
+      "note": "iOS apps do not run at boot; only push, location events or background tasks can wake them."
+    }
+  },
+  "data": {
+    "type": "event",
+    "metric": "Boot completed broadcast",
+    "update": "once per boot",
+    "fields": []
+  },
+  "limits": {
+    "headline": "Can start itself in the background after your Android phone restarts",
+    "user_action": "Nothing. It happens when you restart the phone",
+    "can": [
+      "Start up again after a reboot to restore alarms, syncs or reminders",
+      "Run light setup work once the phone is on",
+      "Be allowed at install without a prompt"
+    ],
+    "cannot": [
+      "Start some foreground services at boot; Android 15 blocks types like media, camera and microphone",
+      "Do this on iPhone, where apps do not run at boot",
+      "Show anything at boot without notifications allowed"
+    ],
+    "reach": 3,
+    "reach_label": "Starts after every restart",
+    "differs": "Android lets apps start after boot. iPhone only wakes apps through push, location events or background tasks."
+  },
+  "story": {
+    "what_it_is": "Lets an Android app start by itself after the phone restarts.",
+    "icon": "power",
+    "tags": [
+      "Android",
+      "Background",
+      "Silent"
+    ],
+    "marketing": [],
+    "for_you": "You restart your phone and your alarms, reminders and sync work again without you opening anything. It is a quiet convenience.",
+    "for_makers": "Makers use it to bring back timers and background tasks after a reboot. It is also how unwanted apps stay running, so Android 15 blocks some types from starting this way.",
+    "use_cases": [
+      {
+        "type": "productivity",
+        "example": "A calendar app resets all your reminders after a reboot.",
+        "apps": [
+          "Google Calendar"
+        ]
+      },
+      {
+        "type": "health",
+        "example": "A pill reminder app brings back tonight's alarms.",
+        "apps": []
+      },
+      {
+        "type": "smart-home",
+        "example": "A home app reconnects to your hub and cameras at startup.",
+        "apps": []
+      },
+      {
+        "type": "fitness",
+        "example": "A step counter restarts its tracking after a reboot.",
+        "apps": []
+      },
+      {
+        "type": "messaging",
+        "example": "A chat app reconnects so messages arrive after a restart.",
+        "apps": [
+          "Signal"
+        ]
+      },
+      {
+        "type": "ads",
+        "example": "An ad SDK inside another app restarts its own background work after boot.",
+        "apps": []
+      },
+      {
+        "type": "games",
+        "example": "A game with a timed farm restores its timers.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Keeps unwanted apps running",
+      "Hard to see"
+    ],
+    "android_note": "Granted at install. Android 15 blocks some foreground service types from boot.",
+    "ios_note": "iOS apps cannot start at boot. Only push, location events or tasks can wake them."
+  },
+  "technical_bounds": [
+    "No iOS equivalent",
+    "Android 15 restricts FGS",
+    "Needs the user to unlock first for credential storage",
+    "No iOS counterpart"
+  ],
+  "scores": {
+    "sensitivity": 1,
+    "utility": 3,
+    "fingerprint_bits": null,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Alarm and sync restoration"
+    ],
+    "abuse": [
+      "Persistence of unwanted apps"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2024-10",
+      "platform": "android",
+      "version": "15 (API 35)",
+      "change": "Boot receivers restricted from launching several FGS types"
+    },
+    {
+      "date": "2024-09",
+      "platform": "android",
+      "version": "15 (API 35)",
+      "change": "Boot receivers cannot start several foreground service types"
+    }
+  ],
+  "related": [
+    "mob.notifications.foreground-service",
+    "mob.notifications.exact-alarm",
+    "mob.bg.fgs-types",
+    "mob.bg.region-monitoring"
+  ],
+  "refs": [
+    {
+      "t": "android",
+      "label": "Android 15 behavior changes (all apps)",
+      "url": "https://developer.android.com/about/versions/15/behavior-changes-all"
+    },
+    {
+      "t": "android",
+      "label": "Android: BOOT_COMPLETED",
+      "url": "https://developer.android.com/reference/android/content/Intent#ACTION_BOOT_COMPLETED"
+    },
+    {
+      "t": "android",
+      "label": "Android 15: FGS restrictions from boot",
+      "url": "https://developer.android.com/about/versions/15/behavior-changes-15"
+    }
+  ],
+  "confidence": "docs"
+}

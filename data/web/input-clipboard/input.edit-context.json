@@ -1,0 +1,229 @@
+{
+  "id": "web.input.edit-context",
+  "name": "EditContext (custom text input)",
+  "kind": "capability",
+  "group": "input-clipboard",
+  "subgroup": "Text",
+  "tags": [
+    "editcontext",
+    "ime",
+    "canvas"
+  ],
+  "plain": "Lets canvas or custom editors receive IME and keyboard text input without a hidden text box.",
+  "meaning": "A page can run its own editor surface and still get full IME and emoji input. It sees the same typing data as a normal text field, so the privacy picture is unchanged.",
+  "lifecycle": [
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "new EditContext(); element.editContext = ctx; textupdate, textformatupdate, characterboundsupdate",
+      "bcd": [
+        "api.EditContext"
+      ],
+      "access": {
+        "grant": "none",
+        "prompt_ui": "None (no browser prompt)",
+        "secure_context": false,
+        "user_gesture": false,
+        "activation": "none",
+        "persistence": "While attached",
+        "revocation": "Nothing to revoke (no permission is stored)",
+        "iframe": "Same-document only",
+        "steps": [
+          "Create EditContext and attach to an element",
+          "Focus the element",
+          "textupdate events deliver composed text"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "121",
+          "note": "",
+          "date": "2024-01-23"
+        },
+        "edge": {
+          "s": "y",
+          "v": "121",
+          "note": "",
+          "date": "2024-01-25"
+        },
+        "firefox": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "safari": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "ios_safari": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "121",
+          "note": "",
+          "date": "2024-01-23"
+        },
+        "samsung": {
+          "s": "y",
+          "v": "25.0",
+          "note": "",
+          "date": "2024-04-24"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "none",
+    "metric": "",
+    "update": "",
+    "fields": []
+  },
+  "limits": {
+    "headline": "Can run its own text editor that still gets your keyboard and emoji input",
+    "user_action": "You click into a custom editor and type",
+    "can": [
+      "Receive your typing, including foreign language and emoji input",
+      "Show its own editor without a hidden text box",
+      "Support custom editors like online documents and design tools"
+    ],
+    "cannot": [
+      "See typing outside the page or editor",
+      "Collect more than a normal text box would",
+      "Work in Firefox or Safari"
+    ],
+    "reach": 2,
+    "reach_label": "What you type in its editor",
+    "differs": "Chrome, Edge and Samsung Internet support it. Firefox and Safari do not."
+  },
+  "story": {
+    "what_it_is": "Lets a page that draws its own text editor still get your typing, accents and emoji.",
+    "icon": "text-cursor-input",
+    "tags": [
+      "Typing",
+      "Editing",
+      "Silent"
+    ],
+    "marketing": [
+      {
+        "vendor": "Google Chrome",
+        "name": "EditContext API",
+        "pitch": "Chrome introduced it for web editors that draw their own text surface, so they can support IME, emoji and spellcheck-like input.",
+        "url": "https://developer.chrome.com/blog/introducing-editcontext-api"
+      }
+    ],
+    "for_you": "You type in a big document or canvas and everything still works, including Chinese or Japanese input, accents and emoji. You do not see how it is built. It may feel smoother than older web editors.",
+    "for_makers": "Makers of big editors want full control of how text looks and moves, and may draw it on a canvas for speed. This API gives them the same input support as a normal box without hacks.",
+    "use_cases": [
+      {
+        "type": "productivity",
+        "example": "An online word processor draws its pages on a canvas and uses it to accept typing from any language.",
+        "apps": [
+          "Google Docs",
+          "Word for the web"
+        ]
+      },
+      {
+        "type": "creative",
+        "example": "A web design or whiteboard tool lets you type directly on a canvas text object.",
+        "apps": [
+          "Figma",
+          "Miro",
+          "Excalidraw"
+        ]
+      },
+      {
+        "type": "games",
+        "example": "A browser game with a custom chat or name entry window gets IME support for players typing in Japanese or Korean.",
+        "apps": []
+      },
+      {
+        "type": "developer",
+        "example": "A code editor in the browser keeps its own cursor and highlighting while still handling input methods.",
+        "apps": [
+          "Monaco",
+          "VS Code for the Web"
+        ]
+      },
+      {
+        "type": "education",
+        "example": "A math or notation tool types into a custom surface and still reads emoji and symbols.",
+        "apps": []
+      },
+      {
+        "type": "accessibility",
+        "example": "A custom editor that supports IME helps people who type in languages that need composition.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Sees typing in the editor",
+      "Little else"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Chromium only: Chrome 121 and Edge 121; Firefox and Safari not shipped",
+    "Page must report selection and character bounds so the IME window can align",
+    "Does not expose text typed elsewhere",
+    "Still needs focus on the element to receive input"
+  ],
+  "scores": {
+    "sensitivity": 3,
+    "utility": 3,
+    "fingerprint_bits": null,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Canvas based editors (Figma-like text, Docs)",
+      "Games with chat"
+    ],
+    "abuse": [
+      "Same keystroke capture risk as normal inputs, harder for password managers to detect"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2024-01",
+      "browser": "chrome",
+      "version": "121",
+      "change": "EditContext API ships"
+    }
+  ],
+  "related": [
+    "web.input.keyboard-events",
+    "web.input.contenteditable"
+  ],
+  "refs": [
+    {
+      "t": "mdn",
+      "label": "MDN EditContext API",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/EditContext_API"
+    },
+    {
+      "t": "spec",
+      "label": "W3C EditContext",
+      "url": "https://www.w3.org/TR/edit-context/"
+    },
+    {
+      "t": "chromestatus",
+      "label": "Chrome EditContext",
+      "url": "https://chromestatus.com/feature/5047295333883904"
+    }
+  ],
+  "confidence": "docs"
+}

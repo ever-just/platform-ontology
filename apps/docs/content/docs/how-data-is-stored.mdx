@@ -1,0 +1,83 @@
+---
+title: How the data is stored
+description: One JSON file per capability, folders that carry meaning, and a build step that compiles per platform bundles.
+---
+
+The data is plain files in a Git repository. Nothing hides behind a database, so every change is a normal pull request that anyone can read.
+
+<Cards>
+  <Card title="One file per capability">Small files make reviews easy and merge conflicts rare.</Card>
+  <Card title="Folders carry meaning">The path tells you the space and the group before you open the file.</Card>
+  <Card title="Shared once, different per platform">A concept is never duplicated across operating systems.</Card>
+  <Card title="Bundles are built">A build step validates everything and writes ready to use JSON.</Card>
+</Cards>
+
+## One file per capability
+
+Every capability lives in its own file:
+
+```text
+data/<space>/<group>/<slug>.json
+```
+
+- `space` is `mobile` or `web`.
+- `group` is a key from `data/taxonomy.json`, for example `camera-mic-screen`.
+- `slug` is the `id` without its `mob.` or `web.` prefix. The id `web.camera.camera-ptz` is stored as `data/web/camera-mic-screen/camera.camera-ptz.json`.
+
+The build checks that the folder, the `space` field and the `group` field agree, so a file can never sit in the wrong place.
+
+## Shared once, different per platform
+
+A native capability such as precise location is one idea on Android and iPhone. Its name, meaning, data fields, limits and history are stored **once**, at the top level of the file. Only what truly differs sits in per platform blocks:
+
+This is a simplified example:
+
+```json
+{
+  "id": "mob.location.precise",
+  "name": "Precise location",
+  "limits": { "headline": "..." },
+  "platforms": {
+    "android": { "permission": "ACCESS_FINE_LOCATION", "v": "1.0" },
+    "ios": { "permission": "NSLocationWhenInUseUsageDescription", "v": "2.0" }
+  }
+}
+```
+
+Web capabilities keep one support record per browser under `platforms.web.support`. A native capability and its web twin are connected with `web_equivalents`.
+
+## The taxonomy is separate
+
+Labels, icons and descriptions for kinds, groups, lifecycle stages and browsers live in `data/taxonomy.json`. Renaming a label never touches the 844 capability files.
+
+## Bundles are built, not stored
+
+`scripts/build-data.mjs` reads every file, validates it, and writes `dist/`:
+
+| Output | What it is |
+| --- | --- |
+| `dist/ontology.json` | Everything, plus the taxonomy |
+| `dist/index.json` | A light list for search boxes and tables |
+| `dist/taxonomy.json` | Labels and descriptions |
+| `dist/platform/android.json` | Native capabilities with the Android block flattened under `platform` |
+| `dist/platform/ios.json` | Native capabilities with the iPhone block flattened under `platform` |
+| `dist/platform/web.json` | Web capabilities with browser support under `platform` |
+
+The website serves them under `/data/`. See [Getting started](/docs/getting-started/) for the URLs.
+
+The build also checks that ids are unique, that every `related` and `web_equivalents` link points to a real capability, that groups and kinds exist, and that no text contains an em or en dash. Run it with `STRICT=1` and any problem stops the build with a non zero exit code.
+
+## JSON Schema
+
+`schema/capability.schema.json` describes one capability. Point your editor at it to get completion and live errors while you edit a file:
+
+```json
+{
+  "$schema": "../../../schema/capability.schema.json",
+  "id": "web.example.thing"
+}
+```
+
+## How these docs are made
+
+This site is generated from the same files. A script reads each JSON file and writes one page per capability, so the docs can never drift from the data. Every page ends with a link back to the file on GitHub.

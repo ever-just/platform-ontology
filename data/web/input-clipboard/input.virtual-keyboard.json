@@ -1,0 +1,227 @@
+{
+  "id": "web.input.virtual-keyboard",
+  "name": "Virtual Keyboard API",
+  "kind": "capability",
+  "group": "input-clipboard",
+  "subgroup": "Mobile input",
+  "tags": [
+    "virtual-keyboard",
+    "mobile",
+    "env"
+  ],
+  "plain": "Lets a page control whether the on-screen keyboard resizes the page or overlays it, and show or hide it.",
+  "meaning": "A web app can take over keyboard layout handling and learn the keyboard rectangle. Keyboard height hints at device type and which keyboard (emoji, numeric) is open.",
+  "lifecycle": [
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "navigator.virtualKeyboard.overlaysContent; show(); hide(); boundingRect; geometrychange; env(keyboard-inset-height); virtualkeyboardpolicy",
+      "bcd": [
+        "api.VirtualKeyboard",
+        "api.Navigator.virtualKeyboard"
+      ],
+      "access": {
+        "grant": "none",
+        "prompt_ui": "None (no browser prompt)",
+        "secure_context": false,
+        "user_gesture": false,
+        "activation": "none",
+        "persistence": "While the page runs",
+        "revocation": "Nothing to revoke (no permission is stored)",
+        "iframe": "Main frame only; cross-origin iframes cannot control it",
+        "steps": [
+          "Page sets overlaysContent = true",
+          "Keyboard appears over the page",
+          "geometrychange reports the rectangle"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "94",
+          "note": "",
+          "date": "2021-09-21"
+        },
+        "edge": {
+          "s": "y",
+          "v": "94",
+          "note": "",
+          "date": "2021-09-24"
+        },
+        "firefox": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "safari": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "ios_safari": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "94",
+          "note": "",
+          "date": "2021-09-21"
+        },
+        "samsung": {
+          "s": "y",
+          "v": "17.0",
+          "note": "",
+          "date": "2022-05-04"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "none",
+    "metric": "",
+    "update": "",
+    "fields": []
+  },
+  "limits": {
+    "headline": "Can control how the on screen keyboard moves the page, and show or hide it",
+    "user_action": "You tap into a text box on a phone or tablet",
+    "can": [
+      "Choose whether the keyboard pushes the page up or covers it",
+      "Learn the size and place of the keyboard",
+      "Show or hide the on screen keyboard from a tap"
+    ],
+    "cannot": [
+      "See what you type on the on screen keyboard",
+      "Show the keyboard without a tap on the page",
+      "Work in Firefox or Safari"
+    ],
+    "reach": 2,
+    "reach_label": "While the keyboard is open",
+    "differs": "Chrome, Edge and Samsung Internet support it. Firefox and Safari do not."
+  },
+  "story": {
+    "what_it_is": "A web app can control whether your on screen keyboard pushes the page up or covers it.",
+    "icon": "keyboard",
+    "tags": [
+      "Keyboard",
+      "Mobile",
+      "Layout"
+    ],
+    "marketing": [
+      {
+        "vendor": "Google Chrome",
+        "name": "VirtualKeyboard API",
+        "pitch": "Chrome describes it as a way for web apps to control layout around the on screen keyboard and show or hide it.",
+        "url": "https://developer.chrome.com/docs/web-platform/virtual-keyboard"
+      }
+    ],
+    "for_you": "You tap a text box and the keyboard slides up. The page may shrink neatly so your message box stays visible, or the keyboard may overlay a game controller. You may not realize the page can also learn how tall the keyboard is.",
+    "for_makers": "Chat, game and editing apps want to keep the box you are typing in on screen. Makers use the keyboard size to place buttons well. The height also hints at the device and keyboard type.",
+    "use_cases": [
+      {
+        "type": "messaging",
+        "example": "A chat web app keeps the message box and send button above the keyboard on a phone.",
+        "apps": [
+          "WhatsApp Web",
+          "Slack"
+        ]
+      },
+      {
+        "type": "games",
+        "example": "A browser game with touch buttons keeps them in view when the keyboard opens for a chat message.",
+        "apps": []
+      },
+      {
+        "type": "productivity",
+        "example": "A mobile document editor keeps the toolbar just above the keyboard.",
+        "apps": [
+          "Google Docs"
+        ]
+      },
+      {
+        "type": "shopping",
+        "example": "A checkout page scrolls the field you are typing in so the pay button stays reachable.",
+        "apps": []
+      },
+      {
+        "type": "analytics",
+        "example": "A site notes keyboard height as a clue to device model and OS keyboard settings.",
+        "apps": []
+      },
+      {
+        "type": "accessibility",
+        "example": "A web app lets people using an on screen keyboard with larger text keep fields visible.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Keyboard height hints at device",
+      "Little else"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Chromium on Android and ChromeOS only (Chrome 94); no Firefox or Safari",
+    "show() and hide() need a focused editable element and (for show) a recent user action",
+    "CSS env() variables keyboard-inset-top, -left, -bottom, -right, -width, -height",
+    "Cannot read keystrokes or which keyboard app is installed; only the rectangle"
+  ],
+  "scores": {
+    "sensitivity": 1,
+    "utility": 3,
+    "fingerprint_bits": 1,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Chat composers and bottom sheets",
+      "Games with custom on-screen controls"
+    ],
+    "abuse": [
+      "Device and keyboard type hints"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2021-09",
+      "browser": "chrome",
+      "version": "94",
+      "change": "VirtualKeyboard API ships on Android"
+    },
+    {
+      "date": "2022-11",
+      "browser": "chrome",
+      "version": "108",
+      "change": "interactive-widget viewport meta option ships"
+    }
+  ],
+  "refs": [
+    {
+      "t": "mdn",
+      "label": "MDN VirtualKeyboard API",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/VirtualKeyboard_API"
+    },
+    {
+      "t": "spec",
+      "label": "W3C VirtualKeyboard",
+      "url": "https://www.w3.org/TR/virtual-keyboard/"
+    },
+    {
+      "t": "chromestatus",
+      "label": "Chrome VirtualKeyboard API",
+      "url": "https://developer.chrome.com/docs/web-platform/virtual-keyboard"
+    }
+  ],
+  "confidence": "docs"
+}

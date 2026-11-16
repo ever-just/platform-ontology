@@ -1,0 +1,252 @@
+{
+  "id": "mob.peripherals.uwb",
+  "name": "Ultra-wideband ranging",
+  "kind": "permission",
+  "group": "peripherals-hardware",
+  "subgroup": "UWB",
+  "tags": [
+    "runtime-permission",
+    "nearby-devices",
+    "uwb",
+    "ranging",
+    "nearby-interaction",
+    "precise-finding"
+  ],
+  "plain": "Lets the app measure exact distance and direction to other UWB devices.",
+  "meaning": "Centimeter accurate nearby tracking: finding keys, car access, handoff. Part of Nearby devices on Android.",
+  "lifecycle": [
+    "in-session"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "y",
+      "v": "12",
+      "api": 31,
+      "permission": "UWB_RANGING",
+      "protection": "dangerous",
+      "grant": "prompt",
+      "prompt_ui": "Nearby devices prompt",
+      "persistence": "Until revoked or auto-reset",
+      "revocation": "Settings > Apps > Permissions > Nearby devices",
+      "store_policy": "Play: data-safety disclosure",
+      "api_surface": "androidx.core.uwb",
+      "note": "Needs UWB hardware; Jetpack UWB library API."
+    },
+    "ios": {
+      "s": "y",
+      "v": "14",
+      "permission": "NSNearbyInteractionUsageDescription",
+      "protection": "prompt",
+      "grant": "prompt",
+      "prompt_ui": "Allow or Don't Allow",
+      "persistence": "Until revoked",
+      "revocation": "Settings > Privacy & Security > Nearby Interaction",
+      "store_policy": "App Review 5.1.1; U1 or U2 chip required",
+      "api_surface": "NearbyInteraction, NISession",
+      "note": "Ranging accuracy about 10 cm; direction needs two devices."
+    }
+  },
+  "data": {
+    "type": "object",
+    "metric": "Distance and direction",
+    "update": "about 5 to 10 Hz",
+    "fields": [
+      {
+        "name": "distance",
+        "type": "float",
+        "unit": "m",
+        "range": "0 to 9",
+        "precision": "about 10 cm"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can measure exact distance and direction to nearby UWB devices while the app is open",
+    "user_action": "You tap Find my item or start a nearby handoff",
+    "can": [
+      "Measure distance to another UWB device, to within about 10 cm on iPhone",
+      "Point you toward the device when both support direction",
+      "Support finding keys, car access and handoff"
+    ],
+    "cannot": [
+      "Work on phones without UWB hardware",
+      "Start before you tap Allow",
+      "Give a direction from one device alone; direction needs two devices"
+    ],
+    "reach": 2,
+    "reach_label": "Nearby UWB devices, while open",
+    "differs": "Android groups this under Nearby devices; iPhone asks a separate Nearby Interaction question."
+  },
+  "story": {
+    "what_it_is": "A very precise radio that measures how far and in what direction another gadget is.",
+    "icon": "radar",
+    "tags": [
+      "Nearby",
+      "Precise",
+      "Gadgets"
+    ],
+    "marketing": [
+      {
+        "vendor": "Apple",
+        "name": "Nearby Interaction",
+        "pitch": "Use ultra wideband to find the precise distance and direction of nearby devices.",
+        "url": "https://developer.apple.com/documentation/nearbyinteraction"
+      },
+      {
+        "vendor": "Google",
+        "name": "UWB on Android",
+        "pitch": "Use ultra wideband for precise ranging between devices.",
+        "url": "https://developer.android.com/develop/connectivity/uwb"
+      }
+    ],
+    "for_you": "An arrow on screen points to your lost keys and counts down the meters. A car unlocks when you walk up. You can feel it work close up, down to a few centimetres.",
+    "for_makers": "UWB is far more exact than Bluetooth or GPS indoors. It powers item finders, keyless entry and fast file sharing. It also makes tracking a person or a thing in a room very exact.",
+    "use_cases": [
+      {
+        "type": "utilities",
+        "example": "You find lost keys with an arrow that points the way.",
+        "apps": [
+          "AirTag",
+          "SmartTag"
+        ]
+      },
+      {
+        "type": "automotive",
+        "example": "A car unlocks when your phone is close and you are on the correct side.",
+        "apps": []
+      },
+      {
+        "type": "games",
+        "example": "A party game uses phone to phone distance to pass a virtual ball.",
+        "apps": []
+      },
+      {
+        "type": "social",
+        "example": "You point your phone at a friend's phone to send a file.",
+        "apps": [
+          "AirDrop"
+        ]
+      },
+      {
+        "type": "smart-home",
+        "example": "A speaker passes music to the phone as you step closer.",
+        "apps": []
+      },
+      {
+        "type": "enterprise",
+        "example": "A warehouse app finds a tool in a bin within a few centimetres.",
+        "apps": []
+      },
+      {
+        "type": "security",
+        "example": "A door opens only when your phone is truly at the door, not just near a wall.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Very precise tracking",
+      "Stalking with trackers",
+      "Needs special hardware"
+    ],
+    "android_note": "Android needs UWB hardware and uses the Jetpack UWB library.",
+    "ios_note": "iPhone ranging is accurate to about 10 cm. Direction needs two devices."
+  },
+  "technical_bounds": [
+    "Hardware dependent",
+    "Short range about 9 m",
+    "Only works between devices running the same session",
+    "Needs hardware on both ends",
+    "Needs UWB chips on both ends",
+    "Short range, about 10 m reliable"
+  ],
+  "scores": {
+    "sensitivity": 3,
+    "utility": 3,
+    "fingerprint_bits": 3,
+    "friction": 2
+  },
+  "value": {
+    "legit_uses": [
+      "Item finders",
+      "Keyless entry"
+    ],
+    "abuse": [
+      "Persistent proximity tracking"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2022-09",
+      "platform": "ios",
+      "version": "iOS 16",
+      "change": "Background interactions"
+    },
+    {
+      "date": "2022-08",
+      "platform": "android",
+      "version": "13 (API 33)",
+      "change": "UWB framework and UWB_RANGING permission"
+    },
+    {
+      "date": "2021-10",
+      "platform": "android",
+      "version": "12 (API 31)",
+      "change": "UWB_RANGING permission added"
+    },
+    {
+      "date": "2021-10",
+      "platform": "android",
+      "version": "12 (API 31)",
+      "change": "UWB_RANGING permission introduced"
+    },
+    {
+      "date": "2021-09",
+      "platform": "ios",
+      "version": "iOS 15",
+      "change": "Third-party accessories"
+    },
+    {
+      "date": "2020-09",
+      "platform": "ios",
+      "version": "iOS 14",
+      "change": "Nearby Interaction introduced"
+    },
+    {
+      "date": "2020-09",
+      "platform": "ios",
+      "version": "iOS 14",
+      "change": "Nearby Interaction with U1"
+    }
+  ],
+  "related": [
+    "mob.peripherals.ble-scan",
+    "mob.peripherals.bluetooth",
+    "mob.hw.ble-central",
+    "mob.hw.accessory-setup"
+  ],
+  "refs": [
+    {
+      "t": "android",
+      "label": "Android: Ultra-wideband (UWB)",
+      "url": "https://developer.android.com/develop/connectivity/uwb"
+    },
+    {
+      "t": "apple",
+      "label": "Apple: Nearby Interaction",
+      "url": "https://developer.apple.com/documentation/nearbyinteraction"
+    },
+    {
+      "t": "apple",
+      "label": "Apple: Protected resources keys",
+      "url": "https://developer.apple.com/documentation/bundleresources/protected-resources"
+    }
+  ],
+  "confidence": "docs"
+}

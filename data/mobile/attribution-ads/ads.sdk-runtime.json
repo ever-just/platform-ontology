@@ -1,0 +1,190 @@
+{
+  "id": "mob.ads.sdk-runtime",
+  "name": "SDK Runtime (privacy sandbox)",
+  "kind": "tracking",
+  "group": "attribution-ads",
+  "subgroup": "Android Privacy Sandbox",
+  "tags": [
+    "sdk-runtime",
+    "sandbox",
+    "isolation",
+    "retired"
+  ],
+  "plain": "Would have run ad SDKs in their own process so they could not read the host app's data.",
+  "meaning": "Isolation of third-party SDKs from host app memory and identifiers. Never reached general availability; retired in the Oct 2025 announcement.",
+  "lifecycle": [
+    "in-session",
+    "background"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "r",
+      "v": "14",
+      "api": 34,
+      "permission": "",
+      "protection": "normal",
+      "grant": "not-exposed",
+      "prompt_ui": "",
+      "persistence": "",
+      "revocation": "",
+      "store_policy": "Privacy Sandbox status page lists as scheduled for phaseout (page updated Aug 2026)",
+      "api_surface": "SdkSandboxManager",
+      "note": "Google announced on 17 Oct 2025 it is retiring this along with most Privacy Sandbox APIs. No Android removal date was stated in the announcement."
+    },
+    "ios": {
+      "s": "n",
+      "v": "",
+      "permission": "",
+      "protection": "none",
+      "grant": "not-exposed",
+      "prompt_ui": "",
+      "persistence": "",
+      "revocation": "",
+      "store_policy": "",
+      "api_surface": "",
+      "note": "Not an Apple feature."
+    }
+  },
+  "data": {
+    "type": "none",
+    "metric": "Not available going forward",
+    "update": "n/a",
+    "fields": []
+  },
+  "limits": {
+    "headline": "Can't run ad tools in a separate box on Android, since Google retired it",
+    "user_action": "Nothing. It was a background feature that never reached wide release",
+    "can": [
+      "Have kept ad tools away from the app's data (Android 14, never released widely)",
+      "Have limited what ad tools could see",
+      "Fall back to the plain model, where tools share the app's access"
+    ],
+    "cannot": [
+      "Run on iPhone; it is not an Apple feature",
+      "Count on it, since Google announced its retirement on 17 Oct 2025",
+      "Isolate ad tools today"
+    ],
+    "reach": 1,
+    "reach_label": "Retired",
+    "differs": "Android only. iPhone never had it."
+  },
+  "story": {
+    "what_it_is": "A plan to run ad code in its own sealed room so it cannot read the host app's data.",
+    "icon": "square-dashed",
+    "tags": [
+      "SDKs",
+      "Retired",
+      "Sandbox"
+    ],
+    "marketing": [
+      {
+        "vendor": "Google",
+        "name": "SDK Runtime",
+        "pitch": "Android Privacy Sandbox plan to isolate ad SDKs from the app. Google retired it in October 2025.",
+        "url": "https://developer.android.com/design-for-safety/privacy-sandbox"
+      }
+    ],
+    "for_you": "You would not have noticed it. Ads would have loaded as before, but the ad code would have run in a separate process.",
+    "for_makers": "It would have kept ad code from reading the app's memory and IDs. It never reached general availability and was retired in the October 2025 announcement.",
+    "use_cases": [
+      {
+        "type": "ads",
+        "example": "An ad SDK runs in a sealed process and cannot read the host app's user ID.",
+        "apps": [
+          "Google AdMob"
+        ]
+      },
+      {
+        "type": "games",
+        "example": "A game studio would have been able to add an ad network without fear it reads saves.",
+        "apps": []
+      },
+      {
+        "type": "news",
+        "example": "A news app would have stopped a rogue ad from scraping reading data.",
+        "apps": []
+      },
+      {
+        "type": "security",
+        "example": "Isolating code lowers the harm from a hacked SDK.",
+        "apps": []
+      },
+      {
+        "type": "analytics",
+        "example": "Analytics tools would have gotten only what the app handed them.",
+        "apps": []
+      },
+      {
+        "type": "developer",
+        "example": "Developers tested the beta and found it hard to adapt popular SDKs.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Never launched",
+      "Complex to adopt"
+    ],
+    "android_note": "Retired in October 2025 before reaching general availability.",
+    "ios_note": "iOS has no equal. SDKs run inside the app's process."
+  },
+  "technical_bounds": [
+    "Retired: do not build new features on this",
+    "Ad ID stays the main cross-app identifier"
+  ],
+  "scores": {
+    "sensitivity": 3,
+    "utility": 1,
+    "fingerprint_bits": null,
+    "friction": 1
+  },
+  "value": {
+    "legit_uses": [
+      "Was meant as an ID-free ad system"
+    ],
+    "abuse": [
+      "Low adoption"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2022-02",
+      "platform": "android",
+      "version": "Android 13",
+      "change": "SDK Runtime preview"
+    },
+    {
+      "date": "2025-10",
+      "platform": "android",
+      "version": "Android 16",
+      "change": "Retirement announced"
+    }
+  ],
+  "related": [
+    "mob.ads.sdk-data-sharing"
+  ],
+  "refs": [
+    {
+      "t": "vendor",
+      "label": "Privacy Sandbox: Update on plans for Privacy Sandbox technologies",
+      "url": "https://privacysandbox.google.com/blog/update-on-plans-for-privacy-sandbox-technologies"
+    },
+    {
+      "t": "android",
+      "label": "Android: Privacy Sandbox on Android",
+      "url": "https://developer.android.com/design-for-safety/privacy-sandbox"
+    },
+    {
+      "t": "news",
+      "label": "AdExchanger: Google pulls the plug on Topics, PAAPI and other APIs",
+      "url": "https://www.adexchanger.com/privacy/google-pulls-the-plug-on-topics-paapi-and-other-major-privacy-sandbox-apis-as-the-cma-says-cheerio/"
+    }
+  ],
+  "confidence": "verified"
+}

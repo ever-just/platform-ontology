@@ -1,0 +1,231 @@
+{
+  "id": "web.files.directory-upload",
+  "name": "Directory upload (webkitdirectory)",
+  "kind": "picker",
+  "group": "files-storage",
+  "subgroup": "Files",
+  "tags": [
+    "directory",
+    "webkitdirectory",
+    "upload"
+  ],
+  "plain": "Lets the person pick a whole folder; the page gets every file in it with relative paths.",
+  "meaning": "One pick shares a full folder tree, often thousands of files. The site sees file names and sub folder structure, so a careless pick can expose more than expected.",
+  "lifecycle": [
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "<input type=file webkitdirectory>; File.webkitRelativePath; DataTransferItem.webkitGetAsEntry()",
+      "bcd": [
+        "api.HTMLInputElement.webkitdirectory",
+        "api.File.webkitRelativePath"
+      ],
+      "access": {
+        "grant": "picker",
+        "prompt_ui": "None (no browser prompt)",
+        "secure_context": false,
+        "user_gesture": true,
+        "activation": "transient",
+        "persistence": "Per selection",
+        "revocation": "Nothing to revoke (no permission is stored)",
+        "iframe": "Works in any frame",
+        "steps": [
+          "Person clicks the input",
+          "Browser shows a folder chooser and, in Chrome, an Upload N files confirmation",
+          "Page receives all files with webkitRelativePath"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "7",
+          "note": "",
+          "date": "2010-10-19"
+        },
+        "edge": {
+          "s": "y",
+          "v": "13",
+          "note": "",
+          "date": "2015-11-12"
+        },
+        "firefox": {
+          "s": "y",
+          "v": "50",
+          "note": "",
+          "date": "2016-11-15"
+        },
+        "safari": {
+          "s": "y",
+          "v": "11.1",
+          "note": "",
+          "date": "2018-04-12"
+        },
+        "ios_safari": {
+          "s": "y",
+          "v": "18.4",
+          "note": "All iOS browsers use WebKit",
+          "date": "2025-03-31"
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "132",
+          "note": "",
+          "date": "2025-01-14"
+        },
+        "samsung": {
+          "s": "y",
+          "v": "29.0",
+          "note": "",
+          "date": "2025-10-25"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "none",
+    "metric": "",
+    "update": "",
+    "fields": []
+  },
+  "limits": {
+    "headline": "Can access every file inside a folder you choose, in order to upload them",
+    "user_action": "You click Upload folder and choose one.",
+    "can": [
+      "Receive every file in the folder, with its path inside the folder",
+      "Upload all of them",
+      "Show file names and sizes"
+    ],
+    "cannot": [
+      "Change or delete the original files",
+      "See other folders or files you did not include",
+      "Get the files again later without another pick"
+    ],
+    "reach": 2,
+    "reach_label": "One folder you pick",
+    "differs": ""
+  },
+  "story": {
+    "what_it_is": "Lets you pick a whole folder, and the page receives every file in it with its folder paths.",
+    "icon": "folder-up",
+    "tags": [
+      "Files",
+      "Picker",
+      "Upload"
+    ],
+    "marketing": [
+      {
+        "vendor": "MDN",
+        "name": "webkitdirectory",
+        "pitch": "Documents a file input option that lets a person choose a whole folder for upload.",
+        "url": "https://developer.mozilla.org/en-US/docs/Web/API/HTMLInputElement/webkitdirectory"
+      }
+    ],
+    "for_you": "You click upload, choose a folder, and the site gets all the files inside. It only gets what is in that folder, and you see a warning first.",
+    "for_makers": "It saves time for bulk uploads like photo sets, code projects and course files. The person picks the folder, so no ongoing access is given. It still can send a lot of data at once.",
+    "use_cases": [
+      {
+        "type": "productivity",
+        "example": "You drag a project folder into a cloud drive and all its files and subfolders go up in one go.",
+        "apps": [
+          "Google Drive",
+          "Dropbox"
+        ]
+      },
+      {
+        "type": "social",
+        "example": "You upload a whole album of photos at once.",
+        "apps": []
+      },
+      {
+        "type": "developer",
+        "example": "You upload a code project folder to a build or hosting site.",
+        "apps": [
+          "GitHub",
+          "Netlify"
+        ]
+      },
+      {
+        "type": "games",
+        "example": "A game mod site takes a whole mod folder for review.",
+        "apps": []
+      },
+      {
+        "type": "education",
+        "example": "A student turns in a folder of project files to a class portal.",
+        "apps": []
+      },
+      {
+        "type": "creative",
+        "example": "A 3D or music web tool loads a whole folder of assets.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Large uploads",
+      "Easy to include extra files"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Chrome shows a confirmation Upload N files to this site before handing over the list",
+    "Includes all files in sub folders (hidden files and dot files may be included; Chrome filters OS junk like .DS_Store)",
+    "Cannot browse parents or siblings of the chosen folder; webkitRelativePath starts at the chosen folder name",
+    "No count cap; very large folders are bounded by memory and Chrome's confirmation counts them",
+    "Support: Chrome 7, Safari 11.1, Firefox 50 (webkit prefix kept)"
+  ],
+  "scores": {
+    "sensitivity": 4,
+    "utility": 3,
+    "fingerprint_bits": null,
+    "friction": 1
+  },
+  "value": {
+    "legit_uses": [
+      "Upload a photo album or code folder",
+      "Static site deploy tools"
+    ],
+    "abuse": [
+      "Collecting more files than the person expects from a deep folder"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2010-05",
+      "browser": "chrome",
+      "version": "7",
+      "change": "webkitdirectory ships"
+    },
+    {
+      "date": "2016-11",
+      "browser": "firefox",
+      "version": "50",
+      "change": "Firefox supports webkitdirectory"
+    }
+  ],
+  "related": [
+    "web.files.file-input",
+    "web.files.drop-files"
+  ],
+  "refs": [
+    {
+      "t": "mdn",
+      "label": "MDN webkitdirectory",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/HTMLInputElement/webkitdirectory"
+    },
+    {
+      "t": "spec",
+      "label": "WICG Directory Upload",
+      "url": "https://wicg.github.io/directory-upload/proposal.html"
+    }
+  ],
+  "confidence": "docs"
+}

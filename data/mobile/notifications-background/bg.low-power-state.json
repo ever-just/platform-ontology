@@ -1,0 +1,204 @@
+{
+  "id": "mob.bg.low-power-state",
+  "name": "Low Power Mode, Battery Saver and Background App Refresh state",
+  "kind": "signal",
+  "group": "notifications-background",
+  "subgroup": "Platform quirks",
+  "tags": [
+    "battery-saver",
+    "low-power-mode",
+    "signal"
+  ],
+  "plain": "Apps can see whether the phone is in a power saving state and adapt, and iOS shows if background refresh is on.",
+  "meaning": "Reveals whether the person is low on battery or has background activity disabled. Apps use it to defer work; it also hints at device habits.",
+  "lifecycle": [
+    "in-session",
+    "background"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "y",
+      "v": "5.0",
+      "api": 21,
+      "permission": "",
+      "protection": "none",
+      "grant": "none",
+      "prompt_ui": "None",
+      "persistence": "Live state",
+      "revocation": "n/a",
+      "store_policy": "",
+      "api_surface": "PowerManager.isPowerSaveMode(), ACTION_POWER_SAVE_MODE_CHANGED",
+      "note": "Battery Saver restricts background activity, location and sync"
+    },
+    "ios": {
+      "s": "y",
+      "v": "9.0",
+      "permission": "",
+      "protection": "none",
+      "grant": "none",
+      "prompt_ui": "None",
+      "persistence": "Live state; notification NSProcessInfoPowerStateDidChange",
+      "revocation": "n/a",
+      "store_policy": "",
+      "api_surface": "ProcessInfo.isLowPowerModeEnabled, UIApplication.backgroundRefreshStatus",
+      "note": "Low Power Mode pauses background fetch, mail fetch and some animations; backgroundRefreshStatus is available, restricted, denied"
+    }
+  },
+  "data": {
+    "type": "boolean",
+    "metric": "Power save on",
+    "update": "On change",
+    "fields": [
+      {
+        "name": "powerSave",
+        "type": "boolean",
+        "unit": "",
+        "range": "true or false",
+        "precision": ""
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can see if your phone is saving power, and slow itself down to match",
+    "user_action": "Nothing. The app checks this when it opens or before it starts background work",
+    "can": [
+      "Tell if Low Power Mode or Battery Saver is on",
+      "Check on iPhone whether Background App Refresh is available, restricted or turned off",
+      "Pause syncing, animations or downloads to save battery"
+    ],
+    "cannot": [
+      "Turn Low Power Mode or Battery Saver on or off for you",
+      "Force background work to continue when the system has paused it",
+      "Change your Background App Refresh setting"
+    ],
+    "reach": 1,
+    "reach_label": "A simple on or off check",
+    "differs": "iPhone Low Power Mode pauses background fetch and mail fetch. Android Battery Saver restricts background activity, location and sync."
+  },
+  "story": {
+    "what_it_is": "Apps can tell if your phone is saving power, and iPhone shows if background refresh is on.",
+    "icon": "battery-low",
+    "tags": [
+      "Battery",
+      "Silent",
+      "Settings"
+    ],
+    "marketing": [
+      {
+        "vendor": "Apple",
+        "name": "Low Power Mode",
+        "pitch": "Apple pitches Low Power Mode as a way to stretch battery by reducing background activity and some visual effects.",
+        "url": "https://support.apple.com/en-us/101604"
+      },
+      {
+        "vendor": "Google",
+        "name": "Battery Saver",
+        "pitch": "Google describes Battery Saver as a mode that extends battery life by limiting background activity.",
+        "url": "https://support.google.com/android/answer/7664692"
+      }
+    ],
+    "for_you": "You never see apps read it. But when your battery is low, games look a little plainer and apps stop syncing, because they noticed you switched on power saving.",
+    "for_makers": "Makers use it to be kind to the battery, such as lowering frame rate or delaying uploads. Others can read it as a hint about habits, like someone who is often low on charge.",
+    "use_cases": [
+      {
+        "type": "games",
+        "example": "A racing game drops from 60 to 30 frames per second when it sees Low Power Mode, so you can keep playing longer.",
+        "apps": [
+          "Asphalt 9",
+          "Genshin Impact"
+        ]
+      },
+      {
+        "type": "video",
+        "example": "A streaming app picks a lower video quality and stops downloading ahead when battery saving is on.",
+        "apps": [
+          "Netflix",
+          "YouTube"
+        ]
+      },
+      {
+        "type": "maps",
+        "example": "A navigation app dims the map animation but keeps directions going.",
+        "apps": [
+          "Google Maps"
+        ]
+      },
+      {
+        "type": "ads",
+        "example": "An ad network sees many low battery devices and avoids heavy video ads that would drain them.",
+        "apps": []
+      },
+      {
+        "type": "analytics",
+        "example": "A product team splits crash and speed reports by power mode to find problems only seen when saving power.",
+        "apps": []
+      },
+      {
+        "type": "security",
+        "example": "A fraud tool notes whether the device state looks normal for the account holder.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Can hint at daily habits",
+      "Features slow down without warning"
+    ],
+    "android_note": "Battery Saver limits background work, location and sync.",
+    "ios_note": "Low Power Mode pauses background fetch and mail. Apps can also see if Background App Refresh is on, off or limited."
+  },
+  "technical_bounds": [
+    "Both are readable with no prompt"
+  ],
+  "scores": {
+    "sensitivity": 2,
+    "utility": 3,
+    "fingerprint_bits": 1,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Adaptive sync"
+    ],
+    "abuse": [
+      "Profiling battery habits"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2014-10",
+      "platform": "android",
+      "version": "5.0 (API 21)",
+      "change": "Battery Saver and isPowerSaveMode introduced"
+    },
+    {
+      "date": "2015-09",
+      "platform": "ios",
+      "version": "iOS 9",
+      "change": "Low Power Mode and isLowPowerModeEnabled introduced"
+    }
+  ],
+  "related": [
+    "mob.bg.restricted-battery-ui",
+    "mob.bg.doze"
+  ],
+  "refs": [
+    {
+      "t": "android",
+      "label": "Android: PowerManager.isPowerSaveMode",
+      "url": "https://developer.android.com/reference/android/os/PowerManager#isPowerSaveMode()"
+    },
+    {
+      "t": "apple",
+      "label": "Apple: isLowPowerModeEnabled",
+      "url": "https://developer.apple.com/documentation/foundation/nsprocessinfo/islowpowermodeenabled"
+    }
+  ],
+  "confidence": "docs"
+}

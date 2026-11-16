@@ -1,0 +1,205 @@
+{
+  "id": "mob.policy.sms-call-log",
+  "name": "Play SMS and Call Log permission policy",
+  "kind": "capability",
+  "group": "app-ecosystem",
+  "subgroup": "Play permission declarations",
+  "tags": [
+    "sms",
+    "call-log",
+    "permissions-declaration",
+    "default-handler"
+  ],
+  "plain": "Apps can read SMS or call logs only if they are the default handler or qualify for a narrow exception.",
+  "meaning": "Since 9 March 2019 Google limits these permissions to default SMS, Phone or Assistant apps and a few declared exceptions. It stops mass harvesting for contact lists and ads.",
+  "lifecycle": [
+    "before-install",
+    "in-session"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "p",
+      "v": "",
+      "permission": "READ_SMS, RECEIVE_SMS, SEND_SMS, READ_CALL_LOG, WRITE_CALL_LOG",
+      "protection": "dangerous",
+      "grant": "none",
+      "prompt_ui": "",
+      "persistence": "",
+      "revocation": "",
+      "store_policy": "Permissions Declaration Form required; default handler or approved exception; data may not be sold",
+      "api_surface": "Play Console > App content > Sensitive permissions",
+      "note": "Alternatives: SMS Retriever and User Consent APIs for OTP."
+    },
+    "ios": {
+      "s": "n",
+      "v": "",
+      "permission": "",
+      "protection": "none",
+      "grant": "not-exposed",
+      "prompt_ui": "",
+      "persistence": "",
+      "revocation": "",
+      "store_policy": "",
+      "api_surface": "",
+      "note": "iOS has no readable SMS or call log. Message Filter extensions see unknown senders only."
+    }
+  },
+  "data": {
+    "type": "object",
+    "metric": "SMS or call records",
+    "update": "on demand",
+    "fields": [
+      {
+        "name": "body",
+        "type": "string",
+        "unit": "",
+        "range": "",
+        "precision": ""
+      },
+      {
+        "name": "number",
+        "type": "string",
+        "unit": "",
+        "range": "",
+        "precision": ""
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can't see your texts or call history unless it is your default texting or phone app",
+    "user_action": "You set the app as your default SMS or Phone app, or enter a one time code yourself",
+    "can": [
+      "Handle your texts if you made it the default SMS app",
+      "Auto fill a one time code using the SMS Retriever or User Consent",
+      "Use the call log if it is the default Phone or Assistant app, or a declared exception"
+    ],
+    "cannot": [
+      "Collect texts for contact lists or ads",
+      "See your texts on iPhone; it has no way in",
+      "Get call history without a Play approved reason",
+      "See any texts on iPhone beyond unknown senders, even with a message filter"
+    ],
+    "reach": 1,
+    "reach_label": "Blocked, unless default app",
+    "differs": "Android allows it for default apps and few exceptions. iPhone has no way in, apart from message filters for unknown senders."
+  },
+  "story": {
+    "what_it_is": "Google's rule that only default phone or text apps may read your texts and call history.",
+    "icon": "phone-call",
+    "tags": [
+      "Texts",
+      "Play rules",
+      "Sensitive"
+    ],
+    "marketing": [
+      {
+        "vendor": "Google",
+        "name": "SMS and Call Log permissions policy",
+        "pitch": "Only default SMS, Phone or Assistant apps, plus a few approved exceptions, may use these permissions.",
+        "url": "https://support.google.com/googleplay/android-developer/answer/10208820"
+      }
+    ],
+    "for_you": "Your text messages and call history stay private from random apps. An app can only read them if you make it your default texting or phone app.",
+    "for_makers": "Apps used to harvest messages for loans scoring or contact lists. Now makers use narrow tools such as the SMS Retriever to read one login code, or ask the person to type it.",
+    "use_cases": [
+      {
+        "type": "messaging",
+        "example": "A texting app becomes your default so it can read and send your texts.",
+        "apps": [
+          "Google Messages",
+          "Textra"
+        ]
+      },
+      {
+        "type": "security",
+        "example": "A bank uses SMS Retriever to read a single one time code with no broad permission.",
+        "apps": [
+          "Chase",
+          "HDFC"
+        ]
+      },
+      {
+        "type": "games",
+        "example": "A game that sends a verification code reads only that code through the retriever tool.",
+        "apps": [
+          "PUBG Mobile"
+        ]
+      },
+      {
+        "type": "ads",
+        "example": "Shady loan apps used to scrape contacts and texts to pressure borrowers, which led to the rule.",
+        "apps": []
+      },
+      {
+        "type": "security",
+        "example": "A call blocker app becomes the default call screening app to see incoming numbers.",
+        "apps": [
+          "Truecaller"
+        ]
+      },
+      {
+        "type": "productivity",
+        "example": "A backup app asks for a special exception to copy texts, with a clear reason.",
+        "apps": [
+          "SMS Backup and Restore"
+        ]
+      }
+    ],
+    "risks": [
+      "Messages carry private codes",
+      "Used to pressure borrowers"
+    ],
+    "android_note": "Since 9 March 2019 Play limits these permissions to default handlers and a few exceptions.",
+    "ios_note": "iOS never lets apps read texts or call logs. Messages filter extensions only classify unknown senders."
+  },
+  "technical_bounds": [
+    "Default handler or exception only",
+    "Review can take weeks"
+  ],
+  "scores": {
+    "sensitivity": 5,
+    "utility": 3,
+    "fingerprint_bits": null,
+    "friction": 4
+  },
+  "value": {
+    "legit_uses": [
+      "Default messaging apps",
+      "Backup apps"
+    ],
+    "abuse": [
+      "Contact and SMS harvesting"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2019-03",
+      "platform": "android",
+      "version": "Play policy",
+      "change": "SMS and Call Log restrictions effective 9 March 2019"
+    }
+  ],
+  "related": [
+    "mob.policy.contacts-declaration"
+  ],
+  "refs": [
+    {
+      "t": "android",
+      "label": "Play: SMS and Call Log policy",
+      "url": "https://support.google.com/googleplay/android-developer/answer/10208820"
+    },
+    {
+      "t": "android",
+      "label": "Android: SMS Retriever API",
+      "url": "https://developers.google.com/identity/sms-retriever/overview"
+    }
+  ],
+  "confidence": "docs"
+}

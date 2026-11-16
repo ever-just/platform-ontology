@@ -1,0 +1,240 @@
+{
+  "id": "web.xsite.bounce-tracking-mitigations",
+  "name": "Bounce tracking mitigations",
+  "kind": "signal",
+  "group": "cross-site-tracking",
+  "subgroup": "After leaving",
+  "tags": [
+    "bounce-tracking",
+    "redirect",
+    "itp",
+    "storage-deletion"
+  ],
+  "plain": "Browsers delete the stored data of sites the person only passed through on a redirect.",
+  "meaning": "Defeats the tracker that bounces a person through its own domain to set a first-party cookie. Chrome checks about hourly and spares sites visited with interaction in the past 45 days. Safari has classified bounce trackers since 2017.",
+  "lifecycle": [
+    "after-leaving"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "Browser background task; no site API (Clear-Site-Data and interaction avoid it)",
+      "access": {
+        "grant": "none",
+        "prompt_ui": "None",
+        "secure_context": false,
+        "user_gesture": false,
+        "persistence": "Chrome deletes after a grace period (about 1 hour) unless the site had interaction in the last 45 days",
+        "revocation": "Clear site data, browser privacy settings",
+        "iframe": "",
+        "steps": []
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "116",
+          "note": "Active for users with third-party cookies blocked",
+          "date": "2023-08-15"
+        },
+        "edge": {
+          "s": "y",
+          "v": "116",
+          "note": "",
+          "date": "2023-08-21"
+        },
+        "firefox": {
+          "s": "p",
+          "v": "131",
+          "note": "Strict mode, verify default",
+          "date": "2024-10-01"
+        },
+        "safari": {
+          "s": "y",
+          "v": "11",
+          "note": "Classification based, 30 day clearing",
+          "date": "2017-09-19"
+        },
+        "ios_safari": {
+          "s": "y",
+          "v": "11",
+          "note": "",
+          "date": "2017-09-19"
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "116",
+          "note": "",
+          "date": "2023-08-15"
+        },
+        "samsung": {
+          "s": "n",
+          "v": "",
+          "note": "Unverified"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "none",
+    "metric": "No data exposed",
+    "update": "n/a",
+    "fields": []
+  },
+  "limits": {
+    "headline": "Can wipe stored data of sites you only passed through on a redirect",
+    "user_action": "Nothing. Your browser does it on its own after a redirect",
+    "can": [
+      "Delete cookies and storage of a site that only bounced you along",
+      "Run on its own after a short wait",
+      "Stop trackers using quick redirects to set IDs"
+    ],
+    "cannot": [
+      "Delete data of sites you actually used or interacted with",
+      "Stop a tracker that gets you to click or sign in there",
+      "Run in Samsung Internet, and only partly in Firefox",
+      "Be turned on or off by the site"
+    ],
+    "reach": 2,
+    "reach_label": "Redirect only sites, after a wait",
+    "differs": "Chrome, Edge and Safari do this. Firefox does it partly. Samsung Internet does not."
+  },
+  "story": {
+    "what_it_is": "The browser clears stored data from sites that you only passed through on a redirect.",
+    "icon": "shield",
+    "tags": [
+      "Privacy",
+      "Browser protection",
+      "Silent"
+    ],
+    "marketing": [
+      {
+        "vendor": "Apple",
+        "name": "Tracking prevention",
+        "pitch": "WebKit documents Safari's protections that classify and limit sites that bounce people through redirects to track them.",
+        "url": "https://webkit.org/tracking-prevention/"
+      }
+    ],
+    "for_you": "You do not see it. If a link sends you through a tracker's page for a split second, the browser notices you never used that site. It then wipes the tracker's cookies and storage so it cannot follow you.",
+    "for_makers": "Trackers moved to redirects when third party cookies got blocked. Browsers answered by deleting data from sites you did not really visit. Makers of login or payment redirects must make sure that real people interact with their site, or it may be treated as a tracker.",
+    "use_cases": [
+      {
+        "type": "security",
+        "example": "A single sign on service sends you through its domain to sign you in, and needs you to click or type there so it is not seen as a bounce tracker.",
+        "apps": [
+          "Okta",
+          "Auth0"
+        ]
+      },
+      {
+        "type": "ads",
+        "example": "An ad tracker bounces you through its domain to set a first party cookie. The browser deletes it within hours.",
+        "apps": []
+      },
+      {
+        "type": "payments",
+        "example": "A payment page redirects you through a bank domain. If it never gets a user action, the browser may clear its data.",
+        "apps": [
+          "PayPal",
+          "Stripe"
+        ]
+      },
+      {
+        "type": "analytics",
+        "example": "A link shortener passes you through its domain to count clicks. Safari and Chrome may erase its cookie.",
+        "apps": [
+          "Bitly"
+        ]
+      },
+      {
+        "type": "games",
+        "example": "A game login that bounces you through a different account site must get a click there, or your session data may be cleared.",
+        "apps": [
+          "Epic Games",
+          "Steam"
+        ]
+      },
+      {
+        "type": "social",
+        "example": "A shared link wrapper on a social site that redirects to the target may lose its cookie if people never interact with it.",
+        "apps": [
+          "Facebook",
+          "LinkedIn"
+        ]
+      }
+    ],
+    "risks": [
+      "Legit redirects can be wrongly cleared",
+      "Does not stop other tracking"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Sites with user interaction in the past 45 days are exempt (Chrome)",
+    "Deletion runs about hourly",
+    "Only affects sites reached by redirect with no visible interaction",
+    "Chrome and Firefox default behaviour varies by tracking protection mode"
+  ],
+  "scores": {
+    "sensitivity": 2,
+    "utility": 2,
+    "fingerprint_bits": null,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Privacy protection"
+    ],
+    "abuse": [
+      "Not applicable"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2017-09",
+      "browser": "safari",
+      "version": "11",
+      "change": "ITP 1.0 classifies bounce trackers"
+    },
+    {
+      "date": "2023-08",
+      "browser": "chrome",
+      "version": "116",
+      "change": "Bounce tracking mitigations shipped when third-party cookies blocked"
+    },
+    {
+      "date": "2024-09",
+      "browser": "firefox",
+      "version": "131",
+      "change": "Bounce tracking protection in Strict mode (verify default)"
+    }
+  ],
+  "related": [
+    "web.xsite.navigational-tracking",
+    "web.xsite.outbound-link-decoration"
+  ],
+  "refs": [
+    {
+      "t": "spec",
+      "label": "Privacy CG bounce tracking mitigations",
+      "url": "https://privacycg.github.io/nav-tracking-mitigations/#bounce-tracking-mitigations"
+    },
+    {
+      "t": "vendor",
+      "label": "Chrome bounce tracking mitigations",
+      "url": "https://developers.google.com/privacy-sandbox/cookies/prepare/bounce-tracking-mitigations"
+    },
+    {
+      "t": "webkit",
+      "label": "WebKit Tracking Prevention",
+      "url": "https://webkit.org/tracking-prevention/"
+    }
+  ],
+  "confidence": "docs"
+}

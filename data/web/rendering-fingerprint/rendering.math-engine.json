@@ -1,0 +1,217 @@
+{
+  "id": "web.rendering.math-engine",
+  "name": "Math function precision",
+  "kind": "signal",
+  "group": "rendering-fingerprint",
+  "subgroup": "Math",
+  "tags": [
+    "math",
+    "js-engine",
+    "fingerprintjs"
+  ],
+  "plain": "Tiny differences in Math.tan, acosh, sinh and others across engines and CPUs.",
+  "meaning": "Results of about 10 transcendental functions differ in the last digits between V8, SpiderMonkey, JavaScriptCore and OS math libraries. Identifies engine version and sometimes CPU family. Firefox 145 made some math more uniform.",
+  "lifecycle": [
+    "on-arrival",
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "Math.acos(), asinh(), atanh(), expm1(), log1p(), sinh(), tan(), pow() ...",
+      "access": {
+        "grant": "none",
+        "prompt_ui": "None",
+        "secure_context": false,
+        "user_gesture": false,
+        "persistence": "read fresh on every page load; nothing stored",
+        "revocation": "none needed (no grant)",
+        "iframe": "Readable from cross-origin iframes too (same values)",
+        "steps": [
+          "Page script reads the value",
+          "No prompt is shown"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "1",
+          "note": "",
+          "date": "2008-12-11"
+        },
+        "edge": {
+          "s": "y",
+          "v": "12",
+          "note": "",
+          "date": "2015-07-29"
+        },
+        "firefox": {
+          "s": "y",
+          "v": "1",
+          "note": "",
+          "date": "2004-11-09"
+        },
+        "safari": {
+          "s": "y",
+          "v": "3",
+          "note": "",
+          "date": "2007-10-26"
+        },
+        "ios_safari": {
+          "s": "y",
+          "v": "3.2",
+          "note": "",
+          "date": "2010-04-03"
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "18",
+          "note": "",
+          "date": "2012-06-27"
+        },
+        "samsung": {
+          "s": "y",
+          "v": "1.0",
+          "note": "",
+          "date": "2013-04-27"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "object",
+    "metric": "",
+    "update": "static per session",
+    "fields": [
+      {
+        "name": "values",
+        "type": "list",
+        "unit": "float64",
+        "range": "about 10 numbers",
+        "precision": "17 significant digits"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can run maths tests and use the last digits to tell your browser apart",
+    "user_action": "Nothing. It happens when the page loads",
+    "can": [
+      "Compute about 10 maths functions and compare the last digits",
+      "Tell Chrome, Firefox and Safari engines apart",
+      "Sometimes guess your system"
+    ],
+    "cannot": [
+      "See your files or what you typed",
+      "Ask permission first",
+      "Name your exact device model",
+      "Know who you are by itself"
+    ],
+    "reach": 2,
+    "reach_label": "Silent, browser engine only",
+    "differs": ""
+  },
+  "story": {
+    "what_it_is": "Tiny differences in how Math.tan and similar functions round can show which browser engine and chip you have.",
+    "icon": "sigma",
+    "tags": [
+      "Silent",
+      "Math",
+      "Fingerprinting"
+    ],
+    "marketing": [],
+    "for_you": "You see nothing. Your browser quietly does a few unusual math steps and looks at the last digits. They differ a little between engines such as Chrome, Firefox and Safari.",
+    "for_makers": "Math results are usually the same everywhere, but tiny gaps exist. Fraud tools use them to check that the browser is what it claims. Trackers add them to a device ID.",
+    "use_cases": [
+      {
+        "type": "security",
+        "example": "A bot detector spots a script that claims to be Safari but gives Chrome style math results.",
+        "apps": []
+      },
+      {
+        "type": "analytics",
+        "example": "A fingerprint library adds math results to a device ID.",
+        "apps": [
+          "FingerprintJS",
+          "CreepJS"
+        ]
+      },
+      {
+        "type": "ads",
+        "example": "An ad script tells browser engines apart when the user agent string is hidden.",
+        "apps": []
+      },
+      {
+        "type": "games",
+        "example": "A web game with physics avoids risky math so a match plays the same on every browser.",
+        "apps": []
+      },
+      {
+        "type": "education",
+        "example": "A graphing tool like Desmos controls its math rounding so students see the same curve on any device.",
+        "apps": [
+          "Desmos"
+        ]
+      },
+      {
+        "type": "banking",
+        "example": "A bank adds the math engine result to a check that a login came from a real browser.",
+        "apps": []
+      },
+      {
+        "type": "developer",
+        "example": "A developer tests number code in three browsers to find tiny rounding differences.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Hard to change",
+      "Adds to a device ID"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Engine class only"
+  ],
+  "scores": {
+    "sensitivity": 1,
+    "utility": 1,
+    "fingerprint_bits": 1.5,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "None"
+    ],
+    "abuse": [
+      "Engine fingerprint"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2025-11",
+      "browser": "firefox",
+      "version": "145",
+      "change": "Android math operations made more consistent"
+    }
+  ],
+  "refs": [
+    {
+      "t": "github",
+      "label": "fingerprintjs source: math",
+      "url": "https://github.com/fingerprintjs/fingerprintjs/blob/master/src/sources/math.ts"
+    },
+    {
+      "t": "mozilla",
+      "label": "Mozilla Security Blog 2026-11-10: harder to fingerprint",
+      "url": "https://blog.mozilla.org/security/2026/11/10/open-research-stronger-privacy-making-firefox-users-harder-to-fingerprint/"
+    }
+  ],
+  "confidence": "docs"
+}

@@ -1,0 +1,207 @@
+{
+  "id": "web.net.tcp-ip-passive-os-fingerprint",
+  "name": "TCP/IP passive OS fingerprint (p0f, JA4T)",
+  "kind": "tracking",
+  "group": "network-connectivity",
+  "subgroup": "TCP",
+  "tags": [
+    "p0f",
+    "tcp",
+    "ttl",
+    "ja4t",
+    "os-detection"
+  ],
+  "plain": "The TCP handshake reveals the operating system through TTL, window size, MSS and option order.",
+  "meaning": "p0f (Zalewski) and JA4T read SYN fields: initial TTL (64 or 128), window size, MSS, window scale and option order. Windows, Linux, iOS and macOS differ, and a mismatch with the User-Agent signals spoofing or a proxy.",
+  "lifecycle": [
+    "on-arrival"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "SYN packet capture (p0f v3, JA4T, Zeek)",
+      "access": {
+        "grant": "none",
+        "prompt_ui": "",
+        "secure_context": false,
+        "user_gesture": false,
+        "persistence": "",
+        "revocation": "",
+        "iframe": "",
+        "steps": [
+          "Capture the SYN",
+          "Compute signature",
+          "Compare OS guess to User-Agent"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "1",
+          "note": "",
+          "date": "2008-12-11"
+        },
+        "edge": {
+          "s": "y",
+          "v": "79",
+          "note": "",
+          "date": "2020-01-15"
+        },
+        "firefox": {
+          "s": "y",
+          "v": "1",
+          "note": "",
+          "date": "2004-11-09"
+        },
+        "safari": {
+          "s": "y",
+          "v": "1",
+          "note": "",
+          "date": "2003-06-23"
+        },
+        "ios_safari": {
+          "s": "y",
+          "v": "1",
+          "note": "",
+          "date": "2007-06-29"
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "1",
+          "note": "",
+          "date": ""
+        },
+        "samsung": {
+          "s": "y",
+          "v": "5.0",
+          "note": "",
+          "date": "2016-12-15"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "string",
+    "metric": "Signature such as 4:64:0:1460:mss*10,6:mss,sok,ts,nop,ws:df,id+:0",
+    "update": "",
+    "fields": [
+      {
+        "name": "ttl",
+        "type": "integer",
+        "unit": "",
+        "range": "1 to 255",
+        "precision": "initial TTL inferred"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can guess your operating system from how your device opens a connection",
+    "user_action": "Nothing. It happens when your device first connects to the server",
+    "can": [
+      "Guess whether you run Windows, Mac, Linux, Android or iPhone from connection details",
+      "Catch visitors whose claimed system does not match their real one",
+      "Filter attack traffic that has odd connection patterns"
+    ],
+    "cannot": [
+      "See your name, account or files",
+      "Tell the exact version or device model",
+      "Be hidden by clearing cookies or using private browsing",
+      "Work well through a proxy or relay, since it only sees the last hop"
+    ],
+    "reach": 3,
+    "reach_label": "Quietly, on every connection",
+    "differs": ""
+  },
+  "story": {
+    "what_it_is": "The very first network packets from your device reveal what kind of operating system it runs.",
+    "icon": "fingerprint",
+    "tags": [
+      "Tracking",
+      "Silent",
+      "Network"
+    ],
+    "marketing": [],
+    "for_you": "You never see it. Every device opens a connection in a slightly different way. A server can read that pattern and guess if you are on Windows, Mac, Linux or a phone.",
+    "for_makers": "Makers use it to catch visitors who say one thing and are another, such as a bot claiming to be an iPhone while running on Linux. It needs no code in the browser and cannot be changed by a page.",
+    "use_cases": [
+      {
+        "type": "security",
+        "example": "A ticket site sees a visitor claiming to be an iPhone, but the connection pattern looks like a Linux server. It blocks the request as a bot.",
+        "apps": []
+      },
+      {
+        "type": "ads",
+        "example": "An ad fraud service compares the claimed device with the network pattern and drops mismatches from billing.",
+        "apps": []
+      },
+      {
+        "type": "games",
+        "example": "A browser game blocks sign ups from servers pretending to be Windows players, which stops bot farms and cheat tools.",
+        "apps": []
+      },
+      {
+        "type": "banking",
+        "example": "A bank compares the system seen at login with the customer's usual one and asks for more proof if it changes.",
+        "apps": []
+      },
+      {
+        "type": "analytics",
+        "example": "A traffic report separates real phone visits from automated ones that spoof phone browsers.",
+        "apps": []
+      },
+      {
+        "type": "enterprise",
+        "example": "A firewall flags an unexpected system type on a company login and steps up checks.",
+        "apps": []
+      },
+      {
+        "type": "shopping",
+        "example": "A retailer ties repeated suspicious orders to the same network pattern, and slows them for review.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Hard to see or avoid",
+      "Misreads VPNs and routers"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Altered by load balancers, VPNs and proxies",
+    "Reveals the network stack, not the browser"
+  ],
+  "scores": {
+    "sensitivity": 2,
+    "utility": 4,
+    "fingerprint_bits": 3,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": "OS vs User-Agent mismatch detection, DDoS filtering",
+    "abuse": "Silent OS identification"
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "related": [
+    "web.net.ja4-fingerprint-family",
+    "web.net.vpn-proxy-tor-detection"
+  ],
+  "refs": [
+    {
+      "t": "github",
+      "label": "p0f v3",
+      "url": "https://lcamtuf.coredump.cx/p0f3/"
+    },
+    {
+      "t": "github",
+      "label": "FoxIO-LLC/ja4 (JA4T)",
+      "url": "https://github.com/FoxIO-LLC/ja4/blob/main/technical_details/JA4T.md"
+    }
+  ],
+  "confidence": "docs"
+}

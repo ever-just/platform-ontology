@@ -1,0 +1,182 @@
+{
+  "id": "mob.os.notarization",
+  "name": "Apple notarization and app review gates",
+  "kind": "action",
+  "group": "os-integration-install",
+  "subgroup": "Distribution",
+  "tags": [
+    "notarization",
+    "app-review",
+    "gatekeeper"
+  ],
+  "plain": "Apple scans apps outside the App Store before install in the EU and Japan.",
+  "meaning": "Apps distributed through alternative marketplaces or the web still pass Apple checks for malware and platform rules. The checks do not review content.",
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "f",
+      "v": "",
+      "permission": "None; Play Protect scanning of sideloaded apps",
+      "protection": "none",
+      "grant": "none",
+      "prompt_ui": "Play Protect warning for unknown apps",
+      "persistence": "n/a",
+      "revocation": "Settings > Security > Play Protect",
+      "store_policy": "Play Protect policies",
+      "api_surface": "Play Protect live threat detection, Play Integrity",
+      "note": "Android has no mandatory pre install review for sideloaded apps."
+    },
+    "ios": {
+      "s": "y",
+      "v": "17.4",
+      "permission": "Notarization through App Store Connect",
+      "protection": "entitlement",
+      "grant": "none",
+      "prompt_ui": "Install sheet shows notarized developer",
+      "persistence": "n/a",
+      "revocation": "n/a",
+      "store_policy": "Apple notarization guidelines",
+      "api_surface": "Notarization for iOS apps",
+      "note": "Required for EU marketplace and web apps and for Japan marketplaces."
+    }
+  },
+  "data": {
+    "type": "none",
+    "metric": "Policy",
+    "update": "n/a",
+    "fields": [
+      {
+        "name": "notarization",
+        "type": "boolean",
+        "unit": "flag",
+        "range": "n/a",
+        "precision": "n/a"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can install apps from outside the App Store in the EU and Japan after Apple checks",
+    "user_action": "You install a marketplace or web app and see a sheet with the developer's name",
+    "can": [
+      "Install apps that Apple has notarized on iPhone in the EU",
+      "Show the notarized developer in the install sheet",
+      "Install through approved marketplaces in Japan"
+    ],
+    "cannot": [
+      "Install an unchecked app on iPhone in these regions",
+      "Skip the check for marketplaces or web apps",
+      "Get this on Android, which has no required review for side loaded apps; Play Protect only warns"
+    ],
+    "reach": 1,
+    "reach_label": "A check before the install",
+    "differs": "Apple checks apps outside the App Store in the EU and Japan. Android has no required review for side loaded apps."
+  },
+  "story": {
+    "what_it_is": "Apple scans apps in the EU and Japan for malware before they can be installed from outside the App Store.",
+    "icon": "shield-check",
+    "tags": [
+      "iPhone",
+      "Safety",
+      "Install"
+    ],
+    "marketing": [
+      {
+        "vendor": "Apple",
+        "name": "Notarization for iOS apps in the EU",
+        "pitch": "Apple describes notarization as a check for malware and platform rules for apps distributed outside the App Store in the EU.",
+        "url": "https://developer.apple.com/support/alternative-app-distribution-in-the-eu/"
+      }
+    ],
+    "for_you": "You install an app from a web page or an alternative store, and a system screen shows the developer's name. The app has already passed Apple's basic safety check.",
+    "for_makers": "Makers who distribute outside the App Store still need Apple's approval of the file. Apple says it checks for malware and rules, not content.",
+    "use_cases": [
+      {
+        "type": "games",
+        "example": "A studio releases a game on its own site and gets it notarized first.",
+        "apps": [
+          "Epic Games Store"
+        ]
+      },
+      {
+        "type": "media",
+        "example": "An alternative store lists apps that each passed notarization.",
+        "apps": [
+          "AltStore PAL"
+        ]
+      },
+      {
+        "type": "security",
+        "example": "A malware author finds it harder to ship through a fake store.",
+        "apps": []
+      },
+      {
+        "type": "enterprise",
+        "example": "A company sends a private app to its staff with the check done.",
+        "apps": []
+      },
+      {
+        "type": "developer",
+        "example": "A small team treats the check as a new step in its release process.",
+        "apps": []
+      },
+      {
+        "type": "social",
+        "example": "A social app released outside the main store still goes through it.",
+        "apps": []
+      },
+      {
+        "type": "banking",
+        "example": "A bank app avoids fake copies with the developer name shown at install.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Gatekeeping critique",
+      "Does not check content"
+    ],
+    "android_note": "Android has no mandatory check for sideloaded apps beyond Play Protect warnings.",
+    "ios_note": "Required for EU marketplaces and web apps and for Japan marketplaces."
+  },
+  "technical_bounds": [
+    "Applies to alternative distribution only"
+  ],
+  "scores": {
+    "sensitivity": 2,
+    "utility": 3,
+    "fingerprint_bits": 0,
+    "friction": 2
+  },
+  "value": {
+    "legit_uses": [
+      "Malware screen"
+    ],
+    "abuse": [
+      "Gatekeeping critique"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2024-03",
+      "platform": "ios",
+      "version": "iOS 17.4",
+      "change": "Notarization for iOS apps outside the App Store"
+    }
+  ],
+  "related": [
+    "mob.os.alt-marketplaces"
+  ],
+  "refs": [
+    {
+      "t": "apple",
+      "label": "Apple: Notarization for iOS apps",
+      "url": "https://developer.apple.com/support/alternative-app-distribution-in-the-eu/#notarization"
+    }
+  ],
+  "confidence": "docs"
+}

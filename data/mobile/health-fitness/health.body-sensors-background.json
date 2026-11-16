@@ -1,0 +1,188 @@
+{
+  "id": "mob.health.body-sensors-background",
+  "name": "Body sensors in background",
+  "kind": "permission",
+  "group": "health-fitness",
+  "subgroup": "Vitals",
+  "tags": [
+    "runtime-permission",
+    "background",
+    "heart-rate"
+  ],
+  "plain": "Lets the app read heart rate and similar vitals while not on screen.",
+  "meaning": "Continuous health monitoring: sleep, stress and arrhythmia patterns. Replaced by READ_HEALTH_DATA_IN_BACKGROUND for apps targeting Android 16.",
+  "lifecycle": [
+    "background"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "y",
+      "v": "13",
+      "api": 33,
+      "permission": "BODY_SENSORS_BACKGROUND (replaced by android.permissions.health.READ_HEALTH_DATA_IN_BACKGROUND for targeting 36)",
+      "protection": "dangerous",
+      "grant": "prompt",
+      "prompt_ui": "Settings-level grant after the foreground body sensors grant",
+      "persistence": "Until revoked",
+      "revocation": "Settings > Apps > Permissions > Body sensors",
+      "store_policy": "Play: Health Connect declaration",
+      "api_surface": "SensorManager in a foreground service of type health",
+      "note": "Needs BODY_SENSORS first; Android 14 added the health foreground service type."
+    },
+    "ios": {
+      "s": "y",
+      "v": "8.0",
+      "permission": "HealthKit enable background delivery entitlement (com.apple.developer.healthkit.background-delivery)",
+      "protection": "entitlement",
+      "grant": "entitlement",
+      "prompt_ui": "Uses the same per-type read toggles",
+      "persistence": "Until revoked",
+      "revocation": "Health app > Sharing > Apps",
+      "store_policy": "App Review 5.1.3",
+      "api_surface": "HKHealthStore.enableBackgroundDelivery",
+      "note": "Background delivery wakes the app at most hourly for most types (frequency can be limited)."
+    }
+  },
+  "data": {
+    "type": "stream",
+    "metric": "Health samples in background",
+    "update": "hourly background delivery on iOS; continuous with Android health foreground service",
+    "fields": []
+  },
+  "limits": {
+    "headline": "Can keep checking your heart rate and vitals while the app is not on screen",
+    "user_action": "You first allow body sensors, then turn on background access in Settings",
+    "can": [
+      "See heart rate and similar vitals in a health foreground service on Android",
+      "Wake on iPhone when new health data arrives, if you allowed that type",
+      "Keep tracking a long workout or sleep in the background"
+    ],
+    "cannot": [
+      "Get background access without the foreground body sensors permission first on Android",
+      "Wake on iPhone more than about once an hour for most data types",
+      "See data types you did not allow in the Health sheet",
+      "Work after you turn the permission off"
+    ],
+    "reach": 3,
+    "reach_label": "Ongoing, but only vitals you allowed",
+    "differs": "Android needs a second Settings grant. iPhone uses a background delivery setting and the same per type switches."
+  },
+  "story": {
+    "what_it_is": "Lets an app read heart rate and similar readings even when it is not on screen.",
+    "icon": "heart-pulse",
+    "tags": [
+      "Health",
+      "Asks first",
+      "Background"
+    ],
+    "marketing": [
+      {
+        "vendor": "Google",
+        "name": "Health Connect background access",
+        "pitch": "Developer guide: apps can ask separate permission to read health data while not in use.",
+        "url": "https://developer.android.com/health-and-fitness/guides/health-connect"
+      }
+    ],
+    "for_you": "A second pop up asks to read body sensors all the time. If you say yes, the app can watch heart rate while closed, such as through the night. That is more personal than a workout reading.",
+    "for_makers": "Needed for sleep tracking, stress alerts and warnings about odd heart rhythms. Android 16 replaces it with a health background permission for apps that target it.",
+    "use_cases": [
+      {
+        "type": "health",
+        "example": "A watch app warns you of a high resting heart rate while the phone is in your pocket.",
+        "apps": []
+      },
+      {
+        "type": "health",
+        "example": "A sleep app reads heart rate through the night to score your sleep.",
+        "apps": []
+      },
+      {
+        "type": "fitness",
+        "example": "A training app watches recovery vitals all day and suggests a rest day.",
+        "apps": []
+      },
+      {
+        "type": "wearables",
+        "example": "A watch app logs stress readings in the background.",
+        "apps": []
+      },
+      {
+        "type": "health",
+        "example": "A heart research app gathers passive readings for a long study.",
+        "apps": []
+      },
+      {
+        "type": "enterprise",
+        "example": "A wellness plan could reward steady vitals if you share the data.",
+        "apps": []
+      },
+      {
+        "type": "ads",
+        "example": "An ad firm could infer health problems from nightly vitals if leaked.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Always on health tracking",
+      "Shows sleep and illness patterns"
+    ],
+    "android_note": "Uses BODY_SENSORS_BACKGROUND, replaced on Android 16.",
+    "ios_note": "iPhone allows background health reads through HealthKit with your approval."
+  },
+  "technical_bounds": [
+    "Needs the foreground grant first on Android",
+    "iOS uses an entitlement for background delivery"
+  ],
+  "scores": {
+    "sensitivity": 5,
+    "utility": 3,
+    "fingerprint_bits": null,
+    "friction": 3
+  },
+  "value": {
+    "legit_uses": [
+      "Sleep and arrhythmia monitoring"
+    ],
+    "abuse": [
+      "Persistent health profiling"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2022-08",
+      "platform": "android",
+      "version": "13 (API 33)",
+      "change": "BODY_SENSORS_BACKGROUND introduced"
+    },
+    {
+      "date": "2025-06",
+      "platform": "android",
+      "version": "16 (API 36)",
+      "change": "Replaced for apps targeting 36 by READ_HEALTH_DATA_IN_BACKGROUND"
+    }
+  ],
+  "related": [
+    "mob.health.body-sensors",
+    "mob.health.health-connect"
+  ],
+  "refs": [
+    {
+      "t": "android",
+      "label": "Android 16 behavior changes (apps targeting 16)",
+      "url": "https://developer.android.com/about/versions/16/behavior-changes-16"
+    },
+    {
+      "t": "android",
+      "label": "Android: Manifest.permission reference",
+      "url": "https://developer.android.com/reference/android/Manifest.permission"
+    }
+  ],
+  "confidence": "docs"
+}

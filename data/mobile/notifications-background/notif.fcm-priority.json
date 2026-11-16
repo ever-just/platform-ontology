@@ -1,0 +1,223 @@
+{
+  "id": "mob.notif.fcm-priority",
+  "name": "FCM priority and deprioritization",
+  "kind": "capability",
+  "group": "notifications-background",
+  "subgroup": "Push",
+  "tags": [
+    "push",
+    "fcm",
+    "doze",
+    "quota"
+  ],
+  "plain": "High priority pushes wake a sleeping phone, but Android downgrades apps that abuse them.",
+  "meaning": "High priority is the only way to reach a dozing phone fast. Apps that send high priority with no visible notification get demoted over a 7 day window, so engagement bots must show something.",
+  "lifecycle": [
+    "background"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "y",
+      "v": "6.0",
+      "api": 23,
+      "permission": "None beyond FCM",
+      "protection": "none",
+      "grant": "install",
+      "prompt_ui": "None",
+      "persistence": "Deprioritization is evaluated over the previous 7 days per app instance; visible notifications prevent it",
+      "revocation": "n/a",
+      "store_policy": "FCM docs: use high priority only for time-sensitive, user-visible messages",
+      "api_surface": "AndroidConfig.priority, android_v2 message types (RemoteNotification, BackgroundSync)",
+      "note": "Normal: delivered immediately if awake, deferred in Doze. High: can wake Doze, allowed limited work; standby bucket no longer sets the quota (Android 13). v2 RemoteNotification gets a 20 s execution window"
+    },
+    "ios": {
+      "s": "n",
+      "v": "",
+      "permission": "",
+      "protection": "none",
+      "grant": "not-exposed",
+      "prompt_ui": "",
+      "persistence": "",
+      "revocation": "",
+      "store_policy": "",
+      "api_surface": "",
+      "note": "APNs has apns-priority 10, 5, 1; see mob.notif.apns-delivery"
+    }
+  },
+  "web_equivalents": [
+    "web.notify.push-abuse-defenses"
+  ],
+  "data": {
+    "type": "enum",
+    "metric": "Priority class",
+    "update": "Per message",
+    "fields": [
+      {
+        "name": "priority",
+        "type": "enum",
+        "unit": "",
+        "range": "normal, high",
+        "precision": ""
+      },
+      {
+        "name": "v2_type",
+        "type": "enum",
+        "unit": "",
+        "range": "RemoteNotification, BackgroundSync",
+        "precision": ""
+      },
+      {
+        "name": "window",
+        "type": "integer",
+        "unit": "seconds",
+        "range": "about 20",
+        "precision": ""
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can wake a sleeping Android phone with a high priority push, but misuse gets slowed down",
+    "user_action": "Nothing. The app's server picks the priority when it sends a message",
+    "can": [
+      "Wake a phone in Doze for something urgent like a call or chat",
+      "Do some short work right after the wake up",
+      "Send normal priority pushes that arrive quietly when the phone is awake"
+    ],
+    "cannot": [
+      "Use high priority for ads without getting downgraded",
+      "Deliver normal priority pushes right away while the phone is in Doze; they wait",
+      "Do long work after a wake up",
+      "Use this on iPhone, which has its own priority levels"
+    ],
+    "reach": 3,
+    "reach_label": "Ongoing, but downgraded if abused",
+    "differs": "Android has normal and high FCM priority. iPhone uses APNs priority 10, 5 and 1."
+  },
+  "story": {
+    "what_it_is": "Whether a push can wake a sleeping Android phone right away, with penalties for abuse.",
+    "icon": "gauge",
+    "tags": [
+      "Push",
+      "Android",
+      "Battery"
+    ],
+    "marketing": [
+      {
+        "vendor": "Google",
+        "name": "Message priority",
+        "pitch": "Google explains high and normal priority in FCM and warns that misuse can cause lower priority delivery.",
+        "url": "https://firebase.google.com/docs/cloud-messaging/android/message-priority"
+      }
+    ],
+    "for_you": "You get a call or chat alert even when the phone is dozing. Less urgent alerts wait until the phone wakes, so you may see them late.",
+    "for_makers": "Makers need high priority to be on time for calls and chat. Android demotes apps that send high priority pushes without showing anything, so they must show a visible alert.",
+    "use_cases": [
+      {
+        "type": "messaging",
+        "example": "A call app uses high priority so your phone rings when locked.",
+        "apps": [
+          "WhatsApp",
+          "Signal"
+        ]
+      },
+      {
+        "type": "health",
+        "example": "A glucose monitor sends a high priority low blood sugar alert.",
+        "apps": []
+      },
+      {
+        "type": "rideshare",
+        "example": "A driver app gets an urgent ride request on a sleeping phone.",
+        "apps": [
+          "Uber"
+        ]
+      },
+      {
+        "type": "games",
+        "example": "A game sends a normal priority daily reward alert that can wait.",
+        "apps": []
+      },
+      {
+        "type": "security",
+        "example": "A banking app sends a high priority fraud alert.",
+        "apps": []
+      },
+      {
+        "type": "ads",
+        "example": "An ad team learns that silent high priority pushes get penalized, so campaigns must show a notice.",
+        "apps": []
+      },
+      {
+        "type": "smart-home",
+        "example": "A doorbell app sends an instant visitor alert.",
+        "apps": [
+          "Ring"
+        ]
+      }
+    ],
+    "risks": [
+      "Abuse can drain battery",
+      "Late alerts when priority is low"
+    ],
+    "android_note": "Android only. High priority pushes can be demoted over about a week if misused.",
+    "ios_note": "iOS has a similar priority number in APNs."
+  },
+  "technical_bounds": [
+    "Downgrade is automatic and silent",
+    "Proxying (Beta) can reduce delivery metrics up to 15%"
+  ],
+  "scores": {
+    "sensitivity": 2,
+    "utility": 4,
+    "fingerprint_bits": null,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Calls",
+      "Chat"
+    ],
+    "abuse": [
+      "High priority data wakeups to harvest signals"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2015-10",
+      "platform": "android",
+      "version": "6.0 (API 23)",
+      "change": "Doze introduced; high priority FCM is the main exemption"
+    },
+    {
+      "date": "2022-08",
+      "platform": "android",
+      "version": "13 (API 33)",
+      "change": "High priority count no longer tied to standby bucket; downgrade when no notification is shown"
+    },
+    {
+      "date": "2024-07",
+      "platform": "android",
+      "version": "FCM",
+      "change": "Legacy HTTP API shutdown begins; HTTP v1 message format with android config required"
+    }
+  ],
+  "related": [
+    "mob.notif.fcm-delivery",
+    "mob.bg.doze"
+  ],
+  "refs": [
+    {
+      "t": "vendor",
+      "label": "FCM: Message priority",
+      "url": "https://firebase.google.com/docs/cloud-messaging/android/message-priority"
+    }
+  ],
+  "confidence": "verified"
+}

@@ -1,0 +1,212 @@
+{
+  "id": "mob.system.focus-status",
+  "name": "Focus and Do Not Disturb status",
+  "kind": "signal",
+  "group": "system-control",
+  "subgroup": "Presence",
+  "tags": [
+    "focus",
+    "dnd",
+    "boolean",
+    "signal",
+    "status"
+  ],
+  "plain": "Learns only whether the person has a Focus or Do Not Disturb mode switched on.",
+  "meaning": "iOS returns a single yes or no. Android returns the interruption filter level with no permission.",
+  "lifecycle": [
+    "in-session",
+    "background"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "y",
+      "v": "6.0",
+      "api": 23,
+      "permission": "None",
+      "protection": "none",
+      "grant": "none",
+      "prompt_ui": "None",
+      "persistence": "n/a",
+      "revocation": "n/a",
+      "store_policy": "",
+      "api_surface": "NotificationManager.getCurrentInterruptionFilter",
+      "note": "Returns ALL, PRIORITY, NONE or ALARMS; no prompt"
+    },
+    "ios": {
+      "s": "y",
+      "v": "15",
+      "permission": "NSFocusStatusUsageDescription",
+      "protection": "prompt",
+      "grant": "prompt",
+      "prompt_ui": "Focus Status prompt",
+      "persistence": "Until revoked",
+      "revocation": "Settings > Privacy & Security > Focus",
+      "store_policy": "App Review 5.1.1",
+      "api_surface": "INFocusStatusCenter.focusStatus.isFocused",
+      "note": "Boolean only; never the mode name or schedule"
+    }
+  },
+  "web_equivalents": [
+    "web.notify.idle-detection"
+  ],
+  "data": {
+    "type": "boolean",
+    "metric": "isFocused",
+    "update": "on query",
+    "fields": [
+      {
+        "name": "isFocused",
+        "type": "boolean",
+        "unit": "",
+        "range": "true or false or nil",
+        "precision": "1 bit"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can learn only whether Focus or Do Not Disturb is on, not which mode",
+    "user_action": "On iPhone you tap Allow on the Focus Status prompt; on Android nothing happens",
+    "can": [
+      "Tell whether a Focus is on, as a yes or no (iPhone)",
+      "Check the Do Not Disturb level on Android: all, priority, none or alarms, with no prompt"
+    ],
+    "cannot": [
+      "See the Focus name or schedule on iPhone",
+      "Change the mode",
+      "See the Do Not Disturb level on iPhone"
+    ],
+    "reach": 1,
+    "reach_label": "A yes or no, or a level",
+    "differs": "iPhone asks first and gives only a yes or no; Android gives the level with no prompt."
+  },
+  "story": {
+    "what_it_is": "An app can learn only whether you have a Focus or Do Not Disturb mode on.",
+    "icon": "moon",
+    "tags": [
+      "Focus",
+      "Silent",
+      "Status"
+    ],
+    "marketing": [],
+    "for_you": "A friend's messaging app may show that you have notifications silenced. You never see a prompt. It only tells them you are busy, not why.",
+    "for_makers": "Chat apps use it to set expectations about replies and cut pings. It leaks little, but it still tells the app something about your day. iPhone returns just a yes or no. Android returns the filter level without a prompt.",
+    "use_cases": [
+      {
+        "type": "messaging",
+        "example": "A chat app shows a notifications silenced note so friends know you will not answer soon.",
+        "apps": [
+          "iMessage",
+          "Slack"
+        ]
+      },
+      {
+        "type": "productivity",
+        "example": "A work chat tool holds a message until you are out of Focus.",
+        "apps": [
+          "Slack",
+          "Microsoft Teams"
+        ]
+      },
+      {
+        "type": "games",
+        "example": "A game delays a non urgent event notice if the player is in Focus.",
+        "apps": []
+      },
+      {
+        "type": "fitness",
+        "example": "A workout app notices that you are in a Fitness Focus and starts tracking.",
+        "apps": []
+      },
+      {
+        "type": "ads",
+        "example": "An ad system avoids showing a pop up when the player is in Do Not Disturb.",
+        "apps": []
+      },
+      {
+        "type": "health",
+        "example": "A health app knows you are sleeping and holds its reminders.",
+        "apps": []
+      },
+      {
+        "type": "security",
+        "example": "A fraud team uses odd Focus patterns as a very weak signal.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Tiny leak about your day",
+      "Can be combined with other signals",
+      "No prompt"
+    ],
+    "android_note": "Android returns the interruption filter level (all, priority, none or alarms) with no prompt.",
+    "ios_note": "iPhone returns only a yes or no, never the name of the mode or its schedule."
+  },
+  "technical_bounds": [
+    "iOS exposes 1 bit and Android exposes 4 levels",
+    "iOS reveals only on or off",
+    "Android gives the filter with no prompt"
+  ],
+  "scores": {
+    "sensitivity": 2,
+    "utility": 2,
+    "fingerprint_bits": 2,
+    "friction": 2
+  },
+  "value": {
+    "legit_uses": [
+      "Messaging apps show a busy badge"
+    ],
+    "abuse": [
+      "Timing attacks on attention"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2021-09",
+      "platform": "ios",
+      "version": "iOS 15",
+      "change": "Share Focus Status introduced with prompt"
+    },
+    {
+      "date": "2021-09",
+      "platform": "ios",
+      "version": "iOS 15",
+      "change": "Share Focus Status API and permission"
+    },
+    {
+      "date": "2015-10",
+      "platform": "android",
+      "version": "6.0 (API 23)",
+      "change": "Interruption filter readable"
+    }
+  ],
+  "related": [
+    "mob.notify.critical-alerts",
+    "mob.notif.time-sensitive"
+  ],
+  "refs": [
+    {
+      "t": "apple",
+      "label": "Apple: INFocusStatusCenter",
+      "url": "https://developer.apple.com/documentation/intents/infocusstatuscenter"
+    },
+    {
+      "t": "android",
+      "label": "Android: getCurrentInterruptionFilter",
+      "url": "https://developer.android.com/reference/android/app/NotificationManager#getCurrentInterruptionFilter()"
+    },
+    {
+      "t": "apple",
+      "label": "Apple: Protected resources keys",
+      "url": "https://developer.apple.com/documentation/bundleresources/protected-resources"
+    }
+  ],
+  "confidence": "docs"
+}

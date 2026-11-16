@@ -1,0 +1,217 @@
+{
+  "id": "web.privacy.do-not-track",
+  "name": "Do Not Track flag",
+  "kind": "signal",
+  "group": "locale-preferences",
+  "subgroup": "Privacy settings",
+  "tags": [
+    "dnt",
+    "privacy"
+  ],
+  "plain": "Reads whether the person turned on Do Not Track.",
+  "meaning": "A setting few sites honor; LinkedIn says it does not generally respond to it. The collector reads it but excludes it from the hash.",
+  "lifecycle": [
+    "on-arrival",
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "navigator.doNotTrack",
+      "bcd": [
+        "api.Navigator.doNotTrack"
+      ],
+      "access": {
+        "grant": "none",
+        "prompt_ui": "None (no browser prompt)",
+        "secure_context": false,
+        "user_gesture": false,
+        "persistence": "",
+        "revocation": "",
+        "iframe": "",
+        "steps": [
+          "Script reads the value",
+          "Value joins the fingerprint payload"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "23",
+          "note": "",
+          "date": "2012-11-06"
+        },
+        "edge": {
+          "s": "y",
+          "v": "17",
+          "note": "",
+          "date": "2018-04-30"
+        },
+        "firefox": {
+          "s": "y",
+          "v": "9",
+          "note": "",
+          "date": "2011-12-20"
+        },
+        "safari": {
+          "s": "r",
+          "v": "12.1",
+          "note": "Removed",
+          "date": "2019-03-25"
+        },
+        "ios_safari": {
+          "s": "r",
+          "v": "12.2",
+          "note": "",
+          "date": "2019-03-25"
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "25",
+          "note": "",
+          "date": "2013-02-27"
+        },
+        "samsung": {
+          "s": "y",
+          "v": "1.5",
+          "note": "",
+          "date": "2013-09-25"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "enum",
+    "metric": "Do Not Track flag",
+    "update": "static",
+    "fields": [
+      {
+        "name": "doNotTrack",
+        "type": "enum",
+        "unit": "",
+        "range": "1, 0, unspecified",
+        "precision": ""
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can see whether you turned on Do Not Track",
+    "user_action": "Nothing. It is checked when the page or app loads",
+    "can": [
+      "Check your Do Not Track setting",
+      "Leave it out of the data used to recognise your browser, in some tools"
+    ],
+    "cannot": [
+      "Make sites stop tracking you; few honor it",
+      "See the setting in Safari, which removed it",
+      "Show a permission pop up; there is none"
+    ],
+    "reach": 1,
+    "reach_label": "One yes or no setting",
+    "differs": "Chrome, Edge and Firefox still have it. Safari removed it."
+  },
+  "story": {
+    "what_it_is": "The page reads whether you turned on Do Not Track.",
+    "icon": "ban",
+    "tags": [
+      "Privacy",
+      "Setting"
+    ],
+    "marketing": [
+      {
+        "vendor": "Mozilla",
+        "name": "Do Not Track",
+        "pitch": "Mozilla describes a browser setting that asks sites not to track you, and notes that sites choose whether to respond.",
+        "url": "https://support.mozilla.org/en-US/kb/how-do-i-turn-do-not-track-feature"
+      }
+    ],
+    "for_you": "If it is on, the page sees your request. Most sites do not change anything in response. You see no difference.",
+    "for_makers": "Few makers act on it, and some say so in their privacy policy. It is also a small fingerprint clue, though some collectors leave it out of the ID.",
+    "use_cases": [
+      {
+        "type": "analytics",
+        "example": "A privacy focused analytics tool skips counting visits that send the flag.",
+        "apps": [
+          "Matomo"
+        ]
+      },
+      {
+        "type": "ads",
+        "example": "An ad network ignores the request, since no rule requires it.",
+        "apps": []
+      },
+      {
+        "type": "media",
+        "example": "A professional network says in its policy that it does not generally respond to it.",
+        "apps": [
+          "LinkedIn"
+        ]
+      },
+      {
+        "type": "games",
+        "example": "A game site reads the flag but keeps tracking play time for ads.",
+        "apps": []
+      },
+      {
+        "type": "security",
+        "example": "A fingerprinting script reads the flag but leaves it out of the hash since many change it.",
+        "apps": []
+      },
+      {
+        "type": "shopping",
+        "example": "A store records the setting for legal notices but keeps its normal cookies.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Mostly ignored",
+      "Makes you stand out"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "No legal weight on its own"
+  ],
+  "scores": {
+    "sensitivity": 2,
+    "utility": 3,
+    "fingerprint_bits": 2,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Respect preferences"
+    ],
+    "abuse": [
+      "Extra fingerprint bit"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": true,
+      "how": "Collector key(s): doNotTrack. Excluded from the hash. Cookie Policy: does not generally respond to DNT."
+    }
+  },
+  "related": [
+    "web.tracking.linkedin-apfc-fingerprint"
+  ],
+  "refs": [
+    {
+      "t": "mdn",
+      "label": "MDN doNotTrack",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/Navigator/doNotTrack"
+    },
+    {
+      "t": "vendor",
+      "label": "LinkedIn cookie table",
+      "url": "https://www.linkedin.com/legal/l/cookie-table"
+    },
+    {
+      "t": "github",
+      "label": "mdp/linkedin-extension-fingerprinting (LinkedIn script snapshot and ID list)",
+      "url": "https://github.com/mdp/linkedin-extension-fingerprinting"
+    }
+  ],
+  "confidence": "docs"
+}

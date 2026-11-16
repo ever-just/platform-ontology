@@ -1,0 +1,226 @@
+{
+  "id": "web.render.countermeasure-brave-farbling",
+  "name": "Brave farbling",
+  "kind": "tracking",
+  "group": "rendering-fingerprint",
+  "subgroup": "Countermeasures",
+  "tags": [
+    "countermeasure",
+    "brave",
+    "farbling",
+    "noise"
+  ],
+  "plain": "Brave adds small per-site random noise to canvas, WebGL, audio and other readouts.",
+  "meaning": "Farbling changes the last bits of fingerprint outputs with a seed per site per session, so tracking sites cannot link a person across sites while pages still work.",
+  "lifecycle": [
+    "on-arrival"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "Brave Shields > Block fingerprinting (Standard or Strict)",
+      "access": {
+        "grant": "none",
+        "prompt_ui": "",
+        "secure_context": false,
+        "user_gesture": false,
+        "persistence": "",
+        "revocation": "",
+        "iframe": "",
+        "steps": [
+          "Brave derives a session seed per eTLD+1",
+          "Wraps canvas, WebGL, audio, plugins, hardwareConcurrency, deviceMemory",
+          "Strict mode blocks readback of risky APIs"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "n",
+          "v": "",
+          "note": ":Brave only (Chromium)"
+        },
+        "edge": {
+          "s": "n",
+          "v": "",
+          "note": ":Brave only (Chromium)"
+        },
+        "firefox": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "safari": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "ios_safari": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "chrome_android": {
+          "s": "n",
+          "v": "",
+          "note": ":Brave only (Chromium)"
+        },
+        "samsung": {
+          "s": "n",
+          "v": "",
+          "note": ":Brave only (Chromium)"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "none",
+    "metric": "Per-site seed rotated per browser session",
+    "update": "",
+    "fields": [
+      {
+        "name": "noise",
+        "type": "float",
+        "unit": "LSB",
+        "range": "1 bit per channel",
+        "precision": "per site seed"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can't track you across sites by device traits when Brave adds random noise",
+    "user_action": "Nothing. Brave does it for you by default",
+    "can": [
+      "Add small random changes to canvas, graphics and audio results",
+      "Use a different random seed for each site",
+      "Keep pages working as normal"
+    ],
+    "cannot": [
+      "Let tracking sites link your visits across different sites",
+      "Hide that you use Brave, which can still be guessed",
+      "Stop sites that follow you with a login or cookie on one site"
+    ],
+    "reach": 1,
+    "reach_label": "Protection that Brave applies for you",
+    "differs": "Only Brave has this. Chrome and Edge do not add noise, and Safari and Firefox have different protections."
+  },
+  "story": {
+    "what_it_is": "Brave adds small random noise to canvas, audio and other readouts so each site sees a different fake ID.",
+    "icon": "shield-check",
+    "tags": [
+      "Privacy",
+      "Defense",
+      "Browser"
+    ],
+    "marketing": [
+      {
+        "vendor": "Brave",
+        "name": "Fingerprinting protections",
+        "pitch": "Brave says it randomizes the values that scripts use to identify you, so tracking across sites is harder.",
+        "url": "https://github.com/brave/brave-browser/wiki/Fingerprinting-Protections"
+      }
+    ],
+    "for_you": "Pages work as normal and you do not have to set anything up. Behind the scenes, Brave nudges tiny details so sites cannot match you from one site to the next.",
+    "for_makers": "Brave sells privacy as a headline feature. It avoids breaking sites by changing values only a little, rather than blocking features. Site makers who use fingerprints for fraud may see noisier data.",
+    "use_cases": [
+      {
+        "type": "ads",
+        "example": "An ad network cannot link your visit on a news site and a shopping site because your canvas result differs on each.",
+        "apps": []
+      },
+      {
+        "type": "security",
+        "example": "A fraud tool sees a new device ID each session from Brave and may ask for extra checks.",
+        "apps": []
+      },
+      {
+        "type": "games",
+        "example": "A browser game with graphics tests still runs fine, because the noise is too small to change how it looks.",
+        "apps": []
+      },
+      {
+        "type": "creative",
+        "example": "A photo tool that reads canvas pixels may show tiny differences when Brave changes the readback.",
+        "apps": []
+      },
+      {
+        "type": "analytics",
+        "example": "Unique visitor counts for Brave users can look higher, because the same person looks different on each site.",
+        "apps": []
+      },
+      {
+        "type": "banking",
+        "example": "A bank may ask Brave users to verify more often, since device recognition is less steady.",
+        "apps": []
+      },
+      {
+        "type": "shopping",
+        "example": "A shop that detects bots by fingerprint may need other signals to trust Brave users.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Can trigger extra checks",
+      "Not total protection",
+      "Fixes can break rare sites"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Cannot hide the fact that Brave is used (tamper detection, Brave-specific values)",
+    "Only reduces cross-site linking, not same-site"
+  ],
+  "scores": {
+    "sensitivity": 1,
+    "utility": 3,
+    "fingerprint_bits": null,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": "Privacy by default",
+    "abuse": "Detecting Brave users"
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2020-03",
+      "browser": "brave",
+      "version": "",
+      "change": "Farbling introduced for canvas, WebGL, audio"
+    },
+    {
+      "date": "2021-01",
+      "browser": "brave",
+      "version": "",
+      "change": "Extended to plugins, hardwareConcurrency, deviceMemory"
+    },
+    {
+      "date": "2023-01",
+      "browser": "brave",
+      "version": "",
+      "change": "Farbling of speech voices and WebGL parameters"
+    }
+  ],
+  "related": [
+    "web.render.tamper-lie-detection",
+    "web.render.canvas-2d-fingerprint"
+  ],
+  "refs": [
+    {
+      "t": "github",
+      "label": "Brave fingerprinting protections wiki",
+      "url": "https://github.com/brave/brave-browser/wiki/Fingerprinting-Protections"
+    },
+    {
+      "t": "vendor",
+      "label": "Brave Privacy Updates",
+      "url": "https://brave.com/privacy-updates/"
+    }
+  ],
+  "confidence": "docs"
+}

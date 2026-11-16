@@ -1,0 +1,183 @@
+{
+  "id": "mob.telephony.sms-send",
+  "name": "Send SMS",
+  "kind": "permission",
+  "group": "telephony-sms",
+  "subgroup": "SMS",
+  "tags": [
+    "runtime-permission",
+    "sms",
+    "premium-sms"
+  ],
+  "plain": "Lets the app send text messages from the user's number.",
+  "meaning": "Can run up charges via premium numbers or spread malware to the contact list. Android warns the user about possible costs for premium short codes.",
+  "lifecycle": [
+    "in-session"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "f",
+      "v": "6.0",
+      "api": 23,
+      "permission": "SEND_SMS",
+      "protection": "dangerous",
+      "grant": "prompt",
+      "prompt_ui": "Allow or Don't allow; short code warning dialog for premium numbers",
+      "persistence": "Until revoked",
+      "revocation": "Settings > Apps > Permissions > SMS",
+      "store_policy": "Play: restricted to default SMS handler; exceptions via declaration",
+      "api_surface": "SmsManager.sendTextMessage, Intent.ACTION_SENDTO (no permission)",
+      "note": "Android 4.2 added the premium SMS confirmation dialog."
+    },
+    "ios": {
+      "s": "p",
+      "v": "4.0",
+      "permission": "none",
+      "protection": "none",
+      "grant": "picker",
+      "prompt_ui": "Composer sheet; the user taps Send",
+      "persistence": "n/a",
+      "revocation": "n/a",
+      "store_policy": "App Review 5.1.1",
+      "api_surface": "MFMessageComposeViewController, canSendText",
+      "note": "The user always sends manually; apps cannot send silently."
+    }
+  },
+  "data": {
+    "type": "event",
+    "metric": "Outgoing text",
+    "update": "on demand",
+    "fields": []
+  },
+  "limits": {
+    "headline": "Can send texts on Android once allowed; on iPhone you tap Send yourself",
+    "user_action": "You tap Send on a message, or tap Allow when the app asks",
+    "can": [
+      "Send text messages from your number (Android, with permission)",
+      "Open a ready to send message through the Messages composer",
+      "Start a text with the system SMS action, with no permission (Android)"
+    ],
+    "cannot": [
+      "Send silently on iPhone; you always tap Send",
+      "Send to premium short codes on Android without a warning dialog",
+      "Send before you tap Allow on Android"
+    ],
+    "reach": 2,
+    "reach_label": "Texts you send or start",
+    "differs": "Android can send with permission and shows a warning for premium numbers; iPhone always makes you tap Send."
+  },
+  "story": {
+    "what_it_is": "Lets the app send text messages from your number.",
+    "icon": "send",
+    "tags": [
+      "SMS",
+      "Permission",
+      "Money"
+    ],
+    "marketing": [],
+    "for_you": "A prompt asks to send texts. If you agree, the app can send messages that may cost money. Android warns you before it sends to premium numbers, and iPhone never lets apps do it silently.",
+    "for_makers": "Apps use it to send verification messages and updates. The same power can run up charges or spread malware to your friends. Most apps send texts through their own servers instead.",
+    "use_cases": [
+      {
+        "type": "messaging",
+        "example": "A texting app sends your message from your number.",
+        "apps": [
+          "Google Messages"
+        ]
+      },
+      {
+        "type": "security",
+        "example": "A verification flow sends a text to prove you own a number.",
+        "apps": []
+      },
+      {
+        "type": "delivery",
+        "example": "A delivery app texts you 'I am outside'.",
+        "apps": []
+      },
+      {
+        "type": "health",
+        "example": "A clinic app texts a reminder.",
+        "apps": []
+      },
+      {
+        "type": "security",
+        "example": "A scam app sends premium texts that cost you money, which Android now warns about.",
+        "apps": []
+      },
+      {
+        "type": "security",
+        "example": "A worm texts a malicious link to all your contacts.",
+        "apps": []
+      },
+      {
+        "type": "enterprise",
+        "example": "A field team app sends an alert text to a manager.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Premium text fraud",
+      "Spreading malware",
+      "Cost on your bill"
+    ],
+    "android_note": "Android 4.2 added a warning dialog before a premium SMS is sent.",
+    "ios_note": "On iPhone the person always sends the message by hand. Apps cannot send silently."
+  },
+  "technical_bounds": [
+    "iOS needs a user tap for each message",
+    "Android allows silent sending with permission"
+  ],
+  "scores": {
+    "sensitivity": 3,
+    "utility": 3,
+    "fingerprint_bits": null,
+    "friction": 2
+  },
+  "value": {
+    "legit_uses": [
+      "Delivery notifications",
+      "Verification flows"
+    ],
+    "abuse": [
+      "Premium rate fraud",
+      "Self-spreading malware"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2012-11",
+      "platform": "android",
+      "version": "4.2 (API 17)",
+      "change": "Premium SMS confirmation dialog added"
+    }
+  ],
+  "related": [
+    "mob.telephony.sms-read"
+  ],
+  "refs": [
+    {
+      "t": "android",
+      "label": "Android: Manifest.permission reference",
+      "url": "https://developer.android.com/reference/android/Manifest.permission"
+    },
+    {
+      "t": "policy",
+      "label": "Google Play: Use of SMS or Call Log permission groups",
+      "url": "https://support.google.com/googleplay/android-developer/answer/10208820"
+    },
+    {
+      "t": "apple",
+      "label": "Apple: MFMessageComposeViewController",
+      "url": "https://developer.apple.com/documentation/messageui/mfmessagecomposeviewcontroller"
+    }
+  ],
+  "confidence": "docs"
+}

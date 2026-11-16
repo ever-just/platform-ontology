@@ -1,0 +1,249 @@
+{
+  "id": "mob.ads.skadnetwork",
+  "name": "SKAdNetwork 4 (postbacks)",
+  "kind": "tracking",
+  "group": "attribution-ads",
+  "subgroup": "Apple attribution",
+  "tags": [
+    "skadnetwork",
+    "skan",
+    "postback",
+    "install-attribution"
+  ],
+  "plain": "Apple sends the ad network a signed, delayed, anonymized report that an ad led to an install.",
+  "meaning": "Gives ad networks proof an ad drove an install without a device ID. Reports are coarse, delayed and may be dropped for small campaigns.",
+  "lifecycle": [
+    "before-install",
+    "on-launch"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "n",
+      "v": "",
+      "permission": "",
+      "protection": "none",
+      "grant": "not-exposed",
+      "prompt_ui": "",
+      "persistence": "",
+      "revocation": "",
+      "store_policy": "",
+      "api_surface": "",
+      "note": "Android uses Install Referrer instead."
+    },
+    "ios": {
+      "s": "y",
+      "v": "11.3",
+      "permission": "SKAdNetworkItems (Info.plist, network IDs); app calls SKAdNetwork.updatePostbackConversionValue",
+      "protection": "none",
+      "grant": "none",
+      "prompt_ui": "",
+      "persistence": "Apple signs postbacks; app and ad network never see device IDs",
+      "revocation": "",
+      "store_policy": "App Review: no fingerprinting; ATT not required for SKAN",
+      "api_surface": "SKAdNetwork, SKStoreProductViewController, SKOverlay",
+      "note": "SKAN 4 (iOS 16.1): three postbacks, hierarchical source ID (2 to 4 digits), coarse and fine values, web-to-app."
+    }
+  },
+  "web_equivalents": [
+    "web.xsite.attribution-reporting"
+  ],
+  "data": {
+    "type": "object",
+    "metric": "Signed postback to ad network",
+    "update": "up to 3 postbacks per install, each delayed",
+    "fields": [
+      {
+        "name": "source-identifier",
+        "type": "string",
+        "unit": "digits",
+        "range": "2 to 4",
+        "precision": "set by crowd anonymity"
+      },
+      {
+        "name": "conversion-value",
+        "type": "integer",
+        "unit": "",
+        "range": "0 to 63 (fine, first postback)",
+        "precision": ""
+      },
+      {
+        "name": "coarse-conversion-value",
+        "type": "enum",
+        "unit": "",
+        "range": "low, medium, high",
+        "precision": ""
+      },
+      {
+        "name": "fidelity-type",
+        "type": "integer",
+        "unit": "",
+        "range": "0 view-through, 1 StoreKit-rendered click",
+        "precision": ""
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can tell an ad network an ad led to an install, in a delayed report",
+    "user_action": "You tap an ad, install the app, then use it for a few days",
+    "can": [
+      "Send a signed report that an ad led to an install",
+      "Send up to three reports over weeks",
+      "Show a small campaign number (2 to 4 digits)"
+    ],
+    "cannot": [
+      "Give your name or device ID",
+      "Report the same day; delays and low counts remove detail",
+      "Work on Android; it uses the install referrer"
+    ],
+    "reach": 2,
+    "reach_label": "A delayed, anonymous count",
+    "differs": "iPhone only (iOS 11.3 and later; iOS 16.1 for the newest version). Android uses the install referrer."
+  },
+  "story": {
+    "what_it_is": "Apple's system that tells an ad network an ad led to an install, in a delayed, anonymous report.",
+    "icon": "send",
+    "tags": [
+      "Ads",
+      "Measurement",
+      "Apple"
+    ],
+    "marketing": [
+      {
+        "vendor": "Apple",
+        "name": "SKAdNetwork",
+        "pitch": "A privacy preserving way to measure ad driven installs without revealing user or device level data.",
+        "url": "https://developer.apple.com/documentation/storekit/skadnetwork"
+      }
+    ],
+    "for_you": "You tap an ad, install and open the app. Days later Apple sends the ad network a signed note that one install came from that ad, with no name or device ID.",
+    "for_makers": "It gives ad networks proof an ad drove an install, without an ID. Reports are coarse and delayed and may be dropped for small campaigns, so makers choose their budgets with less detail than before.",
+    "use_cases": [
+      {
+        "type": "games",
+        "example": "A game studio finds out a video ad brought 500 installs and ties them to a coarse revenue band.",
+        "apps": [
+          "Zynga",
+          "Playtika"
+        ]
+      },
+      {
+        "type": "shopping",
+        "example": "A retail app confirms an ad brought installs, but cannot see which person.",
+        "apps": [
+          "Temu"
+        ]
+      },
+      {
+        "type": "ads",
+        "example": "An ad network gets signed proof so it can bill the advertiser without a device ID.",
+        "apps": [
+          "AppLovin",
+          "Unity"
+        ]
+      },
+      {
+        "type": "social",
+        "example": "A social app learns which campaign brought sign ups after seven days.",
+        "apps": [
+          "Snapchat"
+        ]
+      },
+      {
+        "type": "analytics",
+        "example": "A marketing team compares SKAN data with its own sales data to see the gap.",
+        "apps": [
+          "Singular"
+        ]
+      },
+      {
+        "type": "security",
+        "example": "Signatures stop fake networks from claiming installs they did not drive.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Coarse and delayed",
+      "Small campaigns lose detail"
+    ],
+    "android_note": "Android has no SKAN. Google used the install referrer and advertising ID.",
+    "ios_note": "SKAdNetwork 4 added three postback windows and coarse values."
+  },
+  "technical_bounds": [
+    "Postbacks to the ad network only (app developer does not get it directly)",
+    "Randomized delay per window",
+    "Crowd anonymity tiers cut data on small campaigns",
+    "No user or device identifiers"
+  ],
+  "scores": {
+    "sensitivity": 2,
+    "utility": 4,
+    "fingerprint_bits": null,
+    "friction": 1
+  },
+  "value": {
+    "legit_uses": [
+      "Privacy-safe install measurement"
+    ],
+    "abuse": [
+      "Abused by conversion-value encoding to infer behavior"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2018-03",
+      "platform": "ios",
+      "version": "iOS 11.3",
+      "change": "SKAdNetwork 1.0"
+    },
+    {
+      "date": "2019-06",
+      "platform": "ios",
+      "version": "iOS 13",
+      "change": "Version 2: view-through attribution"
+    },
+    {
+      "date": "2021-04",
+      "platform": "ios",
+      "version": "iOS 14.5",
+      "change": "Version 3 plus ATT, becomes the default measure for non-consented users"
+    },
+    {
+      "date": "2022-10",
+      "platform": "ios",
+      "version": "iOS 16.1",
+      "change": "SKAN 4: multiple postbacks, hierarchical IDs, coarse values, web-to-app"
+    },
+    {
+      "date": "2024-03",
+      "platform": "ios",
+      "version": "iOS 17.4",
+      "change": "AdAttributionKit introduced as the successor framework"
+    }
+  ],
+  "related": [
+    "mob.ads.skan-conversion-values",
+    "mob.ads.skan-crowd-anonymity",
+    "mob.ads.skan-timers",
+    "mob.ads.adattributionkit"
+  ],
+  "refs": [
+    {
+      "t": "apple",
+      "label": "Apple: SKAdNetwork",
+      "url": "https://developer.apple.com/documentation/storekit/skadnetwork"
+    },
+    {
+      "t": "apple",
+      "label": "Apple: Receiving ad attribution postbacks",
+      "url": "https://developer.apple.com/documentation/storekit/skadnetwork"
+    }
+  ],
+  "confidence": "verified"
+}

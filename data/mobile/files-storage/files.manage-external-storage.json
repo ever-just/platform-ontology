@@ -1,0 +1,183 @@
+{
+  "id": "mob.files.manage-external-storage",
+  "name": "All files access",
+  "kind": "permission",
+  "group": "files-storage",
+  "subgroup": "Storage",
+  "tags": [
+    "special-access",
+    "play-restricted",
+    "all-files"
+  ],
+  "plain": "Gives the app access to nearly all files on the device.",
+  "meaning": "Lets an app read and write most user files. Intended for file managers and backup tools; Play requires a declaration.",
+  "lifecycle": [
+    "in-session"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "f",
+      "v": "11",
+      "api": 30,
+      "permission": "MANAGE_EXTERNAL_STORAGE",
+      "protection": "special",
+      "grant": "settings",
+      "prompt_ui": "Settings toggle All files access",
+      "persistence": "Until revoked",
+      "revocation": "Settings > Special app access > All files access",
+      "store_policy": "Play: declaration form; only for core file management, backup, antivirus",
+      "api_surface": "Environment.isExternalStorageManager, ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION",
+      "note": "Does not reach Android/data on Android 11+."
+    },
+    "ios": {
+      "s": "n",
+      "v": "",
+      "permission": "",
+      "protection": "none",
+      "grant": "not-exposed",
+      "prompt_ui": "none",
+      "persistence": "none",
+      "revocation": "",
+      "store_policy": "App Review 5.1.1",
+      "api_surface": "UIDocumentPickerViewController, security-scoped bookmarks",
+      "note": "No all-files access exists; apps use the document picker."
+    }
+  },
+  "web_equivalents": [
+    "web.files.file-system-access-pickers"
+  ],
+  "data": {
+    "type": "list",
+    "metric": "Files",
+    "update": "on demand",
+    "fields": []
+  },
+  "limits": {
+    "headline": "Can open almost every file on your Android phone if you turn on All files access",
+    "user_action": "You open Settings and switch on All files access for the app",
+    "can": [
+      "List and open files across your Android shared storage",
+      "Change, move and delete files in those shared folders",
+      "Run file manager, backup and cleaner features",
+      "Keep the access until you switch it off in Settings"
+    ],
+    "cannot": [
+      "Reach other apps' private folders in Android/data on Android 11 and newer",
+      "Be turned on from a pop up; you must use Settings",
+      "Exist on iPhone; apps use the document picker instead",
+      "Be approved easily on Google Play; the store limits it to apps that truly need it"
+    ],
+    "reach": 4,
+    "reach_label": "Nearly all files, anytime",
+    "differs": "Android only. iPhone has no all files access; apps only get files you pick."
+  },
+  "story": {
+    "what_it_is": "Gives an app wide access to nearly all files on the phone.",
+    "icon": "folder-open",
+    "tags": [
+      "Permission",
+      "Asks first",
+      "Files"
+    ],
+    "marketing": [
+      {
+        "vendor": "Google",
+        "name": "All files access",
+        "pitch": "Developer guide: a special access for apps like file managers and backup tools that need to manage most files.",
+        "url": "https://developer.android.com/training/data-storage/manage-all-files"
+      }
+    ],
+    "for_you": "You are sent to a special Settings page to turn this on, not a normal pop up. Once on, the app can see and change most files. Only file managers and backup apps should need it.",
+    "for_makers": "Needed by file managers, antivirus and backup tools. Google Play makes developers fill out a declaration and says no for most apps that only need photos or documents.",
+    "use_cases": [
+      {
+        "type": "utilities",
+        "example": "A file manager lets you browse every folder on your phone and move files around.",
+        "apps": [
+          "Files by Google"
+        ]
+      },
+      {
+        "type": "security",
+        "example": "An antivirus app scans every file on the phone for malware.",
+        "apps": []
+      },
+      {
+        "type": "utilities",
+        "example": "A backup app copies all your documents and photos to the cloud.",
+        "apps": []
+      },
+      {
+        "type": "games",
+        "example": "A game mod manager reads and writes other games' folders to install mods.",
+        "apps": []
+      },
+      {
+        "type": "developer",
+        "example": "A coding app on the phone opens project folders anywhere on storage.",
+        "apps": []
+      },
+      {
+        "type": "media",
+        "example": "A music player scans every folder for audio files.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Can read most of your files",
+      "Often asked for without need"
+    ],
+    "android_note": "Special app access granted in Settings, and Play requires a declaration.",
+    "ios_note": "iPhone has no such access, since apps can only see their own sandbox."
+  },
+  "technical_bounds": [
+    "Play review required",
+    "iOS has no equivalent"
+  ],
+  "scores": {
+    "sensitivity": 5,
+    "utility": 3,
+    "fingerprint_bits": null,
+    "friction": 3
+  },
+  "value": {
+    "legit_uses": [
+      "File managers",
+      "Backup"
+    ],
+    "abuse": [
+      "Mass data theft"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2020-09",
+      "platform": "android",
+      "version": "11 (API 30)",
+      "change": "MANAGE_EXTERNAL_STORAGE introduced"
+    }
+  ],
+  "related": [
+    "mob.files.storage-legacy"
+  ],
+  "refs": [
+    {
+      "t": "android",
+      "label": "Android: Manage all files",
+      "url": "https://developer.android.com/training/data-storage/manage-all-files"
+    },
+    {
+      "t": "policy",
+      "label": "Google Play: All files access",
+      "url": "https://support.google.com/googleplay/android-developer/answer/10467955"
+    }
+  ],
+  "confidence": "docs"
+}

@@ -1,0 +1,169 @@
+{
+  "id": "mob.nx.saved-wifi",
+  "name": "Saved Wi-Fi networks and passwords",
+  "kind": "not-exposed",
+  "group": "network-connectivity",
+  "subgroup": "Wi-Fi",
+  "tags": [
+    "wifi-list",
+    "blocked"
+  ],
+  "plain": "Blocked: apps cannot list the networks the phone has joined before.",
+  "meaning": "Past networks reveal places the person has been. Android 10 removed list access; iOS never exposed it.",
+  "lifecycle": [
+    "on-launch",
+    "in-session"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "r",
+      "v": "10",
+      "api": 29,
+      "permission": "NETWORK_SETTINGS (signature)",
+      "protection": "signature",
+      "grant": "not-exposed",
+      "prompt_ui": "",
+      "persistence": "",
+      "revocation": "",
+      "store_policy": "",
+      "api_surface": "WifiManager.getConfiguredNetworks() returns an empty list (API 29)",
+      "note": "Apps only see networks they suggested"
+    },
+    "ios": {
+      "s": "n",
+      "v": "",
+      "permission": "none",
+      "protection": "not-exposed",
+      "grant": "not-exposed",
+      "prompt_ui": "",
+      "persistence": "",
+      "revocation": "",
+      "store_policy": "",
+      "api_surface": "No public API",
+      "note": "Only networks configured by the app itself"
+    }
+  },
+  "data": {
+    "type": "none",
+    "metric": "None",
+    "update": "N/A",
+    "fields": []
+  },
+  "limits": {
+    "headline": "Can't see the Wi-Fi networks or passwords your phone has saved",
+    "user_action": "Nothing. Apps may try during network setup, but it fails",
+    "can": [
+      "See only networks the app itself suggested",
+      "See an empty list on Android 10 and newer",
+      "See only networks the app set up itself on iPhone"
+    ],
+    "cannot": [
+      "List your saved Wi-Fi networks",
+      "See any saved Wi-Fi password",
+      "Use system level Wi-Fi settings; that needs a permission only the OS has"
+    ],
+    "reach": 1,
+    "reach_label": "Blocked, own networks only",
+    "differs": ""
+  },
+  "story": {
+    "what_it_is": "Apps cannot list the Wi-Fi networks your phone has joined before, or see their passwords.",
+    "icon": "eye-off",
+    "tags": [
+      "Blocked",
+      "Network",
+      "Privacy"
+    ],
+    "marketing": [],
+    "for_you": "You never see it, because the door is closed. Your home, work and hotel networks stay private. A random app cannot learn where you have been from your saved networks.",
+    "for_makers": "Makers once could read saved networks, which gave a map of the places you have been. They now ask you for one network at a time. Password sharing between phones is done by the system.",
+    "use_cases": [
+      {
+        "type": "ads",
+        "example": "Data firms wanted the list of saved networks to learn the places you visit.",
+        "apps": []
+      },
+      {
+        "type": "security",
+        "example": "Malware wanted saved passwords to join your home network and attack devices on it.",
+        "apps": []
+      },
+      {
+        "type": "utilities",
+        "example": "Wi-Fi backup apps wanted to copy your saved passwords to a new phone, and now use the system backup.",
+        "apps": []
+      },
+      {
+        "type": "smart-home",
+        "example": "Setup apps wanted your home network list, and now ask you to pick one.",
+        "apps": [
+          "Google Home"
+        ]
+      },
+      {
+        "type": "travel",
+        "example": "Airport apps wanted to join known networks, and now use a suggestion that you approve.",
+        "apps": []
+      },
+      {
+        "type": "enterprise",
+        "example": "Companies push a work Wi-Fi profile with a management tool.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Location history if exposed",
+      "Password theft"
+    ],
+    "android_note": "Android 10 removed list access for normal apps, and system sharing uses a QR code with your approval.",
+    "ios_note": "iPhone never allowed apps to list saved networks, and shares passwords through system prompts."
+  },
+  "technical_bounds": [
+    "Device owner apps only"
+  ],
+  "scores": {
+    "sensitivity": 4,
+    "utility": 1,
+    "fingerprint_bits": null,
+    "friction": 3
+  },
+  "value": {
+    "legit_uses": [
+      "None"
+    ],
+    "abuse": [
+      "Location history"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2019-09",
+      "platform": "android",
+      "version": "10 (API 29)",
+      "change": "getConfiguredNetworks returns empty for normal apps"
+    }
+  ],
+  "related": [
+    "mob.network.wifi-info"
+  ],
+  "refs": [
+    {
+      "t": "android",
+      "label": "Android: Wi-Fi permissions",
+      "url": "https://developer.android.com/develop/connectivity/wifi/wifi-permissions"
+    },
+    {
+      "t": "android",
+      "label": "Android 10 privacy changes",
+      "url": "https://developer.android.com/about/versions/10/privacy/changes"
+    }
+  ],
+  "confidence": "docs"
+}

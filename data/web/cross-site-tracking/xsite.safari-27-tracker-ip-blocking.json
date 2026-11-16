@@ -1,0 +1,201 @@
+{
+  "id": "web.xsite.safari-27-tracker-ip-blocking",
+  "name": "Safari 27 IP based tracker blocking (beta)",
+  "kind": "tracking",
+  "group": "cross-site-tracking",
+  "subgroup": "Before the visit",
+  "tags": [
+    "safari-27",
+    "ip-blocking",
+    "fingerprinting-protection"
+  ],
+  "plain": "Safari 27 beta checks the server IP of outgoing requests and can block known ad tracker ranges.",
+  "meaning": "Per a July 2026 code review, Safari 27 beta blocks connections by destination IP (found for bat.bing.com) and puts LinkedIn Insight (snap.licdn.com) on the fingerprinting list so it loses query and referrer data. Unverified beyond one secondary report.",
+  "lifecycle": [
+    "before-visit",
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "Browser feature, no site API; blocks request at network layer",
+      "access": {
+        "grant": "none",
+        "prompt_ui": "None",
+        "secure_context": false,
+        "user_gesture": false,
+        "persistence": "Rules in a system library Apple can update without a Safari release",
+        "revocation": "Clear site data, browser privacy settings",
+        "iframe": "",
+        "steps": []
+      },
+      "support": {
+        "chrome": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "edge": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "firefox": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "safari": {
+          "s": "f",
+          "v": "27",
+          "note": "Developer beta"
+        },
+        "ios_safari": {
+          "s": "f",
+          "v": "27",
+          "note": "Developer beta"
+        },
+        "chrome_android": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "samsung": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "none",
+    "metric": "None",
+    "update": "n/a",
+    "fields": []
+  },
+  "limits": {
+    "headline": "Can block requests to known ad tracker servers by their IP address in Safari 27 beta",
+    "user_action": "Nothing. Safari 27 does it on its own while you browse",
+    "can": [
+      "Check the server address of outgoing requests",
+      "Block requests to known ad tracker address ranges",
+      "Work even when a tracker hides behind a different name"
+    ],
+    "cannot": [
+      "Run in Chrome, Edge or Firefox",
+      "Run in Safari before version 27, or outside the beta for now",
+      "Block trackers that share an address with normal sites",
+      "Stop first party tracking by the site itself"
+    ],
+    "reach": 2,
+    "reach_label": "Known tracker servers",
+    "differs": "Only Safari 27 beta on Mac and iPhone does this. Other browsers do not."
+  },
+  "story": {
+    "what_it_is": "Safari 27 beta may block ad trackers by their server address. Reported, not fully confirmed.",
+    "icon": "ban",
+    "tags": [
+      "Privacy",
+      "Safari",
+      "New"
+    ],
+    "marketing": [],
+    "for_you": "You would never see it. In the beta, Safari may stop connecting to known ad tracker server addresses, and strip data from LinkedIn's tracker. Fewer tracking calls would go out from your browser.",
+    "for_makers": "Blocking by address beats disguises like CNAME cloaking. Advertisers using Bing or LinkedIn tags could lose measurement in Safari. This is based on one secondary report, so it may change.",
+    "use_cases": [
+      {
+        "type": "ads",
+        "example": "An advertiser loses sales data from Safari users, because the Bing tag cannot connect.",
+        "apps": [
+          "Microsoft Advertising"
+        ]
+      },
+      {
+        "type": "analytics",
+        "example": "A marketer sees a drop in LinkedIn tracked visits from iPhones.",
+        "apps": [
+          "LinkedIn Campaign Manager"
+        ]
+      },
+      {
+        "type": "shopping",
+        "example": "A shop sees fewer retargeting events from Safari shoppers.",
+        "apps": []
+      },
+      {
+        "type": "games",
+        "example": "A game ad campaign gets lower counts of installs credited to Bing ads from Safari users.",
+        "apps": []
+      },
+      {
+        "type": "security",
+        "example": "A researcher reads the Safari code to find which tracker addresses are on the list.",
+        "apps": [
+          "WebKit"
+        ]
+      },
+      {
+        "type": "media",
+        "example": "A publisher with tracker tags sees less data from Safari readers.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Report is not confirmed",
+      "May change before release"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Server side tagging is unaffected because the browser never calls the tracker",
+    "First party proxying does not help because destination IPs stay the same",
+    "Stable release date not announced as of Jul 2026"
+  ],
+  "scores": {
+    "sensitivity": 3,
+    "utility": 1,
+    "fingerprint_bits": null,
+    "friction": 3
+  },
+  "value": {
+    "legit_uses": [
+      "User privacy protection"
+    ],
+    "abuse": [
+      "Not applicable"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": true,
+      "how": "LinkedIn Insight Tag (snap.licdn.com) is on Safari's fingerprinting classification list per the July 2026 review."
+    }
+  },
+  "history": [
+    {
+      "date": "2026-07",
+      "browser": "safari",
+      "version": "27 beta",
+      "change": "TAGGRS analysis of WebKit source (Jul 6 2026): IP checks, LinkedIn Insight on fingerprint list"
+    }
+  ],
+  "related": [
+    "web.xsite.click-id-stripping",
+    "web.xsite.linkedin-insight-tag"
+  ],
+  "refs": [
+    {
+      "t": "news",
+      "label": "PPC Land summary of TAGGRS review (Jul 2026)",
+      "url": "https://ppc.land/safari-27-blocks-linkedin-and-bing-ad-trackers-by-ip-address/"
+    },
+    {
+      "t": "webkit",
+      "label": "WebKit Tracking Prevention",
+      "url": "https://webkit.org/tracking-prevention/"
+    }
+  ],
+  "confidence": "inferred"
+}

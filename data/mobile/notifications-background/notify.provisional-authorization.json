@@ -1,0 +1,222 @@
+{
+  "id": "mob.notify.provisional-authorization",
+  "name": "Provisional notification delivery",
+  "kind": "permission",
+  "group": "notifications-background",
+  "subgroup": "Notifications",
+  "tags": [
+    "notification",
+    "quiet",
+    "trial",
+    "notifications",
+    "provisional",
+    "no-prompt"
+  ],
+  "plain": "Delivers notifications quietly without asking first, for the person to keep or turn off.",
+  "meaning": "Inverts the prompt: app earns trust by showing value first. Android 13 prompts but defaults channels.",
+  "lifecycle": [
+    "background"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "y",
+      "v": "13",
+      "api": 33,
+      "permission": "POST_NOTIFICATIONS",
+      "protection": "dangerous",
+      "grant": "prompt",
+      "prompt_ui": "Notification permission prompt",
+      "persistence": "Until revoked",
+      "revocation": "Settings > Apps > Notifications",
+      "store_policy": "",
+      "api_surface": "NotificationManager",
+      "note": "Apps targeting 33 and up must ask at runtime"
+    },
+    "ios": {
+      "s": "y",
+      "v": "12",
+      "permission": "None; UNAuthorizationOptions.provisional",
+      "protection": "none",
+      "grant": "none",
+      "prompt_ui": "Quiet delivery with keep or turn off buttons",
+      "persistence": "Until user chooses",
+      "revocation": "Settings > Notifications",
+      "store_policy": "App Review 5.1.1",
+      "api_surface": "UNUserNotificationCenter",
+      "note": "Delivered to Notification Center only; no sound or banner"
+    }
+  },
+  "web_equivalents": [
+    "web.notify.notifications"
+  ],
+  "data": {
+    "type": "event",
+    "metric": "Notification",
+    "update": "per push",
+    "fields": [
+      {
+        "name": "count",
+        "type": "integer",
+        "unit": "per day",
+        "range": "app defined",
+        "precision": ""
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can send quiet notifications without asking first, which you can keep or turn off",
+    "user_action": "Nothing. Your first notification shows up quietly in Notification Center",
+    "can": [
+      "Deliver alerts to Notification Center on iPhone with no sound or banner",
+      "Show you Keep and Turn off buttons on the first alert",
+      "Ask for full permission later on Android 13 or newer"
+    ],
+    "cannot": [
+      "Show a banner or play a sound until you choose Keep",
+      "Skip the prompt on Android 13 or newer; apps must ask at runtime",
+      "Stay if you tap Turn off"
+    ],
+    "reach": 1,
+    "reach_label": "Quiet alerts only, until you choose",
+    "differs": "iPhone has quiet delivery with Keep and Turn off buttons. Android 13 and newer always asks."
+  },
+  "story": {
+    "what_it_is": "Delivers alerts quietly to Notification Center without asking first, so you can choose to keep them.",
+    "icon": "bell-minus",
+    "tags": [
+      "Notifications",
+      "Quiet",
+      "Trial"
+    ],
+    "marketing": [
+      {
+        "vendor": "Apple",
+        "name": "Provisional authorization",
+        "pitch": "Apple lets apps deliver alerts quietly at first so people can see their value before deciding.",
+        "url": "https://developer.apple.com/documentation/usernotifications/unauthorizationoptions/provisional"
+      }
+    ],
+    "for_you": "You see a quiet alert in Notification Center with buttons to keep it or turn it off. There is no sound or pop up until you say keep.",
+    "for_makers": "Makers get to show value before asking for the full permission. It can raise opt in rates, and it also lets an app send you something before you have decided.",
+    "use_cases": [
+      {
+        "type": "news",
+        "example": "A news app tries a few quiet stories before you choose to keep alerts.",
+        "apps": [
+          "NYT"
+        ]
+      },
+      {
+        "type": "shopping",
+        "example": "A store sends a quiet price drop to see if you care.",
+        "apps": []
+      },
+      {
+        "type": "social",
+        "example": "A new social app sends a few quiet updates to test interest.",
+        "apps": []
+      },
+      {
+        "type": "games",
+        "example": "A game sends a quiet daily reward note and asks you if you want more.",
+        "apps": []
+      },
+      {
+        "type": "productivity",
+        "example": "A task app tests a gentle daily reminder before a pop up.",
+        "apps": []
+      },
+      {
+        "type": "ads",
+        "example": "A growth team measures how many people press Keep on a quiet alert.",
+        "apps": []
+      },
+      {
+        "type": "media",
+        "example": "A podcast app tests new episode alerts in the quiet tray first.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Notification spam without a pop up",
+      "Easy to miss"
+    ],
+    "android_note": "Android 13 always shows a prompt for apps that target it, so there is no quiet trial.",
+    "ios_note": "Delivered to Notification Center only, with keep or turn off buttons."
+  },
+  "technical_bounds": [
+    "Quiet only until user chooses",
+    "Content only shown in Notification Center on iOS",
+    "Not available as a no-permission path on Android 13+"
+  ],
+  "scores": {
+    "sensitivity": 2,
+    "utility": 4,
+    "fingerprint_bits": null,
+    "friction": 1
+  },
+  "value": {
+    "legit_uses": [
+      "Low friction onboarding"
+    ],
+    "abuse": [
+      "Notification spam"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2022-08",
+      "platform": "android",
+      "version": "13 (API 33)",
+      "change": "POST_NOTIFICATIONS runtime permission"
+    },
+    {
+      "date": "2018-09",
+      "platform": "ios",
+      "version": "iOS 12",
+      "change": "Provisional authorization"
+    },
+    {
+      "date": "2018-09",
+      "platform": "ios",
+      "version": "iOS 12",
+      "change": "Provisional authorization introduced"
+    },
+    {
+      "date": "2017-08",
+      "platform": "android",
+      "version": "8.0 (API 26)",
+      "change": "Notification channels with importance levels added"
+    }
+  ],
+  "related": [
+    "mob.notify.critical-alerts",
+    "mob.notifications.post-notifications",
+    "mob.notif.channels-categories"
+  ],
+  "refs": [
+    {
+      "t": "apple",
+      "label": "Apple: UNAuthorizationOptions.provisional",
+      "url": "https://developer.apple.com/documentation/usernotifications/unauthorizationoptions/provisional"
+    },
+    {
+      "t": "android",
+      "label": "Android: Notification runtime permission",
+      "url": "https://developer.android.com/develop/ui/views/notifications/notification-permission"
+    },
+    {
+      "t": "android",
+      "label": "Android: Create and manage notification channels",
+      "url": "https://developer.android.com/develop/ui/views/notifications/channels"
+    }
+  ],
+  "confidence": "docs"
+}

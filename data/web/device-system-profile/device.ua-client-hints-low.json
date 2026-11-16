@@ -1,0 +1,263 @@
+{
+  "id": "web.device.ua-client-hints-low",
+  "name": "UA Client Hints, low entropy",
+  "kind": "signal",
+  "group": "device-system-profile",
+  "subgroup": "Client Hints",
+  "tags": [
+    "ua-ch",
+    "client-hints",
+    "chromium-only",
+    "secure-context"
+  ],
+  "plain": "Browser brand list, mobile flag and OS name that Chromium sends by default.",
+  "meaning": "Three coarse hints (Sec-CH-UA, Sec-CH-UA-Mobile, Sec-CH-UA-Platform) replace most of the old User-Agent. They split the audience into mobile vs desktop and Windows vs macOS vs Android with almost no tracking power.",
+  "lifecycle": [
+    "on-arrival",
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "navigator.userAgentData.brands, .mobile, .platform; headers Sec-CH-UA, Sec-CH-UA-Mobile, Sec-CH-UA-Platform",
+      "bcd": [
+        "api.Navigator.userAgentData",
+        "api.NavigatorUAData.brands",
+        "api.NavigatorUAData.mobile",
+        "api.NavigatorUAData.platform"
+      ],
+      "access": {
+        "grant": "none",
+        "prompt_ui": "None",
+        "secure_context": true,
+        "user_gesture": false,
+        "persistence": "read fresh on every page load; nothing stored",
+        "revocation": "none needed (no grant)",
+        "iframe": "Readable from cross-origin iframes too (same values)",
+        "steps": [
+          "Page script reads the value",
+          "No prompt is shown"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "90",
+          "note": "",
+          "date": "2021-04-13"
+        },
+        "edge": {
+          "s": "y",
+          "v": "90",
+          "note": "",
+          "date": "2021-04-15"
+        },
+        "firefox": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "safari": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "ios_safari": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "90",
+          "note": "",
+          "date": "2021-04-13"
+        },
+        "samsung": {
+          "s": "y",
+          "v": "15.0",
+          "note": "",
+          "date": "2021-08-13"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "object",
+    "metric": "",
+    "update": "static per session",
+    "fields": [
+      {
+        "name": "brands",
+        "type": "list",
+        "unit": "",
+        "range": "3 or so brand+version pairs incl. one randomized GREASE brand like Not A;Brand",
+        "precision": "major version only"
+      },
+      {
+        "name": "mobile",
+        "type": "boolean",
+        "unit": "",
+        "range": "true or false",
+        "precision": ""
+      },
+      {
+        "name": "platform",
+        "type": "enum",
+        "unit": "",
+        "range": "Windows, macOS, Linux, Android, Chrome OS, iOS(n/a), Unknown",
+        "precision": ""
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can see your browser brand, whether it is mobile, and your OS name",
+    "user_action": "Nothing. Chromium sends this with every request",
+    "can": [
+      "See your browser brand list",
+      "See a yes or no for mobile",
+      "See whether you use Windows, macOS, Android, or Linux",
+      "Split visitors into big groups, such as mobile and desktop"
+    ],
+    "cannot": [
+      "See exact versions or device models",
+      "Work in Firefox, Safari, or on iPhone",
+      "Tell you apart from many other visitors",
+      "See your name, location, or accounts"
+    ],
+    "reach": 1,
+    "reach_label": "Three coarse hints",
+    "differs": "Chromium browsers send them. Firefox and Safari send the old user agent text instead."
+  },
+  "story": {
+    "what_it_is": "Three basic facts sent by default: browser brand, phone or not, and operating system name.",
+    "icon": "microchip",
+    "tags": [
+      "Device details",
+      "Silent",
+      "Chrome"
+    ],
+    "marketing": [
+      {
+        "vendor": "Google",
+        "name": "User-Agent Client Hints",
+        "pitch": "Chrome sends a short default set and lets sites ask for more, as part of reducing the old user agent.",
+        "url": "https://developer.chrome.com/docs/privacy-sandbox/user-agent/"
+      }
+    ],
+    "for_you": "You never see these. They ride along with every page request, in the background. They let a site know if you are on a phone or a computer so it shows the right version.",
+    "for_makers": "These replace most of the old user agent. They give just enough to serve mobile or desktop pages and basic OS fixes. They are coarse, so they carry less tracking value.",
+    "use_cases": [
+      {
+        "type": "shopping",
+        "example": "A shop sends a mobile layout to phones and a full layout to desktops from the very first request.",
+        "apps": []
+      },
+      {
+        "type": "games",
+        "example": "A game portal picks the mobile or desktop version of a browser game before the page loads.",
+        "apps": [
+          "Poki"
+        ]
+      },
+      {
+        "type": "media",
+        "example": "A news site routes phones to a lightweight version of an article.",
+        "apps": []
+      },
+      {
+        "type": "video",
+        "example": "A video site chooses a mobile player on phones and a full player on computers.",
+        "apps": [
+          "YouTube"
+        ]
+      },
+      {
+        "type": "analytics",
+        "example": "A traffic dashboard splits visits into mobile and desktop and Windows, Mac and Android.",
+        "apps": [
+          "Google Analytics"
+        ]
+      },
+      {
+        "type": "security",
+        "example": "A bot tool compares the brand list with other signals and flags a fake Chrome.",
+        "apps": [
+          "Cloudflare"
+        ]
+      }
+    ],
+    "risks": [
+      "Very coarse",
+      "Still splits audiences"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Chromium family only (Chrome, Edge, Opera, Brave)",
+    "HTTPS or localhost only",
+    "Brand list order and GREASE token are randomized per version to stop sniffing"
+  ],
+  "scores": {
+    "sensitivity": 1,
+    "utility": 4,
+    "fingerprint_bits": 2.0,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Pick download for OS",
+      "Mobile layout"
+    ],
+    "abuse": [
+      "Baseline for fingerprint combos"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2021-03",
+      "browser": "chrome",
+      "version": "89",
+      "change": "Sec-CH-UA, Mobile, Platform sent by default on HTTPS"
+    },
+    {
+      "date": "2022-10",
+      "browser": "chrome",
+      "version": "107",
+      "change": "UA string reduction completes the shift of detail to hints"
+    }
+  ],
+  "related": [
+    "web.device.ua-client-hints-high"
+  ],
+  "refs": [
+    {
+      "t": "chromestatus",
+      "label": "Chrome developers: UA Client Hints",
+      "url": "https://developer.chrome.com/docs/privacy-security/user-agent-client-hints"
+    },
+    {
+      "t": "mdn",
+      "label": "MDN NavigatorUAData",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/NavigatorUAData"
+    },
+    {
+      "t": "github",
+      "label": "fingerprintjs source: user_agent_data",
+      "url": "https://github.com/fingerprintjs/fingerprintjs/blob/master/src/sources/user_agent_data.ts"
+    },
+    {
+      "t": "paper",
+      "label": "Browser Fingerprinting: A Survey, Laperdrix et al.",
+      "url": "https://arxiv.org/abs/1905.01051"
+    }
+  ],
+  "confidence": "verified"
+}

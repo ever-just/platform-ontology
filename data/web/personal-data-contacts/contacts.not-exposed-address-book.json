@@ -1,0 +1,216 @@
+{
+  "id": "web.contacts.not-exposed-address-book",
+  "name": "Whole address book or call log",
+  "kind": "not-exposed",
+  "group": "personal-data-contacts",
+  "subgroup": "Not exposed",
+  "tags": [
+    "not exposed"
+  ],
+  "plain": "A site cannot read your whole contact list, call history or SMS.",
+  "meaning": "The only contact route is the picker, one chosen entry at a time. No web API reads call logs, SMS, voicemail or calendar events.",
+  "lifecycle": [
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "(none); closest proxy is navigator.contacts.select()",
+      "bcd": [
+        "api.ContactsManager"
+      ],
+      "access": {
+        "grant": "not-exposed",
+        "prompt_ui": "Not available",
+        "secure_context": true,
+        "user_gesture": false,
+        "persistence": "Per origin",
+        "revocation": "Site settings",
+        "iframe": "Same as top level; cross-origin iframes need a permissions policy where listed",
+        "steps": [
+          "Call the API",
+          "Browser applies its access rules",
+          "Page receives the result"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "n",
+          "v": "",
+          "note": "No such API"
+        },
+        "edge": {
+          "s": "n",
+          "v": "",
+          "note": "No such API"
+        },
+        "firefox": {
+          "s": "n",
+          "v": "",
+          "note": "No such API"
+        },
+        "safari": {
+          "s": "n",
+          "v": "",
+          "note": "No such API"
+        },
+        "ios_safari": {
+          "s": "n",
+          "v": "",
+          "note": "No such API"
+        },
+        "chrome_android": {
+          "s": "n",
+          "v": "",
+          "note": "No such API"
+        },
+        "samsung": {
+          "s": "n",
+          "v": "",
+          "note": "No such API"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "object",
+    "metric": "A site cannot read your whole contact list, call history or SMS.",
+    "update": "on demand",
+    "fields": [
+      {
+        "name": "contacts",
+        "type": "none",
+        "range": "no bulk read"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can't see your whole contact list, call history or text messages",
+    "user_action": "Nothing. No browser lets a site do this, even if you tap Allow",
+    "can": [
+      "Ask you to pick contacts one at a time, on browsers that offer a contact picker",
+      "Receive only the name, number or email you chose in the picker"
+    ],
+    "cannot": [
+      "Browse your full address book",
+      "See who you called or who called you",
+      "Look at your text messages or voicemail",
+      "See your calendar events"
+    ],
+    "reach": 1,
+    "reach_label": "Blocked in every browser",
+    "differs": "The contact picker exists only in Chrome on Android. Safari, Firefox and desktop browsers have no way to share contacts at all."
+  },
+  "story": {
+    "what_it_is": "A website cannot read your full contact list, call history, texts or calendar. The browser blocks it by design.",
+    "icon": "book-user",
+    "tags": [
+      "Contacts",
+      "Blocked",
+      "Privacy"
+    ],
+    "marketing": [
+      {
+        "vendor": "Google Chrome",
+        "name": "Contact Picker API",
+        "pitch": "Lets a site ask for one or a few contacts you choose by hand, instead of your whole address book.",
+        "url": "https://developer.chrome.com/docs/capabilities/web-apis/contact-picker"
+      }
+    ],
+    "for_you": "You never see a prompt for this, because the option does not exist. If a site wants a contact, you pick the person yourself from a list your phone shows, and the site gets only that one entry.",
+    "for_makers": "Makers who want a friends list, a call log or message history cannot get it from a web page. They either build a native app, use a sign in with Google or Microsoft that shares contacts, or ask people to type or upload names.",
+    "use_cases": [
+      {
+        "type": "social",
+        "example": "A new social network wants to find your friends on day one. The web version cannot scan your address book, so it asks you to pick a few contacts or import a file.",
+        "apps": []
+      },
+      {
+        "type": "messaging",
+        "example": "A web chat app like WhatsApp Web cannot read your phone contacts directly. It syncs them from the phone app instead.",
+        "apps": [
+          "WhatsApp Web"
+        ]
+      },
+      {
+        "type": "shopping",
+        "example": "A gift site wants to send a card to a friend. It shows the contact picker so you choose one person and the site never sees the rest.",
+        "apps": []
+      },
+      {
+        "type": "games",
+        "example": "A browser party game wants to invite friends. It makes a share link you send yourself, since it cannot read your contacts.",
+        "apps": []
+      },
+      {
+        "type": "productivity",
+        "example": "A web email or CRM tool imports contacts through a Google sign in permission, not through the browser itself.",
+        "apps": [
+          "Gmail",
+          "HubSpot"
+        ]
+      },
+      {
+        "type": "security",
+        "example": "A scammy site that wants to harvest your contacts to spam them is stopped, because the web has no way to read the list silently.",
+        "apps": []
+      },
+      {
+        "type": "rideshare",
+        "example": "A web ride booking page wants to share your trip with a friend. It opens your own messaging app with a link instead of reading contacts.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Native apps can ask for much more",
+      "Phishing can still ask you to type contacts"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "No bulk contact read",
+    "No SMS send or read (sms: links open the user's app only)",
+    "No call log",
+    "No calendar read (only .ics download or a linked calendar via OAuth)"
+  ],
+  "scores": {
+    "sensitivity": 5,
+    "utility": 1,
+    "fingerprint_bits": null,
+    "friction": 3
+  },
+  "value": {
+    "legit_uses": [
+      "None (by design)"
+    ],
+    "abuse": [
+      "Apps that want these must be native or use OAuth APIs"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2020",
+      "browser": "chrome_android",
+      "version": "80",
+      "change": "Picker added; bulk read never offered"
+    }
+  ],
+  "related": [
+    "web.contacts.contact-picker"
+  ],
+  "refs": [
+    {
+      "t": "spec",
+      "label": "Contact Picker",
+      "url": "https://w3c.github.io/contact-picker/"
+    }
+  ],
+  "confidence": "docs"
+}

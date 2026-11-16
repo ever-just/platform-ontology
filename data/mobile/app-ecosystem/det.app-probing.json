@@ -1,0 +1,201 @@
+{
+  "id": "mob.det.app-probing",
+  "name": "Probing for specific installed apps",
+  "kind": "signal",
+  "group": "app-ecosystem",
+  "subgroup": "Package visibility",
+  "tags": [
+    "queries",
+    "canopenurl",
+    "limited"
+  ],
+  "plain": "Android lets an app declare apps to see; iOS limits canOpenURL to 50 declared schemes.",
+  "meaning": "Lets an app check for a specific partner app (banking, wallet, rival) without a full list. Both platforms cap the surface.",
+  "lifecycle": [
+    "on-launch",
+    "in-session"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "y",
+      "v": "11",
+      "api": 30,
+      "permission": "<queries> manifest element",
+      "protection": "normal",
+      "grant": "install",
+      "prompt_ui": "",
+      "persistence": "",
+      "revocation": "",
+      "store_policy": "",
+      "api_surface": "PackageManager.getPackageInfo() on declared packages or intents",
+      "note": "Declared in manifest; no hard cap on count but reviewed"
+    },
+    "ios": {
+      "s": "y",
+      "v": "9.0",
+      "permission": "normal",
+      "protection": "none",
+      "grant": "none",
+      "prompt_ui": "",
+      "persistence": "",
+      "revocation": "App Review: no probing for fingerprinting",
+      "store_policy": "",
+      "api_surface": "Capped at 50 schemes since iOS 9; returns false if scheme is undeclared",
+      "note": ""
+    }
+  },
+  "web_equivalents": [
+    "web.contacts.get-installed-related-apps"
+  ],
+  "data": {
+    "type": "boolean",
+    "metric": "App installed or not",
+    "update": "On call",
+    "fields": [
+      {
+        "name": "installed",
+        "type": "boolean",
+        "unit": "",
+        "range": "true, false",
+        "precision": "1 bit per probed app"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can check if a few named apps are installed, but not list them all",
+    "user_action": "Nothing. It happens when the app starts or when it checks for a partner app",
+    "can": [
+      "Check whether a specific bank, wallet or partner app is on the phone",
+      "Open that app if it is there",
+      "Guess which apps you use from the short list it chose"
+    ],
+    "cannot": [
+      "See any app it did not name ahead of time",
+      "Check more than 50 app names on iPhone",
+      "Hide the check from store review, since the names are listed in the app"
+    ],
+    "reach": 2,
+    "reach_label": "Only the apps it named",
+    "differs": "Android needs the app names listed in the app before it can check. iPhone allows up to 50 declared link names."
+  },
+  "story": {
+    "what_it_is": "An app quietly checks whether a few chosen other apps are on your phone.",
+    "icon": "scan-search",
+    "tags": [
+      "Installed apps",
+      "Silent",
+      "Tracking"
+    ],
+    "marketing": [],
+    "for_you": "You never see this happen. It can make a button say 'Open in Venmo' or hide the Venmo option if you do not have it. It can also be used to guess who you are.",
+    "for_makers": "Apps use it to offer a partner app's checkout or login only when that app exists. Ad tech and fraud systems use it as one more clue about a device, so both platforms limit it.",
+    "use_cases": [
+      {
+        "type": "payments",
+        "example": "A checkout page shows 'Pay with PayPal' only when the PayPal app is installed.",
+        "apps": [
+          "PayPal",
+          "Venmo"
+        ]
+      },
+      {
+        "type": "banking",
+        "example": "A banking app checks for a known remote access app before it allows a big transfer, as fraud defense.",
+        "apps": [
+          "Revolut",
+          "Monzo"
+        ]
+      },
+      {
+        "type": "social",
+        "example": "A sharing menu lists WhatsApp and Messenger only when those apps are present.",
+        "apps": [
+          "Spotify",
+          "TikTok"
+        ]
+      },
+      {
+        "type": "games",
+        "example": "A game checks if the publisher's other game is installed and gives a cross promo gift.",
+        "apps": []
+      },
+      {
+        "type": "ads",
+        "example": "A marketing SDK checks for rival apps, such as a competing food delivery app, to tune ads.",
+        "apps": []
+      },
+      {
+        "type": "security",
+        "example": "Anti cheat tools look for known cheat tools or emulators and block the player from ranked matches.",
+        "apps": [
+          "Call of Duty Mobile"
+        ]
+      }
+    ],
+    "risks": [
+      "Can guess private traits",
+      "Used for fingerprinting"
+    ],
+    "android_note": "Android needs the app to list what it wants to see in its own file, and Play reviews that list.",
+    "ios_note": "iOS limits an app to 50 declared schemes and only answers yes or no."
+  },
+  "technical_bounds": [
+    "Declared list only"
+  ],
+  "scores": {
+    "sensitivity": 3,
+    "utility": 3,
+    "fingerprint_bits": 5,
+    "friction": 1
+  },
+  "value": {
+    "legit_uses": [
+      "Deep link to partner apps"
+    ],
+    "abuse": [
+      "Detect sensitive apps"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2015-09",
+      "platform": "ios",
+      "version": "iOS 9",
+      "change": "50 scheme cap on canOpenURL"
+    },
+    {
+      "date": "2020-09",
+      "platform": "android",
+      "version": "11 (API 30)",
+      "change": "<queries> element required"
+    }
+  ],
+  "related": [
+    "mob.det.installed-apps-all"
+  ],
+  "refs": [
+    {
+      "t": "android",
+      "label": "Android: Package visibility",
+      "url": "https://developer.android.com/training/package-visibility"
+    },
+    {
+      "t": "apple",
+      "label": "Apple: UIApplication canOpenURL",
+      "url": "https://developer.apple.com/documentation/uikit/uiapplication/canopenurl(_:)"
+    },
+    {
+      "t": "policy",
+      "label": "Google Play: package visibility policy",
+      "url": "https://support.google.com/googleplay/android-developer/answer/10158779"
+    }
+  ],
+  "confidence": "verified"
+}

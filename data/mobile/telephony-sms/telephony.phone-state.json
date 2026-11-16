@@ -1,0 +1,238 @@
+{
+  "id": "mob.telephony.phone-state",
+  "name": "Phone state and numbers",
+  "kind": "permission",
+  "group": "telephony-sms",
+  "subgroup": "Device and SIM",
+  "tags": [
+    "runtime-permission",
+    "phone",
+    "identifier",
+    "2fa"
+  ],
+  "plain": "Lets the app see call state, the SIM and the phone's number.",
+  "meaning": "Reveals carrier, SIM info and in some cases the user's number. Android restricts device IDs such as IMEI to privileged apps since Android 10.",
+  "lifecycle": [
+    "in-session",
+    "on-launch",
+    "signed-in"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "y",
+      "v": "6.0",
+      "api": 23,
+      "permission": "READ_PHONE_STATE, READ_PHONE_NUMBERS (API 26)",
+      "protection": "dangerous",
+      "grant": "prompt",
+      "prompt_ui": "Allow or Don't allow",
+      "persistence": "Until revoked or auto-reset",
+      "revocation": "Settings > Apps > Permissions > Phone",
+      "store_policy": "Play: identifiers policy bans persistent IDs from this API for ads",
+      "api_surface": "TelephonyManager, TelephonyCallback (API 31 needs READ_PHONE_STATE)",
+      "note": "Android 10 (API 29) removed non-resettable identifiers (IMEI, serial) for non-privileged apps."
+    },
+    "ios": {
+      "s": "p",
+      "v": "16.4",
+      "permission": "none (CTCarrier deprecated)",
+      "protection": "none",
+      "grant": "none",
+      "prompt_ui": "none",
+      "persistence": "n/a",
+      "revocation": "n/a",
+      "store_policy": "App Review 5.1.1",
+      "api_surface": "CTCarrier (deprecated iOS 16), CTTelephonyNetworkInfo",
+      "note": "iOS never exposes phone number or IMEI; CTCarrier returns placeholder values since iOS 16.4."
+    }
+  },
+  "web_equivalents": [
+    "web.notexposed.phone-number",
+    "web.notexposed.device-serial-imei"
+  ],
+  "data": {
+    "type": "object",
+    "metric": "Phone state, carrier, number",
+    "update": "event and on demand",
+    "fields": [
+      {
+        "name": "number",
+        "type": "string",
+        "unit": "E.164",
+        "range": "up to 15 digits",
+        "precision": "exact"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can see call state, SIM and carrier info on Android; iPhone shows no number",
+    "user_action": "You tap Allow on the Phone permission prompt",
+    "can": [
+      "Tell whether a call is active",
+      "See carrier and SIM information",
+      "See your number on Android with the phone numbers permission"
+    ],
+    "cannot": [
+      "See the IMEI or serial number on Android 10 and later",
+      "See your number or IMEI on iPhone",
+      "Get real carrier names on iPhone 16.4 and later; it shows placeholders"
+    ],
+    "reach": 3,
+    "reach_label": "Ongoing, about calls and SIM",
+    "differs": "Android gives call state and SIM details after a prompt; iPhone never exposes the number or IMEI."
+  },
+  "story": {
+    "what_it_is": "Lets the app see whether you are on a call, plus details about the SIM and the phone's number.",
+    "icon": "phone-incoming",
+    "tags": [
+      "Calls",
+      "Permission",
+      "Device"
+    ],
+    "marketing": [],
+    "for_you": "A prompt asks for phone access. If you allow it, the app can tell whether you are on a call and may see your carrier or SIM. The app can pause itself when you get a call.",
+    "for_makers": "Apps like music and games pause during calls. Others use the carrier info to pick a language or a network setting. Older apps abused it to grab device IDs, so it has been trimmed.",
+    "use_cases": [
+      {
+        "type": "music",
+        "example": "A music app pauses when a call comes in and resumes after.",
+        "apps": [
+          "Spotify"
+        ]
+      },
+      {
+        "type": "games",
+        "example": "A game pauses a match when you get a call.",
+        "apps": []
+      },
+      {
+        "type": "video",
+        "example": "A video call app lowers quality when a cellular call starts.",
+        "apps": []
+      },
+      {
+        "type": "fitness",
+        "example": "A run tracker pauses when you take a call.",
+        "apps": []
+      },
+      {
+        "type": "analytics",
+        "example": "An analytics SDK reads the carrier to report network type.",
+        "apps": []
+      },
+      {
+        "type": "security",
+        "example": "A fraud tool reads SIM changes to spot a swapped SIM.",
+        "apps": []
+      },
+      {
+        "type": "enterprise",
+        "example": "A call center app knows when the agent is on a call.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Carrier and SIM details",
+      "Old device ID tricks",
+      "Reveals when you are busy"
+    ],
+    "android_note": "Android 10 removed non resettable IDs like IMEI and serial for apps without privilege.",
+    "ios_note": "iPhone never exposes the number or IMEI. The carrier API has returned placeholder values since iOS 16.4."
+  },
+  "technical_bounds": [
+    "No IMEI for ordinary apps on either OS",
+    "Phone number still exposed on some Android versions with READ_PHONE_NUMBERS",
+    "Cannot read the number on iOS"
+  ],
+  "scores": {
+    "sensitivity": 4,
+    "utility": 3,
+    "fingerprint_bits": 8,
+    "friction": 2
+  },
+  "value": {
+    "legit_uses": [
+      "Call handling",
+      "Carrier-aware apps"
+    ],
+    "abuse": [
+      "Persistent device fingerprinting"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": true,
+      "how": "Phone Number is on the Apple label (Linked To You, optional on Play). Members enter it for two-step verification and CLEAR identity checks. Android phone state permission was seen in an older build."
+    }
+  },
+  "history": [
+    {
+      "date": "2023-03",
+      "platform": "ios",
+      "version": "iOS 16.4",
+      "change": "CTCarrier deprecated; returns static placeholder values"
+    },
+    {
+      "date": "2021-10",
+      "platform": "android",
+      "version": "12 (API 31)",
+      "change": "TelephonyCallback requires READ_PHONE_STATE"
+    },
+    {
+      "date": "2019-09",
+      "platform": "android",
+      "version": "10 (API 29)",
+      "change": "IMEI, serial and other hardware IDs require privileged permission"
+    },
+    {
+      "date": "2019-09",
+      "platform": "android",
+      "version": "10 (API 29)",
+      "change": "Non-resettable device IDs blocked for normal apps"
+    },
+    {
+      "date": "2017-08",
+      "platform": "android",
+      "version": "8.0 (API 26)",
+      "change": "READ_PHONE_NUMBERS split from READ_PHONE_STATE"
+    }
+  ],
+  "related": [
+    "mob.telephony.call-log",
+    "mob.nx.imei-serial"
+  ],
+  "refs": [
+    {
+      "t": "android",
+      "label": "Android 10: Non-resettable identifiers",
+      "url": "https://developer.android.com/about/versions/10/privacy/changes#non-resettable-device-ids"
+    },
+    {
+      "t": "android",
+      "label": "Android: Manifest.permission reference",
+      "url": "https://developer.android.com/reference/android/Manifest.permission"
+    },
+    {
+      "t": "apple",
+      "label": "Apple: CTCarrier",
+      "url": "https://developer.apple.com/documentation/coretelephony/ctcarrier"
+    },
+    {
+      "t": "android",
+      "label": "Android: READ_PHONE_NUMBERS",
+      "url": "https://developer.android.com/reference/android/Manifest.permission#READ_PHONE_NUMBERS"
+    },
+    {
+      "t": "vendor",
+      "label": "App Store listing and App Privacy label, LinkedIn (id288429040)",
+      "url": "https://apps.apple.com/us/app/linkedin-professional-network/id288429040"
+    },
+    {
+      "t": "vendor",
+      "label": "Google Play Data safety, LinkedIn (com.linkedin.android)",
+      "url": "https://play.google.com/store/apps/datasafety?id=com.linkedin.android&hl=en_US"
+    }
+  ],
+  "confidence": "docs"
+}

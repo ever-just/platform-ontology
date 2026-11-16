@@ -1,0 +1,213 @@
+{
+  "id": "mob.id.sign-in-google",
+  "name": "Sign in with Google",
+  "kind": "capability",
+  "group": "identity-auth",
+  "subgroup": "Federated sign in",
+  "tags": [
+    "google-sign-in",
+    "credential-manager",
+    "oauth",
+    "one-tap"
+  ],
+  "plain": "One tap sign in with a Google account that is already on the phone.",
+  "meaning": "Links an app to the person's Google identity (email, name, photo). On Android it reads accounts from the phone through Google Play services without a separate permission.",
+  "lifecycle": [
+    "signed-in"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "y",
+      "v": "5.0",
+      "api": 21,
+      "permission": "None (GET_ACCOUNTS not needed)",
+      "protection": "none",
+      "grant": "prompt",
+      "prompt_ui": "Bottom sheet listing Google accounts (Credential Manager GetGoogleIdOption)",
+      "persistence": "Token based",
+      "revocation": "Google Account > Security > Third-party connections",
+      "store_policy": "Play: Google Sign-In branding rules",
+      "api_surface": "androidx.credentials GetGoogleIdOption, Sign in with Google button, AuthorizationClient",
+      "note": "Legacy GoogleSignInClient and One Tap are deprecated in favour of Credential Manager and AuthorizationClient."
+    },
+    "ios": {
+      "s": "y",
+      "v": "9.0",
+      "permission": "URL scheme in Info.plist; ASWebAuthenticationSession",
+      "protection": "none",
+      "grant": "prompt",
+      "prompt_ui": "Web auth sheet; system asks to open google.com for sign in",
+      "persistence": "Token based",
+      "revocation": "Google Account",
+      "store_policy": "App Review 4.8",
+      "api_surface": "GoogleSignIn-iOS SDK, ASWebAuthenticationSession",
+      "note": "Uses a browser flow; no account list from iOS."
+    }
+  },
+  "web_equivalents": [
+    "web.identity.fedcm"
+  ],
+  "data": {
+    "type": "object",
+    "metric": "ID token",
+    "update": "per sign in",
+    "fields": [
+      {
+        "name": "sub",
+        "type": "string",
+        "unit": "opaque",
+        "range": "stable per project",
+        "precision": "exact"
+      },
+      {
+        "name": "email",
+        "type": "string",
+        "unit": "text",
+        "range": "verified",
+        "precision": "exact"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can sign you in with a Google account already on your phone after you tap",
+    "user_action": "You tap Sign in with Google and choose an account",
+    "can": [
+      "Show the Google accounts on the phone as a picker",
+      "Receive your name, email and photo after you pick an account",
+      "Create or sign in to an app account without a new password",
+      "Ask for more access (such as Drive) with a second approval screen"
+    ],
+    "cannot": [
+      "See your Google password",
+      "List all accounts on your phone without you opening the picker",
+      "See your Gmail or Drive files without a separate approval",
+      "Show a list of accounts on iPhone; iPhone opens a web sign in instead"
+    ],
+    "reach": 2,
+    "reach_label": "Only the account you choose",
+    "differs": "Android can show a one tap account picker. iPhone opens a browser sign in and cannot list accounts."
+  },
+  "story": {
+    "what_it_is": "One tap signs you into an app with a Google account already on your phone.",
+    "icon": "user-check",
+    "tags": [
+      "Sign in",
+      "Google",
+      "Convenience"
+    ],
+    "marketing": [
+      {
+        "vendor": "Google",
+        "name": "Sign in with Google",
+        "pitch": "Create an account or sign in with one tap using your Google account instead of a new password.",
+        "url": "https://developer.android.com/identity/sign-in/credential-manager"
+      }
+    ],
+    "for_you": "You see a small sheet at the bottom of the screen with your Google account and a Continue button. One tap and you are in. No new password or email check.",
+    "for_makers": "Makers get fast sign ups and a verified email without building a login system. Google also becomes the middle man that knows which apps you use, and the app can link your account with other apps that use the same login.",
+    "use_cases": [
+      {
+        "type": "shopping",
+        "example": "A shopping app lets you join in a tap, so you reach checkout in seconds.",
+        "apps": [
+          "Etsy",
+          "Pinterest"
+        ]
+      },
+      {
+        "type": "media",
+        "example": "A video or music app uses your Google account so your playlists and history follow you.",
+        "apps": [
+          "Spotify",
+          "Netflix"
+        ]
+      },
+      {
+        "type": "games",
+        "example": "A casual game lets you play first, then asks you to sign in with Google to save progress.",
+        "apps": []
+      },
+      {
+        "type": "productivity",
+        "example": "A notes or task app creates your account from your Google name and photo.",
+        "apps": [
+          "Notion",
+          "Todoist"
+        ]
+      },
+      {
+        "type": "delivery",
+        "example": "A delivery app pre fills your email so your first order is faster.",
+        "apps": [
+          "Instacart"
+        ]
+      },
+      {
+        "type": "ads",
+        "example": "An advertiser links your email from the sign in to the rest of your behavior across the web.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Google sees which apps you use",
+      "Account link across apps"
+    ],
+    "android_note": "On Android the account list comes from Google Play services, so no separate permission is needed.",
+    "ios_note": "iPhone apps show a Google web sign in sheet since the phone does not hold Google accounts the same way."
+  },
+  "technical_bounds": [
+    "Needs Play services; not on AOSP only devices"
+  ],
+  "scores": {
+    "sensitivity": 3,
+    "utility": 4,
+    "fingerprint_bits": 1,
+    "friction": 1
+  },
+  "value": {
+    "legit_uses": [
+      "Fast sign up"
+    ],
+    "abuse": [
+      "Cross app identity link"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2023-10",
+      "platform": "android",
+      "version": "14 (API 34)",
+      "change": "Credential Manager adds Sign in with Google"
+    },
+    {
+      "date": "2025-03",
+      "platform": "android",
+      "version": "Play services 2025",
+      "change": "Legacy Google Sign-In API deprecated; migration required"
+    }
+  ],
+  "related": [
+    "mob.identity.sign-in-with-apple",
+    "mob.contacts.accounts"
+  ],
+  "refs": [
+    {
+      "t": "android",
+      "label": "Android: Sign in with Google",
+      "url": "https://developer.android.com/identity/sign-in/credential-manager-siwg"
+    },
+    {
+      "t": "vendor",
+      "label": "Google: Sign in with Google for iOS",
+      "url": "https://developers.google.com/identity/sign-in/ios"
+    }
+  ],
+  "confidence": "docs"
+}

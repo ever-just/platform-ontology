@@ -1,0 +1,223 @@
+{
+  "id": "web.xsite.gpp",
+  "name": "Global Privacy Platform string",
+  "kind": "signal",
+  "group": "cross-site-tracking",
+  "subgroup": "Consent",
+  "tags": [
+    "gpp",
+    "iab",
+    "us-privacy",
+    "opt-out"
+  ],
+  "plain": "A coded record of a person's privacy choices for US states and other regions.",
+  "meaning": "GPP replaces the US Privacy string. Its sections carry US national and state opt outs: section 7 for US national and 8 for California. Ad vendors read it via __gpp() to decide whether to sell or share data.",
+  "lifecycle": [
+    "on-arrival",
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "window.__gpp('getGPPData', cb)",
+      "access": {
+        "grant": "prompt",
+        "prompt_ui": "CMP banner or opt out link",
+        "secure_context": false,
+        "user_gesture": false,
+        "persistence": "Stored in a first party cookie or storage by the CMP",
+        "revocation": "Clear site data, browser privacy settings",
+        "iframe": "",
+        "steps": []
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "1",
+          "note": ":JS API, any browser",
+          "date": "2008-12-11"
+        },
+        "edge": {
+          "s": "y",
+          "v": "1",
+          "note": ":JS API, any browser",
+          "date": ""
+        },
+        "firefox": {
+          "s": "y",
+          "v": "1",
+          "note": ":JS API, any browser",
+          "date": "2004-11-09"
+        },
+        "safari": {
+          "s": "y",
+          "v": "1",
+          "note": ":JS API, any browser",
+          "date": "2003-06-23"
+        },
+        "ios_safari": {
+          "s": "y",
+          "v": "1",
+          "note": ":JS API, any browser",
+          "date": "2007-06-29"
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "1",
+          "note": ":JS API, any browser",
+          "date": ""
+        },
+        "samsung": {
+          "s": "y",
+          "v": "1",
+          "note": ":JS API, any browser",
+          "date": "2013-04-27"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "string",
+    "metric": "GPP string",
+    "update": "per choice",
+    "fields": []
+  },
+  "limits": {
+    "headline": "Can carry your privacy choices for US states and other regions to ad partners",
+    "user_action": "You pick choices in a cookie banner or click an opt out link",
+    "can": [
+      "Store your choices as a short coded string",
+      "Pass that string to ad and analytics partners",
+      "Cover several US states and other regions in one record"
+    ],
+    "cannot": [
+      "Force a partner to obey it, though laws may",
+      "Stop tracking by itself",
+      "Carry choices to a site you have not visited",
+      "Last if you clear cookies, since your choices may reset"
+    ],
+    "reach": 2,
+    "reach_label": "Your choices, per site",
+    "differs": ""
+  },
+  "story": {
+    "what_it_is": "A coded record of your privacy choices that ad companies read before they use your data.",
+    "icon": "clipboard-list",
+    "tags": [
+      "Privacy",
+      "Ads",
+      "Opt out"
+    ],
+    "marketing": [
+      {
+        "vendor": "IAB Tech Lab",
+        "name": "Global Privacy Platform",
+        "pitch": "The industry group says GPP carries privacy choices for many regions in one standard string for ad vendors.",
+        "url": "https://iabtechlab.com/gpp/"
+      }
+    ],
+    "for_you": "You click a cookie or privacy banner. Behind the scenes, the choice becomes a short code that is passed to ad partners. You do not see it, but it should stop them from selling your data if you said no.",
+    "for_makers": "Rules in US states and other regions now differ. One shared string saves ad vendors from building many different signals. It also gives regulators a way to check what the vendor knew.",
+    "use_cases": [
+      {
+        "type": "ads",
+        "example": "A news site records that a Colorado visitor opted out. Each ad bidder reads the GPP string and skips targeting.",
+        "apps": [
+          "Google Ad Manager",
+          "The Trade Desk"
+        ]
+      },
+      {
+        "type": "analytics",
+        "example": "A consent tool writes GPP on page load, and the tag manager reads it to block ad tags.",
+        "apps": [
+          "OneTrust",
+          "Didomi"
+        ]
+      },
+      {
+        "type": "games",
+        "example": "A free browser game site shows an ad auction that respects GPP for players in California and Virginia.",
+        "apps": [
+          "CrazyGames"
+        ]
+      },
+      {
+        "type": "media",
+        "example": "A video site passes GPP into the ad request, so streaming ads follow the viewer's choice.",
+        "apps": [
+          "Hulu"
+        ]
+      },
+      {
+        "type": "shopping",
+        "example": "A retailer uses GPP to decide if it can share purchase data with ad partners for a given state.",
+        "apps": []
+      },
+      {
+        "type": "enterprise",
+        "example": "A privacy team keeps a log of GPP strings to prove it honored choices if audited.",
+        "apps": [
+          "TrustArc"
+        ]
+      }
+    ],
+    "risks": [
+      "Only works if vendors respect it",
+      "Complex rules can be wrong"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Section IDs defined by IAB (2 TCF EU, 7 US national, 8 California)",
+    "Does not by itself enforce the choice",
+    "Depends on the CMP"
+  ],
+  "scores": {
+    "sensitivity": 3,
+    "utility": 3,
+    "fingerprint_bits": null,
+    "friction": 2
+  },
+  "value": {
+    "legit_uses": [
+      "Passing opt outs to ad tech"
+    ],
+    "abuse": [
+      "Ignoring opt outs by not reading it"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2022-05",
+      "browser": "all",
+      "version": "",
+      "change": "GPP 1.0 released"
+    },
+    {
+      "date": "2023-07",
+      "browser": "all",
+      "version": "",
+      "change": "US state laws begin using GPP sections"
+    }
+  ],
+  "related": [
+    "web.xsite.global-privacy-control",
+    "web.xsite.tcf-consent-string"
+  ],
+  "refs": [
+    {
+      "t": "vendor",
+      "label": "IAB Tech Lab Global Privacy Platform",
+      "url": "https://iabtechlab.com/gpp/"
+    }
+  ],
+  "confidence": "docs"
+}

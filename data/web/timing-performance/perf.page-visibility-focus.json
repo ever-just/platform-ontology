@@ -1,0 +1,233 @@
+{
+  "id": "web.perf.page-visibility-focus",
+  "name": "Page Visibility, focus and blur",
+  "kind": "signal",
+  "group": "timing-performance",
+  "subgroup": "Attention",
+  "tags": [
+    "visibilitychange",
+    "focus",
+    "blur",
+    "hidden"
+  ],
+  "plain": "Tells a page when its tab is hidden, backgrounded or unfocused.",
+  "meaning": "Sites learn when the person switches tabs, minimizes or locks the screen. Used for attention tracking, exam proctoring and ad viewability, and by bot detectors that expect focus events.",
+  "lifecycle": [
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "document.visibilityState; visibilitychange; window focus/blur; document.hasFocus()",
+      "bcd": [
+        "api.Document.visibilityState"
+      ],
+      "access": {
+        "grant": "none",
+        "prompt_ui": "",
+        "secure_context": false,
+        "user_gesture": false,
+        "persistence": "",
+        "revocation": "",
+        "iframe": "",
+        "steps": [
+          "Listen to visibilitychange and focus",
+          "Log timestamps",
+          "Compute attention time"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "33",
+          "note": "",
+          "date": "2014-02-20"
+        },
+        "edge": {
+          "s": "y",
+          "v": "12",
+          "note": "",
+          "date": "2015-07-29"
+        },
+        "firefox": {
+          "s": "y",
+          "v": "18",
+          "note": "",
+          "date": "2013-01-08"
+        },
+        "safari": {
+          "s": "y",
+          "v": "7",
+          "note": "",
+          "date": "2013-10-22"
+        },
+        "ios_safari": {
+          "s": "y",
+          "v": "7",
+          "note": "",
+          "date": "2013-09-18"
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "33",
+          "note": "",
+          "date": "2014-02-26"
+        },
+        "samsung": {
+          "s": "y",
+          "v": "2.0",
+          "note": "",
+          "date": "2014-10-17"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "event",
+    "metric": "State transitions",
+    "update": "",
+    "fields": [
+      {
+        "name": "visibilityState",
+        "type": "string",
+        "unit": "",
+        "range": "visible, hidden",
+        "precision": "exact"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can tell when you switch tabs, minimise the browser or lock the screen",
+    "user_action": "You switch tabs, minimise the window or lock the screen",
+    "can": [
+      "Learn when the tab is shown or hidden",
+      "Learn when the window loses focus",
+      "Time how long you look at an ad or a page",
+      "Check that you are really there, as exam tools and bot checks do"
+    ],
+    "cannot": [
+      "See what you do in other tabs or apps",
+      "Ask permission first",
+      "Know why you left",
+      "Stop you from switching away"
+    ],
+    "reach": 2,
+    "reach_label": "While the page is open",
+    "differs": ""
+  },
+  "story": {
+    "what_it_is": "A page can tell when its tab is hidden, in the background or when you click away from it.",
+    "icon": "eye",
+    "tags": [
+      "Presence",
+      "Silent",
+      "Everyday"
+    ],
+    "marketing": [
+      {
+        "vendor": "MDN",
+        "name": "Page Visibility API",
+        "pitch": "Lets a page know when it is visible or hidden, so it can pause work and save power.",
+        "url": "https://developer.mozilla.org/en-US/docs/Web/API/Page_Visibility_API"
+      }
+    ],
+    "for_you": "You never see a prompt. A video may pause when you switch tabs, a game may stop, and a site may notice you went away. It is how pages save battery, and how some sites know you looked elsewhere.",
+    "for_makers": "Makers use it to pause video, stop animations and save power. It also powers ad viewability, which only counts an ad when the tab is visible, and some exam and training sites flag tab switches.",
+    "use_cases": [
+      {
+        "type": "video",
+        "example": "A video site pauses when you switch tabs, then resumes when you return.",
+        "apps": [
+          "YouTube",
+          "Netflix"
+        ]
+      },
+      {
+        "type": "games",
+        "example": "A browser game pauses the match when you switch away, so you do not lose while away.",
+        "apps": []
+      },
+      {
+        "type": "ads",
+        "example": "An ad measurement script only counts an ad as seen when the tab is visible and in view.",
+        "apps": [
+          "DoubleVerify",
+          "Integral Ad Science"
+        ]
+      },
+      {
+        "type": "education",
+        "example": "An online exam tool records each time a student leaves the test tab.",
+        "apps": [
+          "Proctorio",
+          "ExamSoft"
+        ]
+      },
+      {
+        "type": "messaging",
+        "example": "A web chat app only sends a read receipt when the tab is visible, and sends a notification when it is hidden.",
+        "apps": [
+          "Slack",
+          "WhatsApp Web"
+        ]
+      },
+      {
+        "type": "live",
+        "example": "A live stream stops loading video chunks in a hidden tab to save data and power.",
+        "apps": [
+          "Twitch"
+        ]
+      },
+      {
+        "type": "analytics",
+        "example": "A site measures true time on page by pausing the timer when the tab is hidden.",
+        "apps": [
+          "Google Analytics"
+        ]
+      }
+    ],
+    "risks": [
+      "Can feel like monitoring",
+      "Exams may flag honest tab switches"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Cannot see which other tab or app",
+    "Background timers throttled to 1 per second then 1 per minute"
+  ],
+  "scores": {
+    "sensitivity": 2,
+    "utility": 2,
+    "fingerprint_bits": 2,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": "Pausing media, saving battery",
+    "abuse": "Attention and engagement tracking, proctoring"
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "related": [
+    "web.perf.idle-detection-user-activation",
+    "web.perf.battery-status"
+  ],
+  "refs": [
+    {
+      "t": "mdn",
+      "label": "MDN Page Visibility API",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/Page_Visibility_API"
+    },
+    {
+      "t": "spec",
+      "label": "W3C Page Visibility",
+      "url": "https://www.w3.org/TR/page-visibility-2/"
+    }
+  ],
+  "confidence": "docs"
+}

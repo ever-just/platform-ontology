@@ -1,0 +1,230 @@
+{
+  "id": "web.xsite.search-referral-loss",
+  "name": "Search engine referral data loss",
+  "kind": "signal",
+  "group": "cross-site-tracking",
+  "subgroup": "Before the visit",
+  "tags": [
+    "search",
+    "not-provided",
+    "referrer",
+    "seo"
+  ],
+  "plain": "Search engines no longer pass the search keywords to the site; only the engine name arrives.",
+  "meaning": "Since Oct 2011 Google withholds queries for signed in then all searches ('not provided'). Sites see the origin google.com only and learn keywords through Search Console (up to 1000 rows per query export) or on site search.",
+  "lifecycle": [
+    "before-visit",
+    "on-arrival"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "Referer: https://www.google.com/; Search Console API",
+      "access": {
+        "grant": "none",
+        "prompt_ui": "None",
+        "secure_context": false,
+        "user_gesture": false,
+        "persistence": "Per visit",
+        "revocation": "Clear site data, browser privacy settings",
+        "iframe": "",
+        "steps": []
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "1",
+          "note": "Same in all browsers",
+          "date": "2008-12-11"
+        },
+        "edge": {
+          "s": "y",
+          "v": "1",
+          "note": "Same in all browsers",
+          "date": ""
+        },
+        "firefox": {
+          "s": "y",
+          "v": "1",
+          "note": "Same in all browsers",
+          "date": "2004-11-09"
+        },
+        "safari": {
+          "s": "y",
+          "v": "1",
+          "note": "Same in all browsers",
+          "date": "2003-06-23"
+        },
+        "ios_safari": {
+          "s": "y",
+          "v": "1",
+          "note": "Same in all browsers",
+          "date": "2007-06-29"
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "1",
+          "note": "Same in all browsers",
+          "date": ""
+        },
+        "samsung": {
+          "s": "y",
+          "v": "1",
+          "note": "Same in all browsers",
+          "date": "2013-04-27"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "string",
+    "metric": "Engine origin only",
+    "update": "per visit",
+    "fields": []
+  },
+  "limits": {
+    "headline": "Can't see the search words you used, only the search engine's name",
+    "user_action": "You click a result on a search engine",
+    "can": [
+      "Tell that you came from a search engine",
+      "Know which engine you used",
+      "Use other tools to learn which words bring visitors"
+    ],
+    "cannot": [
+      "See your search words from most engines",
+      "Tell which result you saw",
+      "Link your search to a personal profile",
+      "See keywords unless the site has search console data or paid ad data"
+    ],
+    "reach": 1,
+    "reach_label": "Just the engine name",
+    "differs": ""
+  },
+  "story": {
+    "what_it_is": "Search engines stopped sending the words you searched to the sites you visit.",
+    "icon": "search-x",
+    "tags": [
+      "Search",
+      "Silent",
+      "Analytics"
+    ],
+    "marketing": [
+      {
+        "vendor": "Google",
+        "name": "Search Console",
+        "pitch": "Google points sites to Search Console for search query data, in place of per visit keywords.",
+        "url": "https://support.google.com/webmasters/answer/7576553"
+      }
+    ],
+    "for_you": "You search and click a result. The site learns you came from Google, but not what you typed. That keeps your search private from the site.",
+    "for_makers": "Sites lost the exact words visitors used, which they once saw in analytics. They now get grouped query data from Search Console, or learn from their own site search. It changed how SEO teams work.",
+    "use_cases": [
+      {
+        "type": "analytics",
+        "example": "A blog owner sees most traffic as Google, with the term not provided, and uses Search Console to guess topics.",
+        "apps": [
+          "Google Analytics",
+          "Google Search Console"
+        ]
+      },
+      {
+        "type": "shopping",
+        "example": "A shop uses its own on site search to see what people want, since Google keeps the words.",
+        "apps": [
+          "Shopify",
+          "Algolia"
+        ]
+      },
+      {
+        "type": "media",
+        "example": "A news site sees which stories rise on Google through Search Console clicks.",
+        "apps": [
+          "The Guardian"
+        ]
+      },
+      {
+        "type": "games",
+        "example": "A game site learns top search words from Search Console and builds pages for them.",
+        "apps": [
+          "Poki"
+        ]
+      },
+      {
+        "type": "ads",
+        "example": "Paid search ads still get keyword data, which is why ad clicks are better tracked.",
+        "apps": [
+          "Google Ads"
+        ]
+      },
+      {
+        "type": "education",
+        "example": "A school sees only that a student came from Google, not which question they asked.",
+        "apps": [
+          "Khan Academy"
+        ]
+      }
+    ],
+    "risks": [
+      "Sites guess at what you wanted",
+      "Paid ads still see more data"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Query not in Referer or document.referrer",
+    "Search Console data limited to 16 months and sampled to top queries",
+    "AI chat referrers often send only utm_source such as chatgpt.com"
+  ],
+  "scores": {
+    "sensitivity": 2,
+    "utility": 4,
+    "fingerprint_bits": null,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Acquisition analytics"
+    ],
+    "abuse": [
+      "Scraping query terms from legacy referrers on HTTP"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2011-10",
+      "browser": "all",
+      "version": "",
+      "change": "Google starts encrypting searches; keyword data becomes 'not provided'"
+    },
+    {
+      "date": "2020-08",
+      "browser": "chrome",
+      "version": "85",
+      "change": "Default referrer policy trims all cross-origin referrers to origin"
+    }
+  ],
+  "related": [
+    "web.xsite.referer-header",
+    "web.xsite.utm-params"
+  ],
+  "refs": [
+    {
+      "t": "vendor",
+      "label": "Google Search Console performance data",
+      "url": "https://support.google.com/webmasters/answer/7576553"
+    },
+    {
+      "t": "mdn",
+      "label": "MDN Referrer-Policy",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Referrer-Policy"
+    }
+  ],
+  "confidence": "docs"
+}

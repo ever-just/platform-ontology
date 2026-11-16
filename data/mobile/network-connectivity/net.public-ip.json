@@ -1,0 +1,184 @@
+{
+  "id": "mob.net.public-ip",
+  "name": "Public IP address",
+  "kind": "signal",
+  "group": "network-connectivity",
+  "subgroup": "Connectivity",
+  "tags": [
+    "ip",
+    "server-side"
+  ],
+  "plain": "Any server the app contacts sees the public IP, which can be matched to a city.",
+  "meaning": "IP gives city-level location and ISP, with no prompt. Apple's Private Relay and Google's IP Protection hide it for some traffic.",
+  "lifecycle": [
+    "on-launch",
+    "in-session"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "y",
+      "v": "1.0",
+      "api": 1,
+      "permission": "INTERNET",
+      "protection": "normal",
+      "grant": "install",
+      "prompt_ui": "",
+      "persistence": "",
+      "revocation": "",
+      "store_policy": "",
+      "api_surface": "Any network request; server-side logs",
+      "note": "City-level geolocation typically 10 to 50 km"
+    },
+    "ios": {
+      "s": "y",
+      "v": "2.0",
+      "permission": "none",
+      "protection": "none",
+      "grant": "none",
+      "prompt_ui": "",
+      "persistence": "",
+      "revocation": "",
+      "store_policy": "",
+      "api_surface": "Private Relay hides it for Safari only, not app traffic",
+      "note": ""
+    }
+  },
+  "web_equivalents": [
+    "web.net.client-ip"
+  ],
+  "data": {
+    "type": "string",
+    "metric": "IP address",
+    "update": "Per request",
+    "fields": [
+      {
+        "name": "ip",
+        "type": "string",
+        "unit": "",
+        "range": "IPv4 or IPv6",
+        "precision": "exact"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can't avoid showing your public address to any server it contacts, which hints at a city",
+    "user_action": "Nothing. It happens whenever the app connects to the internet",
+    "can": [
+      "Let every server see your public IP address",
+      "Guess your city from the address, usually within 10 to 50 km",
+      "Group visits from the same network"
+    ],
+    "cannot": [
+      "Pin your street or home from the address alone",
+      "See the IP if you use a VPN; the VPN address shows instead",
+      "Be hidden by Private Relay in apps; it only covers Safari on iPhone",
+      "Be hidden by the phone without a VPN"
+    ],
+    "reach": 3,
+    "reach_label": "Public address, with every connection",
+    "differs": "iCloud Private Relay hides the address in Safari on iPhone but not app traffic. Android has no built in equivalent."
+  },
+  "story": {
+    "what_it_is": "Every server an app talks to sees your public internet address, which points to your city.",
+    "icon": "globe",
+    "tags": [
+      "Network",
+      "Silent",
+      "Location"
+    ],
+    "marketing": [
+      {
+        "vendor": "Apple",
+        "name": "iCloud Private Relay",
+        "pitch": "Apple hides your IP address from sites in Safari and some app traffic for iCloud+ users.",
+        "url": "https://support.apple.com/en-us/102602"
+      }
+    ],
+    "for_you": "You do not see it, and you cannot turn it off just by saying no. Every app and site that you contact learns your IP address. It shows your city and your internet provider.",
+    "for_makers": "Makers get a free, no permission clue about your area. They use it for regional content, taxes, fraud checks and ad targeting. It is also a way to link the same person across apps at home.",
+    "use_cases": [
+      {
+        "type": "media",
+        "example": "A streaming app shows the shows licensed for your country because of your IP.",
+        "apps": [
+          "Netflix",
+          "Disney+"
+        ]
+      },
+      {
+        "type": "games",
+        "example": "A game picks the nearest server and region for you based on your IP.",
+        "apps": [
+          "Fortnite",
+          "Call of Duty Mobile"
+        ]
+      },
+      {
+        "type": "banking",
+        "example": "A bank flags a login from a country far from your last one and asks you to confirm.",
+        "apps": []
+      },
+      {
+        "type": "shopping",
+        "example": "A store shows prices and tax for your country and blocks orders from banned areas.",
+        "apps": []
+      },
+      {
+        "type": "ads",
+        "example": "An ad network guesses your city from the IP and shows local offers, or links your phone with your laptop at home.",
+        "apps": []
+      },
+      {
+        "type": "security",
+        "example": "A fraud system blocks an account that logs in from hundreds of cities in one hour.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "City level location with no prompt",
+      "Cross app and cross device linking"
+    ],
+    "android_note": "Android apps see the public address like any other app, and Google is adding an IP protection feature for some Chrome traffic.",
+    "ios_note": "iPhone apps see it too, and Private Relay hides it only for Safari and some system traffic."
+  },
+  "technical_bounds": [
+    "Cannot be hidden from apps by the OS"
+  ],
+  "scores": {
+    "sensitivity": 3,
+    "utility": 3,
+    "fingerprint_bits": 10,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Geo features, fraud checks"
+    ],
+    "abuse": [
+      "Cross-app tracking, location inference"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "related": [
+    "mob.net.local-ip"
+  ],
+  "refs": [
+    {
+      "t": "paper",
+      "label": "Reardon et al.: 50 Ways to Leak Your Data (USENIX Security 2019)",
+      "url": "https://www.usenix.org/conference/usenixsecurity19/presentation/reardon"
+    },
+    {
+      "t": "policy",
+      "label": "Apple Support: Control access to Wi-Fi information and Private Wi-Fi addresses",
+      "url": "https://support.apple.com/en-us/102509"
+    }
+  ],
+  "confidence": "inferred"
+}

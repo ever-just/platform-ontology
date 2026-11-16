@@ -1,0 +1,139 @@
+---
+title: Getting started
+description: Download the JSON bundles and use them in JavaScript or Python.
+---
+
+The whole map is published as plain JSON files. No account, no key, no rate limit beyond normal web courtesy. Pick the bundle that fits your job.
+
+## The bundles
+
+| Bundle | URL | What is in it |
+| --- | --- | --- |
+| Everything | `https://platformontology.lol/data/ontology.json` | All 844 capabilities with every field, plus the taxonomy |
+| Light index | `https://platformontology.lol/data/index.json` | One short row per capability: id, name, kind, group, headline, reach, status per platform |
+| Taxonomy | `https://platformontology.lol/data/taxonomy.json` | Labels, icons and descriptions for kinds, groups, lifecycle stages and browsers |
+| Android | `https://platformontology.lol/data/platform/android.json` | The 361 native capabilities, with the Android block under `platform` |
+| iPhone | `https://platformontology.lol/data/platform/ios.json` | The 361 native capabilities, with the iPhone block under `platform` |
+| Web | `https://platformontology.lol/data/platform/web.json` | The 483 web capabilities, with browser support under `platform` |
+
+Every bundle starts with the same small header: `name`, `version`, `built`, `license`, `homepage` and `count`.
+
+<Callout title="Start small">
+Load `index.json` first. It is much smaller than `ontology.json`, and it has enough to build a list or a search box. Fetch the full bundle only when you need details.
+</Callout>
+
+## JavaScript
+
+<Tabs items={['Browser or Node 18+', 'Filter and group']}>
+  <Tab value="Browser or Node 18+">
+
+```js
+const res = await fetch('https://platformontology.lol/data/index.json');
+const { count, capabilities } = await res.json();
+
+console.log(count); // 844
+
+// Tracking capabilities that reach broadly
+const broad = capabilities.filter((c) => c.kind === 'tracking' && c.reach >= 3);
+console.log(broad.map((c) => c.name));
+```
+
+  </Tab>
+  <Tab value="Filter and group">
+
+```js
+const res = await fetch('https://platformontology.lol/data/ontology.json');
+const { taxonomy, capabilities } = await res.json();
+
+// How many capabilities per group, with the plain label
+const perGroup = {};
+for (const c of capabilities) {
+  const label = taxonomy.groups[c.group].label;
+  perGroup[label] = (perGroup[label] ?? 0) + 1;
+}
+console.table(perGroup);
+
+// Web capabilities that Safari does not support
+const noSafari = capabilities.filter(
+  (c) => c.space === 'web' && c.platforms.web.support.safari.s === 'n',
+);
+console.log(noSafari.length);
+```
+
+  </Tab>
+</Tabs>
+
+## Python
+
+<Tabs items={['Standard library', 'With requests and pandas']}>
+  <Tab value="Standard library">
+
+```python
+import json
+from urllib.request import urlopen
+
+with urlopen("https://platformontology.lol/data/platform/android.json") as r:
+    data = json.load(r)
+
+print(data["count"])  # 361
+
+# Android capabilities that need a runtime permission prompt
+for c in data["capabilities"]:
+    if c["platform"]["grant"] == "prompt":
+        print(c["name"], "->", c["platform"]["permission"])
+```
+
+  </Tab>
+  <Tab value="With requests and pandas">
+
+```python
+import pandas as pd
+import requests
+
+data = requests.get("https://platformontology.lol/data/index.json", timeout=30).json()
+df = pd.DataFrame(data["capabilities"])
+
+print(df.groupby(["space", "kind"]).size())
+print(df[df["reach"] == 4][["name", "headline"]].head())
+```
+
+  </Tab>
+</Tabs>
+
+## The shape of one record
+
+In the full bundle each capability is one object. In a platform bundle the `platforms` field is replaced by a single `platform` block for that platform.
+
+```json
+{
+  "id": "mob.app.associated-domains",
+  "name": "Linking an app to a website",
+  "kind": "capability",
+  "group": "app-ecosystem",
+  "space": "mobile",
+  "plain": "Proves the app and website are owned together...",
+  "platforms": {
+    "android": { "s": "y", "v": "6.0", "api": 23, "permission": "..." },
+    "ios": { "s": "y", "v": "9", "permission": "..." }
+  },
+  "limits": { "headline": "...", "can": ["..."], "cannot": ["..."], "reach": 1 }
+}
+```
+
+Read [the data model](/docs/data-model/) for what every field means.
+
+## Build the bundles yourself
+
+Clone the repository and run the build. It validates every file first, so it also works as a check on your own edits.
+
+```bash
+git clone https://github.com/ever-just/platform-ontology.git
+cd platform-ontology
+STRICT=1 node scripts/build-data.mjs
+```
+
+The bundles land in `dist/`. There are no dependencies to install.
+
+## Link back to a capability
+
+Each capability has a stable `id`. Use it in your own data so you can always find the page again. For example, the page for `mob.app.associated-domains` lives under [capabilities](/docs/capabilities/) in the app group, and the simulator opens it at `/lab/#mob-app-associated-domains` (dots become hyphens).

@@ -1,0 +1,233 @@
+{
+  "id": "web.xsite.server-side-tagging",
+  "name": "Server side tagging",
+  "kind": "tracking",
+  "group": "cross-site-tracking",
+  "subgroup": "In session",
+  "tags": [
+    "server-side",
+    "gtm-server",
+    "first-party-proxy",
+    "sgtm"
+  ],
+  "plain": "The site sends its analytics to its own server first, which relays it to ad vendors.",
+  "meaning": "Moves tracking from the browser to the site's cloud container, so blockers cannot see vendor calls and cookies are set by the site's own server. The vendor can still receive IP, user agent, hashed email and click IDs the server chooses to forward.",
+  "lifecycle": [
+    "in-session",
+    "after-leaving"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "Google Tag Manager server container on a first party subdomain; Set-Cookie from server",
+      "access": {
+        "grant": "none",
+        "prompt_ui": "None",
+        "secure_context": false,
+        "user_gesture": false,
+        "persistence": "Server set cookies can last up to 400 days but Safari caps IP mismatched ones at 7 days",
+        "revocation": "Clear site data, browser privacy settings",
+        "iframe": "",
+        "steps": []
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "1",
+          "note": "Server side, browser independent",
+          "date": "2008-12-11"
+        },
+        "edge": {
+          "s": "y",
+          "v": "1",
+          "note": "Server side, browser independent",
+          "date": ""
+        },
+        "firefox": {
+          "s": "y",
+          "v": "1",
+          "note": "Server side, browser independent",
+          "date": "2004-11-09"
+        },
+        "safari": {
+          "s": "y",
+          "v": "1",
+          "note": "Server side, browser independent",
+          "date": "2003-06-23"
+        },
+        "ios_safari": {
+          "s": "y",
+          "v": "1",
+          "note": "Server side, browser independent",
+          "date": "2007-06-29"
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "1",
+          "note": "Server side, browser independent",
+          "date": ""
+        },
+        "samsung": {
+          "s": "y",
+          "v": "1",
+          "note": "Server side, browser independent",
+          "date": "2013-04-27"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "object",
+    "metric": "Event payload from server",
+    "update": "per event",
+    "fields": []
+  },
+  "limits": {
+    "headline": "Can send your activity to the site's own server first, then on to ad vendors",
+    "user_action": "Nothing on your side. It happens as you use a site that routes data through its server",
+    "can": [
+      "Collect your visits on the site's own server",
+      "Pass them to ad and analytics vendors",
+      "Choose what data each vendor receives, including fewer details"
+    ],
+    "cannot": [
+      "Be seen or blocked by your browser, since the relay is out of sight",
+      "Add details the browser never sent",
+      "Work unless the site has set it up",
+      "Give vendors your data if the site chooses not to pass it on"
+    ],
+    "reach": 3,
+    "reach_label": "What the site chooses to pass on",
+    "differs": ""
+  },
+  "story": {
+    "what_it_is": "A site sends its tracking to its own server first, which passes it on to ad vendors.",
+    "icon": "cloud",
+    "tags": [
+      "Ads",
+      "Server side",
+      "Silent"
+    ],
+    "marketing": [
+      {
+        "vendor": "Google",
+        "name": "Server side tagging",
+        "pitch": "Google pitches it as moving tags to a server container for faster pages, more control and better data.",
+        "url": "https://developers.google.com/tag-platform/tag-manager/server-side/intro"
+      }
+    ],
+    "for_you": "You never see it. Instead of loading many vendor scripts, the page sends one stream to the site's own server. Blockers cannot see vendor calls, and cookies are set by the site's own server.",
+    "for_makers": "Pages load faster and the company controls what each vendor gets. It also gets around blockers and short cookie limits. The server can still forward IP, hashed email and click IDs.",
+    "use_cases": [
+      {
+        "type": "analytics",
+        "example": "A shop sends all events to its own server, then to Google Analytics and Meta, so pages load faster.",
+        "apps": [
+          "Google Tag Manager"
+        ]
+      },
+      {
+        "type": "ads",
+        "example": "An advertiser sets a first party cookie from its own server, so it lasts longer than a script cookie.",
+        "apps": [
+          "Google Ads",
+          "Meta Ads"
+        ]
+      },
+      {
+        "type": "games",
+        "example": "A game store sends purchase events through its server to ad networks, with no vendor script on the page.",
+        "apps": [
+          "Steam"
+        ]
+      },
+      {
+        "type": "media",
+        "example": "A publisher removes dozens of ad scripts from the page and sends data from its server.",
+        "apps": [
+          "The New York Times"
+        ]
+      },
+      {
+        "type": "security",
+        "example": "A company hashes email on its server and drops IP before sharing, to cut what vendors see.",
+        "apps": []
+      },
+      {
+        "type": "shopping",
+        "example": "A retailer adds server events to fill gaps when shoppers use blockers.",
+        "apps": [
+          "Shopify"
+        ]
+      }
+    ],
+    "risks": [
+      "Cannot be blocked in your browser",
+      "Company decides what each vendor sees"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Server must forward data on its own authority",
+    "Consent rules still apply",
+    "Safari caps cookies from servers on different IP ranges",
+    "Browser mitigations like Safari 27 IP blocking do not see server to server calls"
+  ],
+  "scores": {
+    "sensitivity": 4,
+    "utility": 4,
+    "fingerprint_bits": null,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Performance, data control"
+    ],
+    "abuse": [
+      "Evading blockers, covert hashed email forwarding"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2020-08",
+      "browser": "all",
+      "version": "",
+      "change": "Google Tag Manager server side tagging announced"
+    },
+    {
+      "date": "2021-09",
+      "browser": "all",
+      "version": "",
+      "change": "GA4 server side support expanded"
+    }
+  ],
+  "related": [
+    "web.xsite.cname-cloaking",
+    "web.xsite.conversions-api"
+  ],
+  "refs": [
+    {
+      "t": "vendor",
+      "label": "Google Tag Manager server side introduction",
+      "url": "https://developers.google.com/tag-platform/tag-manager/server-side/intro"
+    },
+    {
+      "t": "news",
+      "label": "Safari 27 and server side tagging (PPC Land)",
+      "url": "https://ppc.land/safari-27-blocks-linkedin-and-bing-ad-trackers-by-ip-address/"
+    },
+    {
+      "t": "webkit",
+      "label": "WebKit Tracking Prevention",
+      "url": "https://webkit.org/tracking-prevention/"
+    }
+  ],
+  "confidence": "docs"
+}

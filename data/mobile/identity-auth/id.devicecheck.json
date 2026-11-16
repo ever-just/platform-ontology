@@ -1,0 +1,193 @@
+{
+  "id": "mob.id.devicecheck",
+  "name": "DeviceCheck two bits",
+  "kind": "tracking",
+  "group": "identity-auth",
+  "subgroup": "Attestation",
+  "tags": [
+    "devicecheck",
+    "bits"
+  ],
+  "plain": "Apple stores two bits per device per developer on its servers.",
+  "meaning": "Lets a developer mark a device (for example, trial used) with 2 bits that persist across reinstall and device wipe; no other data.",
+  "lifecycle": [
+    "signed-in",
+    "after-uninstall"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "n",
+      "v": "",
+      "api": "",
+      "permission": "none",
+      "protection": "not-exposed",
+      "grant": "not-exposed",
+      "prompt_ui": "",
+      "persistence": "",
+      "revocation": "",
+      "store_policy": "",
+      "api_surface": "No equivalent",
+      "note": "Play Integrity gives verdicts, not storage"
+    },
+    "ios": {
+      "s": "y",
+      "v": "11.0",
+      "permission": "none",
+      "protection": "none",
+      "grant": "none",
+      "prompt_ui": "",
+      "persistence": "Cannot be cleared by the user",
+      "revocation": "App Review: fraud prevention use",
+      "store_policy": "",
+      "api_surface": "2 bits plus last update month; per developer account; server to server with an Apple key",
+      "note": "Survives reinstall"
+    }
+  },
+  "data": {
+    "type": "binary",
+    "metric": "2 bits",
+    "update": "On server call",
+    "fields": [
+      {
+        "name": "bit0",
+        "type": "boolean",
+        "unit": "",
+        "range": "true, false",
+        "precision": "1 bit"
+      },
+      {
+        "name": "bit1",
+        "type": "boolean",
+        "unit": "",
+        "range": "true, false",
+        "precision": "1 bit"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can store two yes or no flags about your device on Apple's servers",
+    "user_action": "Nothing. It happens when the app's server asks Apple about your device",
+    "can": [
+      "Set or look up 2 bits on Apple's servers for this device and this developer",
+      "Remember a device was flagged (for example, a used free trial) even after you reinstall",
+      "Learn the month the bits were last changed"
+    ],
+    "cannot": [
+      "Store anything beyond 2 bits and a date",
+      "Share the bits with other developers",
+      "See your Apple ID, name or any personal detail",
+      "Work on Android; there is no equivalent"
+    ],
+    "reach": 3,
+    "reach_label": "Two flags that survive reinstall",
+    "differs": "Only iPhone has DeviceCheck. Android gives integrity verdicts but no storage."
+  },
+  "story": {
+    "what_it_is": "Apple lets an app store two private yes or no flags about your phone on its servers.",
+    "icon": "ban",
+    "tags": [
+      "Anti fraud",
+      "Tracking",
+      "Silent"
+    ],
+    "marketing": [
+      {
+        "vendor": "Apple",
+        "name": "DeviceCheck",
+        "pitch": "Apple offers two bits per device so developers can remember simple things like a used free trial.",
+        "url": "https://developer.apple.com/documentation/devicecheck"
+      }
+    ],
+    "for_you": "You never see it. It can mean that if you used a free trial once, the app may still know after you delete it and reinstall. You cannot clear it yourself.",
+    "for_makers": "Makers use these two bits to stop people from claiming a free trial again and again, or to mark a phone that abused a promo. It survives reinstall and even a wipe of the device, which is why it works so well for abuse control.",
+    "use_cases": [
+      {
+        "type": "media",
+        "example": "A music streaming app marks your phone when you finish a free trial so a new email cannot get another one.",
+        "apps": [
+          "Spotify"
+        ]
+      },
+      {
+        "type": "games",
+        "example": "A mobile game flags a phone that abused a gift code so the same phone cannot claim it again on a new account.",
+        "apps": []
+      },
+      {
+        "type": "dating",
+        "example": "A dating app remembers that a phone was banned for harassment, so a fresh profile does not slip through.",
+        "apps": []
+      },
+      {
+        "type": "shopping",
+        "example": "A store limits a welcome coupon to one claim per phone even after an app reinstall.",
+        "apps": []
+      },
+      {
+        "type": "ads",
+        "example": "An ad network flags a device that produced fake installs, then discounts its traffic.",
+        "apps": []
+      },
+      {
+        "type": "security",
+        "example": "A bank app marks a phone used in a known scam so later sign ins from it get extra checks.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Mark survives reinstall",
+      "Hard to clear or see"
+    ],
+    "android_note": "Android has no exact twin. Developers use Play Integrity and server side checks instead.",
+    "ios_note": "This is Apple only. Each developer gets its own two bits per device, so it cannot link different developers."
+  },
+  "technical_bounds": [
+    "Server only",
+    "2 bits max"
+  ],
+  "scores": {
+    "sensitivity": 2,
+    "utility": 3,
+    "fingerprint_bits": 2,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Trial abuse prevention"
+    ],
+    "abuse": [
+      "Persistent mark"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2017-09",
+      "platform": "ios",
+      "version": "iOS 11",
+      "change": "DeviceCheck introduced"
+    }
+  ],
+  "related": [
+    "mob.id.app-attest"
+  ],
+  "refs": [
+    {
+      "t": "apple",
+      "label": "Apple: DeviceCheck",
+      "url": "https://developer.apple.com/documentation/devicecheck"
+    },
+    {
+      "t": "apple",
+      "label": "Apple: Establishing your app's integrity (App Attest)",
+      "url": "https://developer.apple.com/documentation/devicecheck/establishing-your-app-s-integrity"
+    }
+  ],
+  "confidence": "docs"
+}

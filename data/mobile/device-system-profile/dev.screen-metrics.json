@@ -1,0 +1,200 @@
+{
+  "id": "mob.dev.screen-metrics",
+  "name": "Screen size and density",
+  "kind": "signal",
+  "group": "device-system-profile",
+  "subgroup": "Display",
+  "tags": [
+    "screen",
+    "density",
+    "dpi"
+  ],
+  "plain": "Reads pixel size, density and scale factor with no prompt.",
+  "meaning": "Identifies the device model almost uniquely on iPhone and narrows it on Android. Needed for layout; also a long-lived fingerprint field.",
+  "lifecycle": [
+    "on-launch",
+    "in-session"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "y",
+      "v": "1.0",
+      "api": 1,
+      "permission": "",
+      "protection": "none",
+      "grant": "none",
+      "prompt_ui": "",
+      "persistence": "",
+      "revocation": "",
+      "store_policy": "",
+      "api_surface": "DisplayMetrics (widthPixels, heightPixels, density, densityDpi), WindowMetrics (API 30)",
+      "note": "Density 120 to 640 dpi; size in px"
+    },
+    "ios": {
+      "s": "y",
+      "v": "2.0",
+      "permission": "none",
+      "protection": "none",
+      "grant": "none",
+      "prompt_ui": "",
+      "persistence": "",
+      "revocation": "",
+      "store_policy": "",
+      "api_surface": "Scale 2.0 or 3.0 on iPhone; bounds in points",
+      "note": ""
+    }
+  },
+  "web_equivalents": [
+    "web.display.screen-size",
+    "web.display.device-pixel-ratio"
+  ],
+  "data": {
+    "type": "object",
+    "metric": "Width, height, density",
+    "update": "On change (rotation, fold)",
+    "fields": [
+      {
+        "name": "width_px",
+        "type": "integer",
+        "unit": "px",
+        "range": "320 to 3840",
+        "precision": "1 px"
+      },
+      {
+        "name": "density",
+        "type": "float",
+        "unit": "ratio",
+        "range": "0.75 to 4.0",
+        "precision": "0.25 steps"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can see your screen size, sharpness and scale, with no prompt",
+    "user_action": "Nothing. The app checks when it opens, to lay out its screens",
+    "can": [
+      "See screen width and height, in pixels on Android and points on iPhone",
+      "See sharpness, 120 to 640 dpi on Android and scale 2 or 3 on iPhone",
+      "Fit its layout to your screen",
+      "See window size on newer Android"
+    ],
+    "cannot": [
+      "Learn who you are from screen size alone",
+      "See what is on screen in other apps",
+      "Change the screen resolution"
+    ],
+    "reach": 2,
+    "reach_label": "Always available, simple facts",
+    "differs": ""
+  },
+  "story": {
+    "what_it_is": "An app can read the size of your screen and how sharp it is.",
+    "icon": "ruler",
+    "tags": [
+      "Silent",
+      "Device",
+      "Fingerprint"
+    ],
+    "marketing": [],
+    "for_you": "You never see it. It is needed to draw the app properly. It also tells an app almost exactly which phone you have.",
+    "for_makers": "Makers need it to lay out screens for every size. Because the numbers are so specific, they also work as a long lasting fingerprint detail.",
+    "use_cases": [
+      {
+        "type": "games",
+        "example": "A game scales its menus and touch buttons to fit your exact screen.",
+        "apps": []
+      },
+      {
+        "type": "shopping",
+        "example": "A store app shows a grid with two or three product columns depending on your width.",
+        "apps": []
+      },
+      {
+        "type": "creative",
+        "example": "A drawing app sizes its canvas to the screen sharpness.",
+        "apps": []
+      },
+      {
+        "type": "media",
+        "example": "A video app picks a video size that fits your screen and saves data.",
+        "apps": []
+      },
+      {
+        "type": "ads",
+        "example": "An ad network picks an ad size and joins it with other details to guess your phone.",
+        "apps": []
+      },
+      {
+        "type": "accessibility",
+        "example": "A reading app lets you pick larger text based on your screen density.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Narrows down your phone model",
+      "Long lived fingerprint detail"
+    ],
+    "android_note": "Reads pixel size, density and scale factor with no prompt.",
+    "ios_note": "Reads size and scale, which pins down the iPhone model."
+  },
+  "technical_bounds": [
+    "Multi-window and foldables report window, not screen, size"
+  ],
+  "scores": {
+    "sensitivity": 1,
+    "utility": 3,
+    "fingerprint_bits": 5,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Layout"
+    ],
+    "abuse": [
+      "Fingerprint"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2020-09",
+      "platform": "android",
+      "version": "11 (API 30)",
+      "change": "WindowMetrics added for multi-window"
+    },
+    {
+      "date": "2020-09",
+      "platform": "ios",
+      "version": "iOS 13",
+      "change": "Per-scene screens (UIWindowScene) replace main-screen use"
+    }
+  ],
+  "related": [
+    "mob.dev.refresh-rate",
+    "mob.dev.model"
+  ],
+  "refs": [
+    {
+      "t": "android",
+      "label": "Android: Display",
+      "url": "https://developer.android.com/reference/android/view/Display"
+    },
+    {
+      "t": "apple",
+      "label": "Apple: UIScreen",
+      "url": "https://developer.apple.com/documentation/uikit/uiscreen"
+    },
+    {
+      "t": "paper",
+      "label": "Kurtz et al.: Fingerprinting Mobile Devices Using Personalized Configurations (PoPETs 2016)",
+      "url": "https://petsymposium.org/popets/2016/popets-2015-0027.php"
+    }
+  ],
+  "confidence": "inferred"
+}

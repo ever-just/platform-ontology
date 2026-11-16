@@ -1,0 +1,232 @@
+{
+  "id": "web.net.referrer-origin",
+  "name": "Referer and Origin headers",
+  "kind": "signal",
+  "group": "network-connectivity",
+  "subgroup": "Headers",
+  "tags": [
+    "referer",
+    "referrer-policy",
+    "origin"
+  ],
+  "plain": "Requests tell the destination site which page the visitor came from.",
+  "meaning": "The default policy strict-origin-when-cross-origin (Chrome 85, Firefox 87) sends only the origin cross-site. Safari has capped cross-site referrers to the origin since 12.1. Full URLs still go same-site.",
+  "lifecycle": [
+    "on-arrival"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "Referer and Origin request headers; Referrer-Policy; document.referrer",
+      "bcd": [
+        "http.headers.Referrer-Policy"
+      ],
+      "access": {
+        "grant": "none",
+        "prompt_ui": "",
+        "secure_context": false,
+        "user_gesture": false,
+        "persistence": "",
+        "revocation": "",
+        "iframe": "",
+        "steps": [
+          "Navigate or fetch",
+          "Browser applies policy",
+          "Server reads header"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "56",
+          "note": "",
+          "date": "2017-01-25"
+        },
+        "edge": {
+          "s": "y",
+          "v": "79",
+          "note": "",
+          "date": "2020-01-15"
+        },
+        "firefox": {
+          "s": "y",
+          "v": "50",
+          "note": "",
+          "date": "2016-11-15"
+        },
+        "safari": {
+          "s": "y",
+          "v": "11.1",
+          "note": "",
+          "date": "2018-04-12"
+        },
+        "ios_safari": {
+          "s": "y",
+          "v": "12",
+          "note": "",
+          "date": "2018-09-17"
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "56",
+          "note": "",
+          "date": "2017-02-01"
+        },
+        "samsung": {
+          "s": "y",
+          "v": "7.2",
+          "note": "",
+          "date": "2018-06-20"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "string",
+    "metric": "URL or origin",
+    "update": "",
+    "fields": [
+      {
+        "name": "Referer",
+        "type": "string",
+        "unit": "",
+        "range": "URL or origin",
+        "precision": "policy dependent"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can tell which site you came from, usually just the site name, not the page",
+    "user_action": "You click a link or load a page that pulls in another site's content",
+    "can": [
+      "See the site address you arrived from, such as example.com",
+      "See the full page address when you move around inside the same site",
+      "Count visits by traffic source for analytics"
+    ],
+    "cannot": [
+      "See the full page address of another site you left, in Chrome, Firefox and Safari by default",
+      "See your browsing history beyond the one step before",
+      "Get a referrer if the previous page chose to send none"
+    ],
+    "reach": 1,
+    "reach_label": "One step back, mostly the site name",
+    "differs": "Safari has limited cross site referrers to the site name for years. Chrome and Firefox did the same by default around 2020 and 2021."
+  },
+  "story": {
+    "what_it_is": "Each request tells the destination which page or site you came from.",
+    "icon": "link",
+    "tags": [
+      "Tracking",
+      "Silent",
+      "Ads"
+    ],
+    "marketing": [
+      {
+        "vendor": "W3C",
+        "name": "Referrer Policy",
+        "pitch": "The standard lets sites choose how much of the previous page address is shared when you click a link.",
+        "url": "https://www.w3.org/TR/referrer-policy/"
+      }
+    ],
+    "for_you": "You never see it. When you click a link or a page loads an image, the other site learns where you were. Browsers now trim it to just the site name by default, so you share less than before.",
+    "for_makers": "Makers use it to see which sites and ads send visitors, to block other sites from copying their images, and to guard forms from forged requests. The origin header helps stop cross site attacks.",
+    "use_cases": [
+      {
+        "type": "analytics",
+        "example": "A shop sees that many visitors arrive from a blog post. The referrer tells it which blog to thank and which affiliate to pay.",
+        "apps": [
+          "Google Analytics"
+        ]
+      },
+      {
+        "type": "ads",
+        "example": "An advertiser reads the referrer to check that clicks came from the sites it paid, and to spot fake sites.",
+        "apps": []
+      },
+      {
+        "type": "media",
+        "example": "A photo site stops other sites from showing its pictures for free by checking the referrer on image requests.",
+        "apps": []
+      },
+      {
+        "type": "security",
+        "example": "A banking site checks the origin header on a transfer form. A request coming from another site is rejected as forged.",
+        "apps": []
+      },
+      {
+        "type": "games",
+        "example": "A browser game portal sees which partner site a player came from, so it can credit the partner and show a matching start screen.",
+        "apps": [
+          "Poki",
+          "CrazyGames"
+        ]
+      },
+      {
+        "type": "social",
+        "example": "A social site shows a link preview but trims the referrer so private page addresses do not leak to the linked site.",
+        "apps": []
+      },
+      {
+        "type": "news",
+        "example": "A news site sees visitors from search, social and email, and uses it to pick which subscription offer to show.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Leaks page addresses",
+      "Reveals browsing path"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Pages can loosen it with Referrer-Policy: unsafe-url",
+    "Never reveals the referring page across origins by default"
+  ],
+  "scores": {
+    "sensitivity": 2,
+    "utility": 5,
+    "fingerprint_bits": 2,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": "Analytics and traffic attribution",
+    "abuse": "Leaks of sensitive URLs, search terms"
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2020-08",
+      "browser": "chrome",
+      "version": "85",
+      "change": "Default Referrer-Policy strict-origin-when-cross-origin"
+    },
+    {
+      "date": "2021-03",
+      "browser": "firefox",
+      "version": "87",
+      "change": "Default Referrer-Policy strict-origin-when-cross-origin"
+    }
+  ],
+  "related": [
+    "web.net.client-ip"
+  ],
+  "refs": [
+    {
+      "t": "mdn",
+      "label": "MDN Referrer-Policy",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Referrer-Policy"
+    },
+    {
+      "t": "spec",
+      "label": "W3C Referrer Policy",
+      "url": "https://www.w3.org/TR/referrer-policy/"
+    }
+  ],
+  "confidence": "docs"
+}

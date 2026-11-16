@@ -1,0 +1,178 @@
+{
+  "id": "mob.device.increased-memory-limit",
+  "name": "Increased memory limit",
+  "kind": "capability",
+  "group": "device-system-profile",
+  "subgroup": "Performance",
+  "tags": [
+    "entitlement",
+    "memory",
+    "performance"
+  ],
+  "plain": "Raises the foreground memory cap for heavy apps.",
+  "meaning": "No privacy impact; shows how OS gives bigger resource caps to apps that ask in a manifest or entitlement.",
+  "lifecycle": [
+    "in-session"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "y",
+      "v": "3.0",
+      "api": 11,
+      "permission": "android:largeHeap manifest attribute",
+      "protection": "none",
+      "grant": "install",
+      "prompt_ui": "None",
+      "persistence": "Static",
+      "revocation": "n/a",
+      "store_policy": "",
+      "api_surface": "ActivityManager.getMemoryClass, getLargeMemoryClass",
+      "note": "Request needs no approval"
+    },
+    "ios": {
+      "s": "y",
+      "v": "15",
+      "permission": "com.apple.developer.kernel.increased-memory-limit",
+      "protection": "entitlement",
+      "grant": "entitlement",
+      "prompt_ui": "None; capability in Xcode",
+      "persistence": "Tied to provisioning",
+      "revocation": "n/a",
+      "store_policy": "",
+      "api_surface": "Xcode capability, os_proc_available_memory",
+      "note": "Raises per process limit on supported devices"
+    }
+  },
+  "data": {
+    "type": "integer",
+    "metric": "Memory cap",
+    "update": "static",
+    "fields": [
+      {
+        "name": "cap",
+        "type": "integer",
+        "unit": "MB",
+        "range": "device dependent",
+        "precision": ""
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can ask for more working memory for heavy tasks, with no prompt",
+    "user_action": "Nothing. The developer turns this on before the app ships",
+    "can": [
+      "Raise the app's memory cap on supported iPhones",
+      "Ask for a large memory heap on Android with one setting",
+      "Open big photos, video or maps without running out of memory"
+    ],
+    "cannot": [
+      "Go past what your phone physically has",
+      "Get approval on Android; it needs none, but it is only a request",
+      "Gain extra access to your data",
+      "Keep apps from being closed when memory is low for the whole system"
+    ],
+    "reach": 1,
+    "reach_label": "A developer setting, no data",
+    "differs": "On Android it is a manifest setting needing no approval. On iPhone it is an Apple capability that works on supported devices."
+  },
+  "story": {
+    "what_it_is": "A setting that lets heavy apps use more memory while on screen.",
+    "icon": "memory-stick",
+    "tags": [
+      "Developer",
+      "Performance",
+      "iPhone"
+    ],
+    "marketing": [
+      {
+        "vendor": "Apple",
+        "name": "Increased Memory Limit entitlement",
+        "pitch": "Developer rule: apps that need more memory, such as big games or editors, can ask for a higher limit.",
+        "url": "https://developer.apple.com/documentation/bundleresources/entitlements/com.apple.developer.kernel.increased-memory-limit"
+      }
+    ],
+    "for_you": "You will never see it. It only helps demanding apps like large games, video editors or maps keep running instead of closing without warning.",
+    "for_makers": "Makers ask for it when a normal memory cap makes their app crash. On Android a similar flag asks for a larger heap. It does not collect data about you.",
+    "use_cases": [
+      {
+        "type": "games",
+        "example": "A big open world game asks for more memory so it does not close in the middle of a boss fight.",
+        "apps": []
+      },
+      {
+        "type": "creative",
+        "example": "A video or photo editor keeps a long project in memory without crashing.",
+        "apps": []
+      },
+      {
+        "type": "ar-vr",
+        "example": "An AR app holds a 3D scan of your room in memory while you walk around.",
+        "apps": []
+      },
+      {
+        "type": "maps",
+        "example": "A map app keeps large map tiles in memory for smooth zooming.",
+        "apps": []
+      },
+      {
+        "type": "developer",
+        "example": "A developer who sees the app killed for using too much memory turns this on after other fixes.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Can hurt other apps",
+      "No privacy impact"
+    ],
+    "android_note": "Apps ask for a large heap in their manifest, and the system may still limit them.",
+    "ios_note": "Needs an entitlement in the app, and only some devices honor it."
+  },
+  "technical_bounds": [
+    "Device dependent"
+  ],
+  "scores": {
+    "sensitivity": 1,
+    "utility": 2,
+    "fingerprint_bits": null,
+    "friction": 1
+  },
+  "value": {
+    "legit_uses": [
+      "Photo and video editors"
+    ],
+    "abuse": [
+      "None"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2021-09",
+      "platform": "ios",
+      "version": "iOS 15",
+      "change": "Increased memory limit entitlement"
+    }
+  ],
+  "related": [
+    "mob.device.extended-virtual-addressing"
+  ],
+  "refs": [
+    {
+      "t": "apple",
+      "label": "Apple: increased memory limit",
+      "url": "https://developer.apple.com/documentation/bundleresources/entitlements/com.apple.developer.kernel.increased-memory-limit"
+    },
+    {
+      "t": "android",
+      "label": "Android: largeHeap",
+      "url": "https://developer.android.com/topic/performance/memory-overview"
+    }
+  ],
+  "confidence": "docs"
+}

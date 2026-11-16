@@ -1,0 +1,184 @@
+{
+  "id": "mob.rr.file-timestamps",
+  "name": "Required Reason: file timestamps",
+  "kind": "capability",
+  "group": "files-storage",
+  "subgroup": "Privacy manifests",
+  "tags": [
+    "required-reason-api",
+    "file-timestamp"
+  ],
+  "plain": "iOS file creation and modification time needs a reason code: C617.1, 3B52.1, DDA9.1 or 0A2A.1.",
+  "meaning": "File dates can reveal install time and OS age. Reasons limit who sees them: C617.1 app container, 3B52.1 user-granted files, DDA9.1 display, 0A2A.1 SDK wrapper.",
+  "lifecycle": [
+    "on-launch",
+    "in-session"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "n",
+      "v": "",
+      "api": "",
+      "permission": "none",
+      "protection": "none",
+      "grant": "not-exposed",
+      "prompt_ui": "",
+      "persistence": "",
+      "revocation": "",
+      "store_policy": "",
+      "api_surface": "Android has no gate; File.lastModified is open",
+      "note": "Android analog: no reason needed"
+    },
+    "ios": {
+      "s": "f",
+      "v": "17.0",
+      "permission": "entitlement",
+      "protection": "entitlement",
+      "grant": "none",
+      "prompt_ui": "",
+      "persistence": "",
+      "revocation": "App Review: reason must match use",
+      "store_policy": "",
+      "api_surface": "C617.1 app, app group or CloudKit container; 3B52.1 user-granted files; DDA9.1 show to user (no off-device send); 0A2A.1 SDK wrapper only",
+      "note": ""
+    }
+  },
+  "data": {
+    "type": "object",
+    "metric": "Reason codes",
+    "update": "At upload",
+    "fields": [
+      {
+        "name": "reason_codes",
+        "type": "list",
+        "unit": "code",
+        "range": "4 values",
+        "precision": "exact"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can check file dates on iPhone only with a stated reason, and freely on Android",
+    "user_action": "Nothing. The app checks when it opens or syncs",
+    "can": [
+      "Check dates on its own files, app group files or CloudKit files on iPhone",
+      "Check dates on files you chose to give it",
+      "Show you file dates inside the app",
+      "Check dates on Android with no gate"
+    ],
+    "cannot": [
+      "Check dates on iPhone without one of the listed reasons",
+      "Send the dates off your phone when the reason is only to show you",
+      "Use the dates for tracking, under the rules",
+      "Need a reason on Android"
+    ],
+    "reach": 2,
+    "reach_label": "A number, with a stated reason",
+    "differs": "Android has no gate. iPhone requires a declared reason such as C617.1 or DDA9.1."
+  },
+  "story": {
+    "what_it_is": "iOS makes apps give an approved reason before reading file dates.",
+    "icon": "file-clock",
+    "tags": [
+      "Rules",
+      "iPhone",
+      "Files"
+    ],
+    "marketing": [
+      {
+        "vendor": "Apple",
+        "name": "Required Reason APIs",
+        "pitch": "Developer rule: apps must declare why they read file creation or modification time, since dates can fingerprint a device.",
+        "url": "https://developer.apple.com/documentation/bundleresources/describing-use-of-required-reason-api"
+      }
+    ],
+    "for_you": "You never see it. File dates can reveal when you installed an app or updated the system, so Apple makes apps explain why they read them.",
+    "for_makers": "Makers choose a reason code, like C617.1 for their own files or 3B52.1 for files you shared. Using dates for tracking is not allowed.",
+    "use_cases": [
+      {
+        "type": "productivity",
+        "example": "A notes app sorts documents by last edited date and declares C617.1.",
+        "apps": []
+      },
+      {
+        "type": "media",
+        "example": "A files app shows the date of a document you opened and declares 3B52.1.",
+        "apps": []
+      },
+      {
+        "type": "developer",
+        "example": "A toolkit wraps file dates for the app and declares 0A2A.1.",
+        "apps": []
+      },
+      {
+        "type": "utilities",
+        "example": "A viewer app shows the date a file was made and declares DDA9.1.",
+        "apps": []
+      },
+      {
+        "type": "ads",
+        "example": "A tracker SDK that reads install time through file dates is flagged.",
+        "apps": []
+      },
+      {
+        "type": "security",
+        "example": "A fraud tool that reads file dates to guess phone age loses access.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Reason may be misused",
+      "Dates can leak install time"
+    ],
+    "android_note": "Android has no matching rule.",
+    "ios_note": "Enforced through the privacy manifest and App Store checks."
+  },
+  "technical_bounds": [
+    "Reasons restrict off-device use"
+  ],
+  "scores": {
+    "sensitivity": 1,
+    "utility": 2,
+    "fingerprint_bits": null,
+    "friction": 3
+  },
+  "value": {
+    "legit_uses": [
+      "Show file dates"
+    ],
+    "abuse": [
+      "Install-time fingerprint"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2024-05",
+      "platform": "ios",
+      "version": "iOS 17.x",
+      "change": "Reason required to ship"
+    }
+  ],
+  "related": [
+    "mob.rr.regime"
+  ],
+  "refs": [
+    {
+      "t": "apple",
+      "label": "Apple: Describing use of required reason API",
+      "url": "https://developer.apple.com/documentation/bundleresources/describing-use-of-required-reason-api"
+    },
+    {
+      "t": "apple",
+      "label": "Apple: Privacy manifest files",
+      "url": "https://developer.apple.com/documentation/bundleresources/privacy-manifest-files"
+    }
+  ],
+  "confidence": "verified"
+}

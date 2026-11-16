@@ -1,0 +1,240 @@
+{
+  "id": "web.network.ect-client-hints",
+  "name": "Network client hints (ECT, RTT, Downlink)",
+  "kind": "signal",
+  "group": "network-connectivity",
+  "subgroup": "Connection quality",
+  "tags": [
+    "client-hints",
+    "ect",
+    "rtt",
+    "downlink"
+  ],
+  "plain": "Server-side headers with the effective connection type, RTT and downlink.",
+  "meaning": "Same numbers as the Network Information API but delivered on requests so the server can adapt before sending HTML. Requires Accept-CH opt-in, with the same 25 ms and 25 kbps rounding.",
+  "lifecycle": [
+    "on-arrival",
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "Accept-CH: ECT, RTT, Downlink; request headers ECT, RTT, Downlink",
+      "bcd": [
+        "http.headers.ECT"
+      ],
+      "access": {
+        "grant": "none",
+        "prompt_ui": "None",
+        "secure_context": false,
+        "user_gesture": false,
+        "persistence": "read fresh on every page load; nothing stored",
+        "revocation": "none needed (no grant)",
+        "iframe": "Readable from cross-origin iframes too (same values)",
+        "steps": [
+          "Page script reads the value",
+          "No prompt is shown"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "67",
+          "note": "",
+          "date": "2018-05-29"
+        },
+        "edge": {
+          "s": "y",
+          "v": "79",
+          "note": "",
+          "date": "2020-01-15"
+        },
+        "firefox": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "safari": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "ios_safari": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "67",
+          "note": "",
+          "date": "2018-05-31"
+        },
+        "samsung": {
+          "s": "y",
+          "v": "9.0",
+          "note": "",
+          "date": "2018-09-15"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "object",
+    "metric": "",
+    "update": "static per session",
+    "fields": [
+      {
+        "name": "ECT",
+        "type": "enum",
+        "unit": "",
+        "range": "slow-2g, 2g, 3g, 4g",
+        "precision": ""
+      },
+      {
+        "name": "RTT",
+        "type": "integer",
+        "unit": "ms",
+        "range": "multiples of 25",
+        "precision": ""
+      },
+      {
+        "name": "Downlink",
+        "type": "float",
+        "unit": "Mbps",
+        "range": "to 25 kbps steps",
+        "precision": ""
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can see your rough connection speed and delay in each request, if it asks first",
+    "user_action": "Nothing. It happens after the site opts in, on each page load",
+    "can": [
+      "Receive speed and delay hints with your request",
+      "Send a lighter page if your connection is slow",
+      "Notice when your connection class changes between visits"
+    ],
+    "cannot": [
+      "Get exact speed, since figures are rounded to coarse steps",
+      "Work in Firefox or Safari",
+      "Get anything unless the site opts in first",
+      "See your name or location"
+    ],
+    "reach": 3,
+    "reach_label": "Repeats on every request",
+    "differs": "Chrome, Edge and Samsung Internet send it. Firefox and Safari do not."
+  },
+  "story": {
+    "what_it_is": "Servers can receive a note about your connection type, delay and speed with each request.",
+    "icon": "signal",
+    "tags": [
+      "Network",
+      "Silent",
+      "Performance"
+    ],
+    "marketing": [
+      {
+        "vendor": "MDN Web Docs",
+        "name": "ECT header",
+        "pitch": "Tells the server the browser's effective connection type, so it can pick lighter or richer content.",
+        "url": "https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/ECT"
+      }
+    ],
+    "for_you": "You never see it. If a site asks, your browser tells its server how good the connection seems. The server may send a smaller page if the line is slow.",
+    "for_makers": "Makers can decide what to send before the browser runs any script. That saves time for slow users. The details also add a small clue to a device fingerprint.",
+    "use_cases": [
+      {
+        "type": "video",
+        "example": "A video platform reads the hint on the first request and picks a lower starting quality for slow connections.",
+        "apps": [
+          "YouTube"
+        ]
+      },
+      {
+        "type": "shopping",
+        "example": "A store sends a short list of products with small pictures on slow lines, and the full page on fast ones.",
+        "apps": []
+      },
+      {
+        "type": "news",
+        "example": "A news site serves a text first version on slow connections, and loads pictures later.",
+        "apps": []
+      },
+      {
+        "type": "games",
+        "example": "A browser game site serves a smaller loader and delays heavy assets for players on slow lines.",
+        "apps": []
+      },
+      {
+        "type": "ads",
+        "example": "An ad server picks a lightweight ad for slow connections so the page is not blocked.",
+        "apps": []
+      },
+      {
+        "type": "analytics",
+        "example": "A speed monitoring tool groups real page load times by connection type from the headers.",
+        "apps": []
+      },
+      {
+        "type": "accessibility",
+        "example": "A government site gives a plain, light page to people on slow rural internet, so forms still work.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Adds to a fingerprint",
+      "Chromium only"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Chromium only",
+    "Needs Accept-CH"
+  ],
+  "scores": {
+    "sensitivity": 1,
+    "utility": 3,
+    "fingerprint_bits": 2.0,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Server-side adaptation"
+    ],
+    "abuse": [
+      "Connection fingerprint"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2019-01",
+      "browser": "chrome",
+      "version": "67",
+      "change": "Shipped"
+    }
+  ],
+  "related": [
+    "web.network.network-information"
+  ],
+  "refs": [
+    {
+      "t": "mdn",
+      "label": "MDN ECT header",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/ECT"
+    },
+    {
+      "t": "spec",
+      "label": "HTTP Client Hints",
+      "url": "https://httpwg.org/http-extensions/client-hints.html"
+    }
+  ],
+  "confidence": "docs"
+}

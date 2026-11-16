@@ -1,0 +1,221 @@
+{
+  "id": "web.os.web-install-api",
+  "name": "Web Install API (navigator.install)",
+  "kind": "capability",
+  "group": "os-integration-install",
+  "subgroup": "Install",
+  "tags": [
+    "install"
+  ],
+  "plain": "Lets a page install another web app, or itself, with one call.",
+  "meaning": "Turns a link into an install button; the user still approves. Still an origin trial on desktop Chromium.",
+  "lifecycle": [
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "navigator.install(manifestUrl?), <install> element origin trial",
+      "bcd": [
+        "api.Navigator.install"
+      ],
+      "access": {
+        "grant": "origin-trial",
+        "prompt_ui": "Install dialog",
+        "secure_context": true,
+        "user_gesture": true,
+        "persistence": "Per origin",
+        "revocation": "Site settings",
+        "iframe": "Same as top level; cross-origin iframes need a permissions policy where listed",
+        "steps": [
+          "Call the API",
+          "Browser applies its access rules",
+          "Page receives the result"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "f",
+          "v": "154",
+          "note": "Origin trial 143 to 148"
+        },
+        "edge": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "firefox": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "safari": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "ios_safari": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "chrome_android": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "samsung": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "object",
+    "metric": "Lets a page install another web app, or itself, with one call.",
+    "update": "on demand",
+    "fields": [
+      {
+        "name": "result",
+        "type": "object",
+        "range": "manifest id and install state"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can offer to install a web app with one call, but you still approve it",
+    "user_action": "You tap an Install button on a page and confirm in the dialog",
+    "can": [
+      "Show an install dialog for itself or for another web app",
+      "Turn a link into an install button",
+      "Work only on sites in the Chrome trial"
+    ],
+    "cannot": [
+      "Install anything without your approval",
+      "Work for most visitors yet, since it is still a trial",
+      "Work in Edge, Firefox, Safari or on phones",
+      "Skip the browser's own dialog"
+    ],
+    "reach": 1,
+    "reach_label": "One install, if you approve",
+    "differs": "Only desktop Chrome in a testing trial today."
+  },
+  "story": {
+    "what_it_is": "A page can install another web app, or itself, with a single call and no menu hunt.",
+    "icon": "download",
+    "tags": [
+      "Installed apps",
+      "Capability",
+      "Testing"
+    ],
+    "marketing": [
+      {
+        "vendor": "Google Chrome",
+        "name": "Web Install API",
+        "pitch": "Lets a page start the install of a web app from a script, so a store style page can install apps in one click.",
+        "url": "https://developer.chrome.com/blog/web-install"
+      }
+    ],
+    "for_you": "You click an Install button on a page, and the app installs. The browser may ask you to confirm. It is meant to make installing as simple as in an app store.",
+    "for_makers": "Makers can build app catalogs and install buttons on the web. It cuts the steps from visit to installed app, which lifts install rates. It is in testing, so it is not widely used yet.",
+    "use_cases": [
+      {
+        "type": "games",
+        "example": "A web game portal has an Install button that adds the game to your home screen in one click.",
+        "apps": [
+          "Poki"
+        ]
+      },
+      {
+        "type": "shopping",
+        "example": "A store site installs its web app from a banner button.",
+        "apps": []
+      },
+      {
+        "type": "enterprise",
+        "example": "A company page installs staff tools from a list on its intranet.",
+        "apps": []
+      },
+      {
+        "type": "education",
+        "example": "A school portal installs learning apps for students on shared devices.",
+        "apps": []
+      },
+      {
+        "type": "productivity",
+        "example": "A web app directory installs a tool with one click, with no store needed.",
+        "apps": []
+      },
+      {
+        "type": "music",
+        "example": "A web player installs itself right after your first listen.",
+        "apps": []
+      },
+      {
+        "type": "social",
+        "example": "A social site offers Install after you sign in, with one click.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Pushy install prompts",
+      "In testing"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Origin trial only",
+    "Needs user gesture",
+    "Chrome flag in 154"
+  ],
+  "scores": {
+    "sensitivity": 1,
+    "utility": 3,
+    "fingerprint_bits": null,
+    "friction": 3
+  },
+  "value": {
+    "legit_uses": [
+      "App store like install links"
+    ],
+    "abuse": [
+      "Install spam"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2025-09",
+      "browser": "chrome",
+      "version": "143",
+      "change": "Origin trial starts on desktop (M143 to 148, extension requested to 153)"
+    },
+    {
+      "date": "2026-05",
+      "browser": "chrome",
+      "version": "148",
+      "change": "Declarative <install> element trial to 153"
+    }
+  ],
+  "refs": [
+    {
+      "t": "vendor",
+      "label": "Chrome Web Install API",
+      "url": "https://developer.chrome.com/blog/web-install"
+    },
+    {
+      "t": "spec",
+      "label": "Web Install",
+      "url": "https://github.com/WICG/web-install"
+    }
+  ],
+  "confidence": "docs"
+}

@@ -1,0 +1,203 @@
+{
+  "id": "mob.ai.screen-context",
+  "name": "Assistant screen context",
+  "kind": "capability",
+  "group": "on-device-ai",
+  "subgroup": "Assistant",
+  "tags": [
+    "screen-context",
+    "circle-to-search",
+    "visual-intelligence",
+    "assist"
+  ],
+  "plain": "Lets the assistant see what is on screen to answer questions.",
+  "meaning": "The system can capture the screen, or a camera view, and hand it to an assistant. Apps can opt out of capture on Android and iOS.",
+  "lifecycle": [
+    "in-session"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "p",
+      "v": "6.0",
+      "api": 23,
+      "permission": "Assistant role (ROLE_ASSISTANT); FLAG_SECURE blocks capture",
+      "protection": "role",
+      "grant": "role",
+      "prompt_ui": "Default assistant selection; Circle to Search gesture",
+      "persistence": "Per use",
+      "revocation": "Settings > Apps > Default apps > Digital assistant",
+      "store_policy": "",
+      "api_surface": "VoiceInteractionService, AssistContent, onProvideAssistContent, FLAG_SECURE",
+      "note": "Android 15 adds assist content structure to AssistContent; Circle to Search is Google owned."
+    },
+    "ios": {
+      "s": "p",
+      "v": "18.2",
+      "permission": "None; NSUserActivity and App Intents expose content",
+      "protection": "none",
+      "grant": "none",
+      "prompt_ui": "Visual Intelligence (camera control) iPhone 16; onscreen awareness in iOS 26",
+      "persistence": "Per use",
+      "revocation": "Settings > Apple Intelligence & Siri",
+      "store_policy": "",
+      "api_surface": "App Intents entities, Visual Intelligence search integration (iOS 26)",
+      "note": "Screenshots can be shared with ChatGPT after consent."
+    }
+  },
+  "data": {
+    "type": "object",
+    "metric": "Screen capture",
+    "update": "per use",
+    "fields": [
+      {
+        "name": "image",
+        "type": "binary",
+        "unit": "PNG",
+        "range": "n/a",
+        "precision": "n/a"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can see your screen when you call the assistant, if it is your chosen one",
+    "user_action": "You set an assistant as default, or use Circle to Search or Visual Intelligence",
+    "can": [
+      "Look at the screen content to answer a question about it",
+      "Share a screenshot with ChatGPT on iPhone after you agree",
+      "Use camera based search on iPhone 16 and newer"
+    ],
+    "cannot": [
+      "Look at your screen when you have not called the assistant",
+      "Be used by any app that is not the default assistant on Android",
+      "Share a screenshot with ChatGPT on iPhone without your consent"
+    ],
+    "reach": 2,
+    "reach_label": "Only when you ask the assistant",
+    "differs": "Android lets your chosen default assistant see the screen, and Circle to Search is Google's. iPhone uses Visual Intelligence from iOS 18.2."
+  },
+  "story": {
+    "what_it_is": "Lets an assistant see what is on the screen so it can answer questions about it.",
+    "icon": "scan-eye",
+    "tags": [
+      "AI",
+      "Screen",
+      "Privacy"
+    ],
+    "marketing": [
+      {
+        "vendor": "Apple",
+        "name": "Visual Intelligence",
+        "pitch": "Apple pitches Visual Intelligence as a way to learn about what you see with the camera or on screen.",
+        "url": "https://developer.apple.com/documentation/visualintelligence"
+      },
+      {
+        "vendor": "Google",
+        "name": "Circle to Search",
+        "pitch": "Google pitches Circle to Search as a way to search anything on screen with a gesture.",
+        "url": "https://blog.google/products/search/google-circle-to-search-android/"
+      }
+    ],
+    "for_you": "You circle a pair of shoes in a video or point the camera at a plant, and the assistant tells you what it is. It sees whatever is on screen at that moment.",
+    "for_makers": "Makers of assistants get rich context without apps adding anything. It is great for search and help, but it can capture private things on screen.",
+    "use_cases": [
+      {
+        "type": "shopping",
+        "example": "You circle a jacket in a video and see where to buy it.",
+        "apps": [
+          "Google Lens"
+        ]
+      },
+      {
+        "type": "education",
+        "example": "You point at a math problem and get a step by step hint.",
+        "apps": []
+      },
+      {
+        "type": "travel",
+        "example": "You point your camera at a sign and get a translation.",
+        "apps": []
+      },
+      {
+        "type": "accessibility",
+        "example": "The assistant reads what is on screen aloud.",
+        "apps": []
+      },
+      {
+        "type": "social",
+        "example": "You ask what a meme in a chat means.",
+        "apps": []
+      },
+      {
+        "type": "games",
+        "example": "You ask the assistant for a tip about a puzzle on screen.",
+        "apps": []
+      },
+      {
+        "type": "banking",
+        "example": "A bank app can block screen capture on sensitive pages.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Sensitive content may be captured",
+      "Screenshots may leave the device"
+    ],
+    "android_note": "Circle to Search is a Google feature. Apps get assist data from Android 15.",
+    "ios_note": "Visual Intelligence needs iPhone 16. iOS 26 adds on screen awareness."
+  },
+  "technical_bounds": [
+    "Secure windows blocked"
+  ],
+  "scores": {
+    "sensitivity": 5,
+    "utility": 3,
+    "fingerprint_bits": 1,
+    "friction": 1
+  },
+  "value": {
+    "legit_uses": [
+      "Search",
+      "Accessibility"
+    ],
+    "abuse": [
+      "Sensitive content captured"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2024-01",
+      "platform": "android",
+      "version": "Circle to Search",
+      "change": "Launched on Pixel 8 and Galaxy S24"
+    },
+    {
+      "date": "2024-12",
+      "platform": "ios",
+      "version": "iOS 18.2",
+      "change": "Visual Intelligence"
+    }
+  ],
+  "related": [
+    "mob.os.app-intents"
+  ],
+  "refs": [
+    {
+      "t": "android",
+      "label": "Android: Assist API",
+      "url": "https://developer.android.com/reference/android/app/assist/AssistContent"
+    },
+    {
+      "t": "apple",
+      "label": "Apple: Visual Intelligence",
+      "url": "https://developer.apple.com/documentation/visualintelligence"
+    }
+  ],
+  "confidence": "inferred"
+}

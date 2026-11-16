@@ -1,0 +1,242 @@
+{
+  "id": "web.actions.webtransport",
+  "name": "WebTransport",
+  "kind": "capability",
+  "group": "page-actions",
+  "subgroup": "Network channels",
+  "tags": [
+    "webtransport",
+    "http3",
+    "quic"
+  ],
+  "plain": "Opens low-latency streams and datagrams to an HTTP/3 server, with no prompt.",
+  "meaning": "A site can send and receive many parallel streams and unreliable datagrams over QUIC. Faster than WebSockets, but also a flexible channel for covert upload.",
+  "lifecycle": [
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "new WebTransport('https://...'); createBidirectionalStream(); datagrams",
+      "bcd": [
+        "api.WebTransport",
+        "api.WebTransportDatagramDuplexStream"
+      ],
+      "access": {
+        "grant": "none",
+        "prompt_ui": "None (no browser prompt)",
+        "secure_context": true,
+        "user_gesture": false,
+        "activation": "none",
+        "persistence": "Lives with the session",
+        "revocation": "Nothing to revoke (no permission is stored)",
+        "iframe": "CSP connect-src applies",
+        "steps": [
+          "Page creates WebTransport",
+          "Browser opens HTTP/3 session",
+          "Page reads datagrams and streams"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "97",
+          "note": "",
+          "date": "2022-01-04"
+        },
+        "edge": {
+          "s": "y",
+          "v": "97",
+          "note": "",
+          "date": "2022-01-06"
+        },
+        "firefox": {
+          "s": "y",
+          "v": "114",
+          "note": "",
+          "date": "2023-06-06"
+        },
+        "safari": {
+          "s": "y",
+          "v": "26.4",
+          "note": "",
+          "date": "2026-03-24"
+        },
+        "ios_safari": {
+          "s": "y",
+          "v": "26.4",
+          "note": "All iOS browsers use WebKit",
+          "date": "2026-03-24"
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "97",
+          "note": "",
+          "date": "2022-01-04"
+        },
+        "samsung": {
+          "s": "y",
+          "v": "18.0",
+          "note": "",
+          "date": "2022-08-08"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "none",
+    "metric": "",
+    "update": "",
+    "fields": []
+  },
+  "limits": {
+    "headline": "Can open fast two way streams to a server, with no pop up",
+    "user_action": "Nothing. It happens when the page loads, like a live video or game.",
+    "can": [
+      "Send and get many streams of data at once",
+      "Send small quick messages with low delay",
+      "Keep the link open while the page is open"
+    ],
+    "cannot": [
+      "Work with a server that does not support HTTP/3",
+      "Stay connected after you close the tab",
+      "Work in Safari, including on iPhone, where it is not available yet",
+      "Reach your files or other apps"
+    ],
+    "reach": 2,
+    "reach_label": "While the page is open",
+    "differs": "Chrome, Edge and Firefox support it. Safari does not yet."
+  },
+  "story": {
+    "what_it_is": "A newer, faster live line to a server, with no prompt.",
+    "icon": "zap",
+    "tags": [
+      "Real time",
+      "Power",
+      "Silent"
+    ],
+    "marketing": [
+      {
+        "vendor": "Google",
+        "name": "WebTransport",
+        "pitch": "Chrome's docs say WebTransport offers low delay two way streams and datagrams over HTTP/3.",
+        "url": "https://developer.chrome.com/docs/capabilities/web-apis/webtransport"
+      }
+    ],
+    "for_you": "You never see it. It makes cloud games, live video and fast apps feel quicker, especially on shaky wifi.",
+    "for_makers": "Makers get lower delay than older live lines and can send things out of order, which is perfect for games where old data is useless. It is the next step beyond WebSockets.",
+    "use_cases": [
+      {
+        "type": "games",
+        "example": "A cloud game or a fast browser shooter sends controller and move data as quick datagrams, so a lost packet does not stall the game.",
+        "apps": [
+          "GeForce NOW",
+          "Xbox Cloud Gaming"
+        ]
+      },
+      {
+        "type": "live",
+        "example": "A live sports stream delivers video with sub second delay.",
+        "apps": [
+          "Twitch",
+          "DAZN"
+        ]
+      },
+      {
+        "type": "video",
+        "example": "A conferencing tool sends media over HTTP/3 and recovers faster from poor networks.",
+        "apps": [
+          "Google Meet"
+        ]
+      },
+      {
+        "type": "creative",
+        "example": "A shared whiteboard syncs strokes with very low delay.",
+        "apps": [
+          "Figma",
+          "Miro"
+        ]
+      },
+      {
+        "type": "analytics",
+        "example": "A telemetry tool streams many small events without blocking.",
+        "apps": []
+      },
+      {
+        "type": "developer",
+        "example": "A remote desktop in the browser streams the screen and input at low delay.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Quieter tracking channel",
+      "Newer and less audited"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Needs HTTP/3 server; certificate must be valid or pinned via serverCertificateHashes (self-signed up to 14 days validity)",
+    "Datagram payload limited by maxDatagramSize (about 1200 bytes typical)",
+    "Safari 26.4 per MDN BCD, later than Chrome 97 and Firefox 114",
+    "Subject to the same port blocklist and CSP"
+  ],
+  "scores": {
+    "sensitivity": 1,
+    "utility": 4,
+    "fingerprint_bits": null,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Game netcode",
+      "Streaming ingest",
+      "Low-latency telemetry"
+    ],
+    "abuse": [
+      "Hard-to-inspect upload channel",
+      "UDP-like probing of servers"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2021-12",
+      "browser": "chrome",
+      "version": "97",
+      "change": "WebTransport ships"
+    },
+    {
+      "date": "2023-07",
+      "browser": "firefox",
+      "version": "114",
+      "change": "WebTransport ships"
+    }
+  ],
+  "related": [
+    "web.actions.websockets"
+  ],
+  "refs": [
+    {
+      "t": "mdn",
+      "label": "MDN WebTransport API",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/WebTransport_API"
+    },
+    {
+      "t": "spec",
+      "label": "W3C WebTransport",
+      "url": "https://www.w3.org/TR/webtransport/"
+    },
+    {
+      "t": "chromestatus",
+      "label": "Chrome WebTransport",
+      "url": "https://chromestatus.com/feature/4854144902889472"
+    }
+  ],
+  "confidence": "docs"
+}

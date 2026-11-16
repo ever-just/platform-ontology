@@ -1,0 +1,273 @@
+{
+  "id": "web.display.screen-size",
+  "name": "Screen width and height",
+  "kind": "signal",
+  "group": "display-window",
+  "subgroup": "Screen",
+  "tags": [
+    "screen",
+    "resolution",
+    "safari-26-afp",
+    "firefox-rfp"
+  ],
+  "plain": "The monitor or phone screen size in CSS pixels, plus the usable area.",
+  "meaning": "Identifies device model families (iPhone 390x844) and monitor setups (1920x1080, 2560x1440, 3440x1440). Safari 26 and Firefox protections spoof or round it for known scripts; Firefox RFP returns the window size.",
+  "lifecycle": [
+    "on-arrival",
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "screen.width, screen.height, screen.availWidth, screen.availHeight",
+      "bcd": [
+        "api.Screen.width",
+        "api.Screen.height",
+        "api.Screen.availWidth"
+      ],
+      "access": {
+        "grant": "none",
+        "prompt_ui": "None",
+        "secure_context": false,
+        "user_gesture": false,
+        "persistence": "read fresh on every page load; nothing stored",
+        "revocation": "none needed (no grant)",
+        "iframe": "Readable from cross-origin iframes too (same values)",
+        "steps": [
+          "Page script reads the value",
+          "No prompt is shown"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "1",
+          "note": "",
+          "date": "2008-12-11"
+        },
+        "edge": {
+          "s": "y",
+          "v": "12",
+          "note": "",
+          "date": "2015-07-29"
+        },
+        "firefox": {
+          "s": "y",
+          "v": "1",
+          "note": "",
+          "date": "2004-11-09"
+        },
+        "safari": {
+          "s": "y",
+          "v": "1",
+          "note": "",
+          "date": "2003-06-23"
+        },
+        "ios_safari": {
+          "s": "y",
+          "v": "1",
+          "note": "",
+          "date": "2007-06-29"
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "18",
+          "note": "",
+          "date": "2012-06-27"
+        },
+        "samsung": {
+          "s": "y",
+          "v": "1.0",
+          "note": "",
+          "date": "2013-04-27"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "object",
+    "metric": "",
+    "update": "static per session",
+    "fields": [
+      {
+        "name": "width, height",
+        "type": "integer",
+        "unit": "CSS px",
+        "range": "320 to 7680; typical 1920x1080, 1440x900, 390x844, 360x800",
+        "precision": "exact, except under RFP or AFP"
+      },
+      {
+        "name": "availWidth, availHeight",
+        "type": "integer",
+        "unit": "CSS px",
+        "range": "less than width, height by taskbar size",
+        "precision": "exact"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can see your screen width and height, and the usable area, in page units",
+    "user_action": "Nothing. It happens when the page loads.",
+    "can": [
+      "Check the screen's width and height",
+      "Check the usable area, without the taskbar",
+      "Choose a layout that fits"
+    ],
+    "cannot": [
+      "Learn the true pixel count on scaled or Retina screens",
+      "See your other monitors",
+      "Tell your monitor model"
+    ],
+    "reach": 1,
+    "reach_label": "Size numbers, no prompt",
+    "differs": ""
+  },
+  "story": {
+    "what_it_is": "The size of your monitor or phone screen in page units, plus its usable area.",
+    "icon": "monitor",
+    "tags": [
+      "Display",
+      "Silent",
+      "Fingerprint"
+    ],
+    "marketing": [
+      {
+        "vendor": "MDN",
+        "name": "Screen",
+        "pitch": "Documents the object a page reads to learn the width and height of the user screen.",
+        "url": "https://developer.mozilla.org/en-US/docs/Web/API/Screen"
+      }
+    ],
+    "for_you": "You never see it read. It is why a site can fit a big monitor or a small phone, and send the right layout from the start.",
+    "for_makers": "It is one of the oldest and most common signals. Makers use it for layout and analytics. Trackers combine it with other facts to tell your device apart from similar ones.",
+    "use_cases": [
+      {
+        "type": "games",
+        "example": "A browser game sets its canvas to fit the screen and chooses touch or mouse controls.",
+        "apps": []
+      },
+      {
+        "type": "analytics",
+        "example": "A site team sees that 55 percent of visitors use 1920 by 1080 and designs for it.",
+        "apps": [
+          "Google Analytics"
+        ]
+      },
+      {
+        "type": "ads",
+        "example": "An ad server picks a banner size that fits the screen, and also keeps the size in a device profile.",
+        "apps": []
+      },
+      {
+        "type": "security",
+        "example": "A fraud service sees a screen size that no real device has and flags the visit as an emulator.",
+        "apps": []
+      },
+      {
+        "type": "shopping",
+        "example": "A store picks a layout and image sizes for phone, tablet or wide monitor.",
+        "apps": []
+      },
+      {
+        "type": "video",
+        "example": "A streaming site picks its first video quality from the screen size.",
+        "apps": [
+          "YouTube"
+        ]
+      }
+    ],
+    "risks": [
+      "Fingerprint clue",
+      "Reveals device model"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Does not give physical size or PPI",
+    "iOS reports points, not pixels, so many iPhones share values"
+  ],
+  "scores": {
+    "sensitivity": 1,
+    "utility": 5,
+    "fingerprint_bits": 4.8,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Responsive layout",
+      "Choose image size"
+    ],
+    "abuse": [
+      "Device identification",
+      "Monitor setup profiling"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": true,
+      "how": "Collector key(s): screenResolution, availableScreenResolution. BleepingComputer confirms screen resolution."
+    }
+  },
+  "history": [
+    {
+      "date": "2016-06",
+      "browser": "paper",
+      "version": "",
+      "change": "AmIUnique: screen resolution 4.83 bits"
+    },
+    {
+      "date": "2025-09",
+      "browser": "safari",
+      "version": "26",
+      "change": "Advanced Fingerprinting Protection stops known fingerprinting scripts reading screen dimensions reliably"
+    },
+    {
+      "date": "2025-11",
+      "browser": "firefox",
+      "version": "145",
+      "change": "Taskbar and dock size hidden from screen APIs in all modes; wider protections in Private Browsing and ETP Strict"
+    }
+  ],
+  "related": [
+    "web.display.window-sizes"
+  ],
+  "refs": [
+    {
+      "t": "github",
+      "label": "fingerprintjs source: screen_resolution",
+      "url": "https://github.com/fingerprintjs/fingerprintjs/blob/master/src/sources/screen_resolution.ts"
+    },
+    {
+      "t": "paper",
+      "label": "AmIUnique: Beauty and the Beast, Laperdrix et al. 2016 (attribute entropy)",
+      "url": "https://hal.inria.fr/hal-01285470"
+    },
+    {
+      "t": "webkit",
+      "label": "WebKit features in Safari 26.0 (fingerprinting protection)",
+      "url": "https://webkit.org/blog/17333/webkit-features-in-safari-26-0/"
+    },
+    {
+      "t": "mozilla",
+      "label": "Mozilla Security Blog 2026-11-10: harder to fingerprint",
+      "url": "https://blog.mozilla.org/security/2026/11/10/open-research-stronger-privacy-making-firefox-users-harder-to-fingerprint/"
+    },
+    {
+      "t": "mdn",
+      "label": "MDN Screen",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/Screen"
+    },
+    {
+      "t": "news",
+      "label": "BleepingComputer: LinkedIn scans for 6,000+ Chrome extensions",
+      "url": "https://www.bleepingcomputer.com/news/security/linkedin-secretely-scans-for-6-000-plus-chrome-extensions-collects-data/"
+    },
+    {
+      "t": "github",
+      "label": "mdp/linkedin-extension-fingerprinting (LinkedIn script snapshot and ID list)",
+      "url": "https://github.com/mdp/linkedin-extension-fingerprinting"
+    }
+  ],
+  "confidence": "verified"
+}

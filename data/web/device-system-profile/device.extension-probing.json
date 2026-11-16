@@ -1,0 +1,246 @@
+{
+  "id": "web.device.extension-probing",
+  "name": "Extension presence probing",
+  "kind": "tracking",
+  "group": "device-system-profile",
+  "subgroup": "Browser state",
+  "tags": [
+    "extensions",
+    "web_accessible_resources",
+    "chromium",
+    "linkedin"
+  ],
+  "plain": "Detects installed Chrome extensions by fetching their exposed files.",
+  "meaning": "Learns which extensions the person runs: job tools, ad blockers, accessibility aids, religious or political filters. LinkedIn probes about 6,236 IDs, mapping the result to a named member.",
+  "lifecycle": [
+    "on-arrival",
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "fetch('chrome-extension://<32-char-id>/<file>') succeeds only if exposed via web_accessible_resources; DOM scanning for injected IDs",
+      "access": {
+        "grant": "none",
+        "prompt_ui": "None",
+        "secure_context": false,
+        "user_gesture": false,
+        "persistence": "read fresh on every page load; nothing stored",
+        "revocation": "none needed (no grant)",
+        "iframe": "Readable from cross-origin iframes too (same values)",
+        "steps": [
+          "Page script reads the value",
+          "No prompt is shown"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "1",
+          "note": "",
+          "date": "2008-12-11"
+        },
+        "edge": {
+          "s": "y",
+          "v": "79",
+          "note": "",
+          "date": "2020-01-15"
+        },
+        "firefox": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "safari": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "ios_safari": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "chrome_android": {
+          "s": "n",
+          "v": "",
+          "note": "Mobile Chrome has no extensions"
+        },
+        "samsung": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "object",
+    "metric": "",
+    "update": "static per session",
+    "fields": [
+      {
+        "name": "extension id",
+        "type": "string",
+        "unit": "",
+        "range": "32 lowercase letters a to p",
+        "precision": "exact"
+      },
+      {
+        "name": "hit",
+        "type": "boolean",
+        "unit": "",
+        "range": "installed or not",
+        "precision": ""
+      },
+      {
+        "name": "probe list size",
+        "type": "integer",
+        "unit": "ids",
+        "range": "38 (2017) to about 6,236 (2026)",
+        "precision": ""
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can find out which Chrome extensions you have by testing known files",
+    "user_action": "Nothing. It happens when the page loads in Chrome or Edge",
+    "can": [
+      "Test thousands of extension IDs one by one (LinkedIn tests about 6,236)",
+      "See extensions like ad blockers, job tools, and accessibility aids",
+      "Match your list to a named account if you are signed in",
+      "Use the list to tell you apart from other visitors"
+    ],
+    "cannot": [
+      "Work in Firefox, Safari, or on mobile browsers",
+      "See extensions that hide their files from sites",
+      "See your extension settings or data",
+      "See what other tabs show"
+    ],
+    "reach": 3,
+    "reach_label": "Which extensions, without asking",
+    "differs": "Only desktop Chrome and Edge are open to this. Firefox, Safari, and mobile browsers are not."
+  },
+  "story": {
+    "what_it_is": "Checks which browser extensions you have installed by testing for their hidden files.",
+    "icon": "puzzle",
+    "tags": [
+      "Extensions",
+      "Silent",
+      "Tracking"
+    ],
+    "marketing": [],
+    "for_you": "You never see it. A page quietly tries to open files that only exist if a specific extension is installed. The result can reveal job tools, ad blockers, accessibility aids and more.",
+    "for_makers": "Extensions say a lot about a person: work, health, beliefs. Some sites use the list to catch scrapers or prohibited tools. It can also be used for profiling, which is why it is controversial and heavily criticised.",
+    "use_cases": [
+      {
+        "type": "security",
+        "example": "A bot defence checks for known automation extensions to stop scraping.",
+        "apps": [
+          "LinkedIn"
+        ]
+      },
+      {
+        "type": "social",
+        "example": "A professional network scans for extensions that scrape profiles, and bans accounts that use them.",
+        "apps": [
+          "LinkedIn"
+        ]
+      },
+      {
+        "type": "ads",
+        "example": "An ad platform tests for ad blocker extensions to decide whether to show a wall or an alternative ad.",
+        "apps": []
+      },
+      {
+        "type": "games",
+        "example": "A game site detects cheat helper extensions and removes players from ranked modes.",
+        "apps": []
+      },
+      {
+        "type": "banking",
+        "example": "A bank detects remote access or screen sharing extensions that scammers use and shows a warning.",
+        "apps": []
+      },
+      {
+        "type": "accessibility",
+        "example": "A researcher shows how a site could learn that someone uses a screen reader extension.",
+        "apps": []
+      },
+      {
+        "type": "analytics",
+        "example": "A fingerprinting vendor adds the extension list to a stable device ID.",
+        "apps": [
+          "FingerprintJS"
+        ]
+      }
+    ],
+    "risks": [
+      "Can reveal work, health or beliefs",
+      "Hidden and hard to opt out"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Only works if the extension exposes a resource",
+    "Firefox uses random per-install UUIDs; Safari does not expose IDs",
+    "Chromium only"
+  ],
+  "scores": {
+    "sensitivity": 4,
+    "utility": 1,
+    "fingerprint_bits": 12.0,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Detect scraper extensions",
+      "Compatibility"
+    ],
+    "abuse": [
+      "Inferring religion, politics, disability, job search from extensions"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": true,
+      "how": "Core of BrowserGate: parallel fetch to chrome-extension URLs for ~6,236 IDs, plus DOM scan; Chrome-family only."
+    }
+  },
+  "history": [
+    {
+      "date": "2017-01",
+      "browser": "linkedin",
+      "version": "",
+      "change": "LinkedIn probe list starts at 38 ids (alleged)"
+    },
+    {
+      "date": "2026-04",
+      "browser": "linkedin",
+      "version": "",
+      "change": "BleepingComputer confirms 6,236 ids checked"
+    }
+  ],
+  "related": [
+    "web.device.adblock-detection"
+  ],
+  "refs": [
+    {
+      "t": "news",
+      "label": "BleepingComputer: LinkedIn scans for 6,000+ Chrome extensions",
+      "url": "https://www.bleepingcomputer.com/news/security/linkedin-secretely-scans-for-6-000-plus-chrome-extensions-collects-data/"
+    },
+    {
+      "t": "news",
+      "label": "BrowserGate: how LinkedIn's script works",
+      "url": "https://browsergate.eu/how-it-works/"
+    },
+    {
+      "t": "github",
+      "label": "mdp/linkedin-extension-fingerprinting",
+      "url": "https://github.com/mdp/linkedin-extension-fingerprinting"
+    }
+  ],
+  "confidence": "verified"
+}

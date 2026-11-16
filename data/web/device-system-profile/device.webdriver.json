@@ -1,0 +1,235 @@
+{
+  "id": "web.device.webdriver",
+  "name": "Automation detection (navigator.webdriver)",
+  "kind": "signal",
+  "group": "device-system-profile",
+  "subgroup": "Automation",
+  "tags": [
+    "webdriver",
+    "automation",
+    "bot-detection"
+  ],
+  "plain": "Tells whether the browser is controlled by automation, plus other marker checks.",
+  "meaning": "True for Selenium, Puppeteer and similar. LinkedIn also looks for PhantomJS and Selenium markers on window and document.",
+  "lifecycle": [
+    "on-arrival",
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "navigator.webdriver; window._phantom, window.callPhantom, document.__selenium_unwrapped and similar",
+      "bcd": [
+        "api.Navigator.webdriver"
+      ],
+      "access": {
+        "grant": "none",
+        "prompt_ui": "None (no browser prompt)",
+        "secure_context": false,
+        "user_gesture": false,
+        "persistence": "",
+        "revocation": "",
+        "iframe": "",
+        "steps": [
+          "Script reads the value",
+          "Value joins the fingerprint payload"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "63",
+          "note": "",
+          "date": "2017-12-06"
+        },
+        "edge": {
+          "s": "y",
+          "v": "12",
+          "note": "",
+          "date": "2015-07-29"
+        },
+        "firefox": {
+          "s": "y",
+          "v": "60",
+          "note": "",
+          "date": "2018-05-09"
+        },
+        "safari": {
+          "s": "y",
+          "v": "10.1",
+          "note": "",
+          "date": "2017-03-27"
+        },
+        "ios_safari": {
+          "s": "y",
+          "v": "10.3",
+          "note": "",
+          "date": "2017-03-27"
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "63",
+          "note": "",
+          "date": "2017-12-05"
+        },
+        "samsung": {
+          "s": "y",
+          "v": "8.0",
+          "note": "",
+          "date": "2018-07-18"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "boolean",
+    "metric": "Automation detection (navigator.webdriver)",
+    "update": "static",
+    "fields": [
+      {
+        "name": "webdriver",
+        "type": "boolean",
+        "unit": "",
+        "range": "",
+        "precision": ""
+      },
+      {
+        "name": "markers",
+        "type": "object",
+        "unit": "",
+        "range": "Selenium, PhantomJS markers",
+        "precision": ""
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can tell if a script or automation tool is driving your browser",
+    "user_action": "Nothing. It happens when the page loads",
+    "can": [
+      "Check a flag that is true in Selenium, Puppeteer, and similar tools",
+      "Look for PhantomJS and Selenium marks on the page",
+      "Block or challenge likely bots",
+      "Flag AI agents and scrapers"
+    ],
+    "cannot": [
+      "Be sure; bots can hide the flag",
+      "See what the script is doing",
+      "See anything about you if you drive the browser by hand",
+      "Show a flag for normal browsing"
+    ],
+    "reach": 1,
+    "reach_label": "One yes or no flag",
+    "differs": ""
+  },
+  "story": {
+    "what_it_is": "Tells a site whether your browser is being driven by a script, plus other signs of automation.",
+    "icon": "bot",
+    "tags": [
+      "Automation",
+      "Silent",
+      "Fraud"
+    ],
+    "marketing": [
+      {
+        "vendor": "MDN",
+        "name": "Navigator.webdriver",
+        "pitch": "Docs describe a flag that is true when the browser is controlled by automation.",
+        "url": "https://developer.mozilla.org/en-US/docs/Web/API/Navigator/webdriver"
+      }
+    ],
+    "for_you": "You never see it. If you use a normal browser, it just says false. If you use an automation tool, a site may block you or show a puzzle.",
+    "for_makers": "Sites want to tell people from scripts. The flag plus marker objects left behind by tools like PhantomJS and Selenium are easy checks. Strong bots hide them, so teams combine them with other signals.",
+    "use_cases": [
+      {
+        "type": "security",
+        "example": "A bot defence service blocks a script that sets the flag to true while buying tickets.",
+        "apps": [
+          "Cloudflare",
+          "DataDome"
+        ]
+      },
+      {
+        "type": "social",
+        "example": "A professional network looks for automation markers on pages to stop scraping.",
+        "apps": [
+          "LinkedIn"
+        ]
+      },
+      {
+        "type": "shopping",
+        "example": "A sneaker drop site challenges clients that report automation, to protect fair access.",
+        "apps": []
+      },
+      {
+        "type": "games",
+        "example": "A browser game with prizes bans clients that look automated.",
+        "apps": []
+      },
+      {
+        "type": "ads",
+        "example": "An ad vendor throws out clicks from clients with the flag on.",
+        "apps": [
+          "DoubleVerify"
+        ]
+      },
+      {
+        "type": "developer",
+        "example": "A test team uses the flag to switch off pop-ups during automated testing.",
+        "apps": [
+          "Playwright",
+          "Selenium"
+        ]
+      },
+      {
+        "type": "banking",
+        "example": "A bank adds risk when a login comes from an automated browser.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Blocks legitimate testing tools",
+      "Easy for bots to hide"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Stealth tools patch it"
+  ],
+  "scores": {
+    "sensitivity": 3,
+    "utility": 3,
+    "fingerprint_bits": 1,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Block bots"
+    ],
+    "abuse": [
+      "Flag testers and accessibility tools"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": true,
+      "how": "Collector key(s): webdriver, automation. "
+    }
+  },
+  "related": [
+    "web.tracking.linkedin-apfc-fingerprint"
+  ],
+  "refs": [
+    {
+      "t": "mdn",
+      "label": "MDN webdriver",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/Navigator/webdriver"
+    },
+    {
+      "t": "github",
+      "label": "mdp/linkedin-extension-fingerprinting (LinkedIn script snapshot and ID list)",
+      "url": "https://github.com/mdp/linkedin-extension-fingerprinting"
+    }
+  ],
+  "confidence": "docs"
+}

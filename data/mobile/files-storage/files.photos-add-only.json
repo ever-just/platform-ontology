@@ -1,0 +1,198 @@
+{
+  "id": "mob.files.photos-add-only",
+  "name": "Photo library, add only",
+  "kind": "permission",
+  "group": "files-storage",
+  "subgroup": "Photos and media",
+  "tags": [
+    "write-only",
+    "photos",
+    "save-to-library"
+  ],
+  "plain": "Saves a photo or video into the library without being able to read any of it.",
+  "meaning": "Lets an app drop images in (camera, scanner, meme maker) with no view of what is already stored, a far smaller disclosure than reading the roll.",
+  "lifecycle": [
+    "in-session"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "y",
+      "v": "10",
+      "api": 29,
+      "permission": "",
+      "protection": "none",
+      "grant": "none",
+      "prompt_ui": "None: MediaStore insert into the app's own pending item shows no prompt",
+      "persistence": "Item remains; app may modify only files it created",
+      "revocation": "n/a (the app can only touch its own items)",
+      "store_policy": "",
+      "api_surface": "MediaStore.Images.Media.EXTERNAL_CONTENT_URI insert, IS_PENDING flag",
+      "note": "Scoped storage (API 29) means writing your own media needs no permission"
+    },
+    "ios": {
+      "s": "y",
+      "v": "11",
+      "permission": "NSPhotoLibraryAddUsageDescription",
+      "protection": "prompt",
+      "grant": "prompt",
+      "prompt_ui": "Allow, Don't Allow (add-only wording)",
+      "persistence": "Until revoked",
+      "revocation": "Settings > Privacy & Security > Photos > Add Photos Only",
+      "store_policy": "App Review 5.1.1: ask for the smallest access",
+      "api_surface": "PHPhotoLibrary.requestAuthorization(for: .addOnly), UIImageWriteToSavedPhotosAlbum",
+      "note": "Add-only still allows saving with the older UIImageWriteToSavedPhotosAlbum path"
+    }
+  },
+  "data": {
+    "type": "event",
+    "metric": "Write confirmation",
+    "update": "per save",
+    "fields": [
+      {
+        "name": "savedAssetId",
+        "type": "string",
+        "unit": "id",
+        "range": "local identifier",
+        "precision": ""
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can save new photos and videos to your library, but cannot look at what is there",
+    "user_action": "You tap Save photo, Save to gallery or Download image",
+    "can": [
+      "Save a new photo or video into your library",
+      "Save the app's own media on Android with no prompt",
+      "Ask for add only permission on iPhone, shown as Allow or Don't Allow",
+      "Keep saved items in your gallery"
+    ],
+    "cannot": [
+      "See any existing photo or video in your library",
+      "List albums or count your photos",
+      "Delete or change the photos already there",
+      "Save on iPhone without your tap on the add only prompt"
+    ],
+    "reach": 1,
+    "reach_label": "Save only, no browsing",
+    "differs": "Android needs no permission for the app's own new media. iPhone shows an add only prompt."
+  },
+  "story": {
+    "what_it_is": "Lets an app save a photo or video to your library without seeing what is already there.",
+    "icon": "image-down",
+    "tags": [
+      "Permission",
+      "Asks first",
+      "Photos"
+    ],
+    "marketing": [
+      {
+        "vendor": "Apple",
+        "name": "Add only photo access",
+        "pitch": "Developer guide: apps can ask for add only access, so they can save photos without reading the library.",
+        "url": "https://developer.apple.com/documentation/photokit/phaccesslevel"
+      }
+    ],
+    "for_you": "A pop up asks to add photos only. If you say yes, a camera app can save a picture but cannot look at your other photos. It is a much smaller share than full access.",
+    "for_makers": "Makers need it to save results like scans, edits and downloads. Asking for add only keeps trust high and is easier to get approved.",
+    "use_cases": [
+      {
+        "type": "creative",
+        "example": "A camera app saves new pictures to your library and cannot see old ones.",
+        "apps": []
+      },
+      {
+        "type": "productivity",
+        "example": "A document scanner saves a scan as a photo in your library.",
+        "apps": []
+      },
+      {
+        "type": "social",
+        "example": "A meme or sticker maker saves a finished image to share.",
+        "apps": []
+      },
+      {
+        "type": "games",
+        "example": "A game saves a screenshot of your best score.",
+        "apps": []
+      },
+      {
+        "type": "shopping",
+        "example": "A retailer saves a QR code or coupon image to your photos.",
+        "apps": []
+      },
+      {
+        "type": "ar-vr",
+        "example": "An AR app saves a photo of a 3D object in your room.",
+        "apps": []
+      },
+      {
+        "type": "media",
+        "example": "A video downloader saves a clip you chose.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Smaller risk",
+      "Still adds clutter to your library"
+    ],
+    "android_note": "Android apps can save through MediaStore with no permission on recent versions.",
+    "ios_note": "A separate add only choice in the Photos permission."
+  },
+  "technical_bounds": [
+    "Read back of the saved item is not guaranteed on iOS add-only",
+    "Cannot enumerate other apps' media on either platform"
+  ],
+  "scores": {
+    "sensitivity": 1,
+    "utility": 4,
+    "fingerprint_bits": null,
+    "friction": 1
+  },
+  "value": {
+    "legit_uses": [
+      "Saving a scan",
+      "Exporting an edit"
+    ],
+    "abuse": [
+      "None notable"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2020-09",
+      "platform": "ios",
+      "version": "iOS 14",
+      "change": ".addOnly access level API added"
+    },
+    {
+      "date": "2019-09",
+      "platform": "android",
+      "version": "10 (API 29)",
+      "change": "Scoped storage: no permission to write own media"
+    }
+  ],
+  "related": [
+    "mob.files.photos-full-library",
+    "mob.files.photo-picker"
+  ],
+  "refs": [
+    {
+      "t": "apple",
+      "label": "Apple: Describe your app's photo library use",
+      "url": "https://developer.apple.com/documentation/photokit/delivering-an-enhanced-privacy-experience-in-your-photos-app"
+    },
+    {
+      "t": "android",
+      "label": "Android: Add an item to a media collection",
+      "url": "https://developer.android.com/training/data-storage/shared/media#add-item"
+    }
+  ],
+  "confidence": "docs"
+}

@@ -1,0 +1,190 @@
+{
+  "id": "mob.files.media-selected",
+  "name": "Selected photos access",
+  "kind": "permission",
+  "group": "files-storage",
+  "subgroup": "Media",
+  "tags": [
+    "runtime-permission",
+    "partial-access",
+    "photos"
+  ],
+  "plain": "Lets the user share only chosen photos and videos with the app.",
+  "meaning": "A narrower grant than full library access. Android 14 lets people pick specific items; Android 16 pre-selects app-owned photos.",
+  "lifecycle": [
+    "in-session"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "y",
+      "v": "14",
+      "api": 34,
+      "permission": "READ_MEDIA_VISUAL_USER_SELECTED",
+      "protection": "dangerous",
+      "grant": "prompt",
+      "prompt_ui": "Select photos and videos, Allow all, Don't allow",
+      "persistence": "Until revoked; selection can lapse when the app closes",
+      "revocation": "Settings > Apps > Permissions > Photos and videos",
+      "store_policy": "Play: allowed alongside READ_MEDIA_IMAGES; photo picker preferred",
+      "api_surface": "READ_MEDIA_VISUAL_USER_SELECTED, MediaStore",
+      "note": "Android 16: when the user limits access, app-owned photos are pre-selected in the picker."
+    },
+    "ios": {
+      "s": "y",
+      "v": "14",
+      "permission": "NSPhotoLibraryUsageDescription (limited mode)",
+      "protection": "prompt",
+      "grant": "prompt",
+      "prompt_ui": "Select Photos, Allow Full Access",
+      "persistence": "Until revoked; selection persists",
+      "revocation": "Settings > Privacy & Security > Photos",
+      "store_policy": "App Review 5.1.1",
+      "api_surface": "PHAuthorizationStatus.limited, PHPhotoLibrary.presentLimitedLibraryPicker",
+      "note": "Apps can prompt to extend the selection."
+    }
+  },
+  "data": {
+    "type": "list",
+    "metric": "User selected items",
+    "update": "on demand",
+    "fields": []
+  },
+  "limits": {
+    "headline": "Can open only the photos and videos you choose to share, not your whole library",
+    "user_action": "You tap Select photos and videos (Android) or Select Photos (iPhone) in the prompt",
+    "can": [
+      "Open the specific photos and videos you picked",
+      "Let you add more to the shared set later through a prompt",
+      "Keep access to those picks until you change them",
+      "Find photos the app saved itself, pre-selected on Android 16"
+    ],
+    "cannot": [
+      "See other photos in your library",
+      "See your whole library unless you tap Allow all or Allow Full Access",
+      "Change which photos are shared without you",
+      "Guess what is in photos you did not share"
+    ],
+    "reach": 2,
+    "reach_label": "Only what you pick",
+    "differs": "Both phones offer limited sharing. Android 16 pre-selects photos the app owns; iPhone lets apps prompt to extend the selection."
+  },
+  "story": {
+    "what_it_is": "Lets you share only the photos and videos you pick, not the whole gallery.",
+    "icon": "image-plus",
+    "tags": [
+      "Permission",
+      "Asks first",
+      "Photos"
+    ],
+    "marketing": [
+      {
+        "vendor": "Google",
+        "name": "Partial photo and video access",
+        "pitch": "Android 14 notes: users can grant an app access to only the photos and videos they select.",
+        "url": "https://developer.android.com/about/versions/14/changes/partial-photo-video-access"
+      }
+    ],
+    "for_you": "When the app asks for photos you can choose Select photos and pick a few. The app sees only those. It is a safer choice, and you can change it later in Settings.",
+    "for_makers": "Makers can get a post or an upload done without scary full access, which builds trust. The app must handle seeing fewer items than usual.",
+    "use_cases": [
+      {
+        "type": "social",
+        "example": "You share three photos with a post app and it cannot see the other ones.",
+        "apps": [
+          "Instagram"
+        ]
+      },
+      {
+        "type": "shopping",
+        "example": "A returns app takes one photo of a damaged item and nothing else.",
+        "apps": []
+      },
+      {
+        "type": "messaging",
+        "example": "A chat app sends the photos you pick and does not read the rest.",
+        "apps": []
+      },
+      {
+        "type": "creative",
+        "example": "A photo editor works on your chosen pictures only.",
+        "apps": []
+      },
+      {
+        "type": "banking",
+        "example": "A bank app takes one picture of a check from your gallery.",
+        "apps": []
+      },
+      {
+        "type": "games",
+        "example": "A game uses one photo as your avatar picture.",
+        "apps": []
+      },
+      {
+        "type": "dating",
+        "example": "A dating app lets you pick profile photos without showing the rest.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Apps may keep asking for more",
+      "Handy but easy to forget"
+    ],
+    "android_note": "Android 14 adds the option, and Android 16 can preselect photos the app made.",
+    "ios_note": "iOS offers this as Limited Access in the Photos permission."
+  },
+  "technical_bounds": [
+    "Android 14 apps targeting 34+ should handle partial grants"
+  ],
+  "scores": {
+    "sensitivity": 4,
+    "utility": 4,
+    "fingerprint_bits": null,
+    "friction": 2
+  },
+  "value": {
+    "legit_uses": [
+      "Photo editors"
+    ],
+    "abuse": [
+      "Pressuring users to grant full access"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2023-10",
+      "platform": "android",
+      "version": "14 (API 34)",
+      "change": "Partial photo and video access introduced"
+    },
+    {
+      "date": "2025-06",
+      "platform": "android",
+      "version": "16 (API 36)",
+      "change": "Pre-selection of app-owned photos in the limited picker"
+    }
+  ],
+  "related": [
+    "mob.files.media-images",
+    "mob.files.photo-picker"
+  ],
+  "refs": [
+    {
+      "t": "android",
+      "label": "Android: Partial photo and video access",
+      "url": "https://developer.android.com/about/versions/14/changes/partial-photo-video-access"
+    },
+    {
+      "t": "android",
+      "label": "Android 16 behavior changes (apps targeting 16)",
+      "url": "https://developer.android.com/about/versions/16/behavior-changes-16"
+    }
+  ],
+  "confidence": "docs"
+}

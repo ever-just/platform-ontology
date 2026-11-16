@@ -1,0 +1,214 @@
+{
+  "id": "mob.display.overlay",
+  "name": "Draw over other apps",
+  "kind": "permission",
+  "group": "display-window",
+  "subgroup": "Overlay",
+  "tags": [
+    "special-access",
+    "overlay",
+    "tapjacking",
+    "system-alert-window",
+    "floating"
+  ],
+  "plain": "Lets the app draw windows on top of other apps.",
+  "meaning": "Overlays power chat heads and screen filters but are the classic tool for tapjacking and fake login screens. Android 12 limits untrusted touches through overlays.",
+  "lifecycle": [
+    "in-session",
+    "background"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "y",
+      "v": "6.0",
+      "api": 23,
+      "permission": "SYSTEM_ALERT_WINDOW",
+      "protection": "special",
+      "grant": "settings",
+      "prompt_ui": "Settings toggle: Display over other apps",
+      "persistence": "Until revoked",
+      "revocation": "Settings > Special app access > Display over other apps",
+      "store_policy": "Play: allowed for core functionality; review for sensitive uses",
+      "api_surface": "WindowManager TYPE_APPLICATION_OVERLAY (API 26), Settings.canDrawOverlays",
+      "note": "Android 12 hides overlay windows during sensitive prompts and blocks touch pass-through above 0.8 opacity."
+    },
+    "ios": {
+      "s": "n",
+      "v": "",
+      "permission": "",
+      "protection": "none",
+      "grant": "not-exposed",
+      "prompt_ui": "none",
+      "persistence": "none",
+      "revocation": "",
+      "store_policy": "App Review 2.5",
+      "api_surface": "none",
+      "note": "iOS has no cross-app overlay; closest are Picture in Picture and Live Activities."
+    }
+  },
+  "data": {
+    "type": "event",
+    "metric": "Overlay window",
+    "update": "continuous",
+    "fields": []
+  },
+  "limits": {
+    "headline": "Can draw windows over other apps on Android if you flip a switch, never on iPhone",
+    "user_action": "You turn on Display over other apps for this app in Android settings",
+    "can": [
+      "Show a floating button or bubble above other apps on Android",
+      "Show a small panel such as a chat head or screen timer",
+      "Use Picture in Picture or Live Activities on iPhone as the nearest tools"
+    ],
+    "cannot": [
+      "Draw over other apps on iPhone; no cross-app overlay exists",
+      "Show over sensitive prompts on Android 12 and newer, where overlays are hidden",
+      "Pass your taps through when the overlay is mostly solid (above 0.8 opacity)",
+      "Turn the switch on itself; you must do it in Settings"
+    ],
+    "reach": 3,
+    "reach_label": "Anytime, once you allow it",
+    "differs": "Android has this permission, off by default. iPhone has no overlay, only Picture in Picture and Live Activities."
+  },
+  "story": {
+    "what_it_is": "Lets an app draw windows on top of other apps.",
+    "icon": "panels-top-left",
+    "tags": [
+      "Permission",
+      "Asks first",
+      "Security"
+    ],
+    "marketing": [],
+    "for_you": "You may see a floating chat bubble, a screen filter or a recording button that sits above other apps. You have to turn this on in Settings. Bad apps can use it to cover real screens with fake ones.",
+    "for_makers": "Makers use it for chat bubbles, screen recorders, call overlays and accessibility tools. It is also the classic tool for tapjacking, so Google limits touches through overlays.",
+    "use_cases": [
+      {
+        "type": "social",
+        "example": "A chat app shows a floating bubble for a new message above whatever app you are using.",
+        "apps": [
+          "Messenger"
+        ]
+      },
+      {
+        "type": "games",
+        "example": "A game helper shows a small timer or map above a game while you play.",
+        "apps": []
+      },
+      {
+        "type": "utilities",
+        "example": "A blue light filter app dims the screen by drawing a tinted layer over everything.",
+        "apps": [
+          "Twilight"
+        ]
+      },
+      {
+        "type": "creative",
+        "example": "A screen recorder shows a small stop button floating above your apps.",
+        "apps": []
+      },
+      {
+        "type": "rideshare",
+        "example": "A driver app shows a floating button for the next ride while the driver uses maps.",
+        "apps": []
+      },
+      {
+        "type": "security",
+        "example": "Banking malware draws a fake login screen over the real bank app to steal passwords.",
+        "apps": []
+      },
+      {
+        "type": "accessibility",
+        "example": "A tool shows large buttons above apps for people who have trouble tapping.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Fake screens can steal logins",
+      "Hides real buttons"
+    ],
+    "android_note": "Uses the Draw over other apps setting, and Android 12 limits untrusted touches through overlays.",
+    "ios_note": "iPhone does not allow drawing over other apps at all."
+  },
+  "technical_bounds": [
+    "Hidden on secure screens",
+    "No equivalent on iOS",
+    "Sensitive screens (secure flag) block capture"
+  ],
+  "scores": {
+    "sensitivity": 4,
+    "utility": 3,
+    "fingerprint_bits": null,
+    "friction": 3
+  },
+  "value": {
+    "legit_uses": [
+      "Chat heads",
+      "Screen filters"
+    ],
+    "abuse": [
+      "Tapjacking",
+      "Phishing overlays"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2021-10",
+      "platform": "android",
+      "version": "12 (API 31)",
+      "change": "Untrusted touch blocking and hide-overlay API"
+    },
+    {
+      "date": "2021-10",
+      "platform": "android",
+      "version": "12",
+      "change": "Untrusted touch blocking"
+    },
+    {
+      "date": "2020-09",
+      "platform": "android",
+      "version": "11",
+      "change": "Bubbles"
+    },
+    {
+      "date": "2017-08",
+      "platform": "android",
+      "version": "8.0 (API 26)",
+      "change": "Overlay type TYPE_APPLICATION_OVERLAY replaces system alert types"
+    },
+    {
+      "date": "2015-10",
+      "platform": "android",
+      "version": "6.0 (API 23)",
+      "change": "SYSTEM_ALERT_WINDOW needs a Settings grant"
+    }
+  ],
+  "related": [
+    "mob.display.pip",
+    "mob.sys.accessibility-service"
+  ],
+  "refs": [
+    {
+      "t": "android",
+      "label": "Android: Settings.ACTION_MANAGE_OVERLAY_PERMISSION",
+      "url": "https://developer.android.com/reference/android/provider/Settings#ACTION_MANAGE_OVERLAY_PERMISSION"
+    },
+    {
+      "t": "android",
+      "label": "Android 12 behavior changes (all apps)",
+      "url": "https://developer.android.com/about/versions/12/behavior-changes-all"
+    },
+    {
+      "t": "android",
+      "label": "Android: SYSTEM_ALERT_WINDOW",
+      "url": "https://developer.android.com/reference/android/Manifest.permission#SYSTEM_ALERT_WINDOW"
+    }
+  ],
+  "confidence": "docs"
+}

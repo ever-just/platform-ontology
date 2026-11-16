@@ -1,0 +1,207 @@
+{
+  "id": "mob.net.wifi-scan",
+  "name": "Nearby Wi-Fi networks scan",
+  "kind": "signal",
+  "group": "network-connectivity",
+  "subgroup": "Wi-Fi",
+  "tags": [
+    "wifi-scan",
+    "wardriving"
+  ],
+  "plain": "Android lists nearby access points with location permission and throttling; iOS has no public scan.",
+  "meaning": "The list of nearby BSSIDs locates a phone within meters indoors and enables positioning, which is why scans are location-gated and throttled.",
+  "lifecycle": [
+    "in-session",
+    "background"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "p",
+      "v": "1.0",
+      "api": 1,
+      "permission": "ACCESS_FINE_LOCATION (API 29+), CHANGE_WIFI_STATE; NEARBY_WIFI_DEVICES (API 33)",
+      "protection": "dangerous",
+      "grant": "prompt",
+      "prompt_ui": "",
+      "persistence": "Until revoked",
+      "revocation": "Settings > Apps > Permissions",
+      "store_policy": "Play: location policy",
+      "api_surface": "WifiManager.startScan() (deprecated API 28), getScanResults()",
+      "note": "Foreground 4 scans per 2 minutes, background 1 per 30 minutes (Android 9); can be turned off in Developer options"
+    },
+    "ios": {
+      "s": "f",
+      "v": "9.0",
+      "permission": "entitlement",
+      "protection": "entitlement",
+      "grant": "none",
+      "prompt_ui": "",
+      "persistence": "",
+      "revocation": "Apple approval required",
+      "store_policy": "",
+      "api_surface": "Only for approved captive-portal or Wi-Fi provider apps; no general scan",
+      "note": ""
+    }
+  },
+  "data": {
+    "type": "list",
+    "metric": "Access points in range",
+    "update": "Throttled",
+    "fields": [
+      {
+        "name": "scan_results",
+        "type": "list",
+        "unit": "BSSID, RSSI",
+        "range": "0 to 100",
+        "precision": "exact per AP"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can list nearby Wi-Fi networks on Android, with limits and a location prompt",
+    "user_action": "You tap Allow for Location or Nearby devices when the app asks to scan Wi-Fi",
+    "can": [
+      "List nearby Wi-Fi access points on Android",
+      "See names, signal and security type",
+      "Scan about 4 times per 2 minutes in the foreground",
+      "Use it to guess your indoor spot"
+    ],
+    "cannot": [
+      "Scan more than about once per 30 minutes in the background on Android 9 and newer",
+      "Scan on iPhone unless it is an approved captive portal or Wi-Fi provider",
+      "Scan without Location or Nearby devices permission",
+      "Skip the scan limits, unless you turn them off in Developer options"
+    ],
+    "reach": 2,
+    "reach_label": "Nearby Wi-Fi list, with limits",
+    "differs": "Android can scan with location or Nearby devices permission, throttled. iPhone has no public scan."
+  },
+  "story": {
+    "what_it_is": "An app can list the Wi-Fi networks around you, which can show where you are.",
+    "icon": "wifi",
+    "tags": [
+      "Wi-Fi",
+      "Location",
+      "Throttled"
+    ],
+    "marketing": [
+      {
+        "vendor": "Google",
+        "name": "Wi-Fi scanning",
+        "pitch": "Android has Wi-Fi scanning rules that limit how often apps can scan and need location permission.",
+        "url": "https://developer.android.com/develop/connectivity/wifi/wifi-scan"
+      }
+    ],
+    "for_you": "You do not see the scan. If an app has location permission, it can list nearby routers. That list can tell where you are within a few meters, even inside a building.",
+    "for_makers": "Makers use it for indoor maps, Wi-Fi tools and faster location fixes. The list works like a map key, since every router has a known place. That is why Android limits it and needs location permission.",
+    "use_cases": [
+      {
+        "type": "maps",
+        "example": "A map app improves your blue dot indoors by looking at nearby Wi-Fi.",
+        "apps": [
+          "Google Maps"
+        ]
+      },
+      {
+        "type": "utilities",
+        "example": "A Wi-Fi analyzer app shows which channels are crowded so you can fix your router.",
+        "apps": [
+          "WiFi Analyzer"
+        ]
+      },
+      {
+        "type": "shopping",
+        "example": "A mall app guides you to a store using Wi-Fi positioning inside the building.",
+        "apps": []
+      },
+      {
+        "type": "games",
+        "example": "A location game checks nearby networks to catch cheaters who fake GPS.",
+        "apps": []
+      },
+      {
+        "type": "ads",
+        "example": "A data company reads the list of routers around you to learn the places you visit.",
+        "apps": []
+      },
+      {
+        "type": "security",
+        "example": "A security app lists nearby networks to spot a fake copy of a known hotspot.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Tracks you to a few meters",
+      "Wardriving"
+    ],
+    "android_note": "Android lists nearby access points with location permission and limits how often an app can scan.",
+    "ios_note": "iPhone has no public Wi-Fi scan for normal apps."
+  },
+  "technical_bounds": [
+    "Throttled by OS",
+    "Can be limited by Wi-Fi scanning setting"
+  ],
+  "scores": {
+    "sensitivity": 4,
+    "utility": 3,
+    "fingerprint_bits": 5,
+    "friction": 3
+  },
+  "value": {
+    "legit_uses": [
+      "Indoor navigation",
+      "Wi-Fi tools"
+    ],
+    "abuse": [
+      "Covert location tracking, wardriving"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2018-08",
+      "platform": "android",
+      "version": "9 (API 28)",
+      "change": "Scan throttling (4 per 2 min)"
+    },
+    {
+      "date": "2019-09",
+      "platform": "android",
+      "version": "10 (API 29)",
+      "change": "Fine location needed; startScan deprecated"
+    },
+    {
+      "date": "2022-08",
+      "platform": "android",
+      "version": "13 (API 33)",
+      "change": "NEARBY_WIFI_DEVICES split from location"
+    }
+  ],
+  "related": [
+    "mob.network.wifi-info"
+  ],
+  "refs": [
+    {
+      "t": "android",
+      "label": "Android: Wi-Fi permissions",
+      "url": "https://developer.android.com/develop/connectivity/wifi/wifi-permissions"
+    },
+    {
+      "t": "android",
+      "label": "Android 13 behavior changes",
+      "url": "https://developer.android.com/about/versions/13/behavior-changes-13"
+    },
+    {
+      "t": "apple",
+      "label": "Apple: NEHotspotNetwork",
+      "url": "https://developer.apple.com/documentation/networkextension/nehotspotnetwork"
+    }
+  ],
+  "confidence": "docs"
+}

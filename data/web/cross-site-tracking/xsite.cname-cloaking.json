@@ -1,0 +1,228 @@
+{
+  "id": "web.xsite.cname-cloaking",
+  "name": "CNAME cloaking",
+  "kind": "tracking",
+  "group": "cross-site-tracking",
+  "subgroup": "In session",
+  "tags": [
+    "cname",
+    "first-party-subdomain",
+    "dns",
+    "itp"
+  ],
+  "plain": "A tracker is served from a subdomain of the site (like metrics.site.com) that points at the tracker's servers.",
+  "meaning": "Makes tracking look first party so the cookie lasts longer and blockers miss it. Safari caps cookies set by such CNAME or mismatched IP hosts to 7 days. Studies found it on a few percent of top sites (Dimova et al 2021).",
+  "lifecycle": [
+    "in-session",
+    "after-leaving"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "DNS CNAME to a third party plus Set-Cookie from that subdomain",
+      "access": {
+        "grant": "none",
+        "prompt_ui": "None",
+        "secure_context": false,
+        "user_gesture": false,
+        "persistence": "Safari: 7 days. Others: cookie lifetime set by the tracker (up to 400 days in Chrome)",
+        "revocation": "Clear site data, browser privacy settings",
+        "iframe": "",
+        "steps": []
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "1",
+          "note": "Allowed",
+          "date": "2008-12-11"
+        },
+        "edge": {
+          "s": "y",
+          "v": "1",
+          "note": "Allowed",
+          "date": ""
+        },
+        "firefox": {
+          "s": "y",
+          "v": "1",
+          "note": "Blocked only with extensions that read CNAME",
+          "date": "2004-11-09"
+        },
+        "safari": {
+          "s": "p",
+          "v": "14",
+          "note": "Cookie lifetime capped to 7 days",
+          "date": "2020-09-16"
+        },
+        "ios_safari": {
+          "s": "p",
+          "v": "14",
+          "note": "Cookie lifetime capped to 7 days",
+          "date": "2020-09-16"
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "1",
+          "note": "",
+          "date": ""
+        },
+        "samsung": {
+          "s": "y",
+          "v": "1.0",
+          "note": "",
+          "date": "2013-04-27"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "string",
+    "metric": "Cookie ID from tracker host",
+    "update": "per request",
+    "fields": []
+  },
+  "limits": {
+    "headline": "Can hide a tracker as part of the site's own address so it looks first party",
+    "user_action": "Nothing. It happens when a page loads a script from a tracker disguised as the site",
+    "can": [
+      "Serve a tracker from a name like metrics.site.com that points to a tracker's servers",
+      "Set cookies that look like the site's own",
+      "Last longer than third party cookies in some browsers"
+    ],
+    "cannot": [
+      "Stay hidden from Firefox and Safari, which check where the name really points",
+      "Work for browsers that block known tracker names",
+      "Get past a content blocker that checks the real destination",
+      "Follow you to other sites with the same cookie"
+    ],
+    "reach": 3,
+    "reach_label": "A tracker disguised as the site",
+    "differs": "Firefox, Safari and some content blockers check where the name really points and limit it. Chrome mostly does not."
+  },
+  "story": {
+    "what_it_is": "A tracker is made to look like part of the site you are visiting, using a disguised web address.",
+    "icon": "drama",
+    "tags": [
+      "Tracking",
+      "Disguised",
+      "Cookies"
+    ],
+    "marketing": [
+      {
+        "vendor": "Apple",
+        "name": "Tracking prevention",
+        "pitch": "WebKit explains that Safari limits cookies set by hosts that use CNAME or other cloaking to hide third party trackers.",
+        "url": "https://webkit.org/tracking-prevention/"
+      }
+    ],
+    "for_you": "You never see it. The tracker's code loads from something like metrics.shop.com, which looks like the shop itself. Your blocker may not catch it, and its cookie may last longer.",
+    "for_makers": "A site that wants longer cookies and fewer blocked requests points a subdomain at a tracker's servers. It looks first party. Browsers now limit such cookies to about a week, and blockers started to check the real address.",
+    "use_cases": [
+      {
+        "type": "ads",
+        "example": "A shop hosts its Adobe or Criteo tracker at a subdomain so blockers do not stop it.",
+        "apps": [
+          "Adobe Analytics",
+          "Criteo"
+        ]
+      },
+      {
+        "type": "analytics",
+        "example": "A publisher's analytics vendor serves data collection from the publisher's own domain to keep cookies for longer.",
+        "apps": [
+          "Piano",
+          "Adobe Analytics"
+        ]
+      },
+      {
+        "type": "shopping",
+        "example": "An online store sets a tracker CNAME to follow shoppers from ad to checkout, even with blockers on.",
+        "apps": []
+      },
+      {
+        "type": "media",
+        "example": "A news site sets up a tag server on its domain, so its ad partners can set cookies as though they were the site.",
+        "apps": []
+      },
+      {
+        "type": "games",
+        "example": "A game portal hides its ad partner behind a subdomain so ads and player tracking are not blocked.",
+        "apps": []
+      },
+      {
+        "type": "security",
+        "example": "A privacy researcher uses DNS lookups to spot a hidden tracker behind a friendly sounding subdomain.",
+        "apps": [
+          "uBlock Origin"
+        ]
+      }
+    ],
+    "risks": [
+      "Hides who is tracking you",
+      "Can bypass simple blockers"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Safari ITP limits CNAME or IP mismatched server cookies to 7 days",
+    "Browsers with DNS access (Firefox with uBlock Origin) can uncloak",
+    "Server must be delegated by the site"
+  ],
+  "scores": {
+    "sensitivity": 4,
+    "utility": 3,
+    "fingerprint_bits": null,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Same site analytics hosting"
+    ],
+    "abuse": [
+      "Evading tracking blockers and ITP"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2020-11",
+      "browser": "safari",
+      "version": "14",
+      "change": "ITP caps cookies set via CNAME cloaked requests to 7 days"
+    },
+    {
+      "date": "2021-02",
+      "browser": "all",
+      "version": "",
+      "change": "Dimova et al: CNAME tracking found on about 10% of 10,000 sites in a measurement (see paper)"
+    }
+  ],
+  "related": [
+    "web.xsite.server-side-tagging"
+  ],
+  "refs": [
+    {
+      "t": "webkit",
+      "label": "WebKit Tracking Prevention",
+      "url": "https://webkit.org/tracking-prevention/"
+    },
+    {
+      "t": "paper",
+      "label": "The CNAME of the Game (PETS 2021)",
+      "url": "https://petsymposium.org/popets/2021/popets-2021-0053.php"
+    },
+    {
+      "t": "mdn",
+      "label": "MDN Firefox CNAME uncloaking",
+      "url": "https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/API/dns"
+    }
+  ],
+  "confidence": "docs"
+}

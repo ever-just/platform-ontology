@@ -1,0 +1,226 @@
+{
+  "id": "web.identity.private-state-tokens",
+  "name": "Private State Tokens",
+  "kind": "capability",
+  "group": "identity-auth",
+  "subgroup": "Anti fraud",
+  "tags": [
+    "anti fraud"
+  ],
+  "plain": "Lets one site share a trust signal about a visitor with another without identifying them.",
+  "meaning": "Carries a one bit trust token to other origins so bots can be told from people without a login. Privacy Sandbox wind down affects its future.",
+  "lifecycle": [
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "document.hasPrivateToken(issuer), document.hasRedemptionRecord(issuer), fetch(url,{privateToken:{...}})",
+      "bcd": [
+        "api.Document.hasPrivateToken"
+      ],
+      "access": {
+        "grant": "none",
+        "prompt_ui": "None",
+        "secure_context": true,
+        "user_gesture": false,
+        "persistence": "Per origin",
+        "revocation": "Site settings",
+        "iframe": "Same as top level; cross-origin iframes need a permissions policy where listed",
+        "steps": [
+          "Call the API",
+          "Browser applies its access rules",
+          "Page receives the result"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "117",
+          "note": "",
+          "date": "2023-09-12"
+        },
+        "edge": {
+          "s": "y",
+          "v": "117",
+          "note": "",
+          "date": "2023-09-15"
+        },
+        "firefox": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "safari": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "ios_safari": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "117",
+          "note": "",
+          "date": "2023-09-12"
+        },
+        "samsung": {
+          "s": "y",
+          "v": "24.0",
+          "note": "",
+          "date": "2024-01-25"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "object",
+    "metric": "Lets one site share a trust signal about a visitor with another without identifying them.",
+    "update": "on demand",
+    "fields": [
+      {
+        "name": "hasPrivateToken",
+        "type": "boolean",
+        "range": "true or false",
+        "precision": "per issuer"
+      },
+      {
+        "name": "redemption record",
+        "type": "binary",
+        "unit": "bytes",
+        "range": "signed 32 to 64 bytes"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can pass a small trust badge about you between sites without naming you",
+    "user_action": "Nothing. It happens quietly in the background when the page loads",
+    "can": [
+      "Store a token after a site decides you are probably a real person",
+      "Show that token to another site so it can skip a bot check",
+      "Carry one yes or no signal, with no name or account"
+    ],
+    "cannot": [
+      "Tell the other site who you are",
+      "Work in Firefox or Safari",
+      "Count on a long future, because Chrome is winding down the Privacy Sandbox"
+    ],
+    "reach": 2,
+    "reach_label": "One trust signal, no identity",
+    "differs": "Only Chromium browsers have it. Firefox and Safari do not."
+  },
+  "story": {
+    "what_it_is": "A site can pass a hidden 'this is a real person' mark to another site, without your identity.",
+    "icon": "shield-check",
+    "tags": [
+      "Silent",
+      "Anti-bot",
+      "Trust"
+    ],
+    "marketing": [
+      {
+        "vendor": "Google Chrome",
+        "name": "Private State Tokens",
+        "pitch": "Google pitched it as a way for sites to share a trust signal about a visitor across sites without identifying them or using cookies.",
+        "url": "https://developers.google.com/privacy-sandbox/protections/private-state-tokens"
+      }
+    ],
+    "for_you": "You never see it. After you pass a check on one site, the browser may carry a trust token that another site can read as a yes or no. It may mean fewer puzzles asking you to prove you are human.",
+    "for_makers": "Fraud and anti-bot teams want to know a visitor looks like a person before they sign up or buy. The token lets a trusted issuer vouch for the browser, which lowers fake account and ad fraud. The wider Privacy Sandbox project has been scaled back, so its future is unsure.",
+    "use_cases": [
+      {
+        "type": "security",
+        "example": "A checkout page reads a token from an issuer that earlier saw you act like a normal person, then skips a CAPTCHA for you.",
+        "apps": []
+      },
+      {
+        "type": "ads",
+        "example": "An ad network checks the token to filter out bot clicks and charge advertisers only for real viewers.",
+        "apps": []
+      },
+      {
+        "type": "games",
+        "example": "A browser game lobby uses the mark to keep bots out of free signups and ranked queues without nagging players.",
+        "apps": []
+      },
+      {
+        "type": "social",
+        "example": "A social site gates new account creation behind the token, so a bot farm cannot register thousands of accounts.",
+        "apps": []
+      },
+      {
+        "type": "shopping",
+        "example": "A ticket seller uses it to let real fans into the queue while keeping scalper bots out.",
+        "apps": [
+          "Ticketmaster"
+        ]
+      },
+      {
+        "type": "analytics",
+        "example": "A measurement vendor keeps traffic counts clean by excluding visits with no trust mark.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Might label some real people as bots",
+      "Unclear future"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Chrome and Edge only",
+    "Limit of about 2 issuers per origin in Chrome",
+    "Tokens are unlinkable by design"
+  ],
+  "scores": {
+    "sensitivity": 2,
+    "utility": 3,
+    "fingerprint_bits": null,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Bot detection"
+    ],
+    "abuse": [
+      "Cross site signal if issuers collude"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2023-09",
+      "browser": "chrome",
+      "version": "117",
+      "change": "Private State Tokens ships"
+    },
+    {
+      "date": "2025",
+      "browser": "chrome",
+      "version": "155",
+      "change": "Privacy Sandbox wind down coverage; status of PST unverified"
+    }
+  ],
+  "refs": [
+    {
+      "t": "spec",
+      "label": "Private State Token",
+      "url": "https://wicg.github.io/trust-token-api/"
+    },
+    {
+      "t": "mdn",
+      "label": "MDN Private State Token API",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/Private_State_Token_API"
+    }
+  ],
+  "confidence": "inferred"
+}

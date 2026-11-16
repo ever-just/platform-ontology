@@ -1,0 +1,212 @@
+{
+  "id": "mob.hw.nfc-hce",
+  "name": "Host card emulation (HCE)",
+  "kind": "capability",
+  "group": "peripherals-hardware",
+  "subgroup": "NFC",
+  "tags": [
+    "nfc",
+    "hce",
+    "payments",
+    "dma",
+    "eu"
+  ],
+  "plain": "Lets an app act as a contactless card or key that other readers tap.",
+  "meaning": "A phone that emulates a card can hold payment, transit or access credentials without the OS wallet. Opening it to apps changes who controls tap to pay.",
+  "lifecycle": [
+    "in-session",
+    "background"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "y",
+      "v": "4.4",
+      "api": 19,
+      "permission": "BIND_NFC_SERVICE, NFC (normal)",
+      "protection": "normal",
+      "grant": "install",
+      "prompt_ui": "User picks default payment app in Settings > Tap & pay",
+      "persistence": "Until changed",
+      "revocation": "Settings > Connected devices > NFC > Contactless payments",
+      "store_policy": "Play: payments apps follow Payments policy",
+      "api_surface": "HostApduService, CardEmulation, aid-group in apduservice.xml",
+      "note": "Android 10 can set the default in Settings; offhost secure element supported."
+    },
+    "ios": {
+      "s": "f",
+      "v": "17.4",
+      "permission": "com.apple.developer.nfc.hce; com.apple.developer.nfc.hce.iso18092.nfcf.systemcode",
+      "protection": "entitlement",
+      "grant": "entitlement",
+      "prompt_ui": "Apple Pay stays default outside the EU; EU users can choose",
+      "persistence": "Entitlement scope per app",
+      "revocation": "Remove app; Settings > Wallet",
+      "store_policy": "Entitlement limited to developers in the EEA, with a licensing agreement",
+      "api_surface": "CardSession (CoreNFC), NFCPresentmentIntentAssertion",
+      "note": "EEA only at first; iOS 18.1 adds the NFC and SE platform outside the EU for some countries; scope for 2026 should be re-checked."
+    }
+  },
+  "web_equivalents": [
+    "web.peripherals.web-nfc"
+  ],
+  "data": {
+    "type": "event",
+    "metric": "APDU exchange",
+    "update": "per tap",
+    "fields": [
+      {
+        "name": "APDU",
+        "type": "binary",
+        "unit": "bytes",
+        "range": "255 data bytes (short APDU)",
+        "precision": "raw"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can act as a contactless card or key when you pick it as default",
+    "user_action": "You choose the app in Settings under Tap and pay, then tap a reader",
+    "can": [
+      "Answer readers with a stored card, ticket or key",
+      "Hold payment, transit or access credentials without the system wallet",
+      "Run on Android with no Google approval"
+    ],
+    "cannot": [
+      "Become the default payment app without you choosing it",
+      "Work on iPhone without Apple's entitlement",
+      "Replace Apple Pay as the default on iPhone outside the EU"
+    ],
+    "reach": 3,
+    "reach_label": "Ongoing once you choose it",
+    "differs": "Android lets any app do this since 2013; iPhone began in the EU and reached some other countries from iOS 18.1."
+  },
+  "story": {
+    "what_it_is": "Lets an app act as a contactless card or key that readers can tap.",
+    "icon": "smartphone-nfc",
+    "tags": [
+      "NFC",
+      "Payments",
+      "Keys"
+    ],
+    "marketing": [
+      {
+        "vendor": "Google",
+        "name": "Host card emulation",
+        "pitch": "Let your app act as a contactless card, such as a payment or transit card, without special hardware.",
+        "url": "https://developer.android.com/develop/connectivity/nfc/hce"
+      }
+    ],
+    "for_you": "You hold your phone to a reader and the door opens or the bus lets you on. The app does this without the Wallet app opening. You can set which app answers in Settings.",
+    "for_makers": "A company can build a custom tap card for a loyalty scheme, transit or access control and skip the system wallet. It runs in software on Android with no approval. On iPhone it is limited to approved regions and developers.",
+    "use_cases": [
+      {
+        "type": "travel",
+        "example": "A city bus app holds a ticket you can tap at the gate.",
+        "apps": []
+      },
+      {
+        "type": "enterprise",
+        "example": "An office badge app opens doors when you tap your phone.",
+        "apps": []
+      },
+      {
+        "type": "payments",
+        "example": "A bank app sends a one time code to the shop's reader.",
+        "apps": []
+      },
+      {
+        "type": "automotive",
+        "example": "A car sharing app taps the car to unlock.",
+        "apps": []
+      },
+      {
+        "type": "education",
+        "example": "A student card app opens the library gate.",
+        "apps": []
+      },
+      {
+        "type": "shopping",
+        "example": "A loyalty app earns points with a tap at the till.",
+        "apps": []
+      },
+      {
+        "type": "security",
+        "example": "A hotel app holds a room key that expires after your stay.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Relay attacks",
+      "Cloned credentials",
+      "Default app confusion"
+    ],
+    "android_note": "Android 10 lets you pick the default tap app in Settings, and it can use the phone's secure chip.",
+    "ios_note": "iPhone first opened this in the EEA. iOS 18.1 added the NFC and secure element platform outside the EU for some countries. Scope for 2026 should be re-checked."
+  },
+  "technical_bounds": [
+    "iOS needs an Apple entitlement, commercial agreement and fees",
+    "Android requires the user to pick the default payment app for payments AIDs"
+  ],
+  "scores": {
+    "sensitivity": 4,
+    "utility": 4,
+    "fingerprint_bits": 1,
+    "friction": 3
+  },
+  "value": {
+    "legit_uses": [
+      "Bank wallets",
+      "Transit passes",
+      "Car keys"
+    ],
+    "abuse": [
+      "Relay attacks",
+      "Credential cloning"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2013-10",
+      "platform": "android",
+      "version": "4.4 (API 19)",
+      "change": "HCE introduced"
+    },
+    {
+      "date": "2024-03",
+      "platform": "ios",
+      "version": "iOS 17.4",
+      "change": "HCE based contactless payments opened to apps in the EEA"
+    },
+    {
+      "date": "2024-10",
+      "platform": "ios",
+      "version": "iOS 18.1",
+      "change": "NFC and Secure Element platform for in app contactless in several countries"
+    }
+  ],
+  "related": [
+    "mob.hw.nfc-secure-element",
+    "mob.pay.contactless-default",
+    "mob.pay.wallet-pay-sheet"
+  ],
+  "refs": [
+    {
+      "t": "android",
+      "label": "Android: Host-based card emulation",
+      "url": "https://developer.android.com/develop/connectivity/nfc/hce"
+    },
+    {
+      "t": "apple",
+      "label": "Apple: HCE transactions in apps",
+      "url": "https://developer.apple.com/support/hce-transactions-in-apps/"
+    }
+  ],
+  "confidence": "docs"
+}

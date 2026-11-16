@@ -1,0 +1,218 @@
+{
+  "id": "mob.policy.contacts-declaration",
+  "name": "Play READ_CONTACTS declaration",
+  "kind": "capability",
+  "group": "app-ecosystem",
+  "subgroup": "Play permission declarations",
+  "tags": [
+    "contacts",
+    "read-contacts",
+    "contact-picker"
+  ],
+  "plain": "Google adds a Contacts permission declaration so apps use the Contact Picker when possible.",
+  "meaning": "Contact lists are valuable for growth hacks and ads. Policy effective 28 October 2026 asks apps to justify broad access, mirroring photo and video rules.",
+  "lifecycle": [
+    "in-session"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "p",
+      "v": "",
+      "permission": "READ_CONTACTS, WRITE_CONTACTS",
+      "protection": "dangerous",
+      "grant": "none",
+      "prompt_ui": "",
+      "persistence": "",
+      "revocation": "",
+      "store_policy": "Declaration effective 28 Oct 2026 (per Play policy announcement); Contact Picker preferred",
+      "api_surface": "Android Contact Picker, ContactsContract",
+      "note": "Dates should be confirmed in Play Console before relying on them."
+    },
+    "ios": {
+      "s": "y",
+      "v": "9.0",
+      "permission": "NSContactsUsageDescription",
+      "protection": "prompt",
+      "grant": "prompt",
+      "prompt_ui": "",
+      "persistence": "",
+      "revocation": "",
+      "store_policy": "App Review 5.1.1; iOS 18 limited contacts access",
+      "api_surface": "CNContactStore, CNContactPickerViewController (no permission)",
+      "note": "iOS 18 added limited contacts sharing."
+    }
+  },
+  "web_equivalents": [
+    "web.contacts.contact-picker"
+  ],
+  "data": {
+    "type": "list",
+    "metric": "Contacts",
+    "update": "on demand",
+    "fields": [
+      {
+        "name": "name",
+        "type": "string",
+        "unit": "",
+        "range": "",
+        "precision": ""
+      },
+      {
+        "name": "phone",
+        "type": "string",
+        "unit": "",
+        "range": "",
+        "precision": ""
+      },
+      {
+        "name": "email",
+        "type": "string",
+        "unit": "",
+        "range": "",
+        "precision": ""
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can only access all your contacts on Android if Google approves the reason",
+    "user_action": "You tap Pick contacts, or Allow contacts when the app asks",
+    "can": [
+      "Show a contact picker where you choose one or a few people",
+      "Use all contacts if Google approved a core need",
+      "Share a limited set of contacts (iOS 18)"
+    ],
+    "cannot": [
+      "Take your full contact list for growth or ads without approval",
+      "Skip the justification form that starts on 28 October 2026 (confirm dates in Play Console)",
+      "See contacts you did not share when you chose limited access (iOS 18)"
+    ],
+    "reach": 2,
+    "reach_label": "Contacts you pick, or all if approved",
+    "differs": "iOS 18 lets you share only some contacts. Android moves to a picker unless Google approves wider access."
+  },
+  "story": {
+    "what_it_is": "Google's new rule that apps explain why they want your whole contact list.",
+    "icon": "contact",
+    "tags": [
+      "Contacts",
+      "Play rules",
+      "Asks first"
+    ],
+    "marketing": [
+      {
+        "vendor": "Google",
+        "name": "READ_CONTACTS permission declaration",
+        "pitch": "Apps are asked to use the Contact Picker when possible, and explain broad contact access.",
+        "url": "https://support.google.com/googleplay/android-developer/answer/16296680"
+      }
+    ],
+    "for_you": "Instead of handing over your whole address book, you may now pick just the contacts you want to share. You keep the rest private.",
+    "for_makers": "Contact lists fuel growth hacks, such as friend finders and invite spam, and ad matching. The policy, effective 28 October 2026, pushes makers toward a picker unless they truly need the full list.",
+    "use_cases": [
+      {
+        "type": "social",
+        "example": "A new social app asks to find friends and now uses a picker so you choose who is invited.",
+        "apps": [
+          "Snapchat",
+          "Instagram"
+        ]
+      },
+      {
+        "type": "messaging",
+        "example": "A messenger needs the full list to show which contacts already use it, and must justify that.",
+        "apps": [
+          "WhatsApp",
+          "Signal"
+        ]
+      },
+      {
+        "type": "payments",
+        "example": "A payment app picks one contact to send money to instead of reading all numbers.",
+        "apps": [
+          "Venmo",
+          "Cash App"
+        ]
+      },
+      {
+        "type": "games",
+        "example": "A game offers a 'invite friends' button that opens a picker and sends one text at a time.",
+        "apps": [
+          "Words With Friends"
+        ]
+      },
+      {
+        "type": "ads",
+        "example": "An ad broker used contact lists to build a social graph, which this rule makes harder.",
+        "apps": []
+      },
+      {
+        "type": "security",
+        "example": "A caller ID app needs contacts to label callers and must show it as a core feature.",
+        "apps": [
+          "Truecaller"
+        ]
+      }
+    ],
+    "risks": [
+      "Address book leaks neighbors' numbers",
+      "Used for friend graph building"
+    ],
+    "android_note": "Google's Contact Picker lets the person share only chosen contacts.",
+    "ios_note": "iOS 18 added limited contacts access, with a similar choice."
+  },
+  "technical_bounds": [
+    "Android date to be confirmed in console",
+    "Picker needs no permission"
+  ],
+  "scores": {
+    "sensitivity": 5,
+    "utility": 4,
+    "fingerprint_bits": null,
+    "friction": 3
+  },
+  "value": {
+    "legit_uses": [
+      "Messaging apps, invites"
+    ],
+    "abuse": [
+      "Uploading address books for growth or ads"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2024-09",
+      "platform": "ios",
+      "version": "iOS 18",
+      "change": "Limited contacts access"
+    },
+    {
+      "date": "2026-10",
+      "platform": "android",
+      "version": "Play policy",
+      "change": "READ_CONTACTS declaration effective 28 Oct 2026 (as announced)"
+    }
+  ],
+  "related": [
+    "mob.policy.sms-call-log"
+  ],
+  "refs": [
+    {
+      "t": "android",
+      "label": "Play: Policy announcements",
+      "url": "https://support.google.com/googleplay/android-developer/answer/16296680"
+    },
+    {
+      "t": "apple",
+      "label": "Apple: Meet the Contacts framework limited access (WWDC24)",
+      "url": "https://developer.apple.com/videos/play/wwdc2024/10121/"
+    }
+  ],
+  "confidence": "inferred"
+}

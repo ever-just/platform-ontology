@@ -1,0 +1,215 @@
+{
+  "id": "mob.dev.storage-space",
+  "name": "Free and total storage",
+  "kind": "signal",
+  "group": "device-system-profile",
+  "subgroup": "Hardware capacity",
+  "tags": [
+    "storage",
+    "required-reason-api",
+    "fingerprint"
+  ],
+  "plain": "Reads exact free and total disk bytes with no prompt; on iOS this needs a declared reason.",
+  "meaning": "Exact free bytes change slowly and are near-unique, so they are a classic fingerprint. It also reveals device tier (64 GB vs 512 GB) and how full the phone is.",
+  "lifecycle": [
+    "on-launch",
+    "in-session"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "y",
+      "v": "1.0",
+      "api": 1,
+      "permission": "",
+      "protection": "none",
+      "grant": "none",
+      "prompt_ui": "",
+      "persistence": "",
+      "revocation": "",
+      "store_policy": "",
+      "api_surface": "StatFs.getAvailableBytes()/getTotalBytes() (API 18); StorageManager.getAllocatableBytes (API 26)",
+      "note": "Exact byte counts; quota-aware allocatable bytes since Android 8"
+    },
+    "ios": {
+      "s": "f",
+      "v": "17.0",
+      "permission": "entitlement",
+      "protection": "entitlement",
+      "grant": "none",
+      "prompt_ui": "",
+      "persistence": "",
+      "revocation": "App Review: privacy manifest reasons must be declared; fingerprinting banned",
+      "store_policy": "",
+      "api_surface": "Reason codes 85F4.1 (display), E174.1 (low-space behavior), 7D9E.1 (user-sent bug report), B728.1 (health research apps); enforced in App Store submissions since 2024-05-01",
+      "note": ""
+    }
+  },
+  "web_equivalents": [
+    "web.storage.storage-quota",
+    "web.device.storage-estimate"
+  ],
+  "data": {
+    "type": "integer",
+    "metric": "Bytes free, bytes total",
+    "update": "On read",
+    "fields": [
+      {
+        "name": "free_bytes",
+        "type": "integer",
+        "unit": "bytes",
+        "range": "0 to total",
+        "precision": "1 byte (exact)"
+      },
+      {
+        "name": "total_bytes",
+        "type": "integer",
+        "unit": "bytes",
+        "range": "16 GB to 2 TB",
+        "precision": "about 0.93 of marketing size"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can see free and total storage on Android, and on iPhone only with a stated reason",
+    "user_action": "Nothing. The app checks when it starts, or before a big download",
+    "can": [
+      "See exact free and total storage in bytes on Android",
+      "See how much space the app could free up on Android 8 and newer",
+      "Check space on iPhone for approved reasons, such as showing it to you or a low space warning",
+      "Warn you before a download that will not fit"
+    ],
+    "cannot": [
+      "See the space on iPhone without declaring an approved reason; App Store checks began 1 May 2024",
+      "Use the number on iPhone for tracking or a device ID",
+      "See what is stored in other apps' folders"
+    ],
+    "reach": 2,
+    "reach_label": "Always available on Android",
+    "differs": "Android allows it with no prompt. iPhone only allows it for listed reasons the developer must declare."
+  },
+  "story": {
+    "what_it_is": "An app can see how much free and total storage your phone has.",
+    "icon": "hard-drive",
+    "tags": [
+      "Silent",
+      "Fingerprint",
+      "Storage"
+    ],
+    "marketing": [
+      {
+        "vendor": "Apple",
+        "name": "Required Reason APIs",
+        "pitch": "Developer rule: apps that read free disk space must declare an approved reason in their privacy manifest.",
+        "url": "https://developer.apple.com/documentation/bundleresources/describing-use-of-required-reason-api"
+      }
+    ],
+    "for_you": "You may see a warning that you need more space to download a movie. You will not see that the exact number of free bytes works like a near unique tag, because it changes slowly.",
+    "for_makers": "Makers need it to check space before big downloads and saves. The same exact number is a classic fingerprint, so Apple makes apps give a reason.",
+    "use_cases": [
+      {
+        "type": "media",
+        "example": "A streaming app checks free space before offering to download a whole series.",
+        "apps": []
+      },
+      {
+        "type": "games",
+        "example": "A game warns you that an update needs 4 GB before it starts downloading.",
+        "apps": []
+      },
+      {
+        "type": "creative",
+        "example": "A video app checks space before it starts recording in 4K.",
+        "apps": []
+      },
+      {
+        "type": "utilities",
+        "example": "A cleaner app shows how full your phone is and what to delete.",
+        "apps": []
+      },
+      {
+        "type": "ads",
+        "example": "An ad firm uses free bytes plus total size to tell phones apart.",
+        "apps": []
+      },
+      {
+        "type": "security",
+        "example": "A fraud tool notes that a device claims 64 GB but shows free space of a 512 GB model.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Exact number works as a tag",
+      "Shows how full your phone is"
+    ],
+    "android_note": "Reads exact free and total bytes with no prompt.",
+    "ios_note": "Needs a declared reason code in the privacy manifest."
+  },
+  "technical_bounds": [
+    "Reason codes restrict off-device sending on iOS",
+    "Android has no equivalent gate"
+  ],
+  "scores": {
+    "sensitivity": 2,
+    "utility": 3,
+    "fingerprint_bits": 6,
+    "friction": 1
+  },
+  "value": {
+    "legit_uses": [
+      "Check space before download",
+      "Storage cleanup tools"
+    ],
+    "abuse": [
+      "Fingerprint",
+      "Device tier targeting"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2013-07",
+      "platform": "android",
+      "version": "4.3 (API 18)",
+      "change": "StatFs.getAvailableBytes added"
+    },
+    {
+      "date": "2024-05",
+      "platform": "ios",
+      "version": "iOS 17.x",
+      "change": "Disk space is a Required Reason API; manifest reason required to ship"
+    }
+  ],
+  "related": [
+    "mob.rr.disk-space",
+    "mob.dev.ram-size"
+  ],
+  "refs": [
+    {
+      "t": "android",
+      "label": "Android: StatFs",
+      "url": "https://developer.android.com/reference/android/os/StatFs"
+    },
+    {
+      "t": "apple",
+      "label": "Apple: Describing use of required reason API",
+      "url": "https://developer.apple.com/documentation/bundleresources/describing-use-of-required-reason-api"
+    },
+    {
+      "t": "apple",
+      "label": "Apple: URLResourceValues",
+      "url": "https://developer.apple.com/documentation/foundation/urlresourcevalues"
+    },
+    {
+      "t": "apple",
+      "label": "Apple: Privacy manifest files",
+      "url": "https://developer.apple.com/documentation/bundleresources/privacy-manifest-files"
+    }
+  ],
+  "confidence": "inferred"
+}

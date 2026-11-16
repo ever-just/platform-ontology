@@ -1,0 +1,226 @@
+{
+  "id": "web.auth.sign-in-with-linkedin",
+  "name": "Sign in with LinkedIn",
+  "kind": "capability",
+  "group": "identity-auth",
+  "subgroup": "Social login",
+  "tags": [
+    "linkedin",
+    "oidc",
+    "profile",
+    "social-login"
+  ],
+  "plain": "A login where LinkedIn confirms the person and shares basic professional profile details.",
+  "meaning": "With scopes openid, profile and email the site gets sub, name, given_name, family_name, picture, locale, email and email_verified in an ID token. Work history and connections need separate approved partner APIs.",
+  "lifecycle": [
+    "signed-in"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "OIDC authorization code flow at linkedin.com/oauth/v2/authorization",
+      "access": {
+        "grant": "prompt",
+        "prompt_ui": "None",
+        "secure_context": false,
+        "user_gesture": false,
+        "persistence": "Access tokens last about 60 days; refresh tokens up to 1 year for approved apps (verify)",
+        "revocation": "Clear site data, browser privacy settings",
+        "iframe": "",
+        "steps": []
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "1",
+          "note": ":Redirect flow, works in all browsers",
+          "date": "2008-12-11"
+        },
+        "edge": {
+          "s": "y",
+          "v": "1",
+          "note": ":Redirect flow, works in all browsers",
+          "date": ""
+        },
+        "firefox": {
+          "s": "y",
+          "v": "1",
+          "note": ":Redirect flow, works in all browsers",
+          "date": "2004-11-09"
+        },
+        "safari": {
+          "s": "y",
+          "v": "1",
+          "note": ":Redirect flow, works in all browsers",
+          "date": "2003-06-23"
+        },
+        "ios_safari": {
+          "s": "y",
+          "v": "1",
+          "note": ":Redirect flow, works in all browsers",
+          "date": "2007-06-29"
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "1",
+          "note": ":Redirect flow, works in all browsers",
+          "date": ""
+        },
+        "samsung": {
+          "s": "y",
+          "v": "1",
+          "note": ":Redirect flow, works in all browsers",
+          "date": "2013-04-27"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "object",
+    "metric": "ID token claims",
+    "update": "at sign in",
+    "fields": [
+      {
+        "name": "sub",
+        "type": "string",
+        "unit": "id",
+        "range": "any",
+        "precision": "exact"
+      },
+      {
+        "name": "email",
+        "type": "string",
+        "unit": "address",
+        "range": "any",
+        "precision": "exact"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can sign you in with LinkedIn and see your basic profile details",
+    "user_action": "You tap Sign in with LinkedIn and approve the permissions listed on the LinkedIn screen",
+    "can": [
+      "Receive a stable LinkedIn ID for you",
+      "Get your name, profile photo, language and email",
+      "Learn whether your email is verified"
+    ],
+    "cannot": [
+      "See your work history, connections or messages; that needs separate approved partner access",
+      "Prove who you are in real life",
+      "Get your LinkedIn password",
+      "Get anything beyond the permissions listed on the approval screen"
+    ],
+    "reach": 2,
+    "reach_label": "Basic profile you approve",
+    "differs": ""
+  },
+  "story": {
+    "what_it_is": "A login where LinkedIn confirms who you are and shares basic work profile details.",
+    "icon": "badge-check",
+    "tags": [
+      "Sign in",
+      "LinkedIn",
+      "Profile"
+    ],
+    "marketing": [],
+    "for_you": "You click the LinkedIn button, review a screen listing what the site will get (name, photo, email) and agree. The site now knows your professional identity, not your LinkedIn password.",
+    "for_makers": "Makers of work and hiring tools get a real name and a verified work flavored profile. This builds trust and gives sales and recruiting teams cleaner leads.",
+    "use_cases": [
+      {
+        "type": "productivity",
+        "example": "A job board or recruiting web app lets a candidate sign in with LinkedIn and fills in name, photo and email.",
+        "apps": [
+          "Indeed",
+          "Greenhouse"
+        ]
+      },
+      {
+        "type": "enterprise",
+        "example": "A B2B software trial form accepts LinkedIn sign in so the sales team gets a real name and work email.",
+        "apps": [
+          "HubSpot"
+        ]
+      },
+      {
+        "type": "education",
+        "example": "An online course site uses LinkedIn sign in so a learner can share a finished certificate to their profile.",
+        "apps": [
+          "Coursera",
+          "Udemy"
+        ]
+      },
+      {
+        "type": "social",
+        "example": "A networking or events app imports a person's name and photo so introductions look familiar.",
+        "apps": [
+          "Eventbrite"
+        ]
+      },
+      {
+        "type": "ads",
+        "example": "Marketers use the verified work email for lead matching in ad and B2B campaigns.",
+        "apps": []
+      },
+      {
+        "type": "security",
+        "example": "A site trusts that a LinkedIn signed token is harder to fake in bulk than a plain email sign up.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Shares work identity",
+      "Profile details tied to your real name"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Only basic profile via Sign in with LinkedIn using OpenID Connect",
+    "Positions and connections need partner program",
+    "Person sees the consent screen"
+  ],
+  "scores": {
+    "sensitivity": 4,
+    "utility": 4,
+    "fingerprint_bits": null,
+    "friction": 2
+  },
+  "value": {
+    "legit_uses": [
+      "B2B account creation"
+    ],
+    "abuse": [
+      "Identity linking to a professional profile"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": true,
+      "how": "LinkedIn is the identity provider; its tracking stack can match the signed in member to Insight Tag visits."
+    }
+  },
+  "history": [
+    {
+      "date": "2023-08",
+      "browser": "all",
+      "version": "",
+      "change": "LinkedIn moved Sign in to OpenID Connect"
+    }
+  ],
+  "related": [
+    "web.xsite.linkedin-insight-tag"
+  ],
+  "refs": [
+    {
+      "t": "vendor",
+      "label": "LinkedIn Sign In with OpenID Connect",
+      "url": "https://learn.microsoft.com/en-us/linkedin/consumer/integrations/self-serve/sign-in-with-linkedin-v2"
+    },
+    {
+      "t": "spec",
+      "label": "OpenID Connect Core 1.0 standard claims",
+      "url": "https://openid.net/specs/openid-connect-core-1_0.html#StandardClaims"
+    }
+  ],
+  "confidence": "docs"
+}

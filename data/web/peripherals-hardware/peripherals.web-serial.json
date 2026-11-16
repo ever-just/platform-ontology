@@ -1,0 +1,315 @@
+{
+  "id": "web.peripherals.web-serial",
+  "name": "Web Serial",
+  "kind": "permission",
+  "group": "peripherals-hardware",
+  "subgroup": "Serial",
+  "tags": [
+    "serial",
+    "uart",
+    "bluetooth-serial",
+    "chooser"
+  ],
+  "plain": "Lets a site open a serial port the person picks and exchange bytes with it.",
+  "meaning": "Gives a page direct read and write to microcontrollers, 3D printers, GPS modules and Bluetooth serial adapters. Port identity (USB vendor and product id) can be read once granted.",
+  "lifecycle": [
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "navigator.serial.requestPort({filters}), getPorts(), port.open({baudRate,...}), port.readable, port.writable",
+      "permission_name": "serial",
+      "permissions_policy": "serial",
+      "bcd": [
+        "api.Serial",
+        "api.SerialPort",
+        "api.Navigator.serial"
+      ],
+      "access": {
+        "grant": "picker",
+        "prompt_ui": "Chooser of available ports; filtered by usbVendorId and usbProductId when supplied",
+        "secure_context": true,
+        "user_gesture": true,
+        "persistence": "Per origin and port",
+        "revocation": "Site settings, port.forget() (Chrome 103+), 'disconnect' event",
+        "iframe": "Needs allow=\"serial\"",
+        "steps": [
+          "Click",
+          "requestPort()",
+          "port.open({baudRate: 115200})",
+          "Read through port.readable.getReader() and write through port.writable"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "89",
+          "note": "",
+          "date": "2021-03-02"
+        },
+        "edge": {
+          "s": "y",
+          "v": "89",
+          "note": "",
+          "date": "2021-03-04"
+        },
+        "firefox": {
+          "s": "y",
+          "v": "151",
+          "note": "",
+          "date": "2026-05-19"
+        },
+        "safari": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "ios_safari": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "148",
+          "note": "",
+          "date": "2026-05-05"
+        },
+        "samsung": {
+          "s": "p",
+          "v": "30.0",
+          "note": "Serial ports are only available if they're provided by Bluetooth RFCOMM serial port emulation.",
+          "date": "2026-05-11"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "stream",
+    "metric": "Byte streams in both directions",
+    "update": "continuous; bound by baud rate",
+    "fields": [
+      {
+        "name": "baudRate",
+        "type": "integer",
+        "unit": "baud",
+        "range": "required; commonly 9600 to 115200, up to several Mbaud",
+        "precision": "device dependent"
+      },
+      {
+        "name": "dataBits",
+        "type": "enum",
+        "unit": "bits",
+        "range": "7 or 8"
+      },
+      {
+        "name": "stopBits",
+        "type": "enum",
+        "unit": "bits",
+        "range": "1 or 2"
+      },
+      {
+        "name": "parity",
+        "type": "enum",
+        "range": "none, even, odd"
+      },
+      {
+        "name": "bufferSize",
+        "type": "integer",
+        "unit": "bytes",
+        "range": "default 255, must be under 16 MB"
+      },
+      {
+        "name": "flowControl",
+        "type": "enum",
+        "range": "none or hardware"
+      },
+      {
+        "name": "usbVendorId / usbProductId",
+        "type": "integer",
+        "range": "0 to 65535",
+        "precision": "from getInfo()"
+      },
+      {
+        "name": "bluetoothServiceClassId",
+        "type": "string",
+        "range": "UUID or 16 bit alias",
+        "precision": "Chrome 117+ for RFCOMM serial"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can open one serial port you pick and exchange data with it",
+    "user_action": "You tap Connect device and pick a port in the chooser.",
+    "can": [
+      "Show the available ports, filtered by device type if the site asks",
+      "Open the one port you pick",
+      "Send and get data with that device, such as a 3D printer or a board"
+    ],
+    "cannot": [
+      "Open a port you did not pick",
+      "Open any port without the chooser",
+      "Work in Safari, including on iPhone",
+      "Keep access after you remove the permission or unplug the device"
+    ],
+    "reach": 2,
+    "reach_label": "One port you pick",
+    "differs": "Chrome and Edge support it. Safari and iPhone do not. Samsung Internet only partly."
+  },
+  "story": {
+    "what_it_is": "A site can connect to a device on a serial port that you pick.",
+    "icon": "cable",
+    "tags": [
+      "Hardware",
+      "You pick",
+      "Makers"
+    ],
+    "marketing": [
+      {
+        "vendor": "Google",
+        "name": "Web Serial",
+        "pitch": "Chrome's docs say Web Serial lets a page read and write to serial devices like microcontrollers and 3D printers.",
+        "url": "https://developer.chrome.com/docs/capabilities/serial"
+      }
+    ],
+    "for_you": "A picker lists plugged in devices. You pick one, and the page can send and read data from it, like a 3D printer or a circuit board.",
+    "for_makers": "Makers can set up and update hardware from a web page, with no driver or app. It is a big win for maker tools and factory test jigs.",
+    "use_cases": [
+      {
+        "type": "developer",
+        "example": "A web page flashes new code onto an Arduino or ESP32 board.",
+        "apps": [
+          "Arduino",
+          "ESPHome"
+        ]
+      },
+      {
+        "type": "education",
+        "example": "A coding class programs a robot from a browser tab.",
+        "apps": [
+          "micro:bit",
+          "Raspberry Pi Pico"
+        ]
+      },
+      {
+        "type": "creative",
+        "example": "A 3D printer dashboard sends commands from the page.",
+        "apps": [
+          "Prusa",
+          "OctoPrint"
+        ]
+      },
+      {
+        "type": "enterprise",
+        "example": "A factory tool tests devices and records the results.",
+        "apps": []
+      },
+      {
+        "type": "smart-home",
+        "example": "A page sets up a sensor board for home use.",
+        "apps": []
+      },
+      {
+        "type": "security",
+        "example": "A malicious page could trick someone into picking a device that holds secrets.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Picking the wrong device",
+      "Not on Safari"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Needs picker selection each origin; no silent enumeration",
+    "Cannot access ports the OS reserves (some system consoles)",
+    "Bluetooth serial limited to RFCOMM profile devices",
+    "Needs HTTPS",
+    "Safari and iOS have no implementation"
+  ],
+  "scores": {
+    "sensitivity": 4,
+    "utility": 4,
+    "fingerprint_bits": null,
+    "friction": 2
+  },
+  "value": {
+    "legit_uses": [
+      "Arduino and ESP32 flashing",
+      "3D printer control",
+      "Industrial and lab gear dashboards"
+    ],
+    "abuse": [
+      "Writing hostile firmware to a connected board",
+      "Port identity as a fingerprint"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2021-03",
+      "browser": "chrome",
+      "version": "89",
+      "change": "Web Serial ships on desktop Chromium"
+    },
+    {
+      "date": "2022-04",
+      "browser": "chrome",
+      "version": "103",
+      "change": "port.forget()"
+    },
+    {
+      "date": "2024-09",
+      "browser": "chrome",
+      "version": "130",
+      "change": "SerialPort.connected attribute"
+    },
+    {
+      "date": "2026-05",
+      "browser": "chrome_android",
+      "version": "148",
+      "change": "Android support for serial ports and USB or Bluetooth devices emulating serial"
+    },
+    {
+      "date": "2026",
+      "browser": "firefox",
+      "version": "151",
+      "change": "Firefox adds Web Serial per BCD"
+    }
+  ],
+  "related": [
+    "web.peripherals.webusb",
+    "web.peripherals.web-bluetooth"
+  ],
+  "refs": [
+    {
+      "t": "mdn",
+      "label": "MDN Web Serial API",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/Web_Serial_API"
+    },
+    {
+      "t": "spec",
+      "label": "Serial spec",
+      "url": "https://wicg.github.io/serial/"
+    },
+    {
+      "t": "vendor",
+      "label": "Chrome Web Serial guide",
+      "url": "https://developer.chrome.com/docs/capabilities/serial"
+    },
+    {
+      "t": "bcd",
+      "label": "MDN BCD",
+      "url": "https://github.com/mdn/browser-compat-data"
+    }
+  ],
+  "confidence": "verified"
+}

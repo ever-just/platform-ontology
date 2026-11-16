@@ -1,0 +1,206 @@
+{
+  "id": "mob.xtrack.hide-my-email",
+  "name": "Sign in with Apple and Hide My Email",
+  "kind": "capability",
+  "group": "cross-site-tracking",
+  "subgroup": "Identity privacy",
+  "tags": [
+    "sign-in-with-apple",
+    "private-relay-email",
+    "relay"
+  ],
+  "plain": "Apple signs the person in and can give the app a random relay email instead of the real one.",
+  "meaning": "Stops the app from using email as a cross-site key; hash matching in UID2 and RampID fails against relay addresses.",
+  "lifecycle": [
+    "signed-in"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "n",
+      "v": "",
+      "permission": "",
+      "protection": "none",
+      "grant": "not-exposed",
+      "prompt_ui": "",
+      "persistence": "",
+      "revocation": "",
+      "store_policy": "",
+      "api_surface": "",
+      "note": "Credential Manager and Google Sign-In return the real email."
+    },
+    "ios": {
+      "s": "y",
+      "v": "13.0",
+      "permission": "Sign in with Apple capability",
+      "protection": "entitlement",
+      "grant": "prompt",
+      "prompt_ui": "Share My Email or Hide My Email",
+      "persistence": "Alias stays until person revokes",
+      "revocation": "Settings > Apple ID > Sign in with Apple",
+      "store_policy": "App Review 4.8: offer an equivalent login if you offer other logins (relaxed Jan 2024)",
+      "api_surface": "ASAuthorizationAppleIDProvider, private relay (privaterelay.appleid.com)",
+      "note": "Developers must register email domains/senders with Apple to relay mail."
+    }
+  },
+  "web_equivalents": [
+    "web.auth.apple-hide-my-email"
+  ],
+  "data": {
+    "type": "object",
+    "metric": "Stable per-team user ID and optional relay email",
+    "update": "once",
+    "fields": [
+      {
+        "name": "user",
+        "type": "string",
+        "unit": "",
+        "range": "",
+        "precision": ""
+      },
+      {
+        "name": "email",
+        "type": "string",
+        "unit": "",
+        "range": "",
+        "precision": ""
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can sign you in on iPhone and give the app a random relay email instead",
+    "user_action": "You tap Sign in with Apple and choose Share My Email or Hide My Email",
+    "can": [
+      "Sign you in with your Apple account",
+      "Give the app your real email, if you pick Share My Email",
+      "Give the app a random relay address, if you pick Hide My Email",
+      "Forward the app's emails to you through Apple's relay"
+    ],
+    "cannot": [
+      "Reveal your real email when you pick Hide My Email",
+      "Send email to you unless the developer registered its sending domain with Apple",
+      "Work on Android; Google Sign-In and Credential Manager return the real email"
+    ],
+    "reach": 1,
+    "reach_label": "One choice, at sign in",
+    "differs": "iPhone only. Android sign in always returns your real email."
+  },
+  "story": {
+    "what_it_is": "Apple signs you in and can give the app a random fake email that forwards to you.",
+    "icon": "mail-x",
+    "tags": [
+      "Privacy",
+      "Sign in",
+      "Email"
+    ],
+    "marketing": [
+      {
+        "vendor": "Apple",
+        "name": "Sign in with Apple and Hide My Email",
+        "pitch": "Pitch: sign in quickly and keep your real email private with a random address that forwards to you.",
+        "url": "https://developer.apple.com/sign-in-with-apple/"
+      },
+      {
+        "vendor": "Apple",
+        "name": "Hide My Email",
+        "pitch": "Support page: create unique random email addresses that forward to your inbox, so you do not share your real one.",
+        "url": "https://support.apple.com/en-us/105078"
+      }
+    ],
+    "for_you": "You tap Sign in with Apple, use Face ID, and pick Hide My Email. The app gets a random address that forwards to you. You can turn it off any time, which stops that app's emails.",
+    "for_makers": "Makers get a fast sign up with less typing and fewer fake accounts. They lose the real email as a way to link people across ads and sites, and they must send mail through Apple's relay.",
+    "use_cases": [
+      {
+        "type": "shopping",
+        "example": "You sign up for a store and give it a random address, so a data leak or sale of its list never exposes your real email.",
+        "apps": []
+      },
+      {
+        "type": "games",
+        "example": "A game offers Sign in with Apple so you start in seconds and keep your email private.",
+        "apps": []
+      },
+      {
+        "type": "news",
+        "example": "A newsletter site uses the relay so you can cut off emails with one tap in Settings.",
+        "apps": []
+      },
+      {
+        "type": "dating",
+        "example": "A dating app lets you sign up without sharing your main email or phone.",
+        "apps": []
+      },
+      {
+        "type": "ads",
+        "example": "An ad firm cannot match a relay address to the same person's other accounts.",
+        "apps": []
+      },
+      {
+        "type": "security",
+        "example": "Apple's sign in lowers fake account sign ups because each one needs a real Apple account.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Apps may force an Apple account",
+      "Blocks some marketing tools"
+    ],
+    "android_note": "Android has no matching feature. Google offers its own Sign in with Google with real emails.",
+    "ios_note": "Built into iOS and Apple accounts. Developers must offer it when they offer other social sign ins."
+  },
+  "technical_bounds": [
+    "Real name only on first sign in",
+    "Relay needs sender registration"
+  ],
+  "scores": {
+    "sensitivity": 4,
+    "utility": 4,
+    "fingerprint_bits": null,
+    "friction": 2
+  },
+  "value": {
+    "legit_uses": [
+      "Account creation without handing out an email"
+    ],
+    "abuse": [
+      "Marketing with a real email via consent"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2019-06",
+      "platform": "ios",
+      "version": "iOS 13",
+      "change": "Sign in with Apple and Hide My Email"
+    },
+    {
+      "date": "2022-06",
+      "platform": "ios",
+      "version": "iOS 16",
+      "change": "Token revocation required for account deletion (30 June 2022)"
+    }
+  ],
+  "related": [
+    "mob.xtrack.hashed-email-identity",
+    "mob.policy.account-deletion"
+  ],
+  "refs": [
+    {
+      "t": "apple",
+      "label": "Apple: Sign in with Apple",
+      "url": "https://developer.apple.com/sign-in-with-apple/"
+    },
+    {
+      "t": "apple",
+      "label": "Apple: Hide My Email",
+      "url": "https://support.apple.com/en-us/102519"
+    }
+  ],
+  "confidence": "docs"
+}

@@ -1,0 +1,212 @@
+{
+  "id": "mob.notif.voip-push",
+  "name": "VoIP push (PushKit) and call-style wakeups",
+  "kind": "capability",
+  "group": "notifications-background",
+  "subgroup": "Push",
+  "tags": [
+    "push",
+    "voip",
+    "callkit",
+    "high-priority"
+  ],
+  "plain": "A special push that wakes the app for a call; iOS demands it shows a call UI right away.",
+  "meaning": "Used for real-time calls, the strongest wake-up either platform offers. Misuse for silent tracking got apps cut off on iOS 13, so both platforms now tie it to a visible call screen.",
+  "lifecycle": [
+    "background"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "y",
+      "v": "8.0",
+      "permission": "MANAGE_OWN_CALLS or telecom ConnectionService; USE_FULL_SCREEN_INTENT; FOREGROUND_SERVICE_PHONE_CALL (API 34)",
+      "protection": "normal",
+      "grant": "install",
+      "prompt_ui": "Call UI; full screen intent needs grant on 14+ for non calling apps",
+      "persistence": "High priority FCM data message wakes the app even in Doze",
+      "revocation": "Settings > Apps > Special access",
+      "store_policy": "Play policy: full-screen intent only for calling and alarm apps (Android 14)",
+      "api_surface": "TelecomManager.addNewIncomingCall, ConnectionService",
+      "note": "No separate payload limit beyond FCM 4 KB"
+    },
+    "ios": {
+      "s": "f",
+      "v": "8.0",
+      "permission": "voip UIBackgroundModes; PushKit VoIP certificate; apns-push-type voip; CallKit",
+      "protection": "entitlement",
+      "grant": "entitlement",
+      "prompt_ui": "Incoming call UI via CallKit",
+      "persistence": "From iOS 13 each VoIP push must report a CallKit call; repeated failure stops further VoIP pushes",
+      "revocation": "Settings > Notifications; remove VoIP entitlement",
+      "store_policy": "App Review 2.5.4; VoIP only for real VoIP calling",
+      "api_surface": "PKPushRegistry, CXProvider.reportNewIncomingCall",
+      "note": "VoIP payload up to 5120 bytes; apns-priority 10"
+    }
+  },
+  "web_equivalents": [
+    "web.notify.push-api"
+  ],
+  "data": {
+    "type": "event",
+    "metric": "Call wakeup",
+    "update": "Per call",
+    "fields": [
+      {
+        "name": "payload",
+        "type": "binary",
+        "unit": "binary",
+        "range": "0 to 5120 (iOS), 0 to 4096 (FCM)",
+        "precision": "exact"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can wake the app right away for a call, if it shows a call screen",
+    "user_action": "Nothing. It happens when someone calls you through the app",
+    "can": [
+      "Wake the app for an incoming call, even when closed",
+      "Show the call screen on iPhone with CallKit",
+      "Use a full screen call alert on Android"
+    ],
+    "cannot": [
+      "Use call pushes for non call alerts on iPhone; Apple requires a call screen right away",
+      "Show a full screen alert on Android 14 or newer for non calling apps without your grant",
+      "Send more than 5 KB on iPhone, or 4 KB on Android"
+    ],
+    "reach": 3,
+    "reach_label": "Wakes for calls only",
+    "differs": "iPhone requires Apple approval and a call screen at once. Android uses normal high priority push plus a call screen."
+  },
+  "story": {
+    "what_it_is": "A special push that wakes an app for a call, and must show a call screen right away.",
+    "icon": "phone-incoming",
+    "tags": [
+      "Calls",
+      "Push",
+      "Real time"
+    ],
+    "marketing": [
+      {
+        "vendor": "Apple",
+        "name": "PushKit and VoIP",
+        "pitch": "Apple documents VoIP pushes as the way for calling apps to wake and show an incoming call screen.",
+        "url": "https://developer.apple.com/documentation/pushkit/responding-to-voip-notifications-from-pushkit"
+      }
+    ],
+    "for_you": "Your phone rings with a full call screen, even if the app was closed. If an app wakes this way without a call, iOS will stop letting it.",
+    "for_makers": "Makers get the strongest wake up for real time calls. Misuse as a secret wake up got apps cut off, so both systems now tie it to a visible call.",
+    "use_cases": [
+      {
+        "type": "messaging",
+        "example": "A WhatsApp or FaceTime style call rings your locked phone.",
+        "apps": [
+          "WhatsApp",
+          "FaceTime"
+        ]
+      },
+      {
+        "type": "social",
+        "example": "A group video chat pings you to join a live room.",
+        "apps": [
+          "Discord",
+          "Zoom"
+        ]
+      },
+      {
+        "type": "games",
+        "example": "A voice chat for a squad rings you when your friends start a match.",
+        "apps": [
+          "Discord"
+        ]
+      },
+      {
+        "type": "enterprise",
+        "example": "A contact center app rings a work phone with a customer call.",
+        "apps": [
+          "Microsoft Teams"
+        ]
+      },
+      {
+        "type": "health",
+        "example": "A telehealth app rings the patient as the doctor joins the visit.",
+        "apps": []
+      },
+      {
+        "type": "security",
+        "example": "A smart doorbell rings you like a call when someone is at the door.",
+        "apps": [
+          "Ring"
+        ]
+      },
+      {
+        "type": "rideshare",
+        "example": "A driver call bridge rings a hidden number for the rider.",
+        "apps": [
+          "Uber"
+        ]
+      }
+    ],
+    "risks": [
+      "Past abuse as a covert wake up",
+      "Can pull the app out of sleep"
+    ],
+    "android_note": "On Android, full screen alerts need a grant for non calling apps.",
+    "ios_note": "iOS needs a call screen right away through CallKit."
+  },
+  "technical_bounds": [
+    "Must show a call UI",
+    "iOS revokes pushes if apps do not report a call"
+  ],
+  "scores": {
+    "sensitivity": 3,
+    "utility": 4,
+    "fingerprint_bits": null,
+    "friction": 3
+  },
+  "value": {
+    "legit_uses": [
+      "VoIP calls"
+    ],
+    "abuse": [
+      "Using VoIP pushes as a covert wakeup"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2019-09",
+      "platform": "ios",
+      "version": "iOS 13",
+      "change": "Every VoIP push must report a CallKit call or PushKit pushes stop"
+    },
+    {
+      "date": "2023-10",
+      "platform": "android",
+      "version": "14 (API 34)",
+      "change": "USE_FULL_SCREEN_INTENT limited to calling and alarm apps; FGS type phoneCall requires its own permission"
+    }
+  ],
+  "related": [
+    "mob.notifications.full-screen-intent",
+    "mob.notif.apns-delivery"
+  ],
+  "refs": [
+    {
+      "t": "apple",
+      "label": "Apple: Responding to VoIP notifications from PushKit",
+      "url": "https://developer.apple.com/documentation/pushkit/responding-to-voip-notifications-from-pushkit"
+    },
+    {
+      "t": "android",
+      "label": "Android: Foreground service types",
+      "url": "https://developer.android.com/develop/background-work/services/fgs/service-types"
+    }
+  ],
+  "confidence": "docs"
+}

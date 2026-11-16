@@ -1,0 +1,202 @@
+{
+  "id": "mob.peripherals.accessory-setup-kit",
+  "name": "Accessory pairing sheet",
+  "kind": "picker",
+  "group": "peripherals-hardware",
+  "subgroup": "Pairing",
+  "tags": [
+    "picker",
+    "bluetooth",
+    "wifi",
+    "companion"
+  ],
+  "plain": "A system picker that pairs a Bluetooth or Wi-Fi accessory without a broad permission.",
+  "meaning": "The app learns only about the accessory the person picks, which avoids scanning for everything nearby.",
+  "lifecycle": [
+    "in-session"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "y",
+      "v": "8.0",
+      "api": 26,
+      "permission": "Companion device association; no runtime permission for the chosen device",
+      "protection": "none",
+      "grant": "picker",
+      "prompt_ui": "Companion device chooser dialog",
+      "persistence": "Until disassociated",
+      "revocation": "Settings > Connected devices",
+      "store_policy": "",
+      "api_surface": "CompanionDeviceManager.associate, CompanionDeviceManager",
+      "note": "Chooser added in API 26; Android 16 adds device presence improvements"
+    },
+    "ios": {
+      "s": "y",
+      "v": "18",
+      "permission": "NSAccessorySetupBluetoothServices, NSAccessorySetupKitSupports",
+      "protection": "prompt",
+      "grant": "picker",
+      "prompt_ui": "System accessory picker sheet",
+      "persistence": "Until accessory removed",
+      "revocation": "Settings > Privacy & Security > Accessories",
+      "store_policy": "",
+      "api_surface": "AccessorySetupKit, ASAccessorySession",
+      "note": "Replaces broad Bluetooth and Local Network prompts for pairing; iOS 26 extends to more transports"
+    }
+  },
+  "web_equivalents": [
+    "web.peripherals.web-bluetooth"
+  ],
+  "data": {
+    "type": "object",
+    "metric": "Selected accessory",
+    "update": "once per pairing",
+    "fields": [
+      {
+        "name": "accessories",
+        "type": "list",
+        "unit": "items",
+        "range": "only picked ones",
+        "precision": ""
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can pair a Bluetooth or Wi-Fi accessory you pick without scanning everything nearby",
+    "user_action": "You tap your accessory in the system pairing sheet",
+    "can": [
+      "Show a system chooser with only matching accessories",
+      "Connect to the one accessory you choose",
+      "Replace the broad Bluetooth and local network prompts for pairing (iPhone)"
+    ],
+    "cannot": [
+      "See other devices nearby",
+      "Scan for everything around you",
+      "Pick the accessory for you; you tap it"
+    ],
+    "reach": 1,
+    "reach_label": "One accessory you choose",
+    "differs": "iPhone extends this to more connection types in iOS 26; Android uses a companion device chooser and added presence improvements in Android 16."
+  },
+  "story": {
+    "what_it_is": "A system pairing sheet that connects a Bluetooth or Wi-Fi accessory without a broad permission.",
+    "icon": "bluetooth-searching",
+    "tags": [
+      "Bluetooth",
+      "Pairing",
+      "Privacy"
+    ],
+    "marketing": [
+      {
+        "vendor": "Apple",
+        "name": "AccessorySetupKit",
+        "pitch": "Pair accessories using a simple system sheet. Apps see only the accessory you pick.",
+        "url": "https://developer.apple.com/documentation/accessorysetupkit"
+      }
+    ],
+    "for_you": "A tidy sheet shows your device with its picture and a Set up button. One tap and the gadget is ready. You are not asked to let the app scan everything nearby.",
+    "for_makers": "The maker avoids a worrying permission prompt, so more buyers finish setup. The platform keeps the app away from neighbours' devices. It is a gentle push toward privacy by design.",
+    "use_cases": [
+      {
+        "type": "fitness",
+        "example": "A watch or ring maker pairs with a phone app with one picture and one tap.",
+        "apps": [
+          "Oura"
+        ]
+      },
+      {
+        "type": "smart-home",
+        "example": "A smart plug or lamp finds your device without scanning for others in the building.",
+        "apps": []
+      },
+      {
+        "type": "music",
+        "example": "Earbuds appear in the sheet with the right colour and connect right away.",
+        "apps": []
+      },
+      {
+        "type": "utilities",
+        "example": "A tracker tag is set up in one tap and the app only sees that tag.",
+        "apps": []
+      },
+      {
+        "type": "health",
+        "example": "A baby monitor or thermometer pairs without exposing the family's other devices.",
+        "apps": []
+      },
+      {
+        "type": "creative",
+        "example": "A camera or drone shows up on screen with its name and a pairing code.",
+        "apps": []
+      },
+      {
+        "type": "kids",
+        "example": "A child's smartwatch pairs to a parent's phone for tracking without a permission wall.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Only works for apps that adopt it",
+      "Setup mistakes",
+      "None for data"
+    ],
+    "android_note": "Android has a similar companion device pairing chooser, added in API 26, with presence improvements in Android 16.",
+    "ios_note": "iOS 26 extends the pairing sheet to more kinds of links and replaces broad Bluetooth and local network prompts."
+  },
+  "technical_bounds": [
+    "App sees only the chosen accessory"
+  ],
+  "scores": {
+    "sensitivity": 2,
+    "utility": 4,
+    "fingerprint_bits": null,
+    "friction": 1
+  },
+  "value": {
+    "legit_uses": [
+      "Smart watches",
+      "Trackers"
+    ],
+    "abuse": [
+      "Skipping broad scanning"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2017-08",
+      "platform": "android",
+      "version": "8.0 (API 26)",
+      "change": "Companion Device Manager chooser"
+    },
+    {
+      "date": "2024-09",
+      "platform": "ios",
+      "version": "iOS 18",
+      "change": "AccessorySetupKit introduced"
+    }
+  ],
+  "related": [
+    "mob.peripherals.bluetooth",
+    "mob.network.local-network"
+  ],
+  "refs": [
+    {
+      "t": "apple",
+      "label": "Apple: AccessorySetupKit",
+      "url": "https://developer.apple.com/documentation/accessorysetupkit"
+    },
+    {
+      "t": "android",
+      "label": "Android: Companion device pairing",
+      "url": "https://developer.android.com/develop/connectivity/bluetooth/companion-device-pairing"
+    }
+  ],
+  "confidence": "docs"
+}

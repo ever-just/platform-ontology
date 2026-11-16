@@ -1,0 +1,223 @@
+{
+  "id": "web.notexposed.system-volume",
+  "name": "System volume level",
+  "kind": "not-exposed",
+  "group": "device-system-profile",
+  "subgroup": "Audio",
+  "tags": [
+    "not-exposed",
+    "audio",
+    "volume"
+  ],
+  "plain": "No API tells a page how loud the device volume is.",
+  "meaning": "Volume is OS state. Proxies exist: autoplay policy shows a muted tab, audio output device changes fire devicechange, and a muted video can still play. A page cannot read a 0 to 100 level.",
+  "lifecycle": [
+    "on-arrival",
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "none",
+      "access": {
+        "grant": "not-exposed",
+        "prompt_ui": "None",
+        "secure_context": false,
+        "user_gesture": false,
+        "persistence": "read fresh on every page load; nothing stored",
+        "revocation": "not applicable",
+        "iframe": "Readable from cross-origin iframes too (same values)",
+        "steps": [
+          "Page script reads the value",
+          "No prompt is shown"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "edge": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "firefox": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "safari": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "ios_safari": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "chrome_android": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "samsung": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "none",
+    "metric": "",
+    "update": "static per session",
+    "fields": [
+      {
+        "name": "proxy: autoplay policy",
+        "type": "string",
+        "unit": "",
+        "range": "play() rejection reveals no user activation, not volume",
+        "precision": ""
+      },
+      {
+        "name": "proxy: devicechange event",
+        "type": "string",
+        "unit": "",
+        "range": "fires when headphones or Bluetooth output connect (enumerateDevices count)",
+        "precision": ""
+      },
+      {
+        "name": "proxy: HTMLMediaElement.muted",
+        "type": "string",
+        "unit": "",
+        "range": "only the element's own flag, 0 or 1",
+        "precision": ""
+      },
+      {
+        "name": "proxy: volume property",
+        "type": "string",
+        "unit": "",
+        "range": "element volume 0 to 1, not the system level",
+        "precision": ""
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can't see how loud your device volume is set",
+    "user_action": "Nothing. Pages have no way to ask for this",
+    "can": [
+      "See if audio is blocked by autoplay rules",
+      "Tell when your audio output device changes",
+      "Play muted video even if sound is blocked",
+      "Set the volume of its own player"
+    ],
+    "cannot": [
+      "See your volume level from 0 to 100",
+      "Get a volume number; the browser has no way to ask",
+      "See the volume of other tabs or apps",
+      "Change the system volume"
+    ],
+    "reach": 1,
+    "reach_label": "Own player only",
+    "differs": ""
+  },
+  "story": {
+    "what_it_is": "No tool tells a page how loud your device volume is.",
+    "icon": "volume-2",
+    "tags": [
+      "Blocked",
+      "Sound",
+      "Privacy"
+    ],
+    "marketing": [],
+    "for_you": "A website cannot see whether your volume is low or high. It can still see whether its own audio is muted or blocked by autoplay rules.",
+    "for_makers": "Volume is a private device setting. Browsers keep it out of reach. Sites rely on autoplay rules and user buttons instead.",
+    "use_cases": [
+      {
+        "type": "video",
+        "example": "A streaming site wanted to warn when your volume is off and shows an unmute button instead.",
+        "apps": [
+          "YouTube"
+        ]
+      },
+      {
+        "type": "games",
+        "example": "A browser game wanted the system volume to set sound levels and gives a volume slider.",
+        "apps": []
+      },
+      {
+        "type": "ads",
+        "example": "A video advertiser wanted to measure audible ads and uses player mute state.",
+        "apps": []
+      },
+      {
+        "type": "music",
+        "example": "A web music player wanted the device volume and shows its own volume control.",
+        "apps": []
+      },
+      {
+        "type": "education",
+        "example": "An exam site wanted to detect silent rooms and cannot read volume.",
+        "apps": []
+      },
+      {
+        "type": "live",
+        "example": "A live stream shows a tap to unmute button when autoplay is muted.",
+        "apps": []
+      },
+      {
+        "type": "security",
+        "example": "A tracker wanted volume as a device clue and cannot get it.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Muted state is visible to the page"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Privacy and no legitimate need"
+  ],
+  "scores": {
+    "sensitivity": 4,
+    "utility": 2,
+    "fingerprint_bits": 0.0,
+    "friction": 3
+  },
+  "value": {
+    "legit_uses": [
+      "None: the browser deliberately withholds it"
+    ],
+    "abuse": [
+      "Sites attempt proxies to recover it"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "related": [
+    "web.device.mediadevices-count"
+  ],
+  "refs": [
+    {
+      "t": "mdn",
+      "label": "MDN autoplay guide",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/Media/Guides/Autoplay"
+    },
+    {
+      "t": "mdn",
+      "label": "MDN MediaDevices.devicechange",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/MediaDevices/devicechange_event"
+    }
+  ],
+  "confidence": "docs"
+}

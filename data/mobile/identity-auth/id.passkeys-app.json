@@ -1,0 +1,236 @@
+{
+  "id": "mob.id.passkeys-app",
+  "name": "Passkeys in an app (create and sign in)",
+  "kind": "capability",
+  "group": "identity-auth",
+  "subgroup": "Passkeys",
+  "tags": [
+    "passkeys",
+    "webauthn",
+    "credential-manager",
+    "fido"
+  ],
+  "plain": "Creates and uses phishing resistant passkeys for sign in inside an app.",
+  "meaning": "Replaces passwords with device-held keys; an app learns only a public key, never the biometric. Passkeys sync through the platform keychain, so account recovery shifts to Google or Apple.",
+  "lifecycle": [
+    "signed-in"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "y",
+      "v": "9",
+      "api": 34,
+      "permission": "None (Credential Manager API 34; Jetpack back to Android 4.4 with Play services passkeys on 9+)",
+      "protection": "none",
+      "grant": "prompt",
+      "prompt_ui": "Bottom sheet: Create passkey / Use saved passkey with biometric confirm",
+      "persistence": "Syncs across devices through Google Password Manager",
+      "revocation": "Settings > Passwords & accounts > Google Password Manager",
+      "store_policy": "",
+      "api_surface": "androidx.credentials CredentialManager, CreatePublicKeyCredentialRequest, GetCredentialRequest",
+      "note": "Digital Asset Links bind app and domain (assetlinks.json); Android 14 adds credential provider support."
+    },
+    "ios": {
+      "s": "y",
+      "v": "15.0",
+      "permission": "com.apple.developer.associated-domains (webcredentials:domain)",
+      "protection": "entitlement",
+      "grant": "prompt",
+      "prompt_ui": "Sheet with passkey and Face ID or Touch ID confirm",
+      "persistence": "Syncs through iCloud Keychain (iOS 16)",
+      "revocation": "Settings > Passwords",
+      "store_policy": "",
+      "api_surface": "AuthenticationServices ASAuthorizationPlatformPublicKeyCredentialProvider, ASAuthorizationController",
+      "note": "iOS 17 adds passkey manager providers and conditional UI; iOS 26 adds passkey import and export between providers."
+    }
+  },
+  "web_equivalents": [
+    "web.identity.webauthn-create",
+    "web.identity.webauthn-get",
+    "web.auth.passkeys"
+  ],
+  "data": {
+    "type": "object",
+    "metric": "WebAuthn credential",
+    "update": "per sign in",
+    "fields": [
+      {
+        "name": "credential id",
+        "type": "binary",
+        "unit": "bytes",
+        "range": "16 to 1023",
+        "precision": "exact"
+      },
+      {
+        "name": "public key",
+        "type": "binary",
+        "unit": "COSE",
+        "range": "ES256 or EdDSA",
+        "precision": "exact"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can create and use passkeys inside the app after you approve with your device lock",
+    "user_action": "You tap Create a passkey or Sign in with a passkey, then confirm with fingerprint, face or PIN",
+    "can": [
+      "Create a passkey for your account tied to the app and its website",
+      "Sign you in with a passkey instead of a password",
+      "Show a system sheet listing the passkeys you already have",
+      "Sync passkeys through your password manager or cloud keychain"
+    ],
+    "cannot": [
+      "See your private passkey or your screen lock",
+      "Use a passkey without your approval each time",
+      "Use the passkey on a different website or app than it was made for",
+      "Work on very old phones without Google Play services (Android)"
+    ],
+    "reach": 2,
+    "reach_label": "One approved sign in at a time",
+    "differs": "Android uses Credential Manager. iPhone needs the app tied to its website and supports other managers from iOS 17."
+  },
+  "story": {
+    "what_it_is": "You sign in with a face or fingerprint scan instead of a password.",
+    "icon": "fingerprint",
+    "tags": [
+      "Passwords",
+      "Sign in",
+      "Phishing safe"
+    ],
+    "marketing": [
+      {
+        "vendor": "Apple",
+        "name": "Passkeys",
+        "pitch": "Sign in with Face ID or Touch ID instead of passwords, and passkeys sync across your Apple devices.",
+        "url": "https://developer.apple.com/passkeys/"
+      },
+      {
+        "vendor": "Google",
+        "name": "Passkeys",
+        "pitch": "Android and Google make passkeys the simple, safer way to sign in without remembering passwords.",
+        "url": "https://developer.android.com/identity/passkeys"
+      }
+    ],
+    "for_you": "You tap sign in, glance at your phone or touch the sensor, and you are in. No password to remember or type. A fake site cannot steal it because the passkey only works on the real one.",
+    "for_makers": "Makers see fewer password resets, fewer stolen accounts and quicker sign ups. It also moves the key storage to Apple or Google, so recovery and lock in become the platform's problem and power.",
+    "use_cases": [
+      {
+        "type": "shopping",
+        "example": "A shop lets you create a passkey after your first order, then logs you in next time with a face scan.",
+        "apps": [
+          "Amazon",
+          "Best Buy"
+        ]
+      },
+      {
+        "type": "banking",
+        "example": "A bank swaps password and text code for a passkey, which cuts phishing losses.",
+        "apps": []
+      },
+      {
+        "type": "games",
+        "example": "A game platform signs you in with a passkey so a hacked reused password cannot steal your skins.",
+        "apps": [
+          "PlayStation",
+          "Nintendo Account"
+        ]
+      },
+      {
+        "type": "social",
+        "example": "A social app lets you sign in with a passkey from your tablet through the shared keychain.",
+        "apps": [
+          "X"
+        ]
+      },
+      {
+        "type": "travel",
+        "example": "An airline app signs you in with a passkey, so you check in fast at the airport.",
+        "apps": [
+          "Kayak"
+        ]
+      },
+      {
+        "type": "enterprise",
+        "example": "A company login uses passkeys so staff stop falling for fake login pages.",
+        "apps": [
+          "Microsoft"
+        ]
+      }
+    ],
+    "risks": [
+      "Recovery depends on Google or Apple",
+      "Lock in to one platform"
+    ],
+    "android_note": "Android stores passkeys in Google Password Manager or a chosen provider and syncs them to your other Android devices.",
+    "ios_note": "iPhone stores passkeys in iCloud Keychain, and since iOS 17 other apps can offer to hold them too."
+  },
+  "technical_bounds": [
+    "Both vendors sync keys with their own cloud"
+  ],
+  "scores": {
+    "sensitivity": 3,
+    "utility": 5,
+    "fingerprint_bits": 1,
+    "friction": 1
+  },
+  "value": {
+    "legit_uses": [
+      "Passwordless login",
+      "Phishing protection"
+    ],
+    "abuse": [
+      "Lock-in and recovery risk"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2022-09",
+      "platform": "ios",
+      "version": "iOS 16",
+      "change": "Passkeys with iCloud Keychain"
+    },
+    {
+      "date": "2022-10",
+      "platform": "android",
+      "version": "Android 9+ via Play services",
+      "change": "Passkey support announced"
+    },
+    {
+      "date": "2023-10",
+      "platform": "android",
+      "version": "14 (API 34)",
+      "change": "Credential Manager platform API"
+    },
+    {
+      "date": "2025-09",
+      "platform": "ios",
+      "version": "iOS 26",
+      "change": "Credential exchange import and export"
+    }
+  ],
+  "related": [
+    "mob.id.credential-provider",
+    "mob.id.autofill",
+    "mob.peripherals.biometric"
+  ],
+  "refs": [
+    {
+      "t": "android",
+      "label": "Android: Passkeys with Credential Manager",
+      "url": "https://developer.android.com/identity/passkeys"
+    },
+    {
+      "t": "apple",
+      "label": "Apple: Supporting passkeys",
+      "url": "https://developer.apple.com/documentation/authenticationservices/supporting-passkeys"
+    }
+  ],
+  "confidence": "verified"
+}

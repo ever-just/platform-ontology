@@ -1,0 +1,180 @@
+{
+  "id": "mob.sys.restricted-settings",
+  "name": "Restricted settings for sideloaded apps",
+  "kind": "action",
+  "group": "system-control",
+  "subgroup": "Abuse controls",
+  "tags": [
+    "restricted-settings",
+    "sideloading",
+    "android-13",
+    "gating"
+  ],
+  "plain": "Android blocks some powerful toggles for apps installed outside stores.",
+  "meaning": "Accessibility, notification listener and similar options are greyed out for sideloaded apps until the person opens App Info and allows restricted settings.",
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "y",
+      "v": "13",
+      "api": 33,
+      "permission": "ENFORCE_RESTRICTED_SETTINGS (system behavior)",
+      "protection": "special",
+      "grant": "settings",
+      "prompt_ui": "App info > Allow restricted settings",
+      "persistence": "Per app",
+      "revocation": "Settings > Apps > app > menu",
+      "store_policy": "",
+      "api_surface": "Not an app API; PackageInstaller sessions mark source",
+      "note": "Android 14 expanded the scope; Android 15 refined for session installers; Android 16 more checks."
+    },
+    "ios": {
+      "s": "n",
+      "v": "",
+      "permission": "None; no sideloading path on most devices",
+      "protection": "none",
+      "grant": "not-exposed",
+      "prompt_ui": "n/a",
+      "persistence": "n/a",
+      "revocation": "n/a",
+      "store_policy": "",
+      "api_surface": "n/a",
+      "note": "Not applicable on iOS."
+    }
+  },
+  "data": {
+    "type": "none",
+    "metric": "Policy",
+    "update": "n/a",
+    "fields": [
+      {
+        "name": "restricted",
+        "type": "boolean",
+        "unit": "flag",
+        "range": "n/a",
+        "precision": "n/a"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can't turn on powerful settings for apps installed outside stores until you allow it",
+    "user_action": "You open App info, tap the menu and choose Allow restricted settings",
+    "can": [
+      "Install outside a store on Android",
+      "Ask you to unlock the options in App info"
+    ],
+    "cannot": [
+      "Use accessibility or notification listener until you allow restricted settings",
+      "Unlock the options by itself",
+      "Do this on iPhone; there is no sideloading path on most devices"
+    ],
+    "reach": 1,
+    "reach_label": "Blocked until you unlock it",
+    "differs": "Android blocks these toggles for sideloaded apps; iPhone has no equivalent."
+  },
+  "story": {
+    "what_it_is": "Android blocks powerful toggles for apps installed from outside the store, until you unlock them on purpose.",
+    "icon": "lock-keyhole",
+    "tags": [
+      "Safety",
+      "Android",
+      "Scams"
+    ],
+    "marketing": [],
+    "for_you": "If you install an app from a website, some switches look greyed out. You have to open App info and allow restricted settings first. It is a speed bump that makes scammers' lives harder.",
+    "for_makers": "Scammers talk people into installing an app and then turning on accessibility or notification access. Restricted settings adds a step that the scammer cannot complete without you noticing. It is a platform level defense against fraud.",
+    "use_cases": [
+      {
+        "type": "security",
+        "example": "A fake bank app tries to get accessibility access and is blocked until the user unlocks it.",
+        "apps": []
+      },
+      {
+        "type": "security",
+        "example": "A scam call tells someone to install a support tool, and the greyed out switch breaks the script.",
+        "apps": []
+      },
+      {
+        "type": "enterprise",
+        "example": "A company sideloads a work app and has to approve it for settings.",
+        "apps": []
+      },
+      {
+        "type": "developer",
+        "example": "A developer testing an app learns why a setting is greyed out.",
+        "apps": []
+      },
+      {
+        "type": "games",
+        "example": "A game helper app installed from a website cannot get screen tap control.",
+        "apps": []
+      },
+      {
+        "type": "utilities",
+        "example": "An anti malware app uses the same switch to protect the person.",
+        "apps": []
+      },
+      {
+        "type": "payments",
+        "example": "A payment fraud team counts how many cases the block stopped.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Hard to use for legitimate sideloaded apps",
+      "Users can be coached around it",
+      "Not a full fix"
+    ],
+    "android_note": "Android 14 widened the block, Android 15 changed rules for session installers and Android 16 adds more checks.",
+    "ios_note": "Not used on iPhone."
+  },
+  "technical_bounds": [
+    "Apps from Play are exempt"
+  ],
+  "scores": {
+    "sensitivity": 4,
+    "utility": 3,
+    "fingerprint_bits": 0,
+    "friction": 3
+  },
+  "value": {
+    "legit_uses": [
+      "Anti malware"
+    ],
+    "abuse": [
+      "Friction for legitimate sideload"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2022-08",
+      "platform": "android",
+      "version": "13",
+      "change": "Restricted settings"
+    },
+    {
+      "date": "2024-10",
+      "platform": "android",
+      "version": "15",
+      "change": "Reduced bypass via session installer"
+    }
+  ],
+  "related": [
+    "mob.sys.accessibility-service",
+    "mob.sys.notification-listener"
+  ],
+  "refs": [
+    {
+      "t": "android",
+      "label": "Android 13 behavior changes",
+      "url": "https://developer.android.com/about/versions/13/behavior-changes-13"
+    }
+  ],
+  "confidence": "docs"
+}

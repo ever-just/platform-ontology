@@ -1,0 +1,296 @@
+{
+  "id": "web.xsite.third-party-cookies-status",
+  "name": "Third-party cookies by browser (Nov 2026)",
+  "kind": "tracking",
+  "group": "cross-site-tracking",
+  "subgroup": "Before the visit",
+  "tags": [
+    "third-party-cookies",
+    "itp",
+    "tcp",
+    "chrome",
+    "safari",
+    "firefox"
+  ],
+  "plain": "Whether an embedded site can set and read its own cookies on other sites, which varies by browser.",
+  "meaning": "Third-party cookies are how ad networks recognise the same person across sites. Safari blocks them, Firefox partitions them, Brave blocks them, Chrome leaves them on by default (user choice) and blocks them in Incognito.",
+  "lifecycle": [
+    "before-visit",
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "document.cookie in iframes; Set-Cookie with SameSite=None; Secure; Storage Access API",
+      "bcd": [
+        "http.headers.Set-Cookie.SameSite"
+      ],
+      "access": {
+        "grant": "settings",
+        "prompt_ui": "None",
+        "secure_context": false,
+        "user_gesture": false,
+        "persistence": "Cookie lifetime per cookie; Chrome caps at 400 days",
+        "revocation": "Clear site data, browser privacy settings",
+        "iframe": "",
+        "steps": []
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "51",
+          "note": "3PC allowed by default; blocked in Incognito",
+          "date": "2016-05-25"
+        },
+        "edge": {
+          "s": "y",
+          "v": "16",
+          "note": "Blocks classified trackers only",
+          "date": "2017-10-17"
+        },
+        "firefox": {
+          "s": "r",
+          "v": "103",
+          "note": "Partitioned by default",
+          "date": "2022-07-26"
+        },
+        "safari": {
+          "s": "r",
+          "v": "13.1",
+          "note": "Blocked entirely",
+          "date": "2020-03-24"
+        },
+        "ios_safari": {
+          "s": "r",
+          "v": "13.1",
+          "note": "",
+          "date": "2019-09-19"
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "51",
+          "note": "Allowed by default",
+          "date": "2016-06-08"
+        },
+        "samsung": {
+          "s": "y",
+          "v": "5.0",
+          "note": "Allowed by default, Smart Anti-Tracking blocks some",
+          "date": "2016-12-15"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "object",
+    "metric": "Cookie jar per top-level site (partitioned) or global",
+    "update": "continuous",
+    "fields": [
+      {
+        "name": "cookie",
+        "type": "string",
+        "unit": "bytes",
+        "range": "up to 4096 per cookie",
+        "precision": "n/a"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can recognise you across sites with embedded cookies, unless your browser blocks them",
+    "user_action": "Nothing. It happens when a page with ads or embeds loads",
+    "can": [
+      "Set and later see its own cookie from inside a page on another site",
+      "Link your visits across the sites that embed it",
+      "Keep working in Chrome, where these cookies stay on by default",
+      "Ask the browser for access if it was blocked (Storage Access prompt)"
+    ],
+    "cannot": [
+      "Set these cookies in Safari, which blocks them",
+      "Share one cookie across sites in Firefox, which keeps a separate jar per site",
+      "Use them in Incognito windows in Chrome",
+      "Get through in Brave, which blocks them"
+    ],
+    "reach": 4,
+    "reach_label": "Across many sites, unless blocked",
+    "differs": "Safari and Brave block them, Firefox splits them per site, and Chrome allows them by default but blocks them in Incognito."
+  },
+  "story": {
+    "what_it_is": "Whether an embedded site can store cookies on other sites, which depends on which browser you use.",
+    "icon": "cookie",
+    "tags": [
+      "Cookies",
+      "Ads",
+      "Browser choice"
+    ],
+    "marketing": [
+      {
+        "vendor": "Apple",
+        "name": "Intelligent Tracking Prevention",
+        "pitch": "Safari blocks cross-site tracking by default so websites cannot follow you from site to site.",
+        "url": "https://webkit.org/tracking-prevention/"
+      },
+      {
+        "vendor": "Mozilla",
+        "name": "Enhanced Tracking Protection",
+        "pitch": "Firefox keeps each site's cookies in a separate jar so trackers cannot connect your visits.",
+        "url": "https://support.mozilla.org/en-US/kb/enhanced-tracking-protection-firefox-desktop"
+      },
+      {
+        "vendor": "Google",
+        "name": "Privacy Sandbox",
+        "pitch": "Chrome kept third-party cookies and gives people a choice, while offering newer ad tools as alternatives.",
+        "url": "https://developers.google.com/privacy-sandbox"
+      }
+    ],
+    "for_you": "You never see these cookies, but they decide whether an ad for boots follows you from a shoe shop to a news site. In Safari and Firefox it mostly cannot. In Chrome it still can, unless you turn it off in settings.",
+    "for_makers": "Ad networks use these cookies to recognise the same person across sites for targeting, frequency caps and conversion counting. Sites also use them for legitimate embeds like logins and payments. When a browser blocks them, makers must switch to first-party data or new APIs.",
+    "use_cases": [
+      {
+        "type": "ads",
+        "example": "A retailer's ad network sets a cookie when you view boots, then recognises you on a recipe blog and shows the same boots.",
+        "apps": [
+          "Google Display Network",
+          "Criteo"
+        ]
+      },
+      {
+        "type": "social",
+        "example": "A Like or Share button embedded on a news article recognises your logged-in account and counts the visit.",
+        "apps": [
+          "Facebook",
+          "X"
+        ]
+      },
+      {
+        "type": "video",
+        "example": "An embedded video on a blog remembers your player settings and view history through the video host's own cookie.",
+        "apps": [
+          "YouTube"
+        ]
+      },
+      {
+        "type": "games",
+        "example": "A browser game embedded in a portal page saves your progress under the game host's cookie, which breaks when the browser blocks it.",
+        "apps": [
+          "itch.io"
+        ]
+      },
+      {
+        "type": "payments",
+        "example": "A card check inside a frame on a shop page relies on the bank's cookie to recognise a trusted device.",
+        "apps": [
+          "Stripe"
+        ]
+      },
+      {
+        "type": "security",
+        "example": "A bot defence service sets one cookie across many customer sites to spot a scraper hopping between them.",
+        "apps": [
+          "Cloudflare"
+        ]
+      },
+      {
+        "type": "analytics",
+        "example": "A marketing platform ties an ad click on one site to a purchase on another to report which campaign worked.",
+        "apps": [
+          "Google Ads"
+        ]
+      }
+    ],
+    "risks": [
+      "Cross-site profiles of your habits",
+      "Settings differ by browser, so protection is uneven"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Safari: blocked for all, no exceptions except Storage Access API",
+    "Firefox: Total Cookie Protection partitions per top-level site by default (June 2022, Firefox 103)",
+    "Chrome: kept on by default; no deprecation prompt after the April 2025 decision; Incognito blocks by default",
+    "Edge: Tracking Prevention blocks classified trackers, not all"
+  ],
+  "scores": {
+    "sensitivity": 4,
+    "utility": 4,
+    "fingerprint_bits": null,
+    "friction": 3
+  },
+  "value": {
+    "legit_uses": [
+      "Embedded video, chat, SSO, payment frames",
+      "Ad measurement"
+    ],
+    "abuse": [
+      "Cross-site profile building by ad networks",
+      "Silent identifiers synced across domains"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2020-03",
+      "browser": "safari",
+      "version": "13.1",
+      "change": "Full third-party cookie blocking"
+    },
+    {
+      "date": "2022-06",
+      "browser": "firefox",
+      "version": "103",
+      "change": "Total Cookie Protection default for all users"
+    },
+    {
+      "date": "2024-01",
+      "browser": "chrome",
+      "version": "120",
+      "change": "1% of Chrome users had third-party cookies restricted (testing)"
+    },
+    {
+      "date": "2024-07",
+      "browser": "chrome",
+      "version": "127",
+      "change": "Google proposed user choice instead of deprecation"
+    },
+    {
+      "date": "2025-04",
+      "browser": "chrome",
+      "version": "135",
+      "change": "Google confirmed no standalone prompt; users keep the Settings choice"
+    },
+    {
+      "date": "2025-10",
+      "browser": "chrome",
+      "version": "141",
+      "change": "Oct 17: Google retired most remaining Privacy Sandbox APIs; third-party cookies stay"
+    }
+  ],
+  "related": [
+    "web.xsite.chips-partitioned-cookies",
+    "web.xsite.storage-access-api",
+    "web.xsite.cookie-syncing"
+  ],
+  "refs": [
+    {
+      "t": "vendor",
+      "label": "Privacy Sandbox status (updated Aug 14, 2026)",
+      "url": "https://privacysandbox.google.com/overview/status"
+    },
+    {
+      "t": "webkit",
+      "label": "WebKit Full Third-Party Cookie Blocking",
+      "url": "https://webkit.org/blog/10218/full-third-party-cookie-blocking-and-more/"
+    },
+    {
+      "t": "mozilla",
+      "label": "Mozilla Total Cookie Protection",
+      "url": "https://blog.mozilla.org/en/products/firefox/total-cookie-protection-by-default/"
+    }
+  ],
+  "confidence": "verified"
+}

@@ -1,0 +1,249 @@
+{
+  "id": "mob.attr.install-referrer",
+  "name": "Install referrer",
+  "kind": "tracking",
+  "group": "attribution-ads",
+  "subgroup": "Install attribution",
+  "tags": [
+    "install-referrer",
+    "attribution",
+    "90-days",
+    "play-store",
+    "play",
+    "referrer"
+  ],
+  "plain": "The Play Store hands the app the campaign link that led to its install, readable for 90 days.",
+  "meaning": "Tells an app which ad or link produced the install, with click and install timestamps. No permission is needed, so it is the standard Android attribution signal.",
+  "lifecycle": [
+    "on-launch",
+    "before-install"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "y",
+      "v": "4.0",
+      "api": 9,
+      "permission": "None (Play Install Referrer library)",
+      "protection": "none",
+      "grant": "none",
+      "prompt_ui": "None",
+      "persistence": "Available for 90 days after install",
+      "revocation": "n/a",
+      "store_policy": "Play: part of Play Services; referrer must be user safe",
+      "api_surface": "InstallReferrerClient, ReferrerDetails (referrer URL, click and install timestamps, instant experience flag)",
+      "note": "Click and install timestamps; 90 day read window; Meta and Huawei have their own referrers"
+    },
+    "ios": {
+      "s": "n",
+      "v": "",
+      "permission": "",
+      "protection": "none",
+      "grant": "not-exposed",
+      "prompt_ui": "None",
+      "persistence": "n/a",
+      "revocation": "",
+      "store_policy": "",
+      "api_surface": "",
+      "note": "iOS uses SKAdNetwork or AdAttributionKit with coarse postbacks, and deferred deep links via clipboard or fingerprinting (discouraged)"
+    }
+  },
+  "web_equivalents": [
+    "web.xsite.ad-click-ids"
+  ],
+  "data": {
+    "type": "object",
+    "metric": "Referrer",
+    "update": "Once per install",
+    "fields": [
+      {
+        "name": "referrer",
+        "type": "string",
+        "unit": "",
+        "range": "UTM style",
+        "precision": ""
+      },
+      {
+        "name": "window_days",
+        "type": "integer",
+        "unit": "days",
+        "range": "90",
+        "precision": "system"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can learn which ad or link led to your install, for 90 days after",
+    "user_action": "Nothing. It happens when you first open the app after installing from Google Play",
+    "can": [
+      "Find the campaign link that led to your install",
+      "See the click and install times",
+      "Check it any time for 90 days",
+      "Use the Meta and Huawei versions on top of Google's"
+    ],
+    "cannot": [
+      "Work on iPhone; Apple has delayed anonymous reports instead",
+      "Give your name or contact details",
+      "Check it after 90 days"
+    ],
+    "reach": 2,
+    "reach_label": "One signal, for 90 days",
+    "differs": "Android only. iPhone uses delayed reports, and some apps use clipboard or fingerprint tricks Apple discourages."
+  },
+  "story": {
+    "what_it_is": "Google Play hands an app the link that led to its install, so it knows which ad worked.",
+    "icon": "link",
+    "tags": [
+      "Ads",
+      "Attribution",
+      "Android"
+    ],
+    "marketing": [
+      {
+        "vendor": "Google",
+        "name": "Play Install Referrer API",
+        "pitch": "Securely retrieve the referral content from Google Play, such as which campaign led to the install.",
+        "url": "https://developer.android.com/google/play/installreferrer"
+      }
+    ],
+    "for_you": "You tap an ad, go to Play and install. The app wakes up and already knows which ad brought you, so it may show a welcome bonus.",
+    "for_makers": "It needs no permission, includes click and install times, and stays readable for 90 days. It is the standard Android way to credit an ad and to power deferred deep links.",
+    "use_cases": [
+      {
+        "type": "games",
+        "example": "A game reads the referrer and gives you the free gems from the ad you tapped.",
+        "apps": [
+          "Subway Surfers",
+          "Roblox"
+        ]
+      },
+      {
+        "type": "shopping",
+        "example": "A store app lands you on the sale page promised in the ad.",
+        "apps": [
+          "Zalando",
+          "Temu"
+        ]
+      },
+      {
+        "type": "ads",
+        "example": "An ad network proves the install came from its ad and gets paid.",
+        "apps": [
+          "Meta",
+          "Google Ads"
+        ]
+      },
+      {
+        "type": "security",
+        "example": "Fraud tools compare click and install times to catch click injection.",
+        "apps": [
+          "Adjust",
+          "AppsFlyer"
+        ]
+      },
+      {
+        "type": "social",
+        "example": "A friend invite link opens the right group after you install.",
+        "apps": [
+          "Telegram"
+        ]
+      },
+      {
+        "type": "analytics",
+        "example": "A growth team counts which referral campaign brings the best retention.",
+        "apps": [
+          "Firebase"
+        ]
+      }
+    ],
+    "risks": [
+      "No permission needed",
+      "Ties your install to an ad click"
+    ],
+    "android_note": "Android only. Available for 90 days after install.",
+    "ios_note": "iOS has no equal. SKAdNetwork and AdAttributionKit fill the gap."
+  },
+  "technical_bounds": [
+    "Play Store installs only",
+    "Readable only for 90 days",
+    "Valid only for Play installs",
+    "About 90 days of data",
+    "Developer sets the referrer string through the Play URL"
+  ],
+  "scores": {
+    "sensitivity": 2,
+    "utility": 4,
+    "fingerprint_bits": 2,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Measure ad spend"
+    ],
+    "abuse": [
+      "Cross app identity joins"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2020-03",
+      "platform": "android",
+      "version": "Play",
+      "change": "Broadcast based referrer deprecated"
+    },
+    {
+      "date": "2020-03",
+      "platform": "android",
+      "version": "Library 2.2",
+      "change": "Server timestamps added for fraud detection"
+    },
+    {
+      "date": "2019-03",
+      "platform": "android",
+      "version": "Play Services",
+      "change": "Broadcast deprecated; library v2 adds click-time fields"
+    },
+    {
+      "date": "2017-11",
+      "platform": "android",
+      "version": "Play",
+      "change": "Install Referrer API introduced (replaces the broadcast)"
+    },
+    {
+      "date": "2017-09",
+      "platform": "android",
+      "version": "Play Install Referrer 1.0",
+      "change": "API replaces INSTALL_REFERRER broadcast"
+    }
+  ],
+  "related": [
+    "mob.os.app-clips",
+    "mob.attr.skadnetwork",
+    "mob.xtrack.deferred-deep-link",
+    "mob.ads.mmp-appsflyer"
+  ],
+  "refs": [
+    {
+      "t": "android",
+      "label": "Android: Play Install Referrer",
+      "url": "https://developer.android.com/google/play/installreferrer"
+    },
+    {
+      "t": "android",
+      "label": "Android: InstallReferrerClient",
+      "url": "https://developer.android.com/reference/com/android/installreferrer/api/InstallReferrerClient"
+    },
+    {
+      "t": "android",
+      "label": "Android: Play Install Referrer library",
+      "url": "https://developer.android.com/google/play/installreferrer/library"
+    }
+  ],
+  "confidence": "docs"
+}

@@ -1,0 +1,216 @@
+{
+  "id": "mob.ads.skan-timers",
+  "name": "SKAN postback windows and timers",
+  "kind": "capability",
+  "group": "attribution-ads",
+  "subgroup": "Apple attribution",
+  "tags": [
+    "skan",
+    "timer",
+    "delay",
+    "windows"
+  ],
+  "plain": "Postbacks arrive days after install, in three time windows with random delays.",
+  "meaning": "Delays break the link between a user's behavior and the postback, so an ad network cannot tell which person it was.",
+  "lifecycle": [
+    "before-install",
+    "background"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "n",
+      "v": "",
+      "permission": "",
+      "protection": "none",
+      "grant": "not-exposed",
+      "prompt_ui": "",
+      "persistence": "",
+      "revocation": "",
+      "store_policy": "",
+      "api_surface": "",
+      "note": "Not applicable."
+    },
+    "ios": {
+      "s": "y",
+      "v": "16.1",
+      "permission": "",
+      "protection": "none",
+      "grant": "none",
+      "prompt_ui": "",
+      "persistence": "",
+      "revocation": "",
+      "store_policy": "",
+      "api_surface": "",
+      "note": "Window 1 covers days 0 to 2, window 2 days 3 to 7, window 3 days 8 to 35. A randomized timer of 24 to 48 hours after the first window, and 24 to 144 hours for the later windows, delays each send."
+    }
+  },
+  "data": {
+    "type": "event",
+    "metric": "3 postbacks per install",
+    "update": "windows 0 to 2, 3 to 7, 8 to 35 days",
+    "fields": [
+      {
+        "name": "window 1",
+        "type": "event",
+        "unit": "days",
+        "range": "0 to 2",
+        "precision": ""
+      },
+      {
+        "name": "window 2",
+        "type": "event",
+        "unit": "days",
+        "range": "3 to 7",
+        "precision": ""
+      },
+      {
+        "name": "window 3",
+        "type": "event",
+        "unit": "days",
+        "range": "8 to 35",
+        "precision": ""
+      },
+      {
+        "name": "delay timer",
+        "type": "float",
+        "unit": "hours",
+        "range": "24 to 144",
+        "precision": ""
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can only get install reports days later, in three windows with random delays",
+    "user_action": "Nothing. Apple sends the reports after you install and use the app",
+    "can": [
+      "Send the first report after days 0 to 2, plus a random delay of 24 to 48 hours",
+      "Send later reports for days 3 to 7 and 8 to 35, with delays of 24 to 144 hours",
+      "Link a report to a campaign, not to you"
+    ],
+    "cannot": [
+      "Send a report the moment you install",
+      "Tell which person did what",
+      "Change the delays, since Apple sets them"
+    ],
+    "reach": 1,
+    "reach_label": "Delayed, in three windows",
+    "differs": "iPhone only (iOS 16.1 and later). Android has no such timers."
+  },
+  "story": {
+    "what_it_is": "Apple delays and randomizes ad reports so no one can tie them to a person's actions.",
+    "icon": "timer",
+    "tags": [
+      "Ads",
+      "Delay",
+      "Apple"
+    ],
+    "marketing": [
+      {
+        "vendor": "Apple",
+        "name": "SKAdNetwork postback windows",
+        "pitch": "Postbacks come in three windows with delays, to protect privacy.",
+        "url": "https://developer.apple.com/documentation/storekit/skadnetwork"
+      }
+    ],
+    "for_you": "You never see it. You install an app today and the ad network hears about it days later, mixed with other installs.",
+    "for_makers": "The three windows are 0 to 2 days, 3 to 7 days and 8 to 35 days. Random delays break the link between your actions and the report, so marketers must wait and plan around slow data.",
+    "use_cases": [
+      {
+        "type": "games",
+        "example": "A studio waits days to learn if a campaign paid back, so it spends cautiously at first.",
+        "apps": [
+          "Zynga",
+          "Supercell"
+        ]
+      },
+      {
+        "type": "ads",
+        "example": "An ad network gets a first postback after two days and a second after a week.",
+        "apps": [
+          "AppLovin"
+        ]
+      },
+      {
+        "type": "shopping",
+        "example": "A retailer launches a sale and cannot see its ad results until the next week.",
+        "apps": [
+          "Target"
+        ]
+      },
+      {
+        "type": "analytics",
+        "example": "A team builds a model to predict full results from the first postback.",
+        "apps": [
+          "Singular",
+          "Adjust"
+        ]
+      },
+      {
+        "type": "security",
+        "example": "Random delays stop an attacker from matching an install to a person.",
+        "apps": []
+      },
+      {
+        "type": "fitness",
+        "example": "A wellness app waits for the second window to see who bought a subscription.",
+        "apps": [
+          "Calm"
+        ]
+      }
+    ],
+    "risks": [
+      "Slow feedback for advertisers",
+      "Data may arrive partial"
+    ],
+    "android_note": "Android had no delayed postback system, since it uses the advertising ID.",
+    "ios_note": "SKAN 4 has three windows with random delays."
+  },
+  "technical_bounds": [
+    "Randomized delay",
+    "Windows 2 and 3 only report if a coarse value is available"
+  ],
+  "scores": {
+    "sensitivity": 1,
+    "utility": 3,
+    "fingerprint_bits": null,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Privacy-preserving measurement"
+    ],
+    "abuse": []
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2022-10",
+      "platform": "ios",
+      "version": "iOS 16.1",
+      "change": "Three windows and timers (SKAN 4); SKAN 3 had one 24 to 48 hour timer reset on each update"
+    }
+  ],
+  "related": [
+    "mob.ads.skadnetwork",
+    "mob.ads.adattributionkit"
+  ],
+  "refs": [
+    {
+      "t": "apple",
+      "label": "Apple: SKAdNetwork",
+      "url": "https://developer.apple.com/documentation/storekit/skadnetwork"
+    },
+    {
+      "t": "vendor",
+      "label": "AppsFlyer: SKAN 4 postback windows",
+      "url": "https://support.appsflyer.com/hc/en-us/articles/360015445778"
+    }
+  ],
+  "confidence": "docs"
+}

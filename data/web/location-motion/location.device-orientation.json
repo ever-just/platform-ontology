@@ -1,0 +1,314 @@
+{
+  "id": "web.location.device-orientation",
+  "name": "DeviceOrientation and DeviceMotion events",
+  "kind": "permission",
+  "group": "location-motion",
+  "subgroup": "Motion",
+  "tags": [
+    "gyroscope",
+    "accelerometer",
+    "ios-requestpermission",
+    "motion-sensors"
+  ],
+  "plain": "Tilt and shake data from the phone; iOS asks first, Android Chrome does not.",
+  "meaning": "Reveals how the device is held and moved: tilt, walking cadence, vehicle vibration. Research has inferred PINs and keystrokes from tilt patterns, and it hints at device class.",
+  "lifecycle": [
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "addEventListener('deviceorientation'|'deviceorientationabsolute'|'devicemotion'); DeviceMotionEvent.requestPermission(), DeviceOrientationEvent.requestPermission()",
+      "permission_name": "accelerometer, gyroscope, magnetometer (Chromium)",
+      "permissions_policy": "accelerometer; gyroscope; magnetometer",
+      "bcd": [
+        "api.DeviceOrientationEvent",
+        "api.DeviceOrientationEvent.requestPermission",
+        "api.DeviceMotionEvent",
+        "api.DeviceMotionEvent.requestPermission"
+      ],
+      "access": {
+        "grant": "prompt",
+        "prompt_ui": "iOS Safari 13+: system alert asking for Motion and Orientation access, Allow or Don't Allow, after requestPermission(). Chrome and Firefox on Android: no prompt, Motion sensors site setting defaults to Allow. Most desktops: events do not fire.",
+        "secure_context": true,
+        "user_gesture": true,
+        "persistence": "iOS: remembered for the page session and re-asked after the page process ends; Chrome: site setting Allow or Block per origin",
+        "revocation": "iOS: Settings > Safari > Advanced > Motion & Orientation Access (iOS 12.2 global switch); Chrome: Site settings > Motion sensors",
+        "iframe": "Cross-origin iframes blocked unless allow=\"accelerometer; gyroscope; magnetometer\" (Chrome 76+)",
+        "steps": [
+          "iOS: call requestPermission() inside a click handler",
+          "Person taps Allow",
+          "Promise resolves 'granted'",
+          "Add listeners; events fire at about 60 Hz while the tab is visible"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "7",
+          "note": "Secure context required from 50; no prompt",
+          "date": "2010-10-19"
+        },
+        "edge": {
+          "s": "y",
+          "v": "12",
+          "note": "",
+          "date": "2015-07-29"
+        },
+        "firefox": {
+          "s": "y",
+          "v": "6",
+          "note": "No prompt",
+          "date": "2011-08-16"
+        },
+        "safari": {
+          "s": "y",
+          "v": "17",
+          "note": "iOS 13 added requestPermission; macOS Safari has no motion sensors",
+          "date": "2023-09-18"
+        },
+        "ios_safari": {
+          "s": "y",
+          "v": "4.2",
+          "note": "All iOS browsers use WebKit",
+          "date": "2010-11-22"
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "18",
+          "note": "",
+          "date": "2012-06-27"
+        },
+        "samsung": {
+          "s": "y",
+          "v": "1.0",
+          "note": "",
+          "date": "2013-04-27"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "event",
+    "metric": "Orientation angles and motion vectors",
+    "update": "about 60 Hz maximum",
+    "fields": [
+      {
+        "name": "alpha",
+        "type": "float or null",
+        "unit": "degrees",
+        "range": "0 to 360",
+        "precision": "about 0.1 degree; absolute only on deviceorientationabsolute"
+      },
+      {
+        "name": "beta",
+        "type": "float or null",
+        "unit": "degrees",
+        "range": "-180 to 180",
+        "precision": "about 0.1 degree"
+      },
+      {
+        "name": "gamma",
+        "type": "float or null",
+        "unit": "degrees",
+        "range": "-90 to 90",
+        "precision": "about 0.1 degree"
+      },
+      {
+        "name": "acceleration x/y/z",
+        "type": "float or null",
+        "unit": "m/s2 without gravity",
+        "range": "about -20 to 20",
+        "precision": "about 0.01"
+      },
+      {
+        "name": "accelerationIncludingGravity x/y/z",
+        "type": "float",
+        "unit": "m/s2",
+        "range": "about -20 to 20",
+        "precision": "about 0.01"
+      },
+      {
+        "name": "rotationRate alpha/beta/gamma",
+        "type": "float",
+        "unit": "degrees per second",
+        "range": "about -2000 to 2000",
+        "precision": "about 0.1"
+      },
+      {
+        "name": "interval",
+        "type": "float",
+        "unit": "ms",
+        "range": "about 16 at 60 Hz",
+        "precision": "1 ms"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can sense how your phone is tilted and shaken, sometimes only after you allow it",
+    "user_action": "You open a tilt based page, like a game or AR view, and tap Allow on iPhone",
+    "can": [
+      "Measure tilt, turning and shaking while the page is open",
+      "Spot walking steps or vehicle bumps",
+      "Move a view or game as you tilt the phone"
+    ],
+    "cannot": [
+      "Run without your Allow on iPhone Safari 13 and later",
+      "Measure motion while the page is closed or in the background",
+      "Be blocked by default on Android Chrome and Firefox; they allow it unless you turn Motion sensors off",
+      "Know your location; it only senses motion"
+    ],
+    "reach": 2,
+    "reach_label": "While the page is open",
+    "differs": "iPhone Safari asks first. Chrome and Firefox on Android allow it unless you block Motion sensors in site settings."
+  },
+  "story": {
+    "what_it_is": "The page feels how you tilt and shake your phone.",
+    "icon": "rotate-3d",
+    "tags": [
+      "Motion",
+      "Sensors",
+      "Asks first"
+    ],
+    "marketing": [
+      {
+        "vendor": "MDN (standards docs)",
+        "name": "Device orientation events",
+        "pitch": "Describes events that tell pages how a device is tilted and moved, used for compasses, games and 360 views.",
+        "url": "https://developer.mozilla.org/en-US/docs/Web/API/Device_orientation_events"
+      }
+    ],
+    "for_you": "You tilt your phone and a 360 photo turns, a marble rolls or a compass needle moves. On iPhone a prompt asks first. On many Android browsers there is no prompt at all.",
+    "for_makers": "Tilt makes web games, AR and photo viewers feel alive without an app. It is also read by trackers, since small sensor quirks are a fingerprint, and research has shown typing can be guessed from motion.",
+    "use_cases": [
+      {
+        "type": "games",
+        "example": "A browser racing or balance game lets you steer by tilting your phone.",
+        "apps": []
+      },
+      {
+        "type": "ar-vr",
+        "example": "A web AR try on or furniture placement page uses tilt to place a sofa in your room.",
+        "apps": [
+          "IKEA Place web",
+          "8th Wall"
+        ]
+      },
+      {
+        "type": "maps",
+        "example": "A web map or compass turns the arrow as you turn your phone.",
+        "apps": [
+          "Google Maps"
+        ]
+      },
+      {
+        "type": "media",
+        "example": "A 360 degree video or virtual tour pans as you move your phone.",
+        "apps": [
+          "YouTube 360"
+        ]
+      },
+      {
+        "type": "fitness",
+        "example": "A web workout counter uses shakes and steps to count reps or steps.",
+        "apps": []
+      },
+      {
+        "type": "security",
+        "example": "Researchers showed that a page can infer typed PINs from tilt, which is why iPhone asks first.",
+        "apps": []
+      },
+      {
+        "type": "ads",
+        "example": "A fraud tool checks for believable motion, because a phone farm or emulator has none.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Can leak typing or PINs",
+      "Often no prompt on Android"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "iOS requires a user gesture to request",
+    "No events when the tab is hidden",
+    "Rate about 60 Hz",
+    "Mostly absent on desktops",
+    "Blocked in insecure contexts"
+  ],
+  "scores": {
+    "sensitivity": 3,
+    "utility": 4,
+    "fingerprint_bits": 4,
+    "friction": 1
+  },
+  "value": {
+    "legit_uses": [
+      "Tilt-controlled games",
+      "360 video and panoramas",
+      "AR on the web",
+      "Shake to undo"
+    ],
+    "abuse": [
+      "PIN and keystroke inference from motion (published attacks)",
+      "Hardware fingerprinting from sensor calibration (SensorID, 2019)"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2016-04",
+      "browser": "chrome",
+      "version": "50",
+      "change": "Orientation and motion events restricted to secure contexts"
+    },
+    {
+      "date": "2019-03",
+      "browser": "ios_safari",
+      "version": "12.2",
+      "change": "Motion and Orientation access disabled by default behind a setting"
+    },
+    {
+      "date": "2019-09",
+      "browser": "ios_safari",
+      "version": "13",
+      "change": "requestPermission() added; per-site prompt replaces the global setting"
+    },
+    {
+      "date": "2019-07",
+      "browser": "chrome",
+      "version": "76",
+      "change": "Cross-origin iframes need accelerometer, gyroscope, magnetometer policy"
+    }
+  ],
+  "related": [
+    "web.location.sensor-accelerometer",
+    "web.location.sensor-gyroscope",
+    "web.location.sensor-magnetometer"
+  ],
+  "refs": [
+    {
+      "t": "mdn",
+      "label": "MDN DeviceOrientationEvent.requestPermission",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/DeviceOrientationEvent/requestPermission_static"
+    },
+    {
+      "t": "spec",
+      "label": "W3C DeviceOrientation Event Specification",
+      "url": "https://www.w3.org/TR/orientation-event/"
+    },
+    {
+      "t": "paper",
+      "label": "SensorID: Sensor Calibration Fingerprinting for Smartphones",
+      "url": "https://www.cl.cam.ac.uk/~ah793/papers/sensorid.pdf"
+    }
+  ],
+  "confidence": "docs"
+}

@@ -1,0 +1,237 @@
+{
+  "id": "web.timing.request-idle-callback",
+  "name": "Idle callbacks",
+  "kind": "capability",
+  "group": "timing-performance",
+  "subgroup": "Scheduling",
+  "tags": [
+    "requestIdleCallback",
+    "scheduling",
+    "idle",
+    "safari-missing"
+  ],
+  "plain": "Runs low priority work when the browser is idle; no prompt.",
+  "meaning": "A site can wait until the page is quiet before running analytics or prefetching. It also reveals roughly how busy your device is, since idle windows are shorter on slow devices or busy tabs.",
+  "lifecycle": [
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "requestIdleCallback(cb, {timeout}); IdleDeadline.timeRemaining()",
+      "bcd": [
+        "api.Window.requestIdleCallback",
+        "api.IdleDeadline"
+      ],
+      "access": {
+        "grant": "none",
+        "prompt_ui": "None (no browser prompt)",
+        "secure_context": false,
+        "user_gesture": false,
+        "activation": "none",
+        "persistence": "Per page; callbacks do not run when the tab is in the background in most engines",
+        "revocation": "Nothing to revoke (no permission is stored)",
+        "iframe": "Per frame; iframes get their own deadline",
+        "steps": [
+          "Page calls requestIdleCallback",
+          "Browser runs the callback when the main thread is idle",
+          "Callback reads timeRemaining() and does bounded work"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "47",
+          "note": "",
+          "date": "2015-12-01"
+        },
+        "edge": {
+          "s": "y",
+          "v": "79",
+          "note": "",
+          "date": "2020-01-15"
+        },
+        "firefox": {
+          "s": "y",
+          "v": "55",
+          "note": "",
+          "date": "2017-08-08"
+        },
+        "safari": {
+          "s": "f",
+          "v": "preview",
+          "note": "Behind a flag or setting"
+        },
+        "ios_safari": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "47",
+          "note": "",
+          "date": "2015-12-02"
+        },
+        "samsung": {
+          "s": "y",
+          "v": "5.0",
+          "note": "",
+          "date": "2016-12-15"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "none",
+    "metric": "",
+    "update": "",
+    "fields": []
+  },
+  "limits": {
+    "headline": "Can wait until the browser is idle to run low priority jobs",
+    "user_action": "Nothing. It happens when the page loads and the browser is quiet",
+    "can": [
+      "Run analytics or preload files when things are calm",
+      "Learn roughly how busy your device is, since gaps are shorter on slow ones"
+    ],
+    "cannot": [
+      "Work in Safari, which does not support it",
+      "Run when the browser is busy",
+      "Ask permission first",
+      "See your files"
+    ],
+    "reach": 1,
+    "reach_label": "Silent, only when idle",
+    "differs": "Chrome, Edge and Firefox support it. Safari does not."
+  },
+  "story": {
+    "what_it_is": "A page schedules low priority work for moments when the browser has nothing urgent to do.",
+    "icon": "hourglass",
+    "tags": [
+      "Performance",
+      "Silent",
+      "Everyday"
+    ],
+    "marketing": [
+      {
+        "vendor": "MDN",
+        "name": "requestIdleCallback",
+        "pitch": "Lets pages run background work when the browser is idle, so important work is not slowed down.",
+        "url": "https://developer.mozilla.org/en-US/docs/Web/API/Window/requestIdleCallback"
+      }
+    ],
+    "for_you": "You never see it. It helps pages stay smooth by doing small chores, like sending reports or preloading, only when nothing else needs the browser.",
+    "for_makers": "Teams use it to push analytics, prefetching and cleanup out of the way of clicks and typing. It improves speed scores. It can also tell a script how busy the page is.",
+    "use_cases": [
+      {
+        "type": "shopping",
+        "example": "A shop preloads the next product image only when idle, so taps stay fast.",
+        "apps": []
+      },
+      {
+        "type": "analytics",
+        "example": "An analytics tag sends data in idle time so it does not slow the page.",
+        "apps": [
+          "Google Tag Manager"
+        ]
+      },
+      {
+        "type": "productivity",
+        "example": "A web editor runs spell check and autosave in idle moments, so typing stays smooth.",
+        "apps": [
+          "Google Docs"
+        ]
+      },
+      {
+        "type": "games",
+        "example": "A browser game loads the next level in idle time between actions.",
+        "apps": []
+      },
+      {
+        "type": "ads",
+        "example": "An ad script loads its heavy parts in idle time after the page is ready.",
+        "apps": []
+      },
+      {
+        "type": "developer",
+        "example": "A framework like React splits long work into small tasks in idle slices.",
+        "apps": [
+          "React"
+        ]
+      },
+      {
+        "type": "news",
+        "example": "A news site loads comments and related stories only when idle.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Not available everywhere",
+      "Idle gaps hint at activity"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "timeRemaining() is capped at 50 ms per idle period (spec) so the page stays responsive",
+    "Firefox and Chrome support it; Safari ships it only as a preview or flag (not in release Safari), none in iOS Safari",
+    "In the background, callbacks may be delayed by long periods or run only once a minute",
+    "A timeout option forces the callback even if the browser stays busy",
+    "Chrome Android and Samsung Internet support it; desktop Safari has it behind a flag or preview only"
+  ],
+  "scores": {
+    "sensitivity": 1,
+    "utility": 4,
+    "fingerprint_bits": 1,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Analytics batching",
+      "Cache warming and prefetch",
+      "Non-critical rendering"
+    ],
+    "abuse": [
+      "Hidden fingerprinting during idle time",
+      "Mining that avoids detection by running only when idle"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2015-12",
+      "browser": "chrome",
+      "version": "47",
+      "change": "requestIdleCallback ships"
+    },
+    {
+      "date": "2017-08",
+      "browser": "firefox",
+      "version": "55",
+      "change": "requestIdleCallback ships"
+    }
+  ],
+  "related": [
+    "web.actions.scheduler",
+    "web.perf.idle-detection-user-activation"
+  ],
+  "refs": [
+    {
+      "t": "mdn",
+      "label": "MDN Background Tasks API",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/Background_Tasks_API"
+    },
+    {
+      "t": "spec",
+      "label": "W3C Cooperative Scheduling of Background Tasks",
+      "url": "https://www.w3.org/TR/requestidlecallback/"
+    }
+  ],
+  "confidence": "docs"
+}

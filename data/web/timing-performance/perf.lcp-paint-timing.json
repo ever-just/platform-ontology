@@ -1,0 +1,249 @@
+{
+  "id": "web.perf.lcp-paint-timing",
+  "name": "Paint timing (FCP, LCP) and Core Web Vitals",
+  "kind": "signal",
+  "group": "timing-performance",
+  "subgroup": "Performance API",
+  "tags": [
+    "LCP",
+    "FCP",
+    "CLS",
+    "web-vitals"
+  ],
+  "plain": "Reports when content first appeared and the largest element rendered.",
+  "meaning": "PerformancePaintTiming and LargestContentfulPaint give render timings that reflect network, CPU and GPU. Cross-origin images need Timing-Allow-Origin for full detail.",
+  "lifecycle": [
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "PerformanceObserver type 'paint', 'largest-contentful-paint', 'layout-shift'",
+      "bcd": [
+        "api.LargestContentfulPaint"
+      ],
+      "access": {
+        "grant": "none",
+        "prompt_ui": "",
+        "secure_context": false,
+        "user_gesture": false,
+        "persistence": "",
+        "revocation": "",
+        "iframe": "",
+        "steps": [
+          "Observe paint entries",
+          "Collect LCP candidate",
+          "Report on pagehide"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "77",
+          "note": "",
+          "date": "2019-09-10"
+        },
+        "edge": {
+          "s": "y",
+          "v": "79",
+          "note": "",
+          "date": "2020-01-15"
+        },
+        "firefox": {
+          "s": "y",
+          "v": "122",
+          "note": "",
+          "date": "2024-01-23"
+        },
+        "safari": {
+          "s": "y",
+          "v": "26.2",
+          "note": "",
+          "date": "2025-12-12"
+        },
+        "ios_safari": {
+          "s": "y",
+          "v": "26.2",
+          "note": "",
+          "date": "2025-12-12"
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "77",
+          "note": "",
+          "date": "2019-09-10"
+        },
+        "samsung": {
+          "s": "y",
+          "v": "12.0",
+          "note": "",
+          "date": "2020-06-19"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "event",
+    "metric": "startTime in ms, 1 ms resolution",
+    "update": "",
+    "fields": [
+      {
+        "name": "LCP",
+        "type": "float",
+        "unit": "ms",
+        "range": "200 to 20000",
+        "precision": "1 ms"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can check when content first showed and how long the biggest item took",
+    "user_action": "Nothing. It happens as the page loads",
+    "can": [
+      "Get time to first content and time to the largest picture or block",
+      "Learn how fast your network, processor and graphics are",
+      "Get fuller detail for outside images only if their site allows it"
+    ],
+    "cannot": [
+      "See your files",
+      "Ask permission first",
+      "Know who you are by itself",
+      "See full detail for other sites' images without their approval"
+    ],
+    "reach": 2,
+    "reach_label": "Silent, while the page loads",
+    "differs": ""
+  },
+  "story": {
+    "what_it_is": "Browsers report when the first content appeared and when the biggest item finished drawing.",
+    "icon": "gauge",
+    "tags": [
+      "Speed",
+      "Silent",
+      "Core Web Vitals"
+    ],
+    "marketing": [
+      {
+        "vendor": "web.dev",
+        "name": "Largest Contentful Paint (LCP)",
+        "pitch": "Google says LCP measures how soon the main content of a page appears, as one of its Core Web Vitals.",
+        "url": "https://web.dev/articles/lcp"
+      },
+      {
+        "vendor": "web.dev",
+        "name": "Web Vitals",
+        "pitch": "Google describes a set of simple measures of real user experience, to help sites improve speed.",
+        "url": "https://web.dev/articles/vitals"
+      }
+    ],
+    "for_you": "You never see the measure, but you feel it as how fast a page seems to load. Pages that show their main content quickly feel better and tend to rank higher in Google.",
+    "for_makers": "These numbers feed Google's Core Web Vitals, so they affect search ranking, ad revenue and sales. Teams track them from real visitors and fix slow images and scripts.",
+    "use_cases": [
+      {
+        "type": "shopping",
+        "example": "A retailer tracks how fast the main product photo appears and sees that faster pages sell more.",
+        "apps": [
+          "Shopify stores",
+          "Etsy"
+        ]
+      },
+      {
+        "type": "news",
+        "example": "A news site fixes a slow hero image because search and ads depend on a fast first view.",
+        "apps": []
+      },
+      {
+        "type": "ads",
+        "example": "An ad network watches that its ad slot does not push the main content later, since publishers get graded on it.",
+        "apps": []
+      },
+      {
+        "type": "games",
+        "example": "A game portal checks how fast the game page and play button show up, to stop people leaving.",
+        "apps": [
+          "Poki",
+          "CrazyGames"
+        ]
+      },
+      {
+        "type": "analytics",
+        "example": "Real user monitoring tools show LCP by country, device and network.",
+        "apps": [
+          "Chrome UX Report",
+          "SpeedCurve",
+          "Datadog RUM"
+        ]
+      },
+      {
+        "type": "video",
+        "example": "A video site makes sure the poster image and play button appear first, before heavy scripts.",
+        "apps": [
+          "YouTube"
+        ]
+      },
+      {
+        "type": "travel",
+        "example": "A booking site compares paint times on slow phones to decide what to trim.",
+        "apps": [
+          "Booking.com"
+        ]
+      }
+    ],
+    "risks": [
+      "Slow scores hurt ranking",
+      "Sent to analytics vendors"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Rounded to timer resolution",
+    "Cross-origin elements without TAO are exposed only with limited info"
+  ],
+  "scores": {
+    "sensitivity": 1,
+    "utility": 5,
+    "fingerprint_bits": 1,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": "Core Web Vitals",
+    "abuse": "Device and network speed class"
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2025-09",
+      "browser": "firefox",
+      "version": "122",
+      "change": "LCP support"
+    },
+    {
+      "date": "2025-09",
+      "browser": "safari",
+      "version": "26.2",
+      "change": "LCP and paint timing in Safari 26.2"
+    }
+  ],
+  "related": [
+    "web.perf.navigation-resource-timing"
+  ],
+  "refs": [
+    {
+      "t": "mdn",
+      "label": "MDN LargestContentfulPaint",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/LargestContentfulPaint"
+    },
+    {
+      "t": "vendor",
+      "label": "web.dev LCP",
+      "url": "https://web.dev/articles/lcp"
+    }
+  ],
+  "confidence": "docs"
+}

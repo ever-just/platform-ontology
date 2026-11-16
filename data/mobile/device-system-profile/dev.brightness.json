@@ -1,0 +1,185 @@
+{
+  "id": "mob.dev.brightness",
+  "name": "Screen brightness",
+  "kind": "signal",
+  "group": "device-system-profile",
+  "subgroup": "Display",
+  "tags": [
+    "brightness"
+  ],
+  "plain": "Reads the screen brightness setting with no prompt.",
+  "meaning": "Reveals indoor or outdoor use and whether the person left auto-brightness. Mostly a context hint.",
+  "lifecycle": [
+    "on-launch",
+    "in-session"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "y",
+      "v": "1.0",
+      "api": 1,
+      "permission": "",
+      "protection": "none",
+      "grant": "none",
+      "prompt_ui": "",
+      "persistence": "",
+      "revocation": "",
+      "store_policy": "",
+      "api_surface": "Settings.System.SCREEN_BRIGHTNESS (0 to 255), SCREEN_BRIGHTNESS_MODE",
+      "note": "Readable with no permission; writing needs WRITE_SETTINGS"
+    },
+    "ios": {
+      "s": "y",
+      "v": "2.0",
+      "permission": "none",
+      "protection": "none",
+      "grant": "none",
+      "prompt_ui": "",
+      "persistence": "",
+      "revocation": "",
+      "store_policy": "",
+      "api_surface": "Read and write; writes revert at app exit, no ambient lux API",
+      "note": ""
+    }
+  },
+  "web_equivalents": [
+    "web.notexposed.screen-brightness"
+  ],
+  "data": {
+    "type": "float",
+    "metric": "Brightness value",
+    "update": "On poll",
+    "fields": [
+      {
+        "name": "android_brightness",
+        "type": "integer",
+        "unit": "level",
+        "range": "0 to 255",
+        "precision": "1 step"
+      },
+      {
+        "name": "ios_brightness",
+        "type": "float",
+        "unit": "fraction",
+        "range": "0.0 to 1.0",
+        "precision": "about 1 percent"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can check your screen brightness with no prompt, and change it while the app is open",
+    "user_action": "Nothing to check it. You tap a feature like Full brightness for a ticket or code",
+    "can": [
+      "See your brightness level, from 0 to 255 on Android",
+      "See if brightness is set to automatic on Android",
+      "Change brightness for its own screen on iPhone while the app is open",
+      "Change brightness system wide on Android, if you allow Modify system settings"
+    ],
+    "cannot": [
+      "Change Android system brightness without the special Modify system settings switch",
+      "Keep a changed brightness on iPhone after you leave the app; it goes back",
+      "See the light level in the room on iPhone; no public sensor reading exists"
+    ],
+    "reach": 2,
+    "reach_label": "While the app is open",
+    "differs": "Android needs a special settings switch to change brightness for everything. On iPhone a change reverts when the app closes."
+  },
+  "story": {
+    "what_it_is": "An app can read how bright your screen is set.",
+    "icon": "sun",
+    "tags": [
+      "Screen",
+      "Silent",
+      "Context"
+    ],
+    "marketing": [],
+    "for_you": "You never see this check. A brightness reading can hint at whether you are outside in the sun, in bed at night or in a dark room.",
+    "for_makers": "Makers use it to adapt colors, show dark mode hints and boost readability. It is a small context signal, rarely used alone for tracking.",
+    "use_cases": [
+      {
+        "type": "media",
+        "example": "A video app switches to dark theme when brightness is very low at night.",
+        "apps": []
+      },
+      {
+        "type": "fitness",
+        "example": "A running app boosts text contrast when brightness is high outdoors.",
+        "apps": []
+      },
+      {
+        "type": "creative",
+        "example": "A photo editor warns that colors may look wrong because the screen is very dim.",
+        "apps": []
+      },
+      {
+        "type": "ar-vr",
+        "example": "An AR game raises its overlay contrast in bright sun so you can still see targets.",
+        "apps": []
+      },
+      {
+        "type": "accessibility",
+        "example": "A reading app suggests larger text when brightness is low.",
+        "apps": []
+      },
+      {
+        "type": "ads",
+        "example": "An ad firm adds brightness to a list of device details for time and place guesses.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Hints at where you are",
+      "Minor privacy impact"
+    ],
+    "android_note": "Read as a system setting with no prompt.",
+    "ios_note": "Read through UIScreen brightness with no prompt."
+  },
+  "technical_bounds": [
+    "iOS apps cannot read the ambient light sensor, only brightness"
+  ],
+  "scores": {
+    "sensitivity": 1,
+    "utility": 2,
+    "fingerprint_bits": 1,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Adapt UI"
+    ],
+    "abuse": [
+      "Little"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2008-09",
+      "platform": "android",
+      "version": "1.0 (API 1)",
+      "change": "SCREEN_BRIGHTNESS readable"
+    }
+  ],
+  "related": [
+    "mob.sensor.ambient-light"
+  ],
+  "refs": [
+    {
+      "t": "android",
+      "label": "Android: Settings.Secure",
+      "url": "https://developer.android.com/reference/android/provider/Settings.Secure"
+    },
+    {
+      "t": "apple",
+      "label": "Apple: UIScreen",
+      "url": "https://developer.apple.com/documentation/uikit/uiscreen"
+    }
+  ],
+  "confidence": "docs"
+}

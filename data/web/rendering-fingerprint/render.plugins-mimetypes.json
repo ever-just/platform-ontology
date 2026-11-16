@@ -1,0 +1,228 @@
+{
+  "id": "web.render.plugins-mimetypes",
+  "name": "Plugins and MIME types",
+  "kind": "signal",
+  "group": "rendering-fingerprint",
+  "subgroup": "Rendering",
+  "tags": [
+    "plugins",
+    "mimetypes",
+    "fingerprint"
+  ],
+  "plain": "Lists installed plugins and supported MIME types.",
+  "meaning": "Once a strong fingerprint. Since Chrome 94 the list is a fixed set of PDF viewers, so it now adds little.",
+  "lifecycle": [
+    "on-arrival",
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "navigator.plugins, navigator.mimeTypes",
+      "bcd": [
+        "api.Navigator.plugins"
+      ],
+      "access": {
+        "grant": "none",
+        "prompt_ui": "None (no browser prompt)",
+        "secure_context": false,
+        "user_gesture": false,
+        "persistence": "",
+        "revocation": "",
+        "iframe": "",
+        "steps": [
+          "Script reads the value",
+          "Value joins the fingerprint payload"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "1",
+          "note": "",
+          "date": "2008-12-11"
+        },
+        "edge": {
+          "s": "y",
+          "v": "12",
+          "note": "",
+          "date": "2015-07-29"
+        },
+        "firefox": {
+          "s": "y",
+          "v": "1",
+          "note": "",
+          "date": "2004-11-09"
+        },
+        "safari": {
+          "s": "y",
+          "v": "1",
+          "note": "",
+          "date": "2003-06-23"
+        },
+        "ios_safari": {
+          "s": "y",
+          "v": "1",
+          "note": "",
+          "date": "2007-06-29"
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "18",
+          "note": "",
+          "date": "2012-06-27"
+        },
+        "samsung": {
+          "s": "y",
+          "v": "1.0",
+          "note": "",
+          "date": "2013-04-27"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "list",
+    "metric": "Plugins and MIME types",
+    "update": "static",
+    "fields": [
+      {
+        "name": "plugins",
+        "type": "list",
+        "unit": "",
+        "range": "up to 17 (dataLimit)",
+        "precision": ""
+      },
+      {
+        "name": "mimeTypes",
+        "type": "list",
+        "unit": "",
+        "range": "up to 27 (dataLimit)",
+        "precision": ""
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can list your browser plugins and file types, which now adds little",
+    "user_action": "Nothing. It happens when the page loads",
+    "can": [
+      "List the PDF viewers your browser has",
+      "List the file types it can open",
+      "Use that list as one small trait of your browser"
+    ],
+    "cannot": [
+      "List other plugins, since modern browsers show a fixed set",
+      "See your files",
+      "Ask permission first",
+      "Tell you apart on its own, since most people share the same list"
+    ],
+    "reach": 1,
+    "reach_label": "A small, shared trait",
+    "differs": "Since Chrome 94 the list is a fixed set of PDF viewers, so almost every Chrome user looks the same."
+  },
+  "story": {
+    "what_it_is": "A script lists installed plugins and file types your browser can open. Modern browsers return mostly a fixed list.",
+    "icon": "puzzle",
+    "tags": [
+      "Silent",
+      "Browser",
+      "Fingerprinting"
+    ],
+    "marketing": [],
+    "for_you": "You never see it. In the past this list showed old add ons like Flash and PDF viewers and was very unique. Now most browsers show a short fixed list, so it reveals far less.",
+    "for_makers": "Years ago, plugin lists were a top fingerprint. Browsers have since standardized the answer. Bot detectors still use it, because an empty list is a sign of a headless script.",
+    "use_cases": [
+      {
+        "type": "security",
+        "example": "A bot detector sees an empty plugin list, which real desktop browsers do not have, and raises the risk score.",
+        "apps": [
+          "Akamai Bot Manager",
+          "Cloudflare"
+        ]
+      },
+      {
+        "type": "developer",
+        "example": "A site checks whether the browser can show a PDF inline or needs to offer a download.",
+        "apps": []
+      },
+      {
+        "type": "ads",
+        "example": "An older ad script still adds the plugin list to its device ID, though it adds little now.",
+        "apps": []
+      },
+      {
+        "type": "games",
+        "example": "Old browser games needed plugins like Flash. Today they run through standard browser features instead.",
+        "apps": []
+      },
+      {
+        "type": "enterprise",
+        "example": "A company portal checks for a PDF viewer before it opens a contract inline.",
+        "apps": []
+      },
+      {
+        "type": "analytics",
+        "example": "A visitor counting tool splits traffic by browser family using the plugin list as one clue.",
+        "apps": []
+      },
+      {
+        "type": "education",
+        "example": "A school site checks that the browser can open the assignment file type before loading it.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Mostly historic",
+      "Empty list flags bots"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Fixed lists since 2021 (Chrome 94, Firefox 99)"
+  ],
+  "scores": {
+    "sensitivity": 1,
+    "utility": 3,
+    "fingerprint_bits": 3,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "PDF viewer detection"
+    ],
+    "abuse": [
+      "Fingerprint input"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": true,
+      "how": "Collector key(s): plugins, mimetyps. dataLimit 17 and 27."
+    }
+  },
+  "history": [
+    {
+      "date": "2021",
+      "browser": "chrome",
+      "version": "94",
+      "change": "Fixed PDF viewer list"
+    }
+  ],
+  "related": [
+    "web.tracking.linkedin-apfc-fingerprint"
+  ],
+  "refs": [
+    {
+      "t": "mdn",
+      "label": "MDN plugins",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/Navigator/plugins"
+    },
+    {
+      "t": "github",
+      "label": "mdp/linkedin-extension-fingerprinting (LinkedIn script snapshot and ID list)",
+      "url": "https://github.com/mdp/linkedin-extension-fingerprinting"
+    }
+  ],
+  "confidence": "docs"
+}

@@ -1,0 +1,188 @@
+{
+  "id": "mob.rr.disk-space",
+  "name": "Required Reason: disk space",
+  "kind": "capability",
+  "group": "files-storage",
+  "subgroup": "Privacy manifests",
+  "tags": [
+    "required-reason-api",
+    "disk-space"
+  ],
+  "plain": "iOS free and total storage need 85F4.1, E174.1, 7D9E.1 or B728.1.",
+  "meaning": "Exact free bytes are near-unique. 85F4.1 shows space to the user, E174.1 checks room before writing, 7D9E.1 adds to a user-sent bug report, B728.1 is for health research apps.",
+  "lifecycle": [
+    "on-launch",
+    "in-session"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "n",
+      "v": "",
+      "api": "",
+      "permission": "none",
+      "protection": "none",
+      "grant": "not-exposed",
+      "prompt_ui": "",
+      "persistence": "",
+      "revocation": "",
+      "store_policy": "",
+      "api_surface": "Android has no gate: StatFs is open",
+      "note": "Android analog: no reason needed"
+    },
+    "ios": {
+      "s": "f",
+      "v": "17.0",
+      "permission": "entitlement",
+      "protection": "entitlement",
+      "grant": "none",
+      "prompt_ui": "",
+      "persistence": "",
+      "revocation": "App Review: no off-device use except listed",
+      "store_policy": "",
+      "api_surface": "85F4.1 show to user (LAN to own device ok with consent); E174.1 behavior must change by space; 7D9E.1 bug report; B728.1 health research apps",
+      "note": ""
+    }
+  },
+  "web_equivalents": [
+    "web.storage.storage-quota"
+  ],
+  "data": {
+    "type": "object",
+    "metric": "Reason codes",
+    "update": "At upload",
+    "fields": [
+      {
+        "name": "reason_codes",
+        "type": "list",
+        "unit": "code",
+        "range": "4 values",
+        "precision": "exact"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can check your free storage on iPhone only with a stated reason, and freely on Android",
+    "user_action": "Nothing. The app checks when it starts or before a download",
+    "can": [
+      "Show you how much space is left, one allowed reason on iPhone",
+      "Change its behavior when space is low, another allowed reason",
+      "Include space in a bug report you send, another allowed reason",
+      "Check space on Android with no gate at all"
+    ],
+    "cannot": [
+      "Check space on iPhone without picking one of the listed reasons",
+      "Use the number to track you, or send it elsewhere, under the rules",
+      "Ignore Apple's check; submissions are reviewed since 1 May 2024",
+      "Need any reason on Android"
+    ],
+    "reach": 2,
+    "reach_label": "A number, with a stated reason",
+    "differs": "Android has no gate. iPhone requires one of four declared reasons."
+  },
+  "story": {
+    "what_it_is": "iOS makes apps give an approved reason before reading free storage space.",
+    "icon": "hard-drive",
+    "tags": [
+      "Rules",
+      "iPhone",
+      "Storage"
+    ],
+    "marketing": [
+      {
+        "vendor": "Apple",
+        "name": "Required Reason APIs",
+        "pitch": "Developer rule: apps must declare an approved reason for using sensitive APIs like disk space, which can be used for fingerprinting.",
+        "url": "https://developer.apple.com/documentation/bundleresources/describing-use-of-required-reason-api"
+      }
+    ],
+    "for_you": "You never see this rule. It makes apps say why they check free space, so a game cannot quietly use the exact number as a tag on your phone.",
+    "for_makers": "Makers must pick a reason code, like 85F4.1 to show space to the user or E174.1 to check room before saving. Using the number for tracking is not allowed.",
+    "use_cases": [
+      {
+        "type": "media",
+        "example": "A movie app checks free space before a download and declares reason E174.1.",
+        "apps": []
+      },
+      {
+        "type": "utilities",
+        "example": "A cleaner app shows free space to you and declares reason 85F4.1.",
+        "apps": []
+      },
+      {
+        "type": "health",
+        "example": "A research app that records large files declares reason B728.1.",
+        "apps": []
+      },
+      {
+        "type": "developer",
+        "example": "A developer adds free space to a bug report you send, with reason 7D9E.1.",
+        "apps": []
+      },
+      {
+        "type": "ads",
+        "example": "An ad SDK that reads free space for fingerprinting gets flagged and the app is rejected.",
+        "apps": []
+      },
+      {
+        "type": "games",
+        "example": "A game checks room for an update download before starting it.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Reason may be misused",
+      "Hard to verify"
+    ],
+    "android_note": "Android has no matching rule for disk space.",
+    "ios_note": "Enforced through the privacy manifest, with checks on App Store uploads."
+  },
+  "technical_bounds": [
+    "Mostly no off-device sending"
+  ],
+  "scores": {
+    "sensitivity": 1,
+    "utility": 2,
+    "fingerprint_bits": null,
+    "friction": 3
+  },
+  "value": {
+    "legit_uses": [
+      "Warn on low space"
+    ],
+    "abuse": [
+      "Fingerprint"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2024-05",
+      "platform": "ios",
+      "version": "iOS 17.x",
+      "change": "Reason required to ship"
+    }
+  ],
+  "related": [
+    "mob.rr.regime",
+    "mob.dev.storage-space"
+  ],
+  "refs": [
+    {
+      "t": "apple",
+      "label": "Apple: Describing use of required reason API",
+      "url": "https://developer.apple.com/documentation/bundleresources/describing-use-of-required-reason-api"
+    },
+    {
+      "t": "apple",
+      "label": "Apple: Privacy manifest files",
+      "url": "https://developer.apple.com/documentation/bundleresources/privacy-manifest-files"
+    }
+  ],
+  "confidence": "verified"
+}

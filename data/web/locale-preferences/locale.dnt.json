@@ -1,0 +1,227 @@
+{
+  "id": "web.locale.dnt",
+  "name": "Do Not Track",
+  "kind": "signal",
+  "group": "locale-preferences",
+  "subgroup": "Privacy signals",
+  "tags": [
+    "dnt",
+    "header",
+    "deprecated"
+  ],
+  "plain": "Header and property saying the person asked not to be tracked; mostly ignored.",
+  "meaning": "Reveals a privacy preference (about 1 in 4 desktop Chrome and Firefox users enabled it at its peak) and ironically adds a fingerprint bit. Safari removed it in 12.1; Firefox is removing the setting.",
+  "lifecycle": [
+    "on-arrival",
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "navigator.doNotTrack, DNT: 1 header",
+      "bcd": [
+        "api.Navigator.doNotTrack"
+      ],
+      "access": {
+        "grant": "none",
+        "prompt_ui": "None",
+        "secure_context": false,
+        "user_gesture": false,
+        "persistence": "read fresh on every page load; nothing stored",
+        "revocation": "none needed (no grant)",
+        "iframe": "Readable from cross-origin iframes too (same values)",
+        "steps": [
+          "Page script reads the value",
+          "No prompt is shown"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "23",
+          "note": "",
+          "date": "2012-11-06"
+        },
+        "edge": {
+          "s": "y",
+          "v": "17",
+          "note": "",
+          "date": "2018-04-30"
+        },
+        "firefox": {
+          "s": "y",
+          "v": "9",
+          "note": "Setting being retired in 135",
+          "date": "2011-12-20"
+        },
+        "safari": {
+          "s": "r",
+          "v": "12.1",
+          "note": "",
+          "date": "2019-03-25"
+        },
+        "ios_safari": {
+          "s": "r",
+          "v": "12.2",
+          "note": "",
+          "date": "2019-03-25"
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "25",
+          "note": "",
+          "date": "2013-02-27"
+        },
+        "samsung": {
+          "s": "y",
+          "v": "1.5",
+          "note": "",
+          "date": "2013-09-25"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "object",
+    "metric": "",
+    "update": "static per session",
+    "fields": [
+      {
+        "name": "doNotTrack",
+        "type": "enum",
+        "unit": "",
+        "range": "1, 0, null",
+        "precision": ""
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can see whether you turned on Do Not Track, which most sites ignore",
+    "user_action": "Nothing. Your browser sends it with each page request if the setting is on",
+    "can": [
+      "Check if you asked not to be tracked",
+      "Use the setting as one more clue to recognise your browser"
+    ],
+    "cannot": [
+      "Make sites stop tracking you; most do not honor it",
+      "See the setting in Safari, which removed it",
+      "Know why you turned it on"
+    ],
+    "reach": 1,
+    "reach_label": "One yes or no setting",
+    "differs": "Chrome, Edge and Firefox still send it if you turn it on. Safari removed it."
+  },
+  "story": {
+    "what_it_is": "A setting that tells sites you do not want to be tracked, which most ignore.",
+    "icon": "ban",
+    "tags": [
+      "Privacy",
+      "Setting",
+      "Ignored"
+    ],
+    "marketing": [
+      {
+        "vendor": "Mozilla",
+        "name": "Do Not Track",
+        "pitch": "Mozilla describes a browser setting that asks sites not to track you, and notes that sites choose whether to respond.",
+        "url": "https://support.mozilla.org/en-US/kb/how-do-i-turn-do-not-track-feature"
+      }
+    ],
+    "for_you": "If you turn it on, every site gets a small note saying 'please do not track me'. You see no change. Most sites ignore it, and having it on can make your browser stand out.",
+    "for_makers": "Few makers honor it, because there is no law that requires it. Some analytics tools skip counting those visits. It is also a fingerprint bit, since only some people turn it on.",
+    "use_cases": [
+      {
+        "type": "analytics",
+        "example": "A privacy minded analytics tool skips counting visits that carry the request.",
+        "apps": [
+          "Matomo",
+          "Plausible"
+        ]
+      },
+      {
+        "type": "ads",
+        "example": "An ad network reads the flag and keeps tracking, since no rule forces them to stop.",
+        "apps": []
+      },
+      {
+        "type": "media",
+        "example": "A news site shows a 'we do not respond to this' note in its privacy policy.",
+        "apps": []
+      },
+      {
+        "type": "games",
+        "example": "A game site that tracks play time for ads ignores the request, because it is not required to follow it.",
+        "apps": []
+      },
+      {
+        "type": "security",
+        "example": "A fingerprinting script adds the flag as one more clue to tell visitors apart.",
+        "apps": []
+      },
+      {
+        "type": "shopping",
+        "example": "A store records the preference but still uses cookies for the cart.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Mostly ignored",
+      "Makes you stand out"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "No legal force; replaced by GPC"
+  ],
+  "scores": {
+    "sensitivity": 1,
+    "utility": 1,
+    "fingerprint_bits": 1.2,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Honor preference"
+    ],
+    "abuse": [
+      "Fingerprint bit"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": true,
+      "how": "Do Not Track read but excluded from hash. Read by the LinkedIn APFC fingerprint script (alleged by BrowserGate, partly confirmed by BleepingComputer)."
+    }
+  },
+  "history": [
+    {
+      "date": "2019-03",
+      "browser": "safari",
+      "version": "12.1",
+      "change": "navigator.doNotTrack removed"
+    },
+    {
+      "date": "2016-06",
+      "browser": "paper",
+      "version": "",
+      "change": "AmIUnique: DNT 1.19 bits"
+    }
+  ],
+  "related": [
+    "web.locale.gpc"
+  ],
+  "refs": [
+    {
+      "t": "mdn",
+      "label": "MDN doNotTrack",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/Navigator/doNotTrack"
+    },
+    {
+      "t": "paper",
+      "label": "AmIUnique: Beauty and the Beast, Laperdrix et al. 2016 (attribute entropy)",
+      "url": "https://hal.inria.fr/hal-01285470"
+    }
+  ],
+  "confidence": "docs"
+}

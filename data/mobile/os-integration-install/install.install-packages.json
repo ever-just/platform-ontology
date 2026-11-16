@@ -1,0 +1,197 @@
+{
+  "id": "mob.install.install-packages",
+  "name": "Install unknown apps",
+  "kind": "permission",
+  "group": "os-integration-install",
+  "subgroup": "Sideload",
+  "tags": [
+    "special-access",
+    "sideload",
+    "play-restricted"
+  ],
+  "plain": "Lets the app install other apps from APK files.",
+  "meaning": "The gateway for sideloaded malware. Android makes users approve each source app; Play restricts the permission.",
+  "lifecycle": [
+    "in-session"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "f",
+      "v": "6.0",
+      "api": 23,
+      "permission": "REQUEST_INSTALL_PACKAGES",
+      "protection": "special",
+      "grant": "settings",
+      "prompt_ui": "Settings toggle: Install unknown apps, per source app",
+      "persistence": "Until revoked",
+      "revocation": "Settings > Apps > Special app access > Install unknown apps",
+      "store_policy": "Play: restricted; apps must declare core purpose of installing packages",
+      "api_surface": "PackageInstaller, canRequestPackageInstalls",
+      "note": "Android 8.0 (API 26) replaced global Unknown sources with per-app permission."
+    },
+    "ios": {
+      "s": "f",
+      "v": "17.4",
+      "permission": "alternative distribution entitlements",
+      "protection": "entitlement",
+      "grant": "entitlement",
+      "prompt_ui": "System install confirmation",
+      "persistence": "n/a",
+      "revocation": "n/a",
+      "store_policy": "Only in the EU under DMA marketplaces and web distribution (iOS 17.4)",
+      "api_surface": "MarketplaceKit, web distribution",
+      "note": "iOS has no sideloading by default; the EU opened alternative marketplaces in iOS 17.4."
+    }
+  },
+  "web_equivalents": [
+    "web.os.install-prompt"
+  ],
+  "data": {
+    "type": "event",
+    "metric": "App install",
+    "update": "on demand",
+    "fields": []
+  },
+  "limits": {
+    "headline": "Can install other apps from files on Android, only if you allow it for that app",
+    "user_action": "You open an app file and switch on Install unknown apps for the app that opened it",
+    "can": [
+      "Install an app from a file after you allow it for that source",
+      "Show you a system confirmation before each install",
+      "Do this on iPhone in the EU through approved marketplaces, with a system confirmation"
+    ],
+    "cannot": [
+      "Install apps if you have not allowed Install unknown apps for it",
+      "Install silently; the system always asks you",
+      "Do this on iPhone outside the EU, which has no side loading by default"
+    ],
+    "reach": 2,
+    "reach_label": "Only per app, after you allow it",
+    "differs": "Android has a per app switch since version 8. iPhone has no side loading by default; the EU opened alternative marketplaces in iOS 17.4."
+  },
+  "story": {
+    "what_it_is": "Lets an app install other apps from files, so it can act like an app store.",
+    "icon": "package-plus",
+    "tags": [
+      "Android",
+      "Install",
+      "Asks first"
+    ],
+    "marketing": [
+      {
+        "vendor": "Google",
+        "name": "Install unknown apps",
+        "pitch": "Google explains that people must allow each source app before it can install apps from files.",
+        "url": "https://support.google.com/googleplay/android-developer/answer/12085295"
+      }
+    ],
+    "for_you": "When you open an app file from a browser, Android asks you to allow that browser to install unknown apps. You can switch it off per app later.",
+    "for_makers": "Makers of app stores and company app tools need it. It is also the favorite door for malware, so Google restricts which Play apps can ask for it.",
+    "use_cases": [
+      {
+        "type": "media",
+        "example": "A web browser downloads an app file and asks to install it.",
+        "apps": [
+          "Chrome"
+        ]
+      },
+      {
+        "type": "games",
+        "example": "A game store app installs a game outside of Google Play.",
+        "apps": [
+          "Epic Games",
+          "Samsung Galaxy Store"
+        ]
+      },
+      {
+        "type": "enterprise",
+        "example": "A company tool installs private work apps on staff phones.",
+        "apps": []
+      },
+      {
+        "type": "utilities",
+        "example": "An open source store installs apps you choose.",
+        "apps": [
+          "F-Droid"
+        ]
+      },
+      {
+        "type": "security",
+        "example": "A fake update pops up and tries to install a malware app.",
+        "apps": []
+      },
+      {
+        "type": "banking",
+        "example": "A banking trojan asks for this to drop more malware.",
+        "apps": []
+      },
+      {
+        "type": "developer",
+        "example": "A tester installs a debug app from a download link.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Malware dropper",
+      "Easy to approve by mistake"
+    ],
+    "android_note": "Since Android 8, you allow it per source app instead of one global switch.",
+    "ios_note": "iOS has no sideloading by default. The EU opened alternative stores in iOS 17.4."
+  },
+  "technical_bounds": [
+    "Play restricts the permission",
+    "EU only on iOS"
+  ],
+  "scores": {
+    "sensitivity": 4,
+    "utility": 3,
+    "fingerprint_bits": null,
+    "friction": 3
+  },
+  "value": {
+    "legit_uses": [
+      "App stores",
+      "Enterprise deployment"
+    ],
+    "abuse": [
+      "Malware dropper"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2017-08",
+      "platform": "android",
+      "version": "8.0 (API 26)",
+      "change": "Per-app Install unknown apps replaced the global toggle"
+    },
+    {
+      "date": "2024-03",
+      "platform": "ios",
+      "version": "iOS 17.4",
+      "change": "Alternative app marketplaces enabled in the EU"
+    }
+  ],
+  "related": [
+    "mob.install.developer-verification"
+  ],
+  "refs": [
+    {
+      "t": "android",
+      "label": "Android: REQUEST_INSTALL_PACKAGES",
+      "url": "https://developer.android.com/reference/android/Manifest.permission#REQUEST_INSTALL_PACKAGES"
+    },
+    {
+      "t": "policy",
+      "label": "Google Play: Request Install Packages permission",
+      "url": "https://support.google.com/googleplay/android-developer/answer/12085295"
+    }
+  ],
+  "confidence": "docs"
+}

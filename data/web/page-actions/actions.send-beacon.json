@@ -1,0 +1,239 @@
+{
+  "id": "web.actions.send-beacon",
+  "name": "Beacons and keepalive requests",
+  "kind": "capability",
+  "group": "page-actions",
+  "subgroup": "Network channels",
+  "tags": [
+    "beacon",
+    "keepalive",
+    "after-leaving"
+  ],
+  "plain": "Sends data after the person leaves or closes the page, with no prompt.",
+  "meaning": "A site can finish sending analytics even as the tab closes. It is the standard way for page leave metrics, and the reason tab closing does not stop data from being sent.",
+  "lifecycle": [
+    "in-session",
+    "after-leaving"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "navigator.sendBeacon(url, data); fetch(url, {keepalive:true}); fetchLater()",
+      "bcd": [
+        "api.Navigator.sendBeacon"
+      ],
+      "access": {
+        "grant": "none",
+        "prompt_ui": "None (no browser prompt)",
+        "secure_context": false,
+        "user_gesture": false,
+        "activation": "none",
+        "persistence": "One request, queued by the browser",
+        "revocation": "Nothing to revoke (no permission is stored)",
+        "iframe": "No iframe flag",
+        "steps": [
+          "Call sendBeacon in pagehide or visibilitychange",
+          "Browser queues the POST",
+          "Request completes after unload"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "39",
+          "note": "",
+          "date": "2014-11-18"
+        },
+        "edge": {
+          "s": "y",
+          "v": "14",
+          "note": "",
+          "date": "2016-08-02"
+        },
+        "firefox": {
+          "s": "y",
+          "v": "31",
+          "note": "",
+          "date": "2014-07-22"
+        },
+        "safari": {
+          "s": "y",
+          "v": "11.1",
+          "note": "",
+          "date": "2018-04-12"
+        },
+        "ios_safari": {
+          "s": "y",
+          "v": "11.3",
+          "note": "All iOS browsers use WebKit",
+          "date": "2018-03-29"
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "42",
+          "note": "",
+          "date": "2015-04-15"
+        },
+        "samsung": {
+          "s": "y",
+          "v": "4.0",
+          "note": "",
+          "date": "2016-03-11"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "none",
+    "metric": "",
+    "update": "",
+    "fields": []
+  },
+  "limits": {
+    "headline": "Can send data to a server as you leave or close the page",
+    "user_action": "Nothing. It happens when you close the tab, switch away or tap a link.",
+    "can": [
+      "Send a small report to its server when you leave",
+      "Save your last scroll spot, a score or a form draft to the server",
+      "Finish a request even as the page shuts"
+    ],
+    "cannot": [
+      "Send large amounts of data; browsers cap each beacon at about 64 KB",
+      "Wait for or use an answer from the server",
+      "Keep going after the browser kills the page"
+    ],
+    "reach": 2,
+    "reach_label": "At the moment you leave",
+    "differs": ""
+  },
+  "story": {
+    "what_it_is": "A page can send a last message to its server as you leave, and you will not notice.",
+    "icon": "send",
+    "tags": [
+      "Silent",
+      "Tracking",
+      "Measurement"
+    ],
+    "marketing": [
+      {
+        "vendor": "Mozilla",
+        "name": "Navigator.sendBeacon()",
+        "pitch": "MDN describes it as a way to send small amounts of data to a server reliably when a page closes.",
+        "url": "https://developer.mozilla.org/en-US/docs/Web/API/Navigator/sendBeacon"
+      }
+    ],
+    "for_you": "You never see it. When you close a tab, a quiet message may still go out saying how long you stayed, how far you scrolled or whether a video finished.",
+    "for_makers": "It is the standard way to record the end of a visit for analytics, ads and error reports. It matters because regular requests are cancelled when the page closes and those last numbers would be lost.",
+    "use_cases": [
+      {
+        "type": "analytics",
+        "example": "Google Analytics sends the final page timing as you close the tab.",
+        "apps": [
+          "Google Analytics",
+          "Chartbeat"
+        ]
+      },
+      {
+        "type": "ads",
+        "example": "An ad network logs that you viewed an ad for 12 seconds before leaving.",
+        "apps": [
+          "Google Ads"
+        ]
+      },
+      {
+        "type": "video",
+        "example": "A streaming player reports your last watched second so playback resumes on another device.",
+        "apps": [
+          "YouTube",
+          "Netflix"
+        ]
+      },
+      {
+        "type": "developer",
+        "example": "An error tool sends crash details even if the page is closing.",
+        "apps": [
+          "Sentry"
+        ]
+      },
+      {
+        "type": "games",
+        "example": "A browser game saves your score as you close the tab.",
+        "apps": []
+      },
+      {
+        "type": "security",
+        "example": "A fraud tool records behaviour signals up to the very last moment of a login page visit.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Hidden reporting",
+      "Cannot be easily stopped"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Keepalive in-flight body limit about 64 KiB per origin in Chrome (shared with sendBeacon)",
+    "Response cannot be read",
+    "Use visibilitychange or pagehide, not unload (BFCache)",
+    "fetchLater() ships in Chrome and Edge 135 (not Firefox or Safari) and defers a request until the page is gone; documented quota about 64 KiB per origin and 512 KiB per document"
+  ],
+  "scores": {
+    "sensitivity": 2,
+    "utility": 4,
+    "fingerprint_bits": null,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Analytics",
+      "Session end logging"
+    ],
+    "abuse": [
+      "Silent data exfil on leave",
+      "Session replay flush"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2014-08",
+      "browser": "chrome",
+      "version": "39",
+      "change": "sendBeacon ships"
+    },
+    {
+      "date": "2025-04",
+      "browser": "chrome",
+      "version": "135",
+      "change": "fetchLater() ships"
+    }
+  ],
+  "related": [
+    "web.actions.beforeunload"
+  ],
+  "refs": [
+    {
+      "t": "mdn",
+      "label": "MDN sendBeacon",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/Navigator/sendBeacon"
+    },
+    {
+      "t": "spec",
+      "label": "W3C Beacon",
+      "url": "https://www.w3.org/TR/beacon/"
+    },
+    {
+      "t": "chromestatus",
+      "label": "web.dev fetchLater",
+      "url": "https://developer.chrome.com/blog/fetch-later-api"
+    }
+  ],
+  "confidence": "docs"
+}

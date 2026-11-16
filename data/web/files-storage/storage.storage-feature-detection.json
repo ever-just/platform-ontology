@@ -1,0 +1,234 @@
+{
+  "id": "web.storage.storage-feature-detection",
+  "name": "Storage feature detection (localStorage, sessionStorage, IndexedDB, openDatabase, addBehavior)",
+  "kind": "signal",
+  "group": "files-storage",
+  "subgroup": "Storage",
+  "tags": [
+    "storage",
+    "fingerprint"
+  ],
+  "plain": "Tests which storage APIs work in this browser.",
+  "meaning": "Support patterns show browser type and settings such as blocked storage. Old APIs (openDatabase, addBehavior) separate engines.",
+  "lifecycle": [
+    "on-arrival",
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "window.localStorage, sessionStorage, indexedDB, openDatabase, document.body.addBehavior",
+      "bcd": [
+        "api.Window.localStorage"
+      ],
+      "access": {
+        "grant": "none",
+        "prompt_ui": "None (no browser prompt)",
+        "secure_context": false,
+        "user_gesture": false,
+        "persistence": "",
+        "revocation": "",
+        "iframe": "",
+        "steps": [
+          "Script reads the value",
+          "Value joins the fingerprint payload"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "4",
+          "note": "",
+          "date": "2010-01-25"
+        },
+        "edge": {
+          "s": "y",
+          "v": "12",
+          "note": "",
+          "date": "2015-07-29"
+        },
+        "firefox": {
+          "s": "y",
+          "v": "3.5",
+          "note": "",
+          "date": "2009-06-30"
+        },
+        "safari": {
+          "s": "y",
+          "v": "4",
+          "note": "",
+          "date": "2009-06-08"
+        },
+        "ios_safari": {
+          "s": "y",
+          "v": "3.2",
+          "note": "",
+          "date": "2010-04-03"
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "18",
+          "note": "",
+          "date": "2012-06-27"
+        },
+        "samsung": {
+          "s": "y",
+          "v": "1.0",
+          "note": "",
+          "date": "2013-04-27"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "object",
+    "metric": "Storage feature detection (localStorage, sessionStorage, IndexedDB, openDatabase, addBehavior)",
+    "update": "static",
+    "fields": [
+      {
+        "name": "localStorage",
+        "type": "boolean",
+        "unit": "",
+        "range": "",
+        "precision": ""
+      },
+      {
+        "name": "sessionStorage",
+        "type": "boolean",
+        "unit": "",
+        "range": "",
+        "precision": ""
+      },
+      {
+        "name": "indexedDb",
+        "type": "boolean",
+        "unit": "",
+        "range": "",
+        "precision": ""
+      },
+      {
+        "name": "openDatabase",
+        "type": "boolean",
+        "unit": "",
+        "range": "",
+        "precision": ""
+      },
+      {
+        "name": "addBehavior",
+        "type": "boolean",
+        "unit": "",
+        "range": "",
+        "precision": ""
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can test which storage tools your browser lets it use",
+    "user_action": "Nothing. It happens when the page loads.",
+    "can": [
+      "Check whether localStorage, sessionStorage and IndexedDB work",
+      "Tell old browsers from new ones",
+      "Guess private mode from the results",
+      "Add the results to a browser fingerprint"
+    ],
+    "cannot": [
+      "See what is stored by other sites",
+      "See what you saved",
+      "Change or delete anything"
+    ],
+    "reach": 1,
+    "reach_label": "Yes or no answers, no prompt",
+    "differs": ""
+  },
+  "story": {
+    "what_it_is": "A page tests which storage tools your browser supports, such as localStorage, IndexedDB and old add-ons.",
+    "icon": "scan-search",
+    "tags": [
+      "Storage",
+      "Silent",
+      "Fingerprint"
+    ],
+    "marketing": [],
+    "for_you": "You never see it. The page tries each storage type, then picks one that works. It also learns a bit about your browser and any privacy settings.",
+    "for_makers": "Makers use it so sites do not break when a browser blocks storage. The pattern of what works also helps tell browsers and privacy modes apart, which fingerprinting scripts like.",
+    "use_cases": [
+      {
+        "type": "games",
+        "example": "A browser game tests if it can save progress, and warns you if private mode blocks it.",
+        "apps": []
+      },
+      {
+        "type": "shopping",
+        "example": "A store tests cookies and storage before it builds your cart, and shows a warning if they are off.",
+        "apps": []
+      },
+      {
+        "type": "security",
+        "example": "A fraud service notes that a browser says it supports old Internet Explorer storage tricks, which is a sign of a faked identity.",
+        "apps": []
+      },
+      {
+        "type": "ads",
+        "example": "A fingerprint script builds a profile from which storage tools work and which fail.",
+        "apps": []
+      },
+      {
+        "type": "analytics",
+        "example": "A site checks if storage works so it can choose between cookies and a fallback for counting visits.",
+        "apps": [
+          "Google Analytics"
+        ]
+      },
+      {
+        "type": "productivity",
+        "example": "A web app falls back to a server copy if local storage is off.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Fingerprint clue",
+      "Reveals privacy settings"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Only presence, not stored data"
+  ],
+  "scores": {
+    "sensitivity": 1,
+    "utility": 3,
+    "fingerprint_bits": 1,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Fallbacks"
+    ],
+    "abuse": [
+      "Fingerprint input"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": true,
+      "how": "Collector key(s): sessionStorage, localStorage, indexedDb, addBehavior, openDatabase. "
+    }
+  },
+  "related": [
+    "web.tracking.linkedin-apfc-fingerprint"
+  ],
+  "refs": [
+    {
+      "t": "mdn",
+      "label": "MDN Web Storage",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/Web_Storage_API"
+    },
+    {
+      "t": "github",
+      "label": "mdp/linkedin-extension-fingerprinting (LinkedIn script snapshot and ID list)",
+      "url": "https://github.com/mdp/linkedin-extension-fingerprinting"
+    }
+  ],
+  "confidence": "docs"
+}

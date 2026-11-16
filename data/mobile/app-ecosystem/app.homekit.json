@@ -1,0 +1,247 @@
+{
+  "id": "mob.app.homekit",
+  "name": "Home accessories (HomeKit and Matter)",
+  "kind": "permission",
+  "group": "app-ecosystem",
+  "subgroup": "Smart home",
+  "tags": [
+    "runtime-permission",
+    "homekit",
+    "matter",
+    "google-home",
+    "iot",
+    "thread"
+  ],
+  "plain": "Reads and controls the person's smart home: lights, locks, cameras.",
+  "meaning": "Shows when people are home, which doors are locked and camera feeds; it can also control physical devices.",
+  "lifecycle": [
+    "in-session",
+    "signed-in"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "p",
+      "v": "14",
+      "api": 34,
+      "permission": "No dedicated permission; Google Home APIs use OAuth, Matter commissioning via Play services",
+      "protection": "none",
+      "grant": "prompt",
+      "prompt_ui": "Google account consent plus commissioning sheet",
+      "persistence": "Until revoked in the Google Home account settings",
+      "revocation": "Google Home app > Settings",
+      "store_policy": "Google Home developer review for Home APIs",
+      "api_surface": "Google Home APIs, CommissioningClient (Matter)",
+      "note": "No OS level home store; control goes through Google Home account"
+    },
+    "ios": {
+      "s": "y",
+      "v": "8",
+      "permission": "NSHomeKitUsageDescription",
+      "protection": "prompt",
+      "grant": "prompt",
+      "prompt_ui": "Allow or Don't Allow access to your home data",
+      "persistence": "Until revoked",
+      "revocation": "Settings > Privacy & Security > HomeKit",
+      "store_policy": "App Review 5.1.1",
+      "api_surface": "HMHomeManager, MatterSupport (iOS 16.1)",
+      "note": "HomeKit capability required in Xcode"
+    }
+  },
+  "data": {
+    "type": "list",
+    "metric": "Homes, rooms, accessories",
+    "update": "on request",
+    "fields": [
+      {
+        "name": "accessories",
+        "type": "list",
+        "unit": "devices",
+        "range": "0 to dozens",
+        "precision": ""
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can see and control your smart home devices, only after you allow it",
+    "user_action": "You tap Allow when the app asks for your home data, or approve a Google Home sheet",
+    "can": [
+      "List your lights, locks, cameras and sensors",
+      "Turn devices on or off, lock doors, and change settings",
+      "Tell who or what is home based on your devices",
+      "Add a new device while you approve a setup sheet"
+    ],
+    "cannot": [
+      "Control the home before you allow it",
+      "See devices in homes you did not share with it",
+      "Reach your Android smart home without your Google account consent (Android)"
+    ],
+    "reach": 3,
+    "reach_label": "Your whole home, once allowed",
+    "differs": "iPhone keeps a home list on the phone. Android has no such list, so control goes through your Google Home account."
+  },
+  "story": {
+    "what_it_is": "Lets an app see and control your smart home: lights, locks, cameras and sensors.",
+    "icon": "house",
+    "tags": [
+      "Smart home",
+      "Asks first",
+      "Sensitive"
+    ],
+    "marketing": [
+      {
+        "vendor": "Apple",
+        "name": "HomeKit and Matter",
+        "pitch": "Control lights, locks and cameras from one app, with end to end encryption and local control.",
+        "url": "https://developer.apple.com/homekit/"
+      }
+    ],
+    "for_you": "You tap Allow once and then the app can turn your lights on, lock the front door or show a camera. You also see your home status on your lock screen and in Siri.",
+    "for_makers": "Makers of smart home gear use it so their device works with the whole Apple home, not only their own app. It sells hardware and lets apps add routines like 'good night' that touch many brands at once.",
+    "use_cases": [
+      {
+        "type": "smart-home",
+        "example": "Tap 'Good night' and every light turns off, the door locks and the thermostat drops to 68 degrees.",
+        "apps": [
+          "Apple Home",
+          "Philips Hue",
+          "Eve"
+        ]
+      },
+      {
+        "type": "security",
+        "example": "A doorbell camera app shows who is at the door and lets you unlock the lock remotely for a delivery.",
+        "apps": [
+          "Ring",
+          "Eufy",
+          "Logitech Circle"
+        ]
+      },
+      {
+        "type": "utilities",
+        "example": "A thermostat app learns when you leave, using the phone's home status, and saves energy while you are out.",
+        "apps": [
+          "Ecobee",
+          "Nest"
+        ]
+      },
+      {
+        "type": "health",
+        "example": "A sleep sensor app dims the bedroom light and starts a white noise machine when it detects you lying down.",
+        "apps": [
+          "Eight Sleep"
+        ]
+      },
+      {
+        "type": "kids",
+        "example": "A parent sets the smart plug on a tablet charger to switch off at bedtime.",
+        "apps": []
+      },
+      {
+        "type": "accessibility",
+        "example": "Someone with limited mobility controls blinds, door and lights with their voice instead of reaching for switches.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Reveals when you are home",
+      "Can unlock real doors"
+    ],
+    "android_note": "Android uses Google Home and Matter instead of HomeKit, with Matter as the shared standard.",
+    "ios_note": "HomeKit is deeply built into iOS, and Matter devices can be added to it."
+  },
+  "technical_bounds": [
+    "Android has no per app OS level permission for homes",
+    "Cloud APIs need account linking; local APIs need local network permission"
+  ],
+  "scores": {
+    "sensitivity": 4,
+    "utility": 3,
+    "fingerprint_bits": null,
+    "friction": 2
+  },
+  "value": {
+    "legit_uses": [
+      "Smart home control"
+    ],
+    "abuse": [
+      "Presence inference"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2025-06",
+      "platform": "android",
+      "version": "Android 16 (API 36)",
+      "change": "Home APIs and Matter commissioning keep expanding through Play services (GA timing from vendor posts)"
+    },
+    {
+      "date": "2024-11",
+      "platform": "android",
+      "version": "Google Home APIs developer preview",
+      "change": "Home APIs for Android"
+    },
+    {
+      "date": "2022-10",
+      "platform": "ios",
+      "version": "iOS 16.1",
+      "change": "Matter commissioning API"
+    },
+    {
+      "date": "2022-10",
+      "platform": "ios",
+      "version": "iOS 16.1",
+      "change": "Matter support"
+    },
+    {
+      "date": "2016-09",
+      "platform": "ios",
+      "version": "iOS 10",
+      "change": "Home app and HomeKit"
+    },
+    {
+      "date": "2014-09",
+      "platform": "ios",
+      "version": "iOS 8",
+      "change": "HomeKit introduced"
+    }
+  ],
+  "related": [
+    "mob.network.local-network",
+    "mob.hw.ble-central"
+  ],
+  "refs": [
+    {
+      "t": "apple",
+      "label": "Apple: Enabling HomeKit in your app",
+      "url": "https://developer.apple.com/documentation/homekit/enabling-homekit-in-your-app"
+    },
+    {
+      "t": "apple",
+      "label": "Apple: Protected resources keys",
+      "url": "https://developer.apple.com/documentation/bundleresources/protected-resources"
+    },
+    {
+      "t": "android",
+      "label": "Android: Google Home APIs overview",
+      "url": "https://developers.home.google.com/apis"
+    },
+    {
+      "t": "apple",
+      "label": "Apple: HomeKit",
+      "url": "https://developer.apple.com/documentation/homekit"
+    },
+    {
+      "t": "apple",
+      "label": "Apple: MatterSupport",
+      "url": "https://developer.apple.com/documentation/mattersupport"
+    }
+  ],
+  "confidence": "inferred"
+}

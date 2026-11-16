@@ -1,0 +1,183 @@
+{
+  "id": "mob.xtrack.mail-privacy-protection",
+  "name": "Mail Privacy Protection and Link Tracking Protection",
+  "kind": "not-exposed",
+  "group": "cross-site-tracking",
+  "subgroup": "Network privacy",
+  "tags": [
+    "mail-privacy-protection",
+    "link-tracking-protection",
+    "clickid-stripping"
+  ],
+  "plain": "Apple Mail preloads email images through a proxy and Safari and Mail strip known tracking parameters from links.",
+  "meaning": "Open pixels look like opens even when no human saw the email, so email-to-app funnels are noisy. Link Tracking Protection (iOS 17) removes known click IDs from URLs in Mail, Messages and Safari private browsing.",
+  "lifecycle": [
+    "before-install",
+    "in-session"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "n",
+      "v": "",
+      "permission": "",
+      "protection": "none",
+      "grant": "not-exposed",
+      "prompt_ui": "",
+      "persistence": "",
+      "revocation": "",
+      "store_policy": "",
+      "api_surface": "",
+      "note": "Gmail and Android do not add equivalent OS-level link stripping."
+    },
+    "ios": {
+      "s": "n",
+      "v": "15.0",
+      "permission": "",
+      "protection": "none",
+      "grant": "not-exposed",
+      "prompt_ui": "",
+      "persistence": "Mail Privacy Protection per Mail account setting; Link Tracking Protection default in Mail, Messages, private browsing",
+      "revocation": "",
+      "store_policy": "",
+      "api_surface": "Mail, Safari, universal links",
+      "note": "Link Tracking Protection came with iOS 17; it strips known parameters (for example gclid, fbclid, mc_eid) but not custom ones."
+    }
+  },
+  "web_equivalents": [
+    "web.xsite.click-id-stripping",
+    "web.xsite.email-open-pixels",
+    "web.xsite.outbound-link-decoration"
+  ],
+  "data": {
+    "type": "none",
+    "metric": "n/a",
+    "update": "n/a",
+    "fields": []
+  },
+  "limits": {
+    "headline": "Can't see when you open an email in Apple Mail, and some link tags get stripped",
+    "user_action": "Nothing. You turn it on in Mail settings and Safari uses it by default",
+    "can": [
+      "Preload email images through Apple's proxy so open tracking is hidden",
+      "Strip known tracking tags from links in Safari and Mail on iOS 17 and newer",
+      "Hide your IP from the sender when it loads the images"
+    ],
+    "cannot": [
+      "Strip custom tracking tags, only known ones such as gclid, fbclid and mc_eid",
+      "Work in Gmail or other Android mail apps; no matching system feature exists",
+      "Stop a sender from knowing you clicked a link they sent",
+      "Hide that an email was delivered"
+    ],
+    "reach": 1,
+    "reach_label": "Blocks some tracking, not all",
+    "differs": "This is Apple Mail and Safari only. Android and Gmail have no system wide match."
+  },
+  "story": {
+    "what_it_is": "Apple Mail hides when you open an email and strips tracking codes from links.",
+    "icon": "mail-check",
+    "tags": [
+      "Email",
+      "Privacy",
+      "Blocked"
+    ],
+    "marketing": [
+      {
+        "vendor": "Apple",
+        "name": "Mail Privacy Protection",
+        "pitch": "Pitch: stops senders from learning if you opened their email and hides your IP address from them.",
+        "url": "https://www.apple.com/newsroom/2021/06/apple-advances-its-privacy-leadership-with-ios-15-ipados-15-macos-monterey-and-watchos-8/"
+      }
+    ],
+    "for_you": "Marketing emails can no longer tell when you read them or where you are. Links you tap in Mail, Messages and private Safari lose some tracking codes, so what you click is harder to trace.",
+    "for_makers": "Open rates now look high even when no human read the email, so email to app funnels are noisy. Makers lean on clicks, app opens and sign ins instead of the open pixel.",
+    "use_cases": [
+      {
+        "type": "ads",
+        "example": "An advertiser wanted to retarget people who opened its email. Apple Mail now preloads images, so everyone looks like an opener.",
+        "apps": []
+      },
+      {
+        "type": "shopping",
+        "example": "A store wanted to send a follow up to people who opened a deal email, and now relies on actual clicks.",
+        "apps": []
+      },
+      {
+        "type": "news",
+        "example": "A newsletter wanted to find the most engaged readers and now counts link clicks and app opens.",
+        "apps": []
+      },
+      {
+        "type": "analytics",
+        "example": "A growth team wanted to see which email led to an app install, and now uses clean links and app events.",
+        "apps": []
+      },
+      {
+        "type": "games",
+        "example": "A game wanted to email lapsed players if they opened a comeback offer, and now uses push messages.",
+        "apps": []
+      },
+      {
+        "type": "security",
+        "example": "Phishing senders lose the ability to confirm that a real person opened a scam email.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Marketers may switch to harder tracking",
+      "Open stats are fake"
+    ],
+    "android_note": "Gmail hides your address by proxying images, but it does not preload every email like Apple Mail does.",
+    "ios_note": "Turned on in Mail settings. Link Tracking Protection came in iOS 17."
+  },
+  "technical_bounds": [
+    "Custom params survive",
+    "Universal links pass through unchanged"
+  ],
+  "scores": {
+    "sensitivity": 2,
+    "utility": 3,
+    "fingerprint_bits": null,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [],
+    "abuse": []
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2021-09",
+      "platform": "ios",
+      "version": "iOS 15",
+      "change": "Mail Privacy Protection"
+    },
+    {
+      "date": "2023-09",
+      "platform": "ios",
+      "version": "iOS 17",
+      "change": "Link Tracking Protection in Mail, Messages and Safari Private Browsing"
+    }
+  ],
+  "related": [
+    "mob.xtrack.deferred-deep-link"
+  ],
+  "refs": [
+    {
+      "t": "news",
+      "label": "Apple: iOS 15 privacy",
+      "url": "https://www.apple.com/newsroom/2021/06/apple-advances-its-privacy-leadership-with-ios-15-ipados-15-macos-monterey-and-watchos-8/"
+    },
+    {
+      "t": "apple",
+      "label": "Apple: Safari 17 release notes",
+      "url": "https://developer.apple.com/documentation/safari-release-notes/safari-17-release-notes"
+    }
+  ],
+  "confidence": "docs"
+}

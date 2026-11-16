@@ -1,0 +1,214 @@
+{
+  "id": "mob.files.document-picker",
+  "name": "Document picker",
+  "kind": "picker",
+  "group": "files-storage",
+  "subgroup": "Files",
+  "tags": [
+    "no-permission",
+    "system-ui",
+    "resume"
+  ],
+  "plain": "System file chooser for one document, such as a resume.",
+  "meaning": "The app gets only the file picked. Resumes and CVs hold name, address, employers and sometimes IDs.",
+  "lifecycle": [
+    "in-session",
+    "signed-in"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "y",
+      "v": "4.4",
+      "api": 19,
+      "permission": "",
+      "protection": "none",
+      "grant": "picker",
+      "prompt_ui": "Storage Access Framework picker",
+      "persistence": "Per file URI grant",
+      "revocation": "Settings > Apps > Storage",
+      "store_policy": "",
+      "api_surface": "ACTION_OPEN_DOCUMENT",
+      "note": ""
+    },
+    "ios": {
+      "s": "y",
+      "v": "8",
+      "permission": "",
+      "protection": "none",
+      "grant": "picker",
+      "prompt_ui": "UIDocumentPicker sheet",
+      "persistence": "Per file",
+      "revocation": "n/a",
+      "store_policy": "",
+      "api_surface": "UIDocumentPickerViewController",
+      "note": ""
+    }
+  },
+  "web_equivalents": [
+    "web.files.file-input",
+    "web.files.file-system-access-pickers"
+  ],
+  "data": {
+    "type": "binary",
+    "metric": "Selected file",
+    "update": "once",
+    "fields": [
+      {
+        "name": "file",
+        "type": "binary",
+        "unit": "bytes",
+        "range": "app limit (megabytes)",
+        "precision": "full"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can open one document you pick from the system file chooser",
+    "user_action": "You tap Upload file, Attach, or Choose resume and pick a file",
+    "can": [
+      "Open the one file or files you choose",
+      "Upload or attach the file you pick",
+      "Let you browse folders, iCloud Drive or other storage in the system chooser"
+    ],
+    "cannot": [
+      "See other files in the folder that you did not pick",
+      "Browse your files itself; the system chooser does the browsing",
+      "Keep access after you quit, unless you grant lasting access to that file",
+      "Change the file unless the app is allowed to edit it"
+    ],
+    "reach": 1,
+    "reach_label": "Only the file you pick",
+    "differs": ""
+  },
+  "story": {
+    "what_it_is": "A system window where you pick one file to give to an app.",
+    "icon": "file-search",
+    "tags": [
+      "Files",
+      "Picker",
+      "No prompt"
+    ],
+    "marketing": [
+      {
+        "vendor": "Apple",
+        "name": "UIDocumentPickerViewController",
+        "pitch": "Developer guide: let people choose documents from iCloud Drive and other providers without giving access to everything.",
+        "url": "https://developer.apple.com/documentation/uikit/uidocumentpickerviewcontroller"
+      },
+      {
+        "vendor": "Google",
+        "name": "Storage Access Framework",
+        "pitch": "Developer guide: let people pick documents through the system file chooser, with access only to what they choose.",
+        "url": "https://developer.android.com/training/data-storage/shared/documents-files"
+      }
+    ],
+    "for_you": "You tap Upload resume and a system file window opens. You pick one file and the app sees only that one. The app cannot browse the other files in the folder.",
+    "for_makers": "Makers avoid asking for broad file access, which keeps trust high and clears store review. They still get the files people need to complete a task.",
+    "use_cases": [
+      {
+        "type": "productivity",
+        "example": "A job site lets you upload your resume from iCloud Drive or Google Drive with one tap.",
+        "apps": [
+          "LinkedIn"
+        ]
+      },
+      {
+        "type": "banking",
+        "example": "A bank app lets you attach a photo of a check or a PDF statement.",
+        "apps": []
+      },
+      {
+        "type": "messaging",
+        "example": "A chat app lets you share a document from any storage provider.",
+        "apps": [
+          "WhatsApp"
+        ]
+      },
+      {
+        "type": "creative",
+        "example": "A video editor imports a clip from the Files app into a project.",
+        "apps": []
+      },
+      {
+        "type": "education",
+        "example": "A school app lets students submit a homework file.",
+        "apps": []
+      },
+      {
+        "type": "games",
+        "example": "A game with mods lets you import a level file you downloaded.",
+        "apps": []
+      },
+      {
+        "type": "enterprise",
+        "example": "An expense app lets you attach a receipt PDF from your files.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "File may hold personal details",
+      "Cloud file may sync data"
+    ],
+    "android_note": "Uses the system file chooser, with access only to the picked file.",
+    "ios_note": "Uses the system document picker, with access only to the picked file."
+  },
+  "technical_bounds": [
+    "No access to other files"
+  ],
+  "scores": {
+    "sensitivity": 3,
+    "utility": 4,
+    "fingerprint_bits": null,
+    "friction": 1
+  },
+  "value": {
+    "legit_uses": [
+      "Upload a resume for Easy Apply"
+    ],
+    "abuse": [
+      "Over-collecting documents"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": true,
+      "how": "Job applications and profile resume uploads use a file chooser. Play Data safety lists Files and docs (optional); Apple label lists Other User Content. Exact picker type is inferred."
+    }
+  },
+  "history": [
+    {
+      "date": "2013-10",
+      "platform": "android",
+      "version": "4.4 (API 19)",
+      "change": "Storage Access Framework introduced"
+    },
+    {
+      "date": "2014-09",
+      "platform": "ios",
+      "version": "iOS 8",
+      "change": "Document picker introduced"
+    }
+  ],
+  "related": [
+    "mob.files.photo-picker"
+  ],
+  "refs": [
+    {
+      "t": "android",
+      "label": "Android: Open files using the Storage Access Framework",
+      "url": "https://developer.android.com/guide/topics/providers/document-provider"
+    },
+    {
+      "t": "apple",
+      "label": "Apple: UIDocumentPickerViewController",
+      "url": "https://developer.apple.com/documentation/uikit/uidocumentpickerviewcontroller"
+    },
+    {
+      "t": "vendor",
+      "label": "Google Play Data safety, LinkedIn (com.linkedin.android)",
+      "url": "https://play.google.com/store/apps/datasafety?id=com.linkedin.android&hl=en_US"
+    }
+  ],
+  "confidence": "inferred"
+}

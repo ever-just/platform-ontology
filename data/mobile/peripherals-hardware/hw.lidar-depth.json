@@ -1,0 +1,217 @@
+{
+  "id": "mob.hw.lidar-depth",
+  "name": "LiDAR and depth sensing",
+  "kind": "capability",
+  "group": "peripherals-hardware",
+  "subgroup": "Sensors",
+  "tags": [
+    "lidar",
+    "depth",
+    "truedepth",
+    "tof",
+    "scene-mesh"
+  ],
+  "plain": "Gets a depth map or room mesh of what the camera sees.",
+  "meaning": "Reveals the shape of rooms and faces. TrueDepth depth maps identify facial structure, so access is tied to the camera prompt.",
+  "lifecycle": [
+    "in-session"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "p",
+      "v": "7.0",
+      "api": 24,
+      "permission": "CAMERA (depth through ARCore or Camera2 DEPTH16 on devices that have ToF)",
+      "protection": "dangerous",
+      "grant": "prompt",
+      "prompt_ui": "Camera prompt",
+      "persistence": "Until revoked",
+      "revocation": "Settings > Apps > Permissions > Camera",
+      "store_policy": "",
+      "api_surface": "ARCore Depth API (Google Play Services for AR), Camera2 DEPTH16, no standard LiDAR API",
+      "note": "ARCore Raw Depth works without ToF using motion; true ToF only on selected devices."
+    },
+    "ios": {
+      "s": "y",
+      "v": "11.0",
+      "permission": "NSCameraUsageDescription",
+      "protection": "prompt",
+      "grant": "prompt",
+      "prompt_ui": "Camera prompt",
+      "persistence": "Until revoked",
+      "revocation": "Settings > Privacy & Security > Camera",
+      "store_policy": "",
+      "api_surface": "AVCaptureDepthDataOutput (iOS 11, TrueDepth), ARKit sceneDepth and ARMeshAnchor (LiDAR, iOS 14, Pro models), RoomPlan (iOS 16)",
+      "note": "LiDAR on iPhone 12 Pro and later, iPad Pro; up to 5 m range."
+    }
+  },
+  "web_equivalents": [
+    "web.peripherals.webxr-world-sensing"
+  ],
+  "data": {
+    "type": "stream",
+    "metric": "Depth map",
+    "update": "up to 30 to 60 fps",
+    "fields": [
+      {
+        "name": "depth",
+        "type": "float",
+        "unit": "m",
+        "range": "0 to 5 m (LiDAR)",
+        "precision": "about 1 cm"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can measure depth and room shape through the camera, on phones with the hardware",
+    "user_action": "You tap Scan room or Measure, and point the camera around",
+    "can": [
+      "Build a depth map of what the camera sees",
+      "Make a 3D model of a room on iPhone Pro models with LiDAR, up to about 5 meters",
+      "Use front camera depth for faces (TrueDepth on iPhone)",
+      "Estimate depth from motion on Android without a special sensor"
+    ],
+    "cannot": [
+      "Use depth without the camera prompt",
+      "See past about 5 meters with LiDAR",
+      "Get true time of flight depth on most Android phones"
+    ],
+    "reach": 2,
+    "reach_label": "While the camera is open",
+    "differs": "iPhone Pro models have LiDAR and an API for it; Android has no standard LiDAR API and true depth sensors exist only on some models."
+  },
+  "story": {
+    "what_it_is": "A depth sensor or depth estimate that tells the app how far things are in front of the camera.",
+    "icon": "ruler",
+    "tags": [
+      "Camera",
+      "Depth",
+      "AR"
+    ],
+    "marketing": [
+      {
+        "vendor": "Apple",
+        "name": "LiDAR Scanner",
+        "pitch": "Measure the distance to objects and map rooms in 3D for AR, photography and measuring.",
+        "url": "https://developer.apple.com/documentation/avfoundation/capturing-depth-using-the-lidar-camera"
+      }
+    ],
+    "for_you": "A measuring app instantly tells you how tall a door is, or a room scanner builds a 3D model as you walk around it. Nothing seems to be recorded, but your room shape is captured.",
+    "for_makers": "Depth makes AR objects hide behind real furniture, makes portrait mode sharp, and lets apps build 3D models of homes and bodies. Face depth data is sensitive because it can describe a face shape, so access is tightly limited.",
+    "use_cases": [
+      {
+        "type": "ar-vr",
+        "example": "A virtual ball bounces off your real sofa and rolls behind your table.",
+        "apps": [
+          "Apple AR Quick Look"
+        ]
+      },
+      {
+        "type": "shopping",
+        "example": "A home improvement app scans your room so it can suggest furniture that fits.",
+        "apps": []
+      },
+      {
+        "type": "creative",
+        "example": "A 3D scan app builds a model of a statue or a sneaker for sharing.",
+        "apps": [
+          "Polycam"
+        ]
+      },
+      {
+        "type": "games",
+        "example": "An AR game hides virtual enemies behind walls and corners in your real room.",
+        "apps": []
+      },
+      {
+        "type": "security",
+        "example": "A face unlock flow uses a depth map of the face, not just a photo, so a picture cannot fool it.",
+        "apps": [
+          "Face ID"
+        ]
+      },
+      {
+        "type": "utilities",
+        "example": "A measuring app finds the width of a window.",
+        "apps": [
+          "Measure"
+        ]
+      },
+      {
+        "type": "health",
+        "example": "A fitness app counts reps by tracking the body in 3D.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "3D maps of your home",
+      "Face shape data",
+      "Models stored in the cloud"
+    ],
+    "android_note": "Most phones use motion based depth from ARCore. A few have a true depth sensor.",
+    "ios_note": "LiDAR is on iPhone 12 Pro and later and iPad Pro, with a range up to about 5 meters."
+  },
+  "technical_bounds": [
+    "No separate depth permission; camera permission covers it"
+  ],
+  "scores": {
+    "sensitivity": 4,
+    "utility": 3,
+    "fingerprint_bits": 3,
+    "friction": 2
+  },
+  "value": {
+    "legit_uses": [
+      "Room scanning",
+      "Measuring apps",
+      "Face unlock like flows"
+    ],
+    "abuse": [
+      "Face geometry capture"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2020-09",
+      "platform": "ios",
+      "version": "iOS 14",
+      "change": "LiDAR scene reconstruction"
+    },
+    {
+      "date": "2022-09",
+      "platform": "ios",
+      "version": "iOS 16",
+      "change": "RoomPlan room scanning"
+    },
+    {
+      "date": "2020-08",
+      "platform": "android",
+      "version": "ARCore 1.18",
+      "change": "Depth API (stereo from motion)"
+    }
+  ],
+  "related": [
+    "mob.hw.ar-world-tracking",
+    "mob.hw.camera-extensions"
+  ],
+  "refs": [
+    {
+      "t": "apple",
+      "label": "Apple: Visualizing a point cloud using scene depth",
+      "url": "https://developer.apple.com/documentation/arkit/environmental_analysis/visualizing_a_point_cloud_using_scene_depth"
+    },
+    {
+      "t": "android",
+      "label": "ARCore: Depth",
+      "url": "https://developers.google.com/ar/develop/depth"
+    }
+  ],
+  "confidence": "docs"
+}

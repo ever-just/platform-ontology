@@ -1,0 +1,240 @@
+{
+  "id": "web.actions.popover-dialog",
+  "name": "Popover and modal dialog",
+  "kind": "capability",
+  "group": "page-actions",
+  "subgroup": "Interface",
+  "tags": [
+    "popover",
+    "dialog",
+    "top-layer"
+  ],
+  "plain": "Shows overlays on top of everything on the page using the top layer.",
+  "meaning": "A site can draw modal dialogs and popovers above all other content, including iframes. They are page content, not browser UI, so well made fakes can mimic prompts.",
+  "lifecycle": [
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "<dialog>.showModal(); popover attribute; showPopover(); closedby",
+      "bcd": [
+        "api.HTMLElement.showPopover",
+        "api.HTMLDialogElement.showModal"
+      ],
+      "access": {
+        "grant": "none",
+        "prompt_ui": "None (no browser prompt)",
+        "secure_context": false,
+        "user_gesture": false,
+        "activation": "none",
+        "persistence": "While open",
+        "revocation": "Nothing to revoke (no permission is stored)",
+        "iframe": "Top layer belongs to each document; cannot cover browser UI",
+        "steps": [
+          "Page calls showModal() or showPopover()",
+          "Element enters top layer",
+          "Light dismiss closes popovers"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "114",
+          "note": "",
+          "date": "2023-05-30"
+        },
+        "edge": {
+          "s": "y",
+          "v": "114",
+          "note": "",
+          "date": "2023-06-02"
+        },
+        "firefox": {
+          "s": "y",
+          "v": "125",
+          "note": "",
+          "date": "2024-04-16"
+        },
+        "safari": {
+          "s": "y",
+          "v": "17",
+          "note": "",
+          "date": "2023-09-18"
+        },
+        "ios_safari": {
+          "s": "y",
+          "v": "17",
+          "note": "All iOS browsers use WebKit",
+          "date": "2023-09-18"
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "114",
+          "note": "",
+          "date": "2023-05-30"
+        },
+        "samsung": {
+          "s": "y",
+          "v": "23.0",
+          "note": "",
+          "date": "2023-10-18"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "none",
+    "metric": "",
+    "update": "",
+    "fields": []
+  },
+  "limits": {
+    "headline": "Can show a box over everything else on the page",
+    "user_action": "Nothing for most boxes. It happens when you tap a menu, a help bubble or Open details.",
+    "can": [
+      "Show a menu, tooltip or confirm box on top of the page",
+      "Dim and lock the page behind a modal box until you close it",
+      "Close the box when you press Esc or tap outside"
+    ],
+    "cannot": [
+      "Cover things outside its own page, like the address bar or other tabs",
+      "Stop you leaving the tab or closing the browser",
+      "Show over another app on your phone or computer"
+    ],
+    "reach": 1,
+    "reach_label": "Over its own page only",
+    "differs": ""
+  },
+  "story": {
+    "what_it_is": "A page can put a box on top of everything, using built in browser tools.",
+    "icon": "layers",
+    "tags": [
+      "Developer tool",
+      "Silent",
+      "Pop ups"
+    ],
+    "marketing": [
+      {
+        "vendor": "Google",
+        "name": "Popover API",
+        "pitch": "Chrome's blog says the Popover API lets developers show floating content above the rest of the page with little code.",
+        "url": "https://developer.chrome.com/blog/introducing-popover-api"
+      }
+    ],
+    "for_you": "Menus, tooltips and 'accept cookies' boxes sit neatly on top of the page, and keyboard and screen readers handle them better than home made versions.",
+    "for_makers": "Makers replace fragile custom code with built in pieces. It means fewer bugs, better accessibility and lighter pages, and it standardizes how consent banners and menus work.",
+    "use_cases": [
+      {
+        "type": "shopping",
+        "example": "A product page opens a size chart as a modal that dims the page behind it.",
+        "apps": [
+          "Nike",
+          "Zara"
+        ]
+      },
+      {
+        "type": "ads",
+        "example": "A cookie consent banner is drawn on top of the whole page by the site.",
+        "apps": []
+      },
+      {
+        "type": "accessibility",
+        "example": "A modal traps keyboard focus so someone using a screen reader cannot tab behind it.",
+        "apps": []
+      },
+      {
+        "type": "games",
+        "example": "A browser game shows a pause menu on top of the playing field.",
+        "apps": []
+      },
+      {
+        "type": "productivity",
+        "example": "A dropdown menu in a web app pops open above the rest of the page.",
+        "apps": [
+          "GitHub",
+          "Notion"
+        ]
+      },
+      {
+        "type": "social",
+        "example": "A photo viewer opens a lightbox over a feed.",
+        "apps": [
+          "Instagram web"
+        ]
+      }
+    ],
+    "risks": [
+      "Consent banner tricks",
+      "Layering abuse"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "No activation required to show a dialog or popover (activation required for fullscreen only)",
+    "Cannot draw outside the viewport or over the address bar and permission bubbles",
+    "popover=auto uses light dismiss; popover=manual does not",
+    "Support: dialog Chrome 37, Safari 15.4, Firefox 98; popover Chrome 114, Safari 17, Firefox 125"
+  ],
+  "scores": {
+    "sensitivity": 1,
+    "utility": 5,
+    "fingerprint_bits": null,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Modal forms",
+      "Menus and tooltips"
+    ],
+    "abuse": [
+      "Fake browser permission dialogs drawn inside the page",
+      "Overlay phishing"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2023-05",
+      "browser": "chrome",
+      "version": "114",
+      "change": "Popover API ships"
+    },
+    {
+      "date": "2024-04",
+      "browser": "firefox",
+      "version": "125",
+      "change": "Popover API ships"
+    },
+    {
+      "date": "2023-09",
+      "browser": "safari",
+      "version": "17",
+      "change": "Popover API ships"
+    }
+  ],
+  "refs": [
+    {
+      "t": "mdn",
+      "label": "MDN Popover API",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/Popover_API"
+    },
+    {
+      "t": "spec",
+      "label": "HTML Standard: popover",
+      "url": "https://html.spec.whatwg.org/multipage/popover.html"
+    },
+    {
+      "t": "mdn",
+      "label": "MDN dialog element",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/dialog"
+    }
+  ],
+  "confidence": "docs"
+}

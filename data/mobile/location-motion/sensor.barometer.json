@@ -1,0 +1,187 @@
+{
+  "id": "mob.sensor.barometer",
+  "name": "Barometer and altitude",
+  "kind": "signal",
+  "group": "location-motion",
+  "subgroup": "Motion",
+  "tags": [
+    "barometer",
+    "altitude"
+  ],
+  "plain": "Reads air pressure; iOS needs Motion and Fitness permission for relative altitude.",
+  "meaning": "Pressure reveals floor in a building and weather; combined with time it can aid location inference.",
+  "lifecycle": [
+    "in-session"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "y",
+      "v": "2.3",
+      "api": 9,
+      "permission": "",
+      "protection": "none",
+      "grant": "none",
+      "prompt_ui": "",
+      "persistence": "",
+      "revocation": "",
+      "store_policy": "",
+      "api_surface": "Sensor.TYPE_PRESSURE",
+      "note": "Hectopascals, 300 to 1100"
+    },
+    "ios": {
+      "s": "p",
+      "v": "8.0",
+      "permission": "prompt",
+      "protection": "prompt",
+      "grant": "none",
+      "prompt_ui": "",
+      "persistence": "",
+      "revocation": "",
+      "store_policy": "",
+      "api_surface": "Relative altitude in meters, pressure in kPa; needs Motion and Fitness",
+      "note": ""
+    }
+  },
+  "data": {
+    "type": "float",
+    "metric": "Pressure",
+    "update": "Up to 25 Hz",
+    "fields": [
+      {
+        "name": "pressure",
+        "type": "float",
+        "unit": "hPa",
+        "range": "300 to 1100",
+        "precision": "about 0.1 hPa"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can measure air pressure and height change, after a Motion prompt on iPhone",
+    "user_action": "Nothing on Android. On iPhone you tap Allow for Motion and Fitness",
+    "can": [
+      "Measure air pressure in hectopascals (Android) or kilopascals (iPhone)",
+      "Track relative altitude change, such as climbing stairs, on iPhone",
+      "Help estimate floors or weather trends"
+    ],
+    "cannot": [
+      "See your exact altitude above sea level without extra data",
+      "See your location",
+      "Use the sensor on iPhone without Motion and Fitness permission"
+    ],
+    "reach": 2,
+    "reach_label": "Pressure and height change",
+    "differs": "Android gives pressure with no prompt. iPhone gives relative altitude and needs Motion and Fitness."
+  },
+  "story": {
+    "what_it_is": "An app can read air pressure, which shows weather changes and which floor you are on.",
+    "icon": "gauge",
+    "tags": [
+      "Sensors",
+      "Silent",
+      "Altitude"
+    ],
+    "marketing": [
+      {
+        "vendor": "Google",
+        "name": "Pressure sensor",
+        "pitch": "Android lets apps read air pressure to track weather and altitude.",
+        "url": "https://developer.android.com/develop/sensors-and-location/sensors/sensors_environment"
+      },
+      {
+        "vendor": "Apple",
+        "name": "Altimeter",
+        "pitch": "Apple's altimeter gives relative height changes from the barometer, like floors climbed.",
+        "url": "https://developer.apple.com/documentation/coremotion/cmaltimeter"
+      }
+    ],
+    "for_you": "You do not see it. Fitness apps may show floors climbed, and emergency calls can use it to tell which floor you are on. It also reveals weather changes and moving up and down in a building.",
+    "for_makers": "Makers use it to count flights of stairs, improve indoor location and give weather clues. It can also help narrow down location when combined with time and other signals.",
+    "use_cases": [
+      {
+        "type": "fitness",
+        "example": "A step counter adds floors climbed when you take the stairs.",
+        "apps": [
+          "Apple Health",
+          "Fitbit"
+        ]
+      },
+      {
+        "type": "maps",
+        "example": "An indoor map app finds which floor of a mall you are on.",
+        "apps": [
+          "Google Maps"
+        ]
+      },
+      {
+        "type": "health",
+        "example": "A hiking app tracks elevation gain on a trail.",
+        "apps": [
+          "AllTrails",
+          "Gaia GPS"
+        ]
+      },
+      {
+        "type": "utilities",
+        "example": "A weather app uses pressure from many phones to improve local forecasts.",
+        "apps": []
+      },
+      {
+        "type": "games",
+        "example": "An outdoor game notices that you climbed a hill and gives a reward for the real world climb.",
+        "apps": []
+      },
+      {
+        "type": "security",
+        "example": "An emergency location system reads pressure to tell dispatchers which floor to send help.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Location inference",
+      "Weak fingerprint bit"
+    ],
+    "android_note": "Android reads the pressure sensor with no prompt on phones that have one.",
+    "ios_note": "iPhone relative altitude needs Motion and Fitness permission."
+  },
+  "technical_bounds": [
+    "Present on most phones, not all"
+  ],
+  "scores": {
+    "sensitivity": 2,
+    "utility": 2,
+    "fingerprint_bits": 2,
+    "friction": 2
+  },
+  "value": {
+    "legit_uses": [
+      "Floor detection"
+    ],
+    "abuse": [
+      "Location inference"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "related": [
+    "mob.location.motion-sensors-raw"
+  ],
+  "refs": [
+    {
+      "t": "android",
+      "label": "Android: Sensors overview",
+      "url": "https://developer.android.com/develop/sensors-and-location/sensors/sensors_overview"
+    },
+    {
+      "t": "apple",
+      "label": "Apple: Core Motion",
+      "url": "https://developer.apple.com/documentation/coremotion"
+    }
+  ],
+  "confidence": "docs"
+}

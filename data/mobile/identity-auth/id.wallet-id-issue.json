@@ -1,0 +1,205 @@
+{
+  "id": "mob.id.wallet-id-issue",
+  "name": "ID in Wallet (issue and provision)",
+  "kind": "capability",
+  "group": "identity-auth",
+  "subgroup": "Digital ID",
+  "tags": [
+    "digital-id",
+    "mdl",
+    "wallet",
+    "issuer"
+  ],
+  "plain": "Adds a driver's license or passport as a digital ID to the phone wallet.",
+  "meaning": "Puts a government ID inside the phone, so identity checks can be done by tapping or sharing from the Wallet app. Issuers and states choose when to launch.",
+  "lifecycle": [
+    "signed-in"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "f",
+      "v": "9",
+      "api": 28,
+      "permission": "None for users; issuer onboarding with Google Wallet",
+      "protection": "none",
+      "grant": "enterprise",
+      "prompt_ui": "Add to Google Wallet from ID pass, with face match",
+      "persistence": "Until removed",
+      "revocation": "Google Wallet",
+      "store_policy": "Issuer agreement with Google; state partnerships",
+      "api_surface": "Google Wallet ID passes (mDL), Digital ID with passport (US, 2025)",
+      "note": "Google added passport based ID pass in 2025 for TSA use."
+    },
+    "ios": {
+      "s": "f",
+      "v": "15.0",
+      "permission": "IdentityDocumentServices provisioning entitlements",
+      "protection": "entitlement",
+      "grant": "entitlement",
+      "prompt_ui": "Wallet flow: scan card or passport chip, selfie liveness",
+      "persistence": "Until removed",
+      "revocation": "Wallet > Digital ID",
+      "store_policy": "Issuer and state agreements",
+      "api_surface": "IdentityDocumentServices, Wallet",
+      "note": "iOS 26.1 adds Digital ID from US passport; iPhone 11 and later."
+    }
+  },
+  "web_equivalents": [
+    "web.identity.digital-credentials"
+  ],
+  "data": {
+    "type": "object",
+    "metric": "mdoc credential",
+    "update": "once",
+    "fields": [
+      {
+        "name": "issuer signature",
+        "type": "binary",
+        "unit": "bytes",
+        "range": "P-256",
+        "precision": "n/a"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can add your driver's license or passport based ID to your phone's wallet",
+    "user_action": "You tap Add to Wallet and scan your ID, then follow the issuer's checks",
+    "can": [
+      "Add a digital driver's license or passport based ID to Apple Wallet or Google Wallet",
+      "Check your ID and a selfie through the issuing state or agency",
+      "Keep the ID on the phone so it can be shown later at a counter or in apps"
+    ],
+    "cannot": [
+      "Add an ID for you without scanning and checking it",
+      "Work for every state or country; only supported issuers qualify",
+      "Show your ID to anyone without your approval at each use",
+      "Add the ID on older iPhones (iPhone 11 or newer is needed)"
+    ],
+    "reach": 2,
+    "reach_label": "One ID you choose to add",
+    "differs": "Apple Wallet needs iOS 26.1 for passport based IDs and iPhone 11 or newer. Google Wallet added a passport based pass in the US in 2025."
+  },
+  "story": {
+    "what_it_is": "You add your driver's license or passport to your phone wallet as a digital ID.",
+    "icon": "wallet-cards",
+    "tags": [
+      "Identity",
+      "Wallet",
+      "Asks first"
+    ],
+    "marketing": [
+      {
+        "vendor": "Apple",
+        "name": "ID in Apple Wallet",
+        "pitch": "Add your driver's license, state ID or passport to Wallet and use it for ID checks.",
+        "url": "https://www.apple.com/wallet/"
+      },
+      {
+        "vendor": "Google",
+        "name": "Digital ID in Google Wallet",
+        "pitch": "Google Wallet can hold a digital ID, with the participating states and partners growing over time.",
+        "url": "https://wallet.google/"
+      }
+    ],
+    "for_you": "You scan the front of your ID, take a selfie and follow a few head turns. After that your license sits in your wallet. You can show it at the airport or share one fact online.",
+    "for_makers": "Governments and wallet makers want to move ID checks from plastic to phones. Businesses benefit from signed details that are hard to fake. It also makes the phone vendor the keeper of one of the most important documents you own.",
+    "use_cases": [
+      {
+        "type": "travel",
+        "example": "You tap your phone at the airport security line instead of pulling out a plastic license.",
+        "apps": []
+      },
+      {
+        "type": "shopping",
+        "example": "A shop checks your age at pickup of a restricted item by reading your wallet ID.",
+        "apps": []
+      },
+      {
+        "type": "banking",
+        "example": "A bank confirms who you are when you open a new account from your couch.",
+        "apps": []
+      },
+      {
+        "type": "rideshare",
+        "example": "A car rental desk lets you skip the counter by sharing your license from your wallet.",
+        "apps": []
+      },
+      {
+        "type": "security",
+        "example": "A scammer sends a fake 'verify your ID' link, which is why real wallet requests always show a system sheet.",
+        "apps": []
+      },
+      {
+        "type": "enterprise",
+        "example": "A building uses wallet IDs to sign in guests without paper badges.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Fake credentials and phishing",
+      "One loss means a lost ID"
+    ],
+    "android_note": "Google Wallet adds IDs state by state, and the list of places that accept them is still growing.",
+    "ios_note": "Apple Wallet adds IDs state by state in the US, with some other countries following, and uses Face ID to share."
+  },
+  "technical_bounds": [
+    "App access is by wallet not by direct read"
+  ],
+  "scores": {
+    "sensitivity": 5,
+    "utility": 3,
+    "fingerprint_bits": 1,
+    "friction": 3
+  },
+  "value": {
+    "legit_uses": [
+      "Streamlined ID checks"
+    ],
+    "abuse": [
+      "Fake credential or phishing"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2022-11",
+      "platform": "ios",
+      "version": "iOS 15.4",
+      "change": "ID in Wallet launch in Arizona"
+    },
+    {
+      "date": "2025-11",
+      "platform": "ios",
+      "version": "iOS 26.1",
+      "change": "Digital ID from passport"
+    },
+    {
+      "date": "2025-05",
+      "platform": "android",
+      "version": "Google Wallet",
+      "change": "Passport based ID pass announced"
+    }
+  ],
+  "related": [
+    "mob.id.digital-credentials-verify"
+  ],
+  "refs": [
+    {
+      "t": "apple",
+      "label": "Apple: Verifying a mobile document from a passport",
+      "url": "https://developer.apple.com/documentation/identitydocumentservices/verifying-a-mobile-document-from-a-passport"
+    },
+    {
+      "t": "android",
+      "label": "Google Wallet: ID pass",
+      "url": "https://developers.google.com/wallet/identity"
+    }
+  ],
+  "confidence": "docs"
+}

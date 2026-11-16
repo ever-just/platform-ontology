@@ -1,0 +1,194 @@
+{
+  "id": "mob.policy.sdk-signatures",
+  "name": "SDK signatures and the Play SDK Index",
+  "kind": "capability",
+  "group": "app-ecosystem",
+  "subgroup": "Store transparency",
+  "tags": [
+    "sdk-signature",
+    "sdk-index",
+    "supply-chain",
+    "third-party-sdk"
+  ],
+  "plain": "Apple requires signed copies of popular SDKs, and Google publishes data practices for listed SDKs.",
+  "meaning": "Cuts supply chain tampering and puts SDK data use on public record. Apple's list includes common ad and analytics SDKs. Google's SDK Index shows permissions and Data safety info per SDK.",
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "y",
+      "v": "",
+      "permission": "",
+      "protection": "none",
+      "grant": "none",
+      "prompt_ui": "",
+      "persistence": "",
+      "revocation": "",
+      "store_policy": "Play SDK Index lists SDK versions and warnings; non-compliant SDK versions can block releases",
+      "api_surface": "play.google.com/sdks; Play Console SDK warnings",
+      "note": ""
+    },
+    "ios": {
+      "s": "y",
+      "v": "17.5",
+      "permission": "",
+      "protection": "none",
+      "grant": "none",
+      "prompt_ui": "",
+      "persistence": "",
+      "revocation": "",
+      "store_policy": "Signature required for listed third party SDKs added as binaries from 1 May 2024",
+      "api_surface": "Xcode code signing, privacy report",
+      "note": ""
+    }
+  },
+  "data": {
+    "type": "none",
+    "metric": "n/a",
+    "update": "n/a",
+    "fields": []
+  },
+  "limits": {
+    "headline": "Can check that popular add on tools were not changed, and show what they collect",
+    "user_action": "Nothing. It is checked when the app is built and uploaded",
+    "can": [
+      "Prove a popular tool came from its maker, on iPhone",
+      "Show what permissions and data each tool uses, on Google's SDK Index",
+      "Show the developer's own data notes on each tool"
+    ],
+    "cannot": [
+      "Stop a tool from collecting data the app already can",
+      "Check every tool, since the list covers common ones",
+      "Change what you see in the app"
+    ],
+    "reach": 1,
+    "reach_label": "A check at build time",
+    "differs": "Apple requires signed copies of popular tools. Google publishes tool data practices in the SDK Index."
+  },
+  "story": {
+    "what_it_is": "Rules that make popular code libraries signed and public about what data they use.",
+    "icon": "badge-check",
+    "tags": [
+      "Supply chain",
+      "Store rules",
+      "SDKs"
+    ],
+    "marketing": [
+      {
+        "vendor": "Apple",
+        "name": "Third party SDK requirements",
+        "pitch": "Popular SDKs must include a privacy manifest and a signature so developers can trust them.",
+        "url": "https://developer.apple.com/support/third-party-SDK-requirements/"
+      },
+      {
+        "vendor": "Google",
+        "name": "Google Play SDK Index",
+        "pitch": "See SDKs' permissions, data use and safety info to choose the right tools.",
+        "url": "https://developer.android.com/distribute/sdk-index"
+      }
+    ],
+    "for_you": "You are safer without noticing. The tools that apps use to show ads and measure use are checked and listed, so fewer rogue code libraries can slip in.",
+    "for_makers": "Makers cannot just paste in any SDK. They pick from signed, documented ones, and the public record lets reporters and regulators see which SDKs read what.",
+    "use_cases": [
+      {
+        "type": "ads",
+        "example": "An ad network ships a signed SDK with a manifest so game studios can add it without store trouble.",
+        "apps": [
+          "AppLovin",
+          "Unity"
+        ]
+      },
+      {
+        "type": "analytics",
+        "example": "A product team checks the SDK Index to see which permissions an analytics tool adds.",
+        "apps": [
+          "Firebase",
+          "Mixpanel"
+        ]
+      },
+      {
+        "type": "social",
+        "example": "A login SDK is signed so a copy edited by an attacker would fail the check.",
+        "apps": [
+          "Facebook Login"
+        ]
+      },
+      {
+        "type": "games",
+        "example": "A game studio swaps an SDK flagged in the index for a safer one before launch.",
+        "apps": []
+      },
+      {
+        "type": "security",
+        "example": "Security teams use signatures to prove no one changed the code between release and install.",
+        "apps": []
+      },
+      {
+        "type": "developer",
+        "example": "A developer reads the SDK Index warnings when picking a crash reporting tool.",
+        "apps": [
+          "Sentry",
+          "Crashlytics"
+        ]
+      }
+    ],
+    "risks": [
+      "Only covers listed SDKs",
+      "Signatures prove source not intent"
+    ],
+    "android_note": "Google's Play SDK Index is public and shows permissions and known issues.",
+    "ios_note": "Apple requires signed copies of the popular SDKs on its list."
+  },
+  "technical_bounds": [
+    "Lists change over time",
+    "Does not stop exfiltration at runtime"
+  ],
+  "scores": {
+    "sensitivity": 2,
+    "utility": 3,
+    "fingerprint_bits": null,
+    "friction": 1
+  },
+  "value": {
+    "legit_uses": [
+      "Integrity of SDKs"
+    ],
+    "abuse": []
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2021-10",
+      "platform": "android",
+      "version": "Play",
+      "change": "SDK Index launched"
+    },
+    {
+      "date": "2024-05",
+      "platform": "ios",
+      "version": "App Store",
+      "change": "SDK signature requirement"
+    }
+  ],
+  "related": [
+    "mob.ads.sdk-data-sharing",
+    "mob.policy.privacy-manifests"
+  ],
+  "refs": [
+    {
+      "t": "android",
+      "label": "Play SDK Index",
+      "url": "https://developer.android.com/distribute/sdk-index"
+    },
+    {
+      "t": "apple",
+      "label": "Apple: Third party SDK requirements",
+      "url": "https://developer.apple.com/support/third-party-SDK-requirements/"
+    }
+  ],
+  "confidence": "docs"
+}

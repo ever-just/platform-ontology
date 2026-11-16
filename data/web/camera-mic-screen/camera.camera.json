@@ -1,0 +1,344 @@
+{
+  "id": "web.camera.camera",
+  "name": "Camera (video capture)",
+  "kind": "permission",
+  "group": "camera-mic-screen",
+  "subgroup": "Capture",
+  "tags": [
+    "webcam",
+    "getusermedia",
+    "secure-context",
+    "one-time-permission"
+  ],
+  "plain": "Asks to turn on the camera and receive live video.",
+  "meaning": "Gives the site a live view of the person's face, room and surroundings. Used for calls and photos, but also for identity capture, biometrics and covert recording if the tab stays open.",
+  "lifecycle": [
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "navigator.mediaDevices.getUserMedia({video: true|constraints}); ImageCapture; track.applyConstraints()",
+      "permission_name": "camera",
+      "permissions_policy": "camera",
+      "bcd": [
+        "api.MediaDevices.getUserMedia",
+        "api.MediaStreamTrack",
+        "api.ImageCapture"
+      ],
+      "access": {
+        "grant": "prompt",
+        "prompt_ui": "Chrome: bubble with Allow while visiting, Allow this time, Don't allow. Firefox: dropdown to choose a camera with Remember this decision. Safari: Allow or Don't Allow, per-site Ask/Deny/Allow. An OS camera indicator (green dot, menu bar icon) shows while active.",
+        "secure_context": true,
+        "user_gesture": false,
+        "persistence": "Chrome and Edge: persistent per origin once allowed; one-time grants end when the tab closes. Firefox: remembered only if ticked. Safari: per session by default, reasks after the page is left.",
+        "revocation": "Padlock icon, Site settings, OS camera privacy settings; track.stop() ends capture; Permissions API 'change' event.",
+        "iframe": "Cross-origin iframes need allow=\"camera\"; the grant is keyed to the top-level origin.",
+        "steps": [
+          "Call getUserMedia({video: true}) from a secure context",
+          "Browser checks Permissions Policy then shows prompt",
+          "OS camera opens and indicator turns on",
+          "Promise resolves with a MediaStream of one video track; or rejects NotAllowedError, NotFoundError, NotReadableError, OverconstrainedError"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "53",
+          "note": "Unprefixed from 53; secure context from 47",
+          "date": "2016-08-31"
+        },
+        "edge": {
+          "s": "y",
+          "v": "12",
+          "note": "",
+          "date": "2015-07-29"
+        },
+        "firefox": {
+          "s": "y",
+          "v": "36",
+          "note": "Unprefixed from 36",
+          "date": "2015-02-24"
+        },
+        "safari": {
+          "s": "y",
+          "v": "11",
+          "note": "macOS Safari 11, secure context only",
+          "date": "2017-09-19"
+        },
+        "ios_safari": {
+          "s": "y",
+          "v": "11",
+          "note": "iOS 11, all iOS browsers",
+          "date": "2017-09-19"
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "53",
+          "note": "",
+          "date": "2016-09-07"
+        },
+        "samsung": {
+          "s": "y",
+          "v": "6.0",
+          "note": "",
+          "date": "2017-08-23"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "stream",
+    "metric": "Live video track (MediaStreamTrack)",
+    "update": "continuous at the camera frame rate",
+    "fields": [
+      {
+        "name": "width",
+        "type": "integer",
+        "unit": "pixels",
+        "range": "1 to 7680 (device dependent)",
+        "precision": "1 px"
+      },
+      {
+        "name": "height",
+        "type": "integer",
+        "unit": "pixels",
+        "range": "1 to 4320 (device dependent)",
+        "precision": "1 px"
+      },
+      {
+        "name": "frameRate",
+        "type": "float",
+        "unit": "frames per second",
+        "range": "1 to 120 (typical 30)",
+        "precision": "0.1"
+      },
+      {
+        "name": "facingMode",
+        "type": "enum",
+        "unit": "none",
+        "range": "user, environment, left, right",
+        "precision": "exact if supported"
+      },
+      {
+        "name": "deviceId",
+        "type": "string",
+        "unit": "opaque id",
+        "range": "per-origin, reset on clearing cookies",
+        "precision": "32 or 64 hex characters"
+      },
+      {
+        "name": "aspectRatio",
+        "type": "float",
+        "unit": "ratio",
+        "range": "0.1 to 10",
+        "precision": "0.001"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can see and record live video from your camera while the tab is open",
+    "user_action": "You click Start video, Join call, or Scan, then choose Allow in the browser pop up",
+    "can": [
+      "Show live video from your camera on the page",
+      "Send that video to other people on a call or to the site's servers",
+      "Take still photos or record clips from the video",
+      "List your cameras and switch between them once you allow access"
+    ],
+    "cannot": [
+      "Turn the camera on the first time without your Allow tap",
+      "Keep recording after you close the tab; the browser shows a recording indicator while it runs",
+      "Use the camera if it is blocked in your device settings",
+      "See photos or videos already saved on your device"
+    ],
+    "reach": 2,
+    "reach_label": "While the tab is open",
+    "differs": "Chrome offers Allow this time, Firefox lets you pick a camera in the pop up, and Safari asks per site."
+  },
+  "story": {
+    "what_it_is": "Lets a website turn on your camera and see live video of you and your room.",
+    "icon": "camera",
+    "tags": [
+      "Camera",
+      "Asks first",
+      "Sensitive"
+    ],
+    "marketing": [
+      {
+        "vendor": "Mozilla",
+        "name": "getUserMedia",
+        "pitch": "Developer docs describe how a page asks permission, then gets a live camera stream for calls, photos and scanning.",
+        "url": "https://developer.mozilla.org/en-US/docs/Web/API/MediaDevices/getUserMedia"
+      },
+      {
+        "vendor": "Google Chrome",
+        "name": "One-time permissions",
+        "pitch": "Chrome added Allow this time so people can give camera access for a single visit instead of forever.",
+        "url": "https://developer.chrome.com/blog/one-time-permissions"
+      }
+    ],
+    "for_you": "A small box pops up asking to use your camera. You pick Allow or Block, and a camera dot or icon shows in the tab while it is on. If you allow it, the site sees you live until you close the tab or turn it off.",
+    "for_makers": "Camera access turns a plain web page into a video call room, a scanner or a photo booth with no app install. It is what makes web video products possible, and it powers identity checks that cut fraud and sign-up cost. The maker also gets sharper support, since they can see the problem when a customer shows it.",
+    "use_cases": [
+      {
+        "type": "video",
+        "example": "You click a Google Meet link in the browser, allow the camera, and your face appears in the call tile in seconds with nothing to install.",
+        "apps": [
+          "Google Meet",
+          "Zoom web client",
+          "Microsoft Teams"
+        ]
+      },
+      {
+        "type": "security",
+        "example": "Opening a bank account online, the site asks you to hold up a driver license and then take a selfie so it can match your face.",
+        "apps": [
+          "Onfido",
+          "Persona",
+          "Stripe Identity"
+        ]
+      },
+      {
+        "type": "games",
+        "example": "A browser game reads your hand or face through the webcam so you steer a character by tilting your head or waving your hand, and the video never leaves your computer.",
+        "apps": [
+          "Google MediaPipe demos",
+          "Chrome Experiments"
+        ]
+      },
+      {
+        "type": "social",
+        "example": "You open a web camera effects page, the site puts virtual glasses and animal ears on your live video, and you snap a photo to share.",
+        "apps": [
+          "Snapchat web Lenses",
+          "Instagram web"
+        ]
+      },
+      {
+        "type": "shopping",
+        "example": "A glasses or makeup shop uses your live video to show frames or lipstick on your face so you can try before you buy.",
+        "apps": [
+          "Warby Parker virtual try on",
+          "Sephora Virtual Artist"
+        ]
+      },
+      {
+        "type": "education",
+        "example": "In an online exam, the proctoring page watches you through the camera to check that you are alone and not reading notes.",
+        "apps": [
+          "ProctorU",
+          "Examity"
+        ]
+      },
+      {
+        "type": "creative",
+        "example": "You record a quick screen and face video message right in the browser to send a teammate instead of writing a long email.",
+        "apps": [
+          "Loom",
+          "Descript"
+        ]
+      },
+      {
+        "type": "live",
+        "example": "A streaming studio in the browser lets you invite a guest by link, and their webcam shows up in your show.",
+        "apps": [
+          "StreamYard",
+          "Riverside"
+        ]
+      }
+    ],
+    "risks": [
+      "Covert recording from a forgotten open tab",
+      "Face scans used for tracking or identity"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Needs a secure context and (Chrome) a visible tab for ongoing capture",
+    "Cannot pick a specific camera silently: labels hidden until permission",
+    "OS shows an active indicator",
+    "No capture of raw sensor data: browser applies processing"
+  ],
+  "scores": {
+    "sensitivity": 5,
+    "utility": 5,
+    "fingerprint_bits": null,
+    "friction": 2
+  },
+  "value": {
+    "legit_uses": [
+      "Video calls",
+      "Document and ID capture",
+      "QR and barcode scanning",
+      "Photo booths and AR"
+    ],
+    "abuse": [
+      "Covert recording from a forgotten tab",
+      "Facial recognition and biometric capture",
+      "Deepfake training samples"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2016-10",
+      "browser": "chrome",
+      "version": "53",
+      "change": "navigator.mediaDevices.getUserMedia unprefixed"
+    },
+    {
+      "date": "2018-01",
+      "browser": "chrome",
+      "version": "60",
+      "change": "getUserMedia restricted to secure contexts (HTTPS or localhost)"
+    },
+    {
+      "date": "2017-09",
+      "browser": "ios_safari",
+      "version": "11",
+      "change": "Safari on iOS 11 adds getUserMedia"
+    },
+    {
+      "date": "2023-08",
+      "browser": "chrome",
+      "version": "116",
+      "change": "Allow this time one-time permission added"
+    },
+    {
+      "date": "2026-06",
+      "browser": "chrome",
+      "version": "151",
+      "change": "<usermedia> element announced as available"
+    }
+  ],
+  "related": [
+    "web.camera.microphone",
+    "web.camera.enumerate-devices",
+    "web.camera.usermedia-element",
+    "web.camera.camera-ptz"
+  ],
+  "refs": [
+    {
+      "t": "mdn",
+      "label": "MDN getUserMedia",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/MediaDevices/getUserMedia"
+    },
+    {
+      "t": "spec",
+      "label": "W3C Media Capture and Streams",
+      "url": "https://www.w3.org/TR/mediacapture-streams/"
+    },
+    {
+      "t": "chromestatus",
+      "label": "Chrome one-time permissions",
+      "url": "https://developer.chrome.com/blog/one-time-permissions"
+    }
+  ],
+  "confidence": "docs"
+}

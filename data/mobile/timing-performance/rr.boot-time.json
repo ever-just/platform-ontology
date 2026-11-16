@@ -1,0 +1,190 @@
+{
+  "id": "mob.rr.boot-time",
+  "name": "Required Reason: system boot time",
+  "kind": "capability",
+  "group": "timing-performance",
+  "subgroup": "Privacy manifests",
+  "tags": [
+    "required-reason-api",
+    "boot-time"
+  ],
+  "plain": "iOS uptime reads need 35F9.1, 8FFB.1 or 3D61.1.",
+  "meaning": "Boot timestamp is a stable fingerprint until reboot. 35F9.1 measures in-app intervals, 8FFB.1 stamps in-app events, 3D61.1 adds it to a user-submitted bug report.",
+  "lifecycle": [
+    "on-launch",
+    "in-session"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "n",
+      "v": "",
+      "api": "",
+      "permission": "none",
+      "protection": "none",
+      "grant": "not-exposed",
+      "prompt_ui": "",
+      "persistence": "",
+      "revocation": "",
+      "store_policy": "",
+      "api_surface": "Android has no gate: elapsedRealtime is open",
+      "note": "Android analog: no reason needed"
+    },
+    "ios": {
+      "s": "f",
+      "v": "17.0",
+      "permission": "entitlement",
+      "protection": "entitlement",
+      "grant": "none",
+      "prompt_ui": "",
+      "persistence": "",
+      "revocation": "App Review: no off-device boot time",
+      "store_policy": "",
+      "api_surface": "35F9.1 measure elapsed time in-app; 8FFB.1 absolute timestamps for in-app events; 3D61.1 optional bug report, shown to user",
+      "note": ""
+    }
+  },
+  "data": {
+    "type": "object",
+    "metric": "Reason codes",
+    "update": "At upload",
+    "fields": [
+      {
+        "name": "reason_codes",
+        "type": "list",
+        "unit": "code",
+        "range": "3 values",
+        "precision": "exact"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can check how long the phone has been on; iPhone needs an approved reason",
+    "user_action": "Nothing. It happens when the app measures time or logs an event",
+    "can": [
+      "Measure time between actions inside the app (reason 35F9.1)",
+      "Stamp events inside the app (reason 8FFB.1)",
+      "Add it to a bug report that you send (reason 3D61.1)",
+      "Check uptime with no gate on Android"
+    ],
+    "cannot": [
+      "Check it on iPhone without one of the three approved reasons",
+      "Be used as a fingerprint on iPhone; it stays steady until a restart",
+      "Use it on iPhone for ads or tracking"
+    ],
+    "reach": 2,
+    "reach_label": "Ongoing, a quiet signal",
+    "differs": "iPhone requires one of three approved reasons; Android has no gate."
+  },
+  "story": {
+    "what_it_is": "An iOS rule: apps must give a reason before reading how long the phone has been on.",
+    "icon": "clock",
+    "tags": [
+      "iOS rule",
+      "Silent",
+      "Fingerprint"
+    ],
+    "marketing": [
+      {
+        "vendor": "Apple",
+        "name": "Required reason APIs",
+        "pitch": "Apple requires apps to declare why they use certain system timers and data in their privacy manifest.",
+        "url": "https://developer.apple.com/documentation/bundleresources/describing-use-of-required-reason-api"
+      }
+    ],
+    "for_you": "You never see it. Apps that read the phone's boot time must tell Apple why. This makes it harder for them to use a hidden number that stays the same until a restart.",
+    "for_makers": "The boot time can stitch together separate apps and sessions. Apple now limits its use to timers, in app event stamps and a bug report. Makers must describe their use in a privacy manifest or risk store rejection.",
+    "use_cases": [
+      {
+        "type": "games",
+        "example": "A game measures how long a level takes using the boot clock as a stopwatch.",
+        "apps": []
+      },
+      {
+        "type": "video",
+        "example": "A video app times buffering and playback using uptime.",
+        "apps": []
+      },
+      {
+        "type": "analytics",
+        "example": "An analytics SDK stamps events with uptime and must declare it.",
+        "apps": []
+      },
+      {
+        "type": "ads",
+        "example": "An ad SDK could use boot time as part of a hidden device fingerprint, which is now restricted.",
+        "apps": []
+      },
+      {
+        "type": "security",
+        "example": "A fraud tool compares boot times to spot emulator farms.",
+        "apps": []
+      },
+      {
+        "type": "developer",
+        "example": "A developer adds the right reason code to the privacy manifest before shipping.",
+        "apps": []
+      },
+      {
+        "type": "fitness",
+        "example": "A run tracker times intervals with the system clock.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Fingerprinting until reboot",
+      "App Store rejection if undeclared",
+      "Workarounds exist"
+    ],
+    "android_note": "Android has no gate for reading uptime, so no reason is needed.",
+    "ios_note": "iOS 17 added the rule with three allowed reasons, for in app intervals, in app event stamps and a user submitted bug report."
+  },
+  "technical_bounds": [
+    "Boot time itself may not leave the device (except 3D61.1 reports)"
+  ],
+  "scores": {
+    "sensitivity": 1,
+    "utility": 2,
+    "fingerprint_bits": null,
+    "friction": 3
+  },
+  "value": {
+    "legit_uses": [
+      "Timers"
+    ],
+    "abuse": [
+      "Cross-app ID until reboot"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2024-05",
+      "platform": "ios",
+      "version": "iOS 17.x",
+      "change": "Reason required to ship"
+    }
+  ],
+  "related": [
+    "mob.rr.regime",
+    "mob.dev.boot-time"
+  ],
+  "refs": [
+    {
+      "t": "apple",
+      "label": "Apple: Describing use of required reason API",
+      "url": "https://developer.apple.com/documentation/bundleresources/describing-use-of-required-reason-api"
+    },
+    {
+      "t": "apple",
+      "label": "Apple: Privacy manifest files",
+      "url": "https://developer.apple.com/documentation/bundleresources/privacy-manifest-files"
+    }
+  ],
+  "confidence": "verified"
+}

@@ -1,0 +1,230 @@
+{
+  "id": "web.os.web-share-target",
+  "name": "Web Share Target",
+  "kind": "capability",
+  "group": "os-integration-install",
+  "subgroup": "Sharing",
+  "tags": [
+    "sharing"
+  ],
+  "plain": "Lets an installed web app appear in the system share sheet.",
+  "meaning": "Receives text, URLs and files other apps share, which is how a PWA becomes a share destination.",
+  "lifecycle": [
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "manifest share_target {action,method,enctype,params}",
+      "bcd": [
+        "manifests.webapp.share_target"
+      ],
+      "access": {
+        "grant": "install",
+        "prompt_ui": "None until share; app listed in sheet",
+        "secure_context": true,
+        "user_gesture": false,
+        "persistence": "Per origin",
+        "revocation": "Site settings",
+        "iframe": "Same as top level; cross-origin iframes need a permissions policy where listed",
+        "steps": [
+          "Call the API",
+          "Browser applies its access rules",
+          "Page receives the result"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "89",
+          "note": "",
+          "date": "2021-03-02"
+        },
+        "edge": {
+          "s": "y",
+          "v": "89",
+          "note": "",
+          "date": "2021-03-04"
+        },
+        "firefox": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "safari": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "ios_safari": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "76",
+          "note": "",
+          "date": "2019-07-30"
+        },
+        "samsung": {
+          "s": "y",
+          "v": "12.0",
+          "note": "",
+          "date": "2020-06-19"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "object",
+    "metric": "Lets an installed web app appear in the system share sheet.",
+    "update": "on demand",
+    "fields": [
+      {
+        "name": "params.title/text/url",
+        "type": "string",
+        "range": "form fields"
+      },
+      {
+        "name": "files",
+        "type": "binary",
+        "unit": "bytes",
+        "range": "files shared, size limited by OS"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can appear in your device's share sheet and receive links, text or files you send it",
+    "user_action": "You install the web app, then pick it from the share sheet in another app",
+    "can": [
+      "Show up as a choice in the share sheet",
+      "Receive text, links or files you share to it",
+      "Open the app with what you shared"
+    ],
+    "cannot": [
+      "See anything until you pick it in the share sheet",
+      "Work for a site that is not installed",
+      "Work in Firefox, Safari or on iPhone",
+      "See what you shared with other apps"
+    ],
+    "reach": 1,
+    "reach_label": "What you choose to share",
+    "differs": "Chrome, Edge and Samsung Internet on computers and Android. Safari, Firefox and iPhone do not support it."
+  },
+  "story": {
+    "what_it_is": "An installed web app can show up in your share sheet, so you can send things to it.",
+    "icon": "share-2",
+    "tags": [
+      "Installed apps",
+      "Sharing",
+      "Capability"
+    ],
+    "marketing": [
+      {
+        "vendor": "MDN Web Docs",
+        "name": "share_target",
+        "pitch": "Lets an installed web app appear in the system share sheet and receive shared text, links and files.",
+        "url": "https://developer.mozilla.org/en-US/docs/Web/Progressive_web_apps/Manifest/Reference/share_target"
+      }
+    ],
+    "for_you": "When you share a photo or link from another app, you see the web app in the list. Tap it and it opens with your item ready. It works like any other app.",
+    "for_makers": "Makers get a spot in the share sheet next to native apps, which brings content in with little effort. It is key for social, notes and storage apps. It only works once the app is installed.",
+    "use_cases": [
+      {
+        "type": "social",
+        "example": "You share a photo from your gallery to a web social app, which opens a new post with the photo ready.",
+        "apps": [
+          "Pinterest",
+          "X"
+        ]
+      },
+      {
+        "type": "productivity",
+        "example": "You share a link from your browser to a web notes app to save it for later.",
+        "apps": [
+          "Google Keep"
+        ]
+      },
+      {
+        "type": "music",
+        "example": "You share a song link to a web playlist app to add it.",
+        "apps": []
+      },
+      {
+        "type": "messaging",
+        "example": "You share text from a web page to a web chat to send it to a friend.",
+        "apps": [
+          "Telegram Web"
+        ]
+      },
+      {
+        "type": "shopping",
+        "example": "You share a product from a news site to a web wishlist app.",
+        "apps": []
+      },
+      {
+        "type": "games",
+        "example": "You share a screenshot to a web game community app to post a tip.",
+        "apps": []
+      },
+      {
+        "type": "creative",
+        "example": "You share a picture to a web editor to start editing at once.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Only installed apps",
+      "Can receive unwanted files"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Chrome and Samsung only",
+    "Needs installed PWA"
+  ],
+  "scores": {
+    "sensitivity": 2,
+    "utility": 3,
+    "fingerprint_bits": null,
+    "friction": 1
+  },
+  "value": {
+    "legit_uses": [
+      "Notes and social apps"
+    ],
+    "abuse": [
+      "None"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2019",
+      "browser": "chrome",
+      "version": "76",
+      "change": "Android"
+    },
+    {
+      "date": "2020",
+      "browser": "chrome",
+      "version": "89",
+      "change": "Desktop"
+    }
+  ],
+  "refs": [
+    {
+      "t": "mdn",
+      "label": "MDN share_target",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/Progressive_web_apps/Manifest/Reference/share_target"
+    }
+  ],
+  "confidence": "verified"
+}

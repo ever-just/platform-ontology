@@ -1,0 +1,213 @@
+{
+  "id": "mob.ads.idfv",
+  "name": "IDFV and App Set ID (developer-scoped IDs)",
+  "kind": "signal",
+  "group": "attribution-ads",
+  "subgroup": "Advertising IDs",
+  "tags": [
+    "idfv",
+    "app-set-id",
+    "vendor-id",
+    "analytics"
+  ],
+  "plain": "A per-developer app ID that needs no prompt but cannot cross to other companies' apps.",
+  "meaning": "Lets one developer recognize the same device across its own apps for analytics, fraud and fair-use limits. Not allowed for ad targeting on Android and not usable for third-party tracking on iOS.",
+  "lifecycle": [
+    "on-launch",
+    "in-session",
+    "after-uninstall"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "y",
+      "v": "",
+      "api": 21,
+      "permission": "",
+      "protection": "none",
+      "grant": "none",
+      "prompt_ui": "",
+      "persistence": "Resets after 13 months of no use or when the developer's apps are all removed",
+      "revocation": "",
+      "store_policy": "Play Ads policy: App Set ID for analytics and fraud, not ad personalization or attribution",
+      "api_surface": "AppSetIdClient.getAppSetIdInfo (scope app or developer)",
+      "note": "Replaces persistent IDs for non-ad uses when the ad ID is zeroed."
+    },
+    "ios": {
+      "s": "y",
+      "v": "6.0",
+      "permission": "",
+      "protection": "none",
+      "grant": "none",
+      "prompt_ui": "",
+      "persistence": "Same value for apps sharing a team prefix; resets when the last app of that vendor is removed",
+      "revocation": "",
+      "store_policy": "Counts as an identifier in privacy labels if linked to the person",
+      "api_surface": "UIDevice.identifierForVendor",
+      "note": ""
+    }
+  },
+  "data": {
+    "type": "string",
+    "metric": "UUID",
+    "update": "stable until reset rule triggers",
+    "fields": [
+      {
+        "name": "identifierForVendor / appSetId",
+        "type": "string",
+        "unit": "",
+        "range": "UUID",
+        "precision": ""
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can recognise your phone across one company's apps, but not other companies' apps",
+    "user_action": "Nothing. It happens when the app starts",
+    "can": [
+      "Tell that two apps from the same developer are on the same phone",
+      "Count users, spot fraud and set fair use limits",
+      "Stand in for the ad ID on Android for non ad uses when the ad ID is zeroed"
+    ],
+    "cannot": [
+      "Follow you into apps from other companies",
+      "Be used for ad targeting on Android or for third party tracking on iPhone",
+      "Show a prompt; none is needed"
+    ],
+    "reach": 3,
+    "reach_label": "Across one company's apps",
+    "differs": "iPhone calls it IDFV. Android calls it App Set ID."
+  },
+  "story": {
+    "what_it_is": "A number that lets one developer recognize your phone across its own apps, with no prompt.",
+    "icon": "fingerprint",
+    "tags": [
+      "Developer ID",
+      "Silent",
+      "Analytics"
+    ],
+    "marketing": [
+      {
+        "vendor": "Apple",
+        "name": "Identifier for Vendor",
+        "pitch": "A unique ID the same for all of a developer's apps on a device.",
+        "url": "https://developer.apple.com/documentation/uikit/uidevice/identifierforvendor"
+      },
+      {
+        "vendor": "Google",
+        "name": "App Set ID",
+        "pitch": "A reset, developer scoped ID for analytics and fraud, not for ads.",
+        "url": "https://developer.android.com/design-for-safety/ads/appsetid"
+      }
+    ],
+    "for_you": "You never see it. It lets a company that makes several apps know it is the same phone, so a fraud limit or a free trial can apply across all of them.",
+    "for_makers": "It needs no prompt and cannot join other companies' apps, so it is a safe way to run analytics, stop abuse and enforce fair use. Apple and Google both bar it from ad targeting.",
+    "use_cases": [
+      {
+        "type": "games",
+        "example": "A studio that makes five games gives a welcome bonus only once per phone across all five.",
+        "apps": [
+          "Zynga",
+          "Supercell"
+        ]
+      },
+      {
+        "type": "security",
+        "example": "A fraud team sees a phone create 40 accounts in a day and blocks it.",
+        "apps": [
+          "Uber",
+          "Lyft"
+        ]
+      },
+      {
+        "type": "analytics",
+        "example": "A company with a main app and a lite app counts one user instead of two.",
+        "apps": [
+          "Google",
+          "Meta"
+        ]
+      },
+      {
+        "type": "productivity",
+        "example": "An office suite keeps your settings in sync across its sister apps.",
+        "apps": [
+          "Microsoft 365"
+        ]
+      },
+      {
+        "type": "shopping",
+        "example": "A retailer avoids showing the same coupon twice to one phone.",
+        "apps": []
+      },
+      {
+        "type": "developer",
+        "example": "A developer groups crash reports by device across its apps.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Stable across reinstall until all apps removed",
+      "Misuse for ad profiling"
+    ],
+    "android_note": "Android calls its version the App Set ID, which resets after 13 months idle.",
+    "ios_note": "iOS calls it the IDFV, and it resets when the last app from that developer is deleted."
+  },
+  "technical_bounds": [
+    "Cannot join with other developers' apps",
+    "Not a substitute for the ad ID in ads on Android",
+    "iOS: ATT does not apply while the ID is not combined with third-party data"
+  ],
+  "scores": {
+    "sensitivity": 3,
+    "utility": 4,
+    "fingerprint_bits": null,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Cross-app analytics inside one company",
+      "Fraud detection"
+    ],
+    "abuse": [
+      "Used with MMP identity graphs to simulate cross-app IDs"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2013-09",
+      "platform": "ios",
+      "version": "iOS 6",
+      "change": "IDFV available"
+    },
+    {
+      "date": "2021-06",
+      "platform": "android",
+      "version": "Android 12 (API 31)",
+      "change": "App Set ID introduced via Play services as the recommended non-ad ID"
+    }
+  ],
+  "related": [
+    "mob.ads.aaid",
+    "mob.ads.idfa",
+    "mob.xtrack.keychain-reinstall"
+  ],
+  "refs": [
+    {
+      "t": "apple",
+      "label": "Apple: identifierForVendor",
+      "url": "https://developer.apple.com/documentation/uikit/uidevice/identifierforvendor"
+    },
+    {
+      "t": "android",
+      "label": "Android: App Set ID",
+      "url": "https://developer.android.com/design-for-safety/ads/appsetid"
+    }
+  ],
+  "confidence": "docs"
+}

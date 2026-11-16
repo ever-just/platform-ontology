@@ -1,0 +1,234 @@
+{
+  "id": "web.input.paste-event",
+  "name": "Paste event (read what the person pastes)",
+  "kind": "capability",
+  "group": "input-clipboard",
+  "subgroup": "Clipboard",
+  "tags": [
+    "paste",
+    "clipboardData",
+    "files"
+  ],
+  "plain": "Gives the page the clipboard contents, but only when the person presses paste inside the page.",
+  "meaning": "A paste is consent for that one read: the site gets text, HTML or files the person chose to paste. It cannot peek at the clipboard at other times, which blocks silent snooping.",
+  "lifecycle": [
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "document.addEventListener('paste', e => e.clipboardData.getData('text/plain'))",
+      "bcd": [
+        "api.Element.paste_event",
+        "api.ClipboardEvent.clipboardData"
+      ],
+      "access": {
+        "grant": "gesture",
+        "prompt_ui": "No prompt (needs a click, tap or keypress)",
+        "secure_context": false,
+        "user_gesture": false,
+        "activation": "none",
+        "persistence": "Per paste action",
+        "revocation": "Nothing to revoke (no permission is stored)",
+        "iframe": "Fires in the focused frame only",
+        "steps": [
+          "Person presses Ctrl or Cmd+V (or the context menu Paste)",
+          "paste event fires",
+          "Page reads clipboardData: text, html, files"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "1",
+          "note": "",
+          "date": "2008-12-11"
+        },
+        "edge": {
+          "s": "y",
+          "v": "12",
+          "note": "",
+          "date": "2015-07-29"
+        },
+        "firefox": {
+          "s": "y",
+          "v": "22",
+          "note": "",
+          "date": "2013-06-25"
+        },
+        "safari": {
+          "s": "y",
+          "v": "3",
+          "note": "",
+          "date": "2007-10-26"
+        },
+        "ios_safari": {
+          "s": "y",
+          "v": "3",
+          "note": "All iOS browsers use WebKit",
+          "date": "2009-06-17"
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "18",
+          "note": "",
+          "date": "2012-06-27"
+        },
+        "samsung": {
+          "s": "y",
+          "v": "1.0",
+          "note": "",
+          "date": "2013-04-27"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "none",
+    "metric": "",
+    "update": "",
+    "fields": []
+  },
+  "limits": {
+    "headline": "Can get what you paste, but only when you press paste on its page",
+    "user_action": "You press Ctrl+V, Cmd+V, or use Paste from the menu on the page",
+    "can": [
+      "Receive text, HTML or files that you paste",
+      "Fill in a form field or an editor with it",
+      "Work without any pop up"
+    ],
+    "cannot": [
+      "See your clipboard when you did not paste",
+      "See what you pasted on other pages or apps",
+      "Get more than the one paste you did"
+    ],
+    "reach": 1,
+    "reach_label": "One paste, when you press it",
+    "differs": ""
+  },
+  "story": {
+    "what_it_is": "The page gets what you paste, but only when you press paste on it.",
+    "icon": "clipboard-paste",
+    "tags": [
+      "Clipboard",
+      "You trigger it"
+    ],
+    "marketing": [
+      {
+        "vendor": "MDN (standards docs)",
+        "name": "Clipboard events",
+        "pitch": "Describes the paste event that gives pages the clipboard content when the person pastes into them.",
+        "url": "https://developer.mozilla.org/en-US/docs/Web/API/Element/paste_event"
+      }
+    ],
+    "for_you": "You paste into a page with Ctrl+V or a right click and the content appears. Pasting counts as your yes for that one time. The page cannot peek at your clipboard at other times.",
+    "for_makers": "Makers let people paste screenshots, tables and links into editors, chats and forms. They can also clean up pasted content or paste formatted text and images safely.",
+    "use_cases": [
+      {
+        "type": "messaging",
+        "example": "A chat app lets you paste a screenshot from your clipboard right into the message box.",
+        "apps": [
+          "Slack",
+          "Discord",
+          "WhatsApp Web"
+        ]
+      },
+      {
+        "type": "productivity",
+        "example": "A document editor pastes a copied web table and keeps its columns.",
+        "apps": [
+          "Google Docs",
+          "Notion"
+        ]
+      },
+      {
+        "type": "creative",
+        "example": "A design tool turns a pasted image or SVG into a layer on the canvas.",
+        "apps": [
+          "Figma",
+          "Canva"
+        ]
+      },
+      {
+        "type": "games",
+        "example": "A level editor or modding site lets you paste a map code into a box and loads it.",
+        "apps": []
+      },
+      {
+        "type": "security",
+        "example": "A site may block pasting into password or code fields, which annoys people with password managers.",
+        "apps": []
+      },
+      {
+        "type": "analytics",
+        "example": "A form tool records whether you pasted an email or typed it, as one more signal about bots.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Pasted private data is readable",
+      "Hidden formatting"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Only fires on a user paste in the focused document; scripts cannot trigger it with dispatchEvent for real data",
+    "Types readable: text/plain, text/html, text/uri-list and files (images, documents)",
+    "Pasted HTML is the browser sanitized form, not raw source from the source app",
+    "No permission prompt (the keystroke is the consent)",
+    "Pasted files expose name, size, type, lastModified; no path"
+  ],
+  "scores": {
+    "sensitivity": 3,
+    "utility": 5,
+    "fingerprint_bits": null,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Paste images into chat or docs",
+      "Smart paste cleaning",
+      "Paste from spreadsheets"
+    ],
+    "abuse": [
+      "Capturing a sensitive clipboard after social engineering to press paste"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2012",
+      "browser": "chrome",
+      "version": "1",
+      "change": "paste event with clipboardData files for images"
+    },
+    {
+      "date": "2019-04",
+      "browser": "firefox",
+      "version": "66",
+      "change": "paste event exposes clipboard files"
+    }
+  ],
+  "related": [
+    "web.input.clipboard-read"
+  ],
+  "refs": [
+    {
+      "t": "mdn",
+      "label": "MDN paste event",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/Element/paste_event"
+    },
+    {
+      "t": "spec",
+      "label": "W3C Clipboard API and events",
+      "url": "https://www.w3.org/TR/clipboard-apis/"
+    }
+  ],
+  "confidence": "docs"
+}

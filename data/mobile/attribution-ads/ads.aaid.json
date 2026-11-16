@@ -1,0 +1,242 @@
+{
+  "id": "mob.ads.aaid",
+  "name": "Google advertising ID (AAID/GAID)",
+  "kind": "tracking",
+  "group": "attribution-ads",
+  "subgroup": "Advertising IDs",
+  "tags": [
+    "aaid",
+    "gaid",
+    "advertising-id",
+    "delete-id",
+    "play-services"
+  ],
+  "plain": "A resettable Google ID apps use for ads, which the person can delete, giving apps zeros.",
+  "meaning": "The cross-app join key on Android: install attribution, retargeting, frequency capping. Users can reset or delete it; kids apps must not send it.",
+  "lifecycle": [
+    "on-launch",
+    "in-session"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "y",
+      "v": "2.3",
+      "api": 9,
+      "permission": "com.google.android.gms.permission.AD_ID (normal, needed from Android 13 target)",
+      "protection": "normal",
+      "grant": "install",
+      "prompt_ui": "None on install; Settings > Privacy > Ads to reset or delete",
+      "persistence": "Persists until reset by person; reset by factory reset",
+      "revocation": "Settings > Google > Ads > Delete advertising ID (Android 12+); opt out of personalization",
+      "store_policy": "Play Ads policy: use the ad ID for advertising instead of other IDs; Families: must not transmit",
+      "api_surface": "AdvertisingIdClient.getAdvertisingIdInfo (Play services)",
+      "note": "Returns 00000000-0000-0000-0000-000000000000 after deletion (Android 12+). No Privacy Sandbox replacement is coming: the Oct 2025 wind-down left the ad ID as the main cross-app identifier."
+    },
+    "ios": {
+      "s": "n",
+      "v": "",
+      "permission": "",
+      "protection": "none",
+      "grant": "not-exposed",
+      "prompt_ui": "",
+      "persistence": "",
+      "revocation": "",
+      "store_policy": "",
+      "api_surface": "",
+      "note": "Apple equivalent is the IDFA (mob.ads.idfa)."
+    }
+  },
+  "data": {
+    "type": "string",
+    "metric": "UUID plus isLimitAdTrackingEnabled flag",
+    "update": "read any time",
+    "fields": [
+      {
+        "name": "id",
+        "type": "string",
+        "unit": "",
+        "range": "UUID or zeros",
+        "precision": ""
+      },
+      {
+        "name": "isLimitAdTrackingEnabled",
+        "type": "boolean",
+        "unit": "",
+        "range": "",
+        "precision": ""
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can use a resettable Google ad ID to link your activity across apps",
+    "user_action": "Nothing. It happens when the app or its ad tool starts",
+    "can": [
+      "Join your activity across apps that use the same ad ID",
+      "Count installs, show retargeting ads, and limit how often you see an ad",
+      "Give a string of zeros once you delete the ID (Android 12 and later)"
+    ],
+    "cannot": [
+      "Use the ID after you delete it in Settings, Privacy, Ads",
+      "Send it to third parties from a kids app",
+      "Follow you after you reset it, as the ID changes",
+      "Be used on iPhone; the Apple equivalent is the IDFA"
+    ],
+    "reach": 4,
+    "reach_label": "Follows you across apps, anytime",
+    "differs": "Android only. iPhone uses the IDFA, which needs the tracking prompt."
+  },
+  "story": {
+    "what_it_is": "A reset button ID on Android that apps and ad networks use to recognize your phone.",
+    "icon": "fingerprint",
+    "tags": [
+      "Ads",
+      "Tracking",
+      "Resettable"
+    ],
+    "marketing": [
+      {
+        "vendor": "Google",
+        "name": "Advertising ID",
+        "pitch": "A user resettable ID for advertising that you can delete at any time in settings.",
+        "url": "https://support.google.com/googleplay/android-developer/answer/6048248"
+      }
+    ],
+    "for_you": "You normally do not see it. In Settings you can reset it or delete it, which turns it into a row of zeros and makes ads less targeted.",
+    "for_makers": "It is the main cross app join key on Android: ads show who clicked, who installed and who came back. Makers use it for install attribution, retargeting and frequency caps, and kids apps must not send it.",
+    "use_cases": [
+      {
+        "type": "ads",
+        "example": "You click a game ad, install, and the ad network matches the ID to prove its ad worked.",
+        "apps": [
+          "Meta Ads",
+          "Unity Ads"
+        ]
+      },
+      {
+        "type": "games",
+        "example": "A game shows a bonus offer to players who came from a certain campaign and who still have the ID.",
+        "apps": [
+          "Candy Crush",
+          "Subway Surfers"
+        ]
+      },
+      {
+        "type": "shopping",
+        "example": "A shop retargets you with a banner for the shoes you left in the cart.",
+        "apps": [
+          "Amazon",
+          "Temu"
+        ]
+      },
+      {
+        "type": "ads",
+        "example": "An ad network caps a user to three views a day by remembering the ID.",
+        "apps": []
+      },
+      {
+        "type": "analytics",
+        "example": "A growth team joins the ID in several apps to see how often users switch.",
+        "apps": [
+          "AppsFlyer",
+          "Adjust"
+        ]
+      },
+      {
+        "type": "security",
+        "example": "A fraud tool spots a device with many fake installs using the same ID pattern.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Follows you across apps",
+      "Zeroed if you delete it"
+    ],
+    "android_note": "Android lets you reset or delete the ID, and Android 13 needs the AD_ID permission.",
+    "ios_note": "iOS has the IDFA instead, behind the App Tracking Transparency prompt."
+  },
+  "technical_bounds": [
+    "Zero value after delete or without AD_ID",
+    "Apps for kids must not send it",
+    "Wear OS and other form factors vary"
+  ],
+  "scores": {
+    "sensitivity": 4,
+    "utility": 5,
+    "fingerprint_bits": null,
+    "friction": 1
+  },
+  "value": {
+    "legit_uses": [
+      "Attribution and ads for consenting users"
+    ],
+    "abuse": [
+      "Cross-app profiling by data brokers"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": true,
+      "how": "Play Data safety lists Device or other IDs as collected, and says none is shared with third parties. Privacy policy 1.4 says outside designated EU style countries LinkedIn may collect or rely on others to collect device information such as an ad ID."
+    }
+  },
+  "history": [
+    {
+      "date": "2013-10",
+      "platform": "android",
+      "version": "Play services 4.0",
+      "change": "Advertising ID introduced"
+    },
+    {
+      "date": "2021-12",
+      "platform": "android",
+      "version": "Android 12 (API 31)",
+      "change": "Delete advertising ID in Settings; zeros returned"
+    },
+    {
+      "date": "2022-04",
+      "platform": "android",
+      "version": "Android 13 (API 33)",
+      "change": "AD_ID permission declared; missing declaration returns zeros for apps targeting 13+"
+    },
+    {
+      "date": "2025-10",
+      "platform": "android",
+      "version": "Android 16",
+      "change": "Privacy Sandbox wound down; ad ID unchanged"
+    }
+  ],
+  "related": [
+    "mob.id.ad-id-permission",
+    "mob.ads.idfa",
+    "mob.ads.idfv"
+  ],
+  "refs": [
+    {
+      "t": "policy",
+      "label": "Play Console Help: Advertising ID",
+      "url": "https://support.google.com/googleplay/android-developer/answer/6048248"
+    },
+    {
+      "t": "android",
+      "label": "Android: Advertising ID",
+      "url": "https://developer.android.com/identity/user-data-ids"
+    },
+    {
+      "t": "policy",
+      "label": "Google Play: Advertising ID policy",
+      "url": "https://support.google.com/googleplay/android-developer/answer/6048248"
+    },
+    {
+      "t": "vendor",
+      "label": "Google Play Data safety, LinkedIn (com.linkedin.android)",
+      "url": "https://play.google.com/store/apps/datasafety?id=com.linkedin.android&hl=en_US"
+    },
+    {
+      "t": "policy",
+      "label": "LinkedIn Privacy Policy (effective 3 Nov 2025)",
+      "url": "https://www.linkedin.com/legal/privacy-policy"
+    }
+  ],
+  "confidence": "verified"
+}

@@ -1,0 +1,216 @@
+{
+  "id": "mob.notifications.live-updates",
+  "name": "Live Updates and Live Activities",
+  "kind": "permission",
+  "group": "notifications-background",
+  "subgroup": "Alerts",
+  "tags": [
+    "promoted-notification",
+    "live-activity",
+    "ongoing"
+  ],
+  "plain": "Shows a live, ongoing status on the lock screen and status bar.",
+  "meaning": "Live status cards for rides, deliveries and timers. They keep the app visible in prime screen space and are limited to defined use cases.",
+  "lifecycle": [
+    "in-session",
+    "background"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "y",
+      "v": "16",
+      "api": 36,
+      "permission": "POST_PROMOTED_NOTIFICATIONS (Android 16 QPR1); Notification.ProgressStyle; requestPromotedOngoing",
+      "protection": "special",
+      "grant": "settings",
+      "prompt_ui": "Settings toggle per app; app must also opt in via requestPromotedOngoing",
+      "persistence": "Until revoked",
+      "revocation": "Settings > Apps > Notifications > Live updates",
+      "store_policy": "Play: only for eligible ongoing, user-initiated activities",
+      "api_surface": "Notification.ProgressStyle, setRequestPromotedOngoing",
+      "note": "Protection level reported as normal|appops in AOSP; verify against the current manifest reference. Media player notifications are excluded."
+    },
+    "ios": {
+      "s": "y",
+      "v": "16.1",
+      "permission": "NSSupportsLiveActivities (Info.plist); user toggle Allow Live Activities",
+      "protection": "prompt",
+      "grant": "settings",
+      "prompt_ui": "Allow Live Activities toggle in Settings; no separate prompt",
+      "persistence": "Until revoked; activities end after 8 hours and can stay 4 more on the Lock Screen",
+      "revocation": "Settings > app > Live Activities",
+      "store_policy": "App Review: Live Activities must show timely updates, not ads",
+      "api_surface": "ActivityKit, push-to-update Live Activities (iOS 16.2)",
+      "note": "Dynamic Island requires iPhone 14 Pro or later."
+    }
+  },
+  "web_equivalents": [
+    "web.notify.badging"
+  ],
+  "data": {
+    "type": "event",
+    "metric": "Live status updates",
+    "update": "push updates; ActivityKit budgets apply",
+    "fields": []
+  },
+  "limits": {
+    "headline": "Can show a live status on your lock screen, if you allow it for the app",
+    "user_action": "You start a ride, order, timer or trip and the app shows a live card",
+    "can": [
+      "Show live progress on the lock screen and status bar",
+      "Use the Dynamic Island on iPhone 14 Pro and newer",
+      "Keep updating while the task runs"
+    ],
+    "cannot": [
+      "Show it if you turned off Live Activities or Live Updates for the app",
+      "Use it for anything that is not an ongoing task",
+      "Use the Dynamic Island on older iPhones"
+    ],
+    "reach": 2,
+    "reach_label": "While a task is running",
+    "differs": "iPhone calls it Live Activities (iOS 16.1 and up). Android 16 calls it Live Updates. Both have a per app switch in Settings."
+  },
+  "story": {
+    "what_it_is": "Lets an app show a live status card for a ride, delivery or timer on the lock screen.",
+    "icon": "activity",
+    "tags": [
+      "Live",
+      "Notifications",
+      "Asks first"
+    ],
+    "marketing": [
+      {
+        "vendor": "Apple",
+        "name": "Live Activities",
+        "pitch": "Apple lets apps show live updates for tasks on the Lock Screen and Dynamic Island.",
+        "url": "https://developer.apple.com/documentation/activitykit"
+      },
+      {
+        "vendor": "Google",
+        "name": "Live Updates",
+        "pitch": "Google adds Live Updates in Android 16 for time bound tasks like rides and deliveries.",
+        "url": "https://developer.android.com/about/versions/16/behavior-changes-all"
+      }
+    ],
+    "for_you": "You see a live card that keeps updating, such as your driver on a map. You can switch it off per app in settings.",
+    "for_makers": "Makers get a prime spot with strong visibility. Both systems limit it to real tasks, not ads.",
+    "use_cases": [
+      {
+        "type": "delivery",
+        "example": "A food order shows live steps until it arrives.",
+        "apps": [
+          "DoorDash",
+          "Uber Eats"
+        ]
+      },
+      {
+        "type": "rideshare",
+        "example": "A ride shows the car and time left.",
+        "apps": [
+          "Uber",
+          "Lyft"
+        ]
+      },
+      {
+        "type": "live",
+        "example": "A live match shows a running score.",
+        "apps": [
+          "ESPN"
+        ]
+      },
+      {
+        "type": "productivity",
+        "example": "A timer app keeps a countdown on the lock screen.",
+        "apps": []
+      },
+      {
+        "type": "travel",
+        "example": "A flight shows delays and gate live.",
+        "apps": [
+          "United"
+        ]
+      },
+      {
+        "type": "fitness",
+        "example": "A workout shows pace on the Dynamic Island.",
+        "apps": [
+          "Strava"
+        ]
+      },
+      {
+        "type": "games",
+        "example": "A game shows a live match score or timer.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Persistent promotions",
+      "Takes lock screen space"
+    ],
+    "android_note": "Android 16 needs a settings toggle and the app must opt in.",
+    "ios_note": "iOS has a toggle per app. The Dynamic Island needs iPhone 14 Pro or later."
+  },
+  "technical_bounds": [
+    "Eligible categories only",
+    "Android confidence is based on secondary sources and AOSP commits"
+  ],
+  "scores": {
+    "sensitivity": 2,
+    "utility": 4,
+    "fingerprint_bits": null,
+    "friction": 2
+  },
+  "value": {
+    "legit_uses": [
+      "Ride tracking",
+      "Timers",
+      "Delivery updates"
+    ],
+    "abuse": [
+      "Persistent promotions"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2022-10",
+      "platform": "ios",
+      "version": "iOS 16.1",
+      "change": "Live Activities introduced"
+    },
+    {
+      "date": "2025-06",
+      "platform": "android",
+      "version": "16 (API 36)",
+      "change": "Progress-centric notifications introduced; stable lacked the permission"
+    },
+    {
+      "date": "2025-12",
+      "platform": "android",
+      "version": "16 QPR1",
+      "change": "POST_PROMOTED_NOTIFICATIONS and requestPromotedOngoing required"
+    }
+  ],
+  "related": [
+    "mob.notifications.post-notifications"
+  ],
+  "refs": [
+    {
+      "t": "android",
+      "label": "Android 16 behavior changes (all apps)",
+      "url": "https://developer.android.com/about/versions/16/behavior-changes-all"
+    },
+    {
+      "t": "apple",
+      "label": "Apple: ActivityKit",
+      "url": "https://developer.apple.com/documentation/activitykit"
+    }
+  ],
+  "confidence": "inferred"
+}

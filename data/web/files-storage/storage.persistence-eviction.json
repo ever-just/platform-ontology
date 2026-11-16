@@ -1,0 +1,240 @@
+{
+  "id": "web.storage.persistence-eviction",
+  "name": "Storage persistence and eviction",
+  "kind": "capability",
+  "group": "files-storage",
+  "subgroup": "After leaving",
+  "tags": [
+    "storage-persist",
+    "eviction",
+    "quota",
+    "storage-estimate"
+  ],
+  "plain": "A site can ask the browser to keep its data permanently; otherwise it can be evicted when disk is low.",
+  "meaning": "navigator.storage.persist() asks for protected storage. Chrome grants it from engagement, bookmarks or install, Firefox asks the person. Best effort data is deleted least recently used first. storage.estimate() reveals quota, a coarse signal.",
+  "lifecycle": [
+    "after-leaving",
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "navigator.storage.persist(), persisted(), estimate()",
+      "bcd": [
+        "api.StorageManager.persist",
+        "api.StorageManager.estimate"
+      ],
+      "access": {
+        "grant": "prompt",
+        "prompt_ui": "Firefox shows a permission prompt, Chrome decides silently",
+        "secure_context": true,
+        "user_gesture": false,
+        "persistence": "Persistent until cleared by the person. Best effort until eviction",
+        "revocation": "Clear site data, browser privacy settings",
+        "iframe": "",
+        "steps": []
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "55",
+          "note": "",
+          "date": "2016-12-01"
+        },
+        "edge": {
+          "s": "y",
+          "v": "79",
+          "note": "",
+          "date": "2020-01-15"
+        },
+        "firefox": {
+          "s": "y",
+          "v": "57",
+          "note": "",
+          "date": "2017-11-14"
+        },
+        "safari": {
+          "s": "p",
+          "v": "15.2",
+          "note": "Grants conditional",
+          "date": "2021-12-13"
+        },
+        "ios_safari": {
+          "s": "p",
+          "v": "15.2",
+          "note": "",
+          "date": "2021-12-13"
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "55",
+          "note": "",
+          "date": "2016-12-06"
+        },
+        "samsung": {
+          "s": "y",
+          "v": "6.0",
+          "note": "",
+          "date": "2017-08-23"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "object",
+    "metric": "Quota estimate and persisted flag",
+    "update": "any time",
+    "fields": [
+      {
+        "name": "quota",
+        "type": "integer",
+        "unit": "bytes",
+        "range": "up to disk share",
+        "precision": "rounded"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can ask the browser to keep its saved data when space runs low",
+    "user_action": "Firefox may ask you to allow Store data in persistent storage. Other browsers decide quietly.",
+    "can": [
+      "Ask for persistent storage",
+      "Check whether it was granted",
+      "Check how much space it has used and has left, roughly"
+    ],
+    "cannot": [
+      "Make the browser agree",
+      "Stop you clearing site data yourself",
+      "Keep data after a private window closes"
+    ],
+    "reach": 1,
+    "reach_label": "A request, not a guarantee",
+    "differs": "Firefox asks you. Chrome decides on its own. Safari decides on its own and supports it only in part."
+  },
+  "story": {
+    "what_it_is": "A site can ask the browser to keep its data for good. Otherwise low disk space can erase it.",
+    "icon": "history",
+    "tags": [
+      "Storage",
+      "Silent",
+      "Developer"
+    ],
+    "marketing": [
+      {
+        "vendor": "web.dev",
+        "name": "Persistent storage",
+        "pitch": "Google explains how a site can ask the browser to protect its data from automatic cleanup.",
+        "url": "https://web.dev/articles/persistent-storage"
+      },
+      {
+        "vendor": "WebKit",
+        "name": "Updates to storage policy",
+        "pitch": "Apple explains how Safari handles storage limits and when it can clear a site's data.",
+        "url": "https://webkit.org/blog/14403/updates-to-storage-policy/"
+      }
+    ],
+    "for_you": "Most of the time nothing seems to happen. But if your device runs low on space, a site you rarely use may lose its offline data and ask you to log in or download again.",
+    "for_makers": "Makers want their data to survive, because a lost offline copy means a frustrated user. They request protection, and browsers grant it based on use. Trackers also like data that outlives clearing.",
+    "use_cases": [
+      {
+        "type": "games",
+        "example": "A browser game asks to protect your saves so a low disk does not erase your progress.",
+        "apps": []
+      },
+      {
+        "type": "productivity",
+        "example": "A note app asks to protect offline notes that are not yet synced to the cloud.",
+        "apps": []
+      },
+      {
+        "type": "creative",
+        "example": "A web editor asks to protect a long project saved only on your device.",
+        "apps": []
+      },
+      {
+        "type": "media",
+        "example": "A podcast or music app asks to keep your downloads.",
+        "apps": []
+      },
+      {
+        "type": "security",
+        "example": "A browser clears old data first from sites you rarely visit, to free up space.",
+        "apps": []
+      },
+      {
+        "type": "ads",
+        "example": "A tracker hides an ID in storage that the browser might never clear on its own.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Data can vanish",
+      "Lingering trackers"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Chrome decides persist by heuristics with no prompt",
+    "Firefox shows a prompt",
+    "estimate() values are padded or rounded to resist fingerprinting",
+    "Safari applies the 7 day cap except for installed web apps"
+  ],
+  "scores": {
+    "sensitivity": 2,
+    "utility": 4,
+    "fingerprint_bits": 1.0,
+    "friction": 1
+  },
+  "value": {
+    "legit_uses": [
+      "Protecting offline data"
+    ],
+    "abuse": [
+      "Ensuring tracker storage is not evicted"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2016-06",
+      "browser": "chrome",
+      "version": "55",
+      "change": "Persistent storage shipped"
+    },
+    {
+      "date": "2017-05",
+      "browser": "firefox",
+      "version": "57",
+      "change": "StorageManager shipped"
+    },
+    {
+      "date": "2022-03",
+      "browser": "safari",
+      "version": "15.2",
+      "change": "navigator.storage.persist shipped"
+    }
+  ],
+  "related": [
+    "web.storage.indexeddb",
+    "web.xsite.safari-7-day-storage-cap"
+  ],
+  "refs": [
+    {
+      "t": "mdn",
+      "label": "MDN StorageManager.persist",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/StorageManager/persist"
+    },
+    {
+      "t": "mdn",
+      "label": "MDN Storage quotas and eviction",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/Storage_API/Storage_quotas_and_eviction_criteria"
+    }
+  ],
+  "confidence": "docs"
+}

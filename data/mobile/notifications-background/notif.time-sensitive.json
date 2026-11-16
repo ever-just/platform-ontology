@@ -1,0 +1,209 @@
+{
+  "id": "mob.notif.time-sensitive",
+  "name": "Time Sensitive and DND-bypass alerts",
+  "kind": "capability",
+  "group": "notifications-background",
+  "subgroup": "Permission and presentation",
+  "tags": [
+    "notifications",
+    "focus",
+    "interruption-level",
+    "entitlement"
+  ],
+  "plain": "Marks an alert urgent enough to break through Focus or Do Not Disturb for an hour.",
+  "meaning": "A way past the person's quiet time. iOS gates it with a capability and lets users switch it off per app; Android gates the equivalent behind Do Not Disturb access.",
+  "lifecycle": [
+    "background"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "f",
+      "v": "6.0",
+      "api": 23,
+      "permission": "ACCESS_NOTIFICATION_POLICY (special access)",
+      "protection": "special",
+      "grant": "settings",
+      "prompt_ui": "Settings toggle: Do Not Disturb access",
+      "persistence": "Until revoked",
+      "revocation": "Settings > Notifications > Do Not Disturb access",
+      "store_policy": "Play: restricted to alarm, calling, safety apps",
+      "api_surface": "NotificationChannel.setBypassDnd(true), IMPORTANCE_HIGH",
+      "note": "Bypass works only with DND access granted"
+    },
+    "ios": {
+      "s": "f",
+      "v": "15.0",
+      "permission": "com.apple.developer.usernotifications.time-sensitive (capability); interruption-level time-sensitive",
+      "protection": "entitlement",
+      "grant": "entitlement",
+      "prompt_ui": "Time Sensitive Notifications toggle per app in Settings",
+      "persistence": "Per app toggle persists",
+      "revocation": "Settings > Notifications > App > Time Sensitive Notifications",
+      "store_policy": "App Review 4.5.4: only for urgent events",
+      "api_surface": "UNNotificationInterruptionLevel.timeSensitive",
+      "note": "Levels: passive, active, time-sensitive, critical; time sensitive breaks Focus and Scheduled Summary and stays on the lock screen up to 1 hour"
+    }
+  },
+  "web_equivalents": [
+    "web.notify.notifications"
+  ],
+  "data": {
+    "type": "enum",
+    "metric": "Interruption level",
+    "update": "Per notification",
+    "fields": [
+      {
+        "name": "interruption-level",
+        "type": "enum",
+        "unit": "",
+        "range": "passive, active, time-sensitive, critical",
+        "precision": ""
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can mark an alert urgent so it breaks through Focus for about an hour",
+    "user_action": "You allow Time Sensitive in iPhone Settings, or give Do Not Disturb access on Android",
+    "can": [
+      "Show an urgent alert during Focus on iPhone",
+      "Stay on the lock screen for about an hour",
+      "Break through Do Not Disturb on Android once you grant access"
+    ],
+    "cannot": [
+      "Break through if you turned Time Sensitive off for that app",
+      "Break through the mute switch; that is for Critical Alerts, which need Apple approval",
+      "Use Do Not Disturb bypass on Android without your access"
+    ],
+    "reach": 2,
+    "reach_label": "Urgent alerts only, if you allow",
+    "differs": "iPhone has four levels and a per app toggle. Android needs you to grant Do Not Disturb access."
+  },
+  "story": {
+    "what_it_is": "An alert marked urgent enough to break through Focus or Do Not Disturb for up to an hour.",
+    "icon": "bell-ring",
+    "tags": [
+      "Notifications",
+      "Control",
+      "Asks first"
+    ],
+    "marketing": [
+      {
+        "vendor": "Apple",
+        "name": "Time Sensitive notifications",
+        "pitch": "Apple lets apps mark an alert as time sensitive so it can break through Focus when it truly matters.",
+        "url": "https://developer.apple.com/documentation/usernotifications/unnotificationinterruptionlevel"
+      }
+    ],
+    "for_you": "Your phone is quiet in Focus mode, but a delivery arrival or a security alert still breaks through. You can switch this off for any app in Settings.",
+    "for_makers": "Makers get a path past quiet time for things that matter, like a driver at the door. Apple and users limit it because marketing keeps trying to pose as urgent.",
+    "use_cases": [
+      {
+        "type": "delivery",
+        "example": "Your driver is outside and the alert breaks through your Focus mode.",
+        "apps": [
+          "DoorDash",
+          "Amazon"
+        ]
+      },
+      {
+        "type": "security",
+        "example": "A home camera app alerts you to a break in even at night.",
+        "apps": [
+          "Ring"
+        ]
+      },
+      {
+        "type": "health",
+        "example": "A glucose or medication app warns you of a problem during sleep Focus.",
+        "apps": []
+      },
+      {
+        "type": "rideshare",
+        "example": "Your ride has arrived and the driver is waiting.",
+        "apps": [
+          "Uber"
+        ]
+      },
+      {
+        "type": "banking",
+        "example": "A bank flags a suspicious charge you need to confirm now.",
+        "apps": []
+      },
+      {
+        "type": "games",
+        "example": "A game tries to mark a limited time event as urgent. Apple discourages this.",
+        "apps": []
+      },
+      {
+        "type": "travel",
+        "example": "An airline sends a gate change as time sensitive.",
+        "apps": [
+          "Delta"
+        ]
+      }
+    ],
+    "risks": [
+      "Marketing posing as urgent",
+      "Breaks your quiet time"
+    ],
+    "android_note": "On Android, bypass depends on Do Not Disturb access that you grant in settings.",
+    "ios_note": "iOS has four levels from passive to critical. Time sensitive stays on the lock screen up to an hour."
+  },
+  "technical_bounds": [
+    "Can be switched off by the person",
+    "Abuse risks losing the entitlement"
+  ],
+  "scores": {
+    "sensitivity": 2,
+    "utility": 4,
+    "fingerprint_bits": null,
+    "friction": 3
+  },
+  "value": {
+    "legit_uses": [
+      "Delivery arrival",
+      "Safety alerts"
+    ],
+    "abuse": [
+      "Marketing posing as urgent"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2021-09",
+      "platform": "ios",
+      "version": "iOS 15",
+      "change": "Interruption levels and Time Sensitive notifications added with Focus"
+    },
+    {
+      "date": "2015-10",
+      "platform": "android",
+      "version": "6.0 (API 23)",
+      "change": "Do Not Disturb access and NotificationManager interruption filter"
+    }
+  ],
+  "related": [
+    "mob.notify.critical-alerts",
+    "mob.system.focus-status"
+  ],
+  "refs": [
+    {
+      "t": "apple",
+      "label": "Apple: UNNotificationInterruptionLevel",
+      "url": "https://developer.apple.com/documentation/usernotifications/unnotificationinterruptionlevel"
+    },
+    {
+      "t": "android",
+      "label": "Android: Notification channels",
+      "url": "https://developer.android.com/develop/ui/views/notifications/channels"
+    }
+  ],
+  "confidence": "docs"
+}

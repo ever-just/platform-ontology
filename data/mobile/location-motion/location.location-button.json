@@ -1,0 +1,199 @@
+{
+  "id": "mob.location.location-button",
+  "name": "Location button (one time share)",
+  "kind": "picker",
+  "group": "location-motion",
+  "subgroup": "Location",
+  "tags": [
+    "picker",
+    "one-time",
+    "location"
+  ],
+  "plain": "A system button the person taps to share location once, with no prompt or settings.",
+  "meaning": "App gets one time precise location without long term permission.",
+  "lifecycle": [
+    "in-session"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "p",
+      "v": "17",
+      "api": 37,
+      "permission": "None; Jetpack LocationButton (Beta 3, March 2026), ship status not confirmed",
+      "protection": "none",
+      "grant": "picker",
+      "prompt_ui": "Embedded location button",
+      "persistence": "One time",
+      "revocation": "n/a",
+      "store_policy": "",
+      "api_surface": "androidx LocationButton",
+      "note": "Preview; Android 17 stable ship not confirmed here"
+    },
+    "ios": {
+      "s": "y",
+      "v": "15",
+      "permission": "None; CLLocationButton gives one time authorization",
+      "protection": "none",
+      "grant": "picker",
+      "prompt_ui": "Tap on system rendered button",
+      "persistence": "One time",
+      "revocation": "n/a",
+      "store_policy": "",
+      "api_surface": "CLLocationButton, LocationButton in SwiftUI",
+      "note": "Does not require Info.plist usage string for the one time use"
+    }
+  },
+  "web_equivalents": [
+    "web.location.geolocation"
+  ],
+  "data": {
+    "type": "object",
+    "metric": "One time location",
+    "update": "per tap",
+    "fields": [
+      {
+        "name": "accuracy",
+        "type": "float",
+        "unit": "m",
+        "range": "full precision",
+        "precision": ""
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can get your location once when you tap the Share button, with no prompt",
+    "user_action": "You tap the system Share Location button",
+    "can": [
+      "Get your location one time for this tap",
+      "Use that spot to find nearby places or fill an address",
+      "Do it with no permission prompt or settings trip on iPhone"
+    ],
+    "cannot": [
+      "Follow you after the single tap",
+      "Use the one time spot in the background",
+      "Work on Android until the button ships; it is still in preview there",
+      "Use the spot again later without another tap"
+    ],
+    "reach": 1,
+    "reach_label": "One tap, one location",
+    "differs": "iPhone has the button now. Android's button is in preview and not confirmed to ship."
+  },
+  "story": {
+    "what_it_is": "A system button you tap to share your location one time, with no prompt and no settings.",
+    "icon": "locate-fixed",
+    "tags": [
+      "Location",
+      "One time",
+      "Privacy"
+    ],
+    "marketing": [
+      {
+        "vendor": "Apple",
+        "name": "Location Button",
+        "pitch": "A system button that gives an app one time access to your location, with no permission prompt needed.",
+        "url": "https://developer.apple.com/documentation/corelocationui/locationbutton"
+      }
+    ],
+    "for_you": "You see a blue Share Current Location button inside the app. You tap it and the app gets your spot once. There is no long permission step and the app does not keep it.",
+    "for_makers": "Makers get a quick, trusted way to get a location for one task without scaring users. It works well for store finders and one off searches. It cannot track you, so apps that need continuous tracking still need a permission.",
+    "use_cases": [
+      {
+        "type": "shopping",
+        "example": "A store app has a Find stores near me button that fills your location once for the search.",
+        "apps": [
+          "Home Depot",
+          "Starbucks"
+        ]
+      },
+      {
+        "type": "delivery",
+        "example": "A restaurant app uses the button to fill your delivery address on first order.",
+        "apps": [
+          "Domino's"
+        ]
+      },
+      {
+        "type": "rideshare",
+        "example": "A taxi app uses one tap to set your pickup point.",
+        "apps": []
+      },
+      {
+        "type": "travel",
+        "example": "A hotel app asks for your spot to show nearby rooms for tonight.",
+        "apps": [
+          "Hotel Tonight"
+        ]
+      },
+      {
+        "type": "utilities",
+        "example": "A parking app uses the button to find a spot close by without ongoing access.",
+        "apps": []
+      },
+      {
+        "type": "social",
+        "example": "A meetup app lets you tag where you are in a post once.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Repeated nagging for taps",
+      "Sharing without noticing"
+    ],
+    "android_note": "Android has no exact twin. It offers a one time option in the permission dialog instead.",
+    "ios_note": "This is an iPhone feature in the CoreLocationUI framework, and the button gives a temporary Allow While Using the App."
+  },
+  "technical_bounds": [
+    "System draws button so apps cannot spoof"
+  ],
+  "scores": {
+    "sensitivity": 4,
+    "utility": 3,
+    "fingerprint_bits": null,
+    "friction": 1
+  },
+  "value": {
+    "legit_uses": [
+      "Store finder"
+    ],
+    "abuse": [
+      "Repeated nagging"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2021-09",
+      "platform": "ios",
+      "version": "iOS 15",
+      "change": "CLLocationButton introduced"
+    },
+    {
+      "date": "2026-03",
+      "platform": "android",
+      "version": "17 beta",
+      "change": "Jetpack Location Button in Beta 3"
+    }
+  ],
+  "related": [
+    "mob.location.approximate"
+  ],
+  "refs": [
+    {
+      "t": "apple",
+      "label": "Apple: CLLocationButton",
+      "url": "https://developer.apple.com/documentation/corelocationui/cllocationbutton"
+    },
+    {
+      "t": "android",
+      "label": "Android: Android 17 behavior changes",
+      "url": "https://developer.android.com/about/versions/17/behavior-changes-all"
+    }
+  ],
+  "confidence": "inferred"
+}

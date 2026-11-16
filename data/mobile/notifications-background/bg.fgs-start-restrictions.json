@@ -1,0 +1,205 @@
+{
+  "id": "mob.bg.fgs-start-restrictions",
+  "name": "Background start restrictions",
+  "kind": "capability",
+  "group": "notifications-background",
+  "subgroup": "Android background limits",
+  "tags": [
+    "foreground-service",
+    "background-start",
+    "exemptions"
+  ],
+  "plain": "Apps in the background cannot freely start foreground services or open screens.",
+  "meaning": "Stops hidden activity from popping up or starting long tasks while the person is elsewhere. iOS goes further: apps can only launch for a few triggers, like location or push.",
+  "lifecycle": [
+    "background"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "y",
+      "v": "8.0",
+      "api": 26,
+      "permission": "SYSTEM_ALERT_WINDOW (special exemption)",
+      "protection": "normal",
+      "grant": "none",
+      "prompt_ui": "None",
+      "persistence": "Exemptions: visible activity, high priority FCM message, exact alarm, active notification interaction, device owner",
+      "revocation": "n/a",
+      "store_policy": "",
+      "api_surface": "ForegroundServiceStartNotAllowedException (API 31), BAL via PendingIntent",
+      "note": "Android 12 blocks FGS starts from background except listed exemptions; Android 17 hardens IntentSender BAL"
+    },
+    "ios": {
+      "s": "p",
+      "v": "4.0",
+      "permission": "",
+      "protection": "none",
+      "grant": "none",
+      "prompt_ui": "None",
+      "persistence": "iOS wakes apps only for specific events (push, location, BLE, geofence, background tasks)",
+      "revocation": "Force quit stops all",
+      "store_policy": "",
+      "api_surface": "Background modes",
+      "note": "iOS has no equivalent start API; wake only on events"
+    }
+  },
+  "web_equivalents": [
+    "web.xsite.service-worker-lifetime"
+  ],
+  "data": {
+    "type": "list",
+    "metric": "Allowed triggers",
+    "update": "Static",
+    "fields": [
+      {
+        "name": "android_exemptions",
+        "type": "list",
+        "unit": "",
+        "range": "FCM high, exact alarm, visible activity",
+        "precision": ""
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can't freely start work or open screens from the background",
+    "user_action": "Nothing. It happens when an app tries to start a service or screen while hidden",
+    "can": [
+      "Start a foreground service from the background only in listed exemptions on Android 12 and newer",
+      "Open a screen from the background with a special display permission or a notification tap",
+      "Wake on events on iPhone, such as push or location"
+    ],
+    "cannot": [
+      "Start foreground services from the background at will on Android 12 and newer",
+      "Pop up screens over other apps with no exemption",
+      "Run on iPhone with an equivalent start call; it has none",
+      "Skip tighter rules in Android 17"
+    ],
+    "reach": 1,
+    "reach_label": "Blocked unless an exemption applies",
+    "differs": "Android 12 blocks background starts and Android 17 tightens it. iPhone has no start call, only event wake ups."
+  },
+  "story": {
+    "what_it_is": "The phone stops apps in the background from suddenly starting visible services or opening screens.",
+    "icon": "octagon-alert",
+    "tags": [
+      "Background",
+      "Limits",
+      "Android"
+    ],
+    "marketing": [
+      {
+        "vendor": "Google",
+        "name": "Background start restrictions",
+        "pitch": "Android limits when apps in the background can start foreground services, to stop surprise activity.",
+        "url": "https://developer.android.com/develop/background-work/services/fgs/restrictions-bg-start"
+      }
+    ],
+    "for_you": "You notice it as fewer pop ups and less hidden work. An app you are not using cannot suddenly open a screen over your game or start a long task. That keeps the phone calm.",
+    "for_makers": "Makers must start long work from a screen you are using or a clear event, like a tap or a push. Some tricks to start hidden work are blocked. Allowed exceptions are small and listed.",
+    "use_cases": [
+      {
+        "type": "games",
+        "example": "A game cannot throw an ad screen over your video call from the background.",
+        "apps": []
+      },
+      {
+        "type": "messaging",
+        "example": "A chat app starts a call screen only through a high priority message you trigger.",
+        "apps": [
+          "WhatsApp"
+        ]
+      },
+      {
+        "type": "maps",
+        "example": "A navigation app starts when you tap Start, not from the background.",
+        "apps": [
+          "Google Maps"
+        ]
+      },
+      {
+        "type": "fitness",
+        "example": "A workout app starts tracking after a tap or an approved trigger.",
+        "apps": []
+      },
+      {
+        "type": "security",
+        "example": "A bad app tried to pop up fake login screens from the background, which the rules stop.",
+        "apps": []
+      },
+      {
+        "type": "rideshare",
+        "example": "A driver app uses an allowed exemption while you are on a trip.",
+        "apps": [
+          "Uber Driver"
+        ]
+      }
+    ],
+    "risks": [
+      "Exemptions misused",
+      "Features may break"
+    ],
+    "android_note": "Android limits when background apps can start foreground services and open screens, with a list of exceptions.",
+    "ios_note": "iPhone goes further and lets apps wake only for a few triggers, like location or push."
+  },
+  "technical_bounds": [
+    "Exemptions are narrow and change by version"
+  ],
+  "scores": {
+    "sensitivity": 1,
+    "utility": 3,
+    "fingerprint_bits": null,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Preventing nuisance"
+    ],
+    "abuse": [
+      "Using exemptions for covert wakeups"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2017-08",
+      "platform": "android",
+      "version": "8.0 (API 26)",
+      "change": "Background execution limits, no background services"
+    },
+    {
+      "date": "2021-10",
+      "platform": "android",
+      "version": "12 (API 31)",
+      "change": "FGS start from background blocked except exemptions"
+    },
+    {
+      "date": "2026-06",
+      "platform": "android",
+      "version": "17 (API 37)",
+      "change": "Background activity launch hardened for IntentSender"
+    }
+  ],
+  "related": [
+    "mob.bg.fgs-types",
+    "mob.notifications.exact-alarm"
+  ],
+  "refs": [
+    {
+      "t": "android",
+      "label": "Android: Restrictions on starting FGS from the background",
+      "url": "https://developer.android.com/develop/background-work/services/fgs/restrictions-bg-start"
+    },
+    {
+      "t": "android",
+      "label": "Android 17 behavior changes",
+      "url": "https://developer.android.com/about/versions/17/behavior-changes-all"
+    }
+  ],
+  "confidence": "docs"
+}

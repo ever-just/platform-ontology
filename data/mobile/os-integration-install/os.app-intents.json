@@ -1,0 +1,220 @@
+{
+  "id": "mob.os.app-intents",
+  "name": "App actions for assistants (App Intents, AppFunctions)",
+  "kind": "capability",
+  "group": "os-integration-install",
+  "subgroup": "Assistant hooks",
+  "tags": [
+    "app-intents",
+    "appfunctions",
+    "siri",
+    "shortcuts",
+    "app-actions"
+  ],
+  "plain": "Lets Siri, Shortcuts or Gemini run actions inside an app.",
+  "meaning": "An app exposes verbs and data to the system assistant, so a voice request can act without opening the app. Modern assistants can chain these across apps.",
+  "lifecycle": [
+    "background"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "p",
+      "v": "16",
+      "api": 36,
+      "permission": "None; AppFunctions via androidx.appfunctions (experimental), shortcuts.xml capabilities for older App Actions",
+      "protection": "none",
+      "grant": "prompt",
+      "prompt_ui": "Assistant asks before sensitive actions; app function access limited to trusted agents",
+      "persistence": "Per call",
+      "revocation": "Gemini app settings",
+      "store_policy": "",
+      "api_surface": "androidx.appfunctions, Google Assistant App Actions (built-in intents), Shortcuts API",
+      "note": "AppFunctions is the Android 16 analogue of App Intents; limited to privileged assistant callers."
+    },
+    "ios": {
+      "s": "y",
+      "v": "16.0",
+      "permission": "None; App Intents framework",
+      "protection": "none",
+      "grant": "prompt",
+      "prompt_ui": "Siri, Shortcuts, Spotlight and Action button show intents; confirmation dialogs set by developer",
+      "persistence": "Per run",
+      "revocation": "Settings > Siri & Apple Intelligence > Apps",
+      "store_policy": "",
+      "api_surface": "AppIntents, AppEntity, IntentDescription, SiriKit (legacy domains)",
+      "note": "iOS 18 and 26 let Siri and Apple Intelligence chain and understand app content with App Intents."
+    }
+  },
+  "data": {
+    "type": "event",
+    "metric": "Intent invocation",
+    "update": "per run",
+    "fields": [
+      {
+        "name": "intent name",
+        "type": "string",
+        "unit": "id",
+        "range": "n/a",
+        "precision": "exact"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can let Siri, Shortcuts or Gemini run actions inside the app, with your confirmation",
+    "user_action": "You ask Siri or Gemini to do something, or tap an action in Shortcuts or Spotlight",
+    "can": [
+      "Run an action in the app by voice or a shortcut",
+      "Show actions in Spotlight and on the Action button on iPhone",
+      "Chain actions together on iPhone with Apple Intelligence"
+    ],
+    "cannot": [
+      "Run sensitive actions without asking you first",
+      "Let any app call another app's actions on Android; callers are limited to privileged assistants",
+      "Take actions you have not allowed in the Siri or Shortcuts settings"
+    ],
+    "reach": 2,
+    "reach_label": "Only actions you ask for",
+    "differs": "iPhone uses App Intents. Android 16 uses AppFunctions, limited to trusted assistants."
+  },
+  "story": {
+    "what_it_is": "Lets Siri, Shortcuts or Gemini do tasks inside an app without opening it.",
+    "icon": "command",
+    "tags": [
+      "Assistant",
+      "Automation",
+      "Voice"
+    ],
+    "marketing": [
+      {
+        "vendor": "Apple",
+        "name": "App Intents",
+        "pitch": "Apple lets apps expose actions and content to Siri, Shortcuts and Spotlight.",
+        "url": "https://developer.apple.com/documentation/appintents"
+      },
+      {
+        "vendor": "Google",
+        "name": "AppFunctions",
+        "pitch": "Google describes AppFunctions as a way for AI assistants to call actions in apps on Android 16.",
+        "url": "https://developer.android.com/ai/appfunctions"
+      }
+    ],
+    "for_you": "You say add milk to my list or play my workout playlist and it happens without opening the app. You may be asked to confirm sensitive steps.",
+    "for_makers": "Makers get their features inside assistants and search. Modern assistants can chain actions across apps, which raises the risk of tricks hidden in content an assistant reads.",
+    "use_cases": [
+      {
+        "type": "productivity",
+        "example": "You ask Siri to add a task and it appears in your to do app.",
+        "apps": [
+          "Things",
+          "Todoist"
+        ]
+      },
+      {
+        "type": "music",
+        "example": "You say play my morning mix and Spotify starts.",
+        "apps": [
+          "Spotify"
+        ]
+      },
+      {
+        "type": "delivery",
+        "example": "You ask to reorder your usual coffee from a voice command.",
+        "apps": [
+          "Starbucks"
+        ]
+      },
+      {
+        "type": "fitness",
+        "example": "You start a workout from the Action button.",
+        "apps": [
+          "Strava"
+        ]
+      },
+      {
+        "type": "smart-home",
+        "example": "You tell the assistant to lock the door through your home app.",
+        "apps": []
+      },
+      {
+        "type": "games",
+        "example": "A voice command opens a game level or starts a daily challenge.",
+        "apps": []
+      },
+      {
+        "type": "rideshare",
+        "example": "You ask for a ride home without opening the app.",
+        "apps": [
+          "Uber"
+        ]
+      }
+    ],
+    "risks": [
+      "Prompt injection through agent chains",
+      "Actions without opening the app"
+    ],
+    "android_note": "AppFunctions arrive with Android 16 and work only with trusted assistants.",
+    "ios_note": "iOS 18 and 26 let Siri and Apple Intelligence chain and understand app content."
+  },
+  "technical_bounds": [
+    "Android AppFunctions callers are restricted; adoption limited"
+  ],
+  "scores": {
+    "sensitivity": 3,
+    "utility": 4,
+    "fingerprint_bits": 1,
+    "friction": 1
+  },
+  "value": {
+    "legit_uses": [
+      "Voice control",
+      "Cross app automation"
+    ],
+    "abuse": [
+      "Prompt injection through agent chains"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2022-06",
+      "platform": "ios",
+      "version": "iOS 16",
+      "change": "App Intents replaces most SiriKit use"
+    },
+    {
+      "date": "2025-06",
+      "platform": "ios",
+      "version": "iOS 26",
+      "change": "Intents across Spotlight, Visual Intelligence and Apple Intelligence"
+    },
+    {
+      "date": "2025-06",
+      "platform": "android",
+      "version": "16 (API 36)",
+      "change": "AppFunctions introduced"
+    }
+  ],
+  "related": [
+    "mob.os.spotlight",
+    "mob.os.widgets"
+  ],
+  "refs": [
+    {
+      "t": "apple",
+      "label": "Apple: App Intents",
+      "url": "https://developer.apple.com/documentation/appintents"
+    },
+    {
+      "t": "android",
+      "label": "Android: App functions",
+      "url": "https://developer.android.com/ai/appfunctions"
+    }
+  ],
+  "confidence": "docs"
+}

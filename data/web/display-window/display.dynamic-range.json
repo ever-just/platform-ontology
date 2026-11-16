@@ -1,0 +1,220 @@
+{
+  "id": "web.display.dynamic-range",
+  "name": "dynamic-range and video-dynamic-range",
+  "kind": "signal",
+  "group": "display-window",
+  "subgroup": "CSS media features",
+  "tags": [
+    "media-query",
+    "preferences",
+    "accessibility"
+  ],
+  "plain": "Whether the screen can show HDR.",
+  "meaning": "Tells a site to serve HDR video. Splits users into standard and HDR displays (modern iPhones, MacBook Pro, HDR monitors).",
+  "lifecycle": [
+    "on-arrival",
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "matchMedia('(dynamic-range: high)')",
+      "bcd": [
+        "css.at-rules.media.dynamic-range"
+      ],
+      "access": {
+        "grant": "none",
+        "prompt_ui": "None",
+        "secure_context": false,
+        "user_gesture": false,
+        "persistence": "read fresh on every page load; nothing stored",
+        "revocation": "none needed (no grant)",
+        "iframe": "Readable from cross-origin iframes too (same values)",
+        "steps": [
+          "Page script reads the value",
+          "No prompt is shown"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "98",
+          "note": "",
+          "date": "2022-02-01"
+        },
+        "edge": {
+          "s": "y",
+          "v": "98",
+          "note": "",
+          "date": "2022-02-03"
+        },
+        "firefox": {
+          "s": "y",
+          "v": "100",
+          "note": "",
+          "date": "2022-05-03"
+        },
+        "safari": {
+          "s": "y",
+          "v": "13.1",
+          "note": "",
+          "date": "2020-03-24"
+        },
+        "ios_safari": {
+          "s": "y",
+          "v": "13.4",
+          "note": "",
+          "date": "2020-03-24"
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "98",
+          "note": "",
+          "date": "2022-02-01"
+        },
+        "samsung": {
+          "s": "y",
+          "v": "18.0",
+          "note": "",
+          "date": "2022-08-08"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "object",
+    "metric": "",
+    "update": "static per session",
+    "fields": [
+      {
+        "name": "dynamic-range and video-dynamic-range",
+        "type": "enum",
+        "unit": "",
+        "range": "standard, high",
+        "precision": ""
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can check whether your screen can show HDR bright and dark detail",
+    "user_action": "Nothing. It happens when the page loads.",
+    "can": [
+      "Ask whether your screen supports high dynamic range",
+      "Serve HDR video or images if it does",
+      "Add the answer to a browser fingerprint"
+    ],
+    "cannot": [
+      "See your screen's exact brightness",
+      "Learn your monitor model",
+      "Turn HDR on or off"
+    ],
+    "reach": 1,
+    "reach_label": "One yes or no, no prompt",
+    "differs": ""
+  },
+  "story": {
+    "what_it_is": "Asks whether your screen can show high dynamic range, the very bright and very dark picture look called HDR.",
+    "icon": "sun",
+    "tags": [
+      "Display",
+      "HDR",
+      "Silent"
+    ],
+    "marketing": [
+      {
+        "vendor": "MDN",
+        "name": "dynamic-range media feature",
+        "pitch": "Documents a media query that asks whether the screen and browser can show HDR content.",
+        "url": "https://developer.mozilla.org/en-US/docs/Web/CSS/@media/dynamic-range"
+      }
+    ],
+    "for_you": "You never get asked. If your screen supports HDR, a video may look brighter with deeper shadows. If not, you get the normal version without noticing.",
+    "for_makers": "Streaming sites avoid sending big HDR files to screens that cannot show them. That saves money. HDR also lets brands pitch a premium look.",
+    "use_cases": [
+      {
+        "type": "video",
+        "example": "A streaming site sends HDR video only to screens that can show it, and plain video to the rest.",
+        "apps": [
+          "Netflix",
+          "YouTube"
+        ]
+      },
+      {
+        "type": "games",
+        "example": "A cloud gaming site turns on HDR streaming for a supported laptop screen.",
+        "apps": [
+          "Xbox Cloud Gaming",
+          "GeForce NOW"
+        ]
+      },
+      {
+        "type": "creative",
+        "example": "A photo or video editor in the browser enables an HDR preview when the screen supports it.",
+        "apps": []
+      },
+      {
+        "type": "ads",
+        "example": "A brand uses an extra bright HDR ad on screens that can show it.",
+        "apps": []
+      },
+      {
+        "type": "shopping",
+        "example": "A TV or phone seller shows HDR product videos only to screens that can display them.",
+        "apps": []
+      },
+      {
+        "type": "analytics",
+        "example": "A team learns how many viewers can see HDR before paying to produce it.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Small fingerprint clue",
+      "Reveals device class"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "scores": {
+    "sensitivity": 1,
+    "utility": 3,
+    "fingerprint_bits": 1.0,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Respect OS theme and accessibility needs",
+      "Adapt layout"
+    ],
+    "abuse": [
+      "Infer disability or setting for fingerprinting"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "related": [
+    "web.locale.accessibility-inference"
+  ],
+  "refs": [
+    {
+      "t": "mdn",
+      "label": "MDN dynamic-range and video-dynamic-range",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/CSS/@media/dynamic-range"
+    },
+    {
+      "t": "github",
+      "label": "fingerprintjs source: hdr",
+      "url": "https://github.com/fingerprintjs/fingerprintjs/blob/master/src/sources/hdr.ts"
+    },
+    {
+      "t": "spec",
+      "label": "CSS Media Queries Level 5",
+      "url": "https://www.w3.org/TR/mediaqueries-5/"
+    }
+  ],
+  "confidence": "docs"
+}

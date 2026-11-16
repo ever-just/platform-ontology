@@ -1,0 +1,261 @@
+{
+  "id": "web.tracking.linkedin-insight-tag",
+  "name": "LinkedIn Insight Tag (conversion pixel on other sites)",
+  "kind": "tracking",
+  "group": "cross-site-tracking",
+  "subgroup": "Advertising pixels",
+  "tags": [
+    "pixel",
+    "advertising",
+    "retargeting",
+    "insight-tag",
+    "cross-site"
+  ],
+  "plain": "A script and pixel on advertisers' sites that reports visits and actions back to LinkedIn.",
+  "meaning": "Lets LinkedIn see which pages a person visits across other sites, tie it to their member profile if logged in, and use it for ads, retargeting and measurement.",
+  "lifecycle": [
+    "before-visit",
+    "on-arrival",
+    "in-session",
+    "after-leaving"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "<script src=snap.licdn.com/li.lms-analytics/insight.min.js> and px.ads.linkedin.com/collect",
+      "access": {
+        "grant": "none",
+        "prompt_ui": "None (no browser prompt)",
+        "secure_context": false,
+        "user_gesture": false,
+        "persistence": "Cookies bcookie 1 year, bscookie 1 year, lidc 24 hours, li_gc and li_mc 6 months, lms_ads and lms_analytics 30 days",
+        "revocation": "",
+        "iframe": "",
+        "steps": [
+          "Advertiser installs the tag with a partner ID",
+          "Browser sends page URL, referrer, IP, user agent and timestamp to LinkedIn",
+          "If a member is logged in, the event can be tied to the member",
+          "Identifiers dropped in 7 days, pseudonymous data deleted within 180 days (LinkedIn help)"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "",
+          "note": ""
+        },
+        "edge": {
+          "s": "y",
+          "v": "",
+          "note": ""
+        },
+        "firefox": {
+          "s": "y",
+          "v": "",
+          "note": ""
+        },
+        "safari": {
+          "s": "y",
+          "v": "",
+          "note": ""
+        },
+        "ios_safari": {
+          "s": "y",
+          "v": "",
+          "note": ""
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "",
+          "note": ""
+        },
+        "samsung": {
+          "s": "y",
+          "v": "",
+          "note": ""
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "event",
+    "metric": "Page view and conversion events",
+    "update": "per page and per event",
+    "fields": [
+      {
+        "name": "url",
+        "type": "string",
+        "unit": "",
+        "range": "up to full URL",
+        "precision": "exact"
+      },
+      {
+        "name": "referrer",
+        "type": "string",
+        "unit": "",
+        "range": "",
+        "precision": "exact"
+      },
+      {
+        "name": "ip",
+        "type": "string",
+        "unit": "",
+        "range": "IPv4/IPv6",
+        "precision": "truncated or hashed per LinkedIn"
+      },
+      {
+        "name": "user_agent",
+        "type": "string",
+        "unit": "",
+        "range": "",
+        "precision": "exact"
+      },
+      {
+        "name": "timestamp",
+        "type": "integer",
+        "unit": "ms",
+        "range": "",
+        "precision": "1 ms"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can tell LinkedIn when you visit or act on an advertiser's site",
+    "user_action": "Nothing. It happens when you open a page that has the LinkedIn tag",
+    "can": [
+      "Report each page you view on sites that use the tag",
+      "Report actions such as sign ups or purchases",
+      "Link the visit to your LinkedIn account when the browser has a LinkedIn cookie",
+      "Help the advertiser build ad audiences from visitors"
+    ],
+    "cannot": [
+      "Run on sites that do not include the tag",
+      "See activity in other apps or sites without the tag",
+      "Work if the tag or its cookies are blocked",
+      "Know who you are if you never use LinkedIn on that browser"
+    ],
+    "reach": 3,
+    "reach_label": "Pages and actions on tagged sites",
+    "differs": "Blocking third party cookies in Safari and Firefox limits the link to your account."
+  },
+  "story": {
+    "what_it_is": "A script on other companies' sites that tells LinkedIn which pages you visited.",
+    "icon": "radar",
+    "tags": [
+      "Ads",
+      "Cross site",
+      "Silent"
+    ],
+    "marketing": [
+      {
+        "vendor": "LinkedIn",
+        "name": "Insight Tag",
+        "pitch": "LinkedIn pitches it as a lightweight script that helps marketers measure conversions, retarget visitors and learn about their audience.",
+        "url": "https://www.linkedin.com/help/lms/answer/a427660"
+      }
+    ],
+    "for_you": "You never see it. When you visit a company's site, a small script tells LinkedIn which page you opened. If you are logged in, LinkedIn can link it to your profile, and use it to show you ads.",
+    "for_makers": "Advertisers want proof that spend led to action, and a way to find visitors again. The Insight Tag counts conversions, builds audiences from site visits and shows who the visitors are by job and company. LinkedIn gets a view of work related web habits that few others have.",
+    "use_cases": [
+      {
+        "type": "ads",
+        "example": "You read a cloud software pricing page, close it, and later see that vendor's ad on your LinkedIn feed.",
+        "apps": [
+          "LinkedIn Ads"
+        ]
+      },
+      {
+        "type": "analytics",
+        "example": "A marketer sees which job titles and companies visit a pricing page, and which campaign brought them.",
+        "apps": [
+          "LinkedIn Campaign Manager"
+        ]
+      },
+      {
+        "type": "enterprise",
+        "example": "A sales team spots that three people from the same bank read their security page this week and alerts the rep.",
+        "apps": [
+          "6sense",
+          "Demandbase"
+        ]
+      },
+      {
+        "type": "education",
+        "example": "A university sees which ad drove a master's program inquiry, and what job titles the visitors held.",
+        "apps": [
+          "Coursera"
+        ]
+      },
+      {
+        "type": "media",
+        "example": "A webinar host counts signups per ad and sends the best performing posts more budget.",
+        "apps": [
+          "Gartner",
+          "TechTarget"
+        ]
+      },
+      {
+        "type": "security",
+        "example": "Because it runs on many sites, some browsers now treat it as a tracker. Safari beta reportedly limits its data.",
+        "apps": [
+          "Safari"
+        ]
+      }
+    ],
+    "risks": [
+      "Follows you across many sites",
+      "Tied to your real profile when logged in"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Safari ITP and Firefox ETP limit third party cookie lifetimes",
+    "Consent is required in EU/UK (Designated Countries) per LinkedIn",
+    "Does not read the 48 fingerprint features (no evidence found)"
+  ],
+  "scores": {
+    "sensitivity": 4,
+    "utility": 4,
+    "fingerprint_bits": null,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Measure ad conversions",
+      "Retarget visitors"
+    ],
+    "abuse": [
+      "Cross-site browsing profiles"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": true,
+      "how": "Insight Tag sends URL, referrer, IP, user agent and timestamp; LinkedIn help page a427660 documents it. No evidence found that it sends fingerprint features."
+    }
+  },
+  "related": [
+    "web.tracking.linkedin-li-fat-id",
+    "web.tracking.linkedin-enhanced-matching",
+    "web.tracking.linkedin-cookies-ad-sync"
+  ],
+  "refs": [
+    {
+      "t": "vendor",
+      "label": "LinkedIn Help: Insight Tag data collected",
+      "url": "https://www.linkedin.com/help/lms/answer/a427660"
+    },
+    {
+      "t": "vendor",
+      "label": "LinkedIn cookie table",
+      "url": "https://www.linkedin.com/legal/l/cookie-table"
+    },
+    {
+      "t": "vendor",
+      "label": "LinkedIn Help: off-LinkedIn identity resolution",
+      "url": "https://www.linkedin.com/help/learning/answer/a7154788"
+    }
+  ],
+  "confidence": "docs"
+}

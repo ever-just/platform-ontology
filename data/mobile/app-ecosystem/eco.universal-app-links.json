@@ -1,0 +1,234 @@
+{
+  "id": "mob.eco.universal-app-links",
+  "name": "Universal Links and Android App Links",
+  "kind": "capability",
+  "group": "app-ecosystem",
+  "subgroup": "Linking",
+  "tags": [
+    "universal-links",
+    "app-links",
+    "deep-link",
+    "assetlinks",
+    "verified-links",
+    "link-wrapping"
+  ],
+  "plain": "Verified web links that open the app directly, proven by a file on the website.",
+  "meaning": "Lets a site and its app share links and attribution params. The click lands in the app with the URL, including any campaign tags.",
+  "lifecycle": [
+    "in-session",
+    "before-install",
+    "on-launch"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "y",
+      "v": "6.0",
+      "api": 23,
+      "permission": "intent-filter android:autoVerify with https scheme",
+      "protection": "none",
+      "grant": "settings",
+      "prompt_ui": "Link handling toggle in app settings",
+      "persistence": "Until user changes default",
+      "revocation": "Settings > Apps > Open by default",
+      "store_policy": "",
+      "api_surface": "assetlinks.json, Digital Asset Links, App Links",
+      "note": "Verified automatically at install; user can disable in Settings."
+    },
+    "ios": {
+      "s": "y",
+      "v": "9.0",
+      "permission": "Associated Domains entitlement: applinks:",
+      "protection": "entitlement",
+      "grant": "entitlement",
+      "prompt_ui": "Opens app without prompt",
+      "persistence": "apple-app-site-association fetched via Apple CDN",
+      "revocation": "Settings",
+      "store_policy": "",
+      "api_surface": "AASA file, NSUserActivity, onOpenURL",
+      "note": "Link Tracking Protection can remove known click IDs."
+    }
+  },
+  "web_equivalents": [
+    "web.contacts.get-installed-related-apps",
+    "web.xsite.outbound-link-decoration"
+  ],
+  "data": {
+    "type": "string",
+    "metric": "Opened URL with params",
+    "update": "per tap",
+    "fields": []
+  },
+  "limits": {
+    "headline": "Can open the app directly from a website link, with the full link and campaign tags",
+    "user_action": "You tap a web link from that company in a message, email or browser",
+    "can": [
+      "Open the app on the exact screen the link points to",
+      "Receive the full link, including campaign tags and click IDs",
+      "Skip the Open in app question, once links are verified"
+    ],
+    "cannot": [
+      "Open from a site that has not proven it owns the app",
+      "Keep known click IDs on iPhone when Link Tracking Protection removes them",
+      "Stay on after you turn link opening off in Settings"
+    ],
+    "reach": 1,
+    "reach_label": "One link at a time",
+    "differs": "Android lets you switch link opening off per app. iPhone strips some known click IDs from links."
+  },
+  "story": {
+    "what_it_is": "Web links that open the right app straight away, because the site proves the app is its own.",
+    "icon": "link",
+    "tags": [
+      "Links",
+      "Marketing",
+      "Silent"
+    ],
+    "marketing": [
+      {
+        "vendor": "Apple",
+        "name": "Universal Links",
+        "pitch": "Link to content in your app so one URL works on web and in the app.",
+        "url": "https://developer.apple.com/ios/universal-links/"
+      },
+      {
+        "vendor": "Google",
+        "name": "Android App Links",
+        "pitch": "Verified links that open your app directly, with no chooser pop up.",
+        "url": "https://developer.android.com/training/app-links"
+      }
+    ],
+    "for_you": "You tap a link and your phone opens the app on the right screen, with no pop up asking which app to use. If you do not have the app, it opens in your browser.",
+    "for_makers": "Links carry tags such as campaign names, so makers can tell which ad or email brought you in. They are a reliable way to bring people from the web into the app, where they buy more.",
+    "use_cases": [
+      {
+        "type": "shopping",
+        "example": "An email deal link opens the Target app on the product, with the sale price already showing.",
+        "apps": [
+          "Target",
+          "Walmart"
+        ]
+      },
+      {
+        "type": "social",
+        "example": "A tweet link to a thread opens the X app instead of the browser.",
+        "apps": [
+          "X",
+          "Reddit"
+        ]
+      },
+      {
+        "type": "live",
+        "example": "A link to a live game stream opens Twitch and starts the stream right away.",
+        "apps": [
+          "Twitch",
+          "YouTube"
+        ]
+      },
+      {
+        "type": "games",
+        "example": "A tournament invite link opens a mobile esports app on the bracket page.",
+        "apps": [
+          "Discord"
+        ]
+      },
+      {
+        "type": "ads",
+        "example": "A click on a paid ad lands in the app with campaign tags that tell the advertiser which ad worked.",
+        "apps": [
+          "Meta Ads",
+          "Google Ads"
+        ]
+      },
+      {
+        "type": "travel",
+        "example": "A booking link in an email opens the airline app on your trip details.",
+        "apps": [
+          "Delta",
+          "Booking.com"
+        ]
+      },
+      {
+        "type": "news",
+        "example": "A shared news article opens in the paper's app where you are a subscriber.",
+        "apps": [
+          "The New York Times"
+        ]
+      }
+    ],
+    "risks": [
+      "Campaign tags follow the click",
+      "Broken verification opens browser"
+    ],
+    "android_note": "Android checks links when the app installs and can open them with no chooser.",
+    "ios_note": "iOS reads the verification file through Apple and can ignore the link if the user long presses and picks the browser."
+  },
+  "technical_bounds": [
+    "Only works for verified domains",
+    "Cannot read link history",
+    "Domain must host a verification file"
+  ],
+  "scores": {
+    "sensitivity": 2,
+    "utility": 4,
+    "fingerprint_bits": null,
+    "friction": 1
+  },
+  "value": {
+    "legit_uses": [
+      "Shared web and app experiences"
+    ],
+    "abuse": [
+      "Passing IDs through link params"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": true,
+      "how": "linkedin.com and lnkd.in links open the LinkedIn app. Use of the lnkd.in short domain as a click-logging hop is inferred, not confirmed."
+    }
+  },
+  "history": [
+    {
+      "date": "2015-10",
+      "platform": "android",
+      "version": "Android 6.0 (API 23)",
+      "change": "App Links verification"
+    },
+    {
+      "date": "2015-10",
+      "platform": "android",
+      "version": "6.0 (API 23)",
+      "change": "Verified App Links"
+    },
+    {
+      "date": "2015-09",
+      "platform": "ios",
+      "version": "iOS 9",
+      "change": "Universal Links"
+    }
+  ],
+  "related": [
+    "mob.xtrack.deferred-deep-link",
+    "mob.eco.custom-url-schemes",
+    "mob.app-eco.in-app-browser"
+  ],
+  "refs": [
+    {
+      "t": "android",
+      "label": "Android: App Links",
+      "url": "https://developer.android.com/training/app-links"
+    },
+    {
+      "t": "apple",
+      "label": "Apple: Universal Links",
+      "url": "https://developer.apple.com/documentation/xcode/allowing-apps-and-websites-to-link-to-your-content"
+    },
+    {
+      "t": "apple",
+      "label": "Apple: Universal Links",
+      "url": "https://developer.apple.com/ios/universal-links/"
+    }
+  ],
+  "confidence": "verified"
+}

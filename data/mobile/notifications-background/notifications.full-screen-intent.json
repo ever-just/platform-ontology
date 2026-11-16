@@ -1,0 +1,236 @@
+{
+  "id": "mob.notifications.full-screen-intent",
+  "name": "Full screen intent",
+  "kind": "permission",
+  "group": "notifications-background",
+  "subgroup": "Alerts",
+  "tags": [
+    "special-access",
+    "full-screen",
+    "calls-alarms",
+    "notifications",
+    "calls",
+    "alarms"
+  ],
+  "plain": "Lets a notification take over the screen like an incoming call or alarm.",
+  "meaning": "Interrupts the user with a full-screen UI. Limited to calling and alarm apps on Android 14 and later.",
+  "lifecycle": [
+    "background"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "f",
+      "v": "10",
+      "api": 29,
+      "permission": "USE_FULL_SCREEN_INTENT",
+      "protection": "special",
+      "grant": "settings",
+      "prompt_ui": "Settings toggle: Manage full screen intents",
+      "persistence": "Until revoked",
+      "revocation": "Settings > Special app access > Full screen intents",
+      "store_policy": "Play: declaration required from May 31, 2024; only calling and alarm apps by default from Jan 22, 2025 on apps targeting 14+",
+      "api_surface": "Notification.Builder.setFullScreenIntent, canUseFullScreenIntent",
+      "note": "Android 14 limits default grant to calling and alarm apps."
+    },
+    "ios": {
+      "s": "n",
+      "v": "10.0",
+      "permission": "none",
+      "protection": "none",
+      "grant": "not-exposed",
+      "prompt_ui": "none",
+      "persistence": "none",
+      "revocation": "Settings > Phone",
+      "store_policy": "App Review 4.5.4",
+      "api_surface": "CallKit, time-sensitive notifications, AlarmKit",
+      "note": "iOS has no full-screen takeover; CallKit shows incoming calls."
+    }
+  },
+  "data": {
+    "type": "event",
+    "metric": "Full-screen alert",
+    "update": "per alert",
+    "fields": []
+  },
+  "limits": {
+    "headline": "Can take over your Android screen for a call or alarm, only if you allow it",
+    "user_action": "A call comes in, or an alarm goes off, while your phone is locked",
+    "can": [
+      "Open a full screen alert for an incoming call or alarm",
+      "Show it even when the phone is locked",
+      "Do this by default if it is a calling or alarm app"
+    ],
+    "cannot": [
+      "Do this for other apps on Android 14 or newer unless you turn on Manage full screen intents",
+      "Take over your screen on iPhone, which has no full screen takeover",
+      "Skip your choice if you switch the toggle off"
+    ],
+    "reach": 2,
+    "reach_label": "Only calls and alarms, unless you allow",
+    "differs": "Android 14 limits this to calling and alarm apps by default. iPhone shows incoming calls through CallKit, never a takeover."
+  },
+  "story": {
+    "what_it_is": "Lets a notification take over the whole screen, like a ringing call or alarm.",
+    "icon": "maximize",
+    "tags": [
+      "Android",
+      "Calls",
+      "Asks first"
+    ],
+    "marketing": [
+      {
+        "vendor": "Google",
+        "name": "Full screen intent limits",
+        "pitch": "Google restricts full screen alerts to calling and alarm apps starting with Android 14.",
+        "url": "https://source.android.com/docs/core/permissions/fsi-limits"
+      }
+    ],
+    "for_you": "Your phone rings with a big call screen even when locked. For other apps, you must turn it on in settings.",
+    "for_makers": "Makers of calling and alarm apps need it to cut through. Google limited it because ads and promotions used it to interrupt people.",
+    "use_cases": [
+      {
+        "type": "messaging",
+        "example": "A video call app fills the screen when someone rings.",
+        "apps": [
+          "WhatsApp",
+          "Google Meet"
+        ]
+      },
+      {
+        "type": "utilities",
+        "example": "An alarm clock app takes over the lock screen at wake time.",
+        "apps": [
+          "Alarmy"
+        ]
+      },
+      {
+        "type": "rideshare",
+        "example": "A driver app shows a big ride request screen.",
+        "apps": [
+          "Uber"
+        ]
+      },
+      {
+        "type": "health",
+        "example": "A fall alert app shows a full screen check in.",
+        "apps": []
+      },
+      {
+        "type": "smart-home",
+        "example": "A doorbell app opens a live camera when someone rings.",
+        "apps": [
+          "Ring"
+        ]
+      },
+      {
+        "type": "ads",
+        "example": "Past ad apps tried this for takeover ads, which Google now blocks.",
+        "apps": []
+      },
+      {
+        "type": "enterprise",
+        "example": "A dispatch app shows an urgent job screen to a driver.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Interrupts you",
+      "Past misuse for ads"
+    ],
+    "android_note": "Android 14 grants it by default only to calling and alarm apps. You can switch it in settings.",
+    "ios_note": "iOS has no takeover. CallKit shows incoming calls."
+  },
+  "technical_bounds": [
+    "Play declaration required",
+    "No iOS equivalent",
+    "Revocable on Android 14+",
+    "iOS has no general full screen takeover"
+  ],
+  "scores": {
+    "sensitivity": 1,
+    "utility": 3,
+    "fingerprint_bits": null,
+    "friction": 3
+  },
+  "value": {
+    "legit_uses": [
+      "Calls",
+      "Alarms"
+    ],
+    "abuse": [
+      "Ad takeovers"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": true,
+      "how": "USE_FULL_SCREEN_INTENT is declared in Android build 4.1.995 (Exodus snippet). LinkedIn has no consumer calling feature seen; may be library residue. Unverified."
+    }
+  },
+  "history": [
+    {
+      "date": "2026-08",
+      "platform": "android",
+      "version": "Play policy",
+      "change": "Aug 26, 2026: geofencing no longer an approved foreground service use"
+    },
+    {
+      "date": "2025-01",
+      "platform": "android",
+      "version": "Play policy",
+      "change": "Jan 22, 2025: only calling and alarm apps granted by default"
+    },
+    {
+      "date": "2023-10",
+      "platform": "android",
+      "version": "14 (API 34)",
+      "change": "Limited to calling and alarm apps by default"
+    },
+    {
+      "date": "2023-10",
+      "platform": "android",
+      "version": "14 (API 34)",
+      "change": "Full-screen intents limited to apps whose core function is calls or alarms; grant revocable"
+    },
+    {
+      "date": "2019-09",
+      "platform": "android",
+      "version": "10 (API 29)",
+      "change": "USE_FULL_SCREEN_INTENT introduced as a normal permission"
+    }
+  ],
+  "related": [
+    "mob.notifications.post-notifications",
+    "mob.notif.voip-push",
+    "mob.notif.android-live-updates"
+  ],
+  "refs": [
+    {
+      "t": "android",
+      "label": "Android: Full-screen intent limits",
+      "url": "https://source.android.com/docs/core/permissions/fsi-limits"
+    },
+    {
+      "t": "policy",
+      "label": "Google Play: Foreground service and full screen intent declarations",
+      "url": "https://support.google.com/googleplay/android-developer/answer/13392821"
+    },
+    {
+      "t": "vendor",
+      "label": "Exodus Privacy report, com.linkedin.android 4.1.995 (Oct 2024)",
+      "url": "https://reports.exodus-privacy.eu.org/en/reports/513380/"
+    },
+    {
+      "t": "android",
+      "label": "Android: Full-screen intent limits",
+      "url": "https://developer.android.com/about/versions/14/behavior-changes-14#full-screen-intents"
+    },
+    {
+      "t": "apple",
+      "label": "Apple: CallKit",
+      "url": "https://developer.apple.com/documentation/callkit"
+    }
+  ],
+  "confidence": "docs"
+}

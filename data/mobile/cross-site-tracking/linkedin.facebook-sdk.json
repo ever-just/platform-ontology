@@ -1,0 +1,182 @@
+{
+  "id": "mob.linkedin.facebook-sdk",
+  "name": "Facebook SDK (login, share, analytics)",
+  "kind": "tracking",
+  "group": "cross-site-tracking",
+  "subgroup": "Third-party SDK",
+  "tags": [
+    "sdk",
+    "exodus-tracker",
+    "meta"
+  ],
+  "plain": "Meta's SDK modules found inside the LinkedIn Android app.",
+  "meaning": "Facebook Login, Share and Analytics code can read ad IDs and send app events to Meta unless disabled, linking activity across apps.",
+  "lifecycle": [
+    "on-launch",
+    "in-session"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "p",
+      "v": "",
+      "permission": "AD_ID, INTERNET",
+      "protection": "normal",
+      "grant": "install",
+      "prompt_ui": "No prompt",
+      "persistence": "n/a",
+      "revocation": "n/a",
+      "store_policy": "Play Data safety: declares no sharing",
+      "api_surface": "Facebook SDK for Android",
+      "note": "Exodus: static code signatures, not proof of active use"
+    },
+    "ios": {
+      "s": "p",
+      "v": "",
+      "permission": "",
+      "protection": "none",
+      "grant": "none",
+      "prompt_ui": "No prompt",
+      "persistence": "n/a",
+      "revocation": "n/a",
+      "store_policy": "App Review 5.1.2",
+      "api_surface": "Facebook SDK for iOS",
+      "note": "Not verified on iOS"
+    }
+  },
+  "web_equivalents": [
+    "web.xsite.cookie-syncing"
+  ],
+  "data": {
+    "type": "event",
+    "metric": "App events and device info",
+    "update": "per event",
+    "fields": []
+  },
+  "limits": {
+    "headline": "Can include Meta's tracking tools in the LinkedIn app, though active use is not proven",
+    "user_action": "Nothing. These tools live in the app code and need no prompt",
+    "can": [
+      "Offer Facebook login, sharing and analytics if the app turns them on",
+      "Use your Android advertising ID, if you have not reset or cleared it",
+      "Connect to the internet from the app with no prompt"
+    ],
+    "cannot": [
+      "Prove it is running; the Android finding comes from code signatures only",
+      "Be confirmed on iPhone; it was not verified there",
+      "Use your advertising ID once you delete it in Android settings"
+    ],
+    "reach": 2,
+    "reach_label": "Present in code, use unconfirmed",
+    "differs": "Found in Android code scans. On iPhone it is possible but was not verified."
+  },
+  "story": {
+    "what_it_is": "A toolkit from Meta that adds login, share buttons and event tracking to other apps.",
+    "icon": "share-2",
+    "tags": [
+      "Social",
+      "Ads",
+      "Tracking"
+    ],
+    "marketing": [
+      {
+        "vendor": "Meta",
+        "name": "Facebook SDK",
+        "pitch": "Developer pitch: add Facebook Login, sharing and App Events to your app so you can grow and measure it.",
+        "url": "https://developers.facebook.com/docs/android/"
+      }
+    ],
+    "for_you": "You may see a Continue with Facebook button or a Share to Facebook link. Behind the scenes, the same code can tell Meta what you do in the app unless the app turns that off.",
+    "for_makers": "Gives makers easy sign up, sharing and a way to measure which Facebook ads led to installs and purchases. Meta gets signals it uses for ad targeting and results.",
+    "use_cases": [
+      {
+        "type": "games",
+        "example": "A mobile game offers Login with Facebook so you can find friends, and sends Meta a level reached event to improve ad targeting.",
+        "apps": [
+          "Candy Crush Saga",
+          "Words With Friends"
+        ]
+      },
+      {
+        "type": "social",
+        "example": "A news app adds a Share button so a story posts to your Facebook feed in two taps.",
+        "apps": []
+      },
+      {
+        "type": "ads",
+        "example": "An advertiser sees that a Facebook ad click led to a purchase in the app and bids more for similar people.",
+        "apps": []
+      },
+      {
+        "type": "shopping",
+        "example": "A store app sends Meta an add to cart event so you see that exact product in ads later.",
+        "apps": []
+      },
+      {
+        "type": "dating",
+        "example": "A dating app uses Facebook login to pull a profile photo and verify a real person.",
+        "apps": []
+      },
+      {
+        "type": "analytics",
+        "example": "A product team looks at Facebook Analytics style reports on who opens the app after an ad.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Shares app activity with Meta",
+      "Links your use across apps"
+    ],
+    "android_note": "Can read the Google ad ID if the AD_ID permission is allowed.",
+    "ios_note": "Events are limited by Apple's Ask App Not to Track choice and Meta's own aggregated reporting."
+  },
+  "technical_bounds": [
+    "Static signature only"
+  ],
+  "scores": {
+    "sensitivity": 3,
+    "utility": 3,
+    "fingerprint_bits": 12,
+    "friction": 1
+  },
+  "value": {
+    "legit_uses": [
+      "Share to Facebook",
+      "Facebook login"
+    ],
+    "abuse": [
+      "Cross-app event sharing"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": true,
+      "how": "Exodus lists Facebook Analytics, Facebook Login and Facebook Share code signatures in LinkedIn Android 4.1.1012 (Dec 2024 search snippet). Not confirmed that they send data."
+    }
+  },
+  "history": [
+    {
+      "date": "2024-12",
+      "platform": "android",
+      "version": "n/a",
+      "change": "Exodus report for build 4.1.1012 lists Facebook Analytics, Login and Share signatures"
+    }
+  ],
+  "related": [
+    "mob.ads.aaid",
+    "mob.linkedin.app-center"
+  ],
+  "refs": [
+    {
+      "t": "vendor",
+      "label": "Exodus Privacy report, com.linkedin.android 4.1.995 (Oct 2024)",
+      "url": "https://reports.exodus-privacy.eu.org/en/reports/513380/"
+    },
+    {
+      "t": "vendor",
+      "label": "Exodus Privacy: what trackers are",
+      "url": "https://exodus-privacy.eu.org/en/page/what/"
+    }
+  ],
+  "confidence": "inferred"
+}

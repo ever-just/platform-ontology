@@ -1,0 +1,187 @@
+{
+  "id": "mob.xtrack.clipboard-attribution",
+  "name": "Clipboard-based attribution",
+  "kind": "tracking",
+  "group": "cross-site-tracking",
+  "subgroup": "Install to click linking",
+  "tags": [
+    "clipboard",
+    "attribution",
+    "pasteboard"
+  ],
+  "plain": "A web page copies an install token to the clipboard, and the app reads it on first launch.",
+  "meaning": "A trick for iOS: the landing page puts a campaign token on the clipboard, then the app picks it up after install. It was blunted by paste banners and prompts.",
+  "lifecycle": [
+    "before-install",
+    "on-launch"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "p",
+      "v": "",
+      "permission": "none",
+      "protection": "none",
+      "grant": "none",
+      "prompt_ui": "Android 12+ shows a toast when an app reads clipboard text from another app; background reads blocked since 10",
+      "persistence": "",
+      "revocation": "",
+      "store_policy": "",
+      "api_surface": "ClipboardManager.getPrimaryClip",
+      "note": "Android 13 auto-clears history after a time."
+    },
+    "ios": {
+      "s": "p",
+      "v": "16.0",
+      "permission": "none",
+      "protection": "prompt",
+      "grant": "prompt",
+      "prompt_ui": "iOS 14: 'pasted from' banner; iOS 16: Allow Paste prompt for programmatic reads",
+      "persistence": "",
+      "revocation": "",
+      "store_policy": "",
+      "api_surface": "UIPasteboard.general, hasURLs, detectPatterns (no prompt)",
+      "note": "UIPasteControl lets users trigger a read with no prompt."
+    }
+  },
+  "web_equivalents": [
+    "web.input.clipboard-read"
+  ],
+  "data": {
+    "type": "string",
+    "metric": "Token or URL",
+    "update": "once",
+    "fields": []
+  },
+  "limits": {
+    "headline": "Can check the clipboard for an install code, with a warning shown on newer phones",
+    "user_action": "You tap an ad or link, install the app, then open it for the first time",
+    "can": [
+      "Check text you copied when the app opens, to find an install token left by a web page",
+      "Match your first launch to the ad or link you tapped",
+      "Check for copied links on iPhone without a prompt, only to see if they exist"
+    ],
+    "cannot": [
+      "Do it unseen on Android 12 and newer; a small message shows",
+      "Do it in the background on Android 10 and newer",
+      "Get the text on iPhone 16 and newer without an Allow Paste prompt",
+      "Keep old clipboard history; Android 13 clears it after a while"
+    ],
+    "reach": 1,
+    "reach_label": "Once, at first launch",
+    "differs": "iPhone shows a pasted from banner and an Allow Paste prompt. Android shows a toast. iPhone also has a Paste button that skips the prompt when you tap it."
+  },
+  "story": {
+    "what_it_is": "A web page copies a hidden code to your clipboard and the app reads it after install.",
+    "icon": "clipboard-paste",
+    "tags": [
+      "Install tracking",
+      "Clipboard",
+      "Ads"
+    ],
+    "marketing": [],
+    "for_you": "You tap an ad, install an app, and the app opens already knowing which ad you came from. You might see a Pasted from Safari banner on iPhone. That banner is the visible sign of this trick.",
+    "for_makers": "Makers use it to prove which ad earned an install when no ad ID is allowed, and to land you on the right screen. Phones now show paste prompts, which makes the trick less common.",
+    "use_cases": [
+      {
+        "type": "ads",
+        "example": "A mobile game ad sends you to a landing page that copies a campaign token, so the game can credit the ad and pay its partner.",
+        "apps": []
+      },
+      {
+        "type": "shopping",
+        "example": "You click a shoe ad, install the app, and it opens on that exact shoe page.",
+        "apps": []
+      },
+      {
+        "type": "travel",
+        "example": "A travel app uses the copied code to load the hotel deal you tapped before installing.",
+        "apps": []
+      },
+      {
+        "type": "analytics",
+        "example": "A measurement company counts which of its customer campaigns brought real installs.",
+        "apps": [
+          "AppsFlyer",
+          "Adjust"
+        ]
+      },
+      {
+        "type": "security",
+        "example": "Some bad actors copy fake tokens to claim credit for installs they did not drive.",
+        "apps": []
+      },
+      {
+        "type": "games",
+        "example": "A game uses a referral code on the clipboard to give a friend reward when a new player installs.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Reads something you copied on purpose",
+      "Paste banner can look alarming"
+    ],
+    "android_note": "Android shows a toast when an app reads the clipboard in newer versions, and blocks background reads.",
+    "ios_note": "iOS 14 shows a paste banner, and iOS 16 asks permission to paste from other apps."
+  },
+  "technical_bounds": [
+    "User-visible prompts or banners",
+    "Needs the click page to write clipboard"
+  ],
+  "scores": {
+    "sensitivity": 3,
+    "utility": 3,
+    "fingerprint_bits": null,
+    "friction": 2
+  },
+  "value": {
+    "legit_uses": [
+      "Deferred deep link when no referrer exists"
+    ],
+    "abuse": [
+      "Stealing tokens placed by other apps"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2020-09",
+      "platform": "ios",
+      "version": "iOS 14",
+      "change": "Paste banner when an app reads another app's clipboard"
+    },
+    {
+      "date": "2022-09",
+      "platform": "ios",
+      "version": "iOS 16",
+      "change": "Allow Paste prompt introduced"
+    },
+    {
+      "date": "2021-10",
+      "platform": "android",
+      "version": "Android 12 (API 31)",
+      "change": "Toast when an app reads clipboard"
+    }
+  ],
+  "related": [
+    "mob.xtrack.deferred-deep-link"
+  ],
+  "refs": [
+    {
+      "t": "apple",
+      "label": "Apple: UIPasteboard",
+      "url": "https://developer.apple.com/documentation/uikit/uipasteboard"
+    },
+    {
+      "t": "android",
+      "label": "Android: ClipboardManager",
+      "url": "https://developer.android.com/develop/ui/views/touch-and-input/copy-paste"
+    }
+  ],
+  "confidence": "docs"
+}

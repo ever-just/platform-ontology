@@ -1,0 +1,248 @@
+{
+  "id": "web.xsite.page-lifecycle-events",
+  "name": "pagehide, visibilitychange and unload",
+  "kind": "capability",
+  "group": "cross-site-tracking",
+  "subgroup": "After leaving",
+  "tags": [
+    "pagehide",
+    "visibilitychange",
+    "beforeunload",
+    "unload"
+  ],
+  "plain": "Events that tell a page it is being hidden, left or closed so it can save state or send a last report.",
+  "meaning": "visibilitychange and pagehide are the reliable last chance for a final send. unload is being retired: Chrome is deprecating it with a Permissions-Policy and completing the change in late 2026. beforeunload is unreliable on mobile.",
+  "lifecycle": [
+    "after-leaving"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "document.visibilitychange, window.pagehide, beforeunload, unload",
+      "permissions_policy": "unload",
+      "bcd": [
+        "api.Window.pagehide_event",
+        "api.Document.visibilitychange_event",
+        "api.Window.unload_event"
+      ],
+      "access": {
+        "grant": "none",
+        "prompt_ui": "None",
+        "secure_context": false,
+        "user_gesture": false,
+        "persistence": "Fires once at exit or tab hide",
+        "revocation": "Clear site data, browser privacy settings",
+        "iframe": "",
+        "steps": []
+      },
+      "support": {
+        "chrome": {
+          "s": "p",
+          "v": "3",
+          "note": "unload is being phased out in Chrome 154 to 155",
+          "date": "2009-09-15"
+        },
+        "edge": {
+          "s": "p",
+          "v": "12",
+          "note": "",
+          "date": "2015-07-29"
+        },
+        "firefox": {
+          "s": "y",
+          "v": "6",
+          "note": "",
+          "date": "2011-08-16"
+        },
+        "safari": {
+          "s": "y",
+          "v": "5",
+          "note": "",
+          "date": "2010-06-07"
+        },
+        "ios_safari": {
+          "s": "y",
+          "v": "4.2",
+          "note": "",
+          "date": "2010-11-22"
+        },
+        "chrome_android": {
+          "s": "p",
+          "v": "18",
+          "note": "",
+          "date": "2012-06-27"
+        },
+        "samsung": {
+          "s": "y",
+          "v": "1.0",
+          "note": "",
+          "date": "2013-04-27"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "event",
+    "metric": "Lifecycle events",
+    "update": "once at exit",
+    "fields": []
+  },
+  "limits": {
+    "headline": "Can tell a page when you hide or leave it, so it can send a report",
+    "user_action": "You switch tabs, close the tab or leave the page",
+    "can": [
+      "Know when you hide or leave a page",
+      "Save your progress or settings",
+      "Send a final report, such as time spent, through other tools"
+    ],
+    "cannot": [
+      "Always run, since phones and Chrome may skip the unload event",
+      "Stop you from leaving",
+      "Keep the page running after it closes",
+      "See what you do on the next page"
+    ],
+    "reach": 2,
+    "reach_label": "As you leave a page",
+    "differs": "Chrome and Edge limit the unload event. Safari and Firefox run it more often."
+  },
+  "story": {
+    "what_it_is": "Events that tell a page it is being hidden or closed, so it can save and send a last report.",
+    "icon": "door-open",
+    "tags": [
+      "Page exit",
+      "Analytics",
+      "Silent"
+    ],
+    "marketing": [
+      {
+        "vendor": "Google Chrome",
+        "name": "Page Lifecycle API",
+        "pitch": "Chrome documents events like visibilitychange that tell pages when to save state or send last data.",
+        "url": "https://developer.chrome.com/docs/web-platform/page-lifecycle-api"
+      }
+    ],
+    "for_you": "You never see it. When you switch tabs or close the page, the page gets a short warning. It uses that moment to save your work or send a last report. Old unload events are being retired.",
+    "for_makers": "Pages die with little notice, especially on phones. Hidden and pagehide are the reliable last chance to send data. Games and editors use them to save progress, and analytics use them to finish counting time on page.",
+    "use_cases": [
+      {
+        "type": "productivity",
+        "example": "An online editor saves your draft the moment you switch tabs, so nothing is lost if the browser crashes.",
+        "apps": [
+          "Google Docs",
+          "Notion"
+        ]
+      },
+      {
+        "type": "games",
+        "example": "A browser game pauses and saves your state when you switch tabs, and sends progress to the server.",
+        "apps": [
+          "Slither.io",
+          "Krunker"
+        ]
+      },
+      {
+        "type": "video",
+        "example": "A video site sends your watch position when you leave, so you can resume later.",
+        "apps": [
+          "YouTube",
+          "Netflix"
+        ]
+      },
+      {
+        "type": "analytics",
+        "example": "An analytics script sends your time on page when the tab becomes hidden.",
+        "apps": [
+          "Google Analytics"
+        ]
+      },
+      {
+        "type": "live",
+        "example": "A live stream pauses the video feed to save data when you hide the tab, and resumes when you return.",
+        "apps": [
+          "Twitch"
+        ]
+      },
+      {
+        "type": "ads",
+        "example": "An ad tag stops counting visible time when the page goes into the background.",
+        "apps": [
+          "Google Ad Manager"
+        ]
+      }
+    ],
+    "risks": [
+      "Sends data at a moment you cannot stop",
+      "Old unload events are fading"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "unload does not fire reliably on mobile or in bfcache",
+    "beforeunload prompt requires a user gesture on the page",
+    "Chrome deprecation of unload completes about Chrome 154 to 155 (Sep to Oct 2026)",
+    "Only about 100s of ms of work is safe"
+  ],
+  "scores": {
+    "sensitivity": 2,
+    "utility": 4,
+    "fingerprint_bits": null,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Saving drafts, session end events"
+    ],
+    "abuse": [
+      "Last gasp tracking"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2023-07",
+      "browser": "chrome",
+      "version": "115",
+      "change": "Permissions-Policy: unload introduced"
+    },
+    {
+      "date": "2024-01",
+      "browser": "chrome",
+      "version": "117",
+      "change": "Gradual unload deprecation rollout began"
+    },
+    {
+      "date": "2026-09",
+      "browser": "chrome",
+      "version": "154",
+      "change": "Deprecation completes by default (Sep to Oct 2026 per Chrome plan)"
+    }
+  ],
+  "related": [
+    "web.xsite.sendbeacon",
+    "web.storage.bfcache"
+  ],
+  "refs": [
+    {
+      "t": "mdn",
+      "label": "MDN pagehide event",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/Window/pagehide_event"
+    },
+    {
+      "t": "vendor",
+      "label": "Chrome: Deprecating the unload event",
+      "url": "https://developer.chrome.com/docs/web-platform/deprecating-unload"
+    },
+    {
+      "t": "mdn",
+      "label": "MDN visibilitychange",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/Document/visibilitychange_event"
+    }
+  ],
+  "confidence": "verified"
+}

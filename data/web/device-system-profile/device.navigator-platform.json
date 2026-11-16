@@ -1,0 +1,234 @@
+{
+  "id": "web.device.navigator-platform",
+  "name": "navigator.platform",
+  "kind": "signal",
+  "group": "device-system-profile",
+  "subgroup": "Browser identity",
+  "tags": [
+    "navigator",
+    "legacy",
+    "os"
+  ],
+  "plain": "Legacy string naming the OS family such as Win32, MacIntel, Linux x86_64 or iPhone.",
+  "meaning": "Coarse OS signal that is deprecated but still returned. Often frozen to a fixed value (Win32 on 64-bit Windows, MacIntel on Apple Silicon), so it carries little entropy but reveals spoofed user agents when it disagrees.",
+  "lifecycle": [
+    "on-arrival",
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "navigator.platform",
+      "bcd": [
+        "api.Navigator.platform"
+      ],
+      "access": {
+        "grant": "none",
+        "prompt_ui": "None",
+        "secure_context": false,
+        "user_gesture": false,
+        "persistence": "read fresh on every page load; nothing stored",
+        "revocation": "none needed (no grant)",
+        "iframe": "Readable from cross-origin iframes too (same values)",
+        "steps": [
+          "Page script reads the value",
+          "No prompt is shown"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "1",
+          "note": "",
+          "date": "2008-12-11"
+        },
+        "edge": {
+          "s": "y",
+          "v": "12",
+          "note": "",
+          "date": "2015-07-29"
+        },
+        "firefox": {
+          "s": "y",
+          "v": "1",
+          "note": "",
+          "date": "2004-11-09"
+        },
+        "safari": {
+          "s": "y",
+          "v": "1",
+          "note": "",
+          "date": "2003-06-23"
+        },
+        "ios_safari": {
+          "s": "y",
+          "v": "1",
+          "note": "",
+          "date": "2007-06-29"
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "18",
+          "note": "",
+          "date": "2012-06-27"
+        },
+        "samsung": {
+          "s": "y",
+          "v": "1.0",
+          "note": "",
+          "date": "2013-04-27"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "object",
+    "metric": "",
+    "update": "static per session",
+    "fields": [
+      {
+        "name": "platform",
+        "type": "enum",
+        "unit": "",
+        "range": "Win32, MacIntel, Linux x86_64, Linux armv81, iPhone, iPad, Android-like strings",
+        "precision": "frozen values since about 2020"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can see a short label for your OS family, like Win32, MacIntel, or iPhone",
+    "user_action": "Nothing. It happens when the page loads",
+    "can": [
+      "See a coarse OS name, such as Win32 or Linux x86_64",
+      "Compare it with the user agent to spot a fake",
+      "Pick OS specific help text or downloads"
+    ],
+    "cannot": [
+      "See your OS version or chip; it is often frozen",
+      "Tell 32 bit from 64 bit Windows",
+      "Learn much; it carries little detail",
+      "See your name, location, or accounts"
+    ],
+    "reach": 1,
+    "reach_label": "One short OS label",
+    "differs": ""
+  },
+  "story": {
+    "what_it_is": "An old text field naming your operating system family, like Win32 or MacIntel.",
+    "icon": "monitor",
+    "tags": [
+      "Operating system",
+      "Silent",
+      "Legacy"
+    ],
+    "marketing": [
+      {
+        "vendor": "MDN",
+        "name": "Navigator.platform",
+        "pitch": "Docs mark it as deprecated and say it should not be used for new features.",
+        "url": "https://developer.mozilla.org/en-US/docs/Web/API/Navigator/platform"
+      }
+    ],
+    "for_you": "You never see it. It still tells a site your system family, but modern browsers often freeze it to a fixed value, so it often says Win32 even on a 64 bit machine.",
+    "for_makers": "Sites use it to show the right download button and keyboard shortcut. It is low value now, so it is mostly used to cross check other signals.",
+    "use_cases": [
+      {
+        "type": "developer",
+        "example": "A download page shows the Windows button for Win32 and the Mac button for MacIntel.",
+        "apps": [
+          "Slack",
+          "Zoom"
+        ]
+      },
+      {
+        "type": "productivity",
+        "example": "A web app shows Cmd shortcuts on a Mac and Ctrl on Windows.",
+        "apps": [
+          "Google Docs",
+          "Notion"
+        ]
+      },
+      {
+        "type": "games",
+        "example": "A browser game picks keyboard hints and fullscreen steps for each system.",
+        "apps": []
+      },
+      {
+        "type": "security",
+        "example": "A fraud tool flags a visitor whose platform is Linux but whose user agent says iPhone.",
+        "apps": []
+      },
+      {
+        "type": "analytics",
+        "example": "A traffic dashboard counts visits by operating system.",
+        "apps": [
+          "Google Analytics"
+        ]
+      },
+      {
+        "type": "ads",
+        "example": "An advertiser targets Mac users with a premium offer when the platform says MacIntel.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Low value alone",
+      "Handy for cross checks"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Deprecated by spec but not removed",
+    "Cannot distinguish Apple Silicon from Intel"
+  ],
+  "scores": {
+    "sensitivity": 1,
+    "utility": 2,
+    "fingerprint_bits": 2.3,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Legacy code paths"
+    ],
+    "abuse": [
+      "UA-spoof consistency check"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": true,
+      "how": "Collected as platform. Read by the LinkedIn APFC fingerprint script (48 features, alleged by BrowserGate, partly confirmed by BleepingComputer)."
+    }
+  },
+  "history": [
+    {
+      "date": "2020-01",
+      "browser": "chrome",
+      "version": "",
+      "change": "Win32 and MacIntel are effectively frozen on 64-bit and ARM systems"
+    }
+  ],
+  "related": [
+    "web.device.user-agent-string"
+  ],
+  "refs": [
+    {
+      "t": "paper",
+      "label": "AmIUnique: Beauty and the Beast, Laperdrix et al. 2016 (attribute entropy)",
+      "url": "https://hal.inria.fr/hal-01285470"
+    },
+    {
+      "t": "mdn",
+      "label": "MDN Navigator.platform",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/Navigator/platform"
+    },
+    {
+      "t": "github",
+      "label": "fingerprintjs source: platform",
+      "url": "https://github.com/fingerprintjs/fingerprintjs/blob/master/src/sources/platform.ts"
+    }
+  ],
+  "confidence": "verified"
+}

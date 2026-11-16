@@ -1,0 +1,210 @@
+{
+  "id": "mob.os.default-browser",
+  "name": "Default browser and browser engine choice",
+  "kind": "capability",
+  "group": "os-integration-install",
+  "subgroup": "Default apps",
+  "tags": [
+    "default-browser",
+    "browser-choice",
+    "web-engine",
+    "dma"
+  ],
+  "plain": "Becomes the app that opens web links.",
+  "meaning": "The default browser sees every tapped link. Android has long allowed any browser; iOS added it in 14 and the EU and Japan added choice screens and engine freedom.",
+  "lifecycle": [
+    "in-session"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "y",
+      "v": "6.0",
+      "api": 23,
+      "permission": "ROLE_BROWSER",
+      "protection": "role",
+      "grant": "role",
+      "prompt_ui": "System default apps chooser",
+      "persistence": "Until changed",
+      "revocation": "Settings > Apps > Default apps > Browser",
+      "store_policy": "Play: default handler policy",
+      "api_surface": "RoleManager ROLE_BROWSER, intent filters for http and https",
+      "note": "Any engine allowed; browser choice screens for EEA from 2024."
+    },
+    "ios": {
+      "s": "f",
+      "v": "14.0",
+      "permission": "com.apple.developer.web-browser (managed entitlement); browser engine entitlements for EU and Japan",
+      "protection": "entitlement",
+      "grant": "settings",
+      "prompt_ui": "Settings > Default Browser App; EU choice screen at first launch of Safari",
+      "persistence": "Until changed",
+      "revocation": "Settings > Apps > Default Apps",
+      "store_policy": "Apple approves browsers; alternative engines only in EU (iOS 17.4) and Japan (26.2)",
+      "api_surface": "Default browser entitlement; BrowserEngineKit; WebKit required elsewhere",
+      "note": "Other iOS browsers use WKWebView outside EU and Japan."
+    }
+  },
+  "web_equivalents": [
+    "web.os.protocol-handlers"
+  ],
+  "data": {
+    "type": "enum",
+    "metric": "Default browser",
+    "update": "on change",
+    "fields": [
+      {
+        "name": "browser",
+        "type": "string",
+        "unit": "bundle id",
+        "range": "installed",
+        "precision": "exact"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can open your web links, after you pick it as your default browser",
+    "user_action": "You choose a browser in your default apps settings or on a choice screen",
+    "can": [
+      "Open web links you tap in other apps",
+      "Use its own browser engine on Android",
+      "Show a choice screen in the EU on iPhone and Android"
+    ],
+    "cannot": [
+      "Become the default without your choice in Settings",
+      "Use its own engine on iPhone outside the EU and Japan",
+      "Open links if you switch back to another browser"
+    ],
+    "reach": 3,
+    "reach_label": "Every web link, once you choose",
+    "differs": "Android allows any engine. iPhone browsers use Apple's WebKit outside the EU and Japan."
+  },
+  "story": {
+    "what_it_is": "Chooses which app opens web links when you tap them.",
+    "icon": "globe",
+    "tags": [
+      "Choice",
+      "Browser",
+      "Links"
+    ],
+    "marketing": [
+      {
+        "vendor": "Apple",
+        "name": "Change default apps",
+        "pitch": "Apple lets people choose a default browser and other apps in Settings.",
+        "url": "https://support.apple.com/guide/iphone/change-default-apps-iph9d6e7a2c6/ios"
+      }
+    ],
+    "for_you": "You pick a default browser, and every link you tap in mail or chat opens there. In the EU and Japan you may see a choice screen on first use.",
+    "for_makers": "Makers fight to be default, since the default browser sees every tapped link. Browser makers also get a say in search and ad choices.",
+    "use_cases": [
+      {
+        "type": "social",
+        "example": "Tapping a link in a chat opens your chosen browser.",
+        "apps": [
+          "Chrome",
+          "Firefox",
+          "Brave"
+        ]
+      },
+      {
+        "type": "ads",
+        "example": "A default browser shapes which search engine and ad network people see first.",
+        "apps": []
+      },
+      {
+        "type": "games",
+        "example": "A game opens a web page for a login in your browser.",
+        "apps": []
+      },
+      {
+        "type": "shopping",
+        "example": "A shopping link opens in the browser that already has your cart.",
+        "apps": []
+      },
+      {
+        "type": "security",
+        "example": "A fake browser could steal links, so roles are checked.",
+        "apps": []
+      },
+      {
+        "type": "media",
+        "example": "A news link opens in an ad blocking browser.",
+        "apps": [
+          "Brave"
+        ]
+      },
+      {
+        "type": "developer",
+        "example": "A web app engine choice, like a different browser engine in the EU.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Fake browsers capturing links",
+      "Defaults rarely changed"
+    ],
+    "android_note": "Any browser engine is allowed. A choice screen appears in the EEA since 2024.",
+    "ios_note": "iOS added default browsers in 14. Outside the EU and Japan other browsers use Apple's engine."
+  },
+  "technical_bounds": [
+    "Engine freedom regional on iOS"
+  ],
+  "scores": {
+    "sensitivity": 3,
+    "utility": 4,
+    "fingerprint_bits": 0,
+    "friction": 2
+  },
+  "value": {
+    "legit_uses": [
+      "Browser choice"
+    ],
+    "abuse": [
+      "Fake browser capturing links"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2020-09",
+      "platform": "ios",
+      "version": "iOS 14",
+      "change": "Default browser and mail apps"
+    },
+    {
+      "date": "2024-03",
+      "platform": "ios",
+      "version": "iOS 17.4",
+      "change": "EU choice screen and alternative engines"
+    },
+    {
+      "date": "2025-12",
+      "platform": "ios",
+      "version": "iOS 26.2",
+      "change": "Japan browser choice screen and engines"
+    }
+  ],
+  "related": [
+    "mob.os.alt-marketplaces",
+    "mob.os.default-nav-mail"
+  ],
+  "refs": [
+    {
+      "t": "apple",
+      "label": "Apple: Choosing your default browser",
+      "url": "https://support.apple.com/guide/iphone/change-default-apps-iph9d6e7a2c6/ios"
+    },
+    {
+      "t": "android",
+      "label": "Android: Roles",
+      "url": "https://developer.android.com/reference/android/app/role/RoleManager"
+    }
+  ],
+  "confidence": "docs"
+}

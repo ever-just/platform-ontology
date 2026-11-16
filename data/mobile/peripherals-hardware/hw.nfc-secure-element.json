@@ -1,0 +1,194 @@
+{
+  "id": "mob.hw.nfc-secure-element",
+  "name": "Secure Element and NFC platform access",
+  "kind": "capability",
+  "group": "peripherals-hardware",
+  "subgroup": "NFC",
+  "tags": [
+    "secure-element",
+    "nfc",
+    "car-key",
+    "wallet"
+  ],
+  "plain": "Reads and writes applets in the phone's secure chip for keys, badges and payments.",
+  "meaning": "The secure element holds the strongest credentials on the phone. Third-party access means banks, car makers and employers can issue keys without Apple or Google Wallet.",
+  "lifecycle": [
+    "in-session"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "f",
+      "v": "9.0",
+      "api": 28,
+      "permission": "Open Mobile API: SE_PERMISSION via access rules (ARA); android.hardware.se.omapi",
+      "protection": "signature",
+      "grant": "system-only",
+      "prompt_ui": "Access rules on the SE grant per app signature",
+      "persistence": "n/a",
+      "revocation": "n/a",
+      "store_policy": "",
+      "api_surface": "android.se.omapi.SEService, Reader, Session",
+      "note": "Third-party use needs the SE vendor's access rules; OEM wallets and carriers use it. Most apps use HCE instead."
+    },
+    "ios": {
+      "s": "f",
+      "v": "18.1",
+      "permission": "com.apple.developer.secure-element-credential; com.apple.developer.nfc.hce",
+      "protection": "entitlement",
+      "grant": "entitlement",
+      "prompt_ui": "Apple entitlement plus commercial agreement; fee applies",
+      "persistence": "Per credential",
+      "revocation": "Wallet settings",
+      "store_policy": "Apple signed agreement; fees apply",
+      "api_surface": "SecureElementCredential, NFCPresentmentIntent",
+      "note": "Offered in selected countries (Australia, Brazil, Canada, Japan, NZ, UK, US at launch) and EEA under DMA terms."
+    }
+  },
+  "data": {
+    "type": "object",
+    "metric": "Applet credential",
+    "update": "per transaction",
+    "fields": [
+      {
+        "name": "applet instance",
+        "type": "object",
+        "unit": "n/a",
+        "range": "per issuer",
+        "precision": "n/a"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can use the phone's secure chip only with special approval",
+    "user_action": "You add a car key, work badge or bank credential from the issuer's app",
+    "can": [
+      "Store keys, badges and payment credentials on the secure chip",
+      "Let banks, car makers and employers issue keys without Apple or Google Wallet",
+      "Run on iPhone in selected countries and the EEA"
+    ],
+    "cannot": [
+      "Use the chip on iPhone without Apple's entitlement, agreement and fee",
+      "Use the chip on Android without the chip vendor's access rules",
+      "Be used by most Android apps, which use host card emulation instead"
+    ],
+    "reach": 3,
+    "reach_label": "Ongoing, but approval gated",
+    "differs": "iPhone needs an Apple entitlement and fee in selected countries; Android needs access rules from the chip vendor, so wallets and carriers mostly use it."
+  },
+  "story": {
+    "what_it_is": "Lets an approved app store and run keys, badges and payment cards inside the phone's tamper proof chip.",
+    "icon": "key-round",
+    "tags": [
+      "NFC",
+      "Secure chip",
+      "Keys"
+    ],
+    "marketing": [
+      {
+        "vendor": "Apple",
+        "name": "NFC and SE Platform",
+        "pitch": "Approved apps can use the phone's secure element for tap payments, car keys, IDs and more.",
+        "url": "https://developer.apple.com/support/nfc-se-platform/"
+      }
+    ],
+    "for_you": "You tap your phone on a hotel door, a car or a payment reader and it works as fast as a card. The key is held in a locked chip, so someone who copies your app cannot copy the key.",
+    "for_makers": "The chip is the safest place on a phone for car keys, bank cards and access badges. Banks, car makers and employers want to use it for their own brand. Platforms limit it to vetted companies and regions.",
+    "use_cases": [
+      {
+        "type": "automotive",
+        "example": "A car maker's app opens and starts the car from the phone's secure chip.",
+        "apps": []
+      },
+      {
+        "type": "travel",
+        "example": "A hotel app issues a room key valid for exactly your stay.",
+        "apps": []
+      },
+      {
+        "type": "enterprise",
+        "example": "An employer's app holds a badge for the office door and the parking gate.",
+        "apps": []
+      },
+      {
+        "type": "education",
+        "example": "A student ID opens dorms and pays at the cafeteria.",
+        "apps": []
+      },
+      {
+        "type": "payments",
+        "example": "A bank puts its own card in its app and takes taps without the system wallet.",
+        "apps": []
+      },
+      {
+        "type": "security",
+        "example": "A government app holds a digital ID checked by tapping a reader.",
+        "apps": []
+      },
+      {
+        "type": "smart-home",
+        "example": "A home lock holds a house key and shares it with family.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Locked to a few vendors",
+      "Lost phone could open doors",
+      "Rules differ by country"
+    ],
+    "android_note": "Most Android apps use software card emulation. Third party secure chip access needs rules set by the chip owner.",
+    "ios_note": "Apple offers it in selected countries (including Australia, Brazil, Canada, Japan, New Zealand, the UK and the US) and in the EEA under European law."
+  },
+  "technical_bounds": [
+    "Both vendors gate this by contract, not by a user prompt"
+  ],
+  "scores": {
+    "sensitivity": 4,
+    "utility": 3,
+    "fingerprint_bits": 1,
+    "friction": 3
+  },
+  "value": {
+    "legit_uses": [
+      "Car keys",
+      "Hotel keys",
+      "Corporate badges",
+      "Student IDs"
+    ],
+    "abuse": [
+      "Wallet bypass phishing"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2018-05",
+      "platform": "android",
+      "version": "9.0 (API 28)",
+      "change": "Open Mobile API available to apps with SE access rules"
+    },
+    {
+      "date": "2024-10",
+      "platform": "ios",
+      "version": "iOS 18.1",
+      "change": "SE credentials and NFC controller access for approved developers"
+    }
+  ],
+  "related": [
+    "mob.hw.nfc-hce",
+    "mob.pay.wallet-passes"
+  ],
+  "refs": [
+    {
+      "t": "android",
+      "label": "Android: Open Mobile API",
+      "url": "https://developer.android.com/reference/android/se/omapi/package-summary"
+    }
+  ],
+  "confidence": "docs"
+}

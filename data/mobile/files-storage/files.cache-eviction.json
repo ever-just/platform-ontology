@@ -1,0 +1,189 @@
+{
+  "id": "mob.files.cache-eviction",
+  "name": "Cache and temporary storage eviction",
+  "kind": "capability",
+  "group": "files-storage",
+  "subgroup": "Storage limits",
+  "tags": [
+    "cache",
+    "low-storage",
+    "eviction",
+    "purgeable"
+  ],
+  "plain": "The system may delete cache and temporary files when storage runs low; other files stay.",
+  "meaning": "Apps cannot rely on cache data staying. Android clears cache dirs and reports a cache quota; iOS purges Caches and tmp when space is needed, and flags files as purgeable.",
+  "lifecycle": [
+    "background"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "y",
+      "v": "8.0",
+      "api": 26,
+      "permission": "None",
+      "protection": "none",
+      "grant": "none",
+      "prompt_ui": "Settings > Storage > Clear cache",
+      "persistence": "Cache cleared on low storage or by the user; per app cache quota via StorageManager",
+      "revocation": "Settings",
+      "store_policy": "",
+      "api_surface": "Context.getCacheDir(), StorageManager.getCacheQuotaBytes()",
+      "note": "Low storage clears oldest cache first; quota set by the system"
+    },
+    "ios": {
+      "s": "y",
+      "v": "5.0",
+      "permission": "None",
+      "protection": "none",
+      "grant": "none",
+      "prompt_ui": "None",
+      "persistence": "Caches and tmp purged by the system when low; Documents is not",
+      "revocation": "Not user controlled",
+      "store_policy": "",
+      "api_surface": "FileManager caches directory, volumeAvailableCapacityForImportantUsage",
+      "note": "Purge happens while the app is not running; Documents and Application Support are kept"
+    }
+  },
+  "web_equivalents": [
+    "web.storage.storage-quota",
+    "web.storage.persistence-eviction"
+  ],
+  "data": {
+    "type": "integer",
+    "metric": "Free storage",
+    "update": "Live",
+    "fields": [
+      {
+        "name": "available_bytes",
+        "type": "integer",
+        "unit": "binary",
+        "range": "0 to device size",
+        "precision": "1 byte"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can store temporary files that the system may delete when your storage runs low",
+    "user_action": "Nothing. The app saves cache files while you use it",
+    "can": [
+      "Save cache and temporary files, such as image thumbnails",
+      "Keep them until storage runs low or you clear them",
+      "Rebuild them after the system deletes them"
+    ],
+    "cannot": [
+      "Keep cache forever; Android clears oldest cache first when space is low",
+      "Count on cache staying while iPhone is low on storage; it is purged when the app is not running",
+      "Lose Documents or Application Support files on iPhone from this purge",
+      "Stop you from using Settings, then Storage, then Clear cache on Android"
+    ],
+    "reach": 2,
+    "reach_label": "Temporary, system may delete",
+    "differs": "Android sets a cache quota and clears oldest first. iPhone purges the caches folder while the app is not running."
+  },
+  "story": {
+    "what_it_is": "The phone may delete an app's cache and temporary files when it runs low on space.",
+    "icon": "trash-2",
+    "tags": [
+      "Storage",
+      "Automatic",
+      "Developer"
+    ],
+    "marketing": [],
+    "for_you": "When your storage is nearly full, the phone may quietly wipe cached images and temporary files. You may see an app reload things it had already downloaded. Your saved files stay.",
+    "for_makers": "Makers must treat caches as disposable and rebuild them when they vanish. It lets the phone free space without asking you, and makers should not hide needed files in caches.",
+    "use_cases": [
+      {
+        "type": "media",
+        "example": "A streaming app loses its cached thumbnails when space is low and downloads them again.",
+        "apps": []
+      },
+      {
+        "type": "social",
+        "example": "A photo feed app reloads old images after the phone cleared its cache.",
+        "apps": []
+      },
+      {
+        "type": "maps",
+        "example": "A map app re downloads map tiles it used to have stored in cache.",
+        "apps": []
+      },
+      {
+        "type": "games",
+        "example": "A game re downloads optional textures but keeps your saved game files safe.",
+        "apps": []
+      },
+      {
+        "type": "music",
+        "example": "A music app keeps your downloads in permanent storage so they are not wiped, but cached previews may go.",
+        "apps": []
+      },
+      {
+        "type": "developer",
+        "example": "A developer tests low storage to see if the app copes with missing cache.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Lost cache slows apps",
+      "Wrongly stored data can vanish"
+    ],
+    "android_note": "Android clears cache folders and reports a cache quota for each app.",
+    "ios_note": "iOS purges Caches and tmp folders when space is needed and flags files as purgeable."
+  },
+  "technical_bounds": [
+    "Cache is not durable",
+    "Free space readings fingerprint lightly"
+  ],
+  "scores": {
+    "sensitivity": 1,
+    "utility": 2,
+    "fingerprint_bits": 4,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Offline content that can be rebuilt"
+    ],
+    "abuse": [
+      "Storage size fingerprint"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2017-08",
+      "platform": "android",
+      "version": "8.0 (API 26)",
+      "change": "Cache quota APIs introduced"
+    },
+    {
+      "date": "2013-09",
+      "platform": "ios",
+      "version": "iOS 7",
+      "change": "System purges Caches when space is needed"
+    }
+  ],
+  "related": [
+    "mob.files.scoped-storage",
+    "mob.os.app-archiving"
+  ],
+  "refs": [
+    {
+      "t": "android",
+      "label": "Android: Manage cache and storage",
+      "url": "https://developer.android.com/training/data-storage/app-specific"
+    },
+    {
+      "t": "apple",
+      "label": "Apple: Managing storage and purgeable files",
+      "url": "https://developer.apple.com/documentation/foundation/nsurlresourcekey"
+    }
+  ],
+  "confidence": "docs"
+}

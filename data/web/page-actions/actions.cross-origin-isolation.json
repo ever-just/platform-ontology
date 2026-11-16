@@ -1,0 +1,258 @@
+{
+  "id": "web.actions.cross-origin-isolation",
+  "name": "Cross-origin isolation (SharedArrayBuffer, COOP, COEP)",
+  "kind": "capability",
+  "group": "page-actions",
+  "subgroup": "Compute",
+  "tags": [
+    "coop",
+    "coep",
+    "sharedarraybuffer",
+    "cross-origin-isolated",
+    "spectre"
+  ],
+  "plain": "A site can opt into an isolated mode that unlocks SharedArrayBuffer, precise timers and Wasm threads.",
+  "meaning": "Isolation trades openness (no cross-origin popups or unmarked embeds) for power. Sites with it get memory sharing and 5 microsecond timers, which are also better side channel tools.",
+  "lifecycle": [
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "Cross-Origin-Opener-Policy: same-origin; Cross-Origin-Embedder-Policy: require-corp or credentialless; self.crossOriginIsolated",
+      "bcd": [
+        "api.Window.crossOriginIsolated",
+        "api.SharedArrayBuffer"
+      ],
+      "access": {
+        "grant": "none",
+        "prompt_ui": "None (no browser prompt)",
+        "secure_context": false,
+        "user_gesture": false,
+        "activation": "none",
+        "persistence": "Set per document via headers",
+        "revocation": "Nothing to revoke (no permission is stored)",
+        "iframe": "Embedded frames need CORP or CORS (require-corp) or credentialless mode",
+        "steps": [
+          "Server sends COOP and COEP headers",
+          "crossOriginIsolated becomes true",
+          "SharedArrayBuffer and fine timers become available"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "87",
+          "note": "",
+          "date": "2020-11-17"
+        },
+        "edge": {
+          "s": "y",
+          "v": "87",
+          "note": "",
+          "date": "2020-11-19"
+        },
+        "firefox": {
+          "s": "y",
+          "v": "72",
+          "note": "",
+          "date": "2020-01-07"
+        },
+        "safari": {
+          "s": "y",
+          "v": "15.2",
+          "note": "",
+          "date": "2021-12-13"
+        },
+        "ios_safari": {
+          "s": "y",
+          "v": "15.2",
+          "note": "All iOS browsers use WebKit",
+          "date": "2021-12-13"
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "87",
+          "note": "",
+          "date": "2020-11-17"
+        },
+        "samsung": {
+          "s": "y",
+          "v": "14.0",
+          "note": "",
+          "date": "2021-04-17"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "none",
+    "metric": "",
+    "update": "",
+    "fields": []
+  },
+  "limits": {
+    "headline": "Can switch on a locked down mode that unlocks fast shared memory for the page",
+    "user_action": "Nothing. It happens when the site loads with the right security headers set.",
+    "can": [
+      "Share memory between background threads for heavy apps like games and editors",
+      "Run the page's own code with very precise timers",
+      "Start multi threaded compiled code inside the page"
+    ],
+    "cannot": [
+      "Open popups that stay linked to other sites while isolation is on",
+      "Load embedded videos, ads or widgets that are not marked to allow it",
+      "Turn itself on without the site's own server sending the right headers",
+      "See anything in other tabs or other sites"
+    ],
+    "reach": 1,
+    "reach_label": "Only inside its own page",
+    "differs": "Works in Chrome, Edge, Firefox and Safari, including on iPhone and Android."
+  },
+  "story": {
+    "what_it_is": "A site can switch on a locked down mode that unlocks very fast, shared memory tricks.",
+    "icon": "lock-keyhole",
+    "tags": [
+      "Power mode",
+      "Silent",
+      "Games"
+    ],
+    "marketing": [
+      {
+        "vendor": "Google",
+        "name": "Cross-origin isolation",
+        "pitch": "Chrome's web.dev guide says isolation unlocks powerful features like SharedArrayBuffer and high precision timers, in exchange for stricter rules about embeds.",
+        "url": "https://web.dev/articles/coop-coep"
+      }
+    ],
+    "for_you": "You never see a prompt. A big web app just runs smoother, but some embedded widgets, like a video or ad frame, may refuse to load until their owners add the right labels.",
+    "for_makers": "Makers flip this on to get shared memory and multi threaded compiled code, which game engines and heavy editors need. The cost is that every third party embed on the page must opt in too, which is a real project for ad heavy sites.",
+    "use_cases": [
+      {
+        "type": "games",
+        "example": "A Unity or Unreal game exported to the browser uses several worker threads at once, which only works when the page is isolated.",
+        "apps": [
+          "Unity WebGL games",
+          "Unreal web exports"
+        ]
+      },
+      {
+        "type": "creative",
+        "example": "A web video editor trims and renders clips using many CPU threads so the preview stays smooth.",
+        "apps": [
+          "Clipchamp",
+          "CapCut web"
+        ]
+      },
+      {
+        "type": "productivity",
+        "example": "Spreadsheets and CAD tools in the browser share one big block of memory between workers to crunch numbers faster.",
+        "apps": [
+          "AutoCAD web"
+        ]
+      },
+      {
+        "type": "developer",
+        "example": "An in browser coding sandbox runs a whole Node style environment and needs shared memory to do it.",
+        "apps": [
+          "StackBlitz WebContainers"
+        ]
+      },
+      {
+        "type": "security",
+        "example": "Security teams use isolation to make sure that a page cannot be read by other sites' scripts, a defence against Spectre style attacks.",
+        "apps": []
+      },
+      {
+        "type": "ads",
+        "example": "Ad networks must retag their frames and scripts so a publisher can turn isolation on without breaking ad slots.",
+        "apps": [
+          "Google Ad Manager"
+        ]
+      }
+    ],
+    "risks": [
+      "Broken embeds",
+      "Timing attacks if misconfigured"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "SharedArrayBuffer requires crossOriginIsolated (Chrome 92, Firefox 79, Safari 15.2)",
+    "COEP require-corp: every subresource needs CORP or CORS; credentialless mode available in Chrome 96 and Firefox 119",
+    "COOP same-origin severs window.opener to cross-origin popups (breaks OAuth popups unless same-origin-allow-popups)",
+    "Isolated pages get performance.now at 5 microsecond resolution (Chrome) instead of 100 microseconds",
+    "Chrome on Android got SharedArrayBuffer under the same rule in 92"
+  ],
+  "scores": {
+    "sensitivity": 1,
+    "utility": 4,
+    "fingerprint_bits": null,
+    "friction": 1
+  },
+  "value": {
+    "legit_uses": [
+      "Wasm threads",
+      "High resolution profiling",
+      "Large in-browser apps"
+    ],
+    "abuse": [
+      "Fast timer side channels (Spectre style) if isolation fails",
+      "Hidden memory sharing between workers"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2018-01",
+      "browser": "chrome",
+      "version": "64",
+      "change": "SharedArrayBuffer disabled by Spectre"
+    },
+    {
+      "date": "2020-07",
+      "browser": "chrome",
+      "version": "92",
+      "change": "SharedArrayBuffer re-enabled only for crossOriginIsolated"
+    },
+    {
+      "date": "2021-09",
+      "browser": "chrome",
+      "version": "96",
+      "change": "COEP credentialless"
+    },
+    {
+      "date": "2023-10",
+      "browser": "firefox",
+      "version": "119",
+      "change": "COEP credentialless"
+    }
+  ],
+  "related": [
+    "web.actions.webassembly"
+  ],
+  "refs": [
+    {
+      "t": "mdn",
+      "label": "MDN crossOriginIsolated",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/Window/crossOriginIsolated"
+    },
+    {
+      "t": "chromestatus",
+      "label": "web.dev cross-origin isolation guide",
+      "url": "https://web.dev/articles/cross-origin-isolation-guide"
+    },
+    {
+      "t": "spec",
+      "label": "HTML Standard: cross-origin opener policies",
+      "url": "https://html.spec.whatwg.org/multipage/browsers.html#cross-origin-opener-policies"
+    }
+  ],
+  "confidence": "docs"
+}

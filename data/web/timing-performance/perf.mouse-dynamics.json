@@ -1,0 +1,244 @@
+{
+  "id": "web.perf.mouse-dynamics",
+  "name": "Mouse movement dynamics",
+  "kind": "tracking",
+  "group": "timing-performance",
+  "subgroup": "Behavioral biometrics",
+  "tags": [
+    "mouse",
+    "pointer",
+    "trajectory",
+    "bot-detection"
+  ],
+  "plain": "Records cursor paths, speed and acceleration.",
+  "meaning": "Movement curvature, jitter and click timing separate humans from bots and can identify repeat users. Coalesced events give up to 1000 Hz traces on gaming mice.",
+  "lifecycle": [
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "mousemove, pointermove, getCoalescedEvents(), PointerEvent.pointerType",
+      "bcd": [
+        "api.PointerEvent.getCoalescedEvents"
+      ],
+      "access": {
+        "grant": "none",
+        "prompt_ui": "",
+        "secure_context": false,
+        "user_gesture": false,
+        "persistence": "",
+        "revocation": "",
+        "iframe": "",
+        "steps": [
+          "Listen to pointer events",
+          "Record x, y, timestamp",
+          "Compute velocity, acceleration, curvature",
+          "Score human likelihood or identify"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "58",
+          "note": "",
+          "date": "2017-04-19"
+        },
+        "edge": {
+          "s": "y",
+          "v": "79",
+          "note": "",
+          "date": "2020-01-15"
+        },
+        "firefox": {
+          "s": "y",
+          "v": "59",
+          "note": "",
+          "date": "2018-03-13"
+        },
+        "safari": {
+          "s": "y",
+          "v": "18.2",
+          "note": "",
+          "date": "2024-12-11"
+        },
+        "ios_safari": {
+          "s": "y",
+          "v": "18.2",
+          "note": "",
+          "date": "2024-12-11"
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "58",
+          "note": "",
+          "date": "2017-04-25"
+        },
+        "samsung": {
+          "s": "y",
+          "v": "7.0",
+          "note": "",
+          "date": "2018-03-16"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "event",
+    "metric": "60 to 1000 samples per second",
+    "update": "",
+    "fields": [
+      {
+        "name": "clientX",
+        "type": "float",
+        "unit": "CSS px",
+        "range": "0 to viewport",
+        "precision": "subpixel on high DPI"
+      },
+      {
+        "name": "movementX",
+        "type": "float",
+        "unit": "px",
+        "range": "-1000 to 1000",
+        "precision": "1 px"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can track how your cursor moves on the page, to tell people from bots",
+    "user_action": "You move or click the mouse on the page",
+    "can": [
+      "Record cursor paths, speed and how it speeds up",
+      "Time your clicks",
+      "Tell humans from bots by how smooth the movement is",
+      "Spot repeat visitors from their movement style"
+    ],
+    "cannot": [
+      "Follow your cursor outside the page",
+      "Ask permission first",
+      "See what you type",
+      "Follow your hand when the pointer is not over the page"
+    ],
+    "reach": 3,
+    "reach_label": "While the page is open",
+    "differs": "Phones and tablets have no cursor, so touch movement is tracked instead."
+  },
+  "story": {
+    "what_it_is": "A script records cursor paths, speed and acceleration to judge if a human is moving the mouse.",
+    "icon": "mouse-pointer",
+    "tags": [
+      "Mouse",
+      "Silent",
+      "Behavior"
+    ],
+    "marketing": [],
+    "for_you": "You never see it. Real people move a mouse with small wobbles and pauses. A page that records your movement can tell you apart from a bot, and sometimes tell you apart from other people.",
+    "for_makers": "Fraud and bot defense tools use mouse paths as a key signal, like in invisible CAPTCHAs. Marketers use the same data for heat maps that show where people look and click.",
+    "use_cases": [
+      {
+        "type": "security",
+        "example": "An invisible CAPTCHA like reCAPTCHA v3 scores how human your mouse moves are, so most people never see a puzzle.",
+        "apps": [
+          "Google reCAPTCHA v3",
+          "Cloudflare Turnstile"
+        ]
+      },
+      {
+        "type": "shopping",
+        "example": "A site uses heat maps of mouse movement to see which part of a page people hover over before buying.",
+        "apps": [
+          "Hotjar",
+          "Microsoft Clarity"
+        ]
+      },
+      {
+        "type": "shopping",
+        "example": "A ticket seller blocks scalper bots that move the cursor in perfectly straight lines.",
+        "apps": [
+          "Ticketmaster"
+        ]
+      },
+      {
+        "type": "banking",
+        "example": "A bank adds mouse habits to its fraud score at login, quietly checking you move like usual.",
+        "apps": []
+      },
+      {
+        "type": "games",
+        "example": "A browser game catches aim bots that move the cursor in robotic jumps.",
+        "apps": []
+      },
+      {
+        "type": "ads",
+        "example": "An ad system checks that clicks on ads came from natural mouse movement, so advertisers are not charged for bot clicks.",
+        "apps": []
+      },
+      {
+        "type": "analytics",
+        "example": "A product team watches session replays of cursor movement to find a confusing button.",
+        "apps": [
+          "FullStory",
+          "Microsoft Clarity"
+        ]
+      }
+    ],
+    "risks": [
+      "Behavior is personal",
+      "Replay tools can see a lot",
+      "Used for tracking"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Only inside page viewport",
+    "No readout of pointer outside window except during drag/capture"
+  ],
+  "scores": {
+    "sensitivity": 2,
+    "utility": 3,
+    "fingerprint_bits": 3,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": "Games and drawing tools, accessibility",
+    "abuse": "Behavioral CAPTCHAs (reCAPTCHA v3, Turnstile, Akamai sensor) and user identification"
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2019-01",
+      "browser": "chrome",
+      "version": "",
+      "change": "PointerEvent getCoalescedEvents ships (Chrome 58 originally)"
+    },
+    {
+      "date": "2022-01",
+      "browser": "firefox",
+      "version": "",
+      "change": "Firefox adds getCoalescedEvents (version 59)"
+    }
+  ],
+  "related": [
+    "web.perf.keystroke-dynamics",
+    "web.net.bot-detection-signals"
+  ],
+  "refs": [
+    {
+      "t": "mdn",
+      "label": "MDN PointerEvent getCoalescedEvents",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/PointerEvent/getCoalescedEvents"
+    },
+    {
+      "t": "paper",
+      "label": "Shen et al., Mouse biometrics survey",
+      "url": "https://ieeexplore.ieee.org/document/6280610"
+    }
+  ],
+  "confidence": "docs"
+}

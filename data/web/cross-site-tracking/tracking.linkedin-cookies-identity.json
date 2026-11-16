@@ -1,0 +1,223 @@
+{
+  "id": "web.tracking.linkedin-cookies-identity",
+  "name": "LinkedIn identity and session cookies (bcookie, bscookie, lidc, li_gc, li_mc)",
+  "kind": "tracking",
+  "group": "cross-site-tracking",
+  "subgroup": "Cookies",
+  "tags": [
+    "cookie",
+    "first-party",
+    "third-party",
+    "identity",
+    "session"
+  ],
+  "plain": "Cookies that give each browser and member a stable ID on LinkedIn and on sites with its tag.",
+  "meaning": "bcookie and bscookie identify the browser for one year, lidc routes traffic for 24 hours, li_gc and li_mc store consent and marketing state for 6 months. They link logged out and logged in activity.",
+  "lifecycle": [
+    "before-visit",
+    "on-arrival",
+    "signed-in",
+    "after-leaving"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "Set-Cookie bcookie, bscookie, lidc, li_gc, li_mc, JSESSIONID, li_at, lang, liap",
+      "access": {
+        "grant": "none",
+        "prompt_ui": "None (no browser prompt)",
+        "secure_context": false,
+        "user_gesture": false,
+        "persistence": "bcookie 1 year, bscookie 1 year, lidc 24 hours, li_gc 6 months, li_mc 6 months (LinkedIn table)",
+        "revocation": "",
+        "iframe": "",
+        "steps": [
+          "First request sets bcookie and bscookie",
+          "Cookies sent on every LinkedIn request, including via Insight Tag pixel",
+          "li_at and JSESSIONID are the logged in session"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "",
+          "note": ""
+        },
+        "edge": {
+          "s": "y",
+          "v": "",
+          "note": ""
+        },
+        "firefox": {
+          "s": "y",
+          "v": "",
+          "note": ""
+        },
+        "safari": {
+          "s": "y",
+          "v": "",
+          "note": ""
+        },
+        "ios_safari": {
+          "s": "y",
+          "v": "",
+          "note": ""
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "",
+          "note": ""
+        },
+        "samsung": {
+          "s": "y",
+          "v": "",
+          "note": ""
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "string",
+    "metric": "Browser IDs",
+    "update": "set once, refreshed on visit",
+    "fields": [
+      {
+        "name": "bcookie",
+        "type": "string",
+        "unit": "",
+        "range": "UUID",
+        "precision": "stable 1 year"
+      },
+      {
+        "name": "bscookie",
+        "type": "string",
+        "unit": "",
+        "range": "signed id",
+        "precision": "stable 1 year"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can give your browser and account a steady ID on LinkedIn and partner sites",
+    "user_action": "Nothing. It happens when you open LinkedIn or a site with the LinkedIn tag",
+    "can": [
+      "Give your browser a stable ID that stays between visits",
+      "Link that ID to your member account when you are signed in",
+      "Keep your session and route you to the right server",
+      "Tell LinkedIn which sites with its tag you visited"
+    ],
+    "cannot": [
+      "Follow you after you clear cookies or use a fresh browser profile",
+      "Work where third party cookies are blocked, such as Safari and Firefox by default",
+      "Know your identity on other sites unless you are signed in to LinkedIn",
+      "See your activity in other apps"
+    ],
+    "reach": 4,
+    "reach_label": "A stable ID that follows you",
+    "differs": "Safari and Firefox block third party cookies by default, which limits the tag on other sites. Chrome allows them unless you change settings."
+  },
+  "story": {
+    "what_it_is": "Cookies that give your browser a steady ID on LinkedIn and on sites that use its tag.",
+    "icon": "cookie",
+    "tags": [
+      "Cookies",
+      "Tracking",
+      "Silent"
+    ],
+    "marketing": [],
+    "for_you": "You do not see these. A tag called bcookie gives your browser an ID for about a year, and others keep your consent and routing. They connect your logged out visits with the time you log in.",
+    "for_makers": "A stable ID lets LinkedIn count visitors, show the right ads and link activity before and after sign in. It is the base that other tracking pieces plug into. Advertisers use it to measure who saw an ad and who later acted.",
+    "use_cases": [
+      {
+        "type": "ads",
+        "example": "An advertiser sees that the same browser clicked a LinkedIn ad, read a pricing page and later signed up.",
+        "apps": [
+          "LinkedIn Insight Tag"
+        ]
+      },
+      {
+        "type": "analytics",
+        "example": "A marketer measures how many unique people reached a webinar page, not just how many page views.",
+        "apps": [
+          "LinkedIn Campaign Manager"
+        ]
+      },
+      {
+        "type": "social",
+        "example": "You open a LinkedIn post logged out, then log in, and LinkedIn can link the two visits to one person.",
+        "apps": [
+          "LinkedIn"
+        ]
+      },
+      {
+        "type": "enterprise",
+        "example": "A recruiter dashboard counts unique visitors to a careers page, using the browser ID across visits.",
+        "apps": []
+      },
+      {
+        "type": "security",
+        "example": "A sudden jump of requests with one browser ID helps LinkedIn catch scraping from that browser.",
+        "apps": [
+          "LinkedIn"
+        ]
+      },
+      {
+        "type": "media",
+        "example": "A news site with a LinkedIn tag learns which readers also work at target companies for a sponsor.",
+        "apps": [
+          "Fast Company",
+          "Harvard Business Review"
+        ]
+      }
+    ],
+    "risks": [
+      "Joins logged out and logged in activity",
+      "Lasts a year"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Third party cookie blocking limits bcookie on other sites",
+    "Durations are from LinkedIn's cookie table via summary (not rechecked)"
+  ],
+  "scores": {
+    "sensitivity": 4,
+    "utility": 3,
+    "fingerprint_bits": null,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Login session",
+      "Load balancing",
+      "Security"
+    ],
+    "abuse": [
+      "Cross-site profile joins"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": true,
+      "how": "bcookie, bscookie, lidc, li_gc, li_mc listed in LinkedIn's cookie table."
+    }
+  },
+  "related": [
+    "web.tracking.linkedin-cookies-ad-sync",
+    "web.tracking.linkedin-cookies-antiabuse"
+  ],
+  "refs": [
+    {
+      "t": "vendor",
+      "label": "LinkedIn cookie table",
+      "url": "https://www.linkedin.com/legal/l/cookie-table"
+    },
+    {
+      "t": "vendor",
+      "label": "LinkedIn Cookie Policy",
+      "url": "https://www.linkedin.com/legal/cookie-policy"
+    }
+  ],
+  "confidence": "docs"
+}

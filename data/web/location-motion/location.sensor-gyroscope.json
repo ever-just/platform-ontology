@@ -1,0 +1,247 @@
+{
+  "id": "web.location.sensor-gyroscope",
+  "name": "Gyroscope",
+  "kind": "permission",
+  "group": "location-motion",
+  "subgroup": "Generic Sensor API",
+  "tags": [
+    "generic-sensor",
+    "secure-context"
+  ],
+  "plain": "Reads how fast the device is rotating around three axes.",
+  "meaning": "Shows how fast the device turns. Gyroscope noise has been used to eavesdrop on nearby speech (Gyrophone, 2014) and to fingerprint devices, which is why browsers cap the rate.",
+  "lifecycle": [
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "new Gyroscope({frequency})",
+      "permission_name": "gyroscope",
+      "permissions_policy": "gyroscope",
+      "bcd": [
+        "api.Gyroscope"
+      ],
+      "access": {
+        "grant": "prompt",
+        "prompt_ui": "Chromium shows no bubble: access follows the Motion sensors site setting (default Allow) plus the Permissions API name. Safari and Firefox do not ship the API.",
+        "secure_context": true,
+        "user_gesture": false,
+        "persistence": "Site setting Allow or Block per origin",
+        "revocation": "chrome://settings/content/sensors; Permissions API 'change' event",
+        "iframe": "Cross-origin iframes blocked unless allow=\"gyroscope\"; page must be focused and visible",
+        "steps": [
+          "Check isSecureContext and Permissions Policy",
+          "Construct the sensor with {frequency: 60}",
+          "sensor.start()",
+          "'reading' events fire; 'error' event on NotAllowedError or NotReadableError"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "67",
+          "note": "",
+          "date": "2018-05-29"
+        },
+        "edge": {
+          "s": "y",
+          "v": "79",
+          "note": "",
+          "date": "2020-01-15"
+        },
+        "firefox": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "safari": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "ios_safari": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "67",
+          "note": "",
+          "date": "2018-05-31"
+        },
+        "samsung": {
+          "s": "y",
+          "v": "9.0",
+          "note": "",
+          "date": "2018-09-15"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "event",
+    "metric": "Sensor readings at the requested frequency",
+    "update": "up to 60 Hz (Chrome caps frequency)",
+    "fields": [
+      {
+        "name": "x, y, z",
+        "type": "float",
+        "unit": "radians per second",
+        "range": "about -35 to 35 (hardware)",
+        "precision": "about 0.001"
+      },
+      {
+        "name": "frequency",
+        "type": "float",
+        "unit": "Hz",
+        "range": "1 to 60 (Chrome cap)",
+        "precision": "1 Hz"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can feel how fast your device turns while the page is open",
+    "user_action": "Nothing in most browsers. Chrome allows it by default unless you changed Motion sensors in site settings",
+    "can": [
+      "Measure turning speed on three axes",
+      "Move a 3D view or game as you turn the phone",
+      "Help recognise your device through small sensor quirks"
+    ],
+    "cannot": [
+      "Run in Firefox or Safari, which do not support it",
+      "Run at full speed; browsers cap the rate to limit eavesdropping on speech",
+      "Show a prompt in Chrome; there is none by default",
+      "Measure turning while the page is closed"
+    ],
+    "reach": 2,
+    "reach_label": "While the page is open",
+    "differs": "Chrome, Edge and Samsung Internet support it. Safari and Firefox do not."
+  },
+  "story": {
+    "what_it_is": "The page reads how fast your device is turning.",
+    "icon": "rotate-3d",
+    "tags": [
+      "Motion",
+      "Sensors",
+      "Silent"
+    ],
+    "marketing": [
+      {
+        "vendor": "Google Chrome",
+        "name": "Generic Sensor API",
+        "pitch": "Chrome describes a common way for web pages to read motion and environment sensors such as accelerometer and gyroscope.",
+        "url": "https://developer.chrome.com/docs/capabilities/web-apis/generic-sensor"
+      }
+    ],
+    "for_you": "You twist your phone and a game camera turns, or a 360 photo spins. On many phones there is no big prompt. The sensor can also pick up tiny sounds from nearby speech.",
+    "for_makers": "Makers use it for smooth camera control in 3D and AR. Trackers can use sensor quirks to recognize a phone, and research showed it can eavesdrop on speech nearby.",
+    "use_cases": [
+      {
+        "type": "games",
+        "example": "A browser first person game or 3D viewer turns the camera as you turn your phone.",
+        "apps": [
+          "Sketchfab"
+        ]
+      },
+      {
+        "type": "ar-vr",
+        "example": "A web AR try on page uses turning speed to keep models fixed in place.",
+        "apps": [
+          "8th Wall"
+        ]
+      },
+      {
+        "type": "media",
+        "example": "A 360 degree video pans smoothly as you twist your phone.",
+        "apps": [
+          "YouTube 360"
+        ]
+      },
+      {
+        "type": "maps",
+        "example": "A web map turns as you turn, with smooth compass behavior.",
+        "apps": []
+      },
+      {
+        "type": "security",
+        "example": "Researchers showed a page could pick up speech through gyroscope vibration, an eavesdropping risk.",
+        "apps": []
+      },
+      {
+        "type": "analytics",
+        "example": "A fingerprinting script uses tiny gyro errors to recognize one phone among millions.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Can eavesdrop on speech",
+      "Fingerprints devices"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "60 Hz cap mitigates the audio side channel",
+    "No readings while hidden"
+  ],
+  "scores": {
+    "sensitivity": 3,
+    "utility": 3,
+    "fingerprint_bits": 4,
+    "friction": 1
+  },
+  "value": {
+    "legit_uses": [
+      "Camera stabilisation",
+      "VR head tracking"
+    ],
+    "abuse": [
+      "Device fingerprinting by sensor bias",
+      "Speech eavesdropping at higher rates"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2018-05",
+      "browser": "chrome",
+      "version": "67",
+      "change": "Gyroscope ships"
+    },
+    {
+      "date": "2014-08",
+      "browser": "paper",
+      "version": "n/a",
+      "change": "Gyrophone shows speech recovery from gyroscope sampled near 200 Hz"
+    }
+  ],
+  "related": [
+    "web.location.device-orientation",
+    "web.location.sensor-orientation"
+  ],
+  "refs": [
+    {
+      "t": "mdn",
+      "label": "MDN Gyroscope",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/Gyroscope"
+    },
+    {
+      "t": "spec",
+      "label": "W3C Gyroscope",
+      "url": "https://www.w3.org/TR/gyroscope/"
+    },
+    {
+      "t": "paper",
+      "label": "Gyrophone (USENIX Security 2014)",
+      "url": "https://crypto.stanford.edu/gyrophone/"
+    }
+  ],
+  "confidence": "docs"
+}

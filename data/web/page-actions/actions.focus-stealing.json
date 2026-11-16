@@ -1,0 +1,228 @@
+{
+  "id": "web.actions.focus-stealing",
+  "name": "Focus and window raise",
+  "kind": "action",
+  "group": "page-actions",
+  "subgroup": "Windows and navigation",
+  "tags": [
+    "focus",
+    "window-focus",
+    "focus-stealing"
+  ],
+  "plain": "Can move focus between elements; cannot pull the window to the front or steal focus from other apps.",
+  "meaning": "A page can focus its own elements, but browsers stop it from grabbing focus from the address bar, another tab or another app, which blocks keystroke capture and pop-over scams.",
+  "lifecycle": [
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "element.focus(); window.focus(); autofocus; Permissions-Policy focus-without-user-activation",
+      "bcd": [
+        "api.HTMLElement.focus",
+        "api.Window.focus"
+      ],
+      "access": {
+        "grant": "none",
+        "prompt_ui": "None (no browser prompt)",
+        "secure_context": false,
+        "user_gesture": false,
+        "activation": "none",
+        "persistence": "None",
+        "revocation": "Nothing to revoke (no permission is stored)",
+        "iframe": "Cross-origin iframes cannot call focus() on parent or take focus without activation (Chrome 64)",
+        "steps": [
+          "Script calls focus()",
+          "Browser moves focus only inside the page or when the window is already active"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "1",
+          "note": "",
+          "date": "2008-12-11"
+        },
+        "edge": {
+          "s": "y",
+          "v": "12",
+          "note": "",
+          "date": "2015-07-29"
+        },
+        "firefox": {
+          "s": "y",
+          "v": "1.5",
+          "note": "",
+          "date": "2005-11-29"
+        },
+        "safari": {
+          "s": "y",
+          "v": "3",
+          "note": "",
+          "date": "2007-10-26"
+        },
+        "ios_safari": {
+          "s": "y",
+          "v": "1",
+          "note": "All iOS browsers use WebKit",
+          "date": "2007-06-29"
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "18",
+          "note": "",
+          "date": "2012-06-27"
+        },
+        "samsung": {
+          "s": "y",
+          "v": "1.0",
+          "note": "",
+          "date": "2013-04-27"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "none",
+    "metric": "",
+    "update": "",
+    "fields": []
+  },
+  "limits": {
+    "headline": "Can move the cursor between boxes on its page, but can't pull its window forward",
+    "user_action": "Nothing. It happens as you use the page, or when it finishes loading.",
+    "can": [
+      "Move the typing cursor to a form box on its own page",
+      "Bring its own tab back into focus after you click on it",
+      "Highlight a button or field after you finish a step"
+    ],
+    "cannot": [
+      "Pull its browser window above your other apps",
+      "Steal typing from another app or another site",
+      "Jump to the front when you are in a different tab",
+      "Force a tab to open in front of the one you are in"
+    ],
+    "reach": 1,
+    "reach_label": "Only inside its own page",
+    "differs": ""
+  },
+  "story": {
+    "what_it_is": "A page can move the typing cursor between its own fields but cannot yank your whole window forward.",
+    "icon": "crosshair",
+    "tags": [
+      "Safe by design",
+      "Silent",
+      "Annoyances"
+    ],
+    "marketing": [],
+    "for_you": "A search box can be ready to type the moment a page opens. A site cannot pull itself in front of the game or document you are using in another app.",
+    "for_makers": "Makers use autofocus to save you a click on login and search forms. Browsers block pushing the window to the front to prevent pop under annoyances.",
+    "use_cases": [
+      {
+        "type": "shopping",
+        "example": "A store's search bar is ready for typing the moment the page loads.",
+        "apps": [
+          "Amazon",
+          "Google"
+        ]
+      },
+      {
+        "type": "games",
+        "example": "A browser game grabs keyboard focus on load so arrow keys work without a click.",
+        "apps": [
+          "Agar.io",
+          "Slither.io"
+        ]
+      },
+      {
+        "type": "messaging",
+        "example": "A chat app puts the cursor in the message box after you open a conversation.",
+        "apps": [
+          "Slack",
+          "WhatsApp Web"
+        ]
+      },
+      {
+        "type": "security",
+        "example": "Old pop under ad tricks tried to pull a window forward, which browsers now block.",
+        "apps": []
+      },
+      {
+        "type": "accessibility",
+        "example": "A dialog moves focus into itself and back out so keyboard and screen reader users do not get lost.",
+        "apps": []
+      },
+      {
+        "type": "banking",
+        "example": "A login page puts the cursor straight into the username field.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Typing in the wrong box",
+      "Fake window tricks"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "window.focus() is a no-op in modern browsers unless the person triggered it (Chrome, Safari) or dom.disable_window_flip=true (Firefox default)",
+    "Background tabs cannot raise themselves; notification clicks can focus the client via clients.focus (needs a click)",
+    "Cross-origin iframe focus() without user activation is blocked (Chrome 64)",
+    "Cannot read keystrokes outside the document or in the browser UI",
+    "autofocus on a page that is not visible does nothing"
+  ],
+  "scores": {
+    "sensitivity": 1,
+    "utility": 2,
+    "fingerprint_bits": null,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Form autofocus",
+      "Dialog focus management",
+      "Keyboard navigation"
+    ],
+    "abuse": [
+      "Focus theft for keylogging-style scams",
+      "Pop-under refocus"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2018-01",
+      "browser": "chrome",
+      "version": "64",
+      "change": "Cross-origin iframes need user activation to move focus"
+    },
+    {
+      "date": "2020-01",
+      "browser": "firefox",
+      "version": "72",
+      "change": "window.focus() restricted by default"
+    }
+  ],
+  "related": [
+    "web.actions.open-popup"
+  ],
+  "refs": [
+    {
+      "t": "mdn",
+      "label": "MDN focus",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/HTMLElement/focus"
+    },
+    {
+      "t": "spec",
+      "label": "Permissions Policy focus-without-user-activation",
+      "url": "https://github.com/w3c/webappsec-permissions-policy/blob/main/features.md"
+    }
+  ],
+  "confidence": "docs"
+}

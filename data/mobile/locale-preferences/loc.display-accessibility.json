@@ -1,0 +1,198 @@
+{
+  "id": "mob.loc.display-accessibility",
+  "name": "Reduce motion, contrast, color inversion and bold text",
+  "kind": "signal",
+  "group": "locale-preferences",
+  "subgroup": "Accessibility",
+  "tags": [
+    "accessibility",
+    "reduce-motion"
+  ],
+  "plain": "Reads display accessibility toggles with no prompt.",
+  "meaning": "A combination of 5 to 8 toggles gives a small fingerprint and hints at motion sensitivity or vision needs.",
+  "lifecycle": [
+    "on-launch",
+    "in-session"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "p",
+      "v": "9.0",
+      "api": 28,
+      "permission": "",
+      "protection": "none",
+      "grant": "none",
+      "prompt_ui": "",
+      "persistence": "",
+      "revocation": "",
+      "store_policy": "",
+      "api_surface": "Settings.Global.ANIMATOR_DURATION_SCALE, ACCESSIBILITY_DISPLAY_INVERSION_ENABLED, AccessibilityManager (API 29 contrast)",
+      "note": "Animation scale 0 to 10"
+    },
+    "ios": {
+      "s": "y",
+      "v": "8.0",
+      "permission": "none",
+      "protection": "none",
+      "grant": "none",
+      "prompt_ui": "",
+      "persistence": "",
+      "revocation": "",
+      "store_policy": "",
+      "api_surface": "1 boolean each",
+      "note": ""
+    }
+  },
+  "web_equivalents": [
+    "web.display.prefers-reduced-motion",
+    "web.display.prefers-contrast",
+    "web.display.forced-colors",
+    "web.display.inverted-colors"
+  ],
+  "data": {
+    "type": "object",
+    "metric": "Display toggles",
+    "update": "On change",
+    "fields": [
+      {
+        "name": "reduce_motion",
+        "type": "boolean",
+        "unit": "",
+        "range": "true, false",
+        "precision": "1 bit"
+      },
+      {
+        "name": "invert_colors",
+        "type": "boolean",
+        "unit": "",
+        "range": "true, false",
+        "precision": "1 bit"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can see whether Reduce Motion, high contrast, inversion or bold text is on",
+    "user_action": "Nothing. It happens when the app draws its screens",
+    "can": [
+      "Check if Reduce Motion is on and skip heavy animations",
+      "Check for color inversion, bold text and similar toggles",
+      "Adjust screens to match your accessibility settings",
+      "Check the animation speed setting (Android)"
+    ],
+    "cannot": [
+      "Change your accessibility settings",
+      "See which assistive app you use",
+      "Warn you; there is no prompt"
+    ],
+    "reach": 1,
+    "reach_label": "A handful of on or off settings",
+    "differs": "iPhone gives a yes or no for each toggle. Android also shows the animation scale from 0 to 10."
+  },
+  "story": {
+    "what_it_is": "An app can see if you turned on Reduce Motion, high contrast, inverted colors or bold text.",
+    "icon": "accessibility",
+    "tags": [
+      "Accessibility",
+      "Silent",
+      "Sensitive"
+    ],
+    "marketing": [
+      {
+        "vendor": "Apple",
+        "name": "Display accessibility",
+        "pitch": "Apple offers settings for text size, contrast and motion so the phone fits how you see and move.",
+        "url": "https://www.apple.com/accessibility/"
+      },
+      {
+        "vendor": "Google",
+        "name": "Android accessibility",
+        "pitch": "Android offers settings like color correction, high contrast text and removing animations.",
+        "url": "https://www.android.com/accessibility/"
+      }
+    ],
+    "for_you": "You turn on a setting and apps respond, with fewer swoops and easier to read text. You never see apps read it. It may also tell an app that you have trouble with motion or vision.",
+    "for_makers": "Makers use these flags to calm animations, raise contrast and be inclusive. Together they also form a small fingerprint, and a combination of several toggles can imply a health or disability condition.",
+    "use_cases": [
+      {
+        "type": "games",
+        "example": "A game cuts screen shake and flashes when Reduce Motion is on.",
+        "apps": []
+      },
+      {
+        "type": "social",
+        "example": "A social feed skips auto playing video and zoom effects for people who get dizzy.",
+        "apps": [
+          "Instagram"
+        ]
+      },
+      {
+        "type": "media",
+        "example": "A video app raises caption contrast when high contrast text is on.",
+        "apps": [
+          "Disney+"
+        ]
+      },
+      {
+        "type": "ar-vr",
+        "example": "An AR app tones down moving effects for people who feel sick with motion.",
+        "apps": []
+      },
+      {
+        "type": "shopping",
+        "example": "A store app switches to simpler transitions when Reduce Motion is on.",
+        "apps": []
+      },
+      {
+        "type": "analytics",
+        "example": "A tracker records the toggles as a profile, which can reveal a possible disability.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Disability can be inferred",
+      "Fingerprint from many toggles"
+    ],
+    "android_note": "Android apps read many of these from system settings with no prompt.",
+    "ios_note": "iPhone apps get a notification when each toggle changes and can read them with no prompt."
+  },
+  "technical_bounds": [
+    "Low entropy per toggle"
+  ],
+  "scores": {
+    "sensitivity": 3,
+    "utility": 2,
+    "fingerprint_bits": 3,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Adapt animation"
+    ],
+    "abuse": [
+      "Fingerprint, disability inference"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "related": [
+    "mob.loc.font-scale"
+  ],
+  "refs": [
+    {
+      "t": "android",
+      "label": "Android: Settings.Secure",
+      "url": "https://developer.android.com/reference/android/provider/Settings.Secure"
+    },
+    {
+      "t": "apple",
+      "label": "Apple: UIAccessibility",
+      "url": "https://developer.apple.com/documentation/uikit/uiaccessibility"
+    }
+  ],
+  "confidence": "docs"
+}

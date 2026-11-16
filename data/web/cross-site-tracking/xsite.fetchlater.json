@@ -1,0 +1,232 @@
+{
+  "id": "web.xsite.fetchlater",
+  "name": "fetchLater",
+  "kind": "capability",
+  "group": "cross-site-tracking",
+  "subgroup": "After leaving",
+  "tags": [
+    "fetchlater",
+    "deferred-fetch",
+    "beacon",
+    "chrome-135"
+  ],
+  "plain": "Queues a request now that the browser sends later, even if the page closes first.",
+  "meaning": "Gives analytics a reliable way to report at page end. The browser sends it after a chosen delay or when the page is discarded or goes into bfcache. Chrome shipped it in version 135 (Apr 2025).",
+  "lifecycle": [
+    "after-leaving"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "fetchLater(url, {activateAfter})",
+      "bcd": [
+        "api.Window.fetchLater"
+      ],
+      "access": {
+        "grant": "none",
+        "prompt_ui": "None",
+        "secure_context": true,
+        "user_gesture": false,
+        "persistence": "Sent by the browser at the delay or page end; can be cancelled by the page",
+        "revocation": "Clear site data, browser privacy settings",
+        "iframe": "",
+        "steps": []
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "135",
+          "note": "",
+          "date": "2025-04-01"
+        },
+        "edge": {
+          "s": "y",
+          "v": "135",
+          "note": "",
+          "date": "2025-04-04"
+        },
+        "firefox": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "safari": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "ios_safari": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "135",
+          "note": "",
+          "date": "2025-04-01"
+        },
+        "samsung": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "event",
+    "metric": "Deferred request",
+    "update": "after delay or at exit",
+    "fields": [
+      {
+        "name": "activateAfter",
+        "type": "integer",
+        "unit": "milliseconds",
+        "range": "0 to a page defined maximum",
+        "precision": "exact"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can queue a report now and have the browser send it later, even after you close",
+    "user_action": "Nothing. It happens as you use a page that sets up a delayed report",
+    "can": [
+      "Queue a request that the browser sends when the page closes",
+      "Send it at a time the page sets",
+      "Update or cancel the queued report while the page is open"
+    ],
+    "cannot": [
+      "Send the report forever; the browser sends it after a limit",
+      "Work in Firefox, Safari or iPhone browsers",
+      "Send large amounts of data",
+      "Show a prompt or any sign that a report is waiting"
+    ],
+    "reach": 2,
+    "reach_label": "One queued report",
+    "differs": "Only Chrome, Edge and Chrome on Android support it."
+  },
+  "story": {
+    "what_it_is": "Lets a page queue a message that the browser sends later, even if you close the page first.",
+    "icon": "clock",
+    "tags": [
+      "Analytics",
+      "Silent",
+      "Page exit"
+    ],
+    "marketing": [
+      {
+        "vendor": "Google Chrome",
+        "name": "fetchLater API",
+        "pitch": "Chrome describes it as a way to queue a request that goes out later, so end of visit reports are not lost.",
+        "url": "https://developer.chrome.com/blog/fetch-later-api"
+      }
+    ],
+    "for_you": "You never see it. A page can write a note now, and the browser sends it after a delay or when you leave. If you close the tab, it still goes out.",
+    "for_makers": "End of visit data is the hardest to send, since pages die without warning. fetchLater gives analytics a reliable last send, and the browser picks a safe time. It beats old tricks that slowed down pages.",
+    "use_cases": [
+      {
+        "type": "analytics",
+        "example": "A web speed tool queues a report of your page load and layout shifts and sends it when you leave.",
+        "apps": [
+          "Google Analytics"
+        ]
+      },
+      {
+        "type": "ads",
+        "example": "An ad network queues a report about how long an ad was visible and sends it as the tab closes.",
+        "apps": [
+          "Google Ad Manager"
+        ]
+      },
+      {
+        "type": "games",
+        "example": "A browser game queues your session stats, such as time played and level reached, and sends them after you quit.",
+        "apps": []
+      },
+      {
+        "type": "video",
+        "example": "A video site queues the total watch time and buffering counts, sent when you leave.",
+        "apps": [
+          "YouTube"
+        ]
+      },
+      {
+        "type": "shopping",
+        "example": "A store queues the final cart state so a cart reminder can be sent even if you abandon the tab.",
+        "apps": [
+          "Shopify"
+        ]
+      },
+      {
+        "type": "developer",
+        "example": "An app queues error logs from a session and sends them with the closing report to Sentry or a custom server.",
+        "apps": [
+          "Sentry"
+        ]
+      }
+    ],
+    "risks": [
+      "Data goes out after you leave",
+      "Only in some browsers so far"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Per-origin quota of about 64 KiB",
+    "Only in secure contexts",
+    "Chrome only for now",
+    "Cookies for the target origin are sent"
+  ],
+  "scores": {
+    "sensitivity": 3,
+    "utility": 4,
+    "fingerprint_bits": null,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Reliable exit analytics"
+    ],
+    "abuse": [
+      "Persistent post-leave reporting"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2025-04",
+      "browser": "chrome",
+      "version": "135",
+      "change": "Shipped as the successor to unload beacons"
+    }
+  ],
+  "related": [
+    "web.xsite.sendbeacon",
+    "web.xsite.page-lifecycle-events"
+  ],
+  "refs": [
+    {
+      "t": "chromestatus",
+      "label": "Chrome Platform Status fetchLater",
+      "url": "https://chromestatus.com/feature/5075463726907392"
+    },
+    {
+      "t": "vendor",
+      "label": "Chrome fetchLater API",
+      "url": "https://developer.chrome.com/blog/fetch-later-api"
+    },
+    {
+      "t": "spec",
+      "label": "WHATWG fetchLater",
+      "url": "https://whatpr.org/fetch/1647.html"
+    }
+  ],
+  "confidence": "verified"
+}

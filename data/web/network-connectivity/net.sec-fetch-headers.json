@@ -1,0 +1,235 @@
+{
+  "id": "web.net.sec-fetch-headers",
+  "name": "Sec-Fetch-* request metadata",
+  "kind": "signal",
+  "group": "network-connectivity",
+  "subgroup": "Headers",
+  "tags": [
+    "sec-fetch",
+    "fetch-metadata",
+    "csrf"
+  ],
+  "plain": "Browsers add headers saying where a request came from and why, which servers use to block cross-site abuse.",
+  "meaning": "Sec-Fetch-Site, Mode, Dest and User tell the server if a request is same-origin, a navigation, or user triggered. They are not user identifying but help servers tell real browsers from scripts.",
+  "lifecycle": [
+    "on-arrival"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "Sec-Fetch-Site, Sec-Fetch-Mode, Sec-Fetch-Dest, Sec-Fetch-User",
+      "bcd": [
+        "http.headers.Sec-Fetch-Site"
+      ],
+      "access": {
+        "grant": "none",
+        "prompt_ui": "",
+        "secure_context": false,
+        "user_gesture": false,
+        "persistence": "",
+        "revocation": "",
+        "iframe": "",
+        "steps": [
+          "Browser adds headers automatically",
+          "Server evaluates policy"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "76",
+          "note": "",
+          "date": "2019-07-30"
+        },
+        "edge": {
+          "s": "y",
+          "v": "79",
+          "note": "",
+          "date": "2020-01-15"
+        },
+        "firefox": {
+          "s": "y",
+          "v": "90",
+          "note": "",
+          "date": "2021-07-13"
+        },
+        "safari": {
+          "s": "y",
+          "v": "16.4",
+          "note": "",
+          "date": "2023-03-27"
+        },
+        "ios_safari": {
+          "s": "y",
+          "v": "16.4",
+          "note": "",
+          "date": "2023-03-27"
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "76",
+          "note": "",
+          "date": "2019-07-30"
+        },
+        "samsung": {
+          "s": "y",
+          "v": "12.0",
+          "note": "",
+          "date": "2020-06-19"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "list",
+    "metric": "4 headers",
+    "update": "",
+    "fields": [
+      {
+        "name": "Sec-Fetch-Site",
+        "type": "string",
+        "unit": "",
+        "range": "same-origin, same-site, cross-site, none",
+        "precision": "exact"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can tell why a request was sent, such as a click or a script",
+    "user_action": "Nothing. Your browser adds it to every request automatically",
+    "can": [
+      "See whether a request came from the same site, another site, or from you directly",
+      "See whether it came from a click, a typed address or a page script",
+      "Block suspicious cross site requests and bots that lack the right labels"
+    ],
+    "cannot": [
+      "See your name, location or account from these labels",
+      "Be changed by the page, since the browser sets them",
+      "Tell which person you are",
+      "Learn which other pages you visited"
+    ],
+    "reach": 1,
+    "reach_label": "One label per request",
+    "differs": ""
+  },
+  "story": {
+    "what_it_is": "Browsers label each request with where it came from and why, so servers can reject cross site abuse.",
+    "icon": "shield-check",
+    "tags": [
+      "Security",
+      "Silent",
+      "Browser info"
+    ],
+    "marketing": [
+      {
+        "vendor": "web.dev",
+        "name": "Fetch Metadata",
+        "pitch": "Servers can use these labels to block requests that are not meant for them, as a defence against many web attacks.",
+        "url": "https://web.dev/articles/fetch-metadata"
+      }
+    ],
+    "for_you": "You never see these labels, but they help protect you. They let sites refuse a request that a hostile page secretly sent using your logged in session.",
+    "for_makers": "Makers add a short rule on the server: only accept some requests from their own pages. It blocks forged requests and data leaks across sites. Because browsers set the labels, a page cannot fake them.",
+    "use_cases": [
+      {
+        "type": "banking",
+        "example": "A bank's server refuses a money transfer sent by another site, because the label says it came from a different site and was not a normal navigation.",
+        "apps": []
+      },
+      {
+        "type": "social",
+        "example": "A social site only returns private profile data to requests from its own pages, so other sites cannot read it through hidden calls.",
+        "apps": []
+      },
+      {
+        "type": "games",
+        "example": "A browser game's account server rejects score submissions that do not come from its own game page, which cuts simple cheating by third party scripts.",
+        "apps": []
+      },
+      {
+        "type": "productivity",
+        "example": "A web editor such as Google Docs protects document data so other sites cannot load it into a hidden frame.",
+        "apps": [
+          "Google Docs"
+        ]
+      },
+      {
+        "type": "media",
+        "example": "A streaming site blocks other sites from embedding its video files by checking the destination label.",
+        "apps": []
+      },
+      {
+        "type": "developer",
+        "example": "An engineer adds a middleware that drops cross site requests to private APIs, then watches the logs for blocked probes.",
+        "apps": []
+      },
+      {
+        "type": "security",
+        "example": "A security team uses the labels to spot probing from a malicious page in the access logs.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Rules can break features",
+      "Not a full defence"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Absent from non-browser clients, making them a bot signal",
+    "Cannot be set by page script"
+  ],
+  "scores": {
+    "sensitivity": 1,
+    "utility": 3,
+    "fingerprint_bits": 1,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": "CSRF and XSSI defense (resource isolation policies)",
+    "abuse": "Bot detection"
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2019-07",
+      "browser": "chrome",
+      "version": "76",
+      "change": "Fetch Metadata shipped"
+    },
+    {
+      "date": "2021-07",
+      "browser": "firefox",
+      "version": "90",
+      "change": "Fetch Metadata shipped"
+    },
+    {
+      "date": "2023-03",
+      "browser": "safari",
+      "version": "16.4",
+      "change": "Fetch Metadata shipped"
+    }
+  ],
+  "related": [
+    "web.net.bot-detection-signals"
+  ],
+  "refs": [
+    {
+      "t": "mdn",
+      "label": "MDN Fetch Metadata",
+      "url": "https://developer.mozilla.org/en-US/docs/Glossary/Fetch_metadata_request_header"
+    },
+    {
+      "t": "vendor",
+      "label": "web.dev Fetch Metadata",
+      "url": "https://web.dev/articles/fetch-metadata"
+    }
+  ],
+  "confidence": "docs"
+}

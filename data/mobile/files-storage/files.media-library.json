@@ -1,0 +1,205 @@
+{
+  "id": "mob.files.media-library",
+  "name": "Music and media library",
+  "kind": "permission",
+  "group": "files-storage",
+  "subgroup": "Photos and media",
+  "tags": [
+    "runtime-permission",
+    "music",
+    "apple-music"
+  ],
+  "plain": "Reads the person's own music library and listening history.",
+  "meaning": "Reveals taste, play counts and playlists; on iOS it also gates Apple Music playback control.",
+  "lifecycle": [
+    "in-session"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "y",
+      "v": "13",
+      "api": 33,
+      "permission": "READ_MEDIA_AUDIO (API 33); READ_EXTERNAL_STORAGE earlier",
+      "protection": "dangerous",
+      "grant": "prompt",
+      "prompt_ui": "Allow or Don't allow music and audio",
+      "persistence": "Until revoked",
+      "revocation": "Settings > Apps > Permissions > Music and audio",
+      "store_policy": "",
+      "api_surface": "MediaStore.Audio",
+      "note": "No Spotify or YouTube Music library API exists at the OS level"
+    },
+    "ios": {
+      "s": "y",
+      "v": "9.3",
+      "permission": "NSAppleMusicUsageDescription",
+      "protection": "prompt",
+      "grant": "prompt",
+      "prompt_ui": "Allow or Don't Allow access to Media and Apple Music",
+      "persistence": "Until revoked",
+      "revocation": "Settings > Privacy & Security > Media & Apple Music",
+      "store_policy": "",
+      "api_surface": "MPMediaLibrary.requestAuthorization, MusicKit (MusicAuthorization)",
+      "note": "Required for MPMediaLibrary and MusicKit playback"
+    }
+  },
+  "data": {
+    "type": "list",
+    "metric": "Tracks, playlists, play counts",
+    "update": "on request",
+    "fields": [
+      {
+        "name": "items",
+        "type": "list",
+        "unit": "tracks",
+        "range": "0 to library size",
+        "precision": ""
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can see your own music library and play your songs once you tap Allow",
+    "user_action": "You tap Allow when a music or player app asks for your library",
+    "can": [
+      "List songs and playlists in your music library",
+      "Play your music inside the app",
+      "Use Apple Music playback on iPhone after the Media and Apple Music prompt",
+      "Use your audio files on Android after the music and audio prompt"
+    ],
+    "cannot": [
+      "Open Spotify or YouTube Music libraries; no phone wide access exists",
+      "See your listening history on Android, which does not keep it for apps",
+      "Use MusicKit or the media library on iPhone without the prompt",
+      "See photos or videos with this permission"
+    ],
+    "reach": 3,
+    "reach_label": "Your music library, once allowed",
+    "differs": "iPhone uses the Media and Apple Music prompt. Android uses the music and audio prompt on Android 13 and newer."
+  },
+  "story": {
+    "what_it_is": "Lets an app see your own music library and what you have listened to.",
+    "icon": "library",
+    "tags": [
+      "Permission",
+      "Asks first",
+      "Music"
+    ],
+    "marketing": [
+      {
+        "vendor": "Apple",
+        "name": "MusicKit",
+        "pitch": "Developer pitch: let apps play Apple Music and read a person's music library with their permission.",
+        "url": "https://developer.apple.com/musickit/"
+      }
+    ],
+    "for_you": "A pop up asks to access your music library. If you say yes, the app can see your songs, playlists and play counts. On iPhone it can also control Apple Music playback.",
+    "for_makers": "Makers use it to build playlists, show your history and suggest songs. It gives a rich picture of your taste, so permission matters.",
+    "use_cases": [
+      {
+        "type": "music",
+        "example": "A music player shows your whole library and lets you pick songs from it.",
+        "apps": []
+      },
+      {
+        "type": "fitness",
+        "example": "A running app builds a playlist that matches your pace from songs you already own.",
+        "apps": []
+      },
+      {
+        "type": "games",
+        "example": "A rhythm game turns songs in your library into playable levels.",
+        "apps": []
+      },
+      {
+        "type": "creative",
+        "example": "A DJ app mixes tracks from your library on a virtual deck.",
+        "apps": [
+          "djay"
+        ]
+      },
+      {
+        "type": "social",
+        "example": "A social app shows your top songs on your profile.",
+        "apps": []
+      },
+      {
+        "type": "ads",
+        "example": "An ad firm could read your taste to guess age, mood and interests.",
+        "apps": []
+      },
+      {
+        "type": "automotive",
+        "example": "A car app lets you pick a song by voice from your own library.",
+        "apps": [
+          "CarPlay"
+        ]
+      }
+    ],
+    "risks": [
+      "Reveals your taste",
+      "Play history is personal"
+    ],
+    "android_note": "Reads audio files with READ_MEDIA_AUDIO on newer Android.",
+    "ios_note": "Needs the Media Library permission and also gates Apple Music playback control."
+  },
+  "technical_bounds": [
+    "Streaming service libraries are not exposed through the OS"
+  ],
+  "scores": {
+    "sensitivity": 2,
+    "utility": 3,
+    "fingerprint_bits": null,
+    "friction": 2
+  },
+  "value": {
+    "legit_uses": [
+      "Music players",
+      "DJ apps"
+    ],
+    "abuse": [
+      "Taste profiling"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2016-03",
+      "platform": "ios",
+      "version": "iOS 9.3",
+      "change": "Media library usage key and prompt introduced"
+    },
+    {
+      "date": "2022-02",
+      "platform": "android",
+      "version": "13 (API 33)",
+      "change": "Audio files moved under READ_MEDIA_AUDIO"
+    }
+  ],
+  "related": [
+    "mob.files.photos-full-library"
+  ],
+  "refs": [
+    {
+      "t": "apple",
+      "label": "Apple: Requesting access to Apple Music library",
+      "url": "https://developer.apple.com/documentation/storekit/requesting-access-to-apple-music-library"
+    },
+    {
+      "t": "apple",
+      "label": "Apple: Protected resources keys",
+      "url": "https://developer.apple.com/documentation/bundleresources/protected-resources"
+    },
+    {
+      "t": "android",
+      "label": "Android: Granular media permissions",
+      "url": "https://developer.android.com/about/versions/13/behavior-changes-13#granular-media-permissions"
+    }
+  ],
+  "confidence": "docs"
+}

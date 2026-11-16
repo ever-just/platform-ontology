@@ -1,0 +1,247 @@
+{
+  "id": "web.meta.permissions-api",
+  "name": "Permissions API",
+  "kind": "capability",
+  "group": "device-system-profile",
+  "subgroup": "Permissions",
+  "tags": [
+    "fingerprint"
+  ],
+  "plain": "Lets a page ask what each permission is currently set to without prompting.",
+  "meaning": "navigator.permissions.query() returns granted, denied or prompt for most permissions. It reveals which permissions you have granted or blocked, and a change event lets pages react live.",
+  "lifecycle": [
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "navigator.permissions.query({name}); PermissionStatus.state; 'change' event",
+      "bcd": [
+        "api.Permissions.query",
+        "api.PermissionStatus"
+      ],
+      "access": {
+        "grant": "none",
+        "prompt_ui": "No prompt; read only. States: granted, denied, prompt. A permissions policy block reports denied.",
+        "secure_context": true,
+        "user_gesture": false,
+        "persistence": "n/a",
+        "revocation": "n/a",
+        "iframe": "Works in iframes; reflects policy",
+        "steps": [
+          "Call permissions.query({name: 'geolocation'})",
+          "Read status.state",
+          "Listen to status.onchange"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "43",
+          "note": "",
+          "date": "2015-05-19"
+        },
+        "edge": {
+          "s": "y",
+          "v": "79",
+          "note": "",
+          "date": "2020-01-15"
+        },
+        "firefox": {
+          "s": "y",
+          "v": "46",
+          "note": "Not all names supported",
+          "date": "2016-04-26"
+        },
+        "safari": {
+          "s": "y",
+          "v": "16",
+          "note": "",
+          "date": "2022-09-12"
+        },
+        "ios_safari": {
+          "s": "y",
+          "v": "16",
+          "note": "",
+          "date": "2022-09-12"
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "43",
+          "note": "",
+          "date": "2015-05-27"
+        },
+        "samsung": {
+          "s": "y",
+          "v": "4.0",
+          "note": "",
+          "date": "2016-03-11"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "object",
+    "metric": "PermissionStatus",
+    "update": "on call plus change events",
+    "fields": [
+      {
+        "name": "state",
+        "type": "enum",
+        "unit": "none",
+        "range": "granted, denied, prompt",
+        "precision": "log2(3) bits per name"
+      },
+      {
+        "name": "names",
+        "type": "string",
+        "unit": "text",
+        "range": "about 25 names in Chromium",
+        "precision": "state vector across permissions"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can check whether you allowed or blocked a feature, without asking you",
+    "user_action": "Nothing. It happens when the page checks a setting",
+    "can": [
+      "See if a permission is allowed, blocked, or still to be asked",
+      "Skip a pop up if you already said no",
+      "Update the page if you change a setting",
+      "Learn which sensors you have allowed on that site"
+    ],
+    "cannot": [
+      "Change a permission for you",
+      "See your choices for other sites",
+      "Turn a feature on without your yes",
+      "See states for every feature; some names are not supported"
+    ],
+    "reach": 2,
+    "reach_label": "Your choices for this site",
+    "differs": ""
+  },
+  "story": {
+    "what_it_is": "Lets a page check whether you already allowed, blocked or never answered a permission, without asking.",
+    "icon": "toggle-right",
+    "tags": [
+      "Permissions",
+      "Silent",
+      "Browser"
+    ],
+    "marketing": [
+      {
+        "vendor": "MDN",
+        "name": "Permissions API",
+        "pitch": "Docs describe it as a way for pages to check permission status before asking.",
+        "url": "https://developer.mozilla.org/en-US/docs/Web/API/Permissions_API"
+      }
+    ],
+    "for_you": "You never see it. The page just looks at your earlier answers and decides whether to show a pop-up or a helpful button. It can also see when you change your answer later.",
+    "for_makers": "Asking for a permission at the wrong time annoys people and gets denied for good. The API lets sites ask only when it makes sense, and show a help message when the answer is blocked. It also reveals your settings, which can be used in a fingerprint.",
+    "use_cases": [
+      {
+        "type": "video",
+        "example": "A video call page checks if the camera is already allowed and skips straight to the call, or shows a how-to-unblock note.",
+        "apps": [
+          "Google Meet",
+          "Zoom"
+        ]
+      },
+      {
+        "type": "maps",
+        "example": "A maps site only shows the Use my location button if location is not blocked.",
+        "apps": [
+          "Google Maps"
+        ]
+      },
+      {
+        "type": "games",
+        "example": "A browser game asks for microphone access only if it has not been blocked, and shows tips otherwise.",
+        "apps": []
+      },
+      {
+        "type": "news",
+        "example": "A news site waits to ask about notifications until it knows you have not blocked them.",
+        "apps": []
+      },
+      {
+        "type": "security",
+        "example": "A fraud tool reads the pattern of allowed and blocked permissions as part of a device profile.",
+        "apps": [
+          "FingerprintJS"
+        ]
+      },
+      {
+        "type": "developer",
+        "example": "A web app shows a status panel that lists which features are allowed.",
+        "apps": []
+      },
+      {
+        "type": "shopping",
+        "example": "A store locator checks location permission before showing a nearby stores prompt.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Shows your choices to sites",
+      "Adds to a fingerprint"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Names vary per browser",
+    "Permissions.revoke() was removed",
+    "Firefox lacks several names such as clipboard-read"
+  ],
+  "scores": {
+    "sensitivity": 2,
+    "utility": 3,
+    "fingerprint_bits": 4,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Hide unavailable buttons"
+    ],
+    "abuse": [
+      "Fingerprint by permission state vector"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2015-05",
+      "browser": "chrome",
+      "version": "43",
+      "change": "Permissions API ships"
+    },
+    {
+      "date": "2020-03",
+      "browser": "safari",
+      "version": "16",
+      "change": "Permissions API ships"
+    }
+  ],
+  "related": [
+    "web.meta.permissions-policy"
+  ],
+  "refs": [
+    {
+      "t": "mdn",
+      "label": "MDN Permissions API",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/Permissions_API"
+    },
+    {
+      "t": "spec",
+      "label": "W3C Permissions",
+      "url": "https://www.w3.org/TR/permissions/"
+    }
+  ],
+  "confidence": "verified"
+}

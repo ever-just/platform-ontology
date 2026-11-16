@@ -1,0 +1,226 @@
+{
+  "id": "web.payments.payment-handler",
+  "name": "Payment Handler API",
+  "kind": "capability",
+  "group": "payments-commerce",
+  "subgroup": "Checkout",
+  "tags": [
+    "checkout"
+  ],
+  "plain": "Lets a payment app run inside the browser as a payment option.",
+  "meaning": "Lets a wallet website register as a payment method; the site sees only the payment response.",
+  "lifecycle": [
+    "in-session",
+    "after-leaving"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "ServiceWorkerRegistration.paymentManager, 'paymentrequest' event, enableDelegations()",
+      "bcd": [
+        "api.PaymentManager"
+      ],
+      "access": {
+        "grant": "install",
+        "prompt_ui": "Payment sheet lists the registered handler after install",
+        "secure_context": true,
+        "user_gesture": false,
+        "persistence": "Per origin",
+        "revocation": "Site settings",
+        "iframe": "Same as top level; cross-origin iframes need a permissions policy where listed",
+        "steps": [
+          "Call the API",
+          "Browser applies its access rules",
+          "Page receives the result"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "70",
+          "note": "",
+          "date": "2018-10-16"
+        },
+        "edge": {
+          "s": "y",
+          "v": "79",
+          "note": "",
+          "date": "2020-01-15"
+        },
+        "firefox": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "safari": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "ios_safari": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "70",
+          "note": "",
+          "date": "2018-10-17"
+        },
+        "samsung": {
+          "s": "y",
+          "v": "10.0",
+          "note": "",
+          "date": "2019-08-22"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "object",
+    "metric": "Lets a payment app run inside the browser as a payment option.",
+    "update": "on demand",
+    "fields": [
+      {
+        "name": "methodName",
+        "type": "string",
+        "range": "URL based identifier"
+      },
+      {
+        "name": "details",
+        "type": "object",
+        "range": "handler defined"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can offer its own pay option in the browser's payment sheet, once you install it",
+    "user_action": "You pick that payment app in the browser's payment sheet, after it was added.",
+    "can": [
+      "Show up as a payment choice in the browser pay sheet",
+      "Open its own window to take payment details",
+      "Send the store an approval after you pay"
+    ],
+    "cannot": [
+      "Appear without being installed first",
+      "Take money without you picking it",
+      "Work in Firefox or Safari, including on iPhone",
+      "See other payment apps you use"
+    ],
+    "reach": 1,
+    "reach_label": "One payment, once you pick it",
+    "differs": "Chrome and Edge support it. Firefox and Safari do not."
+  },
+  "story": {
+    "what_it_is": "A payment app can run inside the browser as a way to pay.",
+    "icon": "wallet",
+    "tags": [
+      "Payments",
+      "Install",
+      "Developer tool"
+    ],
+    "marketing": [
+      {
+        "vendor": "Google",
+        "name": "Web based payment apps",
+        "pitch": "web.dev explains that Payment Handler lets a web based payment app show up in the browser pay sheet.",
+        "url": "https://web.dev/articles/web-based-payment-apps-overview"
+      }
+    ],
+    "for_you": "At checkout the browser pay sheet may list a payment app you installed from a website, like a bank or wallet app.",
+    "for_makers": "Banks and wallets can offer their payment method without a native app. Merchants just ask for the payment method and the browser connects them.",
+    "use_cases": [
+      {
+        "type": "banking",
+        "example": "A bank registers its own payment app so customers pay with it at any merchant.",
+        "apps": []
+      },
+      {
+        "type": "payments",
+        "example": "A digital wallet offers its balance as a payment choice.",
+        "apps": [
+          "Samsung Pay",
+          "PayPal"
+        ]
+      },
+      {
+        "type": "shopping",
+        "example": "A shop accepts any installed payment app without special integrations.",
+        "apps": []
+      },
+      {
+        "type": "games",
+        "example": "A web game sells in game currency using a wallet balance.",
+        "apps": []
+      },
+      {
+        "type": "travel",
+        "example": "A booking site lets you pay with a loyalty points wallet.",
+        "apps": []
+      },
+      {
+        "type": "security",
+        "example": "A bank checks you in its own app before approving, so card theft is harder.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Fake payment apps",
+      "Few browsers support it"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Chrome and Edge only",
+    "Handler must be a service worker with HTTPS"
+  ],
+  "scores": {
+    "sensitivity": 3,
+    "utility": 2,
+    "fingerprint_bits": null,
+    "friction": 1
+  },
+  "value": {
+    "legit_uses": [
+      "Wallet and bank handlers"
+    ],
+    "abuse": [
+      "Fake handlers for phishing"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2018",
+      "browser": "chrome",
+      "version": "70",
+      "change": "Payment Handler ships"
+    },
+    {
+      "date": "2020",
+      "browser": "chrome",
+      "version": "80",
+      "change": "enableDelegations"
+    }
+  ],
+  "refs": [
+    {
+      "t": "mdn",
+      "label": "MDN Payment Handler API",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/Payment_Handler_API"
+    },
+    {
+      "t": "spec",
+      "label": "Payment Handler",
+      "url": "https://www.w3.org/TR/payment-handler/"
+    }
+  ],
+  "confidence": "verified"
+}

@@ -1,0 +1,262 @@
+{
+  "id": "web.display.scroll-control",
+  "name": "Scroll control and hijacking",
+  "kind": "action",
+  "group": "display-window",
+  "subgroup": "Viewport",
+  "tags": [
+    "scroll",
+    "scroll-restoration",
+    "overscroll",
+    "passive-listeners"
+  ],
+  "plain": "Moves the page scroll position and can change scrolling behaviour or capture the wheel.",
+  "meaning": "A site can jump the page, animate scrolling, restore position or block back-bounce. That helps navigation but also supports scrolljacking and trapping scroll inside a panel.",
+  "lifecycle": [
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "window.scrollTo({top, behavior}); history.scrollRestoration='manual'; overscroll-behavior; wheel listeners",
+      "bcd": [
+        "api.History.scrollRestoration",
+        "api.Window.scrollTo",
+        "api.Element.scrollTo"
+      ],
+      "access": {
+        "grant": "none",
+        "prompt_ui": "None (no browser prompt)",
+        "secure_context": false,
+        "user_gesture": false,
+        "activation": "none",
+        "persistence": "Per page view; scrollRestoration is a per entry setting",
+        "revocation": "Nothing to revoke (no permission is stored)",
+        "iframe": "Same origin only; cross-origin iframes scroll themselves",
+        "steps": [
+          "Page calls scrollTo or sets scroll-behavior",
+          "Browser animates or jumps",
+          "Optional wheel or touch listener calls preventDefault to take over"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "46",
+          "note": "",
+          "date": "2015-10-13"
+        },
+        "edge": {
+          "s": "y",
+          "v": "79",
+          "note": "",
+          "date": "2020-01-15"
+        },
+        "firefox": {
+          "s": "y",
+          "v": "46",
+          "note": "",
+          "date": "2016-04-26"
+        },
+        "safari": {
+          "s": "y",
+          "v": "11",
+          "note": "",
+          "date": "2017-09-19"
+        },
+        "ios_safari": {
+          "s": "y",
+          "v": "11",
+          "note": "All iOS browsers use WebKit",
+          "date": "2017-09-19"
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "46",
+          "note": "",
+          "date": "2015-10-14"
+        },
+        "samsung": {
+          "s": "y",
+          "v": "5.0",
+          "note": "",
+          "date": "2016-12-15"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "none",
+    "metric": "",
+    "update": "",
+    "fields": []
+  },
+  "limits": {
+    "headline": "Can scroll its own page and change how scrolling feels, but nothing else",
+    "user_action": "You scroll or tap a link. Sometimes nothing: it can also move the page on load.",
+    "can": [
+      "Scroll the page to a spot",
+      "Stop the browser remembering your place when you press Back",
+      "Capture the mouse wheel so scrolling moves a map or slider instead",
+      "Stop the bounce at the end of a page"
+    ],
+    "cannot": [
+      "Scroll other tabs or other sites",
+      "Change scrolling in the browser's own screens",
+      "Stop you pressing Back or closing the tab"
+    ],
+    "reach": 2,
+    "reach_label": "Only while on its page",
+    "differs": ""
+  },
+  "story": {
+    "what_it_is": "A page moves your scroll position, changes how scrolling feels, or captures your mouse wheel.",
+    "icon": "scroll",
+    "tags": [
+      "Scrolling",
+      "Display",
+      "Behavior"
+    ],
+    "marketing": [
+      {
+        "vendor": "MDN",
+        "name": "overscroll-behavior",
+        "pitch": "Documents how a page can control what happens when a person scrolls past the end of a box.",
+        "url": "https://developer.mozilla.org/en-US/docs/Web/CSS/overscroll-behavior"
+      }
+    ],
+    "for_you": "You notice smooth jumps to a section, a page that stops at each slide, or a chat box that scrolls on its own. Sometimes it feels hijacked.",
+    "for_makers": "Makers use scroll control for guided stories, infinite feeds and chat that follows new messages. Used badly it traps you. It also lets sites measure how far and how fast you read.",
+    "use_cases": [
+      {
+        "type": "news",
+        "example": "A long form story keeps charts and photos pinned while you scroll through the text.",
+        "apps": [
+          "The New York Times"
+        ]
+      },
+      {
+        "type": "social",
+        "example": "An endless feed loads more posts as you reach the bottom and remembers where you were.",
+        "apps": [
+          "Instagram",
+          "TikTok"
+        ]
+      },
+      {
+        "type": "messaging",
+        "example": "A chat window jumps down as new messages arrive, unless you scrolled up to read old ones.",
+        "apps": [
+          "Slack"
+        ]
+      },
+      {
+        "type": "games",
+        "example": "A browser game captures the mouse wheel to zoom the map or switch weapons, instead of scrolling the page.",
+        "apps": []
+      },
+      {
+        "type": "maps",
+        "example": "A web map uses the wheel to zoom and stops the page behind it from moving.",
+        "apps": [
+          "Google Maps"
+        ]
+      },
+      {
+        "type": "ads",
+        "example": "An ad measurement script records how far you scrolled so it can say whether you saw the ad.",
+        "apps": []
+      },
+      {
+        "type": "shopping",
+        "example": "A product page shows a sticky buy button as you scroll.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Scroll hijacking",
+      "Tracks reading depth"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Chrome treats wheel and touch listeners on window, document and body as passive by default, so preventDefault is ignored unless the page sets passive:false",
+    "overscroll-behavior: contain or none stops scroll chaining and pull to refresh (Chrome 63, Firefox 59, Safari 16 partial per BCD)",
+    "Browsers still allow keyboard scrolling and the scrollbar when wheel is taken over",
+    "scroll-behavior: smooth respects the prefers-reduced-motion setting only if the site uses it",
+    "Chrome limits scroll anchoring adjustments to prevent jumps from late loaded content"
+  ],
+  "scores": {
+    "sensitivity": 1,
+    "utility": 4,
+    "fingerprint_bits": null,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Anchors and in-page navigation",
+      "Infinite lists",
+      "Maps and modals that contain scroll"
+    ],
+    "abuse": [
+      "Scrolljacking that fights the person's input",
+      "Trapping scroll inside overlays",
+      "Hiding content under sticky banners"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2016-02",
+      "browser": "chrome",
+      "version": "46",
+      "change": "history.scrollRestoration for single page apps"
+    },
+    {
+      "date": "2017-03",
+      "browser": "chrome",
+      "version": "56",
+      "change": "Touch listeners on window, document and body are passive by default"
+    },
+    {
+      "date": "2019-03",
+      "browser": "chrome",
+      "version": "73",
+      "change": "Wheel listeners on window, document and body are passive by default"
+    },
+    {
+      "date": "2022-03",
+      "browser": "safari",
+      "version": "15.4",
+      "change": "scroll-behavior and smooth scrolling support"
+    }
+  ],
+  "related": [
+    "web.input.touch-events",
+    "web.input.pointer-events"
+  ],
+  "refs": [
+    {
+      "t": "mdn",
+      "label": "MDN scrollRestoration",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/History/scrollRestoration"
+    },
+    {
+      "t": "mdn",
+      "label": "MDN overscroll-behavior",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/CSS/overscroll-behavior"
+    },
+    {
+      "t": "chromestatus",
+      "label": "Chrome: Passive wheel listeners",
+      "url": "https://developer.chrome.com/blog/scrolling-intervention"
+    }
+  ],
+  "confidence": "docs"
+}

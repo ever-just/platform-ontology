@@ -1,0 +1,228 @@
+{
+  "id": "web.display.prefers-reduced-motion",
+  "name": "prefers-reduced-motion",
+  "kind": "signal",
+  "group": "display-window",
+  "subgroup": "CSS media features",
+  "tags": [
+    "media-query",
+    "preferences",
+    "accessibility"
+  ],
+  "plain": "OS setting to reduce animation.",
+  "meaning": "Marks people with vestibular disorders or motion sensitivity (a health-adjacent setting). Roughly 5 to 15% enable it (estimates differ by platform).",
+  "lifecycle": [
+    "on-arrival",
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "matchMedia('(prefers-reduced-motion: reduce)')",
+      "bcd": [
+        "css.at-rules.media.prefers-reduced-motion"
+      ],
+      "access": {
+        "grant": "none",
+        "prompt_ui": "None",
+        "secure_context": false,
+        "user_gesture": false,
+        "persistence": "read fresh on every page load; nothing stored",
+        "revocation": "none needed (no grant)",
+        "iframe": "Readable from cross-origin iframes too (same values)",
+        "steps": [
+          "Page script reads the value",
+          "No prompt is shown"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "74",
+          "note": "",
+          "date": "2019-04-23"
+        },
+        "edge": {
+          "s": "y",
+          "v": "79",
+          "note": "",
+          "date": "2020-01-15"
+        },
+        "firefox": {
+          "s": "y",
+          "v": "63",
+          "note": "",
+          "date": "2018-10-23"
+        },
+        "safari": {
+          "s": "y",
+          "v": "10.1",
+          "note": "",
+          "date": "2017-03-27"
+        },
+        "ios_safari": {
+          "s": "y",
+          "v": "10.3",
+          "note": "",
+          "date": "2017-03-27"
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "74",
+          "note": "",
+          "date": "2019-04-24"
+        },
+        "samsung": {
+          "s": "y",
+          "v": "11.0",
+          "note": "",
+          "date": "2019-12-05"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "object",
+    "metric": "",
+    "update": "static per session",
+    "fields": [
+      {
+        "name": "prefers-reduced-motion",
+        "type": "enum",
+        "unit": "",
+        "range": "no-preference, reduce",
+        "precision": ""
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can tell if you asked your device to cut down on animation",
+    "user_action": "Nothing. It happens when the page loads.",
+    "can": [
+      "Check whether reduced motion is on",
+      "Turn off animations and autoplay",
+      "Add the answer to a browser fingerprint"
+    ],
+    "cannot": [
+      "Tell why you chose it, though it can hint at motion sensitivity",
+      "See your other accessibility settings",
+      "Change the setting"
+    ],
+    "reach": 1,
+    "reach_label": "One yes or no, no prompt",
+    "differs": ""
+  },
+  "story": {
+    "what_it_is": "Tells a page whether you asked your device to cut down on animation.",
+    "icon": "zap-off",
+    "tags": [
+      "Accessibility",
+      "Animation",
+      "Silent"
+    ],
+    "marketing": [
+      {
+        "vendor": "web.dev",
+        "name": "prefers-reduced-motion",
+        "pitch": "Google teaches sites to tone down animation for people who ask for less motion, such as those with vestibular disorders.",
+        "url": "https://web.dev/articles/prefers-reduced-motion"
+      },
+      {
+        "vendor": "MDN",
+        "name": "prefers-reduced-motion",
+        "pitch": "Documents how a page can respect the system request for reduced animation.",
+        "url": "https://developer.mozilla.org/en-US/docs/Web/CSS/@media/prefers-reduced-motion"
+      }
+    ],
+    "for_you": "You never see the check. If you set reduce motion, many pages stop zooming, sliding and spinning so you do not feel dizzy or sick.",
+    "for_makers": "Makers use it to keep their sites usable by people who get motion sickness or migraines. Caring about this is also a legal and design standard. It can reveal a health need if logged.",
+    "use_cases": [
+      {
+        "type": "accessibility",
+        "example": "A landing page replaces big scroll animations with a simple fade when you ask for reduced motion.",
+        "apps": []
+      },
+      {
+        "type": "games",
+        "example": "A browser game turns off screen shake and fast camera spins when reduced motion is on.",
+        "apps": []
+      },
+      {
+        "type": "social",
+        "example": "A feed stops auto playing short looping videos and animated reactions.",
+        "apps": []
+      },
+      {
+        "type": "ads",
+        "example": "An ad network swaps a spinning animated banner for a still one.",
+        "apps": []
+      },
+      {
+        "type": "shopping",
+        "example": "A store swaps a sliding carousel for a static grid.",
+        "apps": []
+      },
+      {
+        "type": "education",
+        "example": "A learning site turns off a bouncing mascot that distracts some students.",
+        "apps": []
+      },
+      {
+        "type": "health",
+        "example": "A wellness app uses calm cross fades instead of sweeping effects.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "May reveal a health need",
+      "Sensitive signal"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Binary only"
+  ],
+  "scores": {
+    "sensitivity": 1,
+    "utility": 3,
+    "fingerprint_bits": 0.8,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Respect OS theme and accessibility needs",
+      "Adapt layout"
+    ],
+    "abuse": [
+      "Infer disability or setting for fingerprinting"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "related": [
+    "web.locale.accessibility-inference"
+  ],
+  "refs": [
+    {
+      "t": "mdn",
+      "label": "MDN prefers-reduced-motion",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/CSS/@media/prefers-reduced-motion"
+    },
+    {
+      "t": "github",
+      "label": "fingerprintjs source: reduced_motion",
+      "url": "https://github.com/fingerprintjs/fingerprintjs/blob/master/src/sources/reduced_motion.ts"
+    },
+    {
+      "t": "spec",
+      "label": "CSS Media Queries Level 5",
+      "url": "https://www.w3.org/TR/mediaqueries-5/"
+    }
+  ],
+  "confidence": "docs"
+}

@@ -1,0 +1,192 @@
+{
+  "id": "mob.contacts.reminders",
+  "name": "Reminders",
+  "kind": "permission",
+  "group": "personal-data-contacts",
+  "subgroup": "Calendar and reminders",
+  "tags": [
+    "runtime-permission",
+    "reminders",
+    "tasks"
+  ],
+  "plain": "Reads and edits the Reminders app's lists.",
+  "meaning": "Task lists reveal chores, errands, health habits and relationships.",
+  "lifecycle": [
+    "in-session"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "n",
+      "v": "",
+      "permission": "",
+      "protection": "none",
+      "grant": "not-exposed",
+      "prompt_ui": "",
+      "persistence": "",
+      "revocation": "",
+      "store_policy": "",
+      "api_surface": "",
+      "note": "No system-wide reminders store; alarms use AlarmClock intents (SET_ALARM normal permission) and Google Tasks has no public provider"
+    },
+    "ios": {
+      "s": "y",
+      "v": "17",
+      "permission": "NSRemindersFullAccessUsageDescription (iOS 17); NSRemindersUsageDescription earlier",
+      "protection": "prompt",
+      "grant": "prompt",
+      "prompt_ui": "Allow Full Access, Don't Allow",
+      "persistence": "Until revoked",
+      "revocation": "Settings > Privacy & Security > Reminders",
+      "store_policy": "App Review 5.1.1",
+      "api_surface": "EKEventStore.requestFullAccessToReminders",
+      "note": "No write-only mode for reminders"
+    }
+  },
+  "data": {
+    "type": "list",
+    "metric": "Reminder items",
+    "update": "on request",
+    "fields": [
+      {
+        "name": "reminders",
+        "type": "list",
+        "unit": "items",
+        "range": "0 to thousands",
+        "precision": "to the minute"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can see and change your Reminders lists on iPhone; Android has no shared list",
+    "user_action": "You tap Allow Full Access when a task app asks for Reminders",
+    "can": [
+      "List tasks and lists (iPhone)",
+      "Add, tick off and change reminders (iPhone)",
+      "Set an alarm on Android with a normal permission"
+    ],
+    "cannot": [
+      "Use an add only mode on iPhone; there is none",
+      "See Reminders on Android, since no system wide store exists",
+      "See Google Tasks on Android, which has no public access"
+    ],
+    "reach": 4,
+    "reach_label": "Everything in Reminders, once allowed",
+    "differs": "iPhone has a Reminders store with a full access prompt; Android has none."
+  },
+  "story": {
+    "what_it_is": "Lets the app read and edit your Reminders lists.",
+    "icon": "list-todo",
+    "tags": [
+      "Reminders",
+      "Permission",
+      "Tasks"
+    ],
+    "marketing": [
+      {
+        "vendor": "Apple",
+        "name": "EventKit reminders",
+        "pitch": "Apps can read and write reminders, with the permission of the person.",
+        "url": "https://developer.apple.com/documentation/eventkit"
+      }
+    ],
+    "for_you": "A prompt asks to access reminders. If you allow it, the app can see your to dos and add its own. Your chores, errands and medicine reminders become visible to it.",
+    "for_makers": "A task app can plug into the system list so people do not need a second one. It can also add reminders for the app's own tasks. Lists tell a lot about a person's life, so the permission is strict.",
+    "use_cases": [
+      {
+        "type": "productivity",
+        "example": "A to do app syncs with your Reminders so tasks show in both.",
+        "apps": [
+          "Things",
+          "Todoist"
+        ]
+      },
+      {
+        "type": "health",
+        "example": "A medicine app adds daily dose reminders.",
+        "apps": []
+      },
+      {
+        "type": "shopping",
+        "example": "A grocery list app shares a shopping list with family.",
+        "apps": [
+          "Apple Reminders"
+        ]
+      },
+      {
+        "type": "education",
+        "example": "A homework planner adds due dates.",
+        "apps": []
+      },
+      {
+        "type": "fitness",
+        "example": "A habit app adds a daily walk reminder.",
+        "apps": []
+      },
+      {
+        "type": "smart-home",
+        "example": "A home app adds chores for the family.",
+        "apps": []
+      },
+      {
+        "type": "enterprise",
+        "example": "A project tool turns tasks into reminders.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Shows chores and habits",
+      "Health routines",
+      "No write only option"
+    ],
+    "android_note": "Android has no shared reminders store. Alarms use system intents and Google Tasks has no public provider.",
+    "ios_note": "iOS has no write only mode for reminders."
+  },
+  "technical_bounds": [
+    "No Android counterpart store"
+  ],
+  "scores": {
+    "sensitivity": 3,
+    "utility": 2,
+    "fingerprint_bits": null,
+    "friction": 2
+  },
+  "value": {
+    "legit_uses": [
+      "Task apps"
+    ],
+    "abuse": [
+      "Profiling routines"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2023-09",
+      "platform": "ios",
+      "version": "iOS 17",
+      "change": "Full access key replaces NSRemindersUsageDescription"
+    }
+  ],
+  "related": [
+    "mob.contacts.calendar-full"
+  ],
+  "refs": [
+    {
+      "t": "apple",
+      "label": "Apple: Accessing the event store",
+      "url": "https://developer.apple.com/documentation/eventkit/accessing-the-event-store"
+    },
+    {
+      "t": "apple",
+      "label": "Apple: Protected resources keys",
+      "url": "https://developer.apple.com/documentation/bundleresources/protected-resources"
+    }
+  ],
+  "confidence": "docs"
+}

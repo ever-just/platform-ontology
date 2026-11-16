@@ -1,0 +1,215 @@
+{
+  "id": "web.os.isolated-web-apps",
+  "name": "Isolated Web Apps",
+  "kind": "capability",
+  "group": "os-integration-install",
+  "subgroup": "Packaging",
+  "tags": [
+    "packaging"
+  ],
+  "plain": "A packaged, signed web app with extra system APIs.",
+  "meaning": "Needs a signed bundle and, today, enterprise managed Chrome. Unlocks Direct Sockets and Controlled Frame.",
+  "lifecycle": [
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "isolated-app:// scheme, Signed Web Bundle .swbn, manifest at /.well-known/manifest.webmanifest with version",
+      "access": {
+        "grant": "enterprise",
+        "prompt_ui": "Enterprise install",
+        "secure_context": true,
+        "user_gesture": false,
+        "persistence": "Per origin",
+        "revocation": "Site settings",
+        "iframe": "Same as top level; cross-origin iframes need a permissions policy where listed",
+        "steps": [
+          "Call the API",
+          "Browser applies its access rules",
+          "Page receives the result"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "f",
+          "v": "120",
+          "note": "Dev mode or enterprise"
+        },
+        "edge": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "firefox": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "safari": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "ios_safari": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "chrome_android": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "samsung": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "object",
+    "metric": "A packaged, signed web app with extra system APIs.",
+    "update": "on demand",
+    "fields": [
+      {
+        "name": "signature",
+        "type": "string",
+        "range": "Ed25519 or ECDSA P-256"
+      },
+      {
+        "name": "updates",
+        "type": "string",
+        "unit": "hours",
+        "range": "checked every 4 to 6 hours"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can run as a signed, packaged app with extra system features, on managed Chrome only",
+    "user_action": "Your organization installs the signed app on your computer",
+    "can": [
+      "Run from a signed bundle instead of a normal web address",
+      "Use raw network connections and controlled frames, which normal sites cannot",
+      "Work as a kiosk or business app"
+    ],
+    "cannot": [
+      "Be installed by a normal visitor, since it needs a managed Chrome today",
+      "Work in Edge, Firefox, Safari or on phones",
+      "Run without a signed bundle",
+      "Reach your files or system outside what the app is given"
+    ],
+    "reach": 3,
+    "reach_label": "Only in managed installed apps",
+    "differs": "Only Chrome on managed computers, and still limited. Other browsers and phones do not support it."
+  },
+  "story": {
+    "what_it_is": "A packaged, signed web app with extra power, mainly for managed Chromebooks and companies.",
+    "icon": "package",
+    "tags": [
+      "Installed apps",
+      "Enterprise",
+      "Powerful"
+    ],
+    "marketing": [
+      {
+        "vendor": "ChromeOS",
+        "name": "Isolated Web Apps",
+        "pitch": "Packaged web apps with a signed bundle and strong security rules, for powerful features such as direct sockets.",
+        "url": "https://chromeos.dev/en/web/isolated-web-apps"
+      }
+    ],
+    "for_you": "Most people never see these. They are installed by a school or company on its managed devices. They may use special features like raw network access, with admin approval.",
+    "for_makers": "Makers get native like power with web tools. Packaging and signing let the browser trust the app more, so it can access more of the device. It is mostly for enterprise and education.",
+    "use_cases": [
+      {
+        "type": "enterprise",
+        "example": "A company ships a remote desktop client as an isolated app, which talks to office servers over raw network connections.",
+        "apps": []
+      },
+      {
+        "type": "education",
+        "example": "A school installs a testing app that locks down the device while students take an exam.",
+        "apps": []
+      },
+      {
+        "type": "games",
+        "example": "A cloud gaming client could ship as a signed bundle with low level network access for low delay streams.",
+        "apps": []
+      },
+      {
+        "type": "security",
+        "example": "A bank sets up a branch kiosk app on managed devices, with strict rules about what code can run.",
+        "apps": []
+      },
+      {
+        "type": "developer",
+        "example": "A tool ships a web terminal as a signed app, which can open network ports from the browser.",
+        "apps": []
+      },
+      {
+        "type": "health",
+        "example": "A clinic uses a signed app to connect to medical devices on its network.",
+        "apps": []
+      },
+      {
+        "type": "creative",
+        "example": "A studio tool uses a packaged app for fast offline file access on managed laptops.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Very powerful",
+      "Needs admin trust"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Enterprise or developer mode only",
+    "Strict COOP and COEP and CSP"
+  ],
+  "scores": {
+    "sensitivity": 3,
+    "utility": 3,
+    "fingerprint_bits": null,
+    "friction": 3
+  },
+  "value": {
+    "legit_uses": [
+      "Enterprise kiosks"
+    ],
+    "abuse": [
+      "None"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2023",
+      "browser": "chrome",
+      "version": "120",
+      "change": "IWA developer testing"
+    }
+  ],
+  "refs": [
+    {
+      "t": "vendor",
+      "label": "ChromeOS IWA",
+      "url": "https://chromeos.dev/en/web/isolated-web-apps"
+    },
+    {
+      "t": "github",
+      "label": "IWA explainer",
+      "url": "https://github.com/WICG/isolated-web-apps"
+    }
+  ],
+  "confidence": "docs"
+}

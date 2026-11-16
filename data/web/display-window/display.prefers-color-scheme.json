@@ -1,0 +1,237 @@
+{
+  "id": "web.display.prefers-color-scheme",
+  "name": "prefers-color-scheme",
+  "kind": "signal",
+  "group": "display-window",
+  "subgroup": "CSS media features",
+  "tags": [
+    "media-query",
+    "preferences",
+    "accessibility"
+  ],
+  "plain": "Whether the OS or browser theme is light or dark.",
+  "meaning": "Reveals the person's OS appearance setting (dark mode is used by an estimated 40 to 60% of mobile users) and time of day if auto switching. Low entropy; often set at the site by cookie.",
+  "lifecycle": [
+    "on-arrival",
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "matchMedia('(prefers-color-scheme: dark)'); Sec-CH-Prefers-Color-Scheme",
+      "bcd": [
+        "css.at-rules.media.prefers-color-scheme"
+      ],
+      "access": {
+        "grant": "none",
+        "prompt_ui": "None",
+        "secure_context": false,
+        "user_gesture": false,
+        "persistence": "read fresh on every page load; nothing stored",
+        "revocation": "none needed (no grant)",
+        "iframe": "Readable from cross-origin iframes too (same values)",
+        "steps": [
+          "Page script reads the value",
+          "No prompt is shown"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "76",
+          "note": "",
+          "date": "2019-07-30"
+        },
+        "edge": {
+          "s": "y",
+          "v": "79",
+          "note": "",
+          "date": "2020-01-15"
+        },
+        "firefox": {
+          "s": "y",
+          "v": "67",
+          "note": "",
+          "date": "2019-05-21"
+        },
+        "safari": {
+          "s": "y",
+          "v": "12.1",
+          "note": "",
+          "date": "2019-03-25"
+        },
+        "ios_safari": {
+          "s": "y",
+          "v": "13",
+          "note": "",
+          "date": "2019-09-19"
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "76",
+          "note": "",
+          "date": "2019-07-30"
+        },
+        "samsung": {
+          "s": "y",
+          "v": "14.2",
+          "note": "",
+          "date": "2021-06-25"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "object",
+    "metric": "",
+    "update": "static per session",
+    "fields": [
+      {
+        "name": "prefers-color-scheme",
+        "type": "enum",
+        "unit": "",
+        "range": "light, dark",
+        "precision": ""
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can tell whether your device theme is light or dark",
+    "user_action": "Nothing. It happens when the page loads.",
+    "can": [
+      "Check whether you chose light or dark",
+      "Show matching colors",
+      "Ask for it in a request header, in Chrome, once the site opts in"
+    ],
+    "cannot": [
+      "See your wallpaper or other theme colors",
+      "Change your theme",
+      "Tell why you picked it"
+    ],
+    "reach": 1,
+    "reach_label": "One answer, no prompt",
+    "differs": ""
+  },
+  "story": {
+    "what_it_is": "Tells a page whether your device is set to a light or dark theme.",
+    "icon": "sun-moon",
+    "tags": [
+      "Dark mode",
+      "Display",
+      "Silent"
+    ],
+    "marketing": [
+      {
+        "vendor": "web.dev",
+        "name": "prefers-color-scheme",
+        "pitch": "Google teaches sites to follow the system dark or light setting so pages feel native and ease eye strain.",
+        "url": "https://web.dev/articles/prefers-color-scheme"
+      },
+      {
+        "vendor": "MDN",
+        "name": "prefers-color-scheme",
+        "pitch": "Documents the media feature that tells a page if the person wants a light or dark theme.",
+        "url": "https://developer.mozilla.org/en-US/docs/Web/CSS/@media/prefers-color-scheme"
+      }
+    ],
+    "for_you": "You never see the check, but you see the result. If your phone is in dark mode, many sites open dark without you doing a thing.",
+    "for_makers": "Matching dark mode makes a site feel polished and avoids a bright flash at night. It also leaks a tiny fact about you. Together with other signals it helps tell your devices apart.",
+    "use_cases": [
+      {
+        "type": "social",
+        "example": "A social feed opens in dark colors in the evening because your phone is in dark mode.",
+        "apps": [
+          "Reddit",
+          "X"
+        ]
+      },
+      {
+        "type": "games",
+        "example": "A browser game offers a dark menu that matches your system so it is easy on the eyes during late sessions.",
+        "apps": []
+      },
+      {
+        "type": "media",
+        "example": "A news or reading site switches to light text on dark for night reading.",
+        "apps": []
+      },
+      {
+        "type": "productivity",
+        "example": "A document or code editor switches theme when your system goes dark at sunset.",
+        "apps": [
+          "GitHub",
+          "Notion"
+        ]
+      },
+      {
+        "type": "ads",
+        "example": "An advertiser serves a dark version of a banner so it does not glare against a dark page.",
+        "apps": []
+      },
+      {
+        "type": "analytics",
+        "example": "A team sees that 60 percent of evening visitors use dark mode and tests a darker design.",
+        "apps": []
+      },
+      {
+        "type": "security",
+        "example": "A fingerprint script adds the theme to a list of settings to help recognise a returning browser.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Tiny fingerprint clue",
+      "Reveals night habits"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Cannot tell automatic vs manual"
+  ],
+  "scores": {
+    "sensitivity": 1,
+    "utility": 3,
+    "fingerprint_bits": 1.0,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Respect OS theme and accessibility needs",
+      "Adapt layout"
+    ],
+    "abuse": [
+      "Infer disability or setting for fingerprinting"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2020-01",
+      "browser": "firefox",
+      "version": "",
+      "change": "RFP forces light"
+    }
+  ],
+  "related": [
+    "web.locale.accessibility-inference"
+  ],
+  "refs": [
+    {
+      "t": "mdn",
+      "label": "MDN prefers-color-scheme",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/CSS/@media/prefers-color-scheme"
+    },
+    {
+      "t": "spec",
+      "label": "CSS Media Queries Level 5",
+      "url": "https://www.w3.org/TR/mediaqueries-5/"
+    }
+  ],
+  "confidence": "docs"
+}

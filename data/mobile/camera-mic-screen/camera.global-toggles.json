@@ -1,0 +1,180 @@
+{
+  "id": "mob.camera.global-toggles",
+  "name": "Global camera and mic toggles",
+  "kind": "capability",
+  "group": "camera-mic-screen",
+  "subgroup": "Indicators",
+  "tags": [
+    "mechanics",
+    "sensor-privacy",
+    "toggles"
+  ],
+  "plain": "System switches that turn the camera or mic off for all apps.",
+  "meaning": "A blank feed for the camera and silence for the mic. Android 12 only; support depends on the device.",
+  "lifecycle": [
+    "in-session"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "p",
+      "v": "12",
+      "api": 31,
+      "permission": "n/a (system feature)",
+      "protection": "none",
+      "grant": "system-only",
+      "prompt_ui": "Quick Settings toggles",
+      "persistence": "Until toggled",
+      "revocation": "Quick Settings, Settings > Privacy",
+      "store_policy": "Play: none",
+      "api_surface": "SensorPrivacyManager",
+      "note": "Camera shows blank frames; mic returns silence and motion sensors are rate-limited; emergency calls re-enable mic. Device dependent."
+    },
+    "ios": {
+      "s": "n",
+      "v": "",
+      "permission": "n/a",
+      "protection": "managed",
+      "grant": "not-exposed",
+      "prompt_ui": "none",
+      "persistence": "n/a",
+      "revocation": "MDM or Screen Time",
+      "store_policy": "none",
+      "api_surface": "none",
+      "note": "iOS has no global toggle; MDM can disable the camera."
+    }
+  },
+  "data": {
+    "type": "none",
+    "metric": "Toggle state",
+    "update": "live",
+    "fields": []
+  },
+  "limits": {
+    "headline": "Can show you a blank camera and silence when you flip a phone wide switch",
+    "user_action": "You switch off Camera access or Mic access in Quick Settings",
+    "can": [
+      "Give blank frames from the camera when the switch is off (Android 12)",
+      "Give silence from the microphone",
+      "Slow down motion sensors on some phones"
+    ],
+    "cannot": [
+      "Work on iPhone; there is no global switch there (a company can block the camera)",
+      "Work on every Android phone; it depends on the maker",
+      "Block emergency calls; the mic comes back for them"
+    ],
+    "reach": 1,
+    "reach_label": "One switch, all apps",
+    "differs": "Android 12 and later, on some devices. iPhone has none."
+  },
+  "story": {
+    "what_it_is": "System switches that turn the camera or microphone off for every app at once.",
+    "icon": "video-off",
+    "tags": [
+      "Camera",
+      "Microphone",
+      "Privacy"
+    ],
+    "marketing": [
+      {
+        "vendor": "Google",
+        "name": "Camera and microphone toggles",
+        "pitch": "Quick Settings tiles turn camera and mic access off for all apps.",
+        "url": "https://source.android.com/docs/core/permissions/sensors-privacy"
+      }
+    ],
+    "for_you": "You pull down Quick Settings and flip 'Camera access' or 'Mic access' off. All apps then see a black picture or silence.",
+    "for_makers": "It gives people a hard stop that an app cannot bypass. Makers must handle blank feeds gracefully and tell users to turn the toggle on when a feature needs it.",
+    "use_cases": [
+      {
+        "type": "video",
+        "example": "A video call app shows a black screen and a hint to turn the camera toggle back on.",
+        "apps": [
+          "Zoom",
+          "Google Meet"
+        ]
+      },
+      {
+        "type": "games",
+        "example": "A voice chat game shows 'mic is off' and lets you play without voice.",
+        "apps": [
+          "Among Us",
+          "Fortnite"
+        ]
+      },
+      {
+        "type": "social",
+        "example": "A camera filter app asks you to enable camera access in Quick Settings.",
+        "apps": [
+          "Snapchat"
+        ]
+      },
+      {
+        "type": "security",
+        "example": "A privacy minded person leaves the mic off until a call starts.",
+        "apps": []
+      },
+      {
+        "type": "enterprise",
+        "example": "A work phone policy locks both toggles off in secure rooms.",
+        "apps": []
+      },
+      {
+        "type": "accessibility",
+        "example": "A voice command app warns that voice control is silent when the mic toggle is off.",
+        "apps": [
+          "Voice Access"
+        ]
+      }
+    ],
+    "risks": [
+      "Easy to forget it is off",
+      "Support depends on the device"
+    ],
+    "android_note": "Android 12 and later, with support depending on the phone maker.",
+    "ios_note": "iOS has no global camera toggle, but Control Center and Settings give per app control."
+  },
+  "technical_bounds": [
+    "Device support varies",
+    "No iOS equivalent"
+  ],
+  "scores": {
+    "sensitivity": 4,
+    "utility": 3,
+    "fingerprint_bits": null,
+    "friction": 3
+  },
+  "value": {
+    "legit_uses": [
+      "Privacy"
+    ],
+    "abuse": [
+      "None"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2021-10",
+      "platform": "android",
+      "version": "12 (API 31)",
+      "change": "Global mic and camera toggles introduced"
+    }
+  ],
+  "related": [
+    "mob.camera.indicators"
+  ],
+  "refs": [
+    {
+      "t": "android",
+      "label": "AOSP: Sensor privacy",
+      "url": "https://source.android.com/docs/core/permissions/sensors-privacy"
+    }
+  ],
+  "confidence": "docs"
+}

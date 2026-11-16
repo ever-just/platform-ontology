@@ -1,0 +1,193 @@
+{
+  "id": "mob.system.dnd-access",
+  "name": "Do Not Disturb access",
+  "kind": "permission",
+  "group": "system-control",
+  "subgroup": "Focus",
+  "tags": [
+    "special-access",
+    "dnd",
+    "focus"
+  ],
+  "plain": "Lets the app read and change Do Not Disturb settings.",
+  "meaning": "Reveals whether the user is in a focus mode and lets apps toggle it. iOS shows only a yes or no focus status.",
+  "lifecycle": [
+    "in-session"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "y",
+      "v": "6.0",
+      "api": 23,
+      "permission": "ACCESS_NOTIFICATION_POLICY",
+      "protection": "special",
+      "grant": "settings",
+      "prompt_ui": "Settings toggle: Do Not Disturb access",
+      "persistence": "Until revoked",
+      "revocation": "Settings > Special app access > Do Not Disturb access",
+      "store_policy": "Play: none",
+      "api_surface": "NotificationManager.isNotificationPolicyAccessGranted",
+      "note": "Needed to change interruption filter."
+    },
+    "ios": {
+      "s": "p",
+      "v": "15",
+      "permission": "NSFocusStatusUsageDescription",
+      "protection": "prompt",
+      "grant": "prompt",
+      "prompt_ui": "Share Focus Status toggle",
+      "persistence": "Until revoked",
+      "revocation": "Settings > Focus > Focus Status",
+      "store_policy": "App Review 5.1.1",
+      "api_surface": "INFocusStatusCenter",
+      "note": "Returns only a boolean isFocused; cannot change Focus."
+    }
+  },
+  "data": {
+    "type": "boolean",
+    "metric": "Focus status",
+    "update": "on change",
+    "fields": [
+      {
+        "name": "isFocused",
+        "type": "boolean",
+        "unit": "bool",
+        "range": "true or false",
+        "precision": "exact"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can check and change Do Not Disturb on Android; iPhone shows only a yes or no",
+    "user_action": "You switch on Do Not Disturb access in Settings (Android), or tap Share Focus Status (iPhone)",
+    "can": [
+      "Check whether Do Not Disturb is on",
+      "Change the interruption filter on Android",
+      "Learn whether a Focus is on, as a yes or no (iPhone)"
+    ],
+    "cannot": [
+      "Change Focus on iPhone",
+      "Learn the Focus name or schedule on iPhone",
+      "Change Do Not Disturb on Android without the Settings switch"
+    ],
+    "reach": 2,
+    "reach_label": "Your quiet mode, while allowed",
+    "differs": "Android lets an allowed app change Do Not Disturb; iPhone gives apps only a yes or no and no control."
+  },
+  "story": {
+    "what_it_is": "Lets an app read and change your Do Not Disturb settings.",
+    "icon": "bell-off",
+    "tags": [
+      "Focus",
+      "Permission",
+      "Android"
+    ],
+    "marketing": [],
+    "for_you": "A special switch asks to let the app control Do Not Disturb. If you allow it, a meeting app can silence your phone for you. A bedtime app can turn it on at night.",
+    "for_makers": "Apps that care about sleep, meetings and focus want to flip the setting for you. Reading it also tells them if you are busy. On iPhone it is only a yes or no.",
+    "use_cases": [
+      {
+        "type": "productivity",
+        "example": "A calendar app turns on Do Not Disturb during your meetings.",
+        "apps": [
+          "Google Calendar"
+        ]
+      },
+      {
+        "type": "health",
+        "example": "A sleep app silences notifications at bedtime and turns them back on in the morning.",
+        "apps": [
+          "Sleep Cycle"
+        ]
+      },
+      {
+        "type": "fitness",
+        "example": "A workout app silences calls so a run is not interrupted.",
+        "apps": []
+      },
+      {
+        "type": "education",
+        "example": "A study timer blocks alerts during a study session.",
+        "apps": [
+          "Forest"
+        ]
+      },
+      {
+        "type": "automotive",
+        "example": "A driving app turns on Do Not Disturb while you drive.",
+        "apps": []
+      },
+      {
+        "type": "kids",
+        "example": "A parent app sets quiet time at school.",
+        "apps": []
+      },
+      {
+        "type": "games",
+        "example": "A game silences notifications during a match.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Shows if you are busy",
+      "App could silence alarms",
+      "Sleep schedule revealed"
+    ],
+    "android_note": "Android needs special access to change the interruption filter.",
+    "ios_note": "iPhone only returns a yes or no for whether a Focus is on and cannot change it."
+  },
+  "technical_bounds": [
+    "iOS read only boolean"
+  ],
+  "scores": {
+    "sensitivity": 2,
+    "utility": 2,
+    "fingerprint_bits": null,
+    "friction": 3
+  },
+  "value": {
+    "legit_uses": [
+      "Meeting apps"
+    ],
+    "abuse": [
+      "Inferring availability"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2015-10",
+      "platform": "android",
+      "version": "6.0 (API 23)",
+      "change": "Do Not Disturb access introduced"
+    },
+    {
+      "date": "2021-09",
+      "platform": "ios",
+      "version": "iOS 15",
+      "change": "Focus status sharing introduced"
+    }
+  ],
+  "related": [
+    "mob.apps.usage-stats"
+  ],
+  "refs": [
+    {
+      "t": "android",
+      "label": "Android: NotificationManager policy access",
+      "url": "https://developer.android.com/reference/android/app/NotificationManager#isNotificationPolicyAccessGranted()"
+    },
+    {
+      "t": "apple",
+      "label": "Apple: INFocusStatusCenter",
+      "url": "https://developer.apple.com/documentation/intents/infocusstatuscenter"
+    }
+  ],
+  "confidence": "docs"
+}

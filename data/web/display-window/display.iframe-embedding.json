@@ -1,0 +1,263 @@
+{
+  "id": "web.display.iframe-embedding",
+  "name": "Embed another page in an iframe",
+  "kind": "capability",
+  "group": "display-window",
+  "subgroup": "Embedding",
+  "tags": [
+    "iframe",
+    "clickjacking",
+    "frame-ancestors",
+    "sandbox",
+    "x-frame-options"
+  ],
+  "plain": "A page can show another site inside a frame unless that site blocks framing.",
+  "meaning": "A site can embed a third party page (maps, video, ads, payment forms) and, if it frames you without protection, overlay invisible content for clickjacking. Framing headers and sandbox settings control who can do this.",
+  "lifecycle": [
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "<iframe src sandbox allow>; Content-Security-Policy: frame-ancestors; X-Frame-Options",
+      "bcd": [
+        "html.elements.iframe",
+        "http.headers.Content-Security-Policy.frame-ancestors",
+        "http.headers.X-Frame-Options"
+      ],
+      "access": {
+        "grant": "none",
+        "prompt_ui": "None (no browser prompt)",
+        "secure_context": false,
+        "user_gesture": false,
+        "activation": "none",
+        "persistence": "While the frame is on the page; the framed site's own cookies may be blocked as third party",
+        "revocation": "Nothing to revoke (no permission is stored)",
+        "iframe": "This is the iframe boundary: allow attribute lists permissions, sandbox restricts scripts, popups, forms and top navigation",
+        "steps": [
+          "Page adds an iframe element",
+          "Browser checks the target's frame-ancestors or X-Frame-Options",
+          "If allowed, content loads with sandbox and allow limits",
+          "Parent cannot read the frame cross-origin"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "1",
+          "note": "",
+          "date": "2008-12-11"
+        },
+        "edge": {
+          "s": "y",
+          "v": "12",
+          "note": "",
+          "date": "2015-07-29"
+        },
+        "firefox": {
+          "s": "y",
+          "v": "1",
+          "note": "",
+          "date": "2004-11-09"
+        },
+        "safari": {
+          "s": "y",
+          "v": "4",
+          "note": "",
+          "date": "2009-06-08"
+        },
+        "ios_safari": {
+          "s": "y",
+          "v": "3.2",
+          "note": "All iOS browsers use WebKit",
+          "date": "2010-04-03"
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "18",
+          "note": "",
+          "date": "2012-06-27"
+        },
+        "samsung": {
+          "s": "y",
+          "v": "1.0",
+          "note": "",
+          "date": "2013-04-27"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "none",
+    "metric": "",
+    "update": "",
+    "fields": []
+  },
+  "limits": {
+    "headline": "Can show another site inside its own page, unless that site blocks it",
+    "user_action": "You open a page that includes a map, video or payment box.",
+    "can": [
+      "Show another site's content in a frame, such as a video, map or payment form",
+      "Limit what the frame may do with sandbox settings",
+      "Pass a few messages back and forth with the frame"
+    ],
+    "cannot": [
+      "Embed sites that tell browsers not to allow framing",
+      "See what you type or click inside the other site",
+      "Use your camera, microphone or location inside the frame unless the page allows it"
+    ],
+    "reach": 2,
+    "reach_label": "While the framed page is open",
+    "differs": ""
+  },
+  "story": {
+    "what_it_is": "A page can show another website inside a frame, unless that site says no.",
+    "icon": "app-window-mac",
+    "tags": [
+      "Embeds",
+      "Ads",
+      "Security"
+    ],
+    "marketing": [
+      {
+        "vendor": "MDN",
+        "name": "iframe element",
+        "pitch": "Documents how a page can embed another page inside a frame and how sites can control it.",
+        "url": "https://developer.mozilla.org/en-US/docs/Web/HTML/Element/iframe"
+      }
+    ],
+    "for_you": "You see a video, map, chat box, ad or payment form that looks like part of the page. It is really another site running inside a box.",
+    "for_makers": "Embedding lets small teams add maps, videos and payments with one line. Ad and measurement companies rely on it. It also lets another site watch you from inside the page.",
+    "use_cases": [
+      {
+        "type": "video",
+        "example": "A blog shows a YouTube video inside its own page without hosting a single file.",
+        "apps": [
+          "YouTube"
+        ]
+      },
+      {
+        "type": "payments",
+        "example": "A shop shows the card form from its payment company so the shop never touches card numbers.",
+        "apps": [
+          "Stripe"
+        ]
+      },
+      {
+        "type": "ads",
+        "example": "An ad network draws each ad inside a frame so ad code cannot touch the page.",
+        "apps": [
+          "Google Ad Manager"
+        ]
+      },
+      {
+        "type": "games",
+        "example": "A game portal runs each game in a frame and shares one ad slot and leaderboard.",
+        "apps": [
+          "Poki",
+          "CrazyGames",
+          "itch.io"
+        ]
+      },
+      {
+        "type": "productivity",
+        "example": "A company wiki embeds a live Figma file or Google Doc.",
+        "apps": [
+          "Notion",
+          "Figma"
+        ]
+      },
+      {
+        "type": "security",
+        "example": "A scam page hides a bank or social button under a fake one so you click it by mistake. This is called clickjacking.",
+        "apps": []
+      },
+      {
+        "type": "enterprise",
+        "example": "A support widget loads chat inside a frame on every page.",
+        "apps": [
+          "Intercom"
+        ]
+      }
+    ],
+    "risks": [
+      "Clickjacking",
+      "Third party tracking from frames"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "frame-ancestors overrides X-Frame-Options when both are present in browsers that support it",
+    "Cross-origin frames cannot read each other's DOM; only postMessage crosses",
+    "Third party cookies in frames are blocked by default in Safari and Firefox, and partitioned or limited in Chrome",
+    "Top-level navigation from a sandboxed frame needs allow-top-navigation (or allow-top-navigation-by-user-activation)",
+    "The parent cannot hide the framed page's own permission prompts or make them look like its own"
+  ],
+  "scores": {
+    "sensitivity": 3,
+    "utility": 5,
+    "fingerprint_bits": null,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Maps, video and payment widgets",
+      "Embedded ads",
+      "Embedded apps and widgets"
+    ],
+    "abuse": [
+      "Clickjacking",
+      "Invisible frames for tracking pixels",
+      "Cross-origin phishing overlays"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2010-01",
+      "browser": "chrome",
+      "version": "4",
+      "change": "X-Frame-Options supported to stop clickjacking"
+    },
+    {
+      "date": "2015-01",
+      "browser": "chrome",
+      "version": "40",
+      "change": "CSP frame-ancestors supported"
+    },
+    {
+      "date": "2018-01",
+      "browser": "firefox",
+      "version": "58",
+      "change": "CSP frame-ancestors supported in Firefox"
+    }
+  ],
+  "related": [
+    "web.actions.popover-dialog",
+    "web.actions.fenced-frames"
+  ],
+  "refs": [
+    {
+      "t": "mdn",
+      "label": "MDN iframe",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/iframe"
+    },
+    {
+      "t": "mdn",
+      "label": "MDN frame-ancestors",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/Content-Security-Policy/frame-ancestors"
+    },
+    {
+      "t": "spec",
+      "label": "HTML Standard: iframe",
+      "url": "https://html.spec.whatwg.org/multipage/iframe-embed-object.html#the-iframe-element"
+    }
+  ],
+  "confidence": "docs"
+}

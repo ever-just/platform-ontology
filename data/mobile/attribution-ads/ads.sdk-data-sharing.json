@@ -1,0 +1,202 @@
+{
+  "id": "mob.ads.sdk-data-sharing",
+  "name": "Third-party SDK data sharing",
+  "kind": "tracking",
+  "group": "attribution-ads",
+  "subgroup": "SDKs and measurement",
+  "tags": [
+    "sdk",
+    "data-broker",
+    "supply-chain",
+    "sdk-index"
+  ],
+  "plain": "Any SDK in an app can read what the app can read and send it to its own servers.",
+  "meaning": "Third-party code inherits all of the app's permissions, so one SDK can collect location or IDs for a data broker. Stores respond with manifests, disclosure rules and bans.",
+  "lifecycle": [
+    "on-launch",
+    "in-session",
+    "background"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "y",
+      "v": "",
+      "permission": "",
+      "protection": "none",
+      "grant": "none",
+      "prompt_ui": "",
+      "persistence": "",
+      "revocation": "",
+      "store_policy": "Play: you are responsible for SDK behavior; Play SDK Index; Data safety must include SDK collection; 2020 to 2022 bans of data-selling SDKs",
+      "api_surface": "Gradle dependencies, SDK Index",
+      "note": "SDK Runtime (isolating SDKs) was retired."
+    },
+    "ios": {
+      "s": "y",
+      "v": "",
+      "permission": "",
+      "protection": "none",
+      "grant": "none",
+      "prompt_ui": "",
+      "persistence": "",
+      "revocation": "",
+      "store_policy": "Privacy manifests, SDK signatures for listed SDKs, App Review 5.1.2",
+      "api_surface": "Swift Package Manager, CocoaPods, XCFrameworks",
+      "note": "Apple's privacy report in Xcode aggregates manifests; Dec 2020 Apple and Google both removed the X-Mode location SDK."
+    }
+  },
+  "web_equivalents": [
+    "web.xsite.cookie-syncing"
+  ],
+  "data": {
+    "type": "object",
+    "metric": "Whatever the host app can access",
+    "update": "continuous",
+    "fields": []
+  },
+  "limits": {
+    "headline": "Can share anything the app can see with its add on tools, who send it on",
+    "user_action": "Nothing. It happens whenever the app runs",
+    "can": [
+      "Collect location, IDs and other data the app has been allowed",
+      "Send what it collects to its own servers",
+      "Share with data brokers, in the worst case",
+      "Show up in Apple's privacy report in Xcode"
+    ],
+    "cannot": [
+      "Get more access than the app itself has",
+      "Hide from store rules; stores add disclosure, manifest and ban rules",
+      "Stay isolated on Android, since the SDK Runtime was retired"
+    ],
+    "reach": 4,
+    "reach_label": "Everything the app can access, anytime",
+    "differs": "The same on both. Apple lists add on tools in a privacy report. Google shows data practices in the SDK Index."
+  },
+  "story": {
+    "what_it_is": "Any code library inside an app can read what the app can read and send it to its own servers.",
+    "icon": "blocks",
+    "tags": [
+      "SDKs",
+      "Ads",
+      "Tracking"
+    ],
+    "marketing": [
+      {
+        "vendor": "Apple",
+        "name": "Third party SDK requirements",
+        "pitch": "Apple requires privacy manifests and signatures for common SDKs so people can trust the data practices.",
+        "url": "https://developer.apple.com/support/third-party-SDK-requirements/"
+      }
+    ],
+    "for_you": "You never see these helper libraries. If you give an app your location, the ad or analytics code inside may use it too.",
+    "for_makers": "Third party code inherits all of the app's permissions. A single SDK can collect location, IDs or contacts and pass them to a data broker, so the stores demand manifests, signatures and public lists.",
+    "use_cases": [
+      {
+        "type": "games",
+        "example": "A free puzzle game includes six ad SDKs, each of which can read the device ID.",
+        "apps": [
+          "Candy Crush"
+        ]
+      },
+      {
+        "type": "maps",
+        "example": "A weather app with a location grant also shares it with an ad SDK that sells it.",
+        "apps": []
+      },
+      {
+        "type": "social",
+        "example": "A login SDK sends your sign in details to the platform.",
+        "apps": [
+          "Facebook Login"
+        ]
+      },
+      {
+        "type": "analytics",
+        "example": "A crash tool sends device details to its own servers for debugging.",
+        "apps": [
+          "Crashlytics",
+          "Sentry"
+        ]
+      },
+      {
+        "type": "ads",
+        "example": "A data broker pays an app maker to add its SDK that collects location in the background.",
+        "apps": []
+      },
+      {
+        "type": "security",
+        "example": "Researchers inspect network traffic to find SDKs sending more data than declared.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Inherits all app permissions",
+      "Hidden recipients"
+    ],
+    "android_note": "Google Play lists SDK permissions in the SDK Index and requires disclosure in the Data safety form.",
+    "ios_note": "Apple requires manifests and a short list of signed SDKs."
+  },
+  "technical_bounds": [
+    "No runtime isolation on either OS",
+    "Declarations are self-reported",
+    "Apple lists popular SDKs requiring signatures"
+  ],
+  "scores": {
+    "sensitivity": 5,
+    "utility": 3,
+    "fingerprint_bits": null,
+    "friction": 1
+  },
+  "value": {
+    "legit_uses": [
+      "Analytics, crash reports"
+    ],
+    "abuse": [
+      "Covert location or contact harvesting for resale"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2020-12",
+      "platform": "android",
+      "version": "Play policy",
+      "change": "Google bans X-Mode (Outlogic) SDK from Play; Apple gave 14 days"
+    },
+    {
+      "date": "2021-10",
+      "platform": "android",
+      "version": "Play",
+      "change": "Google Play SDK Index shows SDK data practices"
+    },
+    {
+      "date": "2024-05",
+      "platform": "ios",
+      "version": "iOS 17.5",
+      "change": "Privacy manifest and SDK signature requirement"
+    }
+  ],
+  "related": [
+    "mob.policy.privacy-manifests",
+    "mob.policy.play-data-safety"
+  ],
+  "refs": [
+    {
+      "t": "vendor",
+      "label": "Google Play SDK Index",
+      "url": "https://play.google.com/sdks"
+    },
+    {
+      "t": "apple",
+      "label": "Apple: Third-party SDK requirements",
+      "url": "https://developer.apple.com/support/third-party-SDK-requirements/"
+    }
+  ],
+  "confidence": "docs"
+}

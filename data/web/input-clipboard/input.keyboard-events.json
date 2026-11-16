@@ -1,0 +1,270 @@
+{
+  "id": "web.input.keyboard-events",
+  "name": "Keyboard and IME events",
+  "kind": "signal",
+  "group": "input-clipboard",
+  "subgroup": "Text",
+  "tags": [
+    "keyboard",
+    "keydown",
+    "ime",
+    "keylogging",
+    "keystroke-dynamics"
+  ],
+  "plain": "Sees every key pressed while the page has focus, plus IME composition text.",
+  "meaning": "A page that has focus gets each keydown with the key and its physical code, and exact timing. Typing rhythm can identify a person; composition events reveal the language they type in.",
+  "lifecycle": [
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "keydown, keyup, beforeinput, input, compositionstart/update/end; KeyboardEvent.key, .code, .timeStamp",
+      "bcd": [
+        "api.KeyboardEvent",
+        "api.InputEvent",
+        "api.CompositionEvent"
+      ],
+      "access": {
+        "grant": "none",
+        "prompt_ui": "None (no browser prompt)",
+        "secure_context": false,
+        "user_gesture": false,
+        "activation": "none",
+        "persistence": "While the document has focus",
+        "revocation": "Nothing to revoke (no permission is stored)",
+        "iframe": "Keys go to the focused frame only; cross-origin iframes do not leak keys to the parent",
+        "steps": [
+          "Person types in the page",
+          "keydown and input events fire",
+          "Page reads key, code, isComposing and data"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "1",
+          "note": "",
+          "date": "2008-12-11"
+        },
+        "edge": {
+          "s": "y",
+          "v": "12",
+          "note": "",
+          "date": "2015-07-29"
+        },
+        "firefox": {
+          "s": "y",
+          "v": "1.5",
+          "note": "",
+          "date": "2005-11-29"
+        },
+        "safari": {
+          "s": "y",
+          "v": "1.2",
+          "note": "",
+          "date": "2004-02-02"
+        },
+        "ios_safari": {
+          "s": "y",
+          "v": "1",
+          "note": "All iOS browsers use WebKit",
+          "date": "2007-06-29"
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "18",
+          "note": "",
+          "date": "2012-06-27"
+        },
+        "samsung": {
+          "s": "y",
+          "v": "1.0",
+          "note": "",
+          "date": "2013-04-27"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "event",
+    "metric": "Key events with timestamps",
+    "update": "per keystroke",
+    "fields": [
+      {
+        "name": "key",
+        "type": "string",
+        "unit": "",
+        "range": "character or named key",
+        "precision": "exact"
+      },
+      {
+        "name": "code",
+        "type": "string",
+        "unit": "",
+        "range": "physical key position",
+        "precision": "exact"
+      },
+      {
+        "name": "timeStamp",
+        "type": "float",
+        "unit": "ms",
+        "range": "from page load",
+        "precision": "100 us in Chrome, about 1 ms in Firefox and Safari"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can see each key you press while the page has focus",
+    "user_action": "Nothing. It happens as you type while the page is open and in front",
+    "can": [
+      "See which key you pressed and the exact time",
+      "Tell the difference between a typed letter and a shortcut like Ctrl plus C",
+      "Learn your typing rhythm, which can help tell people apart",
+      "See text from input method editors, which can show the language you type in"
+    ],
+    "cannot": [
+      "See keys pressed in other tabs or other apps",
+      "See anything while the page is in the background",
+      "Show a permission pop up; there is none"
+    ],
+    "reach": 3,
+    "reach_label": "Every key while the page is open",
+    "differs": ""
+  },
+  "story": {
+    "what_it_is": "The page sees every key you press while it is focused, including timing.",
+    "icon": "keyboard",
+    "tags": [
+      "Typing",
+      "Silent",
+      "Fingerprint"
+    ],
+    "marketing": [],
+    "for_you": "You press keys and the page reacts: a game character moves, a shortcut opens a menu, a search box suggests words. You do not see that each key and its exact timing was noticed. The page only sees keys while it is the active window.",
+    "for_makers": "Keys drive games, shortcuts, forms and chat. Makers also use typing speed and rhythm for fraud and bot checks, and some analytics tools record keystrokes in forms.",
+    "use_cases": [
+      {
+        "type": "games",
+        "example": "A browser shooter reads WASD, space and shift every frame so your character moves and jumps.",
+        "apps": [
+          "Krunker.io",
+          "Slither.io"
+        ]
+      },
+      {
+        "type": "games",
+        "example": "A cloud gaming site such as GeForce NOW sends each key press to the remote machine to play a PC game in the browser.",
+        "apps": [
+          "GeForce NOW",
+          "Xbox Cloud Gaming"
+        ]
+      },
+      {
+        "type": "creative",
+        "example": "A design tool uses key shortcuts such as V for move and Space to pan.",
+        "apps": [
+          "Figma",
+          "Canva"
+        ]
+      },
+      {
+        "type": "banking",
+        "example": "A bank login checks typing rhythm to judge whether the same person is typing as always.",
+        "apps": []
+      },
+      {
+        "type": "analytics",
+        "example": "A session recording tool replays how visitors typed in a form and where they gave up.",
+        "apps": [
+          "Hotjar",
+          "FullStory"
+        ]
+      },
+      {
+        "type": "security",
+        "example": "A bot detector flags forms filled in perfectly even typing speed with no pauses.",
+        "apps": []
+      },
+      {
+        "type": "accessibility",
+        "example": "A web app offers keyboard only control for people who cannot use a mouse.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Typing rhythm identifies people",
+      "Keystrokes can be recorded"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "No key events for text typed in other tabs, apps, the address bar or OS dialogs",
+    "Event timeStamp is a DOMHighResTimeStamp: 100 microseconds in Chrome, coarser in Firefox and Safari (about 1 ms)",
+    "Password fields still fire keydown (the page owner can read what is typed there)",
+    "During IME composition keydown carries key Process (keyCode 229); the composed text comes through compositionend and beforeinput",
+    "Browsers cannot hide key timing; keystroke dynamics identify users at roughly 1 to 5 percent equal error rate in research"
+  ],
+  "scores": {
+    "sensitivity": 4,
+    "utility": 5,
+    "fingerprint_bits": 5,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Games",
+      "Shortcuts",
+      "Rich editing",
+      "Accessibility"
+    ],
+    "abuse": [
+      "Keylogging typed form data in injected scripts",
+      "Behavioral biometrics (typing cadence)",
+      "Session replay capture of keystrokes"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2016",
+      "browser": "chrome",
+      "version": "51",
+      "change": "KeyboardEvent.code standardized in Chrome"
+    },
+    {
+      "date": "2019-09",
+      "browser": "chrome",
+      "version": "77",
+      "change": "beforeinput event with inputType values"
+    }
+  ],
+  "related": [
+    "web.input.keyboard-layout-map",
+    "web.input.edit-context"
+  ],
+  "refs": [
+    {
+      "t": "mdn",
+      "label": "MDN KeyboardEvent",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent"
+    },
+    {
+      "t": "spec",
+      "label": "W3C UI Events",
+      "url": "https://www.w3.org/TR/uievents/"
+    },
+    {
+      "t": "paper",
+      "label": "Keystroke dynamics survey (Monrose and Rubin lineage)",
+      "url": "https://dl.acm.org/doi/10.1145/266420.266434"
+    }
+  ],
+  "confidence": "docs"
+}

@@ -1,0 +1,242 @@
+{
+  "id": "web.actions.navigate-top",
+  "name": "Navigate or redirect the tab",
+  "kind": "action",
+  "group": "page-actions",
+  "subgroup": "Windows and navigation",
+  "tags": [
+    "redirect",
+    "location",
+    "meta-refresh",
+    "framebusting"
+  ],
+  "plain": "Sends the current tab to a different page by script, meta refresh or server redirect.",
+  "meaning": "A site can move the person to another URL at any time, including after they click something. Cross-origin iframes get tighter limits, which is why ad frames cannot hijack the whole tab.",
+  "lifecycle": [
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "location.href / assign() / replace(); <meta http-equiv=refresh>; HTTP 301/302/303/307/308; top.location from an iframe",
+      "bcd": [
+        "api.Location.assign",
+        "api.Location.replace"
+      ],
+      "access": {
+        "grant": "none",
+        "prompt_ui": "None (no browser prompt)",
+        "secure_context": false,
+        "user_gesture": false,
+        "activation": "none",
+        "persistence": "One-shot; no stored state",
+        "revocation": "Nothing to revoke (no permission is stored)",
+        "iframe": "Cross-origin iframe may navigate top only with user activation (sandbox allow-top-navigation-by-user-activation) or allow-top-navigation",
+        "steps": [
+          "Script runs location.assign or sets location.href",
+          "Browser starts navigation unless blocked",
+          "beforeunload may ask the person to stay"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "1",
+          "note": "",
+          "date": "2008-12-11"
+        },
+        "edge": {
+          "s": "y",
+          "v": "12",
+          "note": "",
+          "date": "2015-07-29"
+        },
+        "firefox": {
+          "s": "y",
+          "v": "1",
+          "note": "",
+          "date": "2004-11-09"
+        },
+        "safari": {
+          "s": "y",
+          "v": "3",
+          "note": "",
+          "date": "2007-10-26"
+        },
+        "ios_safari": {
+          "s": "y",
+          "v": "1",
+          "note": "All iOS browsers use WebKit",
+          "date": "2007-06-29"
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "18",
+          "note": "",
+          "date": "2012-06-27"
+        },
+        "samsung": {
+          "s": "y",
+          "v": "1.0",
+          "note": "",
+          "date": "2013-04-27"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "none",
+    "metric": "",
+    "update": "",
+    "fields": []
+  },
+  "limits": {
+    "headline": "Can send your current tab to another page by itself",
+    "user_action": "Nothing. It happens on load, after a timer, or when you submit a form.",
+    "can": [
+      "Send you to a new page after a login, a payment or a link",
+      "Move you from an old address to a new one",
+      "Open a different page in the same tab through a redirect"
+    ],
+    "cannot": [
+      "Send you away from a page you never opened, such as a page inside someone else's frame, in most browsers",
+      "Skip the browser's warning for a risky site",
+      "Stop you using Back; the earlier page stays in history"
+    ],
+    "reach": 1,
+    "reach_label": "The tab it is running in",
+    "differs": "Chrome, Safari and Firefox all stop most hidden redirects from embedded frames, but how strict they are differs."
+  },
+  "story": {
+    "what_it_is": "A page can send your tab to a different address by script, redirect or timer.",
+    "icon": "route",
+    "tags": [
+      "Redirects",
+      "Silent",
+      "Phishing"
+    ],
+    "marketing": [],
+    "for_you": "Most of the time you click a link and arrive. Sometimes you land on a different page than you clicked, for example after a login or a shortened link.",
+    "for_makers": "Redirects are the plumbing of the web: login flows, short links, regional sites. They also power click tracking, because the hop through an ad server lets it count the click.",
+    "use_cases": [
+      {
+        "type": "ads",
+        "example": "A tap on an ad goes through a tracking server that counts the click, then forwards you to the advertiser.",
+        "apps": [
+          "Google Ads",
+          "Meta Ads"
+        ]
+      },
+      {
+        "type": "banking",
+        "example": "You are sent to your bank, then to an identity page, then back with a signed in session.",
+        "apps": []
+      },
+      {
+        "type": "security",
+        "example": "A phishing mail link bounces you through several sites to hide the real destination.",
+        "apps": []
+      },
+      {
+        "type": "shopping",
+        "example": "A short link from a message expands into a long product URL with a discount code.",
+        "apps": [
+          "bit.ly"
+        ]
+      },
+      {
+        "type": "games",
+        "example": "A browser game portal redirects you to the game's own site on a different domain.",
+        "apps": [
+          "Poki",
+          "CrazyGames"
+        ]
+      },
+      {
+        "type": "travel",
+        "example": "A booking site sends you to a payment partner and then back to confirm your trip.",
+        "apps": [
+          "Booking.com"
+        ]
+      }
+    ],
+    "risks": [
+      "Hidden destinations",
+      "Redirect chains"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Same-frame navigation needs no activation or prompt",
+    "Cross-origin iframe navigating the top frame is blocked without user activation (Chrome 64 framebusting intervention; sandboxed frames need allow-top-navigation*)",
+    "Navigating to data: or blob: URLs in the top frame by script is blocked in Chrome 60 and Firefox 59 for data:",
+    "Browsers cap redirect chains (Chrome and Firefox stop after 20 redirects)",
+    "Navigations flooded in a loop are throttled (Chrome IPC flooding protection, Safari 100 per 30 s)"
+  ],
+  "scores": {
+    "sensitivity": 2,
+    "utility": 5,
+    "fingerprint_bits": null,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Login redirects",
+      "A/B test routing",
+      "Locale redirects"
+    ],
+    "abuse": [
+      "Malvertising redirects",
+      "Forced redirects to scam pages",
+      "Redirect chains used for bounce tracking"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2018-01",
+      "browser": "chrome",
+      "version": "64",
+      "change": "Cross-origin iframe redirects of the top frame need user activation"
+    },
+    {
+      "date": "2017-06",
+      "browser": "chrome",
+      "version": "60",
+      "change": "Block renderer-initiated top-level navigation to data: URLs"
+    },
+    {
+      "date": "2019-09",
+      "browser": "chrome",
+      "version": "76",
+      "change": "sandbox allow-top-navigation-by-user-activation supported broadly"
+    }
+  ],
+  "related": [
+    "web.actions.history-pushstate"
+  ],
+  "refs": [
+    {
+      "t": "mdn",
+      "label": "MDN assign",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/Location/assign"
+    },
+    {
+      "t": "mdn",
+      "label": "MDN iframe sandbox",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/iframe#sandbox"
+    },
+    {
+      "t": "chromestatus",
+      "label": "Chrome: Prevent unwanted redirects from iframes",
+      "url": "https://www.chromestatus.com/feature/5851021045661696"
+    }
+  ],
+  "confidence": "docs"
+}

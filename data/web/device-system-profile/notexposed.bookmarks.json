@@ -1,0 +1,199 @@
+{
+  "id": "web.notexposed.bookmarks",
+  "name": "Bookmarks and reading list",
+  "kind": "not-exposed",
+  "group": "device-system-profile",
+  "subgroup": "Browser state",
+  "tags": [
+    "not-exposed",
+    "bookmarks"
+  ],
+  "plain": "Sites cannot read your bookmarks or reading list.",
+  "meaning": "Only browser extensions with the bookmarks permission can read them. A web page has no API at all; even installing a PWA is detectable only through display-mode.",
+  "lifecycle": [
+    "on-arrival",
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "none",
+      "access": {
+        "grant": "not-exposed",
+        "prompt_ui": "None",
+        "secure_context": false,
+        "user_gesture": false,
+        "persistence": "read fresh on every page load; nothing stored",
+        "revocation": "not applicable",
+        "iframe": "Readable from cross-origin iframes too (same values)",
+        "steps": [
+          "Page script reads the value",
+          "No prompt is shown"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "edge": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "firefox": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "safari": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "ios_safari": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "chrome_android": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "samsung": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "none",
+    "metric": "",
+    "update": "static per session",
+    "fields": [
+      {
+        "name": "proxy: display-mode standalone",
+        "type": "string",
+        "unit": "",
+        "range": "page knows if it was launched as an installed app",
+        "precision": ""
+      },
+      {
+        "name": "proxy: beforeinstallprompt event",
+        "type": "string",
+        "unit": "",
+        "range": "shows the page is installable, not bookmarks",
+        "precision": ""
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can't see your bookmarks or reading list",
+    "user_action": "Nothing. Pages have no way to ask for this",
+    "can": [
+      "Tell if the page runs as an installed app",
+      "Show a prompt to add to your home screen",
+      "Ask you to bookmark it, but only you can do that"
+    ],
+    "cannot": [
+      "See any saved bookmark",
+      "See your reading list",
+      "Know if you bookmarked the site",
+      "Change your bookmarks; only an extension with permission can"
+    ],
+    "reach": 1,
+    "reach_label": "Nothing about bookmarks",
+    "differs": ""
+  },
+  "story": {
+    "what_it_is": "Sites cannot read your bookmarks or reading list.",
+    "icon": "bookmark",
+    "tags": [
+      "Blocked",
+      "Bookmarks",
+      "Privacy"
+    ],
+    "marketing": [],
+    "for_you": "Your saved sites stay between you and your browser. A web page has no way to look at them. Only a browser extension you install and allow can.",
+    "for_makers": "Sites would love to know what you save, because it shows your real interests. The web gives no such access. They can only see how you arrive and, with an installed web app, how you launch it.",
+    "use_cases": [
+      {
+        "type": "shopping",
+        "example": "A shop wanted to know whether you bookmarked it, to see loyalty. It must use sign-in and repeat visits instead.",
+        "apps": []
+      },
+      {
+        "type": "news",
+        "example": "A publisher wanted your saved articles, and instead offers its own Save for later button.",
+        "apps": [
+          "Medium"
+        ]
+      },
+      {
+        "type": "productivity",
+        "example": "A read it later site wants your reading list, so it asks you to import a file or use an extension.",
+        "apps": []
+      },
+      {
+        "type": "ads",
+        "example": "An advertiser wanted bookmarks for interest data, which are not available to pages.",
+        "apps": []
+      },
+      {
+        "type": "analytics",
+        "example": "A product team wants to know who bookmarked the page and settles for return visits.",
+        "apps": []
+      },
+      {
+        "type": "security",
+        "example": "A tracker wanted to link your saved sites to a profile, which the browser blocks.",
+        "apps": []
+      },
+      {
+        "type": "games",
+        "example": "A game site wanted to remind you to come back, so it asks you to install the web app instead.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Only extensions you install can read them"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Interests leak"
+  ],
+  "scores": {
+    "sensitivity": 4,
+    "utility": 2,
+    "fingerprint_bits": 0.0,
+    "friction": 3
+  },
+  "value": {
+    "legit_uses": [
+      "None: the browser deliberately withholds it"
+    ],
+    "abuse": [
+      "Sites attempt proxies to recover it"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "refs": [
+    {
+      "t": "mdn",
+      "label": "MDN bookmarks (extensions)",
+      "url": "https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/API/bookmarks"
+    }
+  ],
+  "confidence": "docs"
+}

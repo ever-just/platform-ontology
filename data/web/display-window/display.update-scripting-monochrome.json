@@ -1,0 +1,217 @@
+{
+  "id": "web.display.update-scripting-monochrome",
+  "name": "update, scripting, monochrome",
+  "kind": "signal",
+  "group": "display-window",
+  "subgroup": "CSS media features",
+  "tags": [
+    "media-query",
+    "preferences",
+    "accessibility"
+  ],
+  "plain": "Screen refresh type, whether JS is enabled, and monochrome depth.",
+  "meaning": "update is none for e-ink or print; scripting reports enabled or none; monochrome is 0 on color screens. Mostly identifies e-readers and print contexts.",
+  "lifecycle": [
+    "on-arrival",
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "matchMedia('(update: slow)'), (scripting: none), (monochrome)",
+      "bcd": [
+        "css.at-rules.media.update"
+      ],
+      "access": {
+        "grant": "none",
+        "prompt_ui": "None",
+        "secure_context": false,
+        "user_gesture": false,
+        "persistence": "read fresh on every page load; nothing stored",
+        "revocation": "none needed (no grant)",
+        "iframe": "Readable from cross-origin iframes too (same values)",
+        "steps": [
+          "Page script reads the value",
+          "No prompt is shown"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "113",
+          "note": "",
+          "date": "2023-05-02"
+        },
+        "edge": {
+          "s": "y",
+          "v": "113",
+          "note": "",
+          "date": "2023-05-05"
+        },
+        "firefox": {
+          "s": "y",
+          "v": "102",
+          "note": "",
+          "date": "2022-06-28"
+        },
+        "safari": {
+          "s": "y",
+          "v": "17",
+          "note": "",
+          "date": "2023-09-18"
+        },
+        "ios_safari": {
+          "s": "y",
+          "v": "17",
+          "note": "",
+          "date": "2023-09-18"
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "113",
+          "note": "",
+          "date": "2023-05-02"
+        },
+        "samsung": {
+          "s": "y",
+          "v": "23.0",
+          "note": "",
+          "date": "2023-10-18"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "object",
+    "metric": "",
+    "update": "static per session",
+    "fields": [
+      {
+        "name": "update, scripting, monochrome",
+        "type": "enum",
+        "unit": "",
+        "range": "update: none, slow, fast; scripting: none, initial-only, enabled; monochrome: 0 to 16",
+        "precision": ""
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can tell how your screen refreshes, if scripting is on, and if it is monochrome",
+    "user_action": "Nothing. It happens when the page loads.",
+    "can": [
+      "Check whether the screen updates slowly, like an e-ink reader",
+      "Check whether scripting is on",
+      "Check whether the screen is monochrome"
+    ],
+    "cannot": [
+      "Name your device",
+      "See anything else about your screen",
+      "Change any of these settings"
+    ],
+    "reach": 1,
+    "reach_label": "Three yes or no answers",
+    "differs": ""
+  },
+  "story": {
+    "what_it_is": "Reports how your screen refreshes, whether scripts run, and whether the display is black and white.",
+    "icon": "monitor-cog",
+    "tags": [
+      "Display",
+      "Silent",
+      "Fingerprint"
+    ],
+    "marketing": [
+      {
+        "vendor": "MDN",
+        "name": "update media feature",
+        "pitch": "Documents how a page can tell whether the screen refreshes quickly, slowly or never, like e ink or print.",
+        "url": "https://developer.mozilla.org/en-US/docs/Web/CSS/@media/update"
+      }
+    ],
+    "for_you": "You never see the reading. On a normal screen the answers are always the same. They only differ for e ink readers, printers or very basic setups.",
+    "for_makers": "Makers use it to serve printable or slow screen layouts. Because almost everyone gives the same answer, the values are weak for tracking, but odd answers can reveal unusual or automated browsers.",
+    "use_cases": [
+      {
+        "type": "news",
+        "example": "A reading site serves a plain layout with no animation on an e ink tablet.",
+        "apps": []
+      },
+      {
+        "type": "games",
+        "example": "A browser game turns off fast animation if it runs on a very slow refresh screen.",
+        "apps": []
+      },
+      {
+        "type": "security",
+        "example": "A fraud check sees a browser that says scripts are off while running scripts, a sign of a masked or automated tool.",
+        "apps": []
+      },
+      {
+        "type": "shopping",
+        "example": "A store gives a clean black and white print page for receipts and coupons.",
+        "apps": []
+      },
+      {
+        "type": "education",
+        "example": "A learning site makes a printable worksheet in grayscale.",
+        "apps": []
+      },
+      {
+        "type": "analytics",
+        "example": "A team checks how many visitors have a non standard display before dropping old support.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Weak fingerprint clue",
+      "Reveals unusual devices"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "scripting: none only visible to CSS, since JS reports enabled"
+  ],
+  "scores": {
+    "sensitivity": 1,
+    "utility": 3,
+    "fingerprint_bits": 0.5,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Respect OS theme and accessibility needs",
+      "Adapt layout"
+    ],
+    "abuse": [
+      "Infer disability or setting for fingerprinting"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "related": [
+    "web.locale.accessibility-inference"
+  ],
+  "refs": [
+    {
+      "t": "mdn",
+      "label": "MDN update, scripting, monochrome",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/CSS/@media/update"
+    },
+    {
+      "t": "github",
+      "label": "fingerprintjs source: monochrome",
+      "url": "https://github.com/fingerprintjs/fingerprintjs/blob/master/src/sources/monochrome.ts"
+    },
+    {
+      "t": "spec",
+      "label": "CSS Media Queries Level 5",
+      "url": "https://www.w3.org/TR/mediaqueries-5/"
+    }
+  ],
+  "confidence": "docs"
+}

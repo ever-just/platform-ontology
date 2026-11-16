@@ -1,0 +1,234 @@
+{
+  "id": "mob.contacts.full-access",
+  "name": "Contacts, read and write",
+  "kind": "permission",
+  "group": "personal-data-contacts",
+  "subgroup": "Address book",
+  "tags": [
+    "runtime-permission",
+    "contacts",
+    "social-graph"
+  ],
+  "plain": "Reads the whole address book: names, numbers, emails, addresses.",
+  "meaning": "Exposes the person's social graph and other people's private data. A shared favorite for growth teams and a historic abuse vector.",
+  "lifecycle": [
+    "in-session",
+    "background"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "y",
+      "v": "6.0",
+      "api": 23,
+      "permission": "READ_CONTACTS, WRITE_CONTACTS, GET_ACCOUNTS",
+      "protection": "dangerous",
+      "grant": "prompt",
+      "prompt_ui": "Allow or Don't allow",
+      "persistence": "Until revoked; auto-reset after months unused (Android 11+)",
+      "revocation": "Settings > Apps > Permissions > Contacts",
+      "store_policy": "Play: contacts are sensitive data; Android 17 contacts write change for targets above 37",
+      "api_surface": "ContactsContract, ContentResolver",
+      "note": "Android 17: CP2 limits account columns; WRITE_CONTACTS direct writes end for newer targets"
+    },
+    "ios": {
+      "s": "y",
+      "v": "6",
+      "permission": "NSContactsUsageDescription",
+      "protection": "prompt",
+      "grant": "prompt",
+      "prompt_ui": "Allow Full Access, Limit Access (iOS 18), Don't Allow",
+      "persistence": "Until revoked",
+      "revocation": "Settings > Privacy & Security > Contacts",
+      "store_policy": "App Review 5.1.1(ii) and 5.1.2; no uploading contacts without consent",
+      "api_surface": "CNContactStore, requestAccess(for: .contacts)",
+      "note": "iOS 13 hides the Notes field behind an entitlement"
+    }
+  },
+  "web_equivalents": [
+    "web.contacts.contact-picker",
+    "web.notexposed.contacts-list"
+  ],
+  "data": {
+    "type": "list",
+    "metric": "Contact records",
+    "update": "on request, change observers",
+    "fields": [
+      {
+        "name": "contacts",
+        "type": "list",
+        "unit": "records",
+        "range": "0 to thousands",
+        "precision": "all fields except notes on iOS"
+      },
+      {
+        "name": "phoneNumbers",
+        "type": "list",
+        "unit": "strings",
+        "range": "0 to many per contact",
+        "precision": ""
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can open your whole address book once you allow it, or only some on iPhone",
+    "user_action": "You tap Find friends or Import contacts",
+    "can": [
+      "List names, numbers, emails and addresses",
+      "Add or change entries (Android with the extra permission)",
+      "Upload the list to match your friends"
+    ],
+    "cannot": [
+      "Open contacts before you tap Allow",
+      "Open the Notes field on iPhone without Apple's entitlement",
+      "Use a limited list on Android; it is all or one time pick"
+    ],
+    "reach": 4,
+    "reach_label": "Everything in your contacts",
+    "differs": "iPhone with iOS 18 and later offers Allow Full Access, Limit Access or Don't Allow; Android gives one choice for the whole contacts group."
+  },
+  "story": {
+    "what_it_is": "Lets the app read and change your whole address book: names, numbers, emails and addresses.",
+    "icon": "book-user",
+    "tags": [
+      "Contacts",
+      "Permission",
+      "Sensitive"
+    ],
+    "marketing": [],
+    "for_you": "You see a prompt to allow contacts. If you tap Allow, the app can see every person in your phone. Friends who never agreed to share are also shared.",
+    "for_makers": "Contacts are the cheapest way to grow a social app. The app finds friends already in the network and sends invites. The data on other people is valuable, which is why platforms now steer apps to narrower options.",
+    "use_cases": [
+      {
+        "type": "social",
+        "example": "A new social app matches your contacts to see who is already on it.",
+        "apps": [
+          "Instagram",
+          "TikTok"
+        ]
+      },
+      {
+        "type": "messaging",
+        "example": "A chat app shows which friends are using it so you can start a chat.",
+        "apps": [
+          "WhatsApp",
+          "Signal"
+        ]
+      },
+      {
+        "type": "security",
+        "example": "A caller ID app names unknown callers from your contacts and a shared database.",
+        "apps": [
+          "Truecaller"
+        ]
+      },
+      {
+        "type": "payments",
+        "example": "A payment app finds friends to send money to.",
+        "apps": [
+          "Venmo",
+          "Cash App"
+        ]
+      },
+      {
+        "type": "games",
+        "example": "A game finds friends so you can team up or send gifts.",
+        "apps": [
+          "Words With Friends"
+        ]
+      },
+      {
+        "type": "dating",
+        "example": "A dating app hides your exes by matching contacts.",
+        "apps": [
+          "Tinder"
+        ]
+      },
+      {
+        "type": "productivity",
+        "example": "A contact manager cleans up duplicates and merges entries.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Exposes other people's data",
+      "Used for growth tricks",
+      "Address book uploaded"
+    ],
+    "android_note": "Android 17 limits account columns and ends direct write for newer target apps.",
+    "ios_note": "iOS 13 hides the Notes field behind an entitlement, so passwords in notes are safer."
+  },
+  "technical_bounds": [
+    "Apps may not upload address book without consent",
+    "Android 17 limits account columns without READ_CONTACTS"
+  ],
+  "scores": {
+    "sensitivity": 5,
+    "utility": 4,
+    "fingerprint_bits": null,
+    "friction": 2
+  },
+  "value": {
+    "legit_uses": [
+      "Find friends",
+      "Caller ID"
+    ],
+    "abuse": [
+      "Harvesting contacts to build shadow social graphs"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": true,
+      "how": "LinkedIn Android and iOS use contacts permission for address book sync and People You May Know"
+    }
+  },
+  "history": [
+    {
+      "date": "2015-10",
+      "platform": "android",
+      "version": "6.0 (API 23)",
+      "change": "Runtime permission"
+    },
+    {
+      "date": "2019-09",
+      "platform": "ios",
+      "version": "iOS 13",
+      "change": "Notes field requires entitlement"
+    },
+    {
+      "date": "2024-09",
+      "platform": "ios",
+      "version": "iOS 18",
+      "change": "Limited contacts access option"
+    },
+    {
+      "date": "2026-03",
+      "platform": "android",
+      "version": "17 (API 37)",
+      "change": "Contact Picker and tighter CP2 columns"
+    }
+  ],
+  "related": [
+    "mob.contacts.limited-access",
+    "mob.contacts.picker"
+  ],
+  "refs": [
+    {
+      "t": "apple",
+      "label": "Apple: Accessing the contact store",
+      "url": "https://developer.apple.com/documentation/contacts/accessing-the-contact-store"
+    },
+    {
+      "t": "android",
+      "label": "Android 17 behavior changes",
+      "url": "https://developer.android.com/about/versions/17/behavior-changes-17"
+    },
+    {
+      "t": "android",
+      "label": "Android: Contacts provider",
+      "url": "https://developer.android.com/identity/providers/contacts-provider"
+    }
+  ],
+  "confidence": "docs"
+}

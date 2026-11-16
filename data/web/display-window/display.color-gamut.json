@@ -1,0 +1,222 @@
+{
+  "id": "web.display.color-gamut",
+  "name": "color-gamut",
+  "kind": "signal",
+  "group": "display-window",
+  "subgroup": "CSS media features",
+  "tags": [
+    "media-query",
+    "preferences",
+    "accessibility"
+  ],
+  "plain": "Widest color space the screen shows: sRGB, P3 or Rec2020.",
+  "meaning": "P3 separates Apple devices and OLED phones from budget screens. A few bits of hardware signal.",
+  "lifecycle": [
+    "on-arrival",
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "matchMedia('(color-gamut: p3)')",
+      "bcd": [
+        "css.at-rules.media.color-gamut"
+      ],
+      "access": {
+        "grant": "none",
+        "prompt_ui": "None",
+        "secure_context": false,
+        "user_gesture": false,
+        "persistence": "read fresh on every page load; nothing stored",
+        "revocation": "none needed (no grant)",
+        "iframe": "Readable from cross-origin iframes too (same values)",
+        "steps": [
+          "Page script reads the value",
+          "No prompt is shown"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "58",
+          "note": "",
+          "date": "2017-04-19"
+        },
+        "edge": {
+          "s": "y",
+          "v": "79",
+          "note": "",
+          "date": "2020-01-15"
+        },
+        "firefox": {
+          "s": "y",
+          "v": "110",
+          "note": "",
+          "date": "2023-02-14"
+        },
+        "safari": {
+          "s": "y",
+          "v": "10",
+          "note": "",
+          "date": "2016-09-20"
+        },
+        "ios_safari": {
+          "s": "y",
+          "v": "10",
+          "note": "",
+          "date": "2016-09-13"
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "58",
+          "note": "",
+          "date": "2017-04-25"
+        },
+        "samsung": {
+          "s": "y",
+          "v": "7.0",
+          "note": "",
+          "date": "2018-03-16"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "object",
+    "metric": "",
+    "update": "static per session",
+    "fields": [
+      {
+        "name": "color-gamut",
+        "type": "enum",
+        "unit": "",
+        "range": "srgb, p3, rec2020",
+        "precision": ""
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can check whether your screen shows standard, wide P3 or very wide Rec2020 colors",
+    "user_action": "Nothing. It happens when the page loads.",
+    "can": [
+      "Ask whether your screen supports P3 or Rec2020",
+      "Serve richer images and colors if it does",
+      "Add the answer to a browser fingerprint"
+    ],
+    "cannot": [
+      "See your exact color profile or calibration",
+      "Learn your monitor model",
+      "Change anything on your screen"
+    ],
+    "reach": 1,
+    "reach_label": "One yes or no, no prompt",
+    "differs": ""
+  },
+  "story": {
+    "what_it_is": "Asks whether your screen can show a wide range of colors, such as the P3 range.",
+    "icon": "palette",
+    "tags": [
+      "Display",
+      "Silent",
+      "Color"
+    ],
+    "marketing": [
+      {
+        "vendor": "web.dev",
+        "name": "High definition CSS color guide",
+        "pitch": "Teaches developers how to use wide gamut color on newer screens and fall back safely on older ones.",
+        "url": "https://web.dev/articles/high-definition-css-color-guide"
+      },
+      {
+        "vendor": "MDN",
+        "name": "color-gamut media feature",
+        "pitch": "Documents a media query that tells a page which range of colors the screen can show.",
+        "url": "https://developer.mozilla.org/en-US/docs/Web/CSS/@media/color-gamut"
+      }
+    ],
+    "for_you": "You never get asked. If your screen is wide gamut, a site can show richer reds and greens. If not, it quietly uses safer colors.",
+    "for_makers": "Brands want their exact orange or green to look right. Developers use the check to switch to wide colors only where they will show. It also adds a small clue to device profiles.",
+    "use_cases": [
+      {
+        "type": "shopping",
+        "example": "A fashion or paint store shows richer swatches on a P3 screen so a red sofa looks closer to real life.",
+        "apps": []
+      },
+      {
+        "type": "creative",
+        "example": "A photo editor in the browser warns when your screen cannot show all the colors in an image.",
+        "apps": []
+      },
+      {
+        "type": "games",
+        "example": "A WebGL game turns on a more vivid look for sunsets and neon on screens that can show it.",
+        "apps": []
+      },
+      {
+        "type": "video",
+        "example": "A streaming site offers wider color video only to screens that can really show it.",
+        "apps": [
+          "Netflix"
+        ]
+      },
+      {
+        "type": "ads",
+        "example": "A brand ad uses the exact brand color in wide gamut on newer phones and laptops.",
+        "apps": []
+      },
+      {
+        "type": "analytics",
+        "example": "A fingerprint script notes the gamut as one more clue to group devices.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Small fingerprint clue",
+      "Reveals device class"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "scores": {
+    "sensitivity": 1,
+    "utility": 3,
+    "fingerprint_bits": 1.2,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Respect OS theme and accessibility needs",
+      "Adapt layout"
+    ],
+    "abuse": [
+      "Infer disability or setting for fingerprinting"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "related": [
+    "web.locale.accessibility-inference"
+  ],
+  "refs": [
+    {
+      "t": "mdn",
+      "label": "MDN color-gamut",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/CSS/@media/color-gamut"
+    },
+    {
+      "t": "github",
+      "label": "fingerprintjs source: color_gamut",
+      "url": "https://github.com/fingerprintjs/fingerprintjs/blob/master/src/sources/color_gamut.ts"
+    },
+    {
+      "t": "spec",
+      "label": "CSS Media Queries Level 5",
+      "url": "https://www.w3.org/TR/mediaqueries-5/"
+    }
+  ],
+  "confidence": "docs"
+}

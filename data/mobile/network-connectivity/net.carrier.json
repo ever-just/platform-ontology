@@ -1,0 +1,189 @@
+{
+  "id": "mob.net.carrier",
+  "name": "Carrier name, MCC and MNC",
+  "kind": "signal",
+  "group": "network-connectivity",
+  "subgroup": "Cellular",
+  "tags": [
+    "carrier",
+    "mcc-mnc"
+  ],
+  "plain": "Android reads carrier and country codes with no prompt; iOS now returns placeholders.",
+  "meaning": "Reveals the person's carrier, home country and roaming. Apple deprecated CTCarrier in iOS 16 and returns static values.",
+  "lifecycle": [
+    "on-launch",
+    "in-session"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "y",
+      "v": "1.0",
+      "api": 1,
+      "permission": "",
+      "protection": "none",
+      "grant": "none",
+      "prompt_ui": "",
+      "persistence": "",
+      "revocation": "",
+      "store_policy": "",
+      "api_surface": "TelephonyManager.getNetworkOperatorName(), getSimOperator(), getNetworkOperator(), getSimCountryIso()",
+      "note": "MCC 3 digits, MNC 2 or 3 digits"
+    },
+    "ios": {
+      "s": "r",
+      "v": "16.0",
+      "permission": "none",
+      "protection": "not-exposed",
+      "grant": "not-exposed",
+      "prompt_ui": "",
+      "persistence": "",
+      "revocation": "",
+      "store_policy": "Dropped to static values",
+      "api_surface": "Returns placeholder values (MCC and MNC 65535) with no prompt",
+      "note": ""
+    }
+  },
+  "web_equivalents": [
+    "web.notexposed.cellular-carrier"
+  ],
+  "data": {
+    "type": "object",
+    "metric": "Carrier fields",
+    "update": "On SIM change",
+    "fields": [
+      {
+        "name": "mcc",
+        "type": "integer",
+        "unit": "",
+        "range": "200 to 799",
+        "precision": "exact"
+      },
+      {
+        "name": "mnc",
+        "type": "integer",
+        "unit": "",
+        "range": "0 to 999",
+        "precision": "exact"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can see your carrier name and country code on Android, not iPhone",
+    "user_action": "Nothing. It happens when the app checks your network",
+    "can": [
+      "Get your carrier name on Android",
+      "Find your mobile country and network codes (MCC and MNC)",
+      "Guess your country from the codes"
+    ],
+    "cannot": [
+      "Get real carrier codes on iPhone; it returns placeholders",
+      "See your phone number or SIM serial"
+    ],
+    "reach": 1,
+    "reach_label": "Carrier and country, Android only",
+    "differs": "Android shows carrier name and codes with no prompt. iPhone now returns placeholder values (65535)."
+  },
+  "story": {
+    "what_it_is": "An app can see which mobile carrier you use and which country it is from.",
+    "icon": "radio-tower",
+    "tags": [
+      "Network",
+      "Silent",
+      "Carrier"
+    ],
+    "marketing": [],
+    "for_you": "You do not see it. Apps may show local offers or know that you are roaming. It tells them where your SIM comes from, even if you deny location.",
+    "for_makers": "Makers use it for regional features, fraud checks and to see if a user is abroad. Ad systems also use carrier and country codes to target. Apple now gives apps fixed placeholder values.",
+    "use_cases": [
+      {
+        "type": "banking",
+        "example": "A bank app sees a foreign carrier and asks extra questions before a transfer.",
+        "apps": []
+      },
+      {
+        "type": "travel",
+        "example": "A travel app shows roaming tips and local eSIM offers when it sees you are abroad.",
+        "apps": [
+          "Airalo"
+        ]
+      },
+      {
+        "type": "rideshare",
+        "example": "A ride app picks the local payment methods that match your carrier's country.",
+        "apps": [
+          "Uber"
+        ]
+      },
+      {
+        "type": "ads",
+        "example": "An ad network sells a campaign aimed at one carrier's subscribers.",
+        "apps": []
+      },
+      {
+        "type": "games",
+        "example": "A game opens a regional store and price list from the country your SIM comes from.",
+        "apps": []
+      },
+      {
+        "type": "security",
+        "example": "A fraud system compares the SIM country with the sign up country to catch fakes.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Country and carrier targeting",
+      "SIM and travel profile"
+    ],
+    "android_note": "Android apps can read carrier name, country code and network codes with no prompt.",
+    "ios_note": "iPhone apps now get static placeholders because Apple deprecated the carrier API in iOS 16."
+  },
+  "technical_bounds": [
+    "iOS lost carrier data entirely"
+  ],
+  "scores": {
+    "sensitivity": 3,
+    "utility": 3,
+    "fingerprint_bits": 4,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Regional features"
+    ],
+    "abuse": [
+      "Country or carrier targeting"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2022-09",
+      "platform": "ios",
+      "version": "iOS 16",
+      "change": "CTCarrier deprecated, returns placeholders"
+    }
+  ],
+  "related": [
+    "mob.net.radio-type",
+    "mob.nx.phone-number"
+  ],
+  "refs": [
+    {
+      "t": "android",
+      "label": "Android: TelephonyManager",
+      "url": "https://developer.android.com/reference/android/telephony/TelephonyManager"
+    },
+    {
+      "t": "apple",
+      "label": "Apple: CTCarrier",
+      "url": "https://developer.apple.com/documentation/coretelephony/ctcarrier"
+    }
+  ],
+  "confidence": "verified"
+}

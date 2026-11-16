@@ -1,0 +1,228 @@
+{
+  "id": "web.perf.visited-link-sniffing",
+  "name": "Visited link (:visited) history sniffing",
+  "kind": "tracking",
+  "group": "timing-performance",
+  "subgroup": "Side channels",
+  "tags": [
+    "visited",
+    "history",
+    "css",
+    "partitioning"
+  ],
+  "plain": "Used to detect which links the person had visited by styling :visited links.",
+  "meaning": "Browsers lie to getComputedStyle for :visited since 2010, but timing, scroll and rendering side channels remained. Chrome 136 partitions :visited links, ending cross-site history probing.",
+  "lifecycle": [
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": ":visited CSS; getComputedStyle; paint timing; scroll-to-text",
+      "access": {
+        "grant": "none",
+        "prompt_ui": "",
+        "secure_context": false,
+        "user_gesture": false,
+        "persistence": "",
+        "revocation": "",
+        "iframe": "",
+        "steps": [
+          "Render a link",
+          "Check style or timing for visited state",
+          "Repeat per candidate URL"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "r",
+          "v": "136",
+          "note": "Partitioned :visited links",
+          "date": "2025-04-29"
+        },
+        "edge": {
+          "s": "r",
+          "v": "136",
+          "note": "Partitioned :visited links",
+          "date": "2025-05-01"
+        },
+        "firefox": {
+          "s": "r",
+          "v": "4",
+          "note": "getComputedStyle protections since 4 (2010)",
+          "date": "2011-03-22"
+        },
+        "safari": {
+          "s": "r",
+          "v": "5",
+          "note": "Protections since 5 (2010)",
+          "date": "2010-06-07"
+        },
+        "ios_safari": {
+          "s": "r",
+          "v": "5",
+          "note": "Protections since 5 (2010)",
+          "date": "2011-10-12"
+        },
+        "chrome_android": {
+          "s": "r",
+          "v": "136",
+          "note": "Partitioned :visited links",
+          "date": "2025-04-29"
+        },
+        "samsung": {
+          "s": "r",
+          "v": "29.0",
+          "note": "Partitioned :visited links",
+          "date": "2025-10-25"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "boolean",
+    "metric": "Per URL visited bit",
+    "update": "",
+    "fields": [
+      {
+        "name": "visited",
+        "type": "boolean",
+        "unit": "",
+        "range": "true or false",
+        "precision": "per URL"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can't find which links you visited by testing link colours anymore",
+    "user_action": "Nothing. Chrome 136 and other browsers already block it",
+    "can": [
+      "Show visited links in a different colour that you can see",
+      "Try timing and scroll tricks, which now work far less in current browsers"
+    ],
+    "cannot": [
+      "See which sites you visited from link colours",
+      "Work across sites in Chrome 136 and later",
+      "Work in Firefox and Safari, which hide the answer"
+    ],
+    "reach": 1,
+    "reach_label": "Blocked in current browsers",
+    "differs": "Chrome 136 now keeps visited links separate per site. Firefox and Safari blocked the main trick earlier."
+  },
+  "story": {
+    "what_it_is": "Old trick: a site styled links so visited and unvisited ones looked different, then read which pages you had seen.",
+    "icon": "history",
+    "tags": [
+      "History",
+      "Old attack",
+      "Fixed"
+    ],
+    "marketing": [
+      {
+        "vendor": "MDN",
+        "name": "Privacy and the :visited selector",
+        "pitch": "MDN explains how browsers limit what styles can apply to visited links, so sites cannot see your history.",
+        "url": "https://developer.mozilla.org/en-US/docs/Web/CSS/Privacy_and_the_:visited_selector"
+      }
+    ],
+    "for_you": "Today you are mostly protected. Browsers tell pages that every link looks unvisited, so a page cannot learn which sites you saw. It is why visited links only change color on your own screen.",
+    "for_makers": "In the past, ad and data sellers used it to learn which banks, shops or news sites a visitor had been to. Browsers fixed it around 2010 and later, so it now works as a security lesson more than a tool.",
+    "use_cases": [
+      {
+        "type": "security",
+        "example": "Before the fix, a malicious page could list which bank sites you had visited by testing their links.",
+        "apps": []
+      },
+      {
+        "type": "ads",
+        "example": "Older ad scripts checked which shopping sites you visited to target ads.",
+        "apps": []
+      },
+      {
+        "type": "shopping",
+        "example": "A store could check for competitor links in your history to adjust its price or coupon.",
+        "apps": []
+      },
+      {
+        "type": "social",
+        "example": "A social network could guess your interests from visited links to other sites.",
+        "apps": []
+      },
+      {
+        "type": "news",
+        "example": "A news site could see if you had read a rival's story, and tailor its message.",
+        "apps": []
+      },
+      {
+        "type": "developer",
+        "example": "Browser makers lock down which styles can use visited links, so apps still show purple links but pages cannot read them.",
+        "apps": [
+          "Chrome",
+          "Firefox",
+          "Safari"
+        ]
+      },
+      {
+        "type": "education",
+        "example": "A security course shows how the old attack worked to explain browser privacy design.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Fixed in modern browsers",
+      "Old browsers still exposed"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Same-site history probing still possible if site is the history owner",
+    "Lie-based mitigation not perfect for rendering side channels"
+  ],
+  "scores": {
+    "sensitivity": 3,
+    "utility": 1,
+    "fingerprint_bits": 4,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": "None",
+    "abuse": "History sniffing, login detection"
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2010-03",
+      "browser": "firefox",
+      "version": "4",
+      "change": "getComputedStyle lies for :visited (Baron)"
+    },
+    {
+      "date": "2025-04",
+      "browser": "chrome",
+      "version": "136",
+      "change": "Partitioned :visited link history by top frame and link origin"
+    }
+  ],
+  "related": [
+    "web.perf.cache-timing-history-sniffing"
+  ],
+  "refs": [
+    {
+      "t": "vendor",
+      "label": "Chrome 136 :visited partitioning",
+      "url": "https://developer.chrome.com/blog/partitioning-visited-links-history"
+    },
+    {
+      "t": "mozilla",
+      "label": "Mozilla 2010 :visited fix",
+      "url": "https://blog.mozilla.org/security/2010/03/31/plugging-the-css-history-leak/"
+    }
+  ],
+  "confidence": "docs"
+}

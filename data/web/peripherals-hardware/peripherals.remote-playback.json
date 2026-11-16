@@ -1,0 +1,238 @@
+{
+  "id": "web.peripherals.remote-playback",
+  "name": "Remote Playback",
+  "kind": "permission",
+  "group": "peripherals-hardware",
+  "subgroup": "Casting",
+  "tags": [
+    "casting"
+  ],
+  "plain": "Lets a video or audio element play on a nearby cast or AirPlay device.",
+  "meaning": "Shows whether cast targets exist; the person chooses where playback goes.",
+  "lifecycle": [
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "video.remote.prompt(), video.remote.watchAvailability(cb), remote.state",
+      "bcd": [
+        "api.RemotePlayback"
+      ],
+      "access": {
+        "grant": "picker",
+        "prompt_ui": "Browser cast or AirPlay chooser",
+        "secure_context": true,
+        "user_gesture": true,
+        "persistence": "Per origin",
+        "revocation": "Site settings",
+        "iframe": "Same as top level; cross-origin iframes need a permissions policy where listed",
+        "steps": [
+          "Call the API",
+          "Browser applies its access rules",
+          "Page receives the result"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "121",
+          "note": "",
+          "date": "2024-01-23"
+        },
+        "edge": {
+          "s": "y",
+          "v": "121",
+          "note": "",
+          "date": "2024-01-25"
+        },
+        "firefox": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "safari": {
+          "s": "y",
+          "v": "13.1",
+          "note": "",
+          "date": "2020-03-24"
+        },
+        "ios_safari": {
+          "s": "y",
+          "v": "13.4",
+          "note": "",
+          "date": "2020-03-24"
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "56",
+          "note": "",
+          "date": "2017-02-01"
+        },
+        "samsung": {
+          "s": "y",
+          "v": "6.0",
+          "note": "",
+          "date": "2017-08-23"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "object",
+    "metric": "Lets a video or audio element play on a nearby cast or AirPlay device.",
+    "update": "on demand",
+    "fields": [
+      {
+        "name": "state",
+        "type": "enum",
+        "range": "connecting, connected, disconnected"
+      },
+      {
+        "name": "availability",
+        "type": "boolean",
+        "range": "true or false"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can play a video or audio on a cast or AirPlay device you choose",
+    "user_action": "You tap the cast or AirPlay icon on the video and pick a device.",
+    "can": [
+      "Show the list of cast or AirPlay devices",
+      "Play the video or audio on the one you pick",
+      "Pause, play or stop it from the page"
+    ],
+    "cannot": [
+      "Pick a device for you",
+      "See all devices on your network",
+      "Cast after you pick Stop",
+      "Cast to a device you did not pick"
+    ],
+    "reach": 2,
+    "reach_label": "A device you choose",
+    "differs": "Safari uses AirPlay and Chrome uses Cast. Firefox has only partial support."
+  },
+  "story": {
+    "what_it_is": "A video player can send its picture to a nearby TV or speaker.",
+    "icon": "airplay",
+    "tags": [
+      "Casting",
+      "Video",
+      "Asks first"
+    ],
+    "marketing": [
+      {
+        "vendor": "Mozilla",
+        "name": "Remote Playback API",
+        "pitch": "MDN says it lets a page play a video or audio on a remote device like a TV or speaker.",
+        "url": "https://developer.mozilla.org/en-US/docs/Web/API/Remote_Playback_API"
+      }
+    ],
+    "for_you": "You tap the cast or AirPlay icon in a video, pick a device and the video continues on the TV.",
+    "for_makers": "Makers keep the viewing going on a bigger screen without leaving the page. It supports Chromecast and AirPlay with one button.",
+    "use_cases": [
+      {
+        "type": "video",
+        "example": "You send a YouTube video from your phone to the living room TV.",
+        "apps": [
+          "YouTube",
+          "Netflix"
+        ]
+      },
+      {
+        "type": "music",
+        "example": "You play a web music player through a smart speaker.",
+        "apps": [
+          "Spotify web"
+        ]
+      },
+      {
+        "type": "live",
+        "example": "You watch a live match on your TV from a stream you opened on a laptop.",
+        "apps": [
+          "DAZN"
+        ]
+      },
+      {
+        "type": "education",
+        "example": "A lecture video is sent to a classroom screen.",
+        "apps": []
+      },
+      {
+        "type": "ads",
+        "example": "An ad plays on the TV before your video, and it is counted as watched.",
+        "apps": []
+      },
+      {
+        "type": "smart-home",
+        "example": "A baby camera page sends live video to a kitchen display.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Casting by mistake",
+      "Reveals nearby devices"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Chooser needs a gesture",
+    "Only audio or video elements",
+    "Firefox does not ship it"
+  ],
+  "scores": {
+    "sensitivity": 1,
+    "utility": 3,
+    "fingerprint_bits": null,
+    "friction": 1
+  },
+  "value": {
+    "legit_uses": [
+      "Media sites"
+    ],
+    "abuse": [
+      "Network presence signal"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2016-05",
+      "browser": "chrome",
+      "version": "56",
+      "change": "Chrome Android"
+    },
+    {
+      "date": "2020-03",
+      "browser": "safari",
+      "version": "13.1",
+      "change": "Safari uses AirPlay"
+    },
+    {
+      "date": "2023-01",
+      "browser": "chrome",
+      "version": "121",
+      "change": "Desktop Chrome"
+    }
+  ],
+  "refs": [
+    {
+      "t": "mdn",
+      "label": "MDN Remote Playback API",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/Remote_Playback_API"
+    },
+    {
+      "t": "spec",
+      "label": "Remote Playback",
+      "url": "https://www.w3.org/TR/remote-playback/"
+    }
+  ],
+  "confidence": "verified"
+}

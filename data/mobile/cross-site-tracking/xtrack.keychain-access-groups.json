@@ -1,0 +1,180 @@
+{
+  "id": "mob.xtrack.keychain-access-groups",
+  "name": "Shared Keychain access groups and app groups",
+  "kind": "capability",
+  "group": "cross-site-tracking",
+  "subgroup": "Persistence",
+  "tags": [
+    "keychain-access-groups",
+    "app-groups",
+    "same-team"
+  ],
+  "plain": "Apps from one developer team can share secrets and files; other developers cannot join.",
+  "meaning": "Lets one company recognize the same person across its own apps. It cannot see another company's keychain items.",
+  "lifecycle": [
+    "on-launch",
+    "in-session",
+    "after-uninstall"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "p",
+      "v": "",
+      "permission": "",
+      "protection": "signature",
+      "grant": "none",
+      "prompt_ui": "",
+      "persistence": "",
+      "revocation": "",
+      "store_policy": "",
+      "api_surface": "android:sharedUserId (deprecated API 29), signature permissions, shared content providers",
+      "note": "No direct match. Same signing key apps can share through providers."
+    },
+    "ios": {
+      "s": "y",
+      "v": "",
+      "permission": "keychain-access-groups, com.apple.security.application-groups",
+      "protection": "entitlement",
+      "grant": "entitlement",
+      "prompt_ui": "",
+      "persistence": "",
+      "revocation": "",
+      "store_policy": "",
+      "api_surface": "Keychain access groups, App Groups containers, UserDefaults(suiteName:)",
+      "note": "Group IDs start with team prefix (keychain) or group. (app groups). Same Apple Developer team only."
+    }
+  },
+  "data": {
+    "type": "object",
+    "metric": "Shared container or keychain item",
+    "update": "persistent",
+    "fields": []
+  },
+  "limits": {
+    "headline": "Can share saved secrets and files between apps from the same developer on iPhone",
+    "user_action": "Nothing. The developer sets this up before the app ships",
+    "can": [
+      "Share a login or token between apps from one Apple developer team",
+      "Share files and settings through an app group folder",
+      "Keep sign in working across a family of apps from the same maker",
+      "Share on Android only between apps signed with the same key"
+    ],
+    "cannot": [
+      "Let apps from other developers join the group",
+      "Share across teams; the group name starts with the team prefix",
+      "Use sharedUserId on new Android apps; it was deprecated in Android 10",
+      "Share on Android with no setup; it needs matching signing keys and a provider"
+    ],
+    "reach": 3,
+    "reach_label": "One developer's apps, ongoing",
+    "differs": "iPhone has built in groups. Android has no direct match and uses same signature sharing."
+  },
+  "story": {
+    "what_it_is": "Lets apps from one company on the same phone share passwords, tokens and files.",
+    "icon": "key-round",
+    "tags": [
+      "Same company",
+      "Sign in",
+      "Silent"
+    ],
+    "marketing": [
+      {
+        "vendor": "Apple",
+        "name": "App Groups",
+        "pitch": "Developer guide: let apps from the same team share containers and data on one device.",
+        "url": "https://developer.apple.com/documentation/xcode/configuring-app-groups"
+      }
+    ],
+    "for_you": "You sign in once and your other apps from the same company already know you. The upside is smooth use. The downside is that one company can link all of its apps to you without asking.",
+    "for_makers": "Makers use it for single sign on, shared settings and shared downloads between their own apps. Other companies cannot join the group, so it is a safe lane between a developer's own apps.",
+    "use_cases": [
+      {
+        "type": "productivity",
+        "example": "You sign in to a mail app and its calendar app from the same company opens already signed in.",
+        "apps": []
+      },
+      {
+        "type": "games",
+        "example": "A studio shares your save file between its main game and a companion app.",
+        "apps": []
+      },
+      {
+        "type": "banking",
+        "example": "A bank shares a secure login token between its main app and a small widget app.",
+        "apps": []
+      },
+      {
+        "type": "media",
+        "example": "A music app shares downloaded songs with its car and watch helper apps.",
+        "apps": []
+      },
+      {
+        "type": "enterprise",
+        "example": "A company shares one login across its work apps so staff sign in once.",
+        "apps": []
+      },
+      {
+        "type": "analytics",
+        "example": "A developer uses a shared ID to see that one person uses three of its apps.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Links your apps without asking",
+      "Cannot be reviewed easily"
+    ],
+    "android_note": "Android uses shared user IDs and signing keys for a similar feature, now rarely allowed.",
+    "ios_note": "Needs an Apple entitlement and the same developer team, with no prompt to you."
+  },
+  "technical_bounds": [
+    "Same team only",
+    "Requires entitlement"
+  ],
+  "scores": {
+    "sensitivity": 3,
+    "utility": 3,
+    "fingerprint_bits": null,
+    "friction": 1
+  },
+  "value": {
+    "legit_uses": [
+      "Single sign-in across a suite",
+      "Widgets and extensions sharing data"
+    ],
+    "abuse": [
+      "Cross-app ID inside a brand's family of apps"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2019-09",
+      "platform": "android",
+      "version": "Android 10 (API 29)",
+      "change": "sharedUserId deprecated"
+    }
+  ],
+  "related": [
+    "mob.xtrack.keychain-reinstall",
+    "mob.ads.idfv"
+  ],
+  "refs": [
+    {
+      "t": "apple",
+      "label": "Apple: Sharing access to keychain items",
+      "url": "https://developer.apple.com/documentation/security/sharing-access-to-keychain-items-among-a-collection-of-apps"
+    },
+    {
+      "t": "apple",
+      "label": "Apple: Configuring app groups",
+      "url": "https://developer.apple.com/documentation/xcode/configuring-app-groups"
+    }
+  ],
+  "confidence": "docs"
+}

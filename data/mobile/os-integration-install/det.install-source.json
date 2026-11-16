@@ -1,0 +1,178 @@
+{
+  "id": "mob.det.install-source",
+  "name": "Install source and installer package",
+  "kind": "signal",
+  "group": "os-integration-install",
+  "subgroup": "Install",
+  "tags": [
+    "install-source",
+    "sideload"
+  ],
+  "plain": "Apps can see which store installed them.",
+  "meaning": "Shows sideloaded, beta or store installs. Used for fraud and update messaging.",
+  "lifecycle": [
+    "on-launch"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "y",
+      "v": "11",
+      "api": 30,
+      "permission": "",
+      "protection": "none",
+      "grant": "none",
+      "prompt_ui": "",
+      "persistence": "",
+      "revocation": "",
+      "store_policy": "",
+      "api_surface": "PackageManager.getInstallSourceInfo(): installingPackageName, initiatingPackageName, originatingPackageName",
+      "note": "API 30"
+    },
+    "ios": {
+      "s": "p",
+      "v": "3.0",
+      "permission": "none",
+      "protection": "none",
+      "grant": "none",
+      "prompt_ui": "",
+      "persistence": "",
+      "revocation": "",
+      "store_policy": "",
+      "api_surface": "Environment production, sandbox or Xcode",
+      "note": ""
+    }
+  },
+  "data": {
+    "type": "string",
+    "metric": "Installer package or environment",
+    "update": "Static",
+    "fields": [
+      {
+        "name": "installer",
+        "type": "string",
+        "unit": "package ID",
+        "range": "about 10 common values",
+        "precision": "exact"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can see which store installed it, like Google Play or a side loaded file",
+    "user_action": "Nothing. It happens when the app starts up",
+    "can": [
+      "Tell if it came from Google Play or another source on Android 11 or newer",
+      "Check this to decide what to show you",
+      "Learn a rough clue about the install source on iPhone"
+    ],
+    "cannot": [
+      "See which store installed other apps",
+      "Know on iPhone with the same detail as Android",
+      "Be sure the answer is true if the phone is tampered with"
+    ],
+    "reach": 1,
+    "reach_label": "A single fact about itself",
+    "differs": "Android 11 and newer names the installer. iPhone gives only a rough clue."
+  },
+  "story": {
+    "what_it_is": "Apps can see which store, or what other source, installed them.",
+    "icon": "store",
+    "tags": [
+      "Silent",
+      "Fraud",
+      "Install"
+    ],
+    "marketing": [],
+    "for_you": "You never see it. An app knows if you got it from the official store, a beta, or a file. It may nag you to update from the store or refuse to run on a hacked copy.",
+    "for_makers": "Makers use it to spot sideloaded or repackaged apps and to decide which update message to show. It is useful for fraud and for cracked game copies.",
+    "use_cases": [
+      {
+        "type": "games",
+        "example": "A paid game spots a cracked copy installed from a file and blocks it.",
+        "apps": []
+      },
+      {
+        "type": "banking",
+        "example": "A bank app limits features if it was not installed from the official store.",
+        "apps": []
+      },
+      {
+        "type": "security",
+        "example": "A security tool flags apps installed from unknown sources.",
+        "apps": []
+      },
+      {
+        "type": "developer",
+        "example": "A team sees how many testers came from a beta channel.",
+        "apps": [
+          "TestFlight"
+        ]
+      },
+      {
+        "type": "ads",
+        "example": "An ad network discards installs from unknown sources as fraud.",
+        "apps": []
+      },
+      {
+        "type": "media",
+        "example": "A streaming app shows a store update link for the right store.",
+        "apps": []
+      },
+      {
+        "type": "enterprise",
+        "example": "A company checks that a work app came from its managed store.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Can block alternative stores",
+      "Small tracking value"
+    ],
+    "android_note": "Android shows which package installed the app, from API 30.",
+    "ios_note": "Only partial. iOS exposes much less."
+  },
+  "technical_bounds": [
+    "Low sensitivity"
+  ],
+  "scores": {
+    "sensitivity": 1,
+    "utility": 2,
+    "fingerprint_bits": 2,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Detect sideloading"
+    ],
+    "abuse": [
+      "Little"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2020-09",
+      "platform": "android",
+      "version": "11 (API 30)",
+      "change": "InstallSourceInfo with initiating package"
+    }
+  ],
+  "refs": [
+    {
+      "t": "android",
+      "label": "Android: PackageManager",
+      "url": "https://developer.android.com/reference/android/content/pm/PackageManager"
+    },
+    {
+      "t": "apple",
+      "label": "Apple: UIDevice",
+      "url": "https://developer.apple.com/documentation/uikit/uidevice"
+    }
+  ],
+  "confidence": "docs"
+}

@@ -1,0 +1,187 @@
+{
+  "id": "mob.hw.torch",
+  "name": "Flashlight (torch)",
+  "kind": "action",
+  "group": "peripherals-hardware",
+  "subgroup": "Actuators",
+  "tags": [
+    "flashlight",
+    "torch",
+    "led"
+  ],
+  "plain": "Turns the camera LED on as a flashlight.",
+  "meaning": "No personal data is read. Neither platform asks for permission, so any app can switch the light on while in the foreground.",
+  "lifecycle": [
+    "in-session"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "y",
+      "v": "6.0",
+      "api": 23,
+      "permission": "None (CAMERA is not needed for setTorchMode)",
+      "protection": "none",
+      "grant": "none",
+      "prompt_ui": "None",
+      "persistence": "Torch turns off when the app leaves the foreground or another app takes the camera",
+      "revocation": "Quick settings tile",
+      "store_policy": "",
+      "api_surface": "CameraManager.setTorchMode, TorchStrengthLevel (Android 13)",
+      "note": "Android 13 adds brightness levels."
+    },
+    "ios": {
+      "s": "y",
+      "v": "4.0",
+      "permission": "",
+      "protection": "none",
+      "grant": "none",
+      "prompt_ui": "None; torch control does not trigger the camera prompt",
+      "persistence": "n/a",
+      "revocation": "Control Center",
+      "store_policy": "",
+      "api_surface": "AVCaptureDevice.torchMode, setTorchModeOn(level:)",
+      "note": "Needs lockForConfiguration; the torch turns off when the capture session ends or the app backgrounds."
+    }
+  },
+  "web_equivalents": [
+    "web.camera.camera"
+  ],
+  "data": {
+    "type": "boolean",
+    "metric": "Torch state",
+    "update": "on call",
+    "fields": [
+      {
+        "name": "level",
+        "type": "integer",
+        "unit": "step",
+        "range": "1 to maxLevel",
+        "precision": "device dependent"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can turn the flashlight on while the app is open, with no permission",
+    "user_action": "You tap the flashlight button",
+    "can": [
+      "Switch the camera light on and off",
+      "Set the brightness level (Android 13 and later, iPhone)",
+      "Do it with no prompt"
+    ],
+    "cannot": [
+      "See any of your personal data",
+      "Keep the light on after the app goes to the background on iPhone",
+      "Take photos or video, which needs the camera prompt"
+    ],
+    "reach": 1,
+    "reach_label": "While the app is open",
+    "differs": ""
+  },
+  "story": {
+    "what_it_is": "Turns the camera light on so the phone works as a flashlight.",
+    "icon": "flashlight",
+    "tags": [
+      "Flashlight",
+      "No prompt",
+      "Camera"
+    ],
+    "marketing": [],
+    "for_you": "You swipe the control centre or tap a button and the light comes on. There is no pop up, since the light reads nothing about you. The light can also come on when an app scans a code in the dark.",
+    "for_makers": "Apps use the light to help the camera work in low light, for scanners and for signals. It is also a classic pitch for tiny utility apps. It needs no permission, so it has been used as a cover for apps that ask for much more.",
+    "use_cases": [
+      {
+        "type": "utilities",
+        "example": "A flashlight app turns on the LED with one tap.",
+        "apps": []
+      },
+      {
+        "type": "payments",
+        "example": "A barcode scanner flips on the torch in a dark shop so a code can be read.",
+        "apps": [
+          "Google Lens"
+        ]
+      },
+      {
+        "type": "creative",
+        "example": "A video app lights a face while you record in a dark room.",
+        "apps": [
+          "TikTok"
+        ]
+      },
+      {
+        "type": "live",
+        "example": "A concert app turns the phone into a light show that blinks with the music.",
+        "apps": []
+      },
+      {
+        "type": "security",
+        "example": "A safety app flashes the torch to signal for help.",
+        "apps": []
+      },
+      {
+        "type": "accessibility",
+        "example": "A deaf user gets a flash alert when the phone rings.",
+        "apps": []
+      },
+      {
+        "type": "games",
+        "example": "A treasure hunt game asks you to shine the light on a clue.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Cover for shady apps",
+      "Battery drain",
+      "None for data"
+    ],
+    "android_note": "Android 13 adds brightness levels for the torch.",
+    "ios_note": "The torch turns off when the app moves to the background or the camera stops."
+  },
+  "technical_bounds": [
+    "Camera light indicator rules do not cover the torch"
+  ],
+  "scores": {
+    "sensitivity": 1,
+    "utility": 2,
+    "fingerprint_bits": 0,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Scanner lighting",
+      "Flashlight apps"
+    ],
+    "abuse": [
+      "Flashlight apps over-collecting permissions"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2015-10",
+      "platform": "android",
+      "version": "6.0 (API 23)",
+      "change": "setTorchMode with no camera permission"
+    },
+    {
+      "date": "2022-08",
+      "platform": "android",
+      "version": "13 (API 33)",
+      "change": "Torch strength control"
+    }
+  ],
+  "refs": [
+    {
+      "t": "android",
+      "label": "Android: CameraManager.setTorchMode",
+      "url": "https://developer.android.com/reference/android/hardware/camera2/CameraManager#setTorchMode(java.lang.String,%20boolean)"
+    }
+  ],
+  "confidence": "docs"
+}

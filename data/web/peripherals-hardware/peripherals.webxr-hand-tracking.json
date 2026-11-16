@@ -1,0 +1,241 @@
+{
+  "id": "web.peripherals.webxr-hand-tracking",
+  "name": "WebXR hand tracking",
+  "kind": "permission",
+  "group": "peripherals-hardware",
+  "subgroup": "XR",
+  "tags": [
+    "webxr",
+    "hand-tracking",
+    "skeleton"
+  ],
+  "plain": "Reads the position of each finger joint in a headset session.",
+  "meaning": "Gives 25 joints per hand every frame, enough to read gestures and sometimes identify a person by hand shape and motion.",
+  "lifecycle": [
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "requestSession({optionalFeatures:['hand-tracking']}), inputSource.hand, frame.getJointPose(joint, refSpace)",
+      "permission_name": "xr-spatial-tracking",
+      "permissions_policy": "xr-spatial-tracking",
+      "bcd": [
+        "api.XRHand",
+        "api.XRJointSpace",
+        "api.XRJointPose"
+      ],
+      "access": {
+        "grant": "prompt",
+        "prompt_ui": "Same XR permission, plus a hand tracking consent in some browsers",
+        "secure_context": true,
+        "user_gesture": true,
+        "persistence": "Per session",
+        "revocation": "End session",
+        "iframe": "Needs allow=\"xr-spatial-tracking\"",
+        "steps": [
+          "Request feature hand-tracking",
+          "Read inputSource.hand",
+          "getJointPose for each joint"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "131",
+          "note": "Updated implementation in 131",
+          "date": "2024-11-12"
+        },
+        "edge": {
+          "s": "r",
+          "v": "111",
+          "note": "Earlier implementation removed in 111",
+          "date": "2023-03-13"
+        },
+        "firefox": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "safari": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "ios_safari": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "131",
+          "note": "",
+          "date": "2024-11-12"
+        },
+        "samsung": {
+          "s": "y",
+          "v": "29.0",
+          "note": "",
+          "date": "2025-10-25"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "stream",
+    "metric": "25 joint poses per hand",
+    "update": "per XR frame (about 72 to 90 Hz)",
+    "fields": [
+      {
+        "name": "joint transform",
+        "type": "object",
+        "unit": "meters",
+        "range": "local space",
+        "precision": "about 1 cm"
+      },
+      {
+        "name": "joint radius",
+        "type": "float",
+        "unit": "meters",
+        "range": "0.005 to 0.03 typical"
+      },
+      {
+        "name": "jointNames",
+        "type": "enum",
+        "range": "wrist, thumb-metacarpal ... pinky-finger-tip (25)"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can see where each of your fingers is inside a headset session",
+    "user_action": "You tap Enter VR on a site in a headset and allow tracking.",
+    "can": [
+      "Track your finger joints during a VR session",
+      "Let you point, pinch and grab with your hands",
+      "Work only while the session is running"
+    ],
+    "cannot": [
+      "Track your hands when the session is closed",
+      "Work without your allowing VR access",
+      "Work in Firefox, Safari or on iPhone",
+      "See your hands outside the headset"
+    ],
+    "reach": 2,
+    "reach_label": "While the VR session runs",
+    "differs": "Chrome supports it on headsets. Edge only partly. Firefox and Safari do not."
+  },
+  "story": {
+    "what_it_is": "In a headset, a page can see where each of your fingers is.",
+    "icon": "hand",
+    "tags": [
+      "VR",
+      "Hands",
+      "Asks first"
+    ],
+    "marketing": [
+      {
+        "vendor": "W3C",
+        "name": "WebXR Hand Input",
+        "pitch": "The W3C spec says it gives pages the position of each hand joint in a headset session.",
+        "url": "https://immersive-web.github.io/webxr-hand-input/"
+      }
+    ],
+    "for_you": "You wear a headset and use your bare hands in the page, pinching and pointing, with no controller.",
+    "for_makers": "Makers get natural hand controls for VR and AR. It also gives them very detailed hand data that could in theory be used to tell people apart.",
+    "use_cases": [
+      {
+        "type": "games",
+        "example": "A browser VR game lets you pick up and throw objects with your hands.",
+        "apps": []
+      },
+      {
+        "type": "education",
+        "example": "A web training tool teaches surgeons or mechanics using hand motion.",
+        "apps": []
+      },
+      {
+        "type": "creative",
+        "example": "A web 3D sculpting tool shapes clay with your fingers.",
+        "apps": []
+      },
+      {
+        "type": "accessibility",
+        "example": "A web sign language tool reads hand shapes.",
+        "apps": []
+      },
+      {
+        "type": "enterprise",
+        "example": "A web design review in VR lets you move parts with your hands.",
+        "apps": []
+      },
+      {
+        "type": "security",
+        "example": "Hand motion data might identify a person like a fingerprint.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Hand biometrics",
+      "Detailed body data"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Only while an immersive session is active",
+    "Needs hardware support (Quest, Vision Pro, some Android XR devices)",
+    "No raw camera access"
+  ],
+  "scores": {
+    "sensitivity": 4,
+    "utility": 3,
+    "fingerprint_bits": null,
+    "friction": 2
+  },
+  "value": {
+    "legit_uses": [
+      "Controller free UI",
+      "Sign language apps"
+    ],
+    "abuse": [
+      "Hand biometrics"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2022-01",
+      "browser": "chrome",
+      "version": "111",
+      "change": "Earlier hand tracking removed in Edge 111 (ahead of rewrite)"
+    },
+    {
+      "date": "2024-12",
+      "browser": "chrome",
+      "version": "131",
+      "change": "Chrome ships updated hand tracking"
+    }
+  ],
+  "related": [
+    "web.peripherals.webxr-immersive"
+  ],
+  "refs": [
+    {
+      "t": "spec",
+      "label": "WebXR Hand Input",
+      "url": "https://www.w3.org/TR/webxr-hand-input-1/"
+    },
+    {
+      "t": "mdn",
+      "label": "MDN XRHand",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/XRHand"
+    }
+  ],
+  "confidence": "verified"
+}

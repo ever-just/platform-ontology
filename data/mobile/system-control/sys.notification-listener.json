@@ -1,0 +1,197 @@
+{
+  "id": "mob.sys.notification-listener",
+  "name": "Read other apps' notifications",
+  "kind": "capability",
+  "group": "system-control",
+  "subgroup": "Screen control",
+  "tags": [
+    "notification-listener",
+    "ancs",
+    "notifications"
+  ],
+  "plain": "Reads what other apps show in the notification shade.",
+  "meaning": "Notification text can contain codes, messages and private data. Android needs a special setting; iOS exposes this only to paired accessories, with EU forwarding added in 26.3.",
+  "lifecycle": [
+    "background"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "y",
+      "v": "4.3",
+      "api": 18,
+      "permission": "BIND_NOTIFICATION_LISTENER_SERVICE (special)",
+      "protection": "special",
+      "grant": "settings",
+      "prompt_ui": "Settings > Notifications > Device and app notifications",
+      "persistence": "Until disabled",
+      "revocation": "Settings",
+      "store_policy": "Play: user data policy; restricted setting for sideloaded apps",
+      "api_surface": "NotificationListenerService",
+      "note": "Android 13 restricted settings applies to sideloaded listener apps."
+    },
+    "ios": {
+      "s": "p",
+      "v": "26.3",
+      "permission": "ANCS for accessories; third party smartwatch notification forwarding (EU)",
+      "protection": "entitlement",
+      "grant": "settings",
+      "prompt_ui": "Settings > Notifications > Notification Forwarding (EU)",
+      "persistence": "Until disabled",
+      "revocation": "Settings",
+      "store_policy": "EU only; limited to approved third party accessories",
+      "api_surface": "ANCS (BLE accessories), EU notification forwarding in iOS 26.3",
+      "note": "Apps on the same phone cannot read other apps' notifications."
+    }
+  },
+  "data": {
+    "type": "stream",
+    "metric": "Notification",
+    "update": "per event",
+    "fields": [
+      {
+        "name": "text",
+        "type": "string",
+        "unit": "title and body",
+        "range": "any app",
+        "precision": "exact"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can see other apps' notifications only on Android after you allow it in Settings",
+    "user_action": "You open Settings, then Notifications, and switch the app on under Device and app notifications",
+    "can": [
+      "See the text of notifications from other apps, like codes and messages",
+      "Pick up what appears in the notification shade"
+    ],
+    "cannot": [
+      "Turn itself on; you must switch it on",
+      "Be enabled in a sideloaded app on Android 13 and later until you allow restricted settings",
+      "See other apps' notifications on iPhone",
+      "Forward notifications on iPhone except to paired accessories, or EU watches with iOS 26.3"
+    ],
+    "reach": 4,
+    "reach_label": "Every notification, once on",
+    "differs": "Android lets an enabled listener see notifications; iPhone offers only paired accessories and EU forwarding."
+  },
+  "story": {
+    "what_it_is": "Lets an app read what other apps show in your notification shade.",
+    "icon": "bell",
+    "tags": [
+      "Notifications",
+      "Android",
+      "Powerful"
+    ],
+    "marketing": [],
+    "for_you": "A special setting asks to give an app notification access. If you agree, it can read every notification, including bank codes and private chats. A smartwatch uses it to mirror alerts on your wrist.",
+    "for_makers": "Smartwatch makers, car displays and automation apps need to see alerts. Notification text can hold codes and messages, so a bad app can steal them. That is why Android hides this behind a special switch.",
+    "use_cases": [
+      {
+        "type": "wearables",
+        "example": "A smartwatch app mirrors your phone alerts to your wrist.",
+        "apps": [
+          "Garmin Connect",
+          "Samsung Galaxy Wearable"
+        ]
+      },
+      {
+        "type": "automotive",
+        "example": "A car display app reads your messages aloud while you drive.",
+        "apps": [
+          "Android Auto"
+        ]
+      },
+      {
+        "type": "productivity",
+        "example": "An automation app turns a delivery alert into a reminder.",
+        "apps": [
+          "Tasker"
+        ]
+      },
+      {
+        "type": "security",
+        "example": "A bank code stealing app reads a one time code from a text alert.",
+        "apps": []
+      },
+      {
+        "type": "accessibility",
+        "example": "A hearing assist app flashes a light when an alert arrives.",
+        "apps": []
+      },
+      {
+        "type": "analytics",
+        "example": "A time tracking app counts the notifications from each app.",
+        "apps": [
+          "Digital Wellbeing"
+        ]
+      },
+      {
+        "type": "smart-home",
+        "example": "A home hub says your door bell alert out loud.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Reads private message text",
+      "Steals one time codes",
+      "Silent access"
+    ],
+    "android_note": "Android 13 restricted settings also block sideloaded notification listener apps.",
+    "ios_note": "iPhone does not allow apps to read other apps' notifications."
+  },
+  "technical_bounds": [
+    "iOS limits to accessories and EU"
+  ],
+  "scores": {
+    "sensitivity": 5,
+    "utility": 4,
+    "fingerprint_bits": 2,
+    "friction": 3
+  },
+  "value": {
+    "legit_uses": [
+      "Smartwatch mirroring"
+    ],
+    "abuse": [
+      "OTP theft"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2013-07",
+      "platform": "android",
+      "version": "4.3",
+      "change": "Notification listener"
+    },
+    {
+      "date": "2026-02",
+      "platform": "ios",
+      "version": "iOS 26.3",
+      "change": "EU third party accessory notification forwarding"
+    }
+  ],
+  "related": [
+    "mob.sys.restricted-settings",
+    "mob.hw.ble-central"
+  ],
+  "refs": [
+    {
+      "t": "android",
+      "label": "Android: NotificationListenerService",
+      "url": "https://developer.android.com/reference/android/service/notification/NotificationListenerService"
+    },
+    {
+      "t": "apple",
+      "label": "Apple: Notification Center Service (ANCS)",
+      "url": "https://developer.apple.com/library/archive/documentation/CoreBluetooth/Reference/AppleNotificationCenterServiceSpecification/Introduction/Introduction.html"
+    }
+  ],
+  "confidence": "inferred"
+}

@@ -1,0 +1,281 @@
+{
+  "id": "web.device.hardware-concurrency",
+  "name": "CPU logical core count",
+  "kind": "signal",
+  "group": "device-system-profile",
+  "subgroup": "Hardware",
+  "tags": [
+    "navigator",
+    "cpu",
+    "clamped-safari",
+    "firefox-fpp"
+  ],
+  "plain": "Number of logical processors the browser may use.",
+  "meaning": "Splits users into low, mid and high end hardware (2, 4, 8, 12, 16 or more threads). Sites use it to size worker pools; trackers use it as a stable hardware trait.",
+  "lifecycle": [
+    "on-arrival",
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "navigator.hardwareConcurrency",
+      "bcd": [
+        "api.Navigator.hardwareConcurrency"
+      ],
+      "access": {
+        "grant": "none",
+        "prompt_ui": "None",
+        "secure_context": false,
+        "user_gesture": false,
+        "persistence": "read fresh on every page load; nothing stored",
+        "revocation": "none needed (no grant)",
+        "iframe": "Readable from cross-origin iframes too (same values)",
+        "steps": [
+          "Page script reads the value",
+          "No prompt is shown"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "37",
+          "note": "",
+          "date": "2014-08-26"
+        },
+        "edge": {
+          "s": "y",
+          "v": "15",
+          "note": "",
+          "date": "2017-04-05"
+        },
+        "firefox": {
+          "s": "y",
+          "v": "48",
+          "note": "",
+          "date": "2016-08-02"
+        },
+        "safari": {
+          "s": "y",
+          "v": "15.4",
+          "note": "",
+          "date": "2022-03-14"
+        },
+        "ios_safari": {
+          "s": "y",
+          "v": "15.4",
+          "note": "",
+          "date": "2022-03-14"
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "37",
+          "note": "",
+          "date": "2014-09-03"
+        },
+        "samsung": {
+          "s": "y",
+          "v": "3.0",
+          "note": "",
+          "date": "2015-04-10"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "object",
+    "metric": "",
+    "update": "static per session",
+    "fields": [
+      {
+        "name": "hardwareConcurrency",
+        "type": "integer",
+        "unit": "threads",
+        "range": "1 to 256, typical 2, 4, 8, 12, 16",
+        "precision": "exact on Chrome and Edge; clamped or bucketed elsewhere"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can see how many processor threads your device has",
+    "user_action": "Nothing. It happens when the page loads",
+    "can": [
+      "Count your logical processor threads, such as 4, 8, or 16",
+      "Size how much work the page runs at once",
+      "Sort you into a low, mid, or high end device",
+      "Use the number as a steady hardware clue"
+    ],
+    "cannot": [
+      "See your chip make or speed",
+      "See how busy the processor is right now",
+      "See your RAM size",
+      "Be exact in every browser; some round it"
+    ],
+    "reach": 2,
+    "reach_label": "A thread count, on page load",
+    "differs": ""
+  },
+  "story": {
+    "what_it_is": "Tells a page how many processor threads your device can use.",
+    "icon": "cpu",
+    "tags": [
+      "Processor",
+      "Silent",
+      "Performance"
+    ],
+    "marketing": [
+      {
+        "vendor": "MDN",
+        "name": "Navigator.hardwareConcurrency",
+        "pitch": "Docs explain it as a hint for how many parallel workers a page can sensibly start.",
+        "url": "https://developer.mozilla.org/en-US/docs/Web/API/Navigator/hardwareConcurrency"
+      }
+    ],
+    "for_you": "You never see it. It quietly decides how many tasks a site runs side by side. A strong laptop gets more, a budget phone fewer, which can mean faster and smoother pages.",
+    "for_makers": "Apps need to know how many background workers to start without freezing the machine. The count also splits people into low, mid and high end groups. It is a stable number, so trackers like it.",
+    "use_cases": [
+      {
+        "type": "creative",
+        "example": "A browser video editor starts as many export workers as you have processor threads.",
+        "apps": [
+          "Clipchamp"
+        ]
+      },
+      {
+        "type": "games",
+        "example": "A browser game with many AI characters picks how many to simulate based on your thread count.",
+        "apps": []
+      },
+      {
+        "type": "productivity",
+        "example": "A large spreadsheet app in the browser spreads calculations across workers.",
+        "apps": [
+          "Google Sheets"
+        ]
+      },
+      {
+        "type": "video",
+        "example": "A video call app decides how many video streams to decode at once.",
+        "apps": [
+          "Google Meet"
+        ]
+      },
+      {
+        "type": "developer",
+        "example": "A code editor in the browser sizes its background search pool to your hardware.",
+        "apps": [
+          "VS Code for the Web"
+        ]
+      },
+      {
+        "type": "security",
+        "example": "A fraud tool notes that a supposed phone reports 64 threads and flags a server.",
+        "apps": []
+      },
+      {
+        "type": "ads",
+        "example": "An ad network treats a device with 16 threads as a higher spending hardware tier.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Stable hardware trait",
+      "Hints at how wealthy a device is"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Cannot name the CPU model",
+    "Value is logical threads, not physical cores",
+    "Safari and Firefox protections vary by mode and script"
+  ],
+  "scores": {
+    "sensitivity": 1,
+    "utility": 4,
+    "fingerprint_bits": 2.5,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Size WebAssembly or worker pools",
+      "Heavy web app tuning"
+    ],
+    "abuse": [
+      "Hardware fingerprint component"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": true,
+      "how": "Collector key(s): hardwareConcurrency. BleepingComputer confirms CPU cores are collected."
+    }
+  },
+  "history": [
+    {
+      "date": "2016-03",
+      "browser": "safari",
+      "version": "10.1",
+      "change": "Shipped; WebKit reports a clamped count (commonly capped at a small maximum)"
+    },
+    {
+      "date": "2023-11",
+      "browser": "firefox",
+      "version": "120",
+      "change": "Spoofed to 2 when resistFingerprinting is on"
+    },
+    {
+      "date": "2025-09",
+      "browser": "safari",
+      "version": "26",
+      "change": "Advanced Fingerprinting Protection stops known fingerprinting scripts reading it reliably"
+    },
+    {
+      "date": "2025-11",
+      "browser": "firefox",
+      "version": "145",
+      "change": "Fingerprinting protection reports 4 or 8 in Private Browsing and ETP Strict"
+    }
+  ],
+  "related": [
+    "web.device.device-memory"
+  ],
+  "refs": [
+    {
+      "t": "mozilla",
+      "label": "Mozilla Security Blog 2026-11-10: harder to fingerprint",
+      "url": "https://blog.mozilla.org/security/2026/11/10/open-research-stronger-privacy-making-firefox-users-harder-to-fingerprint/"
+    },
+    {
+      "t": "webkit",
+      "label": "WebKit features in Safari 26.0 (fingerprinting protection)",
+      "url": "https://webkit.org/blog/17333/webkit-features-in-safari-26-0/"
+    },
+    {
+      "t": "mdn",
+      "label": "MDN hardwareConcurrency",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/Navigator/hardwareConcurrency"
+    },
+    {
+      "t": "github",
+      "label": "fingerprintjs source: hardware_concurrency",
+      "url": "https://github.com/fingerprintjs/fingerprintjs/blob/master/src/sources/hardware_concurrency.ts"
+    },
+    {
+      "t": "paper",
+      "label": "AmIUnique: Beauty and the Beast, Laperdrix et al. 2016 (attribute entropy)",
+      "url": "https://hal.inria.fr/hal-01285470"
+    },
+    {
+      "t": "news",
+      "label": "BleepingComputer: LinkedIn scans for 6,000+ Chrome extensions",
+      "url": "https://www.bleepingcomputer.com/news/security/linkedin-secretely-scans-for-6-000-plus-chrome-extensions-collects-data/"
+    },
+    {
+      "t": "github",
+      "label": "mdp/linkedin-extension-fingerprinting (LinkedIn script snapshot and ID list)",
+      "url": "https://github.com/mdp/linkedin-extension-fingerprinting"
+    }
+  ],
+  "confidence": "docs"
+}

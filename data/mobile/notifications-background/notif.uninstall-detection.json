@@ -1,0 +1,202 @@
+{
+  "id": "mob.notif.uninstall-detection",
+  "name": "Uninstall detection through push failures",
+  "kind": "tracking",
+  "group": "notifications-background",
+  "subgroup": "After uninstall",
+  "tags": [
+    "after-uninstall",
+    "push",
+    "churn",
+    "tracking"
+  ],
+  "plain": "Servers learn an app was removed when the push provider reports the token as invalid.",
+  "meaning": "A company can tell, days later, which people deleted the app and then retarget them in ads or email. No on-device code runs after uninstall; the signal is the push service reply.",
+  "lifecycle": [
+    "after-uninstall"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "y",
+      "v": "1.0",
+      "permission": "",
+      "protection": "none",
+      "grant": "none",
+      "prompt_ui": "None",
+      "persistence": "Visible to the server days after removal; FCM returns UNREGISTERED or NOT_FOUND once a send fails",
+      "revocation": "Cannot be blocked",
+      "store_policy": "No Play rule forbids detecting churn; privacy policy must disclose",
+      "api_surface": "FCM HTTP v1 error codes",
+      "note": "Detection is not instant: the Play services connection must report the removal; typical delay hours to days"
+    },
+    "ios": {
+      "s": "y",
+      "v": "3.0",
+      "permission": "",
+      "protection": "none",
+      "grant": "none",
+      "prompt_ui": "None",
+      "persistence": "APNs returns 410 Unregistered with a timestamp once the token is invalid",
+      "revocation": "Cannot be blocked",
+      "store_policy": "App Review 5.1.2: must disclose tracking",
+      "api_surface": "APNs reason codes 410 Unregistered, 400 BadDeviceToken",
+      "note": "Apple says a 410 is returned after the app is removed; the old feedback service was retired (2021)"
+    }
+  },
+  "data": {
+    "type": "event",
+    "metric": "Token invalidation",
+    "update": "On next send",
+    "fields": [
+      {
+        "name": "fcm_error",
+        "type": "enum",
+        "unit": "",
+        "range": "UNREGISTERED, NOT_FOUND",
+        "precision": ""
+      },
+      {
+        "name": "apns_status",
+        "type": "integer",
+        "unit": "HTTP",
+        "range": "410, 400",
+        "precision": ""
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can find out the app was removed, but only after hours or days",
+    "user_action": "Nothing. The app's server learns it when a push fails",
+    "can": [
+      "Learn the app was removed when the push service says the token is invalid",
+      "Stop sending messages to that device",
+      "Mark you as inactive in its records"
+    ],
+    "cannot": [
+      "Know right away; Android can take hours to days",
+      "Get a direct feedback service from Apple, which was retired in 2021",
+      "Learn anything about the phone after you remove it"
+    ],
+    "reach": 1,
+    "reach_label": "A late hint that you removed it",
+    "differs": "On iPhone, Apple returns a 410 error after removal. On Android, the delay depends on Google Play services."
+  },
+  "story": {
+    "what_it_is": "Companies can tell later that you deleted their app because their push messages stop working.",
+    "icon": "trash-2",
+    "tags": [
+      "Tracking",
+      "Silent",
+      "Ads"
+    ],
+    "marketing": [],
+    "for_you": "You never notice. After you delete an app, the company may learn a day or more later that you left. You may then get email or ads trying to win you back.",
+    "for_makers": "Makers use it to measure churn and run win back campaigns. It is quiet, cheap and works because the push service tells the server the address is dead.",
+    "use_cases": [
+      {
+        "type": "analytics",
+        "example": "A product team charts how many people deleted the app after each update.",
+        "apps": []
+      },
+      {
+        "type": "ads",
+        "example": "A marketer sends a win back ad to someone who just uninstalled a shopping app.",
+        "apps": []
+      },
+      {
+        "type": "games",
+        "example": "A game studio spots players who quit after level 5 and sends a come back offer by email.",
+        "apps": []
+      },
+      {
+        "type": "shopping",
+        "example": "A store sees an uninstall and moves you to an email only plan.",
+        "apps": [
+          "Amazon"
+        ]
+      },
+      {
+        "type": "media",
+        "example": "A streaming service learns viewers left and tries a free month offer.",
+        "apps": []
+      },
+      {
+        "type": "security",
+        "example": "A bank sees that a registered phone no longer has the app and may flag the device as gone.",
+        "apps": []
+      },
+      {
+        "type": "developer",
+        "example": "Measurement tools like Firebase and AppsFlyer report uninstall counts to teams.",
+        "apps": [
+          "Firebase",
+          "AppsFlyer"
+        ]
+      }
+    ],
+    "risks": [
+      "Retargeting after you leave",
+      "Hard to notice or stop"
+    ],
+    "android_note": "Detection can lag hours to days because it relies on Play services.",
+    "ios_note": "Apple returns an error code once the app is removed. The old feedback service was retired in 2021."
+  },
+  "technical_bounds": [
+    "Only a server inference; no device event",
+    "Can be a false positive if the token rotated"
+  ],
+  "scores": {
+    "sensitivity": 3,
+    "utility": 4,
+    "fingerprint_bits": null,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Churn analytics",
+      "Win back"
+    ],
+    "abuse": [
+      "Retargeting people who deleted the app"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2021-03",
+      "platform": "ios",
+      "version": "APNs",
+      "change": "Binary Feedback Service retired; 410 responses are the signal"
+    },
+    {
+      "date": "2024-07",
+      "platform": "android",
+      "version": "FCM",
+      "change": "Legacy API errors replaced by HTTP v1 error codes"
+    }
+  ],
+  "related": [
+    "mob.notif.push-token-registration",
+    "mob.notif.apns-silent-push",
+    "mob.os.uninstall-data-deletion"
+  ],
+  "refs": [
+    {
+      "t": "vendor",
+      "label": "FCM: HTTP v1 error codes",
+      "url": "https://firebase.google.com/docs/reference/fcm/rest/v1/ErrorCode"
+    },
+    {
+      "t": "apple",
+      "label": "Apple: Handling notification responses from APNs",
+      "url": "https://developer.apple.com/documentation/usernotifications/handling-notification-responses-from-apns"
+    }
+  ],
+  "confidence": "docs"
+}

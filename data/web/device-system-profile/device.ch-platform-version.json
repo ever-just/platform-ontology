@@ -1,0 +1,222 @@
+{
+  "id": "web.device.ch-platform-version",
+  "name": "Client Hint: platform version",
+  "kind": "signal",
+  "group": "device-system-profile",
+  "subgroup": "Client Hints",
+  "tags": [
+    "ua-ch",
+    "os-version",
+    "windows-11-detection"
+  ],
+  "plain": "Exact operating system version, via a high-entropy Client Hint.",
+  "meaning": "Only way left on Chromium to tell Windows 10 from 11 (major 13 or higher means 11) or macOS 14 from 15. Lets sites ship OS-specific features or target upgrade prompts.",
+  "lifecycle": [
+    "on-arrival",
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "getHighEntropyValues(['platformVersion']); Sec-CH-UA-Platform-Version",
+      "bcd": [
+        "api.NavigatorUAData.getHighEntropyValues"
+      ],
+      "access": {
+        "grant": "none",
+        "prompt_ui": "None",
+        "secure_context": true,
+        "user_gesture": false,
+        "persistence": "read fresh on every page load; nothing stored",
+        "revocation": "none needed (no grant)",
+        "iframe": "Readable from cross-origin iframes too (same values)",
+        "steps": [
+          "Page script reads the value",
+          "No prompt is shown"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "90",
+          "note": "",
+          "date": "2021-04-13"
+        },
+        "edge": {
+          "s": "y",
+          "v": "90",
+          "note": "",
+          "date": "2021-04-15"
+        },
+        "firefox": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "safari": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "ios_safari": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "90",
+          "note": "",
+          "date": "2021-04-13"
+        },
+        "samsung": {
+          "s": "y",
+          "v": "23.0",
+          "note": "",
+          "date": "2023-10-18"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "object",
+    "metric": "",
+    "update": "static per session",
+    "fields": [
+      {
+        "name": "platformVersion",
+        "type": "string",
+        "unit": "major.minor.patch",
+        "range": "Windows 0.x to 10.0.0 (Win10), 13.0.0 and up (Win11); macOS 10 to 26; Android 8 to 16",
+        "precision": "3 numbers"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can tell your exact Windows or macOS version when it asks",
+    "user_action": "Nothing. The site asks and Chromium answers without a prompt",
+    "can": [
+      "Tell Windows 10 from Windows 11 (major 13 or higher means 11)",
+      "See your macOS or Android version",
+      "Turn on OS specific features or upgrade prompts",
+      "Use the version as a tracking clue"
+    ],
+    "cannot": [
+      "Work in Firefox, Safari, or on iPhone",
+      "See your patch level or install date",
+      "Get an answer until the site asks for it",
+      "See other apps on your system"
+    ],
+    "reach": 2,
+    "reach_label": "OS version, only when asked",
+    "differs": "Only Chromium browsers share it. Firefox and Safari do not."
+  },
+  "story": {
+    "what_it_is": "Tells a site your exact operating system version, such as Windows 11 or macOS 15.",
+    "icon": "layers",
+    "tags": [
+      "Operating system",
+      "Silent",
+      "Chrome"
+    ],
+    "marketing": [
+      {
+        "vendor": "Google",
+        "name": "User-Agent Client Hints",
+        "pitch": "Chrome's modern way for sites to ask for the exact platform version.",
+        "url": "https://developer.chrome.com/docs/privacy-sandbox/user-agent/"
+      }
+    ],
+    "for_you": "You never see it asked. It mainly helps a site avoid giving you features your system cannot run, or nudge you to update when you are far behind.",
+    "for_makers": "On Chrome it is the only way left to tell Windows 10 from Windows 11. Makers use it to ship OS-specific features and to target upgrade messages. Security teams use it to spot old, risky systems.",
+    "use_cases": [
+      {
+        "type": "developer",
+        "example": "A web app uses the exact OS version to turn on Windows 11 window effects only where they work.",
+        "apps": []
+      },
+      {
+        "type": "games",
+        "example": "A browser game loads its WebGPU path only on OS versions that have a stable driver.",
+        "apps": []
+      },
+      {
+        "type": "media",
+        "example": "A streaming site picks the right DRM protection level for the operating system.",
+        "apps": [
+          "Netflix",
+          "Disney+"
+        ]
+      },
+      {
+        "type": "enterprise",
+        "example": "An IT dashboard in the browser highlights staff laptops still on an old OS version.",
+        "apps": []
+      },
+      {
+        "type": "security",
+        "example": "A bank shows a gentle update warning for visitors running an unsupported OS.",
+        "apps": []
+      },
+      {
+        "type": "ads",
+        "example": "A software vendor targets users still on Windows 10 with a new PC promotion.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Reveals out-of-date systems",
+      "Narrows down who you are"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Chromium only",
+    "macOS UA still says 10_15_7 so hint is the only truth"
+  ],
+  "scores": {
+    "sensitivity": 1,
+    "utility": 3,
+    "fingerprint_bits": 3.0,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Windows 11 feature gates"
+    ],
+    "abuse": [
+      "Version targeting for known OS exploits"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2022-10",
+      "browser": "chrome",
+      "version": "107",
+      "change": "UA string stopped carrying OS minor version; hint becomes sole source"
+    }
+  ],
+  "related": [
+    "web.device.ua-client-hints-high"
+  ],
+  "refs": [
+    {
+      "t": "chromestatus",
+      "label": "Chrome developers: UA CH",
+      "url": "https://developer.chrome.com/docs/privacy-security/user-agent-client-hints"
+    },
+    {
+      "t": "mdn",
+      "label": "MDN Sec-CH-UA-Platform-Version",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/Sec-CH-UA-Platform-Version"
+    }
+  ],
+  "confidence": "docs"
+}

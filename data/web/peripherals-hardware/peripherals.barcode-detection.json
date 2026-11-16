@@ -1,0 +1,238 @@
+{
+  "id": "web.peripherals.barcode-detection",
+  "name": "Shape Detection: BarcodeDetector",
+  "kind": "capability",
+  "group": "peripherals-hardware",
+  "subgroup": "Shape detection",
+  "tags": [
+    "shape detection"
+  ],
+  "plain": "Finds and reads barcodes and QR codes in an image or camera frame.",
+  "meaning": "Turns pixels into decoded strings (product codes, URLs, tickets). Runs on-device with no prompt, once the page has the image.",
+  "lifecycle": [
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "new BarcodeDetector({formats}).detect(imageBitmap)",
+      "bcd": [
+        "api.BarcodeDetector"
+      ],
+      "access": {
+        "grant": "none",
+        "prompt_ui": "None for the API; camera needs getUserMedia prompt",
+        "secure_context": true,
+        "user_gesture": false,
+        "persistence": "Per origin",
+        "revocation": "Site settings",
+        "iframe": "Same as top level; cross-origin iframes need a permissions policy where listed",
+        "steps": [
+          "Call the API",
+          "Browser applies its access rules",
+          "Page receives the result"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "88",
+          "note": "Android 83; desktop 88",
+          "date": "2021-01-19"
+        },
+        "edge": {
+          "s": "p",
+          "v": "83",
+          "note": "Supported on macOS only. Before Chrome 113, on macOS Ventura (13) and above, this interface silently failed. See <a href=\"https://crbug.com/40245611\">bug 402456",
+          "date": "2020-05-21"
+        },
+        "firefox": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "safari": {
+          "s": "f",
+          "v": "17",
+          "note": "Behind flag"
+        },
+        "ios_safari": {
+          "s": "f",
+          "v": "17",
+          "note": "Behind flag"
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "83",
+          "note": "",
+          "date": "2020-05-19"
+        },
+        "samsung": {
+          "s": "y",
+          "v": "13.0",
+          "note": "",
+          "date": "2020-12-02"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "object",
+    "metric": "Finds and reads barcodes and QR codes in an image or camera frame.",
+    "update": "on demand",
+    "fields": [
+      {
+        "name": "rawValue",
+        "type": "string",
+        "range": "decoded text"
+      },
+      {
+        "name": "format",
+        "type": "enum",
+        "range": "qr_code, ean_13, code_128, aztec, pdf417, data_matrix and more (about 14)"
+      },
+      {
+        "name": "boundingBox",
+        "type": "object",
+        "unit": "pixels",
+        "range": "image rect"
+      },
+      {
+        "name": "cornerPoints",
+        "type": "list",
+        "unit": "pixels",
+        "range": "4 points"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can find barcodes and QR codes in a picture or camera view",
+    "user_action": "You tap Scan QR code and allow your camera, or you pick a photo.",
+    "can": [
+      "Find a barcode or QR code in a photo",
+      "Scan live from your camera, once you allow it",
+      "Tell the page what the code says"
+    ],
+    "cannot": [
+      "Use your camera without its own camera permission",
+      "Scan in Firefox or in Safari without a special setting",
+      "Always find codes in a blurry or tilted image",
+      "See the rest of your camera roll"
+    ],
+    "reach": 2,
+    "reach_label": "Photos or camera while open",
+    "differs": "Chrome, Edge and Android Chrome support it, though not on every device. Safari and Firefox lack full support."
+  },
+  "story": {
+    "what_it_is": "A page can read barcodes and QR codes from a picture or the camera.",
+    "icon": "scan-barcode",
+    "tags": [
+      "Camera",
+      "QR codes",
+      "Shopping"
+    ],
+    "marketing": [
+      {
+        "vendor": "Google",
+        "name": "Shape Detection API",
+        "pitch": "Chrome's docs describe the API as a way to detect barcodes, faces and text in images.",
+        "url": "https://developer.chrome.com/docs/capabilities/shape-detection"
+      }
+    ],
+    "for_you": "You hold your camera to a QR code or barcode and the page reads it in a flash. The camera still asks permission first.",
+    "for_makers": "Makers can scan tickets, products and payments without a native app, using the camera you already approved. The reading runs on your device so images do not need to leave it.",
+    "use_cases": [
+      {
+        "type": "shopping",
+        "example": "A store site scans a barcode to look up a product in the aisle.",
+        "apps": []
+      },
+      {
+        "type": "live",
+        "example": "An event site scans tickets at the door with a phone.",
+        "apps": [
+          "Eventbrite"
+        ]
+      },
+      {
+        "type": "payments",
+        "example": "A payments site scans a QR code to pay.",
+        "apps": []
+      },
+      {
+        "type": "travel",
+        "example": "An airline site reads a boarding pass code.",
+        "apps": []
+      },
+      {
+        "type": "enterprise",
+        "example": "A warehouse web tool scans shelf labels and counts stock.",
+        "apps": []
+      },
+      {
+        "type": "security",
+        "example": "A phisher puts a fake QR code on a flyer that leads to a bad site.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Fake QR codes",
+      "Limited browser support"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Chrome only in practice",
+    "Format list varies by OS (Android, ChromeOS, macOS; Windows partial)",
+    "FaceDetector and TextDetector exist only behind flags"
+  ],
+  "scores": {
+    "sensitivity": 2,
+    "utility": 4,
+    "fingerprint_bits": null,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Ticket and product scanning",
+      "QR sign in"
+    ],
+    "abuse": [
+      "Reading codes from photos silently"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2019-02",
+      "browser": "chrome",
+      "version": "83",
+      "change": "Android first (desktop 88)"
+    },
+    {
+      "date": "2023-09",
+      "browser": "safari",
+      "version": "17",
+      "change": "Behind a flag in Safari"
+    }
+  ],
+  "refs": [
+    {
+      "t": "mdn",
+      "label": "MDN BarcodeDetector",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/BarcodeDetector"
+    },
+    {
+      "t": "spec",
+      "label": "Shape Detection",
+      "url": "https://wicg.github.io/shape-detection-api/"
+    }
+  ],
+  "confidence": "verified"
+}

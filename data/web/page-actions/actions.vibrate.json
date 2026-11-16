@@ -1,0 +1,230 @@
+{
+  "id": "web.actions.vibrate",
+  "name": "Vibrate the device",
+  "kind": "action",
+  "group": "page-actions",
+  "subgroup": "Device output",
+  "tags": [
+    "vibrate",
+    "haptics",
+    "android"
+  ],
+  "plain": "Triggers the phone's vibration motor in short pulses.",
+  "meaning": "A site can buzz the device for feedback or alerts. It is Android only, needs a tap first, and cannot run from hidden frames or background tabs.",
+  "lifecycle": [
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "navigator.vibrate(pattern)",
+      "bcd": [
+        "api.Navigator.vibrate"
+      ],
+      "access": {
+        "grant": "gesture",
+        "prompt_ui": "No prompt (needs a click, tap or keypress)",
+        "secure_context": false,
+        "user_gesture": true,
+        "activation": "sticky",
+        "persistence": "One-shot pattern; cancelled by vibrate(0) or tab hide",
+        "revocation": "Nothing to revoke (no permission is stored)",
+        "iframe": "Blocked in cross-origin iframes without prior activation in that frame (Firefox 72, Chrome 77)",
+        "steps": [
+          "Person taps in the page (sticky activation in the frame)",
+          "Page calls navigator.vibrate([200,100,200])",
+          "Device vibrates"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "32",
+          "note": "",
+          "date": "2014-01-14"
+        },
+        "edge": {
+          "s": "y",
+          "v": "79",
+          "note": "",
+          "date": "2020-01-15"
+        },
+        "firefox": {
+          "s": "r",
+          "v": "129",
+          "note": "Removed",
+          "date": "2024-08-06"
+        },
+        "safari": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "ios_safari": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "32",
+          "note": "",
+          "date": "2014-01-15"
+        },
+        "samsung": {
+          "s": "y",
+          "v": "2.0",
+          "note": "",
+          "date": "2014-10-17"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "none",
+    "metric": "",
+    "update": "",
+    "fields": []
+  },
+  "limits": {
+    "headline": "Can buzz the phone in short pulses, after you have tapped the page",
+    "user_action": "You tap a button, win a game, or touch the page before it buzzes.",
+    "can": [
+      "Buzz your Android phone in a pattern after a tap",
+      "Stop a buzz it started",
+      "Give touch feedback in games and timers"
+    ],
+    "cannot": [
+      "Buzz without any earlier tap on the page",
+      "Buzz on iPhone, because Safari does not offer it",
+      "Buzz in current Firefox, which no longer offers it"
+    ],
+    "reach": 1,
+    "reach_label": "Short buzz, after a tap",
+    "differs": "Android Chrome and Edge allow it. iPhone Safari does not."
+  },
+  "story": {
+    "what_it_is": "A site can make your phone buzz in short bursts after you tap.",
+    "icon": "vibrate",
+    "tags": [
+      "Phone buzz",
+      "Needs a click",
+      "Games"
+    ],
+    "marketing": [
+      {
+        "vendor": "Mozilla",
+        "name": "Vibration API",
+        "pitch": "MDN says the Vibration API lets a page buzz the phone for feedback.",
+        "url": "https://developer.mozilla.org/en-US/docs/Web/API/Vibration_API"
+      }
+    ],
+    "for_you": "You tap a button in a web game or app and feel a short buzz. Safari on iPhone does not allow it, so you only feel it on some phones.",
+    "for_makers": "Makers use it for touch feedback that makes a web app feel like a real app. It is cheap and needs no permission, only a recent tap.",
+    "use_cases": [
+      {
+        "type": "games",
+        "example": "A browser racing or shooter game buzzes when you crash or get hit.",
+        "apps": []
+      },
+      {
+        "type": "messaging",
+        "example": "A web chat app buzzes your phone for a new message when it is open.",
+        "apps": []
+      },
+      {
+        "type": "payments",
+        "example": "A checkout page buzzes once when the payment goes through.",
+        "apps": []
+      },
+      {
+        "type": "fitness",
+        "example": "A workout timer buzzes at the end of each set.",
+        "apps": []
+      },
+      {
+        "type": "accessibility",
+        "example": "A web app buzzes to confirm a tap for people who cannot see well.",
+        "apps": []
+      },
+      {
+        "type": "security",
+        "example": "An annoying ad may try to buzz the phone to get attention, which Chrome blocks without a tap.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Annoying buzzes",
+      "Battery use"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Needs sticky user activation in the frame (Chrome 60); no prompt",
+    "Pattern limited to 99 entries and 10 s per entry in Chrome (about); longer values truncated",
+    "Not available in Safari or any iOS browser; Firefox desktop removed it in 129",
+    "Stops when the tab is hidden or screen locks",
+    "Hardware intensity cannot be set; only on and off durations"
+  ],
+  "scores": {
+    "sensitivity": 1,
+    "utility": 2,
+    "fingerprint_bits": null,
+    "friction": 1
+  },
+  "value": {
+    "legit_uses": [
+      "Haptic confirmation",
+      "Game feedback"
+    ],
+    "abuse": [
+      "Annoyance and battery drain",
+      "Tactile alerts in scam pages"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2017-07",
+      "browser": "chrome",
+      "version": "60",
+      "change": "Requires user gesture"
+    },
+    {
+      "date": "2019-10",
+      "browser": "chrome",
+      "version": "77",
+      "change": "Cross-origin iframe vibrate needs activation in that frame"
+    },
+    {
+      "date": "2024-08",
+      "browser": "firefox",
+      "version": "129",
+      "change": "Vibration API removed from desktop Firefox"
+    }
+  ],
+  "refs": [
+    {
+      "t": "mdn",
+      "label": "MDN Vibration API",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/Vibration_API"
+    },
+    {
+      "t": "spec",
+      "label": "W3C Vibration API",
+      "url": "https://www.w3.org/TR/vibration/"
+    },
+    {
+      "t": "chromestatus",
+      "label": "Chrome vibrate requires user gesture",
+      "url": "https://chromestatus.com/feature/5644273861001216"
+    }
+  ],
+  "confidence": "docs"
+}

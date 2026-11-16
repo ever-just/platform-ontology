@@ -1,0 +1,211 @@
+{
+  "id": "mob.pay.tap-to-pay",
+  "name": "Tap to Pay (accept contactless payments on the phone)",
+  "kind": "capability",
+  "group": "payments-commerce",
+  "subgroup": "Acceptance",
+  "tags": [
+    "tap-to-pay",
+    "ProximityReader",
+    "softpos",
+    "mpoc"
+  ],
+  "plain": "Turns the phone into a card reader for merchants.",
+  "meaning": "Lets a business accept taps from cards and wallets with no extra hardware. Reader code is certified by card schemes.",
+  "lifecycle": [
+    "in-session"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "f",
+      "v": "8.0",
+      "api": 26,
+      "permission": "NFC; no OS reader API; PSP SDK (Stripe, Adyen, Square) with PCI MPoC attestation",
+      "protection": "normal",
+      "grant": "enterprise",
+      "prompt_ui": "None for users; device must pass SDK and attestation checks",
+      "persistence": "n/a",
+      "revocation": "Remove app",
+      "store_policy": "Play: payments policy; PCI MPoC",
+      "api_surface": "PSP SDK on NfcAdapter reader mode",
+      "note": "Android has no first party Tap to Pay API; availability set by the PSP."
+    },
+    "ios": {
+      "s": "f",
+      "v": "15.4",
+      "permission": "com.apple.developer.proximity-reader.payment.acceptance",
+      "protection": "entitlement",
+      "grant": "entitlement",
+      "prompt_ui": "Merchant UI with system tap sheet; Apple review of entitlement",
+      "persistence": "Per developer",
+      "revocation": "Entitlement revoke",
+      "store_policy": "Apple entitlement review; region limited",
+      "api_surface": "ProximityReader PaymentCardReader",
+      "note": "iOS 18 adds PIN entry; expanded to more countries by 2026."
+    }
+  },
+  "web_equivalents": [
+    "web.payments.secure-payment-confirmation"
+  ],
+  "data": {
+    "type": "event",
+    "metric": "Card read",
+    "update": "per tap",
+    "fields": [
+      {
+        "name": "amount",
+        "type": "float",
+        "unit": "currency",
+        "range": "varies",
+        "precision": "exact"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can accept tap payments from cards and wallets on the phone, once approved",
+    "user_action": "A shop owner opens the payment app and asks the customer to tap a card or phone",
+    "can": [
+      "Take a contactless tap from a card, phone or watch",
+      "Ask for a PIN when the payment needs one (iPhone, iOS 18 and later)",
+      "Turn the phone into a card reader with no extra hardware"
+    ],
+    "cannot": [
+      "Run without the payment company's certified software and device checks",
+      "Use a built in Android reader feature, since Android has none",
+      "Work in every country; iPhone support has grown by region"
+    ],
+    "reach": 1,
+    "reach_label": "One tap at a time",
+    "differs": "iPhone uses Apple's own feature after Apple approves the app; Android depends on the payment company's kit and its checks."
+  },
+  "story": {
+    "what_it_is": "A way to turn a phone into a card reader so a shop can take taps from cards and wallets.",
+    "icon": "smartphone-nfc",
+    "tags": [
+      "Payments",
+      "Merchants",
+      "Contactless"
+    ],
+    "marketing": [
+      {
+        "vendor": "Apple",
+        "name": "Tap to Pay on iPhone",
+        "pitch": "Accept contactless cards, Apple Pay and other wallets with just an iPhone and a payment app. No extra hardware needed.",
+        "url": "https://developer.apple.com/tap-to-pay/"
+      }
+    ],
+    "for_you": "If you buy from a market stall or a small shop, the seller holds up a phone and you tap your card on it. It feels like a normal card reader, and you never see the seller's app.",
+    "for_makers": "Small businesses skip the cost and hassle of a card reader. Payment companies like Square and Stripe get more sellers on their platform. Apple restricts access so only approved payment providers can use it.",
+    "use_cases": [
+      {
+        "type": "payments",
+        "example": "A food truck owner takes taps from lunch customers on a phone with no card reader in the truck.",
+        "apps": [
+          "Square",
+          "Stripe"
+        ]
+      },
+      {
+        "type": "shopping",
+        "example": "A store clerk walks the floor and checks out a shopper at the shelf, so there is no line at the register.",
+        "apps": [
+          "Shopify POS"
+        ]
+      },
+      {
+        "type": "delivery",
+        "example": "A delivery driver takes a card payment on the doorstep for cash on delivery orders.",
+        "apps": [
+          "DoorDash"
+        ]
+      },
+      {
+        "type": "live",
+        "example": "A stall at a music festival or farmers market sells items with only a phone.",
+        "apps": [
+          "Square"
+        ]
+      },
+      {
+        "type": "rideshare",
+        "example": "A taxi driver in a city with many small cabs takes taps in the back seat.",
+        "apps": []
+      },
+      {
+        "type": "enterprise",
+        "example": "A repair technician finishes a job at a customer's home and gets paid before leaving.",
+        "apps": [
+          "Stripe"
+        ]
+      },
+      {
+        "type": "security",
+        "example": "The phone checks that the card is real and shields the card number from the seller's app.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Card data never visible to the app",
+      "Only approved partners allowed",
+      "Fraud if the seller's phone is stolen"
+    ],
+    "android_note": "Android has no single built in Tap to Pay. Each payment company builds its own, so it depends on which provider and device.",
+    "ios_note": "iPhone XS and later can take taps. iOS 18 added PIN entry so shoppers can type a PIN on the seller's screen."
+  },
+  "technical_bounds": [
+    "Not open for merchants without a PSP and entitlement on iOS"
+  ],
+  "scores": {
+    "sensitivity": 4,
+    "utility": 3,
+    "fingerprint_bits": 1,
+    "friction": 3
+  },
+  "value": {
+    "legit_uses": [
+      "Mobile retail",
+      "Pop up shops"
+    ],
+    "abuse": [
+      "Skimming apps"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2022-02",
+      "platform": "ios",
+      "version": "iOS 15.4",
+      "change": "Tap to Pay on iPhone in the US"
+    },
+    {
+      "date": "2024-09",
+      "platform": "ios",
+      "version": "iOS 18",
+      "change": "PIN on glass and wider rollout"
+    }
+  ],
+  "related": [
+    "mob.peripherals.nfc",
+    "mob.hw.nfc-hce"
+  ],
+  "refs": [
+    {
+      "t": "apple",
+      "label": "Apple: Tap to Pay on iPhone",
+      "url": "https://developer.apple.com/tap-to-pay/"
+    },
+    {
+      "t": "vendor",
+      "label": "Stripe: Tap to Pay on Android",
+      "url": "https://docs.stripe.com/terminal/payments/setup-reader/tap-to-pay?platform=android"
+    }
+  ],
+  "confidence": "docs"
+}

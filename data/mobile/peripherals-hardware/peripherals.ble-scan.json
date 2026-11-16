@@ -1,0 +1,228 @@
+{
+  "id": "mob.peripherals.ble-scan",
+  "name": "Bluetooth scan",
+  "kind": "permission",
+  "group": "peripherals-hardware",
+  "subgroup": "Bluetooth",
+  "tags": [
+    "runtime-permission",
+    "nearby-devices",
+    "ble",
+    "proximity",
+    "beacons"
+  ],
+  "plain": "Lets the app search for nearby Bluetooth devices.",
+  "meaning": "Scanning can reveal nearby phones, beacons and wearables and can be used for indoor location. Android 12 split it out of location.",
+  "lifecycle": [
+    "in-session"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "y",
+      "v": "12",
+      "api": 31,
+      "permission": "BLUETOOTH_SCAN (use neverForLocation flag when location is not derived)",
+      "protection": "dangerous",
+      "grant": "prompt",
+      "prompt_ui": "Nearby devices prompt: Allow or Don't allow",
+      "persistence": "Until revoked or auto-reset",
+      "revocation": "Settings > Apps > Permissions > Nearby devices",
+      "store_policy": "Play: data-safety disclosure for beacon location use",
+      "api_surface": "BluetoothLeScanner, BluetoothAdapter",
+      "note": "Before Android 12 scanning required ACCESS_FINE_LOCATION."
+    },
+    "ios": {
+      "s": "y",
+      "v": "13",
+      "permission": "NSBluetoothAlwaysUsageDescription",
+      "protection": "prompt",
+      "grant": "prompt",
+      "prompt_ui": "OK or Don't Allow (one prompt for Bluetooth)",
+      "persistence": "Until revoked",
+      "revocation": "Settings > Privacy & Security > Bluetooth",
+      "store_policy": "App Review 5.1.1; AccessorySetupKit lets apps connect without scan permission (iOS 18)",
+      "api_surface": "CBCentralManager, AccessorySetupKit",
+      "note": "One prompt covers scan, connect and advertise on iOS."
+    }
+  },
+  "web_equivalents": [
+    "web.peripherals.web-bluetooth",
+    "web.notexposed.bluetooth-nearby"
+  ],
+  "data": {
+    "type": "event",
+    "metric": "Advertisement packets",
+    "update": "continuous while scanning",
+    "fields": [
+      {
+        "name": "rssi",
+        "type": "integer",
+        "unit": "dBm",
+        "range": "-100 to 0",
+        "precision": "1 dBm"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can search for nearby Bluetooth devices after you tap Allow",
+    "user_action": "You tap Find devices or Scan nearby",
+    "can": [
+      "Find nearby phones, beacons and wearables",
+      "Use scan results to guess indoor position",
+      "Scan on iPhone with one prompt that covers scan, connect and advertise"
+    ],
+    "cannot": [
+      "Scan before you answer the prompt",
+      "Use scans for your location on Android 12 and later when the app declares it does not",
+      "Scan on Android 11 and older without the location permission"
+    ],
+    "reach": 2,
+    "reach_label": "Nearby devices, while you use it",
+    "differs": "Android before 12 needed the location permission to scan; Android 12 and later has a separate Nearby devices prompt."
+  },
+  "story": {
+    "what_it_is": "Lets the app search for Bluetooth devices near you.",
+    "icon": "bluetooth-searching",
+    "tags": [
+      "Bluetooth",
+      "Nearby",
+      "Permission"
+    ],
+    "marketing": [],
+    "for_you": "The app asks to find nearby devices. If you allow it, it can spot your headphones or a new gadget. It can also notice other people's gear in the room.",
+    "for_makers": "Scanning is how an app finds your new device. It also tells the app which beacons and wearables are around, which can be used for indoor location. That is why platforms treat it as sensitive.",
+    "use_cases": [
+      {
+        "type": "smart-home",
+        "example": "An app finds a new smart bulb and walks you through setup.",
+        "apps": [
+          "Philips Hue"
+        ]
+      },
+      {
+        "type": "health",
+        "example": "A fitness app finds the band you just charged.",
+        "apps": []
+      },
+      {
+        "type": "shopping",
+        "example": "A store app picks up shelf beacons and shows deals as you walk by.",
+        "apps": []
+      },
+      {
+        "type": "ads",
+        "example": "A marketing SDK uses beacon scans to learn which stores a person visits.",
+        "apps": []
+      },
+      {
+        "type": "maps",
+        "example": "A mall app uses beacons to give indoor directions.",
+        "apps": []
+      },
+      {
+        "type": "games",
+        "example": "A local multiplayer game finds other players in the room.",
+        "apps": []
+      },
+      {
+        "type": "security",
+        "example": "An office app checks that you are close to a door before it opens.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Maps nearby gadgets and people",
+      "Indoor tracking",
+      "Beacon spam"
+    ],
+    "android_note": "Before Android 12, scanning needed location permission. Android 12 added a Nearby devices option so apps can scan without location.",
+    "ios_note": "One iOS prompt covers scan, connect and advertise."
+  },
+  "technical_bounds": [
+    "Scans can be filtered; location needed if not neverForLocation",
+    "iOS prompt is shared across the three roles",
+    "Needs foreground scanning in most cases"
+  ],
+  "scores": {
+    "sensitivity": 3,
+    "utility": 4,
+    "fingerprint_bits": 4,
+    "friction": 2
+  },
+  "value": {
+    "legit_uses": [
+      "Wearable pairing",
+      "IoT onboarding"
+    ],
+    "abuse": [
+      "Beacon based tracking"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2024-09",
+      "platform": "ios",
+      "version": "iOS 18",
+      "change": "AccessorySetupKit adds picker based pairing"
+    },
+    {
+      "date": "2021-10",
+      "platform": "android",
+      "version": "12 (API 31)",
+      "change": "BLUETOOTH_SCAN split from location; neverForLocation flag added"
+    },
+    {
+      "date": "2021-10",
+      "platform": "android",
+      "version": "12 (API 31)",
+      "change": "Nearby devices permissions split from location"
+    },
+    {
+      "date": "2019-09",
+      "platform": "ios",
+      "version": "iOS 13",
+      "change": "Bluetooth prompt introduced"
+    },
+    {
+      "date": "2019-09",
+      "platform": "ios",
+      "version": "iOS 13",
+      "change": "Bluetooth permission prompt"
+    }
+  ],
+  "related": [
+    "mob.peripherals.ble-connect",
+    "mob.peripherals.ble-advertise",
+    "mob.location.precise"
+  ],
+  "refs": [
+    {
+      "t": "android",
+      "label": "Android: Bluetooth permissions",
+      "url": "https://developer.android.com/develop/connectivity/bluetooth/bt-permissions"
+    },
+    {
+      "t": "apple",
+      "label": "Apple: Core Bluetooth authorization",
+      "url": "https://developer.apple.com/documentation/corebluetooth/cbmanager/authorization"
+    },
+    {
+      "t": "apple",
+      "label": "Apple: Core Bluetooth",
+      "url": "https://developer.apple.com/documentation/corebluetooth"
+    },
+    {
+      "t": "policy",
+      "label": "LinkedIn Privacy Policy (effective 3 Nov 2025)",
+      "url": "https://www.linkedin.com/legal/privacy-policy"
+    }
+  ],
+  "confidence": "verified"
+}

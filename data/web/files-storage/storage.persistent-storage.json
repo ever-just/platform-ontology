@@ -1,0 +1,249 @@
+{
+  "id": "web.storage.persistent-storage",
+  "name": "Persistent storage (persist)",
+  "kind": "permission",
+  "group": "files-storage",
+  "subgroup": "Storage",
+  "tags": [
+    "quota"
+  ],
+  "plain": "Asks the browser not to delete this site's stored data under disk pressure.",
+  "meaning": "Protects offline data (notes, drafts, downloaded media) from automatic eviction. Chrome and Safari decide silently from engagement; Firefox asks the person. A grant does not raise the quota.",
+  "lifecycle": [
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "navigator.storage.persist(), persisted(), estimate()",
+      "permission_name": "persistent-storage",
+      "bcd": [
+        "api.StorageManager.persist",
+        "api.StorageManager.persisted"
+      ],
+      "access": {
+        "grant": "prompt",
+        "prompt_ui": "Firefox: bubble Store data in persistent storage, Allow or Don't allow. Chrome and Safari: no prompt, granted by heuristics (installed, bookmarked, notifications on, high engagement).",
+        "secure_context": true,
+        "user_gesture": false,
+        "persistence": "Persistent until cleared by the person",
+        "revocation": "Site settings, clearing site data",
+        "iframe": "Not delegated to iframes",
+        "steps": [
+          "Call navigator.storage.persist()",
+          "Browser prompts (Firefox) or checks heuristics",
+          "Promise resolves true or false",
+          "Data is exempt from best-effort eviction"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "55",
+          "note": "",
+          "date": "2016-12-01"
+        },
+        "edge": {
+          "s": "y",
+          "v": "79",
+          "note": "",
+          "date": "2020-01-15"
+        },
+        "firefox": {
+          "s": "y",
+          "v": "57",
+          "note": "",
+          "date": "2017-11-14"
+        },
+        "safari": {
+          "s": "y",
+          "v": "15.2",
+          "note": "Safari 15.2 on macOS, 17 on iOS",
+          "date": "2021-12-13"
+        },
+        "ios_safari": {
+          "s": "y",
+          "v": "15.2",
+          "note": "",
+          "date": "2021-12-13"
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "55",
+          "note": "",
+          "date": "2016-12-06"
+        },
+        "samsung": {
+          "s": "y",
+          "v": "6.0",
+          "note": "",
+          "date": "2017-08-23"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "boolean",
+    "metric": "Whether storage is persistent",
+    "update": "one-shot",
+    "fields": [
+      {
+        "name": "persisted",
+        "type": "boolean",
+        "unit": "none",
+        "range": "true or false",
+        "precision": "1 bit"
+      },
+      {
+        "name": "usage",
+        "type": "integer",
+        "unit": "bytes",
+        "range": "0 to quota",
+        "precision": "padded for cross-origin data"
+      },
+      {
+        "name": "quota",
+        "type": "integer",
+        "unit": "bytes",
+        "range": "see quota entry",
+        "precision": "rounded"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can ask the browser not to delete its saved data when disk space is low",
+    "user_action": "In Firefox you click Allow on Store data in persistent storage. Elsewhere nothing: the browser decides.",
+    "can": [
+      "Ask the browser to protect its saved data from automatic cleanup",
+      "Check whether the request was granted",
+      "Check roughly how much space it has used"
+    ],
+    "cannot": [
+      "Make the browser agree, since Chrome and Safari decide on their own",
+      "Stop you clearing site data yourself",
+      "Keep data after a private window closes"
+    ],
+    "reach": 1,
+    "reach_label": "A request, not a guarantee",
+    "differs": "Firefox asks you. Chrome and Safari give it quietly, based on signs like installing the site, a bookmark or heavy use."
+  },
+  "story": {
+    "what_it_is": "Asks the browser not to delete this site's stored data when your disk runs low.",
+    "icon": "shield-check",
+    "tags": [
+      "Storage",
+      "Asks first",
+      "Developer"
+    ],
+    "marketing": [
+      {
+        "vendor": "web.dev",
+        "name": "Persistent storage",
+        "pitch": "Google explains how a web app can ask to keep its data safe from cleanup.",
+        "url": "https://web.dev/articles/persistent-storage"
+      },
+      {
+        "vendor": "MDN",
+        "name": "StorageManager persist",
+        "pitch": "Documents the call a site makes to ask for protected storage.",
+        "url": "https://developer.mozilla.org/en-US/docs/Web/API/StorageManager/persist"
+      }
+    ],
+    "for_you": "In some browsers a small prompt asks 'Allow this site to store data in your browser?' In Chrome the decision is automatic, based on use and bookmarks. You usually just see nothing.",
+    "for_makers": "It protects work that is only on the device, like drafts, saves and offline files. Makers ask when losing data would hurt trust. The browser may decline.",
+    "use_cases": [
+      {
+        "type": "games",
+        "example": "A browser game asks to protect your save file so you do not lose hours of play.",
+        "apps": []
+      },
+      {
+        "type": "productivity",
+        "example": "A note taking app asks to keep your offline notes before they sync.",
+        "apps": []
+      },
+      {
+        "type": "creative",
+        "example": "A web design or music tool asks to keep a long local project.",
+        "apps": []
+      },
+      {
+        "type": "media",
+        "example": "A web music or reading app asks to keep your downloaded content.",
+        "apps": []
+      },
+      {
+        "type": "enterprise",
+        "example": "A field work app asks to protect forms filled out without a signal.",
+        "apps": []
+      },
+      {
+        "type": "health",
+        "example": "A health diary web app asks to keep entries safe on your device.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "May use more space",
+      "Decision is mostly automatic"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Never beyond the quota",
+    "Chrome and Safari give no prompt: the answer is automatic",
+    "Safari still clears script-written data after 7 days without interaction unless installed"
+  ],
+  "scores": {
+    "sensitivity": 2,
+    "utility": 4,
+    "fingerprint_bits": 1,
+    "friction": 2
+  },
+  "value": {
+    "legit_uses": [
+      "Offline notes",
+      "Cached media"
+    ],
+    "abuse": [
+      "Fingerprint via estimate rounding"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2016-12",
+      "browser": "chrome",
+      "version": "55",
+      "change": "persist() ships"
+    },
+    {
+      "date": "2017-11",
+      "browser": "firefox",
+      "version": "57",
+      "change": "persist() ships with a prompt"
+    }
+  ],
+  "related": [
+    "web.storage.storage-quota"
+  ],
+  "refs": [
+    {
+      "t": "mdn",
+      "label": "MDN StorageManager.persist",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/StorageManager/persist"
+    },
+    {
+      "t": "spec",
+      "label": "WHATWG Storage Standard",
+      "url": "https://storage.spec.whatwg.org/"
+    }
+  ],
+  "confidence": "docs"
+}

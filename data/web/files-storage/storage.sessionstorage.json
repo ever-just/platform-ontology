@@ -1,0 +1,220 @@
+{
+  "id": "web.storage.sessionstorage",
+  "name": "sessionStorage",
+  "kind": "capability",
+  "group": "files-storage",
+  "subgroup": "In session",
+  "tags": [
+    "sessionstorage",
+    "web-storage",
+    "per-tab"
+  ],
+  "plain": "A per tab store of up to about 5 MB that is cleared when the tab closes.",
+  "meaning": "Used for checkout steps and form state, and for trackers that carry a 'session ID' inside one tab. Different tabs of one site do not share it, so it cannot follow the person across tabs. Copied into a tab opened by window.open.",
+  "lifecycle": [
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "window.sessionStorage.setItem(k, v)",
+      "bcd": [
+        "api.Window.sessionStorage"
+      ],
+      "access": {
+        "grant": "none",
+        "prompt_ui": "None",
+        "secure_context": false,
+        "user_gesture": false,
+        "persistence": "Until the tab or window closes. Browsers may restore it after crash or tab restore",
+        "revocation": "Clear site data, browser privacy settings",
+        "iframe": "",
+        "steps": []
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "4",
+          "note": "",
+          "date": "2010-01-25"
+        },
+        "edge": {
+          "s": "y",
+          "v": "12",
+          "note": "",
+          "date": "2015-07-29"
+        },
+        "firefox": {
+          "s": "y",
+          "v": "2",
+          "note": "",
+          "date": "2006-10-24"
+        },
+        "safari": {
+          "s": "y",
+          "v": "4",
+          "note": "",
+          "date": "2009-06-08"
+        },
+        "ios_safari": {
+          "s": "y",
+          "v": "3.2",
+          "note": "",
+          "date": "2010-04-03"
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "18",
+          "note": "",
+          "date": "2012-06-27"
+        },
+        "samsung": {
+          "s": "y",
+          "v": "1.0",
+          "note": "",
+          "date": "2013-04-27"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "string",
+    "metric": "Key value strings",
+    "update": "any time",
+    "fields": [
+      {
+        "name": "quota",
+        "type": "integer",
+        "unit": "MiB",
+        "range": "about 5 per origin",
+        "precision": "approximate"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can keep up to about 5 MB of notes for this tab until you close it",
+    "user_action": "Nothing. It happens as you move through steps or forms in the tab.",
+    "can": [
+      "Remember form steps and choices while the tab is open",
+      "Keep them when you reload the page",
+      "Keep a separate set for each tab"
+    ],
+    "cannot": [
+      "Share them with your other tabs",
+      "Keep them after you close the tab",
+      "Let other sites see them"
+    ],
+    "reach": 1,
+    "reach_label": "This tab only, until closed",
+    "differs": ""
+  },
+  "story": {
+    "what_it_is": "A store of up to about 5 MB for one tab that is cleared when you close the tab.",
+    "icon": "timer",
+    "tags": [
+      "Storage",
+      "Tabs",
+      "Silent"
+    ],
+    "marketing": [
+      {
+        "vendor": "MDN",
+        "name": "Window.sessionStorage",
+        "pitch": "Documents how a page can keep data for the life of one tab.",
+        "url": "https://developer.mozilla.org/en-US/docs/Web/API/Window/sessionStorage"
+      }
+    ],
+    "for_you": "You never see it. It is why a form can hold what you typed while you click through the steps, and why a new tab starts fresh.",
+    "for_makers": "Makers use it for short lived state like multi step forms and temporary tokens. It is safer than long term storage, because it disappears with the tab. It is also used for session IDs in analytics.",
+    "use_cases": [
+      {
+        "type": "shopping",
+        "example": "A checkout keeps your shipping choices while you move through the steps.",
+        "apps": []
+      },
+      {
+        "type": "banking",
+        "example": "A bank keeps a short lived token in the tab and loses it when you close it.",
+        "apps": []
+      },
+      {
+        "type": "games",
+        "example": "A browser game keeps the current level in a tab but does not save it forever.",
+        "apps": []
+      },
+      {
+        "type": "travel",
+        "example": "A booking site keeps your search and seat choices while you compare flights.",
+        "apps": []
+      },
+      {
+        "type": "analytics",
+        "example": "A site analytics script uses it to mark one visit as one session.",
+        "apps": [
+          "Google Analytics"
+        ]
+      },
+      {
+        "type": "education",
+        "example": "An online test keeps your answers in the tab until you submit.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Lost on tab close",
+      "Readable by page scripts"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "About 5 MiB per origin per tab",
+    "Separate per tab even for the same origin",
+    "Cleared on tab close",
+    "Cloned (not shared) when a tab is duplicated"
+  ],
+  "scores": {
+    "sensitivity": 2,
+    "utility": 4,
+    "fingerprint_bits": 0,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Multi step flows, scroll position"
+    ],
+    "abuse": [
+      "Per tab session IDs for analytics"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2023-07",
+      "browser": "chrome",
+      "version": "115",
+      "change": "Third party sessionStorage partitioned by top level site"
+    }
+  ],
+  "related": [
+    "web.storage.localstorage"
+  ],
+  "refs": [
+    {
+      "t": "mdn",
+      "label": "MDN Window.sessionStorage",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/Window/sessionStorage"
+    },
+    {
+      "t": "spec",
+      "label": "HTML Standard web storage",
+      "url": "https://html.spec.whatwg.org/multipage/webstorage.html"
+    }
+  ],
+  "confidence": "docs"
+}

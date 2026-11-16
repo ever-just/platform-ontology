@@ -1,0 +1,204 @@
+{
+  "id": "mob.app-eco.in-app-browser",
+  "name": "In-app browser",
+  "kind": "capability",
+  "group": "cross-site-tracking",
+  "subgroup": "Embedded web",
+  "tags": [
+    "webview",
+    "js-injection",
+    "link-tracking"
+  ],
+  "plain": "Opens outside links in a browser inside the app.",
+  "meaning": "The host app can see page loads and may inject script. Isolated tabs like SFSafariViewController block that; plain WebViews do not.",
+  "lifecycle": [
+    "in-session"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "y",
+      "v": "1.0",
+      "api": 1,
+      "permission": "INTERNET",
+      "protection": "normal",
+      "grant": "install",
+      "prompt_ui": "No prompt",
+      "persistence": "WebView storage per app",
+      "revocation": "Clear app data",
+      "store_policy": "",
+      "api_surface": "WebView vs Custom Tabs",
+      "note": "Custom Tabs are isolated; WebView exposes JS injection to host"
+    },
+    "ios": {
+      "s": "y",
+      "v": "2.0",
+      "permission": "",
+      "protection": "none",
+      "grant": "none",
+      "prompt_ui": "No prompt",
+      "persistence": "WKWebView storage per app",
+      "revocation": "n/a",
+      "store_policy": "App Review 5.1.2",
+      "api_surface": "WKWebView vs SFSafariViewController",
+      "note": "SFSafariViewController is isolated and does not allow script injection by the app"
+    }
+  },
+  "web_equivalents": [
+    "web.xsite.navigational-tracking"
+  ],
+  "data": {
+    "type": "event",
+    "metric": "Page navigation and injected script results",
+    "update": "per page",
+    "fields": []
+  },
+  "limits": {
+    "headline": "Can show web pages inside the app and, in some versions, watch what you do",
+    "user_action": "You tap a link inside the app and it opens without leaving the app",
+    "can": [
+      "Show a web page inside the app window with no prompt",
+      "Watch which pages you open and when they finish loading",
+      "Add its own script to the page when it uses a plain in-app web view",
+      "Keep you inside the app instead of switching to your browser"
+    ],
+    "cannot": [
+      "Add script or watch taps in the isolated browser tabs (Android Custom Tabs, iPhone Safari view)",
+      "See your saved passwords or open tabs from your own browser app",
+      "Keep watching once you tap Open in Safari or Open in Chrome"
+    ],
+    "reach": 2,
+    "reach_label": "Only pages opened inside the app",
+    "differs": "Both phones offer an isolated tab the app cannot change and a plain web view it can; which one you get depends on how the app was built."
+  },
+  "story": {
+    "what_it_is": "Opens a web link inside the app instead of sending you to your normal browser.",
+    "icon": "app-window",
+    "tags": [
+      "Browsing",
+      "Silent",
+      "Tracking"
+    ],
+    "marketing": [
+      {
+        "vendor": "Google",
+        "name": "Chrome Custom Tabs",
+        "pitch": "Developer pitch: show web content inside your app with the speed, saved logins and security of Chrome.",
+        "url": "https://developer.chrome.com/docs/android/custom-tabs"
+      },
+      {
+        "vendor": "Apple",
+        "name": "SFSafariViewController",
+        "pitch": "Developer pitch: show a full Safari experience inside your app, with the app unable to see what you do on the page.",
+        "url": "https://developer.apple.com/documentation/safariservices/sfsafariviewcontroller"
+      }
+    ],
+    "for_you": "You tap a link in a post or chat and the page opens right there, with no app switch. You may not notice that the app can see what you tap and type on that page, unlike in Safari or Chrome. Your saved passwords may also be missing.",
+    "for_makers": "Keeping people inside the app means more time on screen and more ads seen. A plain web view lets the app measure clicks, scroll depth and form use on outside sites. The safer isolated tabs trade that visibility for trust.",
+    "use_cases": [
+      {
+        "type": "social",
+        "example": "You tap a link in a friend's post and the page opens inside the feed app, so the app can log how long you read before you swipe back.",
+        "apps": [
+          "Instagram",
+          "Facebook",
+          "TikTok"
+        ]
+      },
+      {
+        "type": "messaging",
+        "example": "A shared article in a chat app opens in a built in window with a Back to chat button, and the app shows its own share sheet over the page.",
+        "apps": [
+          "Snapchat",
+          "LinkedIn"
+        ]
+      },
+      {
+        "type": "ads",
+        "example": "An ad click opens the advertiser site inside the app, letting the ad network confirm the visit and count it for billing.",
+        "apps": []
+      },
+      {
+        "type": "payments",
+        "example": "A checkout page opens in a secure tab so a bank login or 3D Secure step works with saved cards and autofill.",
+        "apps": []
+      },
+      {
+        "type": "games",
+        "example": "A mobile game opens its Terms or a support form in an in-app page, so you can return to the match without losing your place.",
+        "apps": []
+      },
+      {
+        "type": "news",
+        "example": "A news reader app loads full stories in an embedded page, then injects its own reading mode or ad blocker script.",
+        "apps": [
+          "Flipboard"
+        ]
+      },
+      {
+        "type": "security",
+        "example": "Security researchers test whether big apps add hidden scripts to outside pages, which showed that some do.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "App can watch what you tap or type",
+      "Outside pages may be altered"
+    ],
+    "android_note": "Plain WebView lets the host app inject scripts, while Custom Tabs are isolated and keep your normal browser sign ins.",
+    "ios_note": "WKWebView lets the host app inject scripts, while SFSafariViewController is isolated and the app cannot read it."
+  },
+  "technical_bounds": [
+    "Cannot read passwords typed in an isolated tab"
+  ],
+  "scores": {
+    "sensitivity": 4,
+    "utility": 3,
+    "fingerprint_bits": null,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Fast link viewing"
+    ],
+    "abuse": [
+      "Keystroke and tap logging"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": "Unverified. Felix Krause's 2022 InAppBrowser study covered TikTok, Instagram, Facebook, Messenger, Amazon, Snapchat and Robinhood, and no result for LinkedIn was found. LinkedIn does open links in an in-app browser (inferred)."
+    }
+  },
+  "history": [
+    {
+      "date": "2017-09",
+      "platform": "ios",
+      "version": "iOS 11",
+      "change": "SFSafariViewController no longer shares cookies with Safari"
+    },
+    {
+      "date": "2022-08",
+      "platform": "ios",
+      "version": "iOS 15",
+      "change": "InAppBrowser tool shows injected scripts of other apps, not LinkedIn"
+    }
+  ],
+  "related": [
+    "mob.eco.universal-app-links"
+  ],
+  "refs": [
+    {
+      "t": "news",
+      "label": "BleepingComputer: tool checks in-app browser script injection (2022)",
+      "url": "https://www.bleepingcomputer.com/news/security/new-tool-checks-if-in-app-mobile-browsers-inject-risky-code-on-sites/"
+    },
+    {
+      "t": "apple",
+      "label": "Apple: SFSafariViewController",
+      "url": "https://developer.apple.com/documentation/safariservices/sfsafariviewcontroller"
+    }
+  ],
+  "confidence": "inferred"
+}

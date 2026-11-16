@@ -1,0 +1,201 @@
+{
+  "id": "mob.policy.account-deletion",
+  "name": "Account deletion requirements",
+  "kind": "capability",
+  "group": "app-ecosystem",
+  "subgroup": "App Store rules",
+  "tags": [
+    "account-deletion",
+    "data-deletion",
+    "5-1-1-v"
+  ],
+  "plain": "Both stores require an in-app way to delete an account and its data if the app lets you create one.",
+  "meaning": "Apple required in-app deletion from 30 June 2022 (plus Sign in with Apple token revocation). Google required a deletion path in the app and a web link from 8 December 2023, with Data safety disclosure, and enforcement from 2024.",
+  "lifecycle": [
+    "in-session"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "y",
+      "v": "",
+      "permission": "",
+      "protection": "none",
+      "grant": "none",
+      "prompt_ui": "",
+      "persistence": "",
+      "revocation": "",
+      "store_policy": "Play account deletion policy: in-app path plus web URL in Data safety; enforcement 2024",
+      "api_surface": "Play Console > Data safety > Data deletion",
+      "note": "Developer can retain data only as legally required and must disclose."
+    },
+    "ios": {
+      "s": "y",
+      "v": "",
+      "permission": "",
+      "protection": "none",
+      "grant": "none",
+      "prompt_ui": "",
+      "persistence": "",
+      "revocation": "",
+      "store_policy": "5.1.1(v): in-app account deletion, not just deactivate; revoke Sign in with Apple tokens",
+      "api_surface": "App Store Connect account deletion; Sign in with Apple REST revoke",
+      "note": "Effective 30 June 2022."
+    }
+  },
+  "data": {
+    "type": "object",
+    "metric": "Deletion request",
+    "update": "once",
+    "fields": []
+  },
+  "limits": {
+    "headline": "Can't keep your account forever, since apps must let you delete it in the app",
+    "user_action": "You open the app account settings and tap Delete account",
+    "can": [
+      "Start the deletion of your account and data inside the app",
+      "Keep some data when a law requires it, with a note telling you",
+      "Point you to a web page for deletion (Android)"
+    ],
+    "cannot": [
+      "Hide the deletion option, if the app lets you create an account",
+      "Keep the data for no reason after you delete",
+      "Skip Sign in with Apple cleanup on iPhone"
+    ],
+    "reach": 1,
+    "reach_label": "One account at a time",
+    "differs": "Apple required in app deletion from 30 June 2022. Google added a web link too, from 8 December 2023."
+  },
+  "story": {
+    "what_it_is": "The rule that an app must let you delete your account and data, inside the app.",
+    "icon": "trash-2",
+    "tags": [
+      "Store rules",
+      "Your data",
+      "Deletion"
+    ],
+    "marketing": [
+      {
+        "vendor": "Apple",
+        "name": "Offering account deletion in your app",
+        "pitch": "If your app lets people create an account, it must also let them delete it.",
+        "url": "https://developer.apple.com/support/offering-account-deletion-in-your-app/"
+      },
+      {
+        "vendor": "Google",
+        "name": "Account deletion requirements",
+        "pitch": "Apps must offer in app deletion and a web link where people can request it.",
+        "url": "https://support.google.com/googleplay/android-developer/answer/13327111"
+      }
+    ],
+    "for_you": "You find 'Delete account' in the app settings and it removes your profile and data. No email chain or phone call is needed.",
+    "for_makers": "Both stores require the delete option, so makers must build the whole chain: delete data, revoke Sign in with Apple, and tell partners. It forces cleaner data design and cuts regulator risk.",
+    "use_cases": [
+      {
+        "type": "social",
+        "example": "A social app puts 'Delete my account' under Settings and erases your posts after a short grace period.",
+        "apps": [
+          "Instagram",
+          "Snapchat"
+        ]
+      },
+      {
+        "type": "dating",
+        "example": "A dating app lets you delete the account and cancel the subscription steps are explained.",
+        "apps": [
+          "Tinder",
+          "Hinge"
+        ]
+      },
+      {
+        "type": "games",
+        "example": "A game warns that deleting the account also wipes all purchases and progress.",
+        "apps": [
+          "Fortnite",
+          "Genshin Impact"
+        ]
+      },
+      {
+        "type": "shopping",
+        "example": "A store app removes saved cards and order history when you delete.",
+        "apps": [
+          "Etsy",
+          "Amazon"
+        ]
+      },
+      {
+        "type": "banking",
+        "example": "A fintech app deletes your profile but keeps required transaction records by law and says so.",
+        "apps": [
+          "Cash App"
+        ]
+      },
+      {
+        "type": "developer",
+        "example": "A team revokes the Sign in with Apple token when you delete, as Apple requires.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Records kept by law",
+      "Hidden or slow deletion flows"
+    ],
+    "android_note": "Google Play also requires a web link, so you can delete without having the app installed.",
+    "ios_note": "Apple required it from 30 June 2022 and added Sign in with Apple token revocation."
+  },
+  "technical_bounds": [
+    "Retention exceptions allowed if disclosed",
+    "Must be easy to find"
+  ],
+  "scores": {
+    "sensitivity": 3,
+    "utility": 3,
+    "fingerprint_bits": null,
+    "friction": 2
+  },
+  "value": {
+    "legit_uses": [
+      "User control"
+    ],
+    "abuse": [
+      "Dark patterns that hide the option"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2022-06",
+      "platform": "ios",
+      "version": "App Review",
+      "change": "In-app account deletion required, 30 June 2022"
+    },
+    {
+      "date": "2023-12",
+      "platform": "android",
+      "version": "Play policy",
+      "change": "Account deletion path and web link required from 8 December 2023"
+    }
+  ],
+  "related": [
+    "mob.xtrack.hide-my-email",
+    "mob.policy.play-data-safety"
+  ],
+  "refs": [
+    {
+      "t": "apple",
+      "label": "Apple: Offering account deletion",
+      "url": "https://developer.apple.com/support/offering-account-deletion-in-your-app/"
+    },
+    {
+      "t": "android",
+      "label": "Play: Account deletion requirements",
+      "url": "https://support.google.com/googleplay/android-developer/answer/13327111"
+    }
+  ],
+  "confidence": "docs"
+}

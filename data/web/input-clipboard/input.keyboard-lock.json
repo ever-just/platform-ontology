@@ -1,0 +1,221 @@
+{
+  "id": "web.input.keyboard-lock",
+  "name": "Keyboard Lock",
+  "kind": "action",
+  "group": "input-clipboard",
+  "subgroup": "Keyboard",
+  "tags": [
+    "fullscreen"
+  ],
+  "plain": "Captures keys like Escape and Alt+Tab while in fullscreen.",
+  "meaning": "Lets games and remote desktops receive keys the browser normally keeps, so a site can trap Escape or Ctrl+W. Works only in fullscreen; a long-press of Escape always exits.",
+  "lifecycle": [
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "navigator.keyboard.lock(['Escape', 'KeyW']); unlock()",
+      "permissions_policy": "keyboard-map",
+      "bcd": [
+        "api.Keyboard.lock"
+      ],
+      "access": {
+        "grant": "gesture",
+        "prompt_ui": "No prompt; works only while the page is in fullscreen.",
+        "secure_context": true,
+        "user_gesture": true,
+        "persistence": "While in fullscreen",
+        "revocation": "Exit fullscreen or long-press Escape",
+        "iframe": "Frames inherit fullscreen",
+        "steps": [
+          "Enter fullscreen",
+          "keyboard.lock(keys)",
+          "Locked keys sent to the page",
+          "Hold Escape 2 seconds to exit"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "68",
+          "note": "",
+          "date": "2018-07-24"
+        },
+        "edge": {
+          "s": "y",
+          "v": "79",
+          "note": "",
+          "date": "2020-01-15"
+        },
+        "firefox": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "safari": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "ios_safari": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "68",
+          "note": "",
+          "date": "2018-07-24"
+        },
+        "samsung": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "none",
+    "metric": "Key capture mode",
+    "update": "while fullscreen",
+    "fields": []
+  },
+  "limits": {
+    "headline": "Can capture keys like Escape and Alt+Tab while the page is full screen",
+    "user_action": "You tap a full screen button in a game or remote desktop",
+    "can": [
+      "Take over keys the browser normally keeps, such as Escape or Alt+Tab",
+      "Pass those keys to a game or remote desktop session",
+      "Do this only while the page is in full screen"
+    ],
+    "cannot": [
+      "Trap you for good; holding Escape for about 2 seconds always lets you out",
+      "Capture keys when the page is not full screen",
+      "Work in Firefox or Safari",
+      "Capture the operating system's own protected shortcuts like Ctrl+Alt+Delete"
+    ],
+    "reach": 2,
+    "reach_label": "While in full screen",
+    "differs": "Chrome and Edge support it on desktop. Firefox and Safari do not."
+  },
+  "story": {
+    "what_it_is": "Lets a page grab keys like Escape and Alt+Tab when full screen.",
+    "icon": "lock-keyhole",
+    "tags": [
+      "Keyboard",
+      "Full screen",
+      "Games"
+    ],
+    "marketing": [
+      {
+        "vendor": "MDN (standards docs)",
+        "name": "Keyboard Lock",
+        "pitch": "Describes a way for web apps in full screen to capture keys the browser normally keeps, helpful for games and remote desktops.",
+        "url": "https://developer.mozilla.org/en-US/docs/Web/API/Keyboard_API"
+      }
+    ],
+    "for_you": "You go full screen in a game or remote desktop and keys like Escape go to the game instead of closing it. A message usually says 'Hold Escape to exit full screen'. You feel the page has taken over your keyboard.",
+    "for_makers": "Cloud games and remote work tools need every key to reach the remote computer. Without it, a press of Escape or Alt+Tab would break the stream. Makers also like how it keeps players inside the app.",
+    "use_cases": [
+      {
+        "type": "games",
+        "example": "A cloud gaming stream sends Escape, Alt and Windows keys to the remote PC, so an in game menu opens instead of exiting full screen.",
+        "apps": [
+          "GeForce NOW",
+          "Xbox Cloud Gaming"
+        ]
+      },
+      {
+        "type": "enterprise",
+        "example": "A remote desktop in the browser forwards Alt+Tab and Ctrl+W to the remote Windows machine.",
+        "apps": [
+          "Azure Virtual Desktop",
+          "Amazon WorkSpaces",
+          "Chrome Remote Desktop"
+        ]
+      },
+      {
+        "type": "games",
+        "example": "A browser strategy or shooter game uses Escape for its pause menu while full screen.",
+        "apps": [
+          "Krunker.io"
+        ]
+      },
+      {
+        "type": "education",
+        "example": "An online exam tool locks a student in full screen so keys cannot switch tabs.",
+        "apps": []
+      },
+      {
+        "type": "creative",
+        "example": "A web video editing or 3D tool receives all shortcuts while in full screen.",
+        "apps": []
+      },
+      {
+        "type": "security",
+        "example": "A bad page could try to trap you in full screen, which is why the browser shows a hold to exit message.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Can trap you in full screen",
+      "Fake lock screens"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Fullscreen only",
+    "Cannot capture Ctrl+Alt+Del or OS shortcuts",
+    "Chromium only"
+  ],
+  "scores": {
+    "sensitivity": 2,
+    "utility": 3,
+    "fingerprint_bits": null,
+    "friction": 1
+  },
+  "value": {
+    "legit_uses": [
+      "Games",
+      "Remote desktop"
+    ],
+    "abuse": [
+      "Trapping people in a fullscreen scam page"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2018-07",
+      "browser": "chrome",
+      "version": "68",
+      "change": "Keyboard Lock ships"
+    }
+  ],
+  "related": [
+    "web.input.keyboard-map",
+    "web.display.fullscreen"
+  ],
+  "refs": [
+    {
+      "t": "mdn",
+      "label": "MDN Keyboard.lock",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/Keyboard/lock"
+    },
+    {
+      "t": "spec",
+      "label": "WICG Keyboard Lock",
+      "url": "https://wicg.github.io/keyboard-lock/"
+    }
+  ],
+  "confidence": "docs"
+}

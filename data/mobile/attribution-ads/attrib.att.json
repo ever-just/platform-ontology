@@ -1,0 +1,289 @@
+{
+  "id": "mob.attrib.att",
+  "name": "App Tracking Transparency",
+  "kind": "tracking",
+  "group": "attribution-ads",
+  "subgroup": "Advertising ID",
+  "tags": [
+    "att",
+    "idfa",
+    "prompt",
+    "ios-14-5",
+    "consent",
+    "idfa-gate",
+    "ios-only",
+    "policy"
+  ],
+  "plain": "A system prompt that asks whether the app may track the person across other companies' apps and sites.",
+  "meaning": "Gates the IDFA and cross-company tracking; a No returns an all zero IDFA. Rules also forbid workarounds.",
+  "lifecycle": [
+    "on-launch",
+    "in-session",
+    "after-uninstall"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "p",
+      "v": "13",
+      "api": 33,
+      "permission": "AD_ID (normal, API 33); no per app prompt",
+      "protection": "normal",
+      "grant": "install",
+      "prompt_ui": "No prompt; user can delete the advertising ID in Settings",
+      "persistence": "Global reset or deletion; zeros the ID",
+      "revocation": "Settings > Privacy > Ads > Delete advertising ID",
+      "store_policy": "Play: advertising ID policy; AD_ID declaration required for target 33",
+      "api_surface": "AdvertisingIdClient",
+      "note": "Apps targeting 33 without AD_ID get zeros"
+    },
+    "ios": {
+      "s": "y",
+      "v": "14.5",
+      "permission": "NSUserTrackingUsageDescription",
+      "protection": "prompt",
+      "grant": "prompt",
+      "prompt_ui": "Allow or Ask App Not to Track",
+      "persistence": "Until changed; global switch Allow Apps to Request to Track",
+      "revocation": "Settings > Privacy & Security > Tracking",
+      "store_policy": "App Review 5.1.2(i): no tracking without ATT; no fingerprinting workaround",
+      "api_surface": "ATTrackingManager.requestTrackingAuthorization",
+      "note": "Deny returns zero IDFA; industry reports opt in around 25 to 35 percent"
+    }
+  },
+  "web_equivalents": [
+    "web.identity.private-state-tokens",
+    "web.net.private-access-tokens-pact",
+    "web.locale.gpc"
+  ],
+  "data": {
+    "type": "enum",
+    "metric": "Authorization status",
+    "update": "once, then query",
+    "fields": [
+      {
+        "name": "status",
+        "type": "enum",
+        "unit": "",
+        "range": "notDetermined, restricted, denied, authorized",
+        "precision": ""
+      },
+      {
+        "name": "idfa",
+        "type": "string",
+        "unit": "UUID",
+        "range": "all zeros when denied",
+        "precision": ""
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can track you across other companies' apps and sites only if you tap Allow",
+    "user_action": "You tap Allow or Ask App Not to Track on the system prompt",
+    "can": [
+      "Use the iPhone ad ID once you tap Allow",
+      "Link your activity across other companies' apps and sites after you allow it",
+      "Use the ad ID on Android until you delete it in Settings (no prompt there)"
+    ],
+    "cannot": [
+      "Get the real ad ID after you tap Ask App Not to Track; it returns zeros",
+      "Work around your no with other tricks, which Apple's rules forbid",
+      "Show the tracking prompt on Android; there is none",
+      "Get the real ad ID on Android 13 apps that skip the AD_ID permission"
+    ],
+    "reach": 4,
+    "reach_label": "Across apps, only if you allow it",
+    "differs": "iPhone asks with a system prompt (iOS 14.5 and later). Android has no prompt; you delete the ad ID in Settings."
+  },
+  "story": {
+    "what_it_is": "The iOS pop up asking if an app may follow you across other companies' apps and sites.",
+    "icon": "shield-question",
+    "tags": [
+      "Asks first",
+      "Tracking",
+      "Apple"
+    ],
+    "marketing": [
+      {
+        "vendor": "Apple",
+        "name": "App Tracking Transparency",
+        "pitch": "Apps must ask for your permission before tracking you across other companies' apps and websites.",
+        "url": "https://developer.apple.com/documentation/apptrackingtransparency"
+      }
+    ],
+    "for_you": "A pop up says 'Allow app to track your activity across other companies' apps and websites?' with 'Ask App Not to Track' and 'Allow'. You can also turn requests off in Settings.",
+    "for_makers": "Saying yes unlocks the IDFA. A no returns zeros and forbids workarounds. Makers must design the ask well, show a pre prompt that explains benefits and plan ads around the lower yes rate.",
+    "use_cases": [
+      {
+        "type": "games",
+        "example": "A free game explains that tracking keeps it free, then shows the ATT prompt.",
+        "apps": [
+          "Candy Crush",
+          "Subway Surfers"
+        ]
+      },
+      {
+        "type": "shopping",
+        "example": "A retailer shows a short screen about better offers before the pop up.",
+        "apps": [
+          "Target",
+          "Amazon"
+        ]
+      },
+      {
+        "type": "ads",
+        "example": "An ad network gets IDs for the opted in and falls back to SKAN for others.",
+        "apps": [
+          "Meta",
+          "Google Ads"
+        ]
+      },
+      {
+        "type": "social",
+        "example": "A social app asks at launch, and sees yes rates near industry averages.",
+        "apps": [
+          "Snapchat"
+        ]
+      },
+      {
+        "type": "news",
+        "example": "A news app delays the prompt until after a first article.",
+        "apps": []
+      },
+      {
+        "type": "security",
+        "example": "Apple can pull an app that tracks anyway.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Low yes rate",
+      "Dark pattern pre prompts"
+    ],
+    "android_note": "Android uses a settings toggle for the advertising ID, not a pop up.",
+    "ios_note": "Introduced in iOS 14.5. Regulators in Europe are challenging how it works."
+  },
+  "technical_bounds": [
+    "No consent means no IDFA; fingerprinting is barred",
+    "Probabilistic attribution still happens server side",
+    "Prompt only works while the app is active",
+    "Opt-in is roughly 25 to 38 percent depending on source (Adjust 38 percent Q1 2026; AppsFlyer 29 percent 2026 figure cited by trade press; gaming lower than non-gaming)",
+    "First-party data use is not 'tracking' under Apple's definition",
+    "Apple's definition covers linking with other companies' data for ads or measurement, or sharing with data brokers",
+    "Declaring tracking in the App Privacy label is separate"
+  ],
+  "scores": {
+    "sensitivity": 4,
+    "utility": 4,
+    "fingerprint_bits": 20,
+    "friction": 2
+  },
+  "value": {
+    "legit_uses": [
+      "Ad measurement with consent"
+    ],
+    "abuse": [
+      "Cross app profiling"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": true,
+      "how": "LinkedIn iOS shows ATT prompt for Apple platform tracking"
+    }
+  },
+  "history": [
+    {
+      "date": "2026-09",
+      "platform": "ios",
+      "version": "iOS 27.2",
+      "change": "Reported German settlement: alternative EU consent screen and re-ask after one year"
+    },
+    {
+      "date": "2025-12",
+      "platform": "ios",
+      "version": "iOS 26",
+      "change": "Italian authority fines Apple 98.6 million EUR citing double consent; Apple appeals"
+    },
+    {
+      "date": "2025-03",
+      "platform": "ios",
+      "version": "iOS 18",
+      "change": "French competition authority fines Apple 150 million EUR over ATT design (conduct 2021 to 2023)"
+    },
+    {
+      "date": "2023-04",
+      "platform": "android",
+      "version": "13 (API 33)",
+      "change": "AD_ID permission introduced"
+    },
+    {
+      "date": "2022-02",
+      "platform": "android",
+      "version": "12",
+      "change": "Advertising ID zeroed when user opts out of ads personalization"
+    },
+    {
+      "date": "2021-04",
+      "platform": "ios",
+      "version": "iOS 14.5",
+      "change": "ATT enforced; IDFA zeroed without consent"
+    },
+    {
+      "date": "2021-04",
+      "platform": "ios",
+      "version": "iOS 14.5",
+      "change": "Prompt enforced for all apps on 26 April 2021"
+    },
+    {
+      "date": "2021-04",
+      "platform": "ios",
+      "version": "iOS 14.5",
+      "change": "ATT enforced"
+    },
+    {
+      "date": "2020-06",
+      "platform": "ios",
+      "version": "iOS 14",
+      "change": "ATT announced at WWDC20"
+    }
+  ],
+  "related": [
+    "mob.ads.idfa",
+    "mob.ads.fingerprinting-ban",
+    "mob.ads.skadnetwork"
+  ],
+  "refs": [
+    {
+      "t": "apple",
+      "label": "Apple: App Tracking Transparency",
+      "url": "https://developer.apple.com/documentation/apptrackingtransparency"
+    },
+    {
+      "t": "android",
+      "label": "Android: Advertising ID",
+      "url": "https://developer.android.com/identity/user-data-ids"
+    },
+    {
+      "t": "policy",
+      "label": "App Review Guidelines 5.1.2",
+      "url": "https://developer.apple.com/app-store/review/guidelines/#data-use-and-sharing"
+    },
+    {
+      "t": "apple",
+      "label": "Apple: User privacy and data use",
+      "url": "https://developer.apple.com/app-store/user-privacy-and-data-use/"
+    },
+    {
+      "t": "news",
+      "label": "France fines Apple 150m over ATT (teiss)",
+      "url": "https://www.teiss.co.uk/news/france-fines-apple-150-million-for-abusing-market-dominance-through-app-tracking-transparency-15581"
+    },
+    {
+      "t": "news",
+      "label": "Italy fines Apple 98.6m over double consent (PPC Land)",
+      "url": "https://ppc.land/italy-fines-apple-eu98-6-million-for-making-developers-ask-users-twice/"
+    }
+  ],
+  "confidence": "docs"
+}

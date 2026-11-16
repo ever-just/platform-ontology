@@ -1,0 +1,208 @@
+{
+  "id": "web.tracking.linkedin-merchantpool-dfp",
+  "name": "Merchant Pool device fingerprint script (Microsoft DFP)",
+  "kind": "tracking",
+  "group": "cross-site-tracking",
+  "subgroup": "Anti-abuse vendors",
+  "tags": [
+    "fingerprint",
+    "fraud",
+    "microsoft",
+    "merchantpool"
+  ],
+  "plain": "Loads mdt.js from merchantpool1.linkedin.com and runs a device fingerprint call.",
+  "meaning": "A second device fingerprinting layer, apparently Microsoft's fraud protection technology (inferred from cookie names and a doFpt call), keyed to LinkedIn's browser ID.",
+  "lifecycle": [
+    "on-arrival",
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "script https://merchantpool1.linkedin.com/mdt.js?session_id=<bcookie>&instanceId=<uuid>; window.dfp.doFpt(document)",
+      "access": {
+        "grant": "none",
+        "prompt_ui": "None (no browser prompt)",
+        "secure_context": false,
+        "user_gesture": false,
+        "persistence": "Cookie dfpfpt per LinkedIn table; Microsoft fptctx2 inferred",
+        "revocation": "",
+        "iframe": "",
+        "steps": [
+          "LIX flag pemberly.tracking.dfp.integration enables the load",
+          "mdt.js is requested with session_id set to bcookie and a fixed instanceId (prod fb6bbd47-fa7c-4264-b4e9-b25948407586)",
+          "Script calls window.dfp.doFpt(document)"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "",
+          "note": ""
+        },
+        "edge": {
+          "s": "y",
+          "v": "",
+          "note": ""
+        },
+        "firefox": {
+          "s": "y",
+          "v": "",
+          "note": ""
+        },
+        "safari": {
+          "s": "y",
+          "v": "",
+          "note": ""
+        },
+        "ios_safari": {
+          "s": "y",
+          "v": "",
+          "note": ""
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "",
+          "note": ""
+        },
+        "samsung": {
+          "s": "y",
+          "v": "",
+          "note": ""
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "object",
+    "metric": "Vendor fingerprint",
+    "update": "per page",
+    "fields": [
+      {
+        "name": "session_id",
+        "type": "string",
+        "unit": "bcookie",
+        "range": "",
+        "precision": "stable per browser"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can collect device traits from a Microsoft fingerprint script on LinkedIn pages",
+    "user_action": "Nothing. It happens when a LinkedIn page loads the script",
+    "can": [
+      "Load a script from a LinkedIn payments host",
+      "Collect traits like screen size, fonts and browser settings for a device fingerprint",
+      "Send those traits to Microsoft for fraud checks"
+    ],
+    "cannot": [
+      "Show you anything on the page",
+      "See your files, other tabs or other apps",
+      "Run if the script is blocked",
+      "Name you without a login"
+    ],
+    "reach": 3,
+    "reach_label": "Your device's traits",
+    "differs": ""
+  },
+  "story": {
+    "what_it_is": "A script from a LinkedIn server runs a device fingerprint check tied to your browser ID.",
+    "icon": "fingerprint",
+    "tags": [
+      "Fingerprinting",
+      "Silent",
+      "Fraud"
+    ],
+    "marketing": [],
+    "for_you": "You never see it. A script collects clues about your device, such as screen and software traits, to build a fingerprint. Public analysis suggests it comes from Microsoft's fraud tools.",
+    "for_makers": "A device fingerprint lets a platform tell if the same device creates many fake accounts or ads. It works even when cookies are cleared. The same trick can also track a person across visits, which is why privacy groups push back.",
+    "use_cases": [
+      {
+        "type": "security",
+        "example": "A fraudster opens twenty fake ad accounts from one laptop. The fingerprint links them as one device.",
+        "apps": [
+          "LinkedIn Ads"
+        ]
+      },
+      {
+        "type": "payments",
+        "example": "A stolen card is used to buy ads, and the fingerprint helps spot the device behind many cards.",
+        "apps": [
+          "LinkedIn Ads"
+        ]
+      },
+      {
+        "type": "social",
+        "example": "A banned account owner comes back with a new email, and the device fingerprint links the new account to the old one.",
+        "apps": [
+          "LinkedIn"
+        ]
+      },
+      {
+        "type": "games",
+        "example": "A person makes many accounts to cheat on a game leaderboard, and a fingerprint can reveal one device behind them.",
+        "apps": [
+          "LinkedIn Games"
+        ]
+      },
+      {
+        "type": "ads",
+        "example": "Ad review teams use the fingerprint to remove clicks from the same device that clicks the same ad hundreds of times.",
+        "apps": [
+          "LinkedIn Ads"
+        ]
+      },
+      {
+        "type": "analytics",
+        "example": "An analytics team counts unique devices rather than cookies, which stays steady after people clear cookies.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Works without cookies",
+      "Cannot be easily reset by you"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Link to Microsoft Dynamics 365 Fraud Protection is inferred, not stated by LinkedIn",
+    "What mdt.js collects was not deobfuscated in this research"
+  ],
+  "scores": {
+    "sensitivity": 3,
+    "utility": 2,
+    "fingerprint_bits": 15,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Payment and account fraud screening"
+    ],
+    "abuse": [
+      "Persistent identification"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": true,
+      "how": "URL, instance id and doFpt call seen in the snapshot; the Microsoft DFP product link is an inference from names."
+    }
+  },
+  "related": [
+    "web.tracking.linkedin-apfc-fingerprint"
+  ],
+  "refs": [
+    {
+      "t": "github",
+      "label": "mdp/linkedin-extension-fingerprinting (LinkedIn script snapshot and ID list)",
+      "url": "https://github.com/mdp/linkedin-extension-fingerprinting"
+    },
+    {
+      "t": "vendor",
+      "label": "LinkedIn cookie table",
+      "url": "https://www.linkedin.com/legal/l/cookie-table"
+    }
+  ],
+  "confidence": "inferred"
+}

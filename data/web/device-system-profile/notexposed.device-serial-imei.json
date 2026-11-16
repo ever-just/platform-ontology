@@ -1,0 +1,219 @@
+{
+  "id": "web.notexposed.device-serial-imei",
+  "name": "Serial number, IMEI and device ID",
+  "kind": "not-exposed",
+  "group": "device-system-profile",
+  "subgroup": "Hardware IDs",
+  "tags": [
+    "not-exposed",
+    "imei",
+    "serial",
+    "device-id"
+  ],
+  "plain": "Sites cannot read your serial number, IMEI or advertising ID.",
+  "meaning": "No unprompted API exposes hardware identifiers. Managed ChromeOS and enterprise policies expose serial to allowlisted extensions only (chrome.enterprise.deviceAttributes). A regular site gets none; fingerprints are rebuilt from many signals instead.",
+  "lifecycle": [
+    "on-arrival",
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "none",
+      "access": {
+        "grant": "not-exposed",
+        "prompt_ui": "None",
+        "secure_context": false,
+        "user_gesture": false,
+        "persistence": "read fresh on every page load; nothing stored",
+        "revocation": "not applicable",
+        "iframe": "Readable from cross-origin iframes too (same values)",
+        "steps": [
+          "Page script reads the value",
+          "No prompt is shown"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "edge": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "firefox": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "safari": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "ios_safari": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "chrome_android": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "samsung": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "none",
+    "metric": "",
+    "update": "static per session",
+    "fields": [
+      {
+        "name": "proxy: fingerprint hash",
+        "type": "string",
+        "unit": "",
+        "range": "combine UA, screen, fonts, GPU for an approximate ID",
+        "precision": ""
+      },
+      {
+        "name": "proxy: Web Bluetooth or WebUSB serialNumber",
+        "type": "string",
+        "unit": "",
+        "range": "only for a device the user picked in a prompt",
+        "precision": ""
+      },
+      {
+        "name": "proxy: enterprise deviceAttributes",
+        "type": "string",
+        "unit": "",
+        "range": "managed Chrome extension policy only",
+        "precision": ""
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can't see your serial number, IMEI, or advertising ID from a web page",
+    "user_action": "Nothing. Pages have no way to ask for this",
+    "can": [
+      "Build a tracking guess from many small signals",
+      "Set its own cookie or ID that stays on your browser",
+      "Let managed work devices pass a serial to approved extensions"
+    ],
+    "cannot": [
+      "See your hardware serial",
+      "See your IMEI or phone ID",
+      "See your advertising ID",
+      "Get an ID that survives clearing site data on its own"
+    ],
+    "reach": 1,
+    "reach_label": "No device ID at all",
+    "differs": ""
+  },
+  "story": {
+    "what_it_is": "Sites cannot read your serial number, IMEI or advertising ID.",
+    "icon": "id-card",
+    "tags": [
+      "Blocked",
+      "Hardware ID",
+      "Privacy"
+    ],
+    "marketing": [],
+    "for_you": "A web page cannot see your device's serial number or phone ID. That is a big reason the web is safer to browse than many apps. Only company managed devices can reveal some of it to approved tools.",
+    "for_makers": "Hardware IDs are the strongest way to follow a person for ads and fraud checks. The web gives no such ID, so sites use cookies, logins and fingerprints. Managed work devices can expose a serial to approved tools only.",
+    "use_cases": [
+      {
+        "type": "ads",
+        "example": "An ad network wanted the advertising ID and instead uses cookies or fingerprinting.",
+        "apps": []
+      },
+      {
+        "type": "security",
+        "example": "A fraud team wanted the serial to spot repeat abuse and builds a device profile instead.",
+        "apps": [
+          "FingerprintJS"
+        ]
+      },
+      {
+        "type": "enterprise",
+        "example": "An IT portal wanted laptop serials and needs a managed extension.",
+        "apps": []
+      },
+      {
+        "type": "banking",
+        "example": "A bank wanted a permanent device ID and uses a stored device token after a login.",
+        "apps": []
+      },
+      {
+        "type": "games",
+        "example": "A game site wanted to ban cheaters by device and bans accounts and IP ranges instead.",
+        "apps": []
+      },
+      {
+        "type": "analytics",
+        "example": "An analytics team wanted a stable ID and settles for first party IDs.",
+        "apps": [
+          "Google Analytics"
+        ]
+      },
+      {
+        "type": "shopping",
+        "example": "A retailer wanted to match a phone to a past visit and relies on login.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Fingerprints partly fill the gap",
+      "Managed devices can expose a serial"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Hardware ID is permanent"
+  ],
+  "scores": {
+    "sensitivity": 5,
+    "utility": 2,
+    "fingerprint_bits": 0.0,
+    "friction": 3
+  },
+  "value": {
+    "legit_uses": [
+      "None: the browser deliberately withholds it"
+    ],
+    "abuse": [
+      "Sites attempt proxies to recover it"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "related": [
+    "web.notexposed.mac-address"
+  ],
+  "refs": [
+    {
+      "t": "mdn",
+      "label": "MDN USBDevice.serialNumber",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/USBDevice/serialNumber"
+    },
+    {
+      "t": "paper",
+      "label": "Browser Fingerprinting: A Survey, Laperdrix et al.",
+      "url": "https://arxiv.org/abs/1905.01051"
+    }
+  ],
+  "confidence": "docs"
+}

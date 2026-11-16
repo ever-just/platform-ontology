@@ -1,0 +1,230 @@
+{
+  "id": "web.render.emoji-rendering",
+  "name": "Emoji and glyph rendering",
+  "kind": "tracking",
+  "group": "rendering-fingerprint",
+  "subgroup": "Canvas",
+  "tags": [
+    "emoji",
+    "font",
+    "glyph",
+    "os-version"
+  ],
+  "plain": "Renders emoji and rare Unicode characters and measures or hashes how they look.",
+  "meaning": "Each OS and version ships a different emoji font and Unicode level, so the rendered glyph set pins the OS, its version and sometimes the vendor skin on Android.",
+  "lifecycle": [
+    "on-arrival"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "canvas fillText('emoji'); measureText(); DOM span width",
+      "access": {
+        "grant": "none",
+        "prompt_ui": "",
+        "secure_context": false,
+        "user_gesture": false,
+        "persistence": "",
+        "revocation": "",
+        "iframe": "",
+        "steps": [
+          "Draw a list of recent emoji to canvas",
+          "Compare width or pixels against known OS renderings",
+          "Record which glyphs fall back to tofu boxes"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "4",
+          "note": "",
+          "date": "2010-01-25"
+        },
+        "edge": {
+          "s": "y",
+          "v": "79",
+          "note": "",
+          "date": "2020-01-15"
+        },
+        "firefox": {
+          "s": "y",
+          "v": "3.6",
+          "note": "",
+          "date": "2010-01-21"
+        },
+        "safari": {
+          "s": "y",
+          "v": "4",
+          "note": "",
+          "date": "2009-06-08"
+        },
+        "ios_safari": {
+          "s": "y",
+          "v": "4",
+          "note": "",
+          "date": "2010-06-21"
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "4",
+          "note": "",
+          "date": ""
+        },
+        "samsung": {
+          "s": "y",
+          "v": "5.0",
+          "note": "",
+          "date": "2016-12-15"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "hash",
+    "metric": "Pixel or width signature of 20 to 100 Unicode samples",
+    "update": "",
+    "fields": [
+      {
+        "name": "emoji width",
+        "type": "float",
+        "unit": "px",
+        "range": "0 to 100",
+        "precision": "subpixel"
+      },
+      {
+        "name": "supported Unicode version",
+        "type": "enum",
+        "unit": "",
+        "range": "Unicode 6 to 16",
+        "precision": "per OS release"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can draw emoji to tell your system and version apart",
+    "user_action": "Nothing. It happens when the page loads",
+    "can": [
+      "Draw emoji and rare symbols out of sight",
+      "Check how they look, since each system uses a different emoji font",
+      "Work out your system and often its version",
+      "Spot some Android brands from their emoji style"
+    ],
+    "cannot": [
+      "Know who you are by itself",
+      "Ask permission first",
+      "Tell which apps you have",
+      "Get exact results when browsers add noise or use a fixed emoji font"
+    ],
+    "reach": 2,
+    "reach_label": "Silent, system traits only",
+    "differs": ""
+  },
+  "story": {
+    "what_it_is": "A script draws emoji and rare characters and measures how they look, which shows your system and fonts.",
+    "icon": "smile",
+    "tags": [
+      "Silent",
+      "Fonts",
+      "Fingerprinting"
+    ],
+    "marketing": [],
+    "for_you": "You never see it. The page draws a row of emoji out of sight. Apple, Google, Microsoft and Samsung all draw them differently, so the result says a lot about your device.",
+    "for_makers": "Emoji look different on every platform, so this reveals the system and its version very fast. Fraud tools use it to catch emulators, and tracking tools add it to a device ID.",
+    "use_cases": [
+      {
+        "type": "security",
+        "example": "A bot checker draws a new emoji, sees it as a blank box, and learns the device is running an old system.",
+        "apps": []
+      },
+      {
+        "type": "messaging",
+        "example": "A web chat app picks which emoji picture set to show so your messages look the same on every device.",
+        "apps": [
+          "Slack",
+          "Discord"
+        ]
+      },
+      {
+        "type": "social",
+        "example": "A social site uses one fixed emoji set so a post does not look different in each browser.",
+        "apps": [
+          "X",
+          "Twitter"
+        ]
+      },
+      {
+        "type": "ads",
+        "example": "A tracker draws emoji with the canvas and hashes the result as part of an anonymous ID.",
+        "apps": []
+      },
+      {
+        "type": "games",
+        "example": "A browser game with chat checks that your device can show a new emoji, or it swaps in an image.",
+        "apps": []
+      },
+      {
+        "type": "analytics",
+        "example": "A visitor counting tool uses the emoji look to split visitors on iOS from Android.",
+        "apps": [
+          "FingerprintJS"
+        ]
+      },
+      {
+        "type": "kids",
+        "example": "A kids learning site checks that emoji used in lessons display properly, or uses pictures instead.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Reveals your operating system",
+      "Adds to a device ID"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Reveals OS and font stack but not per-device identity",
+    "Fallback fonts may be user-installed, adding entropy"
+  ],
+  "scores": {
+    "sensitivity": 2,
+    "utility": 1,
+    "fingerprint_bits": 3,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": "Detect missing emoji support and show fallbacks",
+    "abuse": "Narrow OS version, cloak-detect spoofed user agents"
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2020-01",
+      "browser": "paper",
+      "version": "",
+      "change": "Emoji sets used in FingerprintJS and CreepJS to detect OS version"
+    }
+  ],
+  "related": [
+    "web.render.canvas-2d-fingerprint",
+    "web.render.font-enumeration-metrics"
+  ],
+  "refs": [
+    {
+      "t": "github",
+      "label": "CreepJS emoji and glyph tests",
+      "url": "https://github.com/abrahamjuliot/creepjs"
+    },
+    {
+      "t": "github",
+      "label": "FingerprintJS",
+      "url": "https://github.com/fingerprintjs/fingerprintjs"
+    }
+  ],
+  "confidence": "docs"
+}

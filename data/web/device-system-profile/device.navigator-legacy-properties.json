@@ -1,0 +1,228 @@
+{
+  "id": "web.device.navigator-legacy-properties",
+  "name": "Legacy navigator properties (appName, appVersion, platform, vendor ...)",
+  "kind": "signal",
+  "group": "device-system-profile",
+  "subgroup": "Browser identity",
+  "tags": [
+    "navigator",
+    "legacy",
+    "fingerprint"
+  ],
+  "plain": "Frozen strings such as appName, appVersion, appCodeName, platform, product, productSub, vendor and vendorSub.",
+  "meaning": "Mostly frozen for compatibility, but platform and vendor still differ by OS and engine. Used for consistency checks against the user agent.",
+  "lifecycle": [
+    "on-arrival",
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "navigator.appName, appVersion, appCodeName, platform, product, productSub, vendor, vendorSub",
+      "bcd": [
+        "api.Navigator.platform",
+        "api.Navigator.vendor"
+      ],
+      "access": {
+        "grant": "none",
+        "prompt_ui": "None (no browser prompt)",
+        "secure_context": false,
+        "user_gesture": false,
+        "persistence": "",
+        "revocation": "",
+        "iframe": "",
+        "steps": [
+          "Script reads the value",
+          "Value joins the fingerprint payload"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "1",
+          "note": "",
+          "date": "2008-12-11"
+        },
+        "edge": {
+          "s": "y",
+          "v": "12",
+          "note": "",
+          "date": "2015-07-29"
+        },
+        "firefox": {
+          "s": "y",
+          "v": "1",
+          "note": "",
+          "date": "2004-11-09"
+        },
+        "safari": {
+          "s": "y",
+          "v": "1",
+          "note": "",
+          "date": "2003-06-23"
+        },
+        "ios_safari": {
+          "s": "y",
+          "v": "1",
+          "note": "",
+          "date": "2007-06-29"
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "18",
+          "note": "",
+          "date": "2012-06-27"
+        },
+        "samsung": {
+          "s": "y",
+          "v": "1.0",
+          "note": "",
+          "date": "2013-04-27"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "string",
+    "metric": "Legacy navigator properties (appName, appVersion, platform, vendor ...)",
+    "update": "static",
+    "fields": [
+      {
+        "name": "platform",
+        "type": "string",
+        "unit": "",
+        "range": "e.g. MacIntel, Win32, Linux x86_64",
+        "precision": ""
+      },
+      {
+        "name": "vendor",
+        "type": "string",
+        "unit": "",
+        "range": "Google Inc., Apple Computer, Inc., empty for Firefox",
+        "precision": ""
+      },
+      {
+        "name": "productSub",
+        "type": "string",
+        "unit": "",
+        "range": "20030107 or 20100101",
+        "precision": ""
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can see old fixed labels naming your browser maker, OS family, and engine",
+    "user_action": "Nothing. It happens when the page loads",
+    "can": [
+      "Check old browser strings like appName, platform, and vendor",
+      "Compare them with the user agent to spot fakes",
+      "Tell the engine (Chromium, Safari, Firefox) apart"
+    ],
+    "cannot": [
+      "See your exact OS version",
+      "See your name, location, or accounts",
+      "Learn much; many values are frozen for compatibility",
+      "Tell similar browsers apart on their own"
+    ],
+    "reach": 1,
+    "reach_label": "A few frozen labels",
+    "differs": ""
+  },
+  "story": {
+    "what_it_is": "Old fixed text fields, like app name and vendor, that still differ a little by system and engine.",
+    "icon": "file-text",
+    "tags": [
+      "Browser",
+      "Silent",
+      "Fraud"
+    ],
+    "marketing": [],
+    "for_you": "You never see them. They are mostly frozen for old websites. A few still differ between systems, which lets a site cross check that you are who your browser says you are.",
+    "for_makers": "These strings exist so old sites do not break. Modern sites use them in consistency checks. When privacy tools or bots change one value but forget another, the mismatch stands out.",
+    "use_cases": [
+      {
+        "type": "security",
+        "example": "A bot defence service checks that the vendor, platform and user agent agree and challenges those that do not.",
+        "apps": [
+          "Cloudflare",
+          "DataDome"
+        ]
+      },
+      {
+        "type": "ads",
+        "example": "An ad fraud vendor verifies that browser identity strings are consistent before counting a view.",
+        "apps": [
+          "DoubleVerify"
+        ]
+      },
+      {
+        "type": "developer",
+        "example": "An old script reads appName and appVersion to guess the browser, which still works for basic cases.",
+        "apps": []
+      },
+      {
+        "type": "banking",
+        "example": "A bank risk engine adds suspicion when two strings disagree.",
+        "apps": []
+      },
+      {
+        "type": "analytics",
+        "example": "A fingerprinting library mixes the strings into a device ID.",
+        "apps": [
+          "FingerprintJS"
+        ]
+      },
+      {
+        "type": "games",
+        "example": "A browser games platform checks these strings to pick the right controls layout for the engine.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Low value alone, but combined",
+      "Can wrongly flag privacy tools"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Spec says they are legacy constants",
+    "Easy to spoof"
+  ],
+  "scores": {
+    "sensitivity": 1,
+    "utility": 3,
+    "fingerprint_bits": 1,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Compat checks"
+    ],
+    "abuse": [
+      "Engine and OS fingerprint"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": true,
+      "how": "Collector key(s): appName, appVersion, appCodeName, platform, product, productSub, vendor, vendorSub. "
+    }
+  },
+  "related": [
+    "web.tracking.linkedin-apfc-fingerprint"
+  ],
+  "refs": [
+    {
+      "t": "mdn",
+      "label": "MDN Navigator",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/Navigator"
+    },
+    {
+      "t": "github",
+      "label": "mdp/linkedin-extension-fingerprinting (LinkedIn script snapshot and ID list)",
+      "url": "https://github.com/mdp/linkedin-extension-fingerprinting"
+    }
+  ],
+  "confidence": "docs"
+}

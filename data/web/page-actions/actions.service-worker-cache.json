@@ -1,0 +1,248 @@
+{
+  "id": "web.actions.service-worker-cache",
+  "name": "Service Worker offline caching",
+  "kind": "capability",
+  "group": "page-actions",
+  "subgroup": "Background",
+  "tags": [
+    "service-worker",
+    "offline",
+    "cache-api",
+    "pwa",
+    "itp-7-day"
+  ],
+  "plain": "Installs a script that caches pages and answers requests when offline.",
+  "meaning": "A site can keep running its own code between visits and serve content from a local cache. Safari deletes script-written storage after 7 days without interaction; Chrome keeps it until cleared.",
+  "lifecycle": [
+    "in-session",
+    "after-leaving"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "navigator.serviceWorker.register(); caches.open(); fetch event",
+      "bcd": [
+        "api.ServiceWorker",
+        "api.CacheStorage",
+        "api.ServiceWorkerRegistration"
+      ],
+      "access": {
+        "grant": "none",
+        "prompt_ui": "None (no browser prompt)",
+        "secure_context": true,
+        "user_gesture": false,
+        "activation": "none",
+        "persistence": "Persists until unregistered or storage cleared; Safari ITP may delete after 7 days of no interaction",
+        "revocation": "Nothing to revoke (no permission is stored)",
+        "iframe": "Same origin only; scope limited to script path unless Service-Worker-Allowed header is set",
+        "steps": [
+          "Page registers service worker (HTTPS)",
+          "Browser installs, activates",
+          "fetch events return cached or network responses"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "40",
+          "note": "",
+          "date": "2015-01-21"
+        },
+        "edge": {
+          "s": "y",
+          "v": "17",
+          "note": "",
+          "date": "2018-04-30"
+        },
+        "firefox": {
+          "s": "y",
+          "v": "44",
+          "note": "",
+          "date": "2016-01-26"
+        },
+        "safari": {
+          "s": "y",
+          "v": "11.1",
+          "note": "",
+          "date": "2018-04-12"
+        },
+        "ios_safari": {
+          "s": "y",
+          "v": "11.3",
+          "note": "All iOS browsers use WebKit",
+          "date": "2018-03-29"
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "40",
+          "note": "",
+          "date": "2015-01-21"
+        },
+        "samsung": {
+          "s": "y",
+          "v": "4.0",
+          "note": "",
+          "date": "2016-03-11"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "none",
+    "metric": "",
+    "update": "",
+    "fields": []
+  },
+  "limits": {
+    "headline": "Can save pages on your device so the site works offline",
+    "user_action": "You open the site once. It installs by itself, with no pop up.",
+    "can": [
+      "Save pages, images and files on your device for later",
+      "Show saved pages when you have no signal",
+      "Answer or change requests the site makes, even when you are offline"
+    ],
+    "cannot": [
+      "Work on a site that has not been opened over a secure connection (HTTPS)",
+      "Use unlimited storage; browsers set a limit and may clear it",
+      "Stay saved forever; Safari on iPhone can clear it after 7 days of no use",
+      "Reach other sites' saved files"
+    ],
+    "reach": 3,
+    "reach_label": "Stays on your device between visits",
+    "differs": "Safari on iPhone can clear saved data after about 7 days without a visit, unless the site is added to your Home Screen."
+  },
+  "story": {
+    "what_it_is": "A site can install a helper that stores pages and works when you are offline.",
+    "icon": "wifi-off",
+    "tags": [
+      "Offline",
+      "Silent",
+      "Speed"
+    ],
+    "marketing": [
+      {
+        "vendor": "Google",
+        "name": "Service workers",
+        "pitch": "web.dev teaches service workers as the base of installable, offline capable web apps.",
+        "url": "https://web.dev/learn/pwa/service-workers"
+      }
+    ],
+    "for_you": "A site opens instantly the second time and may even work on a plane. You never approve it, and it lives on after you close the tab.",
+    "for_makers": "Makers get offline use, quick starts and push messages, which lifts return visits. It also lets them update an app silently in the background.",
+    "use_cases": [
+      {
+        "type": "media",
+        "example": "A music or podcast web app plays saved episodes with no signal.",
+        "apps": []
+      },
+      {
+        "type": "travel",
+        "example": "A flight status or map site loads from its saved copy in an airport with weak wifi.",
+        "apps": [
+          "Google Maps Go"
+        ]
+      },
+      {
+        "type": "social",
+        "example": "A lite social site opens in a flash on a slow phone.",
+        "apps": [
+          "Twitter Lite",
+          "Pinterest"
+        ]
+      },
+      {
+        "type": "games",
+        "example": "A browser game stores its art and levels so it starts fast and plays offline.",
+        "apps": []
+      },
+      {
+        "type": "shopping",
+        "example": "A store saves its catalog shell so browsing is fast on a bad connection.",
+        "apps": [
+          "Starbucks",
+          "AliExpress"
+        ]
+      },
+      {
+        "type": "security",
+        "example": "A malicious site may keep a helper installed to serve ads or show alerts later, which is why you can clear site data.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Stays after closing",
+      "Stale or stuck copies"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "HTTPS or localhost only",
+    "Idle service workers terminate after about 30 s; a single event can run up to about 5 minutes in Chrome",
+    "Browser checks for a new worker script at most every 24 h (byte compare) and on navigation",
+    "Safari (ITP) caps script-writable storage including service worker registrations and Cache API at 7 days of no user interaction (not for Home Screen web apps)",
+    "Cache API quota shared with origin quota (Chrome up to 60% of disk per origin; Firefox about 10% of disk, up to 10 GiB per group)",
+    "Cannot run while the browser is closed except via push or background sync (permission and platform needed)"
+  ],
+  "scores": {
+    "sensitivity": 2,
+    "utility": 5,
+    "fingerprint_bits": null,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Offline apps",
+      "Fast repeat loads",
+      "Push and sync host"
+    ],
+    "abuse": [
+      "Persistent foothold for tracking and malware",
+      "Hidden background fetches"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2015-04",
+      "browser": "chrome",
+      "version": "40",
+      "change": "Service Workers ship"
+    },
+    {
+      "date": "2018-03",
+      "browser": "safari",
+      "version": "11.1",
+      "change": "Service Workers ship in Safari"
+    },
+    {
+      "date": "2020-03",
+      "browser": "safari",
+      "version": "13.1",
+      "change": "ITP caps script-writable storage including SW at 7 days"
+    }
+  ],
+  "refs": [
+    {
+      "t": "mdn",
+      "label": "MDN Service Worker API",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/Service_Worker_API"
+    },
+    {
+      "t": "spec",
+      "label": "W3C Service Workers",
+      "url": "https://www.w3.org/TR/service-workers/"
+    },
+    {
+      "t": "webkit",
+      "label": "WebKit Tracking Prevention: storage",
+      "url": "https://webkit.org/tracking-prevention/"
+    }
+  ],
+  "confidence": "docs"
+}

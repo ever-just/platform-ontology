@@ -1,0 +1,174 @@
+{
+  "id": "mob.linkedin.cedexis-radar",
+  "name": "Cedexis Radar (network measurement)",
+  "kind": "tracking",
+  "group": "network-connectivity",
+  "subgroup": "Third-party SDK",
+  "tags": [
+    "sdk",
+    "exodus-tracker",
+    "rum",
+    "cdn"
+  ],
+  "plain": "Real-user network measurement SDK found in LinkedIn Android builds.",
+  "meaning": "Measures latency and throughput from the phone to many servers, building a map of network performance by carrier and place.",
+  "lifecycle": [
+    "in-session",
+    "background"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "p",
+      "v": "",
+      "permission": "INTERNET, ACCESS_NETWORK_STATE",
+      "protection": "normal",
+      "grant": "install",
+      "prompt_ui": "No prompt",
+      "persistence": "n/a",
+      "revocation": "n/a",
+      "store_policy": "",
+      "api_surface": "Cedexis Radar SDK",
+      "note": "Exodus signature; exact use unverified"
+    },
+    "ios": {
+      "s": "n",
+      "v": "",
+      "permission": "",
+      "protection": "none",
+      "grant": "not-exposed",
+      "prompt_ui": "Not seen",
+      "persistence": "n/a",
+      "revocation": "n/a",
+      "store_policy": "",
+      "api_surface": "",
+      "note": "No iOS evidence found"
+    }
+  },
+  "data": {
+    "type": "event",
+    "metric": "Latency probes",
+    "update": "periodic",
+    "fields": [
+      {
+        "name": "latency",
+        "type": "integer",
+        "unit": "ms",
+        "range": "1 to 2000",
+        "precision": "1 ms"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can maybe measure how fast your connection is, as found inside LinkedIn Android",
+    "user_action": "Nothing. It may happen while the app is open and loading content",
+    "can": [
+      "Time how fast the network loads from different servers",
+      "Send speed measurements to help choose the fastest route",
+      "Check your network state with normal Android permissions"
+    ],
+    "cannot": [
+      "Do the same on iPhone; no evidence was found",
+      "Be confirmed; the exact use is not verified",
+      "See your messages or profile data",
+      "Find your location from speed tests"
+    ],
+    "reach": 2,
+    "reach_label": "Connection speed, unverified use",
+    "differs": "Seen only in Android builds. No iOS evidence was found."
+  },
+  "story": {
+    "what_it_is": "A measurement kit inside an app tests how fast your phone can reach many servers.",
+    "icon": "radar",
+    "tags": [
+      "Network",
+      "Silent",
+      "Measurement"
+    ],
+    "marketing": [],
+    "for_you": "You never see it. The app quietly tests a few small downloads while you use it. It may help the app load faster for you, but it also shows your network, carrier and place.",
+    "for_makers": "Makers use real user tests to choose the best cloud or content network for each region and carrier. It builds a live map of internet speed. The same data can also reveal your IP, carrier and area.",
+    "use_cases": [
+      {
+        "type": "social",
+        "example": "A professional network picks the fastest server for you by testing it from your phone.",
+        "apps": [
+          "LinkedIn"
+        ]
+      },
+      {
+        "type": "media",
+        "example": "A streaming service picks the fastest delivery network for your carrier at 8 PM.",
+        "apps": []
+      },
+      {
+        "type": "games",
+        "example": "A game studio measures lag to many data centers and matches players to the best one.",
+        "apps": []
+      },
+      {
+        "type": "analytics",
+        "example": "A tool compares carriers in a city to find where slow networks hurt sales.",
+        "apps": []
+      },
+      {
+        "type": "shopping",
+        "example": "A big store tests page speed on real phones to decide where to host images.",
+        "apps": []
+      },
+      {
+        "type": "ads",
+        "example": "An ad system reads network measurements and IPs to profile where and how you connect.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "IP and carrier profiling",
+      "Runs without clear notice"
+    ],
+    "android_note": "This kit was found in LinkedIn Android builds, and Android lets it run with the internet permission.",
+    "ios_note": "iPhone apps could do the same with normal network calls, so it is not specific to Android."
+  },
+  "technical_bounds": [
+    "Static signature only"
+  ],
+  "scores": {
+    "sensitivity": 2,
+    "utility": 2,
+    "fingerprint_bits": 4,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Choose faster CDN"
+    ],
+    "abuse": [
+      "IP and carrier profiling"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": true,
+      "how": "Exodus lists Cedexis Radar in the LinkedIn Android report for 4.1.1012 (Dec 2024 snippet)."
+    }
+  },
+  "history": [
+    {
+      "date": "2024-12",
+      "platform": "android",
+      "version": "n/a",
+      "change": "Listed in Exodus report for 4.1.1012"
+    }
+  ],
+  "related": [
+    "mob.network.network-state"
+  ],
+  "refs": [
+    {
+      "t": "vendor",
+      "label": "Exodus Privacy report, com.linkedin.android 4.1.995 (Oct 2024)",
+      "url": "https://reports.exodus-privacy.eu.org/en/reports/513380/"
+    }
+  ],
+  "confidence": "inferred"
+}

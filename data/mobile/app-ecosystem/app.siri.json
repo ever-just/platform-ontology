@@ -1,0 +1,216 @@
+{
+  "id": "mob.app.siri",
+  "name": "Siri and voice shortcuts",
+  "kind": "permission",
+  "group": "app-ecosystem",
+  "subgroup": "Voice assistant",
+  "tags": [
+    "runtime-permission",
+    "siri",
+    "app-intents"
+  ],
+  "plain": "Lets Siri send the app voice requests and read the app's shortcuts.",
+  "meaning": "Siri forwards what was spoken and learned patterns; apps expose actions to the assistant.",
+  "lifecycle": [
+    "in-session"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "p",
+      "v": "8",
+      "api": 26,
+      "permission": "No runtime permission; App Actions declared in shortcuts.xml",
+      "protection": "none",
+      "grant": "install",
+      "prompt_ui": "None",
+      "persistence": "Per request",
+      "revocation": "Google Assistant settings",
+      "store_policy": "",
+      "api_surface": "App Actions, Shortcuts, Assistant built-in intents",
+      "note": "Voice requests handled via intents"
+    },
+    "ios": {
+      "s": "y",
+      "v": "10",
+      "permission": "NSSiriUsageDescription",
+      "protection": "prompt",
+      "grant": "prompt",
+      "prompt_ui": "Allow or Don't Allow Siri and Dictation for the app",
+      "persistence": "Until revoked",
+      "revocation": "Settings > Siri > Apps",
+      "store_policy": "App Review 5.1.1",
+      "api_surface": "INPreferences.requestSiriAuthorization, App Intents (iOS 16)",
+      "note": "App Intents shortcuts need no authorization"
+    }
+  },
+  "data": {
+    "type": "event",
+    "metric": "Intent request",
+    "update": "per utterance",
+    "fields": [
+      {
+        "name": "intent",
+        "type": "string",
+        "unit": "",
+        "range": "app declared",
+        "precision": ""
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can accept your Siri voice requests and show shortcuts, after you allow Siri",
+    "user_action": "You say a command to Siri, or tap Allow for Siri and Dictation",
+    "can": [
+      "Run an action when you ask Siri by voice",
+      "Suggest shortcuts to you based on how you use the app",
+      "Receive the words you said to carry out the request"
+    ],
+    "cannot": [
+      "Hear you when you did not call Siri",
+      "Use Siri features after you tap Don't Allow"
+    ],
+    "reach": 2,
+    "reach_label": "Only when you ask Siri",
+    "differs": "iPhone shows an Allow prompt for Siri and Dictation. On Android, voice requests go through the assistant with no per app prompt."
+  },
+  "story": {
+    "what_it_is": "Lets Siri talk to an app, so you can use it by voice.",
+    "icon": "mic",
+    "tags": [
+      "Voice",
+      "Asks first",
+      "Assistant"
+    ],
+    "marketing": [
+      {
+        "vendor": "Apple",
+        "name": "Siri and Shortcuts",
+        "pitch": "Use your voice to get things done in apps, and teach Siri your routines.",
+        "url": "https://developer.apple.com/documentation/sirikit/requesting-authorization-to-use-siri"
+      },
+      {
+        "vendor": "Google",
+        "name": "App Actions",
+        "pitch": "Let people open and use app features with Google Assistant voice commands.",
+        "url": "https://developer.android.com/guide/app-actions/overview"
+      }
+    ],
+    "for_you": "You say 'Hey Siri, send money to Sam' or tap a suggestion on your lock screen. The phone learns your habits and offers actions at the right moment.",
+    "for_makers": "Voice and suggestions keep an app one phrase away from the user, even when the icon is buried. Makers gain more daily opens and a way into cars, watches and speakers.",
+    "use_cases": [
+      {
+        "type": "music",
+        "example": "'Hey Siri, play my workout playlist' starts the right playlist in your music app.",
+        "apps": [
+          "Spotify",
+          "Apple Music"
+        ]
+      },
+      {
+        "type": "messaging",
+        "example": "You tell Siri to text a friend on WhatsApp and she reads your message back before sending.",
+        "apps": [
+          "WhatsApp",
+          "Telegram"
+        ]
+      },
+      {
+        "type": "fitness",
+        "example": "A shortcut starts a ten minute stretch routine when you get to the gym.",
+        "apps": [
+          "Peloton",
+          "Nike Training Club"
+        ]
+      },
+      {
+        "type": "delivery",
+        "example": "You say 'Order my usual coffee' and the app builds the order from your last pickup.",
+        "apps": [
+          "Starbucks",
+          "DoorDash"
+        ]
+      },
+      {
+        "type": "productivity",
+        "example": "Say 'Add milk to my list' and the item lands in the shopping app without opening it.",
+        "apps": [
+          "Things",
+          "Todoist",
+          "Reminders"
+        ]
+      },
+      {
+        "type": "smart-home",
+        "example": "Lights and locks respond to a voice command from the phone, watch or car.",
+        "apps": [
+          "Apple Home"
+        ]
+      }
+    ],
+    "risks": [
+      "Voice requests go to servers",
+      "Learned habits reveal routines"
+    ],
+    "android_note": "Android uses Google Assistant and App Actions, which need no extra permission prompt.",
+    "ios_note": "iOS shows a Siri permission pop up and shares learned patterns with the app."
+  },
+  "technical_bounds": [
+    "Only declared intents are handled"
+  ],
+  "scores": {
+    "sensitivity": 3,
+    "utility": 3,
+    "fingerprint_bits": null,
+    "friction": 2
+  },
+  "value": {
+    "legit_uses": [
+      "Voice commands"
+    ],
+    "abuse": [
+      "Intent spoofing"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2016-09",
+      "platform": "ios",
+      "version": "iOS 10",
+      "change": "SiriKit and NSSiriUsageDescription"
+    },
+    {
+      "date": "2022-09",
+      "platform": "ios",
+      "version": "iOS 16",
+      "change": "App Intents framework"
+    }
+  ],
+  "related": [
+    "mob.camera.speech-recognition"
+  ],
+  "refs": [
+    {
+      "t": "apple",
+      "label": "Apple: Requesting authorization to use Siri",
+      "url": "https://developer.apple.com/documentation/sirikit/requesting-authorization-to-use-siri"
+    },
+    {
+      "t": "apple",
+      "label": "Apple: Protected resources keys",
+      "url": "https://developer.apple.com/documentation/bundleresources/protected-resources"
+    },
+    {
+      "t": "android",
+      "label": "Android: App Actions",
+      "url": "https://developer.android.com/guide/app-actions/overview"
+    }
+  ],
+  "confidence": "docs"
+}

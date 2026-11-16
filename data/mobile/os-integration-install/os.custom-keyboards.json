@@ -1,0 +1,195 @@
+{
+  "id": "mob.os.custom-keyboards",
+  "name": "Custom keyboards and input methods",
+  "kind": "capability",
+  "group": "os-integration-install",
+  "subgroup": "Input",
+  "tags": [
+    "keyboard",
+    "ime",
+    "input-method",
+    "full-access"
+  ],
+  "plain": "Replaces the on-screen keyboard.",
+  "meaning": "A keyboard sees every keystroke. iOS sandboxes it and needs a separate Full Access toggle for network; Android IMEs have broader reach but show a risk warning.",
+  "lifecycle": [
+    "in-session"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "y",
+      "v": "1.5",
+      "api": 3,
+      "permission": "BIND_INPUT_METHOD (system bound)",
+      "protection": "signature",
+      "grant": "settings",
+      "prompt_ui": "Settings > System > Languages & input > On screen keyboard; warning dialog",
+      "persistence": "Until disabled",
+      "revocation": "Settings",
+      "store_policy": "Play: user data policy for IMEs",
+      "api_surface": "InputMethodService, InputConnection",
+      "note": "Password fields can use private IME options; keyboards can read clipboard when focused."
+    },
+    "ios": {
+      "s": "y",
+      "v": "8.0",
+      "permission": "Keyboard extension; RequestsOpenAccess flag",
+      "protection": "prompt",
+      "grant": "settings",
+      "prompt_ui": "Settings > General > Keyboard > Keyboards; Full Access warning",
+      "persistence": "Until disabled",
+      "revocation": "Settings",
+      "store_policy": "App Review 4.4.1 extensions",
+      "api_surface": "UIInputViewController, Keyboard extension",
+      "note": "Secure fields force the system keyboard."
+    }
+  },
+  "data": {
+    "type": "stream",
+    "metric": "Keystrokes",
+    "update": "continuous",
+    "fields": [
+      {
+        "name": "text",
+        "type": "string",
+        "unit": "chars",
+        "range": "typed text",
+        "precision": "exact"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can replace the on screen keyboard, but only after you add it and approve its warning",
+    "user_action": "You open Settings and switch on a new keyboard, then accept the warning",
+    "can": [
+      "Type for you in any normal text field once you switch to it",
+      "Offer its own layouts, emoji and suggestions",
+      "See what you type, which is why both phones show a warning"
+    ],
+    "cannot": [
+      "Work in secure fields like passwords on iPhone; the system keyboard takes over",
+      "Turn itself on without you adding it in Settings",
+      "See what you type on iPhone without Full Access"
+    ],
+    "reach": 3,
+    "reach_label": "Everything you type, if you allow",
+    "differs": "iPhone shows a Full Access warning and forces the system keyboard in secure fields. Android can use private options for password fields."
+  },
+  "story": {
+    "what_it_is": "Replaces the phone's on screen keyboard with another one.",
+    "icon": "keyboard",
+    "tags": [
+      "Typing",
+      "Privacy",
+      "Asks first"
+    ],
+    "marketing": [],
+    "for_you": "You pick a new keyboard for swipe typing, GIFs or AI help. You see a warning because a keyboard can see everything you type.",
+    "for_makers": "Makers can offer better typing, languages and AI help. A keyboard sees every keystroke, so it is trusted and also a risk.",
+    "use_cases": [
+      {
+        "type": "messaging",
+        "example": "A GIF keyboard lets you search and send a clip in a chat.",
+        "apps": [
+          "Gboard",
+          "GIPHY"
+        ]
+      },
+      {
+        "type": "accessibility",
+        "example": "A keyboard built for people with limited movement.",
+        "apps": []
+      },
+      {
+        "type": "productivity",
+        "example": "An AI keyboard rewrites your message as you type.",
+        "apps": [
+          "Grammarly"
+        ]
+      },
+      {
+        "type": "social",
+        "example": "A keyboard offers stickers and themes.",
+        "apps": [
+          "Bitmoji"
+        ]
+      },
+      {
+        "type": "kids",
+        "example": "A parent controlled keyboard blocks unsafe words.",
+        "apps": []
+      },
+      {
+        "type": "security",
+        "example": "A malicious keyboard could log passwords, so secure fields use the system one.",
+        "apps": []
+      },
+      {
+        "type": "games",
+        "example": "A gaming keyboard adds quick chat phrases for team games.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Keylogging",
+      "Full Access can send text out"
+    ],
+    "android_note": "A warning dialog appears. Keyboards can read the clipboard when in focus.",
+    "ios_note": "Secure fields force the system keyboard. Full Access needs a separate switch."
+  },
+  "technical_bounds": [
+    "iOS bars them from secure text fields and phone pad"
+  ],
+  "scores": {
+    "sensitivity": 5,
+    "utility": 3,
+    "fingerprint_bits": 1,
+    "friction": 3
+  },
+  "value": {
+    "legit_uses": [
+      "Alternative layouts",
+      "AI keyboards"
+    ],
+    "abuse": [
+      "Keyloggers"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2014-09",
+      "platform": "ios",
+      "version": "iOS 8",
+      "change": "Custom keyboards"
+    },
+    {
+      "date": "2022-09",
+      "platform": "ios",
+      "version": "iOS 16",
+      "change": "Full Access keystroke logging concerns documented"
+    }
+  ],
+  "related": [
+    "mob.sys.accessibility-service"
+  ],
+  "refs": [
+    {
+      "t": "android",
+      "label": "Android: Create an input method",
+      "url": "https://developer.android.com/develop/ui/views/touch-and-input/creating-input-method"
+    },
+    {
+      "t": "apple",
+      "label": "Apple: Custom keyboard",
+      "url": "https://developer.apple.com/documentation/uikit/keyboards_and_input/creating_a_custom_keyboard"
+    }
+  ],
+  "confidence": "docs"
+}

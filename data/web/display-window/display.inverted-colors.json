@@ -1,0 +1,212 @@
+{
+  "id": "web.display.inverted-colors",
+  "name": "inverted-colors",
+  "kind": "signal",
+  "group": "display-window",
+  "subgroup": "CSS media features",
+  "tags": [
+    "media-query",
+    "preferences",
+    "accessibility"
+  ],
+  "plain": "True if the OS inverts colors (Safari Smart Invert).",
+  "meaning": "Accessibility setting visible only in Safari and WebKit browsers. Used by FingerprintJS as a Safari-only trait.",
+  "lifecycle": [
+    "on-arrival",
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "matchMedia('(inverted-colors: inverted)')",
+      "bcd": [
+        "css.at-rules.media.inverted-colors"
+      ],
+      "access": {
+        "grant": "none",
+        "prompt_ui": "None",
+        "secure_context": false,
+        "user_gesture": false,
+        "persistence": "read fresh on every page load; nothing stored",
+        "revocation": "none needed (no grant)",
+        "iframe": "Readable from cross-origin iframes too (same values)",
+        "steps": [
+          "Page script reads the value",
+          "No prompt is shown"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "edge": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "firefox": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "safari": {
+          "s": "y",
+          "v": "9.1",
+          "note": "",
+          "date": "2016-03-21"
+        },
+        "ios_safari": {
+          "s": "y",
+          "v": "10",
+          "note": "",
+          "date": "2016-09-13"
+        },
+        "chrome_android": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "samsung": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "object",
+    "metric": "",
+    "update": "static per session",
+    "fields": [
+      {
+        "name": "inverted-colors",
+        "type": "enum",
+        "unit": "",
+        "range": "none, inverted",
+        "precision": ""
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can tell if your device inverts screen colors, such as Smart Invert on iPhone",
+    "user_action": "Nothing. It happens when the page loads.",
+    "can": [
+      "Check whether inverted colors are on",
+      "Keep images and video looking normal",
+      "Add the answer to a browser fingerprint"
+    ],
+    "cannot": [
+      "Tell why you turned it on, though it can hint at a vision need",
+      "Get an answer in Chrome, Firefox or on Android",
+      "Change the setting"
+    ],
+    "reach": 1,
+    "reach_label": "One yes or no, no prompt",
+    "differs": "Only Safari on iPhone and Mac reports it. Other browsers say nothing."
+  },
+  "story": {
+    "what_it_is": "Tells a page whether your device has inverted colors turned on, as Safari Smart Invert does.",
+    "icon": "contrast",
+    "tags": [
+      "Accessibility",
+      "Display",
+      "Silent"
+    ],
+    "marketing": [
+      {
+        "vendor": "MDN",
+        "name": "inverted-colors media feature",
+        "pitch": "Documents a media query that tells a page when the operating system is inverting colors.",
+        "url": "https://developer.mozilla.org/en-US/docs/Web/CSS/@media/inverted-colors"
+      }
+    ],
+    "for_you": "You never see the check. If you have Smart Invert on, a good site can fix photos and logos that would otherwise look like negatives.",
+    "for_makers": "Makers use it to avoid washed out images and broken brand colors. It is rarely used, but it can hint that the person uses an accessibility setting.",
+    "use_cases": [
+      {
+        "type": "accessibility",
+        "example": "A news site keeps photos in their true colors while the rest of the page is inverted.",
+        "apps": []
+      },
+      {
+        "type": "media",
+        "example": "A photo site restores true colors on pictures so faces do not look like negatives.",
+        "apps": []
+      },
+      {
+        "type": "games",
+        "example": "A browser card game keeps card suits red and black even when the system inverts colors.",
+        "apps": []
+      },
+      {
+        "type": "shopping",
+        "example": "A store keeps product colors true so shoppers do not buy the wrong shade.",
+        "apps": []
+      },
+      {
+        "type": "creative",
+        "example": "A drawing app warns that the screen colors are inverted so you do not misjudge your work.",
+        "apps": []
+      },
+      {
+        "type": "analytics",
+        "example": "A privacy aware team avoids recording the value since it can mark a vision need.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "May reveal vision needs",
+      "Rare signal"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Safari only"
+  ],
+  "scores": {
+    "sensitivity": 1,
+    "utility": 3,
+    "fingerprint_bits": 0.2,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Respect OS theme and accessibility needs",
+      "Adapt layout"
+    ],
+    "abuse": [
+      "Infer disability or setting for fingerprinting"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "related": [
+    "web.locale.accessibility-inference"
+  ],
+  "refs": [
+    {
+      "t": "mdn",
+      "label": "MDN inverted-colors",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/CSS/@media/inverted-colors"
+    },
+    {
+      "t": "github",
+      "label": "fingerprintjs source: inverted_colors",
+      "url": "https://github.com/fingerprintjs/fingerprintjs/blob/master/src/sources/inverted_colors.ts"
+    },
+    {
+      "t": "spec",
+      "label": "CSS Media Queries Level 5",
+      "url": "https://www.w3.org/TR/mediaqueries-5/"
+    }
+  ],
+  "confidence": "docs"
+}

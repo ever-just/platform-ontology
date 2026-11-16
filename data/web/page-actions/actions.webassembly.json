@@ -1,0 +1,262 @@
+{
+  "id": "web.actions.webassembly",
+  "name": "WebAssembly (threads, SIMD, memory limits)",
+  "kind": "capability",
+  "group": "page-actions",
+  "subgroup": "Compute",
+  "tags": [
+    "wasm",
+    "simd",
+    "threads",
+    "memory64",
+    "4gb"
+  ],
+  "plain": "Runs compiled code at near native speed inside the page, with up to 4 GB of memory (16 GB with memory64 in Chrome).",
+  "meaning": "A site can run heavy code (games, codecs, Photoshop-class tools) with no install. The same speed makes in-browser miners and side channel timing code practical.",
+  "lifecycle": [
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "WebAssembly.instantiate(); SharedArrayBuffer threads; SIMD; memory64",
+      "bcd": [
+        "api.WebAssembly",
+        "api.WebAssembly.Memory"
+      ],
+      "access": {
+        "grant": "none",
+        "prompt_ui": "None (no browser prompt)",
+        "secure_context": false,
+        "user_gesture": false,
+        "activation": "none",
+        "persistence": "While the page lives",
+        "revocation": "Nothing to revoke (no permission is stored)",
+        "iframe": "No iframe flag; CSP script-src needs 'wasm-unsafe-eval' to compile",
+        "steps": [
+          "Fetch .wasm",
+          "Compile and instantiate",
+          "Call exports"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "57",
+          "note": "",
+          "date": "2017-03-09"
+        },
+        "edge": {
+          "s": "y",
+          "v": "16",
+          "note": "",
+          "date": "2017-10-17"
+        },
+        "firefox": {
+          "s": "y",
+          "v": "52",
+          "note": "",
+          "date": "2017-03-07"
+        },
+        "safari": {
+          "s": "y",
+          "v": "11",
+          "note": "",
+          "date": "2017-09-19"
+        },
+        "ios_safari": {
+          "s": "y",
+          "v": "11",
+          "note": "All iOS browsers use WebKit",
+          "date": "2017-09-19"
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "57",
+          "note": "",
+          "date": "2017-03-16"
+        },
+        "samsung": {
+          "s": "y",
+          "v": "7.0",
+          "note": "",
+          "date": "2018-03-16"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "none",
+    "metric": "",
+    "update": "",
+    "fields": []
+  },
+  "limits": {
+    "headline": "Can run fast compiled code inside the page, within memory limits",
+    "user_action": "Nothing. It happens when the page loads, such as a game, editor or video tool.",
+    "can": [
+      "Run apps made in languages like C++ or Rust inside the page",
+      "Use up to 4 GB of memory per page; Chrome can go to 16 GB with memory64",
+      "Use several threads at once when the site is isolated"
+    ],
+    "cannot": [
+      "Skip the browser's rules for web code; it runs in the same safe sandbox",
+      "Reach your files, camera or other apps on its own",
+      "Use more memory than the limit the browser sets",
+      "Run after you close the page"
+    ],
+    "reach": 2,
+    "reach_label": "Inside the page's sandbox",
+    "differs": ""
+  },
+  "story": {
+    "what_it_is": "A page can run big, compiled programs in your browser at near desktop speed.",
+    "icon": "binary",
+    "tags": [
+      "Power",
+      "Games",
+      "Silent"
+    ],
+    "marketing": [
+      {
+        "vendor": "W3C",
+        "name": "WebAssembly",
+        "pitch": "The WebAssembly site pitches it as a fast, safe binary format that runs in browsers next to JavaScript.",
+        "url": "https://webassembly.org/"
+      }
+    ],
+    "for_you": "You open a web app and it feels like a desktop program. Photoshop or a 3D game loads in a tab without an install.",
+    "for_makers": "Makers can bring huge existing programs to the web without rewriting them. This is how big games, CAD and design tools reach anyone with a link.",
+    "use_cases": [
+      {
+        "type": "creative",
+        "example": "Figma runs its design engine as WebAssembly so large files stay smooth.",
+        "apps": [
+          "Figma",
+          "Photoshop web"
+        ]
+      },
+      {
+        "type": "games",
+        "example": "Unity and Unreal games run in a tab, and Doom style ports run at full speed.",
+        "apps": [
+          "Unity WebGL games"
+        ]
+      },
+      {
+        "type": "video",
+        "example": "A web conferencing client uses it to compress and clean video and audio.",
+        "apps": [
+          "Zoom web",
+          "Google Meet"
+        ]
+      },
+      {
+        "type": "productivity",
+        "example": "AutoCAD and Google Earth run in a browser tab using compiled code.",
+        "apps": [
+          "AutoCAD web",
+          "Google Earth"
+        ]
+      },
+      {
+        "type": "security",
+        "example": "Attackers can hide crypto miners or obfuscated code in compiled form, harder to inspect.",
+        "apps": []
+      },
+      {
+        "type": "developer",
+        "example": "Developers run Python or full databases in the browser with no server.",
+        "apps": [
+          "Pyodide",
+          "SQLite wasm"
+        ]
+      }
+    ],
+    "risks": [
+      "Hidden miners",
+      "Hard to inspect code"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "wasm32 memory max 65536 pages = 4 GiB per memory in Chrome and Firefox; Safari and mobile browsers often cap lower (about 1 to 2 GiB in practice)",
+    "memory64 raises the limit to 16 GiB in V8 (Chrome 133, Firefox 134); real allocations still fail when RAM is short",
+    "Threads need SharedArrayBuffer and cross-origin isolation (COOP and COEP)",
+    "SIMD: Chrome 91, Firefox 89, Safari 16.4; also tail calls (Chrome 112), GC (Chrome 119, Firefox 120, Safari 18.2)",
+    "Under a CSP without 'wasm-unsafe-eval', compile is blocked (Chrome 97)",
+    "Sandbox: no direct OS access, only imports provided by JavaScript"
+  ],
+  "scores": {
+    "sensitivity": 1,
+    "utility": 5,
+    "fingerprint_bits": 1,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Games",
+      "Video and image processing",
+      "Local ML inference"
+    ],
+    "abuse": [
+      "Cryptojacking",
+      "Timing side channels",
+      "Fast fingerprint and bot code"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2017-03",
+      "browser": "chrome",
+      "version": "57",
+      "change": "WebAssembly 1.0 in all major browsers"
+    },
+    {
+      "date": "2021-05",
+      "browser": "chrome",
+      "version": "91",
+      "change": "Wasm SIMD ships"
+    },
+    {
+      "date": "2025-02",
+      "browser": "chrome",
+      "version": "133",
+      "change": "Memory64 ships"
+    },
+    {
+      "date": "2024-12",
+      "browser": "safari",
+      "version": "18.2",
+      "change": "WasmGC ships"
+    }
+  ],
+  "related": [
+    "web.actions.cross-origin-isolation"
+  ],
+  "refs": [
+    {
+      "t": "mdn",
+      "label": "MDN WebAssembly",
+      "url": "https://developer.mozilla.org/en-US/docs/WebAssembly"
+    },
+    {
+      "t": "spec",
+      "label": "WebAssembly features status",
+      "url": "https://webassembly.org/features/"
+    },
+    {
+      "t": "chromestatus",
+      "label": "V8 Memory64 shipped in Chrome 133",
+      "url": "https://v8.dev/blog/wasm-memory64"
+    }
+  ],
+  "confidence": "docs"
+}

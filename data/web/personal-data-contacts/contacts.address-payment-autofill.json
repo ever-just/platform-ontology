@@ -1,0 +1,227 @@
+{
+  "id": "web.contacts.address-payment-autofill",
+  "name": "Browser saved address and card autofill",
+  "kind": "capability",
+  "group": "personal-data-contacts",
+  "subgroup": "Autofill",
+  "tags": [
+    "autofill"
+  ],
+  "plain": "Chrome and Safari offer saved addresses and cards to fill checkout forms.",
+  "meaning": "Gives a site a user's address, phone and card after the person picks them in a browser prompt.",
+  "lifecycle": [
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "Standard form fields plus autocomplete tokens; Payment Request API for cards",
+      "bcd": [
+        "api.PaymentRequest"
+      ],
+      "access": {
+        "grant": "picker",
+        "prompt_ui": "Browser popup listing saved profiles and cards",
+        "secure_context": true,
+        "user_gesture": true,
+        "persistence": "Per origin",
+        "revocation": "Site settings",
+        "iframe": "Same as top level; cross-origin iframes need a permissions policy where listed",
+        "steps": [
+          "Call the API",
+          "Browser applies its access rules",
+          "Page receives the result"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "60",
+          "note": "",
+          "date": "2017-07-25"
+        },
+        "edge": {
+          "s": "y",
+          "v": "15",
+          "note": "",
+          "date": "2017-04-05"
+        },
+        "firefox": {
+          "s": "f",
+          "v": "55",
+          "note": "Behind flag. "
+        },
+        "safari": {
+          "s": "y",
+          "v": "11.1",
+          "note": "",
+          "date": "2018-04-12"
+        },
+        "ios_safari": {
+          "s": "y",
+          "v": "11.3",
+          "note": "",
+          "date": "2018-03-29"
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "53",
+          "note": "",
+          "date": "2016-09-07"
+        },
+        "samsung": {
+          "s": "y",
+          "v": "6.0",
+          "note": "",
+          "date": "2017-08-23"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "object",
+    "metric": "Chrome and Safari offer saved addresses and cards to fill checkout forms.",
+    "update": "on demand",
+    "fields": [
+      {
+        "name": "shippingAddress",
+        "type": "object",
+        "range": "country, region, city, postalCode, addressLine, recipient, phone",
+        "precision": "Payment Request"
+      },
+      {
+        "name": "card details",
+        "type": "object",
+        "range": "number, expiry, name",
+        "precision": "needs CVC re entry in Chrome"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can offer your saved addresses and cards to fill a form, if you pick them",
+    "user_action": "You tap a form field and choose a saved address or card from the list.",
+    "can": [
+      "Fill a name, address or phone number from your saved ones",
+      "Fill a saved card number in a checkout form",
+      "Offer them in one tap"
+    ],
+    "cannot": [
+      "See your saved cards or addresses before you pick them",
+      "Fill your card's security code without asking in many browsers",
+      "Share them with other sites",
+      "Fill anything if you turned autofill off"
+    ],
+    "reach": 2,
+    "reach_label": "What you pick at checkout",
+    "differs": "Chrome and Safari fill saved addresses and cards. Firefox fills addresses, but cards only partly."
+  },
+  "story": {
+    "what_it_is": "Your browser can fill saved addresses and cards at checkout after you choose them.",
+    "icon": "contact",
+    "tags": [
+      "Autofill",
+      "Asks first",
+      "Checkout"
+    ],
+    "marketing": [
+      {
+        "vendor": "Google",
+        "name": "Autofill in Chrome",
+        "pitch": "Chrome's help page says Chrome can fill saved addresses, cards and passwords so forms go faster.",
+        "url": "https://support.google.com/chrome/answer/142893"
+      }
+    ],
+    "for_you": "A small menu offers your saved address or card. You tap it and the form fills in, without you typing.",
+    "for_makers": "Makers get faster checkouts and fewer errors, so more people finish buying. A skimmer script can try to steal the filled values, so shops must guard the page.",
+    "use_cases": [
+      {
+        "type": "shopping",
+        "example": "You buy shoes on a store and your address and card fill in one tap.",
+        "apps": [
+          "Amazon",
+          "Nike"
+        ]
+      },
+      {
+        "type": "delivery",
+        "example": "A takeout site fills your delivery address and card.",
+        "apps": [
+          "DoorDash"
+        ]
+      },
+      {
+        "type": "travel",
+        "example": "A booking site fills your name, phone and card.",
+        "apps": [
+          "Booking.com"
+        ]
+      },
+      {
+        "type": "media",
+        "example": "A streaming site fills a card for a free trial that you then forget.",
+        "apps": [
+          "Netflix"
+        ]
+      },
+      {
+        "type": "security",
+        "example": "A skimmer script on a checkout page tries to copy the filled card.",
+        "apps": []
+      },
+      {
+        "type": "payments",
+        "example": "A bank page fills your billing address.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Skimmer scripts",
+      "Hidden fields"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Cards need user confirmation",
+    "Address returned only after user chooses"
+  ],
+  "scores": {
+    "sensitivity": 5,
+    "utility": 4,
+    "fingerprint_bits": null,
+    "friction": 1
+  },
+  "value": {
+    "legit_uses": [
+      "Fast checkout"
+    ],
+    "abuse": [
+      "Skimmer scripts on checkout pages"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2016",
+      "browser": "chrome",
+      "version": "53",
+      "change": "Payment Request address collection"
+    }
+  ],
+  "related": [
+    "web.payments.payment-request"
+  ],
+  "refs": [
+    {
+      "t": "mdn",
+      "label": "MDN Payment Request",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/Payment_Request_API"
+    }
+  ],
+  "confidence": "docs"
+}

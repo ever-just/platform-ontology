@@ -1,0 +1,219 @@
+{
+  "id": "mob.notif.android-live-updates",
+  "name": "Android Live Updates (promoted ongoing notifications)",
+  "kind": "capability",
+  "group": "notifications-background",
+  "subgroup": "Live surfaces",
+  "tags": [
+    "live-update",
+    "ongoing",
+    "status-chip",
+    "android-16"
+  ],
+  "plain": "Android 16's progress-style notification that sits on the lock screen and status bar chip.",
+  "meaning": "Gives rideshare, navigation and delivery apps a persistent live surface. Google limits it to specific styles and says it is not for ads, chat or package tracking.",
+  "lifecycle": [
+    "in-session",
+    "background"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "y",
+      "v": "16",
+      "api": 36,
+      "permission": "POST_PROMOTED_NOTIFICATIONS (normal)",
+      "protection": "normal",
+      "grant": "install",
+      "prompt_ui": "Settings toggle per app (ACTION_MANAGE_APP_PROMOTED_NOTIFICATIONS)",
+      "persistence": "Until ongoing notification ends",
+      "revocation": "Settings > Notifications > Live updates",
+      "store_policy": "Play: navigation, calls, rideshare, delivery only",
+      "api_surface": "Notification.Builder.setRequestPromotedOngoing(true), canPostPromotedNotifications(), FLAG_PROMOTED_ONGOING",
+      "note": "Must be ongoing with a title; Standard, BigText, Call, Progress or Metric style; no RemoteViews, not colorized, not a group summary; chip max 96 dp, text shown if under 7 chars; setWhen time at least 2 min away shows minutes"
+    },
+    "ios": {
+      "s": "n",
+      "v": "",
+      "permission": "",
+      "protection": "none",
+      "grant": "not-exposed",
+      "prompt_ui": "",
+      "persistence": "",
+      "revocation": "",
+      "store_policy": "",
+      "api_surface": "",
+      "note": "iOS equivalent is Live Activities (ActivityKit); see mob.notif.live-activities"
+    }
+  },
+  "data": {
+    "type": "object",
+    "metric": "Promoted notification",
+    "update": "App updates",
+    "fields": [
+      {
+        "name": "chip_width",
+        "type": "integer",
+        "unit": "dp",
+        "range": "max 96",
+        "precision": ""
+      },
+      {
+        "name": "chip_text",
+        "type": "integer",
+        "unit": "chars",
+        "range": "under 7 for text",
+        "precision": ""
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can show a live progress card on your Android lock screen, if you allow it",
+    "user_action": "You start a ride, delivery, timer or navigation, and the app shows a Live Update",
+    "can": [
+      "Show one ongoing card with progress, a title and a short status chip",
+      "Keep it on the lock screen while the task runs",
+      "Update it as the ride, order or trip moves along"
+    ],
+    "cannot": [
+      "Show it unless the app turned it on and you left the setting on",
+      "Use a custom layout or color it; Android 16 only allows set styles",
+      "Use it for ads or anything that is not a real ongoing task",
+      "Do this on iPhone, where the matching feature is called Live Activities"
+    ],
+    "reach": 2,
+    "reach_label": "While a task is running",
+    "differs": "Android 16 calls it Live Updates. iPhone's version is Live Activities."
+  },
+  "story": {
+    "what_it_is": "A live progress card for rides, deliveries and navigation that stays on the Android lock screen and status bar.",
+    "icon": "activity",
+    "tags": [
+      "Notifications",
+      "Live",
+      "Android"
+    ],
+    "marketing": [
+      {
+        "vendor": "Google",
+        "name": "Live Updates",
+        "pitch": "Android 16 adds Live Updates so people can follow a ride, delivery or navigation at a glance from the lock screen.",
+        "url": "https://developer.android.com/develop/ui/views/notifications/live-update"
+      }
+    ],
+    "for_you": "You order food and see a live bar on the lock screen and a small chip at the top of the screen. You can watch the courier get closer without opening the app.",
+    "for_makers": "Makers get a prime spot that people check often. It is meant for time bound tasks like rides and deliveries, and Google says not to use it for ads or chat.",
+    "use_cases": [
+      {
+        "type": "rideshare",
+        "example": "Your car is two minutes away and the chip at the top of the screen counts it down.",
+        "apps": [
+          "Uber",
+          "Lyft"
+        ]
+      },
+      {
+        "type": "delivery",
+        "example": "A food order moves from preparing to on the way, shown as a live progress bar.",
+        "apps": [
+          "DoorDash",
+          "Uber Eats"
+        ]
+      },
+      {
+        "type": "maps",
+        "example": "Turn by turn directions show the next turn on the lock screen.",
+        "apps": [
+          "Google Maps"
+        ]
+      },
+      {
+        "type": "fitness",
+        "example": "A run in progress shows pace and distance as a card you can glance at.",
+        "apps": [
+          "Strava"
+        ]
+      },
+      {
+        "type": "games",
+        "example": "A cloud gaming session or live match shows a running timer or score on the lock screen.",
+        "apps": []
+      },
+      {
+        "type": "live",
+        "example": "A live sports score or a flight boarding countdown updates in real time.",
+        "apps": [
+          "ESPN",
+          "Delta"
+        ]
+      },
+      {
+        "type": "productivity",
+        "example": "A timer or stopwatch app keeps the clock visible until it ends.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Can become another nagging spot",
+      "Easy to leave running"
+    ],
+    "android_note": "New in Android 16. Apps must use set styles, and you can turn it off per app.",
+    "ios_note": "iOS has the same idea under the name Live Activities."
+  },
+  "technical_bounds": [
+    "OEMs may add criteria",
+    "Standard, BigText, Call, Progress or Metric styles only"
+  ],
+  "scores": {
+    "sensitivity": 2,
+    "utility": 4,
+    "fingerprint_bits": null,
+    "friction": 1
+  },
+  "value": {
+    "legit_uses": [
+      "Ride tracking",
+      "Navigation"
+    ],
+    "abuse": [
+      "Using the chip for ads"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2025-06",
+      "platform": "android",
+      "version": "16 (API 36)",
+      "change": "Live Updates and promoted ongoing notifications introduced"
+    },
+    {
+      "date": "2026-06",
+      "platform": "android",
+      "version": "17 (API 37)",
+      "change": "No new Live Updates quota change documented; background audio and memory hardening ship alongside"
+    }
+  ],
+  "related": [
+    "mob.notif.live-activities",
+    "mob.notif.ongoing-foreground"
+  ],
+  "refs": [
+    {
+      "t": "android",
+      "label": "Android: Live updates",
+      "url": "https://developer.android.com/develop/ui/views/notifications/live-update"
+    },
+    {
+      "t": "android",
+      "label": "Android 16 features",
+      "url": "https://developer.android.com/about/versions/16/features"
+    }
+  ],
+  "confidence": "verified"
+}

@@ -1,0 +1,241 @@
+{
+  "id": "mob.system.network-extension",
+  "name": "VPN and network extensions",
+  "kind": "capability",
+  "group": "system-control",
+  "subgroup": "Network control",
+  "tags": [
+    "vpn",
+    "entitlement",
+    "content-filter",
+    "packet-tunnel",
+    "networkextension",
+    "vpnservice"
+  ],
+  "plain": "Routes or filters the device's network traffic as a VPN, DNS or content filter.",
+  "meaning": "A tunnel app sees destination metadata and can read cleartext for all other apps. It is a powerful trust position.",
+  "lifecycle": [
+    "in-session",
+    "background"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "y",
+      "v": "4.0",
+      "api": 14,
+      "permission": "BIND_VPN_SERVICE (service permission), VpnService.prepare() consent dialog",
+      "protection": "special",
+      "grant": "prompt",
+      "prompt_ui": "Connection request dialog; key icon in status bar",
+      "persistence": "Until user disconnects or revokes",
+      "revocation": "Settings > Network > VPN",
+      "store_policy": "Play: VpnService policy and declaration form",
+      "api_surface": "VpnService",
+      "note": "Always-on VPN available; data limited by Play policy"
+    },
+    "ios": {
+      "s": "f",
+      "v": "8",
+      "permission": "com.apple.developer.networking.networkextension (packet-tunnel-provider, app-proxy-provider, content-filter-provider, dns-proxy, dns-settings)",
+      "protection": "entitlement",
+      "grant": "entitlement",
+      "prompt_ui": "Add VPN Configurations prompt",
+      "persistence": "Until removed in Settings",
+      "revocation": "Settings > General > VPN & Device Management",
+      "store_policy": "App Review 5.4: VPN apps must be from organizations and limit data use",
+      "api_surface": "NEPacketTunnelProvider, NEFilterProvider, URL filter (iOS 26)",
+      "note": "Data provider filters need a supervised device; iOS 17 added relay; iOS 26 adds URL filter"
+    }
+  },
+  "data": {
+    "type": "stream",
+    "metric": "Packets and flows",
+    "update": "continuous",
+    "fields": [
+      {
+        "name": "mtu",
+        "type": "integer",
+        "unit": "bytes",
+        "range": "1280 to 1500",
+        "precision": ""
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can route or filter all the phone's network traffic once you accept a VPN prompt",
+    "user_action": "You tap Allow on the Add VPN Configurations or connection request prompt",
+    "can": [
+      "See where your traffic goes",
+      "See unencrypted content for all other apps",
+      "Run as an always on VPN (Android)",
+      "Filter traffic or DNS for the whole phone"
+    ],
+    "cannot": [
+      "Start before you accept the prompt",
+      "Use iPhone data filters unless the phone is supervised",
+      "Skip Apple's networking entitlement on iPhone",
+      "Hide from you on Android; a key icon shows in the status bar"
+    ],
+    "reach": 4,
+    "reach_label": "All traffic, anytime while on",
+    "differs": "Android shows a connection request dialog and a key icon; iPhone needs an Apple entitlement and shows an Add VPN Configurations prompt."
+  },
+  "story": {
+    "what_it_is": "A way to route or filter all of a phone's network traffic as a VPN, DNS tool or content filter.",
+    "icon": "network",
+    "tags": [
+      "VPN",
+      "Network",
+      "Powerful"
+    ],
+    "marketing": [
+      {
+        "vendor": "Apple",
+        "name": "Network Extension",
+        "pitch": "Build VPN, DNS and content filter apps that work for the whole device.",
+        "url": "https://developer.apple.com/documentation/networkextension"
+      },
+      {
+        "vendor": "Google",
+        "name": "VPN on Android",
+        "pitch": "Build VPN apps with the Android VPN service for tunnels and filters.",
+        "url": "https://developer.android.com/develop/connectivity/vpn"
+      }
+    ],
+    "for_you": "You install a VPN app and accept a system prompt. A VPN icon appears. All your traffic runs through that app, so it can protect you or watch you.",
+    "for_makers": "VPNs, ad blockers and parental tools all use it. The maker sees where traffic goes, and for traffic that is not encrypted, what it says. That makes trust in the maker the whole story.",
+    "use_cases": [
+      {
+        "type": "security",
+        "example": "A VPN hides your traffic on public Wi-Fi at an airport.",
+        "apps": [
+          "ProtonVPN",
+          "Mullvad"
+        ]
+      },
+      {
+        "type": "kids",
+        "example": "A parent filter blocks adult sites on a child's phone.",
+        "apps": []
+      },
+      {
+        "type": "ads",
+        "example": "A blocker stops ad and tracker domains in every app.",
+        "apps": [
+          "AdGuard"
+        ]
+      },
+      {
+        "type": "enterprise",
+        "example": "A company VPN lets staff reach internal tools.",
+        "apps": []
+      },
+      {
+        "type": "games",
+        "example": "A game booster routes traffic through a faster path.",
+        "apps": []
+      },
+      {
+        "type": "media",
+        "example": "A VPN lets travelers watch the shows they pay for while abroad.",
+        "apps": []
+      },
+      {
+        "type": "analytics",
+        "example": "A privacy tool logs which apps contact which domains.",
+        "apps": [
+          "Lockdown Privacy"
+        ]
+      }
+    ],
+    "risks": [
+      "VPN maker sees your traffic",
+      "Data sold by free VPNs",
+      "Slows connections"
+    ],
+    "android_note": "Always on VPN is available, with data use limited by store policy.",
+    "ios_note": "Data filters need a supervised device. iOS 17 added relay support and iOS 26 adds URL filtering."
+  },
+  "technical_bounds": [
+    "Supervised device needed for data provider filters",
+    "Apple restricts VPN apps from data resale",
+    "Cannot see inside TLS without a CA"
+  ],
+  "scores": {
+    "sensitivity": 5,
+    "utility": 4,
+    "fingerprint_bits": null,
+    "friction": 3
+  },
+  "value": {
+    "legit_uses": [
+      "VPN",
+      "Parental filters",
+      "Ad blockers"
+    ],
+    "abuse": [
+      "Selling browsing data"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2025-09",
+      "platform": "ios",
+      "version": "iOS 26",
+      "change": "URL filter provider"
+    },
+    {
+      "date": "2024-02",
+      "platform": "ios",
+      "version": "App Review 5.4",
+      "change": "VPN app rules updated"
+    },
+    {
+      "date": "2023-09",
+      "platform": "ios",
+      "version": "iOS 17",
+      "change": "Relay support"
+    },
+    {
+      "date": "2017-09",
+      "platform": "ios",
+      "version": "iOS 11",
+      "change": "Always on VPN for supervised"
+    },
+    {
+      "date": "2013-09",
+      "platform": "ios",
+      "version": "iOS 8",
+      "change": "Network Extension introduced"
+    }
+  ],
+  "related": [
+    "mob.network.local-network",
+    "mob.sys.network-filter-dns"
+  ],
+  "refs": [
+    {
+      "t": "apple",
+      "label": "Apple: Network Extension",
+      "url": "https://developer.apple.com/documentation/networkextension"
+    },
+    {
+      "t": "android",
+      "label": "Android: VpnService",
+      "url": "https://developer.android.com/reference/android/net/VpnService"
+    },
+    {
+      "t": "policy",
+      "label": "App Review Guidelines 5.4",
+      "url": "https://developer.apple.com/app-store/review/guidelines/#vpn-apps"
+    }
+  ],
+  "confidence": "docs"
+}

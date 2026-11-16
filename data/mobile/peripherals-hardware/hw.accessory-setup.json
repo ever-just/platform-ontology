@@ -1,0 +1,209 @@
+{
+  "id": "mob.hw.accessory-setup",
+  "name": "Accessory pairing without broad Bluetooth access",
+  "kind": "picker",
+  "group": "peripherals-hardware",
+  "subgroup": "Bluetooth",
+  "tags": [
+    "pairing",
+    "companion-device",
+    "privacy-picker"
+  ],
+  "plain": "A system picker pairs one chosen accessory so the app never needs the full Bluetooth scan.",
+  "meaning": "Reduces what an app learns: it sees only the accessory the person picked, not every device nearby, so a pairing flow cannot double as a presence survey.",
+  "lifecycle": [
+    "in-session"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "y",
+      "v": "8.0",
+      "api": 26,
+      "permission": "REQUEST_COMPANION_RUN_IN_BACKGROUND, REQUEST_COMPANION_USE_DATA_IN_BACKGROUND, REQUEST_COMPANION_START_FOREGROUND_SERVICES_FROM_BACKGROUND",
+      "protection": "normal",
+      "grant": "picker",
+      "prompt_ui": "System device chooser; association remains until removed",
+      "persistence": "Until user or app removes the association",
+      "revocation": "Settings > Connected devices; app can disassociate",
+      "store_policy": "",
+      "api_surface": "CompanionDeviceManager.associate(), CompanionDeviceService",
+      "note": "Android 13 adds presence observation; Android 16 adds device presence improvements and self-managed association."
+    },
+    "ios": {
+      "s": "y",
+      "v": "18.0",
+      "permission": "NSAccessorySetupKitSupports, NSAccessorySetupBluetoothServices, NSAccessorySetupBluetoothCompanyIdentifiers",
+      "protection": "prompt",
+      "grant": "picker",
+      "prompt_ui": "Apple sheet showing only matching accessories; one tap to pair",
+      "persistence": "Until accessory removed in Settings",
+      "revocation": "Settings > Privacy & Security > Accessories",
+      "store_policy": "",
+      "api_surface": "AccessorySetupKit ASAccessorySession, ASPickerDisplayItem",
+      "note": "iOS 26 expands to Wi-Fi accessories and migration of already paired devices."
+    }
+  },
+  "data": {
+    "type": "object",
+    "metric": "Single accessory handle",
+    "update": "per pairing",
+    "fields": [
+      {
+        "name": "accessory identifier",
+        "type": "string",
+        "unit": "opaque",
+        "range": "per app",
+        "precision": "n/a"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can pair the one accessory you pick without seeing other Bluetooth devices nearby",
+    "user_action": "You tap your accessory in the system pairing sheet",
+    "can": [
+      "Show you a system picker listing only matching accessories",
+      "Connect to the accessory you choose with one tap",
+      "Keep the link until you remove it (Android)"
+    ],
+    "cannot": [
+      "See other Bluetooth devices nearby",
+      "Turn a pairing flow into a survey of who is around",
+      "Need the broad Bluetooth scan permission for this step"
+    ],
+    "reach": 1,
+    "reach_label": "One accessory you choose",
+    "differs": "iPhone adds Wi-Fi accessories and migration of paired devices in iOS 26; Android adds device presence checks from Android 13 and more in 16."
+  },
+  "story": {
+    "what_it_is": "A system screen that pairs one accessory you pick, so the app never gets the broad Bluetooth scan.",
+    "icon": "bluetooth-searching",
+    "tags": [
+      "Bluetooth",
+      "Pairing",
+      "Privacy"
+    ],
+    "marketing": [
+      {
+        "vendor": "Apple",
+        "name": "AccessorySetupKit",
+        "pitch": "Pair accessories with a simple sheet that shows only the device you pick, with no broad Bluetooth access.",
+        "url": "https://developer.apple.com/documentation/accessorysetupkit"
+      }
+    ],
+    "for_you": "A clean picture sheet appears with your headphones or watch. You tap it and it connects. The app does not need to ask to scan for everything near you.",
+    "for_makers": "The app maker skips a scary permission prompt and wins more trust. Setup is smoother, so fewer people give up. The platform makes sure the app sees only the one device it was given.",
+    "use_cases": [
+      {
+        "type": "fitness",
+        "example": "A running watch maker pairs the band with its app without scanning every device in the park.",
+        "apps": [
+          "Garmin"
+        ]
+      },
+      {
+        "type": "music",
+        "example": "A pair of smart earbuds shows a photo of the case in the sheet and connects in a tap.",
+        "apps": [
+          "Bose"
+        ]
+      },
+      {
+        "type": "smart-home",
+        "example": "A smart lock app finds only the lock you are holding your phone near.",
+        "apps": []
+      },
+      {
+        "type": "health",
+        "example": "A glucose monitor or blood pressure cuff pairs without exposing other nearby devices.",
+        "apps": []
+      },
+      {
+        "type": "creative",
+        "example": "A camera or drone controller app finds your device from a pretty setup screen.",
+        "apps": [
+          "GoPro"
+        ]
+      },
+      {
+        "type": "kids",
+        "example": "A kids' smartwatch pairs with a parent's phone without the app learning about neighbours' devices.",
+        "apps": []
+      },
+      {
+        "type": "ar-vr",
+        "example": "A headset companion app pairs once and remembers the headset.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Only works for apps that adopt it",
+      "Older apps still scan broadly",
+      "Pairing mistakes"
+    ],
+    "android_note": "Android has a similar companion device pairing flow. Android 13 added presence watching, and Android 16 improves it.",
+    "ios_note": "iOS 26 extends the sheet to Wi-Fi accessories and can move already paired devices across."
+  },
+  "technical_bounds": [
+    "The app cannot scan for other accessories after pairing via the picker alone"
+  ],
+  "scores": {
+    "sensitivity": 2,
+    "utility": 4,
+    "fingerprint_bits": 1,
+    "friction": 1
+  },
+  "value": {
+    "legit_uses": [
+      "Smartwatches",
+      "Headphones",
+      "Cameras"
+    ],
+    "abuse": [
+      "None notable; reduces abuse"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2017-08",
+      "platform": "android",
+      "version": "8.0 (API 26)",
+      "change": "CompanionDeviceManager introduced"
+    },
+    {
+      "date": "2024-09",
+      "platform": "ios",
+      "version": "iOS 18",
+      "change": "AccessorySetupKit introduced"
+    },
+    {
+      "date": "2025-09",
+      "platform": "ios",
+      "version": "iOS 26",
+      "change": "Wi-Fi accessory support and migration APIs"
+    }
+  ],
+  "related": [
+    "mob.hw.ble-central",
+    "mob.hw.watch-companion"
+  ],
+  "refs": [
+    {
+      "t": "android",
+      "label": "Android: Companion device pairing",
+      "url": "https://developer.android.com/develop/connectivity/bluetooth/companion-device-pairing"
+    },
+    {
+      "t": "apple",
+      "label": "Apple: AccessorySetupKit",
+      "url": "https://developer.apple.com/documentation/accessorysetupkit"
+    }
+  ],
+  "confidence": "docs"
+}

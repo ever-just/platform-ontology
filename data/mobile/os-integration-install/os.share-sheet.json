@@ -1,0 +1,236 @@
+{
+  "id": "mob.os.share-sheet",
+  "name": "Share sheet and share extensions",
+  "kind": "capability",
+  "group": "os-integration-install",
+  "subgroup": "Sharing",
+  "tags": [
+    "share-sheet",
+    "share-extension",
+    "direct-share",
+    "sharetarget",
+    "intents",
+    "extension"
+  ],
+  "plain": "Receives or sends content through the system share menu.",
+  "meaning": "Any app can offer to take shared files or text. The system shows suggested people, so the app can learn who the sender usually shares with.",
+  "lifecycle": [
+    "in-session"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "y",
+      "v": "1.0",
+      "api": 1,
+      "permission": "None; ShareTarget in manifest, sharing shortcuts",
+      "protection": "none",
+      "grant": "none",
+      "prompt_ui": "System chooser",
+      "persistence": "Per share",
+      "revocation": "n/a",
+      "store_policy": "",
+      "api_surface": "Intent.ACTION_SEND, ChooserTargetService (removed), ShortcutManager sharing shortcuts",
+      "note": "Sharesheet shows app targets and direct share people; Android 14 adds custom actions."
+    },
+    "ios": {
+      "s": "y",
+      "v": "8.0",
+      "permission": "Share extension target in the app extension",
+      "protection": "none",
+      "grant": "none",
+      "prompt_ui": "UIActivityViewController sheet",
+      "persistence": "Per share",
+      "revocation": "Settings",
+      "store_policy": "",
+      "api_surface": "UIActivityViewController, NSExtensionItem, Share Extension",
+      "note": "iOS shows suggestions from Siri intelligence; extensions run in separate sandbox."
+    }
+  },
+  "web_equivalents": [
+    "web.os.web-share",
+    "web.os.web-share-target"
+  ],
+  "data": {
+    "type": "event",
+    "metric": "Share action",
+    "update": "per share",
+    "fields": [
+      {
+        "name": "payload",
+        "type": "binary",
+        "unit": "files",
+        "range": "limited to selection",
+        "precision": "exact"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can send or receive content through the share menu, after you pick where it goes",
+    "user_action": "You tap Share and choose an app or person",
+    "can": [
+      "Send a link, picture or file to another app",
+      "Receive things other apps share with it",
+      "Show people suggestions like Direct Share on Android or Siri suggestions on iPhone"
+    ],
+    "cannot": [
+      "Send anything without you choosing a target",
+      "See other apps' data except what you share",
+      "Run share extensions on iPhone outside their own sandbox"
+    ],
+    "reach": 1,
+    "reach_label": "Only what you share, one time",
+    "differs": "Android Sharesheet shows app and direct share targets. iPhone extensions run in a separate sandbox."
+  },
+  "story": {
+    "what_it_is": "The system menu for sending content to other apps, and for apps to receive it.",
+    "icon": "share-2",
+    "tags": [
+      "Sharing",
+      "System",
+      "Contacts"
+    ],
+    "marketing": [
+      {
+        "vendor": "Apple",
+        "name": "App extensions",
+        "pitch": "Apple describes share extensions as a way for apps to take content from other apps through the system share menu.",
+        "url": "https://developer.apple.com/app-extensions/"
+      },
+      {
+        "vendor": "Google",
+        "name": "Share content",
+        "pitch": "Google documents how apps send and receive content through the Android sharesheet.",
+        "url": "https://developer.android.com/training/sharing"
+      }
+    ],
+    "for_you": "You tap Share on a photo and see apps and people you message often. You pick one and the content is sent. You may not know the system chose those people based on your habits.",
+    "for_makers": "Makers get content from other apps and a quick path to send theirs. The suggested people also let the system and apps learn who you share with.",
+    "use_cases": [
+      {
+        "type": "social",
+        "example": "You share a photo straight to a friend in a chat app.",
+        "apps": [
+          "Instagram",
+          "WhatsApp"
+        ]
+      },
+      {
+        "type": "music",
+        "example": "You share a song link to a friend.",
+        "apps": [
+          "Spotify"
+        ]
+      },
+      {
+        "type": "productivity",
+        "example": "You save a web page to your notes app.",
+        "apps": [
+          "Notion",
+          "Notes"
+        ]
+      },
+      {
+        "type": "shopping",
+        "example": "You share a product with family.",
+        "apps": [
+          "Amazon"
+        ]
+      },
+      {
+        "type": "maps",
+        "example": "You send a place to a friend.",
+        "apps": [
+          "Google Maps"
+        ]
+      },
+      {
+        "type": "games",
+        "example": "You share a game score or invite link.",
+        "apps": []
+      },
+      {
+        "type": "ads",
+        "example": "A site adds share buttons that quietly record what you share.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Reveals who you share with",
+      "Fake share targets"
+    ],
+    "android_note": "The sharesheet shows app targets and direct people. Android 14 adds custom actions.",
+    "ios_note": "iOS suggests people from Siri. Extensions run in their own sandbox."
+  },
+  "technical_bounds": [
+    "Extensions memory limited on iOS",
+    "Only content the person chooses"
+  ],
+  "scores": {
+    "sensitivity": 2,
+    "utility": 5,
+    "fingerprint_bits": 0,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Cross app share"
+    ],
+    "abuse": [
+      "Share target spoofing"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": true,
+      "how": "Share to LinkedIn is a common target from browsers and news apps. Exact manifest entries unverified."
+    }
+  },
+  "history": [
+    {
+      "date": "2023-10",
+      "platform": "android",
+      "version": "14",
+      "change": "Custom share actions"
+    },
+    {
+      "date": "2014-09",
+      "platform": "ios",
+      "version": "iOS 8",
+      "change": "Share extensions"
+    },
+    {
+      "date": "2014-09",
+      "platform": "ios",
+      "version": "iOS 8",
+      "change": "App extensions including Share introduced"
+    }
+  ],
+  "related": [
+    "mob.os.default-browser",
+    "mob.det.installed-apps-all"
+  ],
+  "refs": [
+    {
+      "t": "android",
+      "label": "Android: Sharing content",
+      "url": "https://developer.android.com/training/sharing"
+    },
+    {
+      "t": "apple",
+      "label": "Apple: App extensions",
+      "url": "https://developer.apple.com/app-extensions/"
+    },
+    {
+      "t": "android",
+      "label": "Android: Receive simple data",
+      "url": "https://developer.android.com/training/sharing/receive"
+    },
+    {
+      "t": "apple",
+      "label": "Apple: Share extensions",
+      "url": "https://developer.apple.com/library/archive/documentation/General/Conceptual/ExtensibilityPG/Share.html"
+    }
+  ],
+  "confidence": "docs"
+}

@@ -1,0 +1,205 @@
+{
+  "id": "web.net.reverse-dns",
+  "name": "Reverse DNS (PTR) of the client IP",
+  "kind": "signal",
+  "group": "network-connectivity",
+  "subgroup": "Addressing",
+  "tags": [
+    "dns",
+    "ptr",
+    "hostname"
+  ],
+  "plain": "A reverse lookup of the IP can return an ISP hostname that hints at location or line type.",
+  "meaning": "PTR records such as pool-1-2-3-4.nycmny.fios.verizon.net expose ISP, city codes and sometimes dynamic vs static addressing. Servers do this for logs and bot checks (Googlebot verification).",
+  "lifecycle": [
+    "on-arrival"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "DNS PTR lookup for in-addr.arpa and ip6.arpa",
+      "access": {
+        "grant": "none",
+        "prompt_ui": "",
+        "secure_context": false,
+        "user_gesture": false,
+        "persistence": "",
+        "revocation": "",
+        "iframe": "",
+        "steps": [
+          "Server reverse looks up IP",
+          "Parses hostname patterns"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "1",
+          "note": "",
+          "date": "2008-12-11"
+        },
+        "edge": {
+          "s": "y",
+          "v": "79",
+          "note": "",
+          "date": "2020-01-15"
+        },
+        "firefox": {
+          "s": "y",
+          "v": "1",
+          "note": "",
+          "date": "2004-11-09"
+        },
+        "safari": {
+          "s": "y",
+          "v": "1",
+          "note": "",
+          "date": "2003-06-23"
+        },
+        "ios_safari": {
+          "s": "y",
+          "v": "1",
+          "note": "",
+          "date": "2007-06-29"
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "1",
+          "note": "",
+          "date": ""
+        },
+        "samsung": {
+          "s": "y",
+          "v": "5.0",
+          "note": "",
+          "date": "2016-12-15"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "string",
+    "metric": "FQDN or none",
+    "update": "",
+    "fields": [
+      {
+        "name": "ptr",
+        "type": "string",
+        "unit": "",
+        "range": "hostname",
+        "precision": "exact if present"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can look up your internet address to learn your provider and sometimes your area",
+    "user_action": "Nothing. It happens when the site's server logs or checks your visit",
+    "can": [
+      "Learn the name your internet provider gave your address",
+      "Spot city codes or home versus business lines in that name",
+      "Confirm that a visitor claiming to be a search crawler really is one"
+    ],
+    "cannot": [
+      "Learn your street address or your name",
+      "Work when your provider gives no useful name",
+      "See through a VPN or relay, which show their own names",
+      "Be blocked from your browser, since it happens on the server side"
+    ],
+    "reach": 2,
+    "reach_label": "Rough area and provider",
+    "differs": ""
+  },
+  "story": {
+    "what_it_is": "A lookup of your internet address can return a name hinting where you are or what line you use.",
+    "icon": "search",
+    "tags": [
+      "Network",
+      "Silent",
+      "Security"
+    ],
+    "marketing": [],
+    "for_you": "You never see it. The server may turn your numeric address into a name like a phone company or a school. That name hints at your area or whether you are on a home line or a data center.",
+    "for_makers": "Makers use it to check that crawlers are who they say, to tell home users from servers, and to guess city or company. It is quick, free and needs no cooperation from the browser.",
+    "use_cases": [
+      {
+        "type": "security",
+        "example": "A site that gets traffic claiming to be Googlebot checks the address name. If it does not end in Google's domain, it is blocked as an impostor.",
+        "apps": [
+          "Googlebot"
+        ]
+      },
+      {
+        "type": "ads",
+        "example": "An ad network uses the name to tell data center traffic from home traffic, and treats data center clicks as likely fake.",
+        "apps": []
+      },
+      {
+        "type": "analytics",
+        "example": "An analytics tool shows visits by company name, because staff of a firm browse from an address that names it.",
+        "apps": []
+      },
+      {
+        "type": "enterprise",
+        "example": "A B2B sales tool spots a visit from a target company and alerts the salesperson.",
+        "apps": []
+      },
+      {
+        "type": "games",
+        "example": "A game server list blocks cloud hosting names for ranked play, to stop cheat servers and bots.",
+        "apps": []
+      },
+      {
+        "type": "media",
+        "example": "A video site sees a university address name and offers the campus subscription deal.",
+        "apps": []
+      },
+      {
+        "type": "security",
+        "example": "A mail or web server logs address names so staff can trace an abuse complaint to the right network owner.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Guesses location",
+      "Can mislabel people"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Many IPs have no PTR",
+    "Cloud IPs return generic names"
+  ],
+  "scores": {
+    "sensitivity": 2,
+    "utility": 3,
+    "fingerprint_bits": 2,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": "Crawler verification, log enrichment",
+    "abuse": "Residential identification"
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "related": [
+    "web.net.asn-isp-hosting"
+  ],
+  "refs": [
+    {
+      "t": "rfc",
+      "label": "RFC 1035 Domain Names",
+      "url": "https://www.rfc-editor.org/rfc/rfc1035"
+    },
+    {
+      "t": "vendor",
+      "label": "Google verifying Googlebot",
+      "url": "https://developers.google.com/search/docs/crawling-indexing/verifying-googlebot"
+    }
+  ],
+  "confidence": "docs"
+}

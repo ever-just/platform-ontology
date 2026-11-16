@@ -1,0 +1,257 @@
+{
+  "id": "web.tracking.linkedin-extension-probe",
+  "name": "Active extension probe (AED)",
+  "kind": "tracking",
+  "group": "device-system-profile",
+  "subgroup": "Browser extensions",
+  "tags": [
+    "extension-detection",
+    "web-accessible-resources",
+    "chrome-extension",
+    "fingerprint",
+    "browsergate"
+  ],
+  "plain": "Fetches a hidden file from each of thousands of known extension IDs to learn which ones are installed.",
+  "meaning": "Reveals installed add-ons, which can imply job search, sales role, religion, health or politics, and a stable identifier for the browser profile. LinkedIn calls it abuse prevention; critics call it covert profiling.",
+  "lifecycle": [
+    "on-arrival",
+    "in-session",
+    "signed-in"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "fetch('chrome-extension://<id>/<file>') per list entry, Promise.allSettled; fulfilled = installed",
+      "access": {
+        "grant": "none",
+        "prompt_ui": "None (no browser prompt)",
+        "secure_context": false,
+        "user_gesture": false,
+        "persistence": "Runs on page load for every visit; result is sent once per run if any ID is found",
+        "revocation": "",
+        "iframe": "",
+        "steps": [
+          "Script checks navigator.userAgent contains 'Chrome' and that it is not server side",
+          "For each hardcoded {id, file} pair, fetch chrome-extension://id/file",
+          "A fulfilled fetch means the extension is installed and exposes that file in web_accessible_resources",
+          "Collected IDs are sent as AedEvent.browserExtensionIds through the tracking payload, only if the list is non-empty",
+          "Later versions add staggered scanning, requestIdleCallback and a 2000 ms timeout (per BrowserGate)"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "",
+          "note": "Needs chrome-extension:// scheme"
+        },
+        "edge": {
+          "s": "y",
+          "v": "79",
+          "note": "Chromium Edge: UA contains Chrome, extension IDs from the Chrome Web Store work if installed there",
+          "date": "2020-01-15"
+        },
+        "firefox": {
+          "s": "n",
+          "v": "",
+          "note": "moz-extension URLs use per-install random UUIDs, so IDs cannot be guessed"
+        },
+        "safari": {
+          "s": "n",
+          "v": "",
+          "note": "Safari extension URLs are per-install random"
+        },
+        "ios_safari": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "chrome_android": {
+          "s": "n",
+          "v": "",
+          "note": "Chrome for Android has no extension support"
+        },
+        "samsung": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "list",
+    "metric": "Set of installed extension IDs out of the probe list",
+    "update": "every page load or session start",
+    "fields": [
+      {
+        "name": "browserExtensionIds",
+        "type": "list",
+        "unit": "extension IDs",
+        "range": "0 to list size (2,953 in the public snapshot, 6,236 claimed Apr 2026)",
+        "precision": "32 char lowercase ID each"
+      },
+      {
+        "name": "probe_list_size",
+        "type": "integer",
+        "unit": "IDs",
+        "range": "2,000 (2025 gist) to 6,236 (Apr 2026 claim)",
+        "precision": "exact"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can check which of thousands of known browser extensions you have installed",
+    "user_action": "Nothing. It happens when you open the site in Chrome or Edge.",
+    "can": [
+      "Test a long list of known extension IDs, one by one",
+      "Tell which of those extensions are installed",
+      "Use the result as a stable fingerprint of your browser profile",
+      "Send the list of detected extensions to its servers"
+    ],
+    "cannot": [
+      "See extensions that are not on its list",
+      "See what an extension does or the data inside it",
+      "Work in Firefox, Safari or most phone browsers",
+      "Find extensions that keep their files hidden from web pages"
+    ],
+    "reach": 3,
+    "reach_label": "Silent check, only known extensions",
+    "differs": "Works in Chrome and Edge only. Firefox, Safari and phone browsers block it."
+  },
+  "story": {
+    "what_it_is": "A site quietly tests thousands of known browser add-on addresses to learn which add-ons you have installed.",
+    "icon": "puzzle",
+    "tags": [
+      "Extensions",
+      "Silent",
+      "Tracking"
+    ],
+    "marketing": [],
+    "for_you": "You see nothing at all. While the page loads, it tries thousands of hidden add-on addresses in the background. The answer is a list of which add-ons your browser has.",
+    "for_makers": "The site says this catches scraping and automation tools that break its rules. Critics say the same list can hint at your job, beliefs or health, and acts as a steady ID for your browser.",
+    "use_cases": [
+      {
+        "type": "security",
+        "example": "A professional network checks for known scraper add-ons when a profile gets viewed hundreds of times in a minute, then limits the account.",
+        "apps": [
+          "LinkedIn"
+        ]
+      },
+      {
+        "type": "security",
+        "example": "A sneaker or concert ticket site looks for auto-buyer add-ons before a big drop and sends those visitors to extra checks.",
+        "apps": []
+      },
+      {
+        "type": "games",
+        "example": "A browser game with real prizes looks for auto-clicker or cheat add-ons before a ranked match starts.",
+        "apps": []
+      },
+      {
+        "type": "ads",
+        "example": "An ad network adds the add-on list to its other clues so it can tell a returning browser from a new one.",
+        "apps": []
+      },
+      {
+        "type": "analytics",
+        "example": "A fraud team compares add-on lists across thousands of new accounts and finds a cluster of fake profiles that all share the same odd set.",
+        "apps": []
+      },
+      {
+        "type": "enterprise",
+        "example": "A sales software maker spots a rival's sales add-on in a visitor's browser, which critics call competitor snooping.",
+        "apps": [
+          "LinkedIn"
+        ]
+      },
+      {
+        "type": "social",
+        "example": "A platform could guess that someone is job hunting from a resume or job alert add-on, which privacy groups warn about.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Reveals private traits",
+      "Hidden stable ID",
+      "No prompt or consent"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Only Chromium browsers with chrome-extension:// URLs",
+    "Only finds extensions that list a file in web_accessible_resources",
+    "Manifest V3 use_dynamic_url randomizes the URL so those extensions cannot be probed",
+    "Cannot read extension data, only presence"
+  ],
+  "scores": {
+    "sensitivity": 4,
+    "utility": 3,
+    "fingerprint_bits": 12,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Detect scraper and automation extensions that abuse the site",
+      "Block known data harvesting tools"
+    ],
+    "abuse": [
+      "Profiling users by installed extensions (religion, health, job hunting, rivals' tools)",
+      "Competitor tool detection",
+      "Stable fingerprint component"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": true,
+      "how": "Core of BrowserGate. LinkedIn script loops a hardcoded extension ID list (2,953 IDs in the public mdp snapshot, 6,236 claimed Apr 2026) and fetches each chrome-extension:// resource. Verified in the snapshot; LinkedIn says it is for abuse prevention."
+    }
+  },
+  "history": [
+    {
+      "date": "2025",
+      "browser": "chrome",
+      "version": "",
+      "change": "About 2,000 IDs listed in a public gist (cited by BleepingComputer)"
+    },
+    {
+      "date": "2026-04",
+      "browser": "chrome",
+      "version": "",
+      "change": "BrowserGate reports 6,236 IDs; public snapshot has 2,953"
+    }
+  ],
+  "related": [
+    "web.tracking.linkedin-spectroscopy-dom-scan",
+    "web.tracking.linkedin-apfc-fingerprint",
+    "web.device.user-agent"
+  ],
+  "refs": [
+    {
+      "t": "github",
+      "label": "mdp/linkedin-extension-fingerprinting (LinkedIn script snapshot and ID list)",
+      "url": "https://github.com/mdp/linkedin-extension-fingerprinting"
+    },
+    {
+      "t": "news",
+      "label": "BrowserGate: how it works (48 feature table)",
+      "url": "https://browsergate.eu/how-it-works/"
+    },
+    {
+      "t": "news",
+      "label": "BleepingComputer: LinkedIn scans for 6,000+ Chrome extensions",
+      "url": "https://www.bleepingcomputer.com/news/security/linkedin-secretely-scans-for-6-000-plus-chrome-extensions-collects-data/"
+    },
+    {
+      "t": "vendor",
+      "label": "Chrome docs: web_accessible_resources",
+      "url": "https://developer.chrome.com/docs/extensions/reference/manifest/web-accessible-resources"
+    },
+    {
+      "t": "news",
+      "label": "Ars Technica via mirror: LinkedIn scanning sparks controversy",
+      "url": "https://hn.jakechampion.name/reader/https://arstechnica.com/tech-policy/2026/04/linkedin-scanning-users-browser-extensions-sparks-controversy-and-two-lawsuits"
+    }
+  ],
+  "confidence": "verified"
+}

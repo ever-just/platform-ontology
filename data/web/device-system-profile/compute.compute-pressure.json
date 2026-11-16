@@ -1,0 +1,238 @@
+{
+  "id": "web.compute.compute-pressure",
+  "name": "Compute Pressure",
+  "kind": "permission",
+  "group": "device-system-profile",
+  "subgroup": "Performance",
+  "tags": [
+    "cpu"
+  ],
+  "plain": "Reports how busy the device CPU is in four coarse levels.",
+  "meaning": "Gives nominal, fair, serious, critical CPU pressure states. Lets video-call sites adapt, but also leaks activity on the machine.",
+  "lifecycle": [
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "new PressureObserver(callback).observe('cpu', {sampleInterval}); permission compute-pressure",
+      "permission_name": "compute-pressure",
+      "permissions_policy": "compute-pressure",
+      "bcd": [
+        "api.PressureObserver"
+      ],
+      "access": {
+        "grant": "none",
+        "prompt_ui": "No prompt in current Chrome; blocked by Permissions Policy and requires a focused, visible page.",
+        "secure_context": true,
+        "user_gesture": false,
+        "persistence": "While observing",
+        "revocation": "Disconnect observer",
+        "iframe": "Needs allow=\"compute-pressure\"",
+        "steps": [
+          "Create PressureObserver",
+          "observe('cpu')",
+          "Receive PressureRecord updates"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "125",
+          "note": "",
+          "date": "2024-05-14"
+        },
+        "edge": {
+          "s": "y",
+          "v": "125",
+          "note": "",
+          "date": "2024-05-17"
+        },
+        "firefox": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "safari": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "ios_safari": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "chrome_android": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "samsung": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "event",
+    "metric": "PressureRecord with state",
+    "update": "at sampleInterval (min 1000 ms)",
+    "fields": [
+      {
+        "name": "state",
+        "type": "enum",
+        "unit": "none",
+        "range": "nominal, fair, serious, critical",
+        "precision": "2 bits"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can tell roughly how busy your device is, only while the page is in view",
+    "user_action": "Nothing. A video call or heavy page may start it while you use the tab",
+    "can": [
+      "Check four coarse busy levels: nominal, fair, serious, critical",
+      "Slow down video or effects when your device is struggling",
+      "Get updates about once a second while the tab is visible"
+    ],
+    "cannot": [
+      "Measure exact heat, fan speed, or power use",
+      "Run in Firefox, Safari, or on iPhone",
+      "Keep checking when the tab is hidden or out of focus",
+      "Run if the site or its iframe is blocked by Permissions Policy"
+    ],
+    "reach": 2,
+    "reach_label": "Coarse level, while the tab is open",
+    "differs": "Works in Chrome and Edge only. Firefox and Safari do not offer it."
+  },
+  "story": {
+    "what_it_is": "Tells a page how busy your computer's processor is, as nominal, fair, serious or critical.",
+    "icon": "gauge",
+    "tags": [
+      "CPU",
+      "Performance",
+      "Video calls"
+    ],
+    "marketing": [
+      {
+        "vendor": "Google",
+        "name": "Compute Pressure API",
+        "pitch": "Chrome describes it as a way for sites to notice when the device is under strain and adapt before things stutter.",
+        "url": "https://developer.chrome.com/docs/web-platform/compute-pressure"
+      },
+      {
+        "vendor": "MDN",
+        "name": "Compute Pressure API",
+        "pitch": "Mozilla's docs explain how pages observe coarse CPU pressure states.",
+        "url": "https://developer.mozilla.org/en-US/docs/Web/API/Compute_Pressure_API"
+      }
+    ],
+    "for_you": "You never see it. On a good day your video call just stays smooth because the app quietly turned down the fancy background blur when your laptop got hot. On a bad day, others on the call may notice lower quality.",
+    "for_makers": "Heavy web apps want to use all the power they can without freezing the machine. Compute Pressure gives them an early warning so they can drop quality, not crash. It also tells them when a machine is busy with other work.",
+    "use_cases": [
+      {
+        "type": "video",
+        "example": "A video call app turns off background blur and lowers resolution when the processor says serious, so the call does not stutter.",
+        "apps": [
+          "Google Meet",
+          "Zoom"
+        ]
+      },
+      {
+        "type": "games",
+        "example": "A WebGL game lowers shadows and crowd size when pressure hits critical, so frame rate stays steady on a laptop.",
+        "apps": []
+      },
+      {
+        "type": "games",
+        "example": "A cloud gaming page keeps the video decoder healthy by pausing extra overlays while the processor is overloaded.",
+        "apps": [
+          "Xbox Cloud Gaming",
+          "GeForce NOW"
+        ]
+      },
+      {
+        "type": "creative",
+        "example": "A browser design tool such as Figma lowers live preview quality while you drag a huge file so the cursor stays smooth.",
+        "apps": [
+          "Figma"
+        ]
+      },
+      {
+        "type": "live",
+        "example": "A browser-based streaming studio switches to a lighter video encode when the CPU is stressed, to avoid dropped frames.",
+        "apps": []
+      },
+      {
+        "type": "productivity",
+        "example": "An online video editor uses fewer background threads for thumbnails while you are exporting a clip.",
+        "apps": [
+          "Clipchamp"
+        ]
+      },
+      {
+        "type": "security",
+        "example": "A tracking script might read pressure to guess whether you are running other heavy tasks.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Leaks what else your machine is doing",
+      "Rarely seen, so people are unaware"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Chromium desktop only",
+    "Only coarse buckets"
+  ],
+  "scores": {
+    "sensitivity": 2,
+    "utility": 3,
+    "fingerprint_bits": 2,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Video calls",
+      "Games"
+    ],
+    "abuse": [
+      "Side channel about local activity"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2024-05",
+      "browser": "chrome",
+      "version": "125",
+      "change": "Compute Pressure API ships"
+    }
+  ],
+  "related": [
+    "web.meta.permissions-policy"
+  ],
+  "refs": [
+    {
+      "t": "mdn",
+      "label": "MDN Compute Pressure",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/Compute_Pressure_API"
+    },
+    {
+      "t": "spec",
+      "label": "W3C Compute Pressure",
+      "url": "https://www.w3.org/TR/compute-pressure/"
+    }
+  ],
+  "confidence": "docs"
+}

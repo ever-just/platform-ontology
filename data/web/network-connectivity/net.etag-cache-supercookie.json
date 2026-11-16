@@ -1,0 +1,227 @@
+{
+  "id": "web.net.etag-cache-supercookie",
+  "name": "ETag and HTTP cache supercookie",
+  "kind": "tracking",
+  "group": "network-connectivity",
+  "subgroup": "Supercookies",
+  "tags": [
+    "etag",
+    "cache",
+    "supercookie",
+    "partitioning"
+  ],
+  "plain": "A tracker stores an ID in the cache validators of a file, which come back on every request.",
+  "meaning": "A server sets a unique ETag or Last-Modified on a resource; the browser sends If-None-Match back, identifying the visitor. Since cache partitioning (Chrome 86, Firefox 85, Safari earlier) the ID is only valid per top-level site.",
+  "lifecycle": [
+    "on-arrival"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "ETag, If-None-Match, Last-Modified, Cache-Control",
+      "access": {
+        "grant": "none",
+        "prompt_ui": "",
+        "secure_context": false,
+        "user_gesture": false,
+        "persistence": "",
+        "revocation": "",
+        "iframe": "",
+        "steps": [
+          "Server issues unique ETag",
+          "Browser caches the resource",
+          "Later request sends If-None-Match with the ID"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "r",
+          "v": "86",
+          "note": "HTTP cache partitioned",
+          "date": "2020-10-20"
+        },
+        "edge": {
+          "s": "r",
+          "v": "86",
+          "note": "HTTP cache partitioned",
+          "date": "2020-10-09"
+        },
+        "firefox": {
+          "s": "r",
+          "v": "85",
+          "note": "Network state partitioning",
+          "date": "2021-01-26"
+        },
+        "safari": {
+          "s": "r",
+          "v": "1",
+          "note": "Cache partitioned by first party (2013)",
+          "date": "2003-06-23"
+        },
+        "ios_safari": {
+          "s": "r",
+          "v": "1",
+          "note": "Cache partitioned by first party (2013)",
+          "date": "2007-06-29"
+        },
+        "chrome_android": {
+          "s": "r",
+          "v": "86",
+          "note": "HTTP cache partitioned",
+          "date": "2020-10-20"
+        },
+        "samsung": {
+          "s": "r",
+          "v": "14.0",
+          "note": "HTTP cache partitioned",
+          "date": "2021-04-17"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "string",
+    "metric": "Opaque ID",
+    "update": "",
+    "fields": [
+      {
+        "name": "etag",
+        "type": "string",
+        "unit": "",
+        "range": "random token",
+        "precision": "exact"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can try to tag your browser with a hidden cached ID, though browsers now limit it",
+    "user_action": "Nothing. It happens when you visit a site that tries it",
+    "can": [
+      "Store an ID in the cache details of a file",
+      "Recognise a returning visitor on the same site",
+      "Keep the ID after you clear cookies in older browsers"
+    ],
+    "cannot": [
+      "Follow you across different sites; modern browsers separate the cache by site",
+      "Survive clearing your cache or browsing data",
+      "Work the same in every browser"
+    ],
+    "reach": 1,
+    "reach_label": "Same site only, after limits",
+    "differs": "Chrome, Firefox and Safari all split the cache by site now, so the ID only works inside one site."
+  },
+  "story": {
+    "what_it_is": "A tracker hides a personal ID in a saved file's label, so it survives clearing cookies.",
+    "icon": "cookie",
+    "tags": [
+      "Tracking",
+      "Cache",
+      "Hidden"
+    ],
+    "marketing": [
+      {
+        "vendor": "Google Chrome",
+        "name": "HTTP cache partitioning",
+        "pitch": "Chrome describes splitting the cache by site so one site cannot learn about your visits to another through shared cached files.",
+        "url": "https://developer.chrome.com/blog/http-cache-partitioning"
+      }
+    ],
+    "for_you": "You never see it. You clear your cookies and still get recognized, because the ID rides on a cached file. Modern browsers now keep separate caches per site, which weakens this trick.",
+    "for_makers": "Trackers and ad firms used it as a backup when cookies were blocked or deleted. It is mostly unfriendly to privacy, and browsers have been closing it with split caches.",
+    "use_cases": [
+      {
+        "type": "ads",
+        "example": "An ad network labels a tiny image with a unique tag and reads it back to recognize you on the next visit.",
+        "apps": []
+      },
+      {
+        "type": "analytics",
+        "example": "An analytics script rebuilds a lost ID from the cache label after cookies are cleared.",
+        "apps": []
+      },
+      {
+        "type": "security",
+        "example": "A fraud company uses it to link a returning bot or a banned account.",
+        "apps": []
+      },
+      {
+        "type": "shopping",
+        "example": "A retargeting service recognizes a shopper who deleted cookies and shows the same product ads.",
+        "apps": []
+      },
+      {
+        "type": "games",
+        "example": "A game portal links a banned player's new browser session to the old one.",
+        "apps": []
+      },
+      {
+        "type": "media",
+        "example": "A video site recognizes a viewer who tried to dodge a free article limit.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Survives clearing cookies",
+      "Used for hidden tracking"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Cross-site ID no longer works; same-site ID still works",
+    "Cleared with Clear browsing data"
+  ],
+  "scores": {
+    "sensitivity": 3,
+    "utility": 1,
+    "fingerprint_bits": 4,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": "Cache revalidation",
+    "abuse": "Cookie free first party tracking"
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2013-01",
+      "browser": "safari",
+      "version": "",
+      "change": "Safari double keys HTTP cache"
+    },
+    {
+      "date": "2020-10",
+      "browser": "chrome",
+      "version": "86",
+      "change": "HTTP cache partitioning"
+    },
+    {
+      "date": "2021-02",
+      "browser": "firefox",
+      "version": "85",
+      "change": "Network partitioning including cache"
+    }
+  ],
+  "related": [
+    "web.net.favicon-cache-supercookie",
+    "web.perf.cache-timing-history-sniffing"
+  ],
+  "refs": [
+    {
+      "t": "vendor",
+      "label": "Chrome HTTP cache partitioning",
+      "url": "https://developer.chrome.com/blog/http-cache-partitioning"
+    },
+    {
+      "t": "mozilla",
+      "label": "Firefox state partitioning",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/Privacy/Guides/State_Partitioning"
+    }
+  ],
+  "confidence": "docs"
+}

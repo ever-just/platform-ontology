@@ -1,0 +1,219 @@
+{
+  "id": "web.actions.window-close",
+  "name": "Close a window from script",
+  "kind": "action",
+  "group": "page-actions",
+  "subgroup": "Windows and navigation",
+  "tags": [
+    "window-close",
+    "script-closable"
+  ],
+  "plain": "Closes windows the script opened; ordinary tabs cannot be closed by script.",
+  "meaning": "A page can close a popup it created (for example after sign in), but it cannot kill the tab the person opened, which prevents sites from trapping or hiding.",
+  "lifecycle": [
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "window.close(); window.closed",
+      "bcd": [
+        "api.Window.close",
+        "api.Window.closed"
+      ],
+      "access": {
+        "grant": "none",
+        "prompt_ui": "None (no browser prompt)",
+        "secure_context": false,
+        "user_gesture": false,
+        "activation": "none",
+        "persistence": "One-shot",
+        "revocation": "Nothing to revoke (no permission is stored)",
+        "iframe": "Only script-closable windows; frames cannot close their parent",
+        "steps": [
+          "Script calls window.close()",
+          "If the window is script-closable, it closes",
+          "Otherwise console warns and nothing happens"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "1",
+          "note": "",
+          "date": "2008-12-11"
+        },
+        "edge": {
+          "s": "y",
+          "v": "12",
+          "note": "",
+          "date": "2015-07-29"
+        },
+        "firefox": {
+          "s": "y",
+          "v": "1",
+          "note": "",
+          "date": "2004-11-09"
+        },
+        "safari": {
+          "s": "y",
+          "v": "1",
+          "note": "",
+          "date": "2003-06-23"
+        },
+        "ios_safari": {
+          "s": "y",
+          "v": "1",
+          "note": "All iOS browsers use WebKit",
+          "date": "2007-06-29"
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "18",
+          "note": "",
+          "date": "2012-06-27"
+        },
+        "samsung": {
+          "s": "y",
+          "v": "1.0",
+          "note": "",
+          "date": "2013-04-27"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "none",
+    "metric": "",
+    "update": "",
+    "fields": []
+  },
+  "limits": {
+    "headline": "Can close windows it opened itself, but not your regular tabs",
+    "user_action": "Nothing for its own windows. It happens when you finish a sign in or tap Done.",
+    "can": [
+      "Close a popup or window that the page opened",
+      "Close a sign in window when it is finished",
+      "Close a window after a payment completes"
+    ],
+    "cannot": [
+      "Close a tab you opened yourself",
+      "Close a window it did not open",
+      "Close the whole browser",
+      "Close a tab with other history in it in most browsers"
+    ],
+    "reach": 1,
+    "reach_label": "Only windows it opened",
+    "differs": ""
+  },
+  "story": {
+    "what_it_is": "A page can close windows it opened, but not your ordinary tabs.",
+    "icon": "x",
+    "tags": [
+      "Safe by design",
+      "Silent",
+      "Pop ups"
+    ],
+    "marketing": [],
+    "for_you": "A small sign in or payment window closes itself when it is done. A normal page cannot shut your other tabs.",
+    "for_makers": "Makers use it to tidy up their own pop ups after sign in or payment. The browser blocks the rest so sites cannot slam your tabs shut.",
+    "use_cases": [
+      {
+        "type": "social",
+        "example": "A Sign in with Google window closes itself after you approve.",
+        "apps": [
+          "Spotify",
+          "Canva"
+        ]
+      },
+      {
+        "type": "payments",
+        "example": "A PayPal pop up closes after you confirm, returning you to the shop.",
+        "apps": [
+          "PayPal"
+        ]
+      },
+      {
+        "type": "games",
+        "example": "A browser game portal closes its leaderboard pop up after you pick a player.",
+        "apps": []
+      },
+      {
+        "type": "security",
+        "example": "A phishing flow opens and closes windows quickly to hide a redirect.",
+        "apps": []
+      },
+      {
+        "type": "live",
+        "example": "A pop out chat window shuts itself when the stream ends.",
+        "apps": [
+          "Twitch"
+        ]
+      },
+      {
+        "type": "enterprise",
+        "example": "A company tool closes its single sign on pop up when login is done.",
+        "apps": [
+          "Okta"
+        ]
+      }
+    ],
+    "risks": [
+      "Vanishing windows",
+      "Hiding redirects"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Script-closable only: opened by window.open, or the tab has a single session history entry (HTML spec)",
+    "Firefox adds dom.allow_scripts_to_close_windows (default false for non-script windows)",
+    "Chrome logs: Scripts may close only the windows that were opened by them",
+    "Cannot close the browser or other windows"
+  ],
+  "scores": {
+    "sensitivity": 1,
+    "utility": 2,
+    "fingerprint_bits": null,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Close OAuth popup after login"
+    ],
+    "abuse": [
+      "Pop-under cleanup",
+      "Hiding tracking popups"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2012",
+      "browser": "firefox",
+      "version": "10",
+      "change": "close() restricted to script-opened windows"
+    }
+  ],
+  "related": [
+    "web.actions.open-popup"
+  ],
+  "refs": [
+    {
+      "t": "mdn",
+      "label": "MDN close",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/Window/close"
+    },
+    {
+      "t": "spec",
+      "label": "HTML Standard: script-closable",
+      "url": "https://html.spec.whatwg.org/multipage/nav-history-apis.html#script-closable"
+    }
+  ],
+  "confidence": "docs"
+}

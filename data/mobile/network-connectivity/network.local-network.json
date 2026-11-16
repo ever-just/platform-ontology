@@ -1,0 +1,211 @@
+{
+  "id": "mob.network.local-network",
+  "name": "Local network access",
+  "kind": "permission",
+  "group": "network-connectivity",
+  "subgroup": "Local network",
+  "tags": [
+    "runtime-permission",
+    "local-network",
+    "nearby-devices"
+  ],
+  "plain": "Asks to talk to devices on the home or office network.",
+  "meaning": "Lets apps discover printers, TVs and smart-home devices and also map every device on the network. iOS has prompted since 14; Android adds it in 17.",
+  "lifecycle": [
+    "in-session",
+    "background"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "y",
+      "v": "17",
+      "api": 37,
+      "permission": "ACCESS_LOCAL_NETWORK (Nearby devices group); Android 16 compat flag RESTRICT_LOCAL_NETWORK",
+      "protection": "dangerous",
+      "grant": "prompt",
+      "prompt_ui": "Nearby devices prompt; system pickers can skip it",
+      "persistence": "Until revoked or auto-reset",
+      "revocation": "Settings > Apps > Permissions > Nearby devices",
+      "store_policy": "Play: data-safety disclosure",
+      "api_surface": "Sockets to RFC 1918, 169.254/16, 100.64/10, multicast, broadcast, IPv6 link-local ranges",
+      "note": "Apps targeting 37 must request it. Android 16 offers an opt-in compat flag with NEARBY_WIFI_DEVICES as the interim grant. DNS on port 53 and the Output Switcher are exempt."
+    },
+    "ios": {
+      "s": "y",
+      "v": "14",
+      "permission": "NSLocalNetworkUsageDescription, NSBonjourServices",
+      "protection": "prompt",
+      "grant": "prompt",
+      "prompt_ui": "Allow or Don't Allow",
+      "persistence": "Until revoked",
+      "revocation": "Settings > Privacy & Security > Local Network",
+      "store_policy": "App Review 5.1.1; Multicast Networking entitlement for raw multicast",
+      "api_surface": "NWBrowser, Bonjour, multicast sockets",
+      "note": "Denied access makes local connections fail without error."
+    }
+  },
+  "web_equivalents": [
+    "web.network.local-network"
+  ],
+  "data": {
+    "type": "event",
+    "metric": "Local connections",
+    "update": "per connection",
+    "fields": []
+  },
+  "limits": {
+    "headline": "Can talk to devices on your home or office network, after you tap Allow",
+    "user_action": "You tap Allow when the app asks to find devices on your local network",
+    "can": [
+      "Find smart TVs, printers and speakers on your network",
+      "Send data to local addresses and multicast groups",
+      "Browse for devices with Bonjour on iPhone"
+    ],
+    "cannot": [
+      "Reach local devices if you tap Don't Allow; connections fail with no error on iPhone",
+      "Skip the prompt on iPhone, or on apps built for Android 17",
+      "Reach the internet through this permission"
+    ],
+    "reach": 3,
+    "reach_label": "Devices on your local network",
+    "differs": "Android 17 apps must ask for local network permission. iPhone has asked since iOS 14."
+  },
+  "story": {
+    "what_it_is": "An app asks to talk to devices on your home or office network.",
+    "icon": "router",
+    "tags": [
+      "Network",
+      "Asks first",
+      "Home"
+    ],
+    "marketing": [
+      {
+        "vendor": "Apple",
+        "name": "Local network privacy",
+        "pitch": "Apple asks you before an app can find and connect to devices on your local network.",
+        "url": "https://developer.apple.com/documentation/technotes/tn3179-understanding-local-network-privacy"
+      }
+    ],
+    "for_you": "You see a prompt: 'App would like to find and connect to devices on your local network'. If you allow it, the app can find your TV, printer or speaker. If you say no, casting and setup may not work.",
+    "for_makers": "Makers need this for casting, printing and smart home control. The same access could list every device in your home, which helps a tracker build a profile. That is why Apple and now Android ask first.",
+    "use_cases": [
+      {
+        "type": "media",
+        "example": "A video app finds your TV for casting.",
+        "apps": [
+          "YouTube",
+          "Plex"
+        ]
+      },
+      {
+        "type": "music",
+        "example": "A music app finds your speakers and plays to them.",
+        "apps": [
+          "Sonos",
+          "Spotify"
+        ]
+      },
+      {
+        "type": "smart-home",
+        "example": "A home app controls lights and plugs directly over your Wi-Fi.",
+        "apps": [
+          "Philips Hue",
+          "Home Assistant"
+        ]
+      },
+      {
+        "type": "games",
+        "example": "A console companion app finds your console on the same network to stream to the phone.",
+        "apps": [
+          "PlayStation Remote Play",
+          "Xbox"
+        ]
+      },
+      {
+        "type": "utilities",
+        "example": "A printer app finds your printer and sends a document.",
+        "apps": [
+          "HP Smart"
+        ]
+      },
+      {
+        "type": "ads",
+        "example": "A hidden kit scans devices on your network to build a home profile.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Device inventory for tracking",
+      "Prompt can be confusing"
+    ],
+    "android_note": "Android 17 adds a local network permission for apps that target it.",
+    "ios_note": "iPhone has prompted since iOS 14, and apps must give a reason in a text."
+  },
+  "technical_bounds": [
+    "Pickers can bypass the prompt",
+    "DNS 53 exempt"
+  ],
+  "scores": {
+    "sensitivity": 3,
+    "utility": 4,
+    "fingerprint_bits": 4,
+    "friction": 2
+  },
+  "value": {
+    "legit_uses": [
+      "Casting",
+      "Smart home control"
+    ],
+    "abuse": [
+      "Device inventory for fingerprinting"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2020-09",
+      "platform": "ios",
+      "version": "iOS 14",
+      "change": "Local network prompt introduced"
+    },
+    {
+      "date": "2025-06",
+      "platform": "android",
+      "version": "16 (API 36)",
+      "change": "Local Network Protection opt-in via RESTRICT_LOCAL_NETWORK"
+    },
+    {
+      "date": "2026-06",
+      "platform": "android",
+      "version": "17 (API 37)",
+      "change": "ACCESS_LOCAL_NETWORK runtime permission mandatory for apps targeting 37"
+    }
+  ],
+  "related": [
+    "mob.network.nearby-wifi"
+  ],
+  "refs": [
+    {
+      "t": "android",
+      "label": "Android 16 behavior changes (apps targeting 16)",
+      "url": "https://developer.android.com/about/versions/16/behavior-changes-16"
+    },
+    {
+      "t": "android",
+      "label": "Android 17 release notes",
+      "url": "https://developer.android.com/about/versions/17"
+    },
+    {
+      "t": "apple",
+      "label": "Apple: Local network privacy",
+      "url": "https://developer.apple.com/documentation/technotes/tn3179-understanding-local-network-privacy"
+    }
+  ],
+  "confidence": "docs"
+}

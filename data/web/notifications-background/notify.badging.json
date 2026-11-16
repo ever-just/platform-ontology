@@ -1,0 +1,246 @@
+{
+  "id": "web.notify.badging",
+  "name": "Badging API",
+  "kind": "capability",
+  "group": "notifications-background",
+  "subgroup": "Notifications",
+  "tags": [
+    "pwa"
+  ],
+  "plain": "Shows a number or dot on an installed app icon.",
+  "meaning": "Puts an unread count on the app icon of an installed web app. No prompt on desktop, but iOS needs notification permission and an installed app. It shows the person that the app has attention to give.",
+  "lifecycle": [
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "navigator.setAppBadge(n), clearAppBadge()",
+      "permission_name": "notifications (iOS)",
+      "bcd": [
+        "api.Navigator.setAppBadge"
+      ],
+      "access": {
+        "grant": "install",
+        "prompt_ui": "No prompt on desktop Chrome and Edge; iOS requires Home Screen web app plus granted notifications.",
+        "secure_context": true,
+        "user_gesture": false,
+        "persistence": "Persists until cleared",
+        "revocation": "Clear or uninstall",
+        "iframe": "Not delegated",
+        "steps": [
+          "Install the PWA",
+          "Call setAppBadge(count)",
+          "OS draws badge on icon"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "81",
+          "note": "Installed PWAs",
+          "date": "2020-04-07"
+        },
+        "edge": {
+          "s": "y",
+          "v": "81",
+          "note": "",
+          "date": "2020-04-13"
+        },
+        "firefox": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "safari": {
+          "s": "y",
+          "v": "17",
+          "note": "macOS Dock web apps",
+          "date": "2023-09-18"
+        },
+        "ios_safari": {
+          "s": "y",
+          "v": "16.4",
+          "note": "Home Screen web apps with notification permission",
+          "date": "2023-03-27"
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "81",
+          "note": "BCD lists no support; agent research says otherwise",
+          "date": "2020-04-07"
+        },
+        "samsung": {
+          "s": "y",
+          "v": "13.0",
+          "note": "BCD lists no support; agent research says otherwise",
+          "date": "2020-12-02"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "integer",
+    "metric": "Badge count",
+    "update": "on call",
+    "fields": [
+      {
+        "name": "count",
+        "type": "integer",
+        "unit": "number",
+        "range": "0 to 4,294,967,295 (unsigned long)",
+        "precision": "1"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can show a number or dot on the icon of an installed web app",
+    "user_action": "You install a web app and, on iPhone, allow notifications",
+    "can": [
+      "Show an unread count or dot on the app icon",
+      "Update the count while the app is open or when a push arrives",
+      "Clear the count when you open the item"
+    ],
+    "cannot": [
+      "Do this for a site that is not installed as an app",
+      "Do this on iPhone without notification permission",
+      "See what number is already showing",
+      "Work in Firefox"
+    ],
+    "reach": 2,
+    "reach_label": "A badge on one icon",
+    "differs": "Chrome and Edge on desktop need no pop up. iPhone needs a Home Screen web app plus allowed notifications. Firefox does not support it."
+  },
+  "story": {
+    "what_it_is": "An installed web app can show a small number or dot on its icon.",
+    "icon": "badge-check",
+    "tags": [
+      "Installed apps",
+      "Notifications",
+      "Silent"
+    ],
+    "marketing": [
+      {
+        "vendor": "web.dev",
+        "name": "Badging API",
+        "pitch": "Installed web apps can set a badge on their icon to show new items, such as unread messages.",
+        "url": "https://web.dev/articles/badging-api"
+      }
+    ],
+    "for_you": "You see a number or dot on the app icon in your dock or home screen, like unread chats. It tells you something is waiting without a pop up.",
+    "for_makers": "Makers use the badge to pull people back to the app. A small count can raise return visits. It is only for installed web apps, and works with push messages.",
+    "use_cases": [
+      {
+        "type": "messaging",
+        "example": "A web chat app installed on your laptop shows a red 3 on its icon when three new messages arrive.",
+        "apps": [
+          "Slack web app",
+          "Telegram Web"
+        ]
+      },
+      {
+        "type": "productivity",
+        "example": "A web mail app shows the count of unread emails on its dock icon.",
+        "apps": [
+          "Gmail"
+        ]
+      },
+      {
+        "type": "games",
+        "example": "A browser game shows a dot when your turn arrives in an online board game.",
+        "apps": []
+      },
+      {
+        "type": "shopping",
+        "example": "A store web app shows a dot when your order ships or a deal drops.",
+        "apps": []
+      },
+      {
+        "type": "social",
+        "example": "A social web app shows a number for new replies and follows.",
+        "apps": [
+          "X",
+          "Bluesky"
+        ]
+      },
+      {
+        "type": "productivity",
+        "example": "A task web app shows how many tasks are due today.",
+        "apps": [
+          "Todoist"
+        ]
+      },
+      {
+        "type": "news",
+        "example": "A news web app shows how many breaking stories you have not read.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Nagging counts",
+      "Only installed apps"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Needs installed app",
+    "Count only, no text"
+  ],
+  "scores": {
+    "sensitivity": 1,
+    "utility": 3,
+    "fingerprint_bits": null,
+    "friction": 1
+  },
+  "value": {
+    "legit_uses": [
+      "Unread counts"
+    ],
+    "abuse": [
+      "Attention nagging"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2020-04",
+      "browser": "chrome",
+      "version": "81",
+      "change": "Badging ships on desktop"
+    },
+    {
+      "date": "2023-03",
+      "browser": "ios_safari",
+      "version": "16.4",
+      "change": "Badging for Home Screen web apps"
+    },
+    {
+      "date": "2023-09",
+      "browser": "safari",
+      "version": "17",
+      "change": "Badging for web apps added to Dock"
+    }
+  ],
+  "related": [
+    "web.notify.notifications"
+  ],
+  "refs": [
+    {
+      "t": "mdn",
+      "label": "MDN Badging API",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/Badging_API"
+    },
+    {
+      "t": "spec",
+      "label": "W3C Badging API",
+      "url": "https://w3c.github.io/badging/"
+    }
+  ],
+  "confidence": "docs"
+}

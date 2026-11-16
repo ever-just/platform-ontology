@@ -1,0 +1,231 @@
+{
+  "id": "web.locale.gpc",
+  "name": "Global Privacy Control",
+  "kind": "signal",
+  "group": "locale-preferences",
+  "subgroup": "Privacy signals",
+  "tags": [
+    "gpc",
+    "sec-gpc",
+    "ccpa",
+    "opt-out"
+  ],
+  "plain": "Browser signal that the person opts out of sale or sharing of data.",
+  "meaning": "Legally binding opt-out in California, Colorado, Connecticut and more, so sites must honor it. Also tells the site this user runs privacy-focused settings or a browser like Firefox, DuckDuckGo or Brave.",
+  "lifecycle": [
+    "on-arrival",
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "navigator.globalPrivacyControl; Sec-GPC: 1 header",
+      "bcd": [
+        "api.Navigator.globalPrivacyControl"
+      ],
+      "access": {
+        "grant": "none",
+        "prompt_ui": "None",
+        "secure_context": false,
+        "user_gesture": false,
+        "persistence": "read fresh on every page load; nothing stored",
+        "revocation": "none needed (no grant)",
+        "iframe": "Readable from cross-origin iframes too (same values)",
+        "steps": [
+          "Page script reads the value",
+          "No prompt is shown"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "n",
+          "v": "",
+          "note": "Not shipped; extensions add the header"
+        },
+        "edge": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "firefox": {
+          "s": "y",
+          "v": "120",
+          "note": "Opt-in setting; default in Private Browsing optional",
+          "date": "2023-11-21"
+        },
+        "safari": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "ios_safari": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "chrome_android": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "samsung": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "object",
+    "metric": "",
+    "update": "static per session",
+    "fields": [
+      {
+        "name": "globalPrivacyControl",
+        "type": "boolean",
+        "unit": "",
+        "range": "true or absent",
+        "precision": ""
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can see that you asked sites not to sell or share your data",
+    "user_action": "Nothing. Your browser sends it with each page request if the setting is on",
+    "can": [
+      "Check the Global Privacy Control signal",
+      "Treat it as your opt out of sale or sharing, where the law requires it, such as in California",
+      "Learn that you may use a privacy focused browser or setting"
+    ],
+    "cannot": [
+      "Make a site honor it outside places where the law requires it",
+      "See your name or account from this signal",
+      "Work by default in Chrome or Safari; you need an extension or a privacy browser"
+    ],
+    "reach": 1,
+    "reach_label": "One yes or no setting",
+    "differs": "Firefox, Brave and DuckDuckGo send it. Chrome and Safari do not by default."
+  },
+  "story": {
+    "what_it_is": "A browser signal that tells sites not to sell or share your data.",
+    "icon": "shield-check",
+    "tags": [
+      "Privacy",
+      "Opt out",
+      "Law"
+    ],
+    "marketing": [
+      {
+        "vendor": "Global Privacy Control",
+        "name": "Global Privacy Control",
+        "pitch": "The group describes a simple browser setting that sends an opt out request about selling or sharing data to every site.",
+        "url": "https://globalprivacycontrol.org/"
+      },
+      {
+        "vendor": "Mozilla",
+        "name": "Global Privacy Control",
+        "pitch": "Mozilla explains a Firefox setting that tells sites you do not want your data sold or shared.",
+        "url": "https://support.mozilla.org/en-US/kb/global-privacy-control"
+      }
+    ],
+    "for_you": "If you turn it on, every site gets a note saying 'do not sell or share my data'. You may see fewer targeted ads, or a banner saying your choice was honored. In some places the law makes sites listen.",
+    "for_makers": "In California, Colorado, Connecticut and more, sites must treat it as an opt out. Makers must change ad and data sharing for those visitors. It also tells them who is privacy minded.",
+    "use_cases": [
+      {
+        "type": "ads",
+        "example": "An ad network sees the signal and stops sharing the visitor's data with partners for targeted ads.",
+        "apps": []
+      },
+      {
+        "type": "media",
+        "example": "A news site hides its 'do not sell my info' link as the setting has already done that job.",
+        "apps": [
+          "The Washington Post"
+        ]
+      },
+      {
+        "type": "shopping",
+        "example": "A store turns off third party ad pixels for visitors who send the signal.",
+        "apps": []
+      },
+      {
+        "type": "games",
+        "example": "A game portal limits data sharing with ad partners when it receives the signal from a player in a covered state.",
+        "apps": []
+      },
+      {
+        "type": "analytics",
+        "example": "A consent tool stores the opt out and logs that it was honored, for legal proof.",
+        "apps": [
+          "OneTrust"
+        ]
+      },
+      {
+        "type": "security",
+        "example": "Fingerprinters may use the signal as a clue, so turning it on can make the browser rarer.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Few sites honor it outside the law",
+      "Can make you stand out"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Absent on Chrome and Safari",
+    "Header only, no proof user understood it"
+  ],
+  "scores": {
+    "sensitivity": 2,
+    "utility": 4,
+    "fingerprint_bits": 1.0,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Comply with state privacy laws"
+    ],
+    "abuse": [
+      "Segment privacy-aware users"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2023-11",
+      "browser": "firefox",
+      "version": "120",
+      "change": "navigator.globalPrivacyControl shipped"
+    },
+    {
+      "date": "2020-10",
+      "browser": "brave",
+      "version": "",
+      "change": "Default on"
+    }
+  ],
+  "related": [
+    "web.locale.dnt"
+  ],
+  "refs": [
+    {
+      "t": "spec",
+      "label": "GPC spec",
+      "url": "https://privacycg.github.io/gpc-spec/"
+    },
+    {
+      "t": "mdn",
+      "label": "MDN globalPrivacyControl",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/Navigator/globalPrivacyControl"
+    }
+  ],
+  "confidence": "docs"
+}

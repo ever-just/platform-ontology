@@ -1,0 +1,277 @@
+{
+  "id": "web.storage.storage-quota",
+  "name": "Storage quotas and eviction",
+  "kind": "capability",
+  "group": "files-storage",
+  "subgroup": "Storage",
+  "tags": [
+    "quota",
+    "eviction"
+  ],
+  "plain": "How much each site may store on the device, per browser.",
+  "meaning": "Caps how much a site can keep (IndexedDB, Cache, files). Large quotas let a site store gigabytes; quota values are derived from total disk size, so estimate() was padded to limit fingerprinting.",
+  "lifecycle": [
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "navigator.storage.estimate(); IndexedDB; Cache API; OPFS",
+      "bcd": [
+        "api.StorageManager.estimate"
+      ],
+      "access": {
+        "grant": "none",
+        "prompt_ui": "No prompt; browser enforces quota and throws QuotaExceededError.",
+        "secure_context": true,
+        "user_gesture": false,
+        "persistence": "Until evicted or cleared",
+        "revocation": "Clear site data",
+        "iframe": "Cross-origin frames get a fraction (Safari about 10% of the parent's)",
+        "steps": [
+          "Write data",
+          "Browser compares against the origin quota",
+          "If exceeded throws QuotaExceededError",
+          "Under disk pressure unprotected origins are evicted least recently used, all or nothing"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "61",
+          "note": "",
+          "date": "2017-09-05"
+        },
+        "edge": {
+          "s": "y",
+          "v": "79",
+          "note": "",
+          "date": "2020-01-15"
+        },
+        "firefox": {
+          "s": "y",
+          "v": "57",
+          "note": "",
+          "date": "2017-11-14"
+        },
+        "safari": {
+          "s": "y",
+          "v": "17",
+          "note": "",
+          "date": "2023-09-18"
+        },
+        "ios_safari": {
+          "s": "y",
+          "v": "17",
+          "note": "",
+          "date": "2023-09-18"
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "61",
+          "note": "",
+          "date": "2017-09-05"
+        },
+        "samsung": {
+          "s": "y",
+          "v": "8.0",
+          "note": "",
+          "date": "2018-07-18"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "object",
+    "metric": "usage and quota estimate",
+    "update": "on call",
+    "fields": [
+      {
+        "name": "Chrome and Edge",
+        "type": "integer",
+        "unit": "percent of total disk",
+        "range": "up to 60% per origin; about 80% across the browser",
+        "precision": "bytes"
+      },
+      {
+        "name": "Firefox best effort",
+        "type": "integer",
+        "unit": "bytes",
+        "range": "min(10% of disk, 10 GiB) per origin; 10 GiB per eTLD+1 group",
+        "precision": "bytes"
+      },
+      {
+        "name": "Firefox persistent",
+        "type": "integer",
+        "unit": "percent of disk",
+        "range": "up to 50%, capped at 8 TiB",
+        "precision": "bytes"
+      },
+      {
+        "name": "Safari 14+ and iOS 17+",
+        "type": "integer",
+        "unit": "percent of disk",
+        "range": "about 60% per origin; 80% total; embedded WebViews 15% and 20%",
+        "precision": "bytes"
+      },
+      {
+        "name": "localStorage and sessionStorage",
+        "type": "integer",
+        "unit": "MiB",
+        "range": "5 each per origin",
+        "precision": "about 10 MB UTF-16"
+      },
+      {
+        "name": "Chrome opaque response padding",
+        "type": "integer",
+        "unit": "bytes",
+        "range": "about 7 MB per opaque cross-origin response",
+        "precision": "fingerprint defense (secondary)"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can store only what your browser allows, and may lose it when space is low",
+    "user_action": "Nothing. It happens when the page loads.",
+    "can": [
+      "Check roughly how much space it has used and may use",
+      "Store data up to its limit",
+      "Get an error when the limit is reached"
+    ],
+    "cannot": [
+      "Go over its limit, which varies by browser and free disk",
+      "Stop the browser clearing it when space is low, unless storage is protected",
+      "See your exact free disk space, since the numbers are rough"
+    ],
+    "reach": 1,
+    "reach_label": "A rough number, no prompt",
+    "differs": "Limits differ by browser. Chrome, Firefox and Safari each set their own caps."
+  },
+  "story": {
+    "what_it_is": "How much each site may store on your device, which differs by browser.",
+    "icon": "gauge",
+    "tags": [
+      "Storage",
+      "Silent",
+      "Limits"
+    ],
+    "marketing": [
+      {
+        "vendor": "web.dev",
+        "name": "Storage for the web",
+        "pitch": "Google explains how much a site can store and how browsers manage quota and cleanup.",
+        "url": "https://web.dev/articles/storage-for-the-web"
+      },
+      {
+        "vendor": "WebKit",
+        "name": "Updates to storage policy",
+        "pitch": "Apple explains the new Safari limits on how much a site can store.",
+        "url": "https://webkit.org/blog/14403/updates-to-storage-policy/"
+      }
+    ],
+    "for_you": "You never see the limit, until a site runs out of room. Then it may stop saving, ask you to free space or lose offline data.",
+    "for_makers": "Makers plan their offline features around the limit. A big game or editor needs lots of space. The quota number and the way it behaves can also help tell browsers and private modes apart.",
+    "use_cases": [
+      {
+        "type": "games",
+        "example": "A browser game with large levels checks the quota first, then downloads only what fits.",
+        "apps": []
+      },
+      {
+        "type": "media",
+        "example": "A podcast or music web app tells you how many songs it can keep offline.",
+        "apps": []
+      },
+      {
+        "type": "creative",
+        "example": "A web video editor warns you before a project grows beyond the space it can store.",
+        "apps": []
+      },
+      {
+        "type": "productivity",
+        "example": "A web email app keeps the last month of mail offline, as much as the quota allows.",
+        "apps": [
+          "Gmail"
+        ]
+      },
+      {
+        "type": "security",
+        "example": "A fraud service notes a tiny quota, which can mean private mode or an emulator.",
+        "apps": []
+      },
+      {
+        "type": "analytics",
+        "example": "A site team measures typical quotas to design offline features.",
+        "apps": []
+      },
+      {
+        "type": "ads",
+        "example": "A fingerprint script reads the exact quota number as one more clue about your device and disk.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Fingerprint clue",
+      "Reveals disk size"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Quota computed from total disk, not free space",
+    "Safari deletes script-written data after 7 days without interaction (ITP)",
+    "Eviction is LRU and all or nothing per origin"
+  ],
+  "scores": {
+    "sensitivity": 2,
+    "utility": 4,
+    "fingerprint_bits": 2,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Offline apps",
+      "Large model and media caches"
+    ],
+    "abuse": [
+      "Fingerprinting via quota estimates",
+      "Filling disks with cached data"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2023-09",
+      "browser": "safari",
+      "version": "17",
+      "change": "Per-origin quota raised to about 60% of disk"
+    },
+    {
+      "date": "2017-06",
+      "browser": "firefox",
+      "version": "57",
+      "change": "Eviction policy moved to origin groups"
+    }
+  ],
+  "related": [
+    "web.storage.persistent-storage"
+  ],
+  "refs": [
+    {
+      "t": "mdn",
+      "label": "MDN Storage quotas and eviction criteria",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/Storage_API/Storage_quotas_and_eviction_criteria"
+    },
+    {
+      "t": "webkit",
+      "label": "WebKit: updates to storage policy",
+      "url": "https://webkit.org/blog/14403/updates-to-storage-policy/"
+    }
+  ],
+  "confidence": "verified"
+}

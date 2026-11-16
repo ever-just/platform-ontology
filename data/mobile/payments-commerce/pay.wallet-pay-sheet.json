@@ -1,0 +1,222 @@
+{
+  "id": "mob.pay.wallet-pay-sheet",
+  "name": "Wallet payment sheet (Apple Pay, Google Pay)",
+  "kind": "capability",
+  "group": "payments-commerce",
+  "subgroup": "Wallets",
+  "tags": [
+    "apple-pay",
+    "google-pay",
+    "tokenised-card",
+    "payment-sheet"
+  ],
+  "plain": "Takes a card payment through the OS wallet with biometric confirm.",
+  "meaning": "A merchant gets a payment token, not the card number. The wallet also reveals shipping and contact details the person chooses to share.",
+  "lifecycle": [
+    "in-session"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "y",
+      "v": "5.0",
+      "api": 21,
+      "permission": "None; Google Pay merchant profile and API",
+      "protection": "none",
+      "grant": "prompt",
+      "prompt_ui": "Google Pay sheet with fingerprint or PIN",
+      "persistence": "Per transaction",
+      "revocation": "Google Wallet > Payment methods",
+      "store_policy": "Play: Payments policy; physical goods are not charged a store commission",
+      "api_surface": "Google Pay API (com.google.android.gms.wallet), PaymentsClient",
+      "note": "Used for physical goods and services outside Play Billing."
+    },
+    "ios": {
+      "s": "y",
+      "v": "8.0",
+      "permission": "com.apple.developer.in-app-payments (merchant ID)",
+      "protection": "entitlement",
+      "grant": "prompt",
+      "prompt_ui": "Apple Pay sheet with Face ID; shipping and contact fields",
+      "persistence": "Per transaction",
+      "revocation": "Wallet & Apple Pay settings",
+      "store_policy": "App Review 3.1.5 allows physical goods and services via Apple Pay",
+      "api_surface": "PassKit PKPaymentAuthorizationController, PKPaymentRequest",
+      "note": "Apple Pay via the web in Safari uses the same sheet."
+    }
+  },
+  "web_equivalents": [
+    "web.payments.apple-pay-js",
+    "web.payments.google-pay",
+    "web.payments.payment-request"
+  ],
+  "data": {
+    "type": "object",
+    "metric": "Payment token",
+    "update": "per transaction",
+    "fields": [
+      {
+        "name": "token",
+        "type": "binary",
+        "unit": "encrypted",
+        "range": "per merchant",
+        "precision": "n/a"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can charge you through Apple Pay or Google Pay without seeing your card number",
+    "user_action": "You tap Apple Pay or Google Pay at checkout and confirm with Face ID, fingerprint or PIN",
+    "can": [
+      "Receive a payment token instead of your card number",
+      "Ask for shipping and contact details that you choose to share",
+      "Take one payment each time you confirm the sheet",
+      "Use it for physical goods and services"
+    ],
+    "cannot": [
+      "Charge you without your Face ID, fingerprint or PIN",
+      "See your other cards in the wallet",
+      "Get the details you hold back on the sheet"
+    ],
+    "reach": 1,
+    "reach_label": "One payment per confirmation",
+    "differs": "Apple Pay on the web in Safari uses the same sheet; Android uses the Google Pay sheet with fingerprint or PIN."
+  },
+  "story": {
+    "what_it_is": "A phone pop up that pays with a saved card using Face ID, a fingerprint or a PIN.",
+    "icon": "wallet",
+    "tags": [
+      "Payments",
+      "Face ID",
+      "Checkout"
+    ],
+    "marketing": [
+      {
+        "vendor": "Apple",
+        "name": "Apple Pay",
+        "pitch": "A safer, faster way to pay in apps and on websites using Face ID or Touch ID. The shop never sees your card number.",
+        "url": "https://www.apple.com/apple-pay/"
+      },
+      {
+        "vendor": "Google",
+        "name": "Google Pay",
+        "pitch": "Pay with cards saved to your Google account in apps, on websites and in stores.",
+        "url": "https://pay.google.com/"
+      }
+    ],
+    "for_you": "A sheet slides up showing your card, shipping address and total. You look at the phone or tap a finger to confirm. It feels much faster than typing card numbers.",
+    "for_makers": "Checkout becomes one step, which means fewer abandoned carts. The shop gets a one time token instead of the card number, which lowers fraud and the cost of storing card data. It can also hand over your name, email and address if you allow it.",
+    "use_cases": [
+      {
+        "type": "shopping",
+        "example": "You buy shoes on a shop's app and finish checkout with Face ID in two seconds.",
+        "apps": [
+          "Nike",
+          "Amazon"
+        ]
+      },
+      {
+        "type": "rideshare",
+        "example": "You pay for a ride at the end of the trip with a saved card and no card fields.",
+        "apps": [
+          "Uber",
+          "Lyft"
+        ]
+      },
+      {
+        "type": "delivery",
+        "example": "You order a pizza and the sheet fills in your address from your wallet.",
+        "apps": [
+          "DoorDash",
+          "Domino's"
+        ]
+      },
+      {
+        "type": "games",
+        "example": "You buy a battle pass in a mobile game without typing a card number, so the impulse purchase is easy.",
+        "apps": [
+          "Roblox"
+        ]
+      },
+      {
+        "type": "travel",
+        "example": "You book a hotel and pay in a tap, with the receipt sent to the email the wallet shared.",
+        "apps": [
+          "Booking.com"
+        ]
+      },
+      {
+        "type": "payments",
+        "example": "You split a dinner bill or tip a street musician online with a wallet button.",
+        "apps": []
+      },
+      {
+        "type": "security",
+        "example": "The bank checks that the phone and the face match before it approves the payment.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Easy impulse buying",
+      "Shares name and address",
+      "Card tokens still linked to you"
+    ],
+    "android_note": "Google Pay is also used for physical goods and services outside Google Play's own billing.",
+    "ios_note": "Apple Pay on the web in Safari uses the same sheet, so the experience matches across devices."
+  },
+  "technical_bounds": [
+    "Digital goods must use IAP on Apple and Play Billing on Google unless an exception applies"
+  ],
+  "scores": {
+    "sensitivity": 5,
+    "utility": 5,
+    "fingerprint_bits": 1,
+    "friction": 2
+  },
+  "value": {
+    "legit_uses": [
+      "E-commerce checkout",
+      "Ride hailing"
+    ],
+    "abuse": [
+      "Card testing with stolen tokens"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2014-09",
+      "platform": "ios",
+      "version": "iOS 8",
+      "change": "Apple Pay in apps"
+    },
+    {
+      "date": "2015-09",
+      "platform": "android",
+      "version": "Android Pay",
+      "change": "Android Pay launched; became Google Pay 2018"
+    }
+  ],
+  "related": [
+    "mob.pay.iap",
+    "mob.pay.contactless-default"
+  ],
+  "refs": [
+    {
+      "t": "apple",
+      "label": "Apple: Apple Pay",
+      "url": "https://developer.apple.com/apple-pay/"
+    },
+    {
+      "t": "vendor",
+      "label": "Google Pay Android developer docs",
+      "url": "https://developers.google.com/pay/api/android/overview"
+    }
+  ],
+  "confidence": "verified"
+}

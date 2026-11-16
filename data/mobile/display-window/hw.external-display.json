@@ -1,0 +1,231 @@
+{
+  "id": "mob.hw.external-display",
+  "name": "External display and casting output",
+  "kind": "capability",
+  "group": "display-window",
+  "subgroup": "Output",
+  "tags": [
+    "external-display",
+    "airplay",
+    "presentation",
+    "desktop-mode"
+  ],
+  "plain": "Draws a separate screen on a connected monitor or AirPlay target.",
+  "meaning": "An app can show different content on a second screen. Mostly a layout feature; it also lets an app know that a monitor is attached.",
+  "lifecycle": [
+    "in-session"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "y",
+      "v": "4.2",
+      "api": 17,
+      "permission": "",
+      "protection": "none",
+      "grant": "none",
+      "prompt_ui": "None for wired displays; Cast and Miracast use system pickers",
+      "persistence": "Session",
+      "revocation": "Disconnect cable or stop cast",
+      "store_policy": "",
+      "api_surface": "DisplayManager, Presentation, Android 14 desktop windowing (Android 16 desktop mode)",
+      "note": "Android 16 adds connected display desktop mode on supported phones."
+    },
+    "ios": {
+      "s": "y",
+      "v": "13.0",
+      "permission": "",
+      "protection": "none",
+      "grant": "none",
+      "prompt_ui": "None for wired; AirPlay is a system control",
+      "persistence": "Session",
+      "revocation": "Disconnect",
+      "store_policy": "",
+      "api_surface": "UIScene with UIWindowSceneSessionRoleExternalDisplayNonInteractive, AirPlay",
+      "note": "iPhone 15 USB-C and iPad: external display scenes; iPadOS 16 Stage Manager; iPadOS 26 windowing."
+    }
+  },
+  "web_equivalents": [
+    "web.display.window-management",
+    "web.peripherals.presentation-api"
+  ],
+  "data": {
+    "type": "object",
+    "metric": "Display metrics",
+    "update": "on connect",
+    "fields": [
+      {
+        "name": "resolution",
+        "type": "integer",
+        "unit": "px",
+        "range": "up to 4K",
+        "precision": "exact"
+      },
+      {
+        "name": "refresh rate",
+        "type": "float",
+        "unit": "Hz",
+        "range": "24 to 144",
+        "precision": "exact"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can show a separate screen on a connected monitor, TV or AirPlay device",
+    "user_action": "You plug in a monitor or choose Cast or AirPlay",
+    "can": [
+      "Show a different screen on a wired display with no prompt",
+      "Show to a TV through the system Cast, Miracast or AirPlay picker",
+      "Run a desktop style window layout on newer Android phones",
+      "Show external display scenes on iPhone 15 USB-C and on iPad"
+    ],
+    "cannot": [
+      "Cast or send to AirPlay without you choosing a target",
+      "Show on iPhone models before USB-C in the same way",
+      "Use Android 16 desktop mode on phones that do not support it",
+      "See the other screen's apps or content"
+    ],
+    "reach": 2,
+    "reach_label": "While connected",
+    "differs": "Android 16 adds desktop mode on supported phones. iPhone 15 and newer with USB-C support external display scenes."
+  },
+  "story": {
+    "what_it_is": "An app can send a second screen to a monitor, TV or AirPlay device.",
+    "icon": "cast",
+    "tags": [
+      "Display",
+      "Feature",
+      "TV"
+    ],
+    "marketing": [
+      {
+        "vendor": "Apple",
+        "name": "AirPlay",
+        "pitch": "Pitch: stream video, photos and music from your Apple devices to a TV or speaker, or mirror your screen.",
+        "url": "https://www.apple.com/airplay/"
+      },
+      {
+        "vendor": "Google",
+        "name": "Google Cast",
+        "pitch": "Developer pitch: let people send content from your app to TVs and speakers.",
+        "url": "https://developers.google.com/cast"
+      }
+    ],
+    "for_you": "You plug your phone into a TV or cast it, and an app shows something different on the big screen. The app also learns that a monitor is attached.",
+    "for_makers": "Makers use it for second screens like game controls on the phone and the game on the TV, slide decks and video players. It is mostly a layout feature.",
+    "use_cases": [
+      {
+        "type": "games",
+        "example": "A party game shows the board on your TV and your secret cards on your phone.",
+        "apps": [
+          "Jackbox Games"
+        ]
+      },
+      {
+        "type": "video",
+        "example": "A streaming app plays a movie on your TV while your phone becomes the remote.",
+        "apps": [
+          "YouTube",
+          "Netflix"
+        ]
+      },
+      {
+        "type": "productivity",
+        "example": "A slide app shows slides on a projector and notes on your phone.",
+        "apps": [
+          "Keynote"
+        ]
+      },
+      {
+        "type": "creative",
+        "example": "A drawing app shows a large clean canvas on a monitor while tools stay on the tablet.",
+        "apps": []
+      },
+      {
+        "type": "automotive",
+        "example": "A car display app shows maps on the dashboard screen and a list on your phone.",
+        "apps": [
+          "Android Auto",
+          "CarPlay"
+        ]
+      },
+      {
+        "type": "live",
+        "example": "A sports app shows a live game on the TV and a stat feed on your phone.",
+        "apps": []
+      },
+      {
+        "type": "enterprise",
+        "example": "A sales app presents a customer demo on a conference room screen.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Can show private content on a public screen",
+      "Reveals you are plugged in"
+    ],
+    "android_note": "Uses the Presentation API and Google Cast.",
+    "ios_note": "Uses AirPlay and wired adapters."
+  },
+  "technical_bounds": [
+    "No permission, so any app can read display metrics"
+  ],
+  "scores": {
+    "sensitivity": 1,
+    "utility": 3,
+    "fingerprint_bits": 3,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Presentations",
+      "Games on TV",
+      "Desktop apps"
+    ],
+    "abuse": [
+      "Display metrics add to fingerprinting"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2012-11",
+      "platform": "android",
+      "version": "4.2 (API 17)",
+      "change": "Presentation API for secondary displays"
+    },
+    {
+      "date": "2019-09",
+      "platform": "ios",
+      "version": "iOS 13",
+      "change": "UIScene based external display"
+    },
+    {
+      "date": "2025-09",
+      "platform": "ios",
+      "version": "iPadOS 26",
+      "change": "Menu bar and multi window desktop style"
+    }
+  ],
+  "related": [
+    "mob.hw.usb"
+  ],
+  "refs": [
+    {
+      "t": "android",
+      "label": "Android: Presentation API",
+      "url": "https://developer.android.com/reference/android/app/Presentation"
+    },
+    {
+      "t": "apple",
+      "label": "Apple: Displaying content on an external screen",
+      "url": "https://developer.apple.com/documentation/uikit/windows_and_screens/displaying_content_on_a_connected_screen"
+    }
+  ],
+  "confidence": "docs"
+}

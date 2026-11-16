@@ -1,0 +1,199 @@
+{
+  "id": "mob.notif.service-extension",
+  "name": "Notification service extension and mutable content",
+  "kind": "capability",
+  "group": "notifications-background",
+  "subgroup": "Permission and presentation",
+  "tags": [
+    "notifications",
+    "extension",
+    "mutable-content",
+    "30s"
+  ],
+  "plain": "A small helper that edits an iOS push for about 30 seconds before it is shown.",
+  "meaning": "Lets a company decrypt message text, fetch images and personalize on the phone. Android does the same inside the messaging service; both give short windows to run code.",
+  "lifecycle": [
+    "background"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "y",
+      "v": "1.0",
+      "api": 1,
+      "permission": "",
+      "protection": "none",
+      "grant": "install",
+      "prompt_ui": "None",
+      "persistence": "Data messages run onMessageReceived in a short window (about 10 s before the system may kill the work)",
+      "revocation": "n/a",
+      "store_policy": "",
+      "api_surface": "FirebaseMessagingService.onMessageReceived()",
+      "note": "Must finish quickly or hand off to WorkManager; for v2 RemoteNotification a 20 s window"
+    },
+    "ios": {
+      "s": "y",
+      "v": "10.0",
+      "permission": "UNNotificationServiceExtension; aps mutable-content 1 with an alert",
+      "protection": "entitlement",
+      "grant": "install",
+      "prompt_ui": "None",
+      "persistence": "Original content shown if the extension fails or time runs out",
+      "revocation": "n/a",
+      "store_policy": "App Review: extension used only to improve notifications",
+      "api_surface": "UNNotificationServiceExtension.didReceive, serviceExtensionTimeWillExpire()",
+      "note": "About 30 s to modify the payload; does not run for silent, sound-only or badge-only payloads or if alerts are disabled"
+    }
+  },
+  "web_equivalents": [
+    "web.notify.notifications"
+  ],
+  "data": {
+    "type": "event",
+    "metric": "Modification window",
+    "update": "Per push",
+    "fields": [
+      {
+        "name": "window",
+        "type": "integer",
+        "unit": "seconds",
+        "range": "about 30 (iOS), 10 to 20 (Android)",
+        "precision": "approx"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can edit an iPhone push for about 30 seconds before you see it",
+    "user_action": "Nothing. It happens when a push arrives and before the alert shows",
+    "can": [
+      "Download a picture or attach media before the alert shows",
+      "Change the title or text, for example to decrypt a message",
+      "Add details quickly, or hand longer work to a background job on Android"
+    ],
+    "cannot": [
+      "Run for more than about 30 seconds",
+      "Run for silent, sound only or badge only pushes on iPhone",
+      "Run when alerts are off for the app",
+      "Work on Android with a long window; it must finish quickly"
+    ],
+    "reach": 1,
+    "reach_label": "A short edit before the alert shows",
+    "differs": "iPhone has a service extension with about 30 seconds. Android must finish quickly or hand off to a background job."
+  },
+  "story": {
+    "what_it_is": "A tiny helper that edits an iPhone alert for about 30 seconds before you see it.",
+    "icon": "wand-sparkles",
+    "tags": [
+      "Notifications",
+      "iPhone",
+      "Privacy"
+    ],
+    "marketing": [
+      {
+        "vendor": "Apple",
+        "name": "Modifying content in newly delivered notifications",
+        "pitch": "Apple lets apps change an alert on arrival, for example to decrypt text or attach a picture.",
+        "url": "https://developer.apple.com/documentation/usernotifications/modifying-content-in-newly-delivered-notifications"
+      }
+    ],
+    "for_you": "You see a finished alert, such as a message that was scrambled in transit and shown as readable text. You never see the helper work in that short window.",
+    "for_makers": "Makers use it for end to end encrypted chats, previews and personal touches. The helper also runs code before display, so some use it to send a signal that the alert arrived.",
+    "use_cases": [
+      {
+        "type": "messaging",
+        "example": "A secure chat app decrypts the message on your phone so the server never sees the text.",
+        "apps": [
+          "Signal",
+          "WhatsApp"
+        ]
+      },
+      {
+        "type": "delivery",
+        "example": "A courier app downloads a photo of your doorstep and attaches it to the alert.",
+        "apps": [
+          "Amazon"
+        ]
+      },
+      {
+        "type": "news",
+        "example": "A news app adds a thumbnail to the headline alert.",
+        "apps": [
+          "NYT"
+        ]
+      },
+      {
+        "type": "social",
+        "example": "A social app swaps in the sender's current profile photo.",
+        "apps": [
+          "Instagram"
+        ]
+      },
+      {
+        "type": "ads",
+        "example": "A marketing tool records that the alert reached the phone before you even saw it.",
+        "apps": []
+      },
+      {
+        "type": "banking",
+        "example": "A bank app shows your balance in the alert after fetching it securely.",
+        "apps": []
+      },
+      {
+        "type": "games",
+        "example": "A game builds a personal alert like Your farm is ready, Sam.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Can report that an alert arrived",
+      "Runs code before you see anything"
+    ],
+    "android_note": "Android does the same inside the messaging service with a short time window.",
+    "ios_note": "About 30 seconds. It does not run for silent pushes or when alerts are off."
+  },
+  "technical_bounds": [
+    "iOS extension does not run for silent pushes",
+    "Short run window"
+  ],
+  "scores": {
+    "sensitivity": 3,
+    "utility": 4,
+    "fingerprint_bits": null,
+    "friction": 1
+  },
+  "value": {
+    "legit_uses": [
+      "End to end encrypted messaging",
+      "Rich previews"
+    ],
+    "abuse": [
+      "Beaconing from the extension before display"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2016-09",
+      "platform": "ios",
+      "version": "iOS 10",
+      "change": "Notification service extension introduced"
+    }
+  ],
+  "related": [
+    "mob.notif.rich-media",
+    "mob.notif.apns-delivery"
+  ],
+  "refs": [
+    {
+      "t": "apple",
+      "label": "Apple: Modifying content in newly delivered notifications",
+      "url": "https://developer.apple.com/documentation/usernotifications/modifying-content-in-newly-delivered-notifications"
+    }
+  ],
+  "confidence": "verified"
+}

@@ -1,0 +1,261 @@
+{
+  "id": "web.auth.sign-in-with-google",
+  "name": "Sign in with Google",
+  "kind": "capability",
+  "group": "identity-auth",
+  "subgroup": "Social login",
+  "tags": [
+    "google",
+    "oidc",
+    "id-token",
+    "social-login"
+  ],
+  "plain": "A one click login where Google tells the site who the person is.",
+  "meaning": "The site gets a signed ID token with sub (stable user ID), email, email_verified, name, picture, locale and for Workspace users the hd domain. Extra scopes can add Calendar, Drive or Contacts. The site gets the same sub every visit.",
+  "lifecycle": [
+    "signed-in"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "Google Identity Services: google.accounts.id.initialize(); OIDC id_token",
+      "access": {
+        "grant": "prompt",
+        "prompt_ui": "None",
+        "secure_context": false,
+        "user_gesture": false,
+        "persistence": "Google session cookies keep the person signed in; site stores its own session",
+        "revocation": "Clear site data, browser privacy settings",
+        "iframe": "",
+        "steps": [
+          "Person clicks Sign in with Google",
+          "Google shows account chooser",
+          "Site receives ID token",
+          "Site creates its account or session"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "1",
+          "note": ":Redirect or popup, works in all browsers",
+          "date": "2008-12-11"
+        },
+        "edge": {
+          "s": "y",
+          "v": "1",
+          "note": ":Redirect or popup, works in all browsers",
+          "date": ""
+        },
+        "firefox": {
+          "s": "y",
+          "v": "1",
+          "note": ":Redirect or popup, works in all browsers",
+          "date": "2004-11-09"
+        },
+        "safari": {
+          "s": "y",
+          "v": "1",
+          "note": ":Redirect or popup, works in all browsers",
+          "date": "2003-06-23"
+        },
+        "ios_safari": {
+          "s": "y",
+          "v": "1",
+          "note": ":Redirect or popup, works in all browsers",
+          "date": "2007-06-29"
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "1",
+          "note": ":Redirect or popup, works in all browsers",
+          "date": ""
+        },
+        "samsung": {
+          "s": "y",
+          "v": "1",
+          "note": ":Redirect or popup, works in all browsers",
+          "date": "2013-04-27"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "object",
+    "metric": "ID token claims",
+    "update": "at sign in",
+    "fields": [
+      {
+        "name": "sub",
+        "type": "string",
+        "unit": "id",
+        "range": "up to 255 chars",
+        "precision": "exact"
+      },
+      {
+        "name": "email",
+        "type": "string",
+        "unit": "address",
+        "range": "any",
+        "precision": "exact"
+      },
+      {
+        "name": "email_verified",
+        "type": "boolean",
+        "unit": "none",
+        "range": "true or false",
+        "precision": "exact"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can sign you in with Google and learn your name, email and photo",
+    "user_action": "You tap Sign in with Google and pick an account in the Google box",
+    "can": [
+      "Receive a Google ID that stays the same each time you visit",
+      "Get your name, email, profile photo and language",
+      "Learn your company domain when you use a Workspace account",
+      "Ask for extra access such as Calendar, Drive or Contacts on a second screen"
+    ],
+    "cannot": [
+      "Get your Google password",
+      "See your Calendar, Drive or Contacts unless you approve that extra access",
+      "See your email inbox without a separate approval",
+      "Sign in without you picking an account"
+    ],
+    "reach": 2,
+    "reach_label": "Basic profile, extra on request",
+    "differs": ""
+  },
+  "story": {
+    "what_it_is": "A one click login where Google tells the site who you are.",
+    "icon": "log-in",
+    "tags": [
+      "Sign in",
+      "Google",
+      "Profile"
+    ],
+    "marketing": [
+      {
+        "vendor": "Google",
+        "name": "Sign in with Google",
+        "pitch": "Google pitches a quick, secure sign in using an account people already have, with one tap on web and mobile.",
+        "url": "https://developers.google.com/identity/gsi/web/guides/overview"
+      }
+    ],
+    "for_you": "You click a Google button, pick your account and agree. The site now knows your name, photo and email. Next time it may offer a one tap box right when the page loads.",
+    "for_makers": "Makers skip building password systems and get a verified email. They get a stable user ID and a profile picture for personalizing the app, and sign ups are faster, which improves conversion.",
+    "use_cases": [
+      {
+        "type": "games",
+        "example": "A web game lets a player sign in with Google so scores, skins and a friends leaderboard follow them to a new laptop.",
+        "apps": [
+          "Google Play Games on PC",
+          "CrazyGames"
+        ]
+      },
+      {
+        "type": "games",
+        "example": "A cloud gaming service such as GeForce NOW offers account sign in options so a person can start streaming a game on any browser.",
+        "apps": [
+          "GeForce NOW"
+        ]
+      },
+      {
+        "type": "productivity",
+        "example": "An online editor reads the sign in token to open a person's own files and show their picture on live cursors.",
+        "apps": [
+          "Figma",
+          "Canva",
+          "Notion"
+        ]
+      },
+      {
+        "type": "shopping",
+        "example": "A store gets a verified email at checkout, so receipts and order tracking work with no extra form.",
+        "apps": []
+      },
+      {
+        "type": "education",
+        "example": "A school web app uses the Workspace domain claim to let only students and teachers of that school in.",
+        "apps": [
+          "Google Classroom",
+          "Khan Academy"
+        ]
+      },
+      {
+        "type": "analytics",
+        "example": "A growth team counts new accounts made with Google versus email to tune the sign up page.",
+        "apps": []
+      },
+      {
+        "type": "security",
+        "example": "A site can block throwaway sign ups because Google already checked that the email is real.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Google sees where you sign in",
+      "If the Google account is lost, so are the logins"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Default scopes are openid, email and profile",
+    "ID token expires after 1 hour",
+    "Google also sees every site the person signs in to",
+    "Third-party cookie free path via FedCM"
+  ],
+  "scores": {
+    "sensitivity": 5,
+    "utility": 5,
+    "fingerprint_bits": null,
+    "friction": 2
+  },
+  "value": {
+    "legit_uses": [
+      "Frictionless sign up and login"
+    ],
+    "abuse": [
+      "Google learning every site the person uses; email address given to site"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2022-08",
+      "browser": "all",
+      "version": "",
+      "change": "Google Identity Services replaced Google Sign-In JS library"
+    },
+    {
+      "date": "2025-01",
+      "browser": "chrome",
+      "version": "132",
+      "change": "GIS One Tap uses FedCM by default (verify exact milestone)"
+    }
+  ],
+  "related": [
+    "web.auth.fedcm",
+    "web.auth.sign-in-with-apple"
+  ],
+  "refs": [
+    {
+      "t": "vendor",
+      "label": "Sign in with Google: ID token claims",
+      "url": "https://developers.google.com/identity/gsi/web/guides/verify-google-id-token"
+    },
+    {
+      "t": "spec",
+      "label": "OpenID Connect Core 1.0 standard claims",
+      "url": "https://openid.net/specs/openid-connect-core-1_0.html#StandardClaims"
+    }
+  ],
+  "confidence": "docs"
+}

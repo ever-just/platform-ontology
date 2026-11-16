@@ -1,0 +1,226 @@
+{
+  "id": "web.notexposed.wifi-ssid",
+  "name": "Wi-Fi name, BSSID and signal strength",
+  "kind": "not-exposed",
+  "group": "device-system-profile",
+  "subgroup": "Network",
+  "tags": [
+    "not-exposed",
+    "wifi",
+    "ssid",
+    "bssid"
+  ],
+  "plain": "Sites cannot read your Wi-Fi network name, router ID or signal bars.",
+  "meaning": "Wi-Fi identity is a location tracker (BSSID databases map to street addresses). Browsers expose none of it. Proxies: Network Information type on Android, server-side IP geolocation, and the Geolocation API which uses Wi-Fi servers behind its prompt.",
+  "lifecycle": [
+    "on-arrival",
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "none",
+      "access": {
+        "grant": "not-exposed",
+        "prompt_ui": "None",
+        "secure_context": false,
+        "user_gesture": false,
+        "persistence": "read fresh on every page load; nothing stored",
+        "revocation": "not applicable",
+        "iframe": "Readable from cross-origin iframes too (same values)",
+        "steps": [
+          "Page script reads the value",
+          "No prompt is shown"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "edge": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "firefox": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "safari": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "ios_safari": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "chrome_android": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "samsung": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "none",
+    "metric": "",
+    "update": "static per session",
+    "fields": [
+      {
+        "name": "proxy: navigator.connection.type",
+        "type": "string",
+        "unit": "",
+        "range": "wifi or cellular, Chromium Android only",
+        "precision": ""
+      },
+      {
+        "name": "proxy: effectiveType and rtt",
+        "type": "string",
+        "unit": "",
+        "range": "link quality bucket, not identity",
+        "precision": ""
+      },
+      {
+        "name": "proxy: Geolocation API",
+        "type": "string",
+        "unit": "",
+        "range": "uses nearby Wi-Fi inside the OS and returns lat/long only after a prompt, accuracy 10 to 100 m",
+        "precision": ""
+      },
+      {
+        "name": "proxy: WebRTC ICE candidates",
+        "type": "string",
+        "unit": "",
+        "range": "local IPs hidden behind mDNS .local names since Chrome 75 and Firefox 78",
+        "precision": ""
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can't see your Wi-Fi name, router ID, or signal bars",
+    "user_action": "Nothing. Pages have no way to ask for this",
+    "can": [
+      "See if you are on Wi-Fi or cellular in Chrome on Android",
+      "Guess your area from your IP address",
+      "Use your location only after you allow it in the browser"
+    ],
+    "cannot": [
+      "See the Wi-Fi name (SSID)",
+      "See the router ID (BSSID)",
+      "See signal bars",
+      "See nearby networks"
+    ],
+    "reach": 1,
+    "reach_label": "Connection type only",
+    "differs": ""
+  },
+  "story": {
+    "what_it_is": "Sites cannot read your Wi-Fi name, router ID or signal bars.",
+    "icon": "wifi",
+    "tags": [
+      "Blocked",
+      "Wi-Fi",
+      "Privacy"
+    ],
+    "marketing": [],
+    "for_you": "A site does not know which Wi-Fi you use. That matters since Wi-Fi names and router IDs can pin down your home or workplace. Only your internet address and connection type are visible.",
+    "for_makers": "Router IDs can be matched in databases to street addresses, so they are location data. Browsers keep them hidden. Sites use IP address lookups and a rough connection type.",
+    "use_cases": [
+      {
+        "type": "ads",
+        "example": "An ad network wanted your Wi-Fi name to place you in a venue and uses IP location.",
+        "apps": []
+      },
+      {
+        "type": "shopping",
+        "example": "A store wanted to know when you are in the shop and cannot from a web page.",
+        "apps": []
+      },
+      {
+        "type": "games",
+        "example": "A game site wanted Wi-Fi strength for matchmaking and runs a speed test instead.",
+        "apps": [
+          "Xbox Cloud Gaming"
+        ]
+      },
+      {
+        "type": "video",
+        "example": "A video call tool wanted signal strength and measures packet loss instead.",
+        "apps": [
+          "Zoom",
+          "Google Meet"
+        ]
+      },
+      {
+        "type": "security",
+        "example": "A fraud team wanted to match known networks and uses IP reputation.",
+        "apps": []
+      },
+      {
+        "type": "travel",
+        "example": "A hotel site wanted to detect that you are on its Wi-Fi and uses a login page.",
+        "apps": []
+      },
+      {
+        "type": "enterprise",
+        "example": "A company portal wanted to allow only office Wi-Fi and uses VPN or sign-in.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "IP address still shows rough place"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Wi-Fi BSSID to location lookup enables physical tracking"
+  ],
+  "scores": {
+    "sensitivity": 5,
+    "utility": 2,
+    "fingerprint_bits": 0.0,
+    "friction": 3
+  },
+  "value": {
+    "legit_uses": [
+      "None: the browser deliberately withholds it"
+    ],
+    "abuse": [
+      "Wi-Fi geolocation of a person's home or workplace"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "related": [
+    "web.network.network-information"
+  ],
+  "refs": [
+    {
+      "t": "mdn",
+      "label": "MDN NetworkInformation.type",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/NetworkInformation/type"
+    },
+    {
+      "t": "vendor",
+      "label": "WebRTC mDNS candidates (Chrome)",
+      "url": "https://bugs.chromium.org/p/chromium/issues/detail?id=878465"
+    }
+  ],
+  "confidence": "docs"
+}

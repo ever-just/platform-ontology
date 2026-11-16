@@ -1,0 +1,221 @@
+{
+  "id": "web.display.orientation",
+  "name": "Screen orientation",
+  "kind": "signal",
+  "group": "display-window",
+  "subgroup": "Screen",
+  "tags": [
+    "orientation",
+    "mobile"
+  ],
+  "plain": "Whether the screen is portrait or landscape and its rotation angle.",
+  "meaning": "Shows how a phone is held and whether a tablet is docked. Reports type (portrait-primary etc.) and angle 0, 90, 180 or 270; changes with a rotate event.",
+  "lifecycle": [
+    "on-arrival",
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "screen.orientation.type, .angle; matchMedia('(orientation)')",
+      "bcd": [
+        "api.ScreenOrientation.type"
+      ],
+      "access": {
+        "grant": "none",
+        "prompt_ui": "None",
+        "secure_context": false,
+        "user_gesture": false,
+        "persistence": "read fresh on every page load; nothing stored",
+        "revocation": "none needed (no grant)",
+        "iframe": "Readable from cross-origin iframes too (same values)",
+        "steps": [
+          "Page script reads the value",
+          "No prompt is shown"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "38",
+          "note": "",
+          "date": "2014-10-07"
+        },
+        "edge": {
+          "s": "y",
+          "v": "79",
+          "note": "",
+          "date": "2020-01-15"
+        },
+        "firefox": {
+          "s": "y",
+          "v": "43",
+          "note": "",
+          "date": "2015-12-15"
+        },
+        "safari": {
+          "s": "y",
+          "v": "16.4",
+          "note": "",
+          "date": "2023-03-27"
+        },
+        "ios_safari": {
+          "s": "y",
+          "v": "16.4",
+          "note": "",
+          "date": "2023-03-27"
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "38",
+          "note": "",
+          "date": "2014-10-08"
+        },
+        "samsung": {
+          "s": "y",
+          "v": "3.0",
+          "note": "",
+          "date": "2015-04-10"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "object",
+    "metric": "",
+    "update": "static per session",
+    "fields": [
+      {
+        "name": "type",
+        "type": "enum",
+        "unit": "",
+        "range": "portrait-primary, portrait-secondary, landscape-primary, landscape-secondary",
+        "precision": ""
+      },
+      {
+        "name": "angle",
+        "type": "integer",
+        "unit": "degrees",
+        "range": "0, 90, 180, 270",
+        "precision": ""
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can tell if your screen is upright or sideways, and by how many degrees",
+    "user_action": "Nothing. It happens when the page loads or you rotate the device.",
+    "can": [
+      "Check portrait or landscape",
+      "Check the rotation angle",
+      "Notice when you rotate the device",
+      "Change its layout to match"
+    ],
+    "cannot": [
+      "See the device's tilt or movement, which is a different sensor",
+      "Rotate your screen for you",
+      "Learn how you are holding the device when rotation is locked"
+    ],
+    "reach": 1,
+    "reach_label": "Portrait or landscape only",
+    "differs": ""
+  },
+  "story": {
+    "what_it_is": "Tells a page whether your screen is tall or wide, and how far it is turned.",
+    "icon": "rotate-3d",
+    "tags": [
+      "Display",
+      "Phone",
+      "Silent"
+    ],
+    "marketing": [
+      {
+        "vendor": "MDN",
+        "name": "Screen Orientation API",
+        "pitch": "Explains how a page can read whether the screen is portrait or landscape and react when it turns.",
+        "url": "https://developer.mozilla.org/en-US/docs/Web/API/Screen_Orientation_API"
+      }
+    ],
+    "for_you": "You turn your phone and the page rearranges itself. That change is the page reading the orientation and moving things around.",
+    "for_makers": "Makers use it to fit layouts to the screen shape. It also hints at the device type, since a laptop is always wide and a phone often tall.",
+    "use_cases": [
+      {
+        "type": "games",
+        "example": "A browser racing game switches to a wide track and moves the buttons to the sides when you turn the phone.",
+        "apps": []
+      },
+      {
+        "type": "video",
+        "example": "A video site goes full screen when you turn your phone sideways.",
+        "apps": [
+          "YouTube",
+          "Netflix"
+        ]
+      },
+      {
+        "type": "shopping",
+        "example": "A store shows a two column gallery in landscape and a single scroll in portrait.",
+        "apps": []
+      },
+      {
+        "type": "maps",
+        "example": "A web map shows a side panel in landscape and a bottom sheet in portrait.",
+        "apps": [
+          "Google Maps"
+        ]
+      },
+      {
+        "type": "security",
+        "example": "A fraud check notes that a supposed phone never changes orientation and reports a desktop size, a sign of a faked device.",
+        "apps": []
+      },
+      {
+        "type": "education",
+        "example": "A reading app asks students to turn the device so long math tables fit.",
+        "apps": []
+      },
+      {
+        "type": "analytics",
+        "example": "A team sees which orientation most visitors use before designing a new page.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Mild fingerprint clue",
+      "Hints at device type"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "No tilt or accelerometer data"
+  ],
+  "scores": {
+    "sensitivity": 1,
+    "utility": 3,
+    "fingerprint_bits": 1.0,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Layout",
+      "Lock orientation in fullscreen"
+    ],
+    "abuse": [
+      "Device use pattern"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": true,
+      "how": "Orientation collected. Read by the LinkedIn APFC fingerprint script (alleged by BrowserGate, partly confirmed by BleepingComputer)."
+    }
+  },
+  "refs": [
+    {
+      "t": "mdn",
+      "label": "MDN ScreenOrientation",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/ScreenOrientation"
+    }
+  ],
+  "confidence": "docs"
+}

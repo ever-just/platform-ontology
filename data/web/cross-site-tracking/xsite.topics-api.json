@@ -1,0 +1,248 @@
+{
+  "id": "web.xsite.topics-api",
+  "name": "Topics API (retired)",
+  "kind": "tracking",
+  "group": "cross-site-tracking",
+  "subgroup": "Privacy Sandbox",
+  "tags": [
+    "topics",
+    "privacy-sandbox",
+    "interest-based",
+    "retired"
+  ],
+  "plain": "Chrome's interest-topic API for ads. Deprecated in Chrome 144 and being removed in 2026.",
+  "meaning": "Gave ad scripts up to 3 coarse interest topics (one per recent week) from the browsing history of sites that called it. Taxonomy had 469 topics in v2; 5% of results were random noise. Removal rolling out from Chrome 153.",
+  "lifecycle": [
+    "before-visit",
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "document.browsingTopics(); fetch(..., {browsingTopics: true}); Sec-Browsing-Topics header",
+      "permissions_policy": "browsing-topics",
+      "bcd": [
+        "api.Document.browsingTopics"
+      ],
+      "access": {
+        "grant": "none",
+        "prompt_ui": "None",
+        "secure_context": false,
+        "user_gesture": false,
+        "persistence": "Epoch of 1 week; 3 most recent epochs returned; observed topics kept for 3 weeks",
+        "revocation": "Clear site data, browser privacy settings",
+        "iframe": "",
+        "steps": []
+      },
+      "support": {
+        "chrome": {
+          "s": "r",
+          "v": "153",
+          "note": "Deprecated 144, removal rolling out",
+          "date": "2026-09-08"
+        },
+        "edge": {
+          "s": "n",
+          "v": "",
+          "note": "Edge disabled Privacy Sandbox"
+        },
+        "firefox": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "safari": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "ios_safari": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "chrome_android": {
+          "s": "r",
+          "v": "153",
+          "note": "",
+          "date": "2026-09-08"
+        },
+        "samsung": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "list",
+    "metric": "Up to 3 topic IDs",
+    "update": "weekly epoch",
+    "fields": [
+      {
+        "name": "topics",
+        "type": "list",
+        "unit": "taxonomy IDs",
+        "range": "0 to 3 per call",
+        "precision": "469 topics in taxonomy v2"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can't pick your interests from your browsing any more; Chrome is retiring this",
+    "user_action": "Nothing. It used to run when an ad script loaded in Chrome",
+    "can": [
+      "Still work in some older Chrome versions until removal rolls out from Chrome 153",
+      "Hand ad scripts up to 3 broad interest topics, one per recent week"
+    ],
+    "cannot": [
+      "Run in Safari, Firefox, or Edge",
+      "Give exact sites you visited; it shared broad topics only, and 5% were random noise",
+      "Keep working after Chrome finishes removing it",
+      "Pick topics from sites that never used the feature"
+    ],
+    "reach": 1,
+    "reach_label": "Broad topics only, going away",
+    "differs": "Only Chrome ever offered it. Other browsers never did."
+  },
+  "story": {
+    "what_it_is": "Chrome's retired feature that told ad scripts a few broad interests, like Sports or Travel.",
+    "icon": "tags",
+    "tags": [
+      "Ads",
+      "Interests",
+      "Chrome"
+    ],
+    "marketing": [
+      {
+        "vendor": "Google",
+        "name": "Topics API",
+        "pitch": "Chrome described it as a way to show relevant ads using broad topics instead of tracking you across sites.",
+        "url": "https://developer.chrome.com/docs/privacy-sandbox/topics/"
+      }
+    ],
+    "for_you": "You may have seen an Ad topics switch in Chrome settings. Chrome noted a few broad interests from the sites you visit and shared them with ad scripts. This was being removed in 2026, so most people will never meet it.",
+    "for_makers": "Ad companies wanted a replacement for cookies that still let them pick a relevant ad. Topics gave a coarse interest label with no name or ID attached. Few buyers adopted it, which is part of why it was dropped.",
+    "use_cases": [
+      {
+        "type": "ads",
+        "example": "An ad tech script on a news page asks Chrome for your topics and picks a travel ad because Travel was on the list.",
+        "apps": [
+          "Google Ad Manager"
+        ]
+      },
+      {
+        "type": "shopping",
+        "example": "A retailer's ad partner favours camping gear ads for visitors whose topics include Outdoors.",
+        "apps": []
+      },
+      {
+        "type": "games",
+        "example": "A browser games site shows a sports game promo to visitors whose topics include Fitness, without knowing who they are.",
+        "apps": []
+      },
+      {
+        "type": "media",
+        "example": "A publisher with many logged-out readers lifts ad income by sending topics along with the ad request.",
+        "apps": []
+      },
+      {
+        "type": "analytics",
+        "example": "An ad measurement firm compared topic-based ad results with cookie-based results during Chrome's trials.",
+        "apps": []
+      },
+      {
+        "type": "developer",
+        "example": "Ad tech engineers ran Chrome origin trials and tuned their bidding code to use topic labels.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Interest labels still reveal habits",
+      "Retired, so old code may linger"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Only returns topics the caller observed on prior sites",
+    "5% random topic noise",
+    "Up to 3 topics per call, 1 per epoch",
+    "Blocked when third-party cookies are off or user disabled Ad topics",
+    "Not shipped in Firefox or Safari; Edge disabled it"
+  ],
+  "scores": {
+    "sensitivity": 3,
+    "utility": 2,
+    "fingerprint_bits": null,
+    "friction": 3
+  },
+  "value": {
+    "legit_uses": [
+      "Interest signals without cross-site IDs (historical)"
+    ],
+    "abuse": [
+      "Profiling topics across sites by many callers"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2023-07",
+      "browser": "chrome",
+      "version": "115",
+      "change": "Topics shipped with Privacy Sandbox general availability"
+    },
+    {
+      "date": "2025-10",
+      "browser": "chrome",
+      "version": "141",
+      "change": "Oct 17 2025: Google announces retirement of Topics"
+    },
+    {
+      "date": "2026-01",
+      "browser": "chrome",
+      "version": "144",
+      "change": "Deprecation (per blink-dev intent)"
+    },
+    {
+      "date": "2026-09",
+      "browser": "chrome",
+      "version": "153",
+      "change": "Removal rollout: 1% stable on 153 and later, paused at 10% until Oct 15 2026, full removal after (per blink-dev as summarised Oct 2 2026)"
+    }
+  ],
+  "related": [
+    "web.xsite.protected-audience",
+    "web.xsite.attribution-reporting"
+  ],
+  "refs": [
+    {
+      "t": "vendor",
+      "label": "Privacy Sandbox: Update on plans (Oct 17, 2025)",
+      "url": "https://privacysandbox.google.com/blog/update-on-plans-for-privacy-sandbox-technologies"
+    },
+    {
+      "t": "vendor",
+      "label": "Privacy Sandbox feature status page (updated Aug 14, 2026)",
+      "url": "https://privacysandbox.google.com/overview/status"
+    },
+    {
+      "t": "news",
+      "label": "Privacy Sandbox history and removal timeline (checked Oct 2, 2026)",
+      "url": "https://hidekazu-konishi.com/entry/privacy_sandbox_history_and_timeline.html"
+    },
+    {
+      "t": "spec",
+      "label": "Topics API explainer",
+      "url": "https://github.com/patcg-individual-drafts/topics"
+    }
+  ],
+  "confidence": "verified"
+}

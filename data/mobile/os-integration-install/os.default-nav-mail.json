@@ -1,0 +1,211 @@
+{
+  "id": "mob.os.default-nav-mail",
+  "name": "Default mail, navigation, dialer and messaging apps",
+  "kind": "capability",
+  "group": "os-integration-install",
+  "subgroup": "Default apps",
+  "tags": [
+    "default-apps",
+    "mail",
+    "maps",
+    "dialer",
+    "sms"
+  ],
+  "plain": "Changes which app opens email, maps, calls, texts and passwords.",
+  "meaning": "Android has had roles for dialer and SMS for years. iOS added default mail and browser in 14, then maps, messaging, calling, passwords and translation in later releases.",
+  "lifecycle": [
+    "in-session"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "y",
+      "v": "10",
+      "api": 29,
+      "permission": "ROLE_DIALER, ROLE_SMS, ROLE_ASSISTANT, ROLE_HOME, ROLE_EMERGENCY",
+      "protection": "role",
+      "grant": "role",
+      "prompt_ui": "Role request dialog",
+      "persistence": "Until changed",
+      "revocation": "Settings > Apps > Default apps",
+      "store_policy": "Play: SMS and Call Log policy",
+      "api_surface": "RoleManager.createRequestRoleIntent",
+      "note": "Dialer and SMS roles have extra Play policy review."
+    },
+    "ios": {
+      "s": "p",
+      "v": "14.0",
+      "permission": "Default app entitlements (managed); Mail, Maps, Messaging, Phone role support",
+      "protection": "entitlement",
+      "grant": "settings",
+      "prompt_ui": "Settings > Apps > Default Apps",
+      "persistence": "Until changed",
+      "revocation": "Settings",
+      "store_policy": "Navigation, call and messaging defaults are available in the EU (iOS 18.2+) and Japan",
+      "api_surface": "Default navigation (EU iOS 17.4 era), Default apps UI in iOS 18.2",
+      "note": "Scope varies by app type and region."
+    }
+  },
+  "data": {
+    "type": "enum",
+    "metric": "Default app",
+    "update": "on change",
+    "fields": [
+      {
+        "name": "app",
+        "type": "string",
+        "unit": "bundle id",
+        "range": "installed",
+        "precision": "exact"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can open your email, maps, calls and texts, once you set it as the default",
+    "user_action": "You accept a role request dialog, or pick a default in Settings",
+    "can": [
+      "Open email links, map links, calls or texts after you set it as default",
+      "Ask you through a role request on Android 10 or newer",
+      "Be set in Default Apps on iPhone for supported types"
+    ],
+    "cannot": [
+      "Become the default without your approval",
+      "Take over dialer or messages on Android without Google Play review",
+      "Cover every type on iPhone; it depends on app type and region"
+    ],
+    "reach": 3,
+    "reach_label": "Every link of that kind, if chosen",
+    "differs": "Android uses role requests. iPhone lets you set defaults only for some app types, and by region."
+  },
+  "story": {
+    "what_it_is": "Chooses which app handles email, maps, calls, texts and passwords.",
+    "icon": "mail",
+    "tags": [
+      "Choice",
+      "Defaults",
+      "Apps"
+    ],
+    "marketing": [
+      {
+        "vendor": "Apple",
+        "name": "Change default apps",
+        "pitch": "Apple lets people choose default apps for mail, browsing and more in Settings.",
+        "url": "https://support.apple.com/guide/iphone/change-default-apps-iph9d6e7a2c6/ios"
+      }
+    ],
+    "for_you": "You choose which mail, maps or phone app opens when you tap an address or number. The system then uses your choice everywhere.",
+    "for_makers": "Makers want to be the default because it brings steady use. Platforms add new default types over time as rules change.",
+    "use_cases": [
+      {
+        "type": "maps",
+        "example": "You pick Google Maps for every address link.",
+        "apps": [
+          "Google Maps",
+          "Waze"
+        ]
+      },
+      {
+        "type": "productivity",
+        "example": "You pick Gmail as the app that opens email links.",
+        "apps": [
+          "Gmail"
+        ]
+      },
+      {
+        "type": "messaging",
+        "example": "You choose a texting app other than the built in one.",
+        "apps": [
+          "Signal"
+        ]
+      },
+      {
+        "type": "security",
+        "example": "A fake dialer asks to be default to see your calls, so stores review it.",
+        "apps": []
+      },
+      {
+        "type": "shopping",
+        "example": "A tap to pay link opens your chosen wallet.",
+        "apps": []
+      },
+      {
+        "type": "automotive",
+        "example": "Your car navigation opens in your chosen maps app.",
+        "apps": []
+      },
+      {
+        "type": "enterprise",
+        "example": "A work mail app is set as default on company phones.",
+        "apps": [
+          "Outlook"
+        ]
+      }
+    ],
+    "risks": [
+      "Fake dialers",
+      "Choices differ by region"
+    ],
+    "android_note": "Android has roles for dialer and texts with extra Play review.",
+    "ios_note": "Scope varies by app type and region. Settings show Default Apps."
+  },
+  "technical_bounds": [
+    "Region and category specific on iOS"
+  ],
+  "scores": {
+    "sensitivity": 3,
+    "utility": 4,
+    "fingerprint_bits": 0,
+    "friction": 2
+  },
+  "value": {
+    "legit_uses": [
+      "Competition"
+    ],
+    "abuse": [
+      "Fake dialers"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2019-09",
+      "platform": "android",
+      "version": "10",
+      "change": "Role APIs"
+    },
+    {
+      "date": "2020-09",
+      "platform": "ios",
+      "version": "iOS 14",
+      "change": "Default mail"
+    },
+    {
+      "date": "2024-12",
+      "platform": "ios",
+      "version": "iOS 18.2",
+      "change": "Default Apps settings with regional extras"
+    }
+  ],
+  "related": [
+    "mob.os.default-browser",
+    "mob.pay.contactless-default"
+  ],
+  "refs": [
+    {
+      "t": "apple",
+      "label": "Apple: Default apps (iPhone User Guide)",
+      "url": "https://support.apple.com/guide/iphone/change-default-apps-iph9d6e7a2c6/ios"
+    },
+    {
+      "t": "android",
+      "label": "Android: RoleManager",
+      "url": "https://developer.android.com/reference/android/app/role/RoleManager"
+    }
+  ],
+  "confidence": "inferred"
+}

@@ -1,0 +1,206 @@
+{
+  "id": "web.identity.client-certificates",
+  "name": "TLS client certificates",
+  "kind": "capability",
+  "group": "identity-auth",
+  "subgroup": "Legacy",
+  "tags": [
+    "legacy"
+  ],
+  "plain": "A site can ask the browser to present a certificate stored on the computer.",
+  "meaning": "Certificates identify a person or company. The browser asks which cert to send; used in banks and enterprise.",
+  "lifecycle": [
+    "on-arrival"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "TLS CertificateRequest during handshake; browser certificate chooser",
+      "access": {
+        "grant": "prompt",
+        "prompt_ui": "Browser or OS certificate picker",
+        "secure_context": true,
+        "user_gesture": false,
+        "persistence": "Per origin",
+        "revocation": "Site settings",
+        "iframe": "Same as top level; cross-origin iframes need a permissions policy where listed",
+        "steps": [
+          "Call the API",
+          "Browser applies its access rules",
+          "Page receives the result"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "1.0",
+          "note": "",
+          "date": "2008-12-11"
+        },
+        "edge": {
+          "s": "y",
+          "v": "1.0",
+          "note": "",
+          "date": ""
+        },
+        "firefox": {
+          "s": "y",
+          "v": "1.0",
+          "note": "",
+          "date": "2004-11-09"
+        },
+        "safari": {
+          "s": "y",
+          "v": "1.0",
+          "note": "",
+          "date": "2003-06-23"
+        },
+        "ios_safari": {
+          "s": "y",
+          "v": "1.0",
+          "note": "",
+          "date": "2007-06-29"
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "1.0",
+          "note": "",
+          "date": ""
+        },
+        "samsung": {
+          "s": "y",
+          "v": "1.0",
+          "note": "",
+          "date": "2013-04-27"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "object",
+    "metric": "A site can ask the browser to present a certificate stored on the computer.",
+    "update": "on demand",
+    "fields": [
+      {
+        "name": "subject DN",
+        "type": "string",
+        "range": "certificate defined"
+      },
+      {
+        "name": "issuer",
+        "type": "string",
+        "range": "CA name"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can ask your browser to show a certificate stored on your computer",
+    "user_action": "You open a bank or company site and pick a certificate in the box that appears",
+    "can": [
+      "Ask you to choose one certificate from those on your device",
+      "Receive the certificate you choose to prove who you or your company are",
+      "Sign you in to a bank or work site without a password"
+    ],
+    "cannot": [
+      "Pick a certificate for you without your choice, unless you set the browser to auto choose",
+      "Get the private key; it stays on your device or security card",
+      "See certificates you did not choose to send"
+    ],
+    "reach": 1,
+    "reach_label": "One certificate you pick",
+    "differs": ""
+  },
+  "story": {
+    "what_it_is": "The browser can offer a digital ID card stored on your computer when a site asks.",
+    "icon": "id-card",
+    "tags": [
+      "Sign in",
+      "Certificate",
+      "Work"
+    ],
+    "marketing": [],
+    "for_you": "A box may pop up asking which certificate to use, or it picks one for you. There is no password box. You mostly see this at work, school or a government service.",
+    "for_makers": "Makers use client certificates for very strong machine and person checks, such as a bank or an internal company tool. It proves the device is one the company issued before the site loads.",
+    "use_cases": [
+      {
+        "type": "enterprise",
+        "example": "A company intranet only opens on laptops that carry a certificate from IT, so a stolen password alone does not get in.",
+        "apps": []
+      },
+      {
+        "type": "banking",
+        "example": "A business bank portal asks for a certificate stored on a smart card or token before it shows balances.",
+        "apps": []
+      },
+      {
+        "type": "security",
+        "example": "A government tax or health web service uses a national ID certificate to prove who is filing.",
+        "apps": []
+      },
+      {
+        "type": "developer",
+        "example": "An engineer reaches a staging server or code tool that only accepts browsers with the right certificate.",
+        "apps": [
+          "Cloudflare Access"
+        ]
+      },
+      {
+        "type": "games",
+        "example": "An online gaming tournament admin panel is limited to organizer laptops with certificates, so only staff can change brackets.",
+        "apps": []
+      },
+      {
+        "type": "analytics",
+        "example": "A security team logs which certificate connected to spot an unusual device.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Certificate reveals identity to site",
+      "Hard to set up and move"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Page cannot read cert store",
+    "Chooser shown at TLS layer",
+    "Auto select via enterprise policy"
+  ],
+  "scores": {
+    "sensitivity": 4,
+    "utility": 2,
+    "fingerprint_bits": null,
+    "friction": 2
+  },
+  "value": {
+    "legit_uses": [
+      "Mutual TLS in enterprise"
+    ],
+    "abuse": [
+      "Identity linking across sites if the same cert is used"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "1999",
+      "browser": "chrome",
+      "version": "1",
+      "change": "Client cert support from early TLS"
+    }
+  ],
+  "refs": [
+    {
+      "t": "mdn",
+      "label": "MDN TLS client certificate",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/Security/Transport_Layer_Security"
+    }
+  ],
+  "confidence": "inferred"
+}

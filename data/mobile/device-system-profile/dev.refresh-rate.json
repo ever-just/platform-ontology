@@ -1,0 +1,189 @@
+{
+  "id": "mob.dev.refresh-rate",
+  "name": "Display refresh rate and HDR",
+  "kind": "signal",
+  "group": "device-system-profile",
+  "subgroup": "Display",
+  "tags": [
+    "refresh-rate",
+    "hdr",
+    "120hz"
+  ],
+  "plain": "Reads the screen refresh rate and HDR support with no prompt.",
+  "meaning": "60, 90, 120 or 144 Hz plus HDR format list separates device tiers and models. Used for animation pacing.",
+  "lifecycle": [
+    "on-launch",
+    "in-session"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "y",
+      "v": "6.0",
+      "api": 23,
+      "permission": "",
+      "protection": "none",
+      "grant": "none",
+      "prompt_ui": "",
+      "persistence": "",
+      "revocation": "",
+      "store_policy": "",
+      "api_surface": "Display.getRefreshRate(), getSupportedModes() (API 23), getHdrCapabilities() (API 24)",
+      "note": "Rates 60, 90, 120, 144 Hz"
+    },
+    "ios": {
+      "s": "y",
+      "v": "10.3",
+      "permission": "none",
+      "protection": "none",
+      "grant": "none",
+      "prompt_ui": "",
+      "persistence": "",
+      "revocation": "",
+      "store_policy": "",
+      "api_surface": "60 or 120 Hz (ProMotion); ProMotion on Pro models since 2021",
+      "note": ""
+    }
+  },
+  "web_equivalents": [
+    "web.display.refresh-rate"
+  ],
+  "data": {
+    "type": "object",
+    "metric": "Refresh rate, HDR types",
+    "update": "Static or on mode change",
+    "fields": [
+      {
+        "name": "refresh_hz",
+        "type": "float",
+        "unit": "Hz",
+        "range": "60 to 144",
+        "precision": "0.1 Hz"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can see your screen refresh rate and whether it shows HDR, with no prompt",
+    "user_action": "Nothing. Games and video apps check when they start",
+    "can": [
+      "See the refresh rate, such as 60, 90, 120 or 144 Hz",
+      "See which refresh rate options your screen supports on Android",
+      "See if the screen supports HDR on Android",
+      "See if an iPhone has a 120 Hz ProMotion screen"
+    ],
+    "cannot": [
+      "Change the screen's hardware refresh options",
+      "Force a rate your screen does not support",
+      "Tell who you are from the screen alone"
+    ],
+    "reach": 2,
+    "reach_label": "Always available, simple facts",
+    "differs": "Android lists many refresh modes. iPhone shows 60 or 120 Hz, with ProMotion on Pro models since 2021."
+  },
+  "story": {
+    "what_it_is": "An app can see how fast your screen redraws and whether it supports HDR.",
+    "icon": "monitor",
+    "tags": [
+      "Screen",
+      "Silent",
+      "Device"
+    ],
+    "marketing": [
+      {
+        "vendor": "Google",
+        "name": "Frame rate on Android",
+        "pitch": "Developer guide: let your app choose a frame rate that fits the display for smooth motion and better battery life.",
+        "url": "https://developer.android.com/media/optimize/performance/frame-rate"
+      }
+    ],
+    "for_you": "You see smoother scrolling and games on a fast screen. The app also learns whether your phone has a 60, 90, 120 or 144 Hz display, which shows the phone tier.",
+    "for_makers": "Makers match animation speed to the screen and decide whether to offer HDR video. The mix of rate and HDR formats helps separate phone models for fingerprinting.",
+    "use_cases": [
+      {
+        "type": "games",
+        "example": "A racing game offers a 120 frames per second mode only on phones that can show it.",
+        "apps": []
+      },
+      {
+        "type": "video",
+        "example": "A streaming app plays HDR movies only if your screen supports the format.",
+        "apps": [
+          "Netflix"
+        ]
+      },
+      {
+        "type": "creative",
+        "example": "A drawing app matches pen lag to the screen speed so strokes feel instant.",
+        "apps": []
+      },
+      {
+        "type": "social",
+        "example": "A feed app speeds up scrolling animations on a 120 Hz display.",
+        "apps": []
+      },
+      {
+        "type": "ar-vr",
+        "example": "An AR app picks a target frame rate that matches the camera and screen.",
+        "apps": []
+      },
+      {
+        "type": "ads",
+        "example": "An ad firm uses refresh rate and HDR formats to tell similar phones apart.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Reveals phone tier",
+      "Adds to a fingerprint"
+    ],
+    "android_note": "Reads the display modes and HDR list with no prompt.",
+    "ios_note": "Reads the maximum frame rate and HDR support with no prompt."
+  },
+  "technical_bounds": [
+    "Low entropy"
+  ],
+  "scores": {
+    "sensitivity": 1,
+    "utility": 2,
+    "fingerprint_bits": 2,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Smooth animation"
+    ],
+    "abuse": [
+      "Fingerprint"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2015-10",
+      "platform": "android",
+      "version": "6.0 (API 23)",
+      "change": "Display modes list exposed"
+    }
+  ],
+  "related": [
+    "mob.dev.screen-metrics"
+  ],
+  "refs": [
+    {
+      "t": "android",
+      "label": "Android: Display",
+      "url": "https://developer.android.com/reference/android/view/Display"
+    },
+    {
+      "t": "apple",
+      "label": "Apple: UIScreen",
+      "url": "https://developer.apple.com/documentation/uikit/uiscreen"
+    }
+  ],
+  "confidence": "docs"
+}

@@ -1,0 +1,222 @@
+{
+  "id": "web.net.ja3-tls-fingerprint",
+  "name": "JA3 TLS client fingerprint",
+  "kind": "tracking",
+  "group": "network-connectivity",
+  "subgroup": "TLS",
+  "tags": [
+    "ja3",
+    "tls",
+    "clienthello",
+    "server-side"
+  ],
+  "plain": "The TLS handshake order of ciphers and extensions identifies the client software.",
+  "meaning": "JA3 (Salesforce, 2017) is an MD5 of version, ciphers, extensions, curves and point formats in the ClientHello. Chrome 110 randomized extension order (Jan 2023), so one browser now yields many JA3s; JA4 sorts them out.",
+  "lifecycle": [
+    "on-arrival"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "TLS ClientHello parsing at CDN or server",
+      "access": {
+        "grant": "none",
+        "prompt_ui": "",
+        "secure_context": false,
+        "user_gesture": false,
+        "persistence": "",
+        "revocation": "",
+        "iframe": "",
+        "steps": [
+          "Capture ClientHello",
+          "Concatenate fields",
+          "MD5",
+          "Match against known hashes"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "1",
+          "note": "",
+          "date": "2008-12-11"
+        },
+        "edge": {
+          "s": "y",
+          "v": "79",
+          "note": "",
+          "date": "2020-01-15"
+        },
+        "firefox": {
+          "s": "y",
+          "v": "1",
+          "note": "",
+          "date": "2004-11-09"
+        },
+        "safari": {
+          "s": "y",
+          "v": "1",
+          "note": "",
+          "date": "2003-06-23"
+        },
+        "ios_safari": {
+          "s": "y",
+          "v": "1",
+          "note": "",
+          "date": "2007-06-29"
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "1",
+          "note": "",
+          "date": ""
+        },
+        "samsung": {
+          "s": "y",
+          "v": "5.0",
+          "note": "",
+          "date": "2016-12-15"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "string",
+    "metric": "32 hex characters",
+    "update": "",
+    "fields": [
+      {
+        "name": "ja3_hash",
+        "type": "string",
+        "unit": "",
+        "range": "MD5",
+        "precision": "exact, but unstable on Chrome 110 and later"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can guess which browser or app you use from how your connection starts",
+    "user_action": "Nothing. It happens the moment your browser connects to the site",
+    "can": [
+      "Make a short code from the list of options your browser offers when it connects",
+      "Spot bots, scripts and malware that connect differently from real browsers",
+      "Recognize the same software again across different internet addresses"
+    ],
+    "cannot": [
+      "See your name, account or what you browse",
+      "Give one steady code for Chrome, since Chrome shuffles the order and gives many codes",
+      "Be turned off in your browser settings",
+      "Tell two people with identical software apart"
+    ],
+    "reach": 3,
+    "reach_label": "Quietly, on every connection",
+    "differs": "Chrome and Edge shuffle the options on purpose, so one browser gives many codes. Firefox and Safari keep a steadier order."
+  },
+  "story": {
+    "what_it_is": "The way your browser starts a secure connection leaves a pattern that names the software you use.",
+    "icon": "fingerprint",
+    "tags": [
+      "Tracking",
+      "Silent",
+      "Security"
+    ],
+    "marketing": [],
+    "for_you": "You never see it. Before any page loads, your browser says hello in a particular order. Servers can turn that order into a short code that points to your browser family.",
+    "for_makers": "Makers use it to tell real Chrome or Safari apart from scripts and bots pretending to be them. It happens before any page code runs, so it is hard to fake. Browsers now shuffle the order, which weakens it.",
+    "use_cases": [
+      {
+        "type": "security",
+        "example": "A ticket site gets a flood of requests that say they are Chrome. The secure handshake code matches a Python script, so the site blocks them before the sale opens.",
+        "apps": []
+      },
+      {
+        "type": "ads",
+        "example": "An ad network checks that clicks come from real browsers. Clicks with a known bot handshake code are dropped and not billed to the advertiser.",
+        "apps": []
+      },
+      {
+        "type": "games",
+        "example": "A browser game's login server blocks a cheating tool that automates logins, because its handshake matches a known tool and not a normal browser.",
+        "apps": []
+      },
+      {
+        "type": "shopping",
+        "example": "A sneaker store uses the handshake code to spot buying bots that fake a browser name, so real shoppers get a fairer chance.",
+        "apps": []
+      },
+      {
+        "type": "analytics",
+        "example": "A bot defence service lists the most common handshake codes in its traffic and sets alarms when a rare one suddenly appears.",
+        "apps": [
+          "Cloudflare"
+        ]
+      },
+      {
+        "type": "banking",
+        "example": "A bank's login page treats a handshake that does not match the claimed browser as a warning sign and adds a challenge.",
+        "apps": []
+      },
+      {
+        "type": "developer",
+        "example": "A developer scraping a site with a plain script gets blocked, and learns the site compares the handshake code with the browser name sent.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Hard to see or avoid",
+      "Wrong blocks of rare browsers"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Chrome randomization makes the hash non-stable",
+    "Easy to spoof with curl-impersonate or uTLS"
+  ],
+  "scores": {
+    "sensitivity": 2,
+    "utility": 4,
+    "fingerprint_bits": 3,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": "Bot detection, malware C2 detection",
+    "abuse": "Persistent client identification across IPs"
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2023-01",
+      "browser": "chrome",
+      "version": "110",
+      "change": "TLS extension order randomized, breaking static JA3 hashes"
+    },
+    {
+      "date": "2023-01",
+      "browser": "firefox",
+      "version": "",
+      "change": "Firefox keeps fixed order"
+    }
+  ],
+  "related": [
+    "web.net.ja4-fingerprint-family"
+  ],
+  "refs": [
+    {
+      "t": "github",
+      "label": "salesforce/ja3",
+      "url": "https://github.com/salesforce/ja3"
+    },
+    {
+      "t": "github",
+      "label": "lwthiker/curl-impersonate",
+      "url": "https://github.com/lwthiker/curl-impersonate"
+    }
+  ],
+  "confidence": "docs"
+}

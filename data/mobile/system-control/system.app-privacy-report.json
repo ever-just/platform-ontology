@@ -1,0 +1,200 @@
+{
+  "id": "mob.system.app-privacy-report",
+  "name": "App privacy report and Privacy Dashboard",
+  "kind": "signal",
+  "group": "system-control",
+  "subgroup": "Transparency",
+  "tags": [
+    "audit",
+    "dashboard",
+    "transparency"
+  ],
+  "plain": "A log in Settings showing which apps used sensors and which domains they contacted.",
+  "meaning": "Android's dashboard shows sensor access. Apple's report adds network domains.",
+  "lifecycle": [
+    "background"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "y",
+      "v": "12",
+      "api": 31,
+      "permission": "None",
+      "protection": "none",
+      "grant": "none",
+      "prompt_ui": "Privacy dashboard in Settings",
+      "persistence": "24 hours at launch; 7 days from Android 15 QPR1",
+      "revocation": "Settings > Privacy > Privacy dashboard",
+      "store_policy": "",
+      "api_surface": "System",
+      "note": "Location, camera, microphone; no domain list"
+    },
+    "ios": {
+      "s": "y",
+      "v": "15.2",
+      "permission": "None",
+      "protection": "none",
+      "grant": "none",
+      "prompt_ui": "Record App Activity switch in Settings",
+      "persistence": "7 days",
+      "revocation": "Settings > Privacy & Security > App Privacy Report",
+      "store_policy": "",
+      "api_surface": "System",
+      "note": "Includes data and sensor access plus contacted domains"
+    }
+  },
+  "data": {
+    "type": "list",
+    "metric": "Access log",
+    "update": "7 days",
+    "fields": [
+      {
+        "name": "entries",
+        "type": "list",
+        "unit": "events",
+        "range": "7 days window",
+        "precision": ""
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can show you which apps used sensors, and on iPhone which domains they contacted",
+    "user_action": "You open the Privacy dashboard in Settings, or turn on Record App Activity on iPhone",
+    "can": [
+      "List which apps used location, camera and microphone",
+      "Show when each use happened",
+      "Show the domains apps contacted (iPhone)"
+    ],
+    "cannot": [
+      "List contacted domains on Android",
+      "Record on iPhone before you switch on Record App Activity",
+      "Block or change what apps do; it only shows a log"
+    ],
+    "reach": 1,
+    "reach_label": "Shows a log, changes nothing",
+    "differs": "Android shows sensor access only; iPhone adds network domains."
+  },
+  "story": {
+    "what_it_is": "A log in Settings that shows which apps used your camera, mic or location, and which sites they talked to.",
+    "icon": "scroll-text",
+    "tags": [
+      "Privacy",
+      "Audit",
+      "Silent"
+    ],
+    "marketing": [
+      {
+        "vendor": "Apple",
+        "name": "App Privacy Report",
+        "pitch": "See how apps use the access you gave them, and which websites they contact.",
+        "url": "https://support.apple.com/en-us/102188"
+      }
+    ],
+    "for_you": "You switch it on in Settings and then read a simple list. You can see which app used the mic last night and which tracker domains it contacted. It is a way to catch an app that is too chatty.",
+    "for_makers": "The report tells honest apps they will be watched. It also gives a public way to expose bad behavior, since a long list of ad domains is easy to spot. Makers must be ready to explain what their apps send.",
+    "use_cases": [
+      {
+        "type": "security",
+        "example": "A journalist checks which apps contacted unknown domains.",
+        "apps": []
+      },
+      {
+        "type": "social",
+        "example": "A parent looks at which apps used the camera on a child's phone.",
+        "apps": []
+      },
+      {
+        "type": "games",
+        "example": "A free game is found to contact dozens of ad domains.",
+        "apps": []
+      },
+      {
+        "type": "ads",
+        "example": "A privacy researcher compares an app's promises with its network contacts.",
+        "apps": []
+      },
+      {
+        "type": "analytics",
+        "example": "A developer checks that their own SDKs do not contact surprise domains.",
+        "apps": []
+      },
+      {
+        "type": "health",
+        "example": "A person finds that a health app read their location overnight.",
+        "apps": []
+      },
+      {
+        "type": "enterprise",
+        "example": "IT checks that work apps contact only approved sites.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Only shows after the fact",
+      "Easy to ignore",
+      "Needs to be turned on"
+    ],
+    "android_note": "Android's dashboard shows sensor use, such as location, camera and microphone, with no list of domains.",
+    "ios_note": "Apple's report also lists the domains each app contacted."
+  },
+  "technical_bounds": [
+    "Reports are user facing only"
+  ],
+  "scores": {
+    "sensitivity": 3,
+    "utility": 1,
+    "fingerprint_bits": null,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Auditing apps"
+    ],
+    "abuse": [
+      "None"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2021-12",
+      "platform": "ios",
+      "version": "iOS 15.2",
+      "change": "App Privacy Report"
+    },
+    {
+      "date": "2021-10",
+      "platform": "android",
+      "version": "12 (API 31)",
+      "change": "Privacy dashboard, 24 hours"
+    },
+    {
+      "date": "2024-12",
+      "platform": "android",
+      "version": "15 QPR1",
+      "change": "Dashboard window extended to 7 days"
+    }
+  ],
+  "related": [
+    "mob.system.safety-check"
+  ],
+  "refs": [
+    {
+      "t": "apple",
+      "label": "Apple: App Privacy Report",
+      "url": "https://support.apple.com/en-us/102188"
+    },
+    {
+      "t": "android",
+      "label": "Android: Privacy dashboard",
+      "url": "https://support.google.com/android/answer/12094348"
+    }
+  ],
+  "confidence": "docs"
+}

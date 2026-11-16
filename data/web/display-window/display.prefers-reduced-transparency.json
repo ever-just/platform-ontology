@@ -1,0 +1,220 @@
+{
+  "id": "web.display.prefers-reduced-transparency",
+  "name": "prefers-reduced-transparency",
+  "kind": "signal",
+  "group": "display-window",
+  "subgroup": "CSS media features",
+  "tags": [
+    "media-query",
+    "preferences",
+    "accessibility"
+  ],
+  "plain": "OS setting to reduce translucent effects.",
+  "meaning": "Accessibility and low-vision hint. New and rare.",
+  "lifecycle": [
+    "on-arrival",
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "matchMedia('(prefers-reduced-transparency: reduce)')",
+      "bcd": [
+        "css.at-rules.media.prefers-reduced-transparency"
+      ],
+      "access": {
+        "grant": "none",
+        "prompt_ui": "None",
+        "secure_context": false,
+        "user_gesture": false,
+        "persistence": "read fresh on every page load; nothing stored",
+        "revocation": "none needed (no grant)",
+        "iframe": "Readable from cross-origin iframes too (same values)",
+        "steps": [
+          "Page script reads the value",
+          "No prompt is shown"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "118",
+          "note": "",
+          "date": "2023-10-10"
+        },
+        "edge": {
+          "s": "y",
+          "v": "118",
+          "note": "",
+          "date": "2023-10-13"
+        },
+        "firefox": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "safari": {
+          "s": "y",
+          "v": "16.4",
+          "note": "BCD lists no support; agent research says otherwise",
+          "date": "2023-03-27"
+        },
+        "ios_safari": {
+          "s": "y",
+          "v": "16.4",
+          "note": "BCD lists no support; agent research says otherwise",
+          "date": "2023-03-27"
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "118",
+          "note": "",
+          "date": "2023-10-10"
+        },
+        "samsung": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "object",
+    "metric": "",
+    "update": "static per session",
+    "fields": [
+      {
+        "name": "prefers-reduced-transparency",
+        "type": "enum",
+        "unit": "",
+        "range": "no-preference, reduce",
+        "precision": ""
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can tell if you asked your device to make windows less see through",
+    "user_action": "Nothing. It happens when the page loads.",
+    "can": [
+      "Check whether reduced transparency is on",
+      "Use solid backgrounds instead of frosted ones",
+      "Add the answer to a browser fingerprint"
+    ],
+    "cannot": [
+      "See your other accessibility settings",
+      "Get an answer in Firefox",
+      "Change the setting"
+    ],
+    "reach": 1,
+    "reach_label": "One yes or no, no prompt",
+    "differs": "Firefox does not report it. Safari and Chrome do."
+  },
+  "story": {
+    "what_it_is": "Tells a page whether you asked your device to cut down on see through effects.",
+    "icon": "eye-off",
+    "tags": [
+      "Accessibility",
+      "Display",
+      "Silent"
+    ],
+    "marketing": [
+      {
+        "vendor": "MDN",
+        "name": "prefers-reduced-transparency",
+        "pitch": "Documents a media feature that lets pages use solid colors when the person wants less see through glass.",
+        "url": "https://developer.mozilla.org/en-US/docs/Web/CSS/@media/prefers-reduced-transparency"
+      }
+    ],
+    "for_you": "You never see the check. If you reduced transparency in settings, menus and cards on a site can become solid so text is easier to read.",
+    "for_makers": "Makers use it to keep frosted glass styles readable. It is a very rare signal today, so it has little value for tracking, but it still marks an accessibility setting.",
+    "use_cases": [
+      {
+        "type": "accessibility",
+        "example": "A web app replaces a blurred glass menu with a solid one for easier reading.",
+        "apps": []
+      },
+      {
+        "type": "creative",
+        "example": "A design tool shows solid panels over a busy canvas for users who asked for less transparency.",
+        "apps": []
+      },
+      {
+        "type": "games",
+        "example": "A browser game makes its pause menu a solid card instead of a see through overlay.",
+        "apps": []
+      },
+      {
+        "type": "media",
+        "example": "A video site uses a solid control bar so buttons do not blend into the picture.",
+        "apps": []
+      },
+      {
+        "type": "productivity",
+        "example": "A note app drops frosted sidebars so text has a clear background.",
+        "apps": []
+      },
+      {
+        "type": "analytics",
+        "example": "A team ignores the value in tracking because it is rare and personal.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Rare accessibility signal",
+      "Mild fingerprint clue"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "scores": {
+    "sensitivity": 1,
+    "utility": 3,
+    "fingerprint_bits": 0.3,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Respect OS theme and accessibility needs",
+      "Adapt layout"
+    ],
+    "abuse": [
+      "Infer disability or setting for fingerprinting"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2023-10",
+      "browser": "chrome",
+      "version": "118",
+      "change": "Shipped"
+    }
+  ],
+  "related": [
+    "web.locale.accessibility-inference"
+  ],
+  "refs": [
+    {
+      "t": "mdn",
+      "label": "MDN prefers-reduced-transparency",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/CSS/@media/prefers-reduced-transparency"
+    },
+    {
+      "t": "github",
+      "label": "fingerprintjs source: reduced_transparency",
+      "url": "https://github.com/fingerprintjs/fingerprintjs/blob/master/src/sources/reduced_transparency.ts"
+    },
+    {
+      "t": "spec",
+      "label": "CSS Media Queries Level 5",
+      "url": "https://www.w3.org/TR/mediaqueries-5/"
+    }
+  ],
+  "confidence": "docs"
+}

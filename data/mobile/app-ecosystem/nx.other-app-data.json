@@ -1,0 +1,182 @@
+{
+  "id": "mob.nx.other-app-data",
+  "name": "Other apps' data",
+  "kind": "not-exposed",
+  "group": "app-ecosystem",
+  "subgroup": "Sandbox",
+  "tags": [
+    "sandbox",
+    "blocked"
+  ],
+  "plain": "Each app's files and memory are sealed from other apps on both platforms.",
+  "meaning": "Sandboxing keeps one app from reading another's messages, tokens or files. Only user-picked files, shared groups or content providers cross the line.",
+  "lifecycle": [
+    "on-launch",
+    "in-session"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "n",
+      "v": "",
+      "api": "",
+      "permission": "none",
+      "protection": "not-exposed",
+      "grant": "not-exposed",
+      "prompt_ui": "",
+      "persistence": "",
+      "revocation": "",
+      "store_policy": "",
+      "api_surface": "App-private storage; scoped storage since Android 10, enforced 11",
+      "note": "Sharing needs content providers or the Storage Access Framework"
+    },
+    "ios": {
+      "s": "n",
+      "v": "",
+      "permission": "none",
+      "protection": "not-exposed",
+      "grant": "not-exposed",
+      "prompt_ui": "",
+      "persistence": "",
+      "revocation": "",
+      "store_policy": "",
+      "api_surface": "App sandbox container; app groups only for the same team",
+      "note": "Sharing needs app groups or file pickers"
+    }
+  },
+  "data": {
+    "type": "none",
+    "metric": "None",
+    "update": "N/A",
+    "fields": []
+  },
+  "limits": {
+    "headline": "Can't open another app's files, messages or saved logins",
+    "user_action": "Nothing. It is blocked by the phone itself",
+    "can": [
+      "See a file you pick through the file picker and share to it",
+      "Share data through a group or shared area that the same company set up",
+      "Receive what another app sends on purpose"
+    ],
+    "cannot": [
+      "See another app's messages, tokens or files on its own",
+      "Browse another app's storage",
+      "Break the barrier between apps without rooting or jailbreaking the phone"
+    ],
+    "reach": 1,
+    "reach_label": "Blocked",
+    "differs": "Android shares through content providers or the file picker. iPhone shares through app groups or file pickers."
+  },
+  "story": {
+    "what_it_is": "Blocked: one app cannot read another app's files, messages or saved logins.",
+    "icon": "shield-check",
+    "tags": [
+      "Blocked",
+      "Sandbox",
+      "Privacy"
+    ],
+    "marketing": [
+      {
+        "vendor": "Apple",
+        "name": "App Sandbox on iOS",
+        "pitch": "Each app runs in its own protected space so it cannot access other apps' data.",
+        "url": "https://www.apple.com/privacy/features/"
+      }
+    ],
+    "for_you": "You do not see anything. It is the reason a game cannot read your banking app or your messages. Only things you pick, like a photo, cross between apps.",
+    "for_makers": "Makers want to read other apps' data for ads, fraud scoring and rich features, but the system blocks it. They use approved bridges instead: share sheets, file pickers, shared app groups and sign in tokens.",
+    "use_cases": [
+      {
+        "type": "banking",
+        "example": "A budgeting app asks you to log in through your bank's own sign in because it cannot reach the bank app's data.",
+        "apps": [
+          "YNAB",
+          "Monarch Money"
+        ]
+      },
+      {
+        "type": "messaging",
+        "example": "A photo editor cannot read your WhatsApp chats. You must choose a picture to share.",
+        "apps": [
+          "Photoshop Express"
+        ]
+      },
+      {
+        "type": "games",
+        "example": "A game cannot copy your save from a rival game. Players must use cloud saves or accounts.",
+        "apps": [
+          "Clash of Clans"
+        ]
+      },
+      {
+        "type": "ads",
+        "example": "An ad SDK wanted other apps' ad history, but sandboxing forces it to use only its own data.",
+        "apps": []
+      },
+      {
+        "type": "security",
+        "example": "Malware that infects one app cannot jump into a password manager's vault.",
+        "apps": [
+          "1Password"
+        ]
+      },
+      {
+        "type": "productivity",
+        "example": "Two apps from the same maker share data through a special shared container, with the person's knowledge.",
+        "apps": [
+          "Google Docs"
+        ]
+      }
+    ],
+    "risks": [
+      "Shared containers are a loophole",
+      "Rooted phones break the wall"
+    ],
+    "android_note": "Android runs each app as its own user and added scoped storage in 10 and 11.",
+    "ios_note": "iOS keeps each app in a sealed container and only allows shared groups from one developer."
+  },
+  "technical_bounds": [
+    "Same-signature or same-team exceptions"
+  ],
+  "scores": {
+    "sensitivity": 5,
+    "utility": 1,
+    "fingerprint_bits": null,
+    "friction": 3
+  },
+  "value": {
+    "legit_uses": [
+      "None"
+    ],
+    "abuse": [
+      "Data theft"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2020-09",
+      "platform": "android",
+      "version": "11 (API 30)",
+      "change": "Scoped storage enforced"
+    }
+  ],
+  "refs": [
+    {
+      "t": "android",
+      "label": "Android 11 privacy features",
+      "url": "https://developer.android.com/about/versions/11/privacy"
+    },
+    {
+      "t": "apple",
+      "label": "Apple: Privacy manifest files",
+      "url": "https://developer.apple.com/documentation/bundleresources/privacy-manifest-files"
+    }
+  ],
+  "confidence": "docs"
+}

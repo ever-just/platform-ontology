@@ -1,0 +1,207 @@
+{
+  "id": "mob.loc.language-region",
+  "name": "Language, region and locale list",
+  "kind": "signal",
+  "group": "locale-preferences",
+  "subgroup": "Locale",
+  "tags": [
+    "locale",
+    "language"
+  ],
+  "plain": "Reads the person's ordered language list and region with no prompt.",
+  "meaning": "Tells native language, diaspora, expat status and often nationality. Apps localize with it; ad tech uses it for targeting and as a fingerprint bit.",
+  "lifecycle": [
+    "on-launch",
+    "in-session"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "y",
+      "v": "1.0",
+      "api": 1,
+      "permission": "",
+      "protection": "none",
+      "grant": "none",
+      "prompt_ui": "",
+      "persistence": "",
+      "revocation": "",
+      "store_policy": "",
+      "api_surface": "LocaleList.getDefault() (API 24), Resources.getConfiguration().getLocales(), Locale.getDefault()",
+      "note": "Ordered list of up to about 5 BCP 47 tags"
+    },
+    "ios": {
+      "s": "y",
+      "v": "2.0",
+      "permission": "none",
+      "protection": "none",
+      "grant": "none",
+      "prompt_ui": "",
+      "persistence": "",
+      "revocation": "",
+      "store_policy": "",
+      "api_surface": "Ordered list; region separate from language",
+      "note": ""
+    }
+  },
+  "web_equivalents": [
+    "web.locale.accept-language",
+    "web.locale.intl-formats"
+  ],
+  "data": {
+    "type": "list",
+    "metric": "Ordered locale tags",
+    "update": "On change",
+    "fields": [
+      {
+        "name": "languages",
+        "type": "list",
+        "unit": "BCP 47",
+        "range": "1 to 10 tags",
+        "precision": "exact"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can see your language list and region, with no prompt",
+    "user_action": "Nothing. It happens when the app or page loads",
+    "can": [
+      "Get your ordered list of languages (usually up to about 5)",
+      "Find your region and country format",
+      "Show screens in a language you prefer"
+    ],
+    "cannot": [
+      "Change your language or region",
+      "See your location from it alone; it only hints at a country",
+      "Warn you; there is no prompt"
+    ],
+    "reach": 1,
+    "reach_label": "Your language settings",
+    "differs": ""
+  },
+  "story": {
+    "what_it_is": "An app sees your preferred languages in order, plus your country setting.",
+    "icon": "languages",
+    "tags": [
+      "Language",
+      "Silent",
+      "Profile"
+    ],
+    "marketing": [
+      {
+        "vendor": "Google",
+        "name": "Per app language",
+        "pitch": "Android lets people pick a different language for each app, from system settings.",
+        "url": "https://developer.android.com/guide/topics/resources/app-languages"
+      }
+    ],
+    "for_you": "You do not notice it. Apps just open in your language with the right currency and date. It also tells them where you might be from and which languages you speak.",
+    "for_makers": "Makers need it to translate the app and pick the right store and prices. Ad tech uses the same list to target ads and as a fingerprint bit. It can reveal ethnicity, migration or a second language.",
+    "use_cases": [
+      {
+        "type": "shopping",
+        "example": "A store opens in your language with your local currency and shipping rules.",
+        "apps": [
+          "Amazon",
+          "AliExpress"
+        ]
+      },
+      {
+        "type": "media",
+        "example": "A streaming app picks audio and subtitle languages from your list.",
+        "apps": [
+          "Netflix",
+          "Disney+"
+        ]
+      },
+      {
+        "type": "games",
+        "example": "A global game puts you on the right regional server with matching chat and event times.",
+        "apps": [
+          "Genshin Impact"
+        ]
+      },
+      {
+        "type": "travel",
+        "example": "A travel app shows prices and help in your language when you land abroad.",
+        "apps": [
+          "Booking.com"
+        ]
+      },
+      {
+        "type": "ads",
+        "example": "An ad network picks ads in your languages and treats a rare mix as a fingerprint bit.",
+        "apps": []
+      },
+      {
+        "type": "security",
+        "example": "A fraud system flags a sign up whose language list does not fit the claimed country.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Infers origin or migration",
+      "Fingerprint bit"
+    ],
+    "android_note": "Android lets you set a different language for each app, and apps read the ordered list.",
+    "ios_note": "iPhone also supports per app language, and apps read an ordered list of preferred languages."
+  },
+  "technical_bounds": [
+    "Per-app language settings affect what the app sees"
+  ],
+  "scores": {
+    "sensitivity": 3,
+    "utility": 3,
+    "fingerprint_bits": 5,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Localize UI"
+    ],
+    "abuse": [
+      "Profile ethnicity or migration"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2016-08",
+      "platform": "android",
+      "version": "7.0 (API 24)",
+      "change": "Multi-language ordered list (LocaleList)"
+    },
+    {
+      "date": "2022-09",
+      "platform": "android",
+      "version": "13 (API 33)",
+      "change": "Per-app language preference"
+    }
+  ],
+  "related": [
+    "mob.loc.timezone"
+  ],
+  "refs": [
+    {
+      "t": "android",
+      "label": "Android: Locale and language",
+      "url": "https://developer.android.com/guide/topics/resources/localization"
+    },
+    {
+      "t": "apple",
+      "label": "Apple: Locale",
+      "url": "https://developer.apple.com/documentation/foundation/locale"
+    },
+    {
+      "t": "paper",
+      "label": "Kurtz et al.: Fingerprinting Mobile Devices Using Personalized Configurations (PoPETs 2016)",
+      "url": "https://petsymposium.org/popets/2016/popets-2015-0027.php"
+    }
+  ],
+  "confidence": "inferred"
+}

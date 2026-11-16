@@ -1,0 +1,192 @@
+{
+  "id": "mob.system.two-denial-rule",
+  "name": "Two denial rule",
+  "kind": "capability",
+  "group": "system-control",
+  "subgroup": "Mechanics",
+  "tags": [
+    "mechanics",
+    "denial",
+    "prompt-limit"
+  ],
+  "plain": "After two denials, Android stops showing the permission dialog.",
+  "meaning": "Limits repeated prompts. iOS shows a permission prompt only once; later changes must be made in Settings.",
+  "lifecycle": [
+    "in-session"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "y",
+      "v": "11",
+      "api": 30,
+      "permission": "n/a (system behavior)",
+      "protection": "none",
+      "grant": "prompt",
+      "prompt_ui": "Dialog shows at most twice per permission",
+      "persistence": "Remains denied until user changes it",
+      "revocation": "Settings > Apps > Permissions",
+      "store_policy": "Play: apps must handle denial gracefully",
+      "api_surface": "shouldShowRequestPermissionRationale, flags USER_SET and USER_FIXED",
+      "note": "USER_SET after one denial; USER_FIXED after two."
+    },
+    "ios": {
+      "s": "y",
+      "v": "2.0",
+      "permission": "n/a",
+      "protection": "prompt",
+      "grant": "prompt",
+      "prompt_ui": "System prompt once per permission",
+      "persistence": "Until changed in Settings",
+      "revocation": "Settings > app > permission",
+      "store_policy": "App Review 5.1.1",
+      "api_surface": "UIApplication.openSettingsURLString",
+      "note": "App can send the user to Settings via a deep link."
+    }
+  },
+  "web_equivalents": [
+    "web.meta.permissions-api"
+  ],
+  "data": {
+    "type": "none",
+    "metric": "Denial count",
+    "update": "per permission",
+    "fields": [
+      {
+        "name": "count",
+        "type": "integer",
+        "unit": "denials",
+        "range": "0 to 2",
+        "precision": "exact"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can ask for a permission only twice on Android, and once on iPhone",
+    "user_action": "You tap Don't allow on a permission dialog",
+    "can": [
+      "Ask again after one denial on Android",
+      "Send you to Settings with a link to change it",
+      "Explain why it needs the permission before asking again"
+    ],
+    "cannot": [
+      "Show the Android dialog after two denials",
+      "Show the iPhone prompt again after you answer",
+      "Change the permission for you; you do that in Settings"
+    ],
+    "reach": 1,
+    "reach_label": "One or two asks, then Settings",
+    "differs": "Android shows the dialog at most twice; iPhone shows it once."
+  },
+  "story": {
+    "what_it_is": "After you say no twice, Android stops showing the permission prompt for that app.",
+    "icon": "ban",
+    "tags": [
+      "Permissions",
+      "Android",
+      "Choice"
+    ],
+    "marketing": [],
+    "for_you": "If you deny a permission twice, the app cannot ask again. You have to change it yourself in Settings. This stops an app from nagging you into saying yes.",
+    "for_makers": "Apps must explain why they need a permission before asking, since they only get two tries. Good apps show a simple screen first. Bad ones may send you to Settings with a plea.",
+    "use_cases": [
+      {
+        "type": "games",
+        "example": "A game asks for location, you say no twice, and it works without it or shows a settings link.",
+        "apps": []
+      },
+      {
+        "type": "social",
+        "example": "A social app asks for contacts and has to live without it after two denials.",
+        "apps": []
+      },
+      {
+        "type": "maps",
+        "example": "A maps app shows a screen explaining why location helps before the prompt.",
+        "apps": [
+          "Google Maps"
+        ]
+      },
+      {
+        "type": "shopping",
+        "example": "A store app asks for the camera and sends you to Settings if you refuse twice.",
+        "apps": []
+      },
+      {
+        "type": "fitness",
+        "example": "A fitness app asks for body sensors and explains its use.",
+        "apps": []
+      },
+      {
+        "type": "security",
+        "example": "A researcher tests how an app behaves when permissions are blocked.",
+        "apps": []
+      },
+      {
+        "type": "developer",
+        "example": "A developer builds a pre prompt screen to win consent.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "App may stop working",
+      "Hard to change your mind",
+      "Nag tricks"
+    ],
+    "android_note": "Android marks a permission as user set after one denial, and fixed after two.",
+    "ios_note": "iPhone shows a permission prompt only once. After that, changes must be made in Settings, and an app can link to Settings."
+  },
+  "technical_bounds": [
+    "Apps cannot reset the prompt"
+  ],
+  "scores": {
+    "sensitivity": 2,
+    "utility": 2,
+    "fingerprint_bits": null,
+    "friction": 2
+  },
+  "value": {
+    "legit_uses": [
+      "User control"
+    ],
+    "abuse": [
+      "Dark pattern re-prompts"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2020-09",
+      "platform": "android",
+      "version": "11 (API 30)",
+      "change": "Dialog suppressed after two denials"
+    },
+    {
+      "date": "2008-07",
+      "platform": "ios",
+      "version": "iOS 2",
+      "change": "Single-shot permission prompts"
+    }
+  ],
+  "related": [
+    "mob.system.one-time-permission"
+  ],
+  "refs": [
+    {
+      "t": "android",
+      "label": "Android: Handle denial",
+      "url": "https://developer.android.com/training/permissions/requesting#handle-denial"
+    },
+    {
+      "t": "android",
+      "label": "Android: Request runtime permissions",
+      "url": "https://developer.android.com/training/permissions/requesting"
+    }
+  ],
+  "confidence": "docs"
+}

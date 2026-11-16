@@ -1,0 +1,211 @@
+{
+  "id": "mob.contacts.picker",
+  "name": "Contact picker",
+  "kind": "picker",
+  "group": "personal-data-contacts",
+  "subgroup": "Address book",
+  "tags": [
+    "picker",
+    "no-permission",
+    "out-of-process"
+  ],
+  "plain": "A system screen where the person selects contacts to share; no permission needed.",
+  "meaning": "Shares only the chosen contacts and fields, so an invite flow does not need the whole book.",
+  "lifecycle": [
+    "in-session"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "y",
+      "v": "17",
+      "api": 37,
+      "permission": "",
+      "protection": "none",
+      "grant": "picker",
+      "prompt_ui": "System contact picker, multi select, requested field filter (ACTION_PICK_CONTACTS)",
+      "persistence": "Session URI auto cleaned after 24 hours; reaches work, clone and private profiles",
+      "revocation": "n/a",
+      "store_policy": "Google steers apps to this over READ_CONTACTS",
+      "api_surface": "ACTION_PICK_CONTACTS, EXTRA_PICK_CONTACTS_SELECTION_LIMIT, EXTRA_PICK_CONTACTS_REQUESTED_DATA_FIELDS",
+      "note": "Legacy ACTION_PICK is auto upgraded on Android 17"
+    },
+    "ios": {
+      "s": "y",
+      "v": "9",
+      "permission": "",
+      "protection": "none",
+      "grant": "picker",
+      "prompt_ui": "CNContactPickerViewController sheet (iOS 9); single or multi select",
+      "persistence": "Returned objects only; no store access",
+      "revocation": "n/a",
+      "store_policy": "",
+      "api_surface": "CNContactPickerViewController, ContactAccessButton",
+      "note": "Runs out of process; the app gets only the chosen contact fields"
+    }
+  },
+  "web_equivalents": [
+    "web.contacts.contact-picker"
+  ],
+  "data": {
+    "type": "list",
+    "metric": "Selected contacts",
+    "update": "once",
+    "fields": [
+      {
+        "name": "count",
+        "type": "integer",
+        "unit": "contacts",
+        "range": "up to EXTRA selection limit",
+        "precision": "exact"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can get only the contacts and fields you pick in the system screen, no permission needed",
+    "user_action": "You tap Invite friends and select people from the system list",
+    "can": [
+      "Receive the contacts you tick",
+      "Ask for just certain fields, such as a phone number",
+      "Set a limit on how many you pick (Android)",
+      "Work with no permission prompt"
+    ],
+    "cannot": [
+      "See contacts you did not select",
+      "See the full address book",
+      "See fields it did not ask for (Android)"
+    ],
+    "reach": 1,
+    "reach_label": "Only what you pick, once",
+    "differs": ""
+  },
+  "story": {
+    "what_it_is": "A system screen where you pick a person to share, and the app needs no permission.",
+    "icon": "users",
+    "tags": [
+      "Contacts",
+      "No prompt",
+      "Privacy"
+    ],
+    "marketing": [
+      {
+        "vendor": "Google",
+        "name": "Contact Picker",
+        "pitch": "Let people pick a contact with a system screen so your app needs no contacts permission.",
+        "url": "https://developer.android.com/training/contacts-provider"
+      }
+    ],
+    "for_you": "You tap Choose a friend and a normal contacts list opens from the phone. You pick one person, and only that name and number go to the app. The app never sees the rest.",
+    "for_makers": "The app skips a scary permission and still gets what it needs for one task. This is the best way for invite, send money and share flows. The system runs the list, so the app stays out of the address book.",
+    "use_cases": [
+      {
+        "type": "payments",
+        "example": "You pick a friend to send money to and the app gets only their number.",
+        "apps": [
+          "Venmo",
+          "Cash App"
+        ]
+      },
+      {
+        "type": "social",
+        "example": "You pick a friend to invite to a group.",
+        "apps": []
+      },
+      {
+        "type": "messaging",
+        "example": "You pick a contact to share a photo with.",
+        "apps": []
+      },
+      {
+        "type": "delivery",
+        "example": "You pick a gift recipient and the app fills in a delivery address.",
+        "apps": []
+      },
+      {
+        "type": "games",
+        "example": "You pick a friend to send a life or a gift in a game.",
+        "apps": []
+      },
+      {
+        "type": "security",
+        "example": "You pick an emergency contact for a safety app.",
+        "apps": []
+      },
+      {
+        "type": "rideshare",
+        "example": "You pick a contact to share your trip with.",
+        "apps": [
+          "Uber"
+        ]
+      }
+    ],
+    "risks": [
+      "Only one contact at a time",
+      "Shared fields may include more than needed",
+      "App can still keep what it gets"
+    ],
+    "android_note": "The old system pick screen is upgraded to the safer picker on Android 17.",
+    "ios_note": "The picker runs outside the app. The app only gets the contact fields you chose."
+  },
+  "technical_bounds": [
+    "App cannot read unchosen contacts",
+    "Android returns a session scoped URI, iOS returns a snapshot"
+  ],
+  "scores": {
+    "sensitivity": 2,
+    "utility": 4,
+    "fingerprint_bits": null,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Invite a friend",
+      "Send money"
+    ],
+    "abuse": [
+      "None, scoped by design"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2015-09",
+      "platform": "ios",
+      "version": "iOS 9",
+      "change": "CNContactPickerViewController"
+    },
+    {
+      "date": "2026-03",
+      "platform": "android",
+      "version": "17 (API 37)",
+      "change": "Contact Picker with Session URI and field filters"
+    }
+  ],
+  "related": [
+    "mob.contacts.full-access",
+    "mob.contacts.limited-access"
+  ],
+  "refs": [
+    {
+      "t": "android",
+      "label": "Android: Contact Picker blog (26 Mar 2026)",
+      "url": "https://developer.android.com/blog/posts/contact-picker-privacy-first-contact-sharing"
+    },
+    {
+      "t": "apple",
+      "label": "Apple: Accessing the contact store",
+      "url": "https://developer.apple.com/documentation/contacts/accessing-the-contact-store"
+    },
+    {
+      "t": "android",
+      "label": "Android 17 behavior changes",
+      "url": "https://developer.android.com/about/versions/17/behavior-changes-17"
+    }
+  ],
+  "confidence": "verified"
+}

@@ -1,0 +1,271 @@
+{
+  "id": "mob.camera.camera",
+  "name": "Camera",
+  "kind": "permission",
+  "group": "camera-mic-screen",
+  "subgroup": "Capture",
+  "tags": [
+    "runtime-permission",
+    "camera",
+    "indicator",
+    "scan"
+  ],
+  "plain": "Asks to use the camera for photos, video, scanning or video calls.",
+  "meaning": "Sees the room, the face and documents in front of the lens. Apps can capture without a shutter sound in some modes, so both OSes add on-screen indicators.",
+  "lifecycle": [
+    "in-session"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "y",
+      "v": "6.0",
+      "api": 23,
+      "permission": "CAMERA",
+      "protection": "dangerous",
+      "grant": "prompt",
+      "prompt_ui": "While using the app, Only this time, Don't allow (Android 11+)",
+      "persistence": "Until revoked or auto-reset; one-time ends with the visible activity",
+      "revocation": "Settings > Apps > Permissions > Camera; Quick Settings camera access toggle (Android 12)",
+      "store_policy": "Play: no declaration, but data-safety disclosure and background-capture limits",
+      "api_surface": "CameraX, Camera2, MediaStore.ACTION_IMAGE_CAPTURE (no permission)",
+      "note": "Capturing via the camera Intent needs no permission because the system camera app takes the picture."
+    },
+    "ios": {
+      "s": "y",
+      "v": "7.0",
+      "permission": "NSCameraUsageDescription",
+      "protection": "prompt",
+      "grant": "prompt",
+      "prompt_ui": "OK or Don't Allow",
+      "persistence": "Until revoked; the prompt is shown only once per install",
+      "revocation": "Settings > Privacy & Security > Camera",
+      "store_policy": "App Review 5.1.1",
+      "api_surface": "AVCaptureDevice.requestAccess(for: .video), AVCaptureSession, UIImagePickerController (limited)",
+      "note": "Green dot appears in the status bar while the camera is in use (iOS 14)."
+    }
+  },
+  "web_equivalents": [
+    "web.camera.camera"
+  ],
+  "data": {
+    "type": "stream",
+    "metric": "Video frames and stills",
+    "update": "up to 30 to 60 fps for preview; stills on demand",
+    "fields": [
+      {
+        "name": "frame",
+        "type": "binary",
+        "unit": "pixels",
+        "range": "up to sensor size, often 12 to 48 MP",
+        "precision": "full sensor resolution"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can use your camera while the app is open, after you tap Allow",
+    "user_action": "You tap Take photo, Scan, or Start video call, then tap Allow",
+    "can": [
+      "Show what the camera sees and take photos or video",
+      "Scan codes and documents",
+      "Use it in video calls",
+      "Capture one photo through the system camera app, with no permission, on Android"
+    ],
+    "cannot": [
+      "Use the camera without a green dot (iPhone) or green chip (Android 12 and later)",
+      "Use it after you tap Don't Allow",
+      "See your photo library; that is a separate permission"
+    ],
+    "reach": 2,
+    "reach_label": "While the app is open",
+    "differs": "Android 11 and later adds Only this time. iPhone has OK or Don't Allow. Both show a dot or chip when the camera is on."
+  },
+  "story": {
+    "what_it_is": "Lets an app take photos and video, scan codes and join video calls.",
+    "icon": "camera",
+    "tags": [
+      "Camera",
+      "Asks first",
+      "Sensitive"
+    ],
+    "marketing": [
+      {
+        "vendor": "Apple",
+        "name": "Camera privacy",
+        "pitch": "iOS shows a green dot whenever an app uses the camera, so you always know.",
+        "url": "https://www.apple.com/privacy/features/"
+      },
+      {
+        "vendor": "Google",
+        "name": "CameraX",
+        "pitch": "A simple camera library that lets apps take photos and video on many devices.",
+        "url": "https://developer.android.com/media/camera/camerax"
+      }
+    ],
+    "for_you": "A pop up asks 'Allow camera?' once. Then the app can see what the lens sees, and a dot or chip tells you the camera is on.",
+    "for_makers": "Camera access powers many features: scanning, video calls, effects and photos. Makers ask only when needed, because a no stops the whole feature and people trust apps that explain why.",
+    "use_cases": [
+      {
+        "type": "social",
+        "example": "You post a story and filters add dog ears to your face live.",
+        "apps": [
+          "Snapchat",
+          "Instagram"
+        ]
+      },
+      {
+        "type": "games",
+        "example": "An AR game places a monster on your sidewalk.",
+        "apps": [
+          "Pokemon GO",
+          "Pikmin Bloom"
+        ]
+      },
+      {
+        "type": "banking",
+        "example": "You deposit a check by taking a picture of it.",
+        "apps": [
+          "Chase"
+        ]
+      },
+      {
+        "type": "video",
+        "example": "You join a video call and see friends.",
+        "apps": [
+          "Zoom",
+          "FaceTime"
+        ]
+      },
+      {
+        "type": "shopping",
+        "example": "You scan a barcode to compare prices or try on furniture in your room.",
+        "apps": [
+          "Amazon",
+          "IKEA Place"
+        ]
+      },
+      {
+        "type": "security",
+        "example": "A face unlock or ID check compares your face with a document.",
+        "apps": [
+          "Persona"
+        ]
+      },
+      {
+        "type": "payments",
+        "example": "You scan a QR code to pay at a market stall.",
+        "apps": [
+          "Alipay",
+          "Venmo"
+        ]
+      }
+    ],
+    "risks": [
+      "Sees your room and face",
+      "Can capture without a shutter sound"
+    ],
+    "android_note": "Android shows a green camera chip and offers a one time grant.",
+    "ios_note": "iOS shows a green dot and a one time grant, and Always Allow does not exist for camera."
+  },
+  "technical_bounds": [
+    "Cannot capture while the app is in the background on either OS (Android 11+ blocks background camera)",
+    "iPad multitasking and Stage Manager can keep sessions alive",
+    "Cannot run in background on either platform"
+  ],
+  "scores": {
+    "sensitivity": 5,
+    "utility": 5,
+    "fingerprint_bits": null,
+    "friction": 2
+  },
+  "value": {
+    "legit_uses": [
+      "Video calls",
+      "Document scanning",
+      "AR"
+    ],
+    "abuse": [
+      "Covert capture",
+      "Face scraping"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": true,
+      "how": "Used to take profile photos and video posts, and for ID verification: LinkedIn Verified passport checks need the app camera, the phone's NFC reader and a live selfie (Persona flow). Camera access is also listed in the Exodus Android report. Photos or Videos appear on the Apple label."
+    }
+  },
+  "history": [
+    {
+      "date": "2021-10",
+      "platform": "android",
+      "version": "12 (API 31)",
+      "change": "Privacy indicators and Quick Settings camera toggle added"
+    },
+    {
+      "date": "2021-10",
+      "platform": "android",
+      "version": "12 (API 31)",
+      "change": "Camera indicator and global toggle"
+    },
+    {
+      "date": "2020-09",
+      "platform": "ios",
+      "version": "iOS 14",
+      "change": "Green indicator dot added; Control Center shows apps that recently used it"
+    },
+    {
+      "date": "2020-09",
+      "platform": "android",
+      "version": "11 (API 30)",
+      "change": "One-time grant added for camera"
+    },
+    {
+      "date": "2020-09",
+      "platform": "ios",
+      "version": "iOS 14",
+      "change": "Green dot indicator"
+    },
+    {
+      "date": "2015-10",
+      "platform": "android",
+      "version": "6.0 (API 23)",
+      "change": "Camera made a runtime permission"
+    }
+  ],
+  "related": [
+    "mob.camera.microphone",
+    "mob.camera.indicators",
+    "mob.camera.global-toggles",
+    "mob.linkedin.id-verification",
+    "mob.peripherals.nfc"
+  ],
+  "refs": [
+    {
+      "t": "android",
+      "label": "Android: CameraX overview",
+      "url": "https://developer.android.com/media/camera/camerax"
+    },
+    {
+      "t": "android",
+      "label": "Android 11 permissions",
+      "url": "https://developer.android.com/about/versions/11/privacy/permissions"
+    },
+    {
+      "t": "apple",
+      "label": "Apple: Requesting authorization for media capture",
+      "url": "https://developer.apple.com/documentation/avfoundation/capture_setup/requesting_authorization_to_capture_and_save_media"
+    },
+    {
+      "t": "android",
+      "label": "Android: Request app permissions",
+      "url": "https://developer.android.com/training/permissions/requesting"
+    },
+    {
+      "t": "vendor",
+      "label": "Exodus Privacy report, com.linkedin.android 4.1.995 (Oct 2024)",
+      "url": "https://reports.exodus-privacy.eu.org/en/reports/513380/"
+    }
+  ],
+  "confidence": "docs"
+}

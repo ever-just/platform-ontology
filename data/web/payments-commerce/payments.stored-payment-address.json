@@ -1,0 +1,238 @@
+{
+  "id": "web.payments.stored-payment-address",
+  "name": "Stored payment and address data",
+  "kind": "capability",
+  "group": "payments-commerce",
+  "subgroup": "Checkout",
+  "tags": [
+    "autofill",
+    "payment-request",
+    "apple-pay",
+    "address"
+  ],
+  "plain": "Saved cards and addresses a browser, wallet or the site itself can fill at checkout.",
+  "meaning": "Browser autofill fills a saved card only after the person picks it, and often asks for the CVC. Apple Pay and Google Pay give the merchant a tokenised card, not the card number. Sites that store cards keep tokens from a payment provider.",
+  "lifecycle": [
+    "signed-in",
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "Payment Request API: new PaymentRequest(methods, details).show(); autocomplete tokens cc-number, shipping address",
+      "permissions_policy": "payment",
+      "bcd": [
+        "api.PaymentRequest"
+      ],
+      "access": {
+        "grant": "prompt",
+        "prompt_ui": "Browser or wallet payment sheet",
+        "secure_context": true,
+        "user_gesture": true,
+        "persistence": "Saved in the browser profile or wallet until deleted; merchant tokens until revoked",
+        "revocation": "Clear site data, browser privacy settings",
+        "iframe": "",
+        "steps": [
+          "Site calls PaymentRequest.show from a click",
+          "Browser shows saved cards and addresses",
+          "Person approves",
+          "Site receives token and address"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "60",
+          "note": "",
+          "date": "2017-07-25"
+        },
+        "edge": {
+          "s": "y",
+          "v": "15",
+          "note": "",
+          "date": "2017-04-05"
+        },
+        "firefox": {
+          "s": "n",
+          "v": "",
+          "note": "Autofill only"
+        },
+        "safari": {
+          "s": "y",
+          "v": "11.1",
+          "note": ":Apple Pay only",
+          "date": "2018-04-12"
+        },
+        "ios_safari": {
+          "s": "y",
+          "v": "11.3",
+          "note": ":Apple Pay only",
+          "date": "2018-03-29"
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "53",
+          "note": "",
+          "date": "2016-09-07"
+        },
+        "samsung": {
+          "s": "y",
+          "v": "6.0",
+          "note": "",
+          "date": "2017-08-23"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "object",
+    "metric": "Card token, billing and shipping address",
+    "update": "per checkout",
+    "fields": []
+  },
+  "limits": {
+    "headline": "Can fill in saved cards and addresses at checkout, if you choose them",
+    "user_action": "You tap a field at checkout, pick a saved card or address, or tap a wallet button.",
+    "can": [
+      "Fill your name, address and card from the browser, a wallet or the site",
+      "Offer a saved card from your account on that site",
+      "Fill a billing or shipping address in one tap"
+    ],
+    "cannot": [
+      "See all your saved cards without you choosing one",
+      "Fill your security code (CVC) without asking you in many browsers",
+      "Share your saved cards with other sites",
+      "Fill anything if you turned autofill off"
+    ],
+    "reach": 2,
+    "reach_label": "What you pick at checkout",
+    "differs": "Chrome and Safari fill saved cards and addresses. Firefox only fills addresses in many cases."
+  },
+  "story": {
+    "what_it_is": "Saved cards and addresses can be filled in at checkout.",
+    "icon": "wallet",
+    "tags": [
+      "Payments",
+      "Autofill",
+      "Asks first"
+    ],
+    "marketing": [
+      {
+        "vendor": "Google",
+        "name": "Payment and address form best practices",
+        "pitch": "web.dev teaches how saved cards and addresses help people check out faster and make fewer errors.",
+        "url": "https://web.dev/articles/payment-and-address-form-best-practices"
+      }
+    ],
+    "for_you": "Checkout forms fill your name, address and card in a tap. It saves time, but your data sits in your browser, wallet or the shop's account.",
+    "for_makers": "Makers get faster checkouts and fewer typing mistakes, which lifts sales. Shops that keep cards on file also get easy repeat buying and subscription billing.",
+    "use_cases": [
+      {
+        "type": "shopping",
+        "example": "Your saved address and card fill the form in one tap on a store.",
+        "apps": [
+          "Amazon",
+          "Etsy"
+        ]
+      },
+      {
+        "type": "delivery",
+        "example": "A takeout app remembers your address and card for next time.",
+        "apps": [
+          "DoorDash",
+          "Uber Eats"
+        ]
+      },
+      {
+        "type": "travel",
+        "example": "A booking site fills passenger info and your card.",
+        "apps": [
+          "Booking.com"
+        ]
+      },
+      {
+        "type": "media",
+        "example": "A subscription site bills you every month from the saved card.",
+        "apps": [
+          "Netflix",
+          "Spotify"
+        ]
+      },
+      {
+        "type": "security",
+        "example": "A skimmer script on a checkout page tries to read the filled fields.",
+        "apps": []
+      },
+      {
+        "type": "payments",
+        "example": "A wallet app offers its saved cards across many shops.",
+        "apps": [
+          "PayPal",
+          "Shop Pay"
+        ]
+      }
+    ],
+    "risks": [
+      "Skimmer scripts",
+      "Data kept long term"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Merchant gets a device token (DPAN) with Apple Pay not the card number",
+    "Payment Request needs a user gesture and HTTPS",
+    "Autofill phishing: hidden fields can be filled after one click on a visible field"
+  ],
+  "scores": {
+    "sensitivity": 5,
+    "utility": 5,
+    "fingerprint_bits": null,
+    "friction": 2
+  },
+  "value": {
+    "legit_uses": [
+      "Fast checkout"
+    ],
+    "abuse": [
+      "Harvesting hidden autofilled fields, card testing"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2016-09",
+      "browser": "chrome",
+      "version": "53",
+      "change": "Payment Request shipped"
+    },
+    {
+      "date": "2017-01",
+      "browser": "all",
+      "version": "",
+      "change": "Autofill phishing demo with hidden fields (Kuosmanen)"
+    }
+  ],
+  "related": [
+    "web.auth.account-profile-fields",
+    "web.commerce.purchase-history"
+  ],
+  "refs": [
+    {
+      "t": "mdn",
+      "label": "MDN Payment Request API",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/Payment_Request_API"
+    },
+    {
+      "t": "spec",
+      "label": "W3C Payment Request",
+      "url": "https://www.w3.org/TR/payment-request/"
+    }
+  ],
+  "confidence": "docs"
+}

@@ -1,0 +1,239 @@
+{
+  "id": "web.xsite.utm-params",
+  "name": "UTM campaign parameters",
+  "kind": "tracking",
+  "group": "cross-site-tracking",
+  "subgroup": "Before the visit",
+  "tags": [
+    "utm",
+    "campaign",
+    "analytics"
+  ],
+  "plain": "Tags in the link URL that tell the site which campaign, medium and source sent the person.",
+  "meaning": "Lets a site tie a visit to a specific ad, email or post. Five standard keys: utm_source, utm_medium, utm_campaign, utm_term, utm_content. Stored in first-party cookies by analytics tools for the session or longer.",
+  "lifecycle": [
+    "before-visit",
+    "on-arrival"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "location.search / URLSearchParams; server access logs",
+      "access": {
+        "grant": "none",
+        "prompt_ui": "None",
+        "secure_context": false,
+        "user_gesture": false,
+        "persistence": "GA4 campaign data is session scoped by default; first-touch copies often kept in cookies for 30 to 90 days",
+        "revocation": "Clear site data, browser privacy settings",
+        "iframe": "",
+        "steps": []
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "1",
+          "note": "Plain URL parameters; any browser",
+          "date": "2008-12-11"
+        },
+        "edge": {
+          "s": "y",
+          "v": "1",
+          "note": "Plain URL parameters; any browser",
+          "date": ""
+        },
+        "firefox": {
+          "s": "y",
+          "v": "1",
+          "note": "Plain URL parameters; any browser",
+          "date": "2004-11-09"
+        },
+        "safari": {
+          "s": "y",
+          "v": "1",
+          "note": "Plain URL parameters; any browser",
+          "date": "2003-06-23"
+        },
+        "ios_safari": {
+          "s": "y",
+          "v": "1",
+          "note": "Plain URL parameters; any browser",
+          "date": "2007-06-29"
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "1",
+          "note": "Plain URL parameters; any browser",
+          "date": ""
+        },
+        "samsung": {
+          "s": "y",
+          "v": "1",
+          "note": "Plain URL parameters; any browser",
+          "date": "2013-04-27"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "object",
+    "metric": "Up to 5 key/value text parameters",
+    "update": "per landing URL",
+    "fields": [
+      {
+        "name": "utm_source",
+        "type": "string",
+        "unit": "text",
+        "range": "any",
+        "precision": "n/a"
+      },
+      {
+        "name": "utm_medium",
+        "type": "string",
+        "unit": "text",
+        "range": "any",
+        "precision": "n/a"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can see which ad, email, or post sent you, from tags in the link",
+    "user_action": "You tap a link that carries campaign tags, such as an ad or email link",
+    "can": [
+      "See the source, medium, and campaign named in the link",
+      "Tie your visit to one specific ad, email, or post",
+      "Keep that tag in its own cookie for the visit or longer",
+      "Count how many people came from each campaign"
+    ],
+    "cannot": [
+      "See the tags if the link was copied without them",
+      "Learn who you are from the tags alone",
+      "Follow you to other sites with these tags",
+      "Learn what you did before you clicked"
+    ],
+    "reach": 1,
+    "reach_label": "One link, one visit",
+    "differs": ""
+  },
+  "story": {
+    "what_it_is": "Little tags added to a link that tell a site which ad, email or post sent you.",
+    "icon": "link",
+    "tags": [
+      "Links",
+      "Marketing",
+      "Tracking"
+    ],
+    "marketing": [
+      {
+        "vendor": "Google",
+        "name": "Campaign URL builder",
+        "pitch": "Google Analytics shows how to add source, medium and campaign tags to links so you can see what drives visits.",
+        "url": "https://support.google.com/analytics/answer/1033863"
+      }
+    ],
+    "for_you": "You see them as a long tail on a web address, like utm_source=newsletter. Nothing pops up and the page looks the same. The site just learns which link brought you.",
+    "for_makers": "Marketing teams need to know which email, ad or post paid off. The tags are free, work on any site and need no consent banner on their own. They feed dashboards that decide where the next ad budget goes.",
+    "use_cases": [
+      {
+        "type": "ads",
+        "example": "A shoe brand tags each ad so its dashboard shows that the Instagram story brought more buyers than the Google search ad.",
+        "apps": [
+          "Google Analytics"
+        ]
+      },
+      {
+        "type": "media",
+        "example": "A newsletter tags each link so the editor sees which headline readers clicked from the Tuesday email.",
+        "apps": [
+          "Substack"
+        ]
+      },
+      {
+        "type": "games",
+        "example": "A browser game studio tags links on Discord, YouTube and Reddit to learn which place brings players who stay past day one.",
+        "apps": []
+      },
+      {
+        "type": "social",
+        "example": "A creator adds tags to the link in a bio so a brand can see exactly how many followers visited.",
+        "apps": []
+      },
+      {
+        "type": "shopping",
+        "example": "A Black Friday email carries a campaign tag, so the shop ties each order to that email.",
+        "apps": [
+          "Shopify"
+        ]
+      },
+      {
+        "type": "security",
+        "example": "A fraud team spots a campaign tag that suddenly brings thousands of fake sign-ups and cuts that source off.",
+        "apps": []
+      },
+      {
+        "type": "analytics",
+        "example": "A product team joins the tags with sign-up data to learn which channel brings paying customers.",
+        "apps": [
+          "Mixpanel",
+          "Amplitude"
+        ]
+      }
+    ],
+    "risks": [
+      "Links reveal where you came from",
+      "Tags can be shared when you copy the link"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Only as accurate as the link author made them",
+    "Not stripped by Chrome; Safari and Firefox strip some tracker IDs but leave UTM keys intact",
+    "Cannot identify the person alone"
+  ],
+  "scores": {
+    "sensitivity": 2,
+    "utility": 5,
+    "fingerprint_bits": 0.0,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Campaign ROI",
+      "A/B channel analysis"
+    ],
+    "abuse": [
+      "Appending personal data (email, IDs) to links shared widely"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2022-06",
+      "browser": "firefox",
+      "version": "102",
+      "change": "Query Parameter Stripping added for known tracking parameters; UTM keys are not on the strip list"
+    }
+  ],
+  "related": [
+    "web.xsite.ad-click-ids"
+  ],
+  "refs": [
+    {
+      "t": "vendor",
+      "label": "Google Analytics UTM parameters",
+      "url": "https://support.google.com/analytics/answer/10917952"
+    },
+    {
+      "t": "mozilla",
+      "label": "Firefox Query Parameter Stripping",
+      "url": "https://firefox-source-docs.mozilla.org/toolkit/components/antitracking/anti-tracking/query-stripping/index.html"
+    }
+  ],
+  "confidence": "docs"
+}

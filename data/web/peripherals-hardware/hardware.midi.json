@@ -1,0 +1,255 @@
+{
+  "id": "web.hardware.midi",
+  "name": "Web MIDI (midi and midi sysex)",
+  "kind": "permission",
+  "group": "peripherals-hardware",
+  "subgroup": "Peripherals",
+  "tags": [
+    "sysex",
+    "midi"
+  ],
+  "plain": "Asks to talk to connected music gear such as keyboards and controllers.",
+  "meaning": "Two permission levels: plain MIDI sees note and control data; sysex also sends vendor system messages that can reprogram a device. Reveals which music devices you own.",
+  "lifecycle": [
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "navigator.requestMIDIAccess({sysex}); permission midi with descriptor {sysex:true}",
+      "permission_name": "midi",
+      "permissions_policy": "midi",
+      "bcd": [
+        "api.Navigator.requestMIDIAccess"
+      ],
+      "access": {
+        "grant": "prompt",
+        "prompt_ui": "Chromium prompt: Control and reprogram your MIDI devices when sysex is requested; Chrome 124 prompts for any MIDI access. Firefox 108 needs an add-on install for sysex.",
+        "secure_context": true,
+        "user_gesture": true,
+        "persistence": "Persistent per origin",
+        "revocation": "Site settings; Permissions API midi",
+        "iframe": "Needs allow=\"midi\" in iframes",
+        "steps": [
+          "Call requestMIDIAccess({sysex})",
+          "Permission prompt",
+          "Enumerate inputs and outputs",
+          "Send and receive MIDI messages"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "43",
+          "note": "",
+          "date": "2015-05-19"
+        },
+        "edge": {
+          "s": "y",
+          "v": "79",
+          "note": "",
+          "date": "2020-01-15"
+        },
+        "firefox": {
+          "s": "y",
+          "v": "108",
+          "note": "Add-on required in 108",
+          "date": "2022-12-13"
+        },
+        "safari": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "ios_safari": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "43",
+          "note": "",
+          "date": "2015-05-27"
+        },
+        "samsung": {
+          "s": "y",
+          "v": "4.0",
+          "note": "",
+          "date": "2016-03-11"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "list",
+    "metric": "MIDIInput and MIDIOutput ports",
+    "update": "on call plus statechange events",
+    "fields": [
+      {
+        "name": "port id",
+        "type": "string",
+        "unit": "opaque",
+        "range": "per origin",
+        "precision": "high entropy"
+      },
+      {
+        "name": "manufacturer, name",
+        "type": "string",
+        "unit": "text",
+        "range": "device strings",
+        "precision": "high entropy"
+      },
+      {
+        "name": "version",
+        "type": "string",
+        "unit": "text",
+        "range": "device firmware",
+        "precision": "some bits"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can talk to your connected music gear, with a prompt for deeper control",
+    "user_action": "You tap Connect keyboard or Connect MIDI on a music site.",
+    "can": [
+      "Listen to notes from a keyboard or controller you have plugged in",
+      "Send notes and lights to the device",
+      "Ask for deeper control, called sysex, that shows a stronger warning"
+    ],
+    "cannot": [
+      "Use any music gear before you allow it",
+      "Change the gear's settings with sysex unless you allow that",
+      "Work in Safari or on iPhone",
+      "Keep access after you clear permissions or close the site"
+    ],
+    "reach": 2,
+    "reach_label": "While the page is open",
+    "differs": "Chrome, Edge and Firefox support it. Firefox may need an add on for sysex. Safari and iPhone do not."
+  },
+  "story": {
+    "what_it_is": "A site asks to connect to your music gear, like a keyboard or drum pad.",
+    "icon": "piano",
+    "tags": [
+      "Music",
+      "Asks first",
+      "Hardware"
+    ],
+    "marketing": [
+      {
+        "vendor": "Mozilla",
+        "name": "Web MIDI API",
+        "pitch": "MDN says the API lets pages talk to MIDI devices like keyboards and drum machines.",
+        "url": "https://developer.mozilla.org/en-US/docs/Web/API/Web_MIDI_API"
+      }
+    ],
+    "for_you": "A pop up asks 'Allow this site to use your MIDI devices?'. If you say yes, a plugged in keyboard plays notes in the page.",
+    "for_makers": "Makers can build full music apps in a tab: synths, lessons and recording. A special system mode can even rewrite a device's settings, so the browser asks more carefully.",
+    "use_cases": [
+      {
+        "type": "music",
+        "example": "You play a plugged in keyboard and hear piano notes in the browser.",
+        "apps": [
+          "BandLab",
+          "Soundtrap",
+          "Chrome Music Lab"
+        ]
+      },
+      {
+        "type": "education",
+        "example": "A piano lesson site watches which keys you press and scores you.",
+        "apps": [
+          "Flowkey"
+        ]
+      },
+      {
+        "type": "games",
+        "example": "A rhythm game lets you play with a MIDI drum pad.",
+        "apps": []
+      },
+      {
+        "type": "creative",
+        "example": "A visual artist links a controller's knobs to a live visual show.",
+        "apps": []
+      },
+      {
+        "type": "live",
+        "example": "A DJ tool in the browser reads a controller for mixing.",
+        "apps": []
+      },
+      {
+        "type": "security",
+        "example": "A site can tell which MIDI devices exist, which adds to a fingerprint.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Device fingerprint",
+      "Changes device settings"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Safari does not support",
+    "Sysex needs the stronger permission",
+    "Needs secure context"
+  ],
+  "scores": {
+    "sensitivity": 3,
+    "utility": 3,
+    "fingerprint_bits": 5,
+    "friction": 2
+  },
+  "value": {
+    "legit_uses": [
+      "DAWs",
+      "Hardware editors"
+    ],
+    "abuse": [
+      "Device fingerprinting by connected gear"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2015-05",
+      "browser": "chrome",
+      "version": "43",
+      "change": "Web MIDI ships"
+    },
+    {
+      "date": "2024-04",
+      "browser": "chrome",
+      "version": "124",
+      "change": "Prompt for any MIDI access, not only sysex"
+    },
+    {
+      "date": "2022-12",
+      "browser": "firefox",
+      "version": "108",
+      "change": "Web MIDI behind add-on install prompt"
+    }
+  ],
+  "related": [
+    "web.meta.permissions-api"
+  ],
+  "refs": [
+    {
+      "t": "mdn",
+      "label": "MDN Web MIDI API",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/Web_MIDI_API"
+    },
+    {
+      "t": "spec",
+      "label": "W3C Web MIDI",
+      "url": "https://webaudio.github.io/web-midi-api/"
+    }
+  ],
+  "confidence": "docs"
+}

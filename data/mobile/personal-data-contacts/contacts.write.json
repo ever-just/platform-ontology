@@ -1,0 +1,212 @@
+{
+  "id": "mob.contacts.write",
+  "name": "Write contacts",
+  "kind": "permission",
+  "group": "personal-data-contacts",
+  "subgroup": "Address book",
+  "tags": [
+    "runtime-permission",
+    "contacts",
+    "sync",
+    "account",
+    "background-capable"
+  ],
+  "plain": "Lets the app add, edit or delete address book entries.",
+  "meaning": "Lets apps modify who is in the phone's book, which can plant fake contacts or merge entries. Backup and sync apps need it.",
+  "lifecycle": [
+    "in-session",
+    "background",
+    "signed-in"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "y",
+      "v": "6.0",
+      "api": 23,
+      "permission": "WRITE_CONTACTS",
+      "protection": "dangerous",
+      "grant": "prompt",
+      "prompt_ui": "Allow or Don't allow",
+      "persistence": "Until revoked or auto-reset",
+      "revocation": "Settings > Apps > Permissions > Contacts",
+      "store_policy": "Play: same data-safety rules as read",
+      "api_surface": "ContactsContract, ContentProviderOperation batch",
+      "note": "Granting READ_CONTACTS or WRITE_CONTACTS grants the whole contacts group."
+    },
+    "ios": {
+      "s": "p",
+      "v": "6.0",
+      "permission": "NSContactsUsageDescription (CNSaveRequest needs the same grant)",
+      "protection": "prompt",
+      "grant": "prompt",
+      "prompt_ui": "Same prompt as read; no write-only option",
+      "persistence": "Until revoked",
+      "revocation": "Settings > Privacy & Security > Contacts",
+      "store_policy": "App Review 5.1.1",
+      "api_surface": "CNSaveRequest, CNContactViewController (new contact UI without permission)",
+      "note": "iOS has no write-only contacts mode; UI controllers add a contact without access."
+    }
+  },
+  "data": {
+    "type": "event",
+    "metric": "Contact change writes",
+    "update": "on demand",
+    "fields": []
+  },
+  "limits": {
+    "headline": "Can add, edit and delete address book entries once you tap Allow",
+    "user_action": "You tap Allow when a backup, sync or contacts app asks",
+    "can": [
+      "Add new contacts",
+      "Edit or merge existing entries",
+      "Delete entries",
+      "Change many entries in one batch (Android)"
+    ],
+    "cannot": [
+      "Change contacts before you tap Allow",
+      "Get add only access on iPhone; it uses the same prompt as seeing contacts",
+      "Change the contacts group one part at a time on Android; one grant covers all"
+    ],
+    "reach": 4,
+    "reach_label": "Everything in your contacts",
+    "differs": "iPhone has no add only mode but a system new contact screen needs no access; Android groups seeing and changing contacts together."
+  },
+  "story": {
+    "what_it_is": "Lets the app add, edit or delete entries in your address book.",
+    "icon": "user-plus",
+    "tags": [
+      "Contacts",
+      "Permission",
+      "Sensitive"
+    ],
+    "marketing": [],
+    "for_you": "A prompt asks to change your contacts. If you agree, the app can add people, fix numbers or remove entries. You may not notice until your address book looks different.",
+    "for_makers": "A caller ID or backup app has to write to restore your contacts. The same power could add fake contacts or merge the wrong people. Platforms want apps to use the system editor when they can.",
+    "use_cases": [
+      {
+        "type": "productivity",
+        "example": "A backup app restores your address book on a new phone.",
+        "apps": [
+          "Google Contacts"
+        ]
+      },
+      {
+        "type": "security",
+        "example": "A caller ID app adds the names of known businesses.",
+        "apps": []
+      },
+      {
+        "type": "enterprise",
+        "example": "A company directory app adds coworkers to the phone's address book.",
+        "apps": []
+      },
+      {
+        "type": "social",
+        "example": "A social app adds friends' photos to contacts.",
+        "apps": [
+          "Facebook"
+        ]
+      },
+      {
+        "type": "productivity",
+        "example": "A cleanup tool merges duplicates.",
+        "apps": []
+      },
+      {
+        "type": "shopping",
+        "example": "A shop app saves a delivery driver as a contact.",
+        "apps": []
+      },
+      {
+        "type": "security",
+        "example": "A malicious app could plant a fake bank number to run scams.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Fake contacts for scams",
+      "Wrong merges",
+      "Backup corruption"
+    ],
+    "android_note": "Granting read or write contacts permission grants the whole contacts permission group.",
+    "ios_note": "iOS has no write only contacts mode, but the system editor can add one contact without access."
+  },
+  "technical_bounds": [
+    "Android groups permissions so one grant covers the group",
+    "Users can pick or save via system UI without any grant",
+    "User can remove the account from Settings to drop synced rows"
+  ],
+  "scores": {
+    "sensitivity": 3,
+    "utility": 3,
+    "fingerprint_bits": null,
+    "friction": 2
+  },
+  "value": {
+    "legit_uses": [
+      "Backup restore",
+      "Caller ID apps"
+    ],
+    "abuse": [
+      "Contact spoofing"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": true,
+      "how": "Android build 4.1.995 lists WRITE_SYNC_SETTINGS, the permission used by sync adapters. LinkedIn help states contacts sync has been removed, so the adapter is probably legacy; unverified."
+    }
+  },
+  "history": [
+    {
+      "date": "2024-09",
+      "platform": "ios",
+      "version": "iOS 18",
+      "change": "Limited access also limits the write scope"
+    },
+    {
+      "date": "2015-10",
+      "platform": "android",
+      "version": "6.0 (API 23)",
+      "change": "Contacts group runtime permission"
+    },
+    {
+      "date": "2015-10",
+      "platform": "android",
+      "version": "6.0 (API 23)",
+      "change": "Write to contacts needs a runtime grant"
+    }
+  ],
+  "related": [
+    "mob.contacts.read"
+  ],
+  "refs": [
+    {
+      "t": "android",
+      "label": "Android: Manifest.permission reference",
+      "url": "https://developer.android.com/reference/android/Manifest.permission"
+    },
+    {
+      "t": "apple",
+      "label": "Apple: CNSaveRequest",
+      "url": "https://developer.apple.com/documentation/contacts/cnsaverequest"
+    },
+    {
+      "t": "vendor",
+      "label": "Exodus Privacy report, com.linkedin.android 4.1.995 (Oct 2024)",
+      "url": "https://reports.exodus-privacy.eu.org/en/reports/513380/"
+    },
+    {
+      "t": "android",
+      "label": "Android: Sync adapters",
+      "url": "https://developer.android.com/training/sync-adapters"
+    },
+    {
+      "t": "policy",
+      "label": "LinkedIn Help: Import mobile address book and sync (no longer available)",
+      "url": "https://www.linkedin.com/help/linkedin/answer/a567454"
+    }
+  ],
+  "confidence": "docs"
+}

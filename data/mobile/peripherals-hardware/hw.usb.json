@@ -1,0 +1,219 @@
+{
+  "id": "mob.hw.usb",
+  "name": "USB host and accessories",
+  "kind": "permission",
+  "group": "peripherals-hardware",
+  "subgroup": "Wired",
+  "tags": [
+    "usb",
+    "otg",
+    "mfi",
+    "driverkit"
+  ],
+  "plain": "Talks to USB devices plugged into the phone.",
+  "meaning": "Reveals attached gear (drives, keyboards, radios, microcontrollers). Android lets an app drive raw USB; iPhone mostly limits apps to MFi devices and cameras.",
+  "lifecycle": [
+    "in-session"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "y",
+      "v": "3.1",
+      "api": 12,
+      "permission": "android.hardware.usb.host; per device USB permission dialog",
+      "protection": "dangerous",
+      "grant": "prompt",
+      "prompt_ui": "Allow app to access USB device? (with an Always open option)",
+      "persistence": "Per device and app, optional default",
+      "revocation": "Settings > Apps > Open by default > Clear defaults",
+      "store_policy": "",
+      "api_surface": "UsbManager, UsbDeviceConnection, UsbRequest",
+      "note": "Android 14 can reset USB permission on disconnect."
+    },
+    "ios": {
+      "s": "p",
+      "v": "10.0",
+      "permission": "com.apple.developer.driverkit.transport.usb (iPad), UISupportedExternalAccessoryProtocols (MFi)",
+      "protection": "entitlement",
+      "grant": "entitlement",
+      "prompt_ui": "No raw prompt; MFi chip or DriverKit entitlement",
+      "persistence": "Per accessory",
+      "revocation": "Remove app",
+      "store_policy": "MFi licence for accessories",
+      "api_surface": "ExternalAccessory, DriverKit (iPadOS 16+), AVCaptureDevice external",
+      "note": "iPhone 15 and later USB-C: UVC cameras and mics work through AVFoundation; raw USB for apps is iPadOS only."
+    }
+  },
+  "web_equivalents": [
+    "web.peripherals.webusb"
+  ],
+  "data": {
+    "type": "stream",
+    "metric": "Raw USB transfers",
+    "update": "up to 480 Mbit/s (USB 2) or 5 Gbit/s (USB 3 on supported phones)",
+    "fields": [
+      {
+        "name": "vendor id",
+        "type": "integer",
+        "unit": "id",
+        "range": "0 to 65535",
+        "precision": "exact"
+      },
+      {
+        "name": "product id",
+        "type": "integer",
+        "unit": "id",
+        "range": "0 to 65535",
+        "precision": "exact"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can talk to plugged in USB gear on Android; iPhone mostly limits apps to certified devices",
+    "user_action": "You plug in a USB device and tap Allow when asked",
+    "can": [
+      "Open a connection to a drive, keyboard, radio or board (Android)",
+      "Remember your choice if you pick Always open (Android)",
+      "Use USB cameras and mics on iPhone 15 and later through the camera system"
+    ],
+    "cannot": [
+      "Use a device on Android without a prompt for that device",
+      "Run raw USB on iPhone; that is iPad only",
+      "Keep permission after unplug on Android 14 and later when it resets"
+    ],
+    "reach": 2,
+    "reach_label": "Plugged in devices you allow",
+    "differs": "Android apps can drive raw USB after a prompt; iPhone allows certified (MFi) accessories and USB cameras and mics, and raw USB only on iPad."
+  },
+  "story": {
+    "what_it_is": "Lets an app talk to things plugged into the phone's USB port, like cameras, keyboards and audio gear.",
+    "icon": "usb",
+    "tags": [
+      "USB",
+      "Gadgets",
+      "Permission"
+    ],
+    "marketing": [
+      {
+        "vendor": "Google",
+        "name": "USB host",
+        "pitch": "Connect Android to USB gadgets such as keyboards, cameras and drives, and talk to them from your app.",
+        "url": "https://developer.android.com/guide/topics/connectivity/usb/host"
+      }
+    ],
+    "for_you": "You plug something in and a pop up asks whether the app may use it. On Android that can be a drive, a microphone or a gadget board. On iPhone, cameras and mics work, but most other gear does not.",
+    "for_makers": "USB turns the phone into a tool for pros. A creator can plug in an audio interface or camera, and engineers can program boards. Android opens raw access to apps. iPhone keeps raw access for iPad.",
+    "use_cases": [
+      {
+        "type": "creative",
+        "example": "A musician plugs a studio audio interface into the phone and records a track with a recording app.",
+        "apps": [
+          "GarageBand"
+        ]
+      },
+      {
+        "type": "live",
+        "example": "A streamer plugs in a USB camera and microphone and goes live from a phone.",
+        "apps": [
+          "Twitch"
+        ]
+      },
+      {
+        "type": "developer",
+        "example": "A hobbyist programs a microcontroller board straight from a phone.",
+        "apps": []
+      },
+      {
+        "type": "games",
+        "example": "A gamer plugs a wired controller into a phone for console style play on the go.",
+        "apps": []
+      },
+      {
+        "type": "health",
+        "example": "A technician connects a medical or lab sensor and logs readings.",
+        "apps": []
+      },
+      {
+        "type": "enterprise",
+        "example": "A shop plugs in a barcode scanner or card reader for the till.",
+        "apps": []
+      },
+      {
+        "type": "security",
+        "example": "A hardware security key plugged in proves who you are when you log in.",
+        "apps": [
+          "YubiKey"
+        ]
+      }
+    ],
+    "risks": [
+      "Unknown gadgets can steal or inject data",
+      "Permission may be remembered",
+      "Data copied from drives"
+    ],
+    "android_note": "Android 14 can reset a USB permission when the device is unplugged.",
+    "ios_note": "iPhone 15 and later with USB-C support cameras and mics through AVFoundation. Raw USB access for apps is on iPadOS only."
+  },
+  "technical_bounds": [
+    "Vendor and product IDs expose what is plugged in"
+  ],
+  "scores": {
+    "sensitivity": 3,
+    "utility": 3,
+    "fingerprint_bits": 5,
+    "friction": 2
+  },
+  "value": {
+    "legit_uses": [
+      "Cameras",
+      "Audio interfaces",
+      "Programmers"
+    ],
+    "abuse": [
+      "Fingerprinting by attached gear"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2011-12",
+      "platform": "android",
+      "version": "3.1 (API 12)",
+      "change": "USB host mode"
+    },
+    {
+      "date": "2022-09",
+      "platform": "ios",
+      "version": "iPadOS 16",
+      "change": "DriverKit for USB drivers"
+    },
+    {
+      "date": "2023-09",
+      "platform": "ios",
+      "version": "iOS 17",
+      "change": "External USB-C cameras and mics for AVFoundation"
+    }
+  ],
+  "related": [
+    "mob.hw.external-display"
+  ],
+  "refs": [
+    {
+      "t": "android",
+      "label": "Android: USB host overview",
+      "url": "https://developer.android.com/develop/connectivity/usb/host"
+    },
+    {
+      "t": "apple",
+      "label": "Apple: DriverKit",
+      "url": "https://developer.apple.com/documentation/driverkit"
+    }
+  ],
+  "confidence": "docs"
+}

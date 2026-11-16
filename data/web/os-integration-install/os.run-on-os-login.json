@@ -1,0 +1,211 @@
+{
+  "id": "web.os.run-on-os-login",
+  "name": "Run on OS login",
+  "kind": "action",
+  "group": "os-integration-install",
+  "subgroup": "Startup",
+  "tags": [
+    "startup"
+  ],
+  "plain": "An installed app can start when the person logs in to their computer.",
+  "meaning": "Set by the person, not the site, via about://apps, or by IT policy. No site can enable it silently.",
+  "lifecycle": [
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "No web API; WebAppSettings policy run_on_os_login: blocked, run_windowed, allowed",
+      "access": {
+        "grant": "settings",
+        "prompt_ui": "User toggles Start app when you sign in",
+        "secure_context": true,
+        "user_gesture": false,
+        "persistence": "Per origin",
+        "revocation": "Site settings",
+        "iframe": "Same as top level; cross-origin iframes need a permissions policy where listed",
+        "steps": [
+          "Call the API",
+          "Browser applies its access rules",
+          "Page receives the result"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "f",
+          "v": "91",
+          "note": "user setting"
+        },
+        "edge": {
+          "s": "f",
+          "v": "91",
+          "note": "user setting"
+        },
+        "firefox": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "safari": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "ios_safari": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "chrome_android": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "samsung": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "object",
+    "metric": "An installed app can start when the person logs in to their computer.",
+    "update": "on demand",
+    "fields": [
+      {
+        "name": "run_on_os_login",
+        "type": "enum",
+        "range": "blocked, run_windowed, allowed",
+        "precision": "enterprise policy"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can start an installed app when you sign in, only if you choose",
+    "user_action": "You turn on Start app when you sign in, or your IT team sets it",
+    "can": [
+      "Start the app when you sign in once you turn it on",
+      "Start through an IT policy on managed computers",
+      "Stay off until you or IT turn it on"
+    ],
+    "cannot": [
+      "Turn itself on without you",
+      "Start for a site that is not installed",
+      "Work in Safari, Firefox or on phones",
+      "Be turned on from the page, since the person sets it"
+    ],
+    "reach": 3,
+    "reach_label": "Each sign in, if you choose",
+    "differs": "Chrome and Edge on computers only, and still in testing. Not on phones, Safari or Firefox."
+  },
+  "story": {
+    "what_it_is": "An installed web app can start by itself when you sign in to your computer.",
+    "icon": "log-in",
+    "tags": [
+      "Installed apps",
+      "Startup",
+      "Settings"
+    ],
+    "marketing": [
+      {
+        "vendor": "Google Chrome",
+        "name": "Run on OS login",
+        "pitch": "Lets installed web apps launch when you sign in, so chat or music apps are ready from the start.",
+        "url": "https://developer.chrome.com/docs/web-platform/run-on-os-login"
+      }
+    ],
+    "for_you": "You may see a prompt or a setting asking if the app should start when you log in. If you say yes, it opens right away each morning. You can turn it off in app settings.",
+    "for_makers": "Makers want chat, music and work apps to be running and ready for alerts. It raises daily use. It uses memory and startup time, so a person must opt in.",
+    "use_cases": [
+      {
+        "type": "messaging",
+        "example": "A chat web app starts at login so you do not miss messages.",
+        "apps": [
+          "Slack"
+        ]
+      },
+      {
+        "type": "music",
+        "example": "A web music player opens at login and resumes your playlist.",
+        "apps": []
+      },
+      {
+        "type": "enterprise",
+        "example": "A company dashboard app starts when staff sign in.",
+        "apps": []
+      },
+      {
+        "type": "productivity",
+        "example": "A web task app opens at login to show today's list.",
+        "apps": [
+          "Todoist"
+        ]
+      },
+      {
+        "type": "games",
+        "example": "A web game launcher starts at login to check for updates and friend invites.",
+        "apps": []
+      },
+      {
+        "type": "video",
+        "example": "A web meeting app starts at login to be ready for calls.",
+        "apps": [
+          "Microsoft Teams"
+        ]
+      },
+      {
+        "type": "health",
+        "example": "A web health monitor app starts at login to track your day.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Slows startup",
+      "Runs when not wanted"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "A manifest member was only proposed",
+    "Never silent"
+  ],
+  "scores": {
+    "sensitivity": 1,
+    "utility": 2,
+    "fingerprint_bits": null,
+    "friction": 3
+  },
+  "value": {
+    "legit_uses": [
+      "Chat apps"
+    ],
+    "abuse": [
+      "None"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2021-05",
+      "browser": "chrome",
+      "version": "91",
+      "change": "Run on login on Windows, Linux, macOS"
+    }
+  ],
+  "refs": [
+    {
+      "t": "vendor",
+      "label": "Chrome Run on OS Login",
+      "url": "https://developer.chrome.com/docs/web-platform/run-on-os-login"
+    }
+  ],
+  "confidence": "docs"
+}

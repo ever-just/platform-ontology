@@ -1,0 +1,237 @@
+{
+  "id": "web.xsite.speculation-rules-prefetch",
+  "name": "Speculation Rules prefetch and prerender",
+  "kind": "tracking",
+  "group": "cross-site-tracking",
+  "subgroup": "Before the visit",
+  "tags": [
+    "speculation-rules",
+    "prefetch",
+    "prerender",
+    "sec-purpose"
+  ],
+  "plain": "A page can load a likely next page early, so a site may see a request before the person visits.",
+  "meaning": "Prefetch or prerender makes the destination server log a hit, and run scripts, before any click, sending Sec-Purpose: prefetch;prerender. Analytics can over count; cookies from a prefetched response apply only on activation.",
+  "lifecycle": [
+    "before-visit"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "<script type=speculationrules>; Sec-Purpose request header; document.prerendering",
+      "bcd": [
+        "api.Document.prerendering",
+        "http.headers.Sec-Purpose"
+      ],
+      "access": {
+        "grant": "none",
+        "prompt_ui": "None",
+        "secure_context": false,
+        "user_gesture": false,
+        "persistence": "Prefetch cache about 5 minutes in Chrome",
+        "revocation": "Clear site data, browser privacy settings",
+        "iframe": "",
+        "steps": []
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "108",
+          "note": "",
+          "date": "2022-11-29"
+        },
+        "edge": {
+          "s": "y",
+          "v": "108",
+          "note": "",
+          "date": "2022-12-05"
+        },
+        "firefox": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "safari": {
+          "s": "n",
+          "v": "",
+          "note": "Not supported at time of research, verify"
+        },
+        "ios_safari": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "108",
+          "note": "",
+          "date": "2022-11-29"
+        },
+        "samsung": {
+          "s": "y",
+          "v": "21.0",
+          "note": "",
+          "date": "2023-05-19"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "string",
+    "metric": "Sec-Purpose request header",
+    "update": "per speculative request",
+    "fields": [
+      {
+        "name": "Sec-Purpose",
+        "type": "string",
+        "unit": "token",
+        "range": "prefetch, prefetch;prerender",
+        "precision": "enum"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can load a likely next page early, so a site may see a visit first",
+    "user_action": "Nothing. It happens when a page guesses where you will go next",
+    "can": [
+      "Load a likely next page before you click",
+      "Show the next page almost instantly when you click",
+      "Let the next site see a request before you visit"
+    ],
+    "cannot": [
+      "Run in Firefox or Safari",
+      "Run when Chrome's data saver is on or the connection is poor",
+      "Show you the page until you click, or count it as a visit in some tools",
+      "Load pages from a different site without extra signals"
+    ],
+    "reach": 2,
+    "reach_label": "Pages you might visit next",
+    "differs": "Chrome, Edge and Samsung Internet support it. Firefox and Safari do not."
+  },
+  "story": {
+    "what_it_is": "A page can load a likely next page early, so a site may see a visit before you click.",
+    "icon": "fast-forward",
+    "tags": [
+      "Speed",
+      "Silent",
+      "Analytics"
+    ],
+    "marketing": [
+      {
+        "vendor": "Google Chrome",
+        "name": "Prerender pages",
+        "pitch": "Chrome says speculation rules can load pages ahead of time so the next click feels instant.",
+        "url": "https://developer.chrome.com/docs/web-platform/prerender-pages"
+      }
+    ],
+    "for_you": "You click a link and the next page appears almost at once. Behind the scenes, the browser loaded it before you clicked. The site may log a hit even if you never open it.",
+    "for_makers": "Instant page loads raise sales and reading time. But prefetching makes the server count a visit early and can run scripts before you arrive. Analytics must wait for activation to avoid inflated numbers.",
+    "use_cases": [
+      {
+        "type": "shopping",
+        "example": "A shop prerenders the product page you are likely to open, so checkout feels fast.",
+        "apps": [
+          "Shopify",
+          "Amazon"
+        ]
+      },
+      {
+        "type": "media",
+        "example": "A news site prefetches the next article so it opens instantly.",
+        "apps": [
+          "The Guardian"
+        ]
+      },
+      {
+        "type": "games",
+        "example": "A game portal prefetches the page of the game you hover over, so it loads in a blink.",
+        "apps": [
+          "Poki",
+          "CrazyGames"
+        ]
+      },
+      {
+        "type": "analytics",
+        "example": "A tool must ignore hits from prefetched pages, or visit counts go up.",
+        "apps": [
+          "Google Analytics"
+        ]
+      },
+      {
+        "type": "ads",
+        "example": "An ad system waits for activation before it counts an impression.",
+        "apps": [
+          "Google Ad Manager"
+        ]
+      },
+      {
+        "type": "utilities",
+        "example": "A search result page prerenders the top result so it opens at once.",
+        "apps": [
+          "Google Search"
+        ]
+      }
+    ],
+    "risks": [
+      "Server sees visits you never made",
+      "Can inflate analytics"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Same-site prefetch carries cookies; cross-origin uses an isolated session without them",
+    "Not done when Data Saver or Save-Data is on, or in low memory",
+    "Chrome limits concurrent prefetch and prerender counts"
+  ],
+  "scores": {
+    "sensitivity": 2,
+    "utility": 4,
+    "fingerprint_bits": null,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Instant navigations"
+    ],
+    "abuse": [
+      "Phantom page views, privacy leak of intent before click"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2022-11",
+      "browser": "chrome",
+      "version": "108",
+      "change": "Prerender2 shipped for omnibox and speculation rules"
+    },
+    {
+      "date": "2024-04",
+      "browser": "chrome",
+      "version": "121",
+      "change": "Speculation Rules eagerness, document rules"
+    }
+  ],
+  "related": [
+    "web.xsite.referer-header"
+  ],
+  "refs": [
+    {
+      "t": "mdn",
+      "label": "MDN Speculation Rules API",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/Speculation_Rules_API"
+    },
+    {
+      "t": "chromestatus",
+      "label": "Chrome Prerender",
+      "url": "https://developer.chrome.com/docs/web-platform/prerender-pages"
+    }
+  ],
+  "confidence": "docs"
+}

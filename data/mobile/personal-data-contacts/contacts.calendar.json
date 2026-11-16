@@ -1,0 +1,251 @@
+{
+  "id": "mob.contacts.calendar",
+  "name": "Calendar",
+  "kind": "permission",
+  "group": "personal-data-contacts",
+  "subgroup": "Calendar",
+  "tags": [
+    "runtime-permission",
+    "calendar",
+    "schedule",
+    "meetings",
+    "attendees"
+  ],
+  "plain": "Lets the app read or write the user's calendar events.",
+  "meaning": "Shows meetings, locations, attendees and routines; writes can create events. Reveals employer, health appointments and travel plans.",
+  "lifecycle": [
+    "in-session",
+    "signed-in"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "y",
+      "v": "6.0",
+      "api": 23,
+      "permission": "READ_CALENDAR, WRITE_CALENDAR",
+      "protection": "dangerous",
+      "grant": "prompt",
+      "prompt_ui": "Allow or Don't allow",
+      "persistence": "Until revoked or auto-reset",
+      "revocation": "Settings > Apps > Permissions > Calendar",
+      "store_policy": "Play: data-safety disclosure",
+      "api_surface": "CalendarContract, Intent.ACTION_INSERT (no permission)",
+      "note": "Events can be created via an Intent with no permission."
+    },
+    "ios": {
+      "s": "y",
+      "v": "6.0",
+      "permission": "NSCalendarsFullAccessUsageDescription, NSCalendarsWriteOnlyAccessUsageDescription (iOS 17); legacy NSCalendarsUsageDescription",
+      "protection": "prompt",
+      "grant": "prompt",
+      "prompt_ui": "Allow Full Access, Add Events Only (iOS 17), Don't Allow",
+      "persistence": "Until revoked",
+      "revocation": "Settings > Privacy & Security > Calendars",
+      "store_policy": "App Review 5.1.1",
+      "api_surface": "EKEventStore.requestFullAccessToEvents, requestWriteOnlyAccessToEvents, EKEventEditViewController (no permission)",
+      "note": "iOS 17 added a write-only tier; the event edit UI needs no permission."
+    }
+  },
+  "web_equivalents": [
+    "web.os.not-exposed-sms-calendar"
+  ],
+  "data": {
+    "type": "list",
+    "metric": "Calendar events",
+    "update": "on demand",
+    "fields": [
+      {
+        "name": "event_count",
+        "type": "integer",
+        "unit": "events",
+        "range": "0 to thousands",
+        "precision": "exact"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can see and add calendar events after you allow it, or only add them on iPhone",
+    "user_action": "You tap Add to calendar or Sync my calendar",
+    "can": [
+      "List events with times, places and attendees",
+      "Create new events",
+      "Add an event through the system calendar editor with no permission"
+    ],
+    "cannot": [
+      "See events before you tap Allow",
+      "Split see only from add only on Android; it is one permission pair",
+      "Skip the Full Access or Add Events Only choice on iPhone (iOS 17 and later)"
+    ],
+    "reach": 4,
+    "reach_label": "All your events, once allowed",
+    "differs": "iPhone with iOS 17 and later offers Add Events Only; Android gives all or nothing for direct access."
+  },
+  "story": {
+    "what_it_is": "Lets an app read or add events in your calendar.",
+    "icon": "calendar",
+    "tags": [
+      "Calendar",
+      "Permission",
+      "Schedule"
+    ],
+    "marketing": [
+      {
+        "vendor": "Apple",
+        "name": "EventKit",
+        "pitch": "Let people add events and reminders to their calendars. iOS 17 added a write only option.",
+        "url": "https://developer.apple.com/documentation/eventkit"
+      }
+    ],
+    "for_you": "The app asks to use your calendar. You can let it add a ticket or let it read your schedule. Apps that only add events can now avoid reading anything.",
+    "for_makers": "A calendar link makes people show up. A ticket or flight in the calendar cuts no shows. Reading it lets a scheduling tool suggest times. It also exposes your work, health visits and routines.",
+    "use_cases": [
+      {
+        "type": "live",
+        "example": "A ticket app adds the show to your calendar with the seat and doors time.",
+        "apps": [
+          "Ticketmaster"
+        ]
+      },
+      {
+        "type": "travel",
+        "example": "A travel app adds your flights and hotel stays.",
+        "apps": [
+          "Airbnb",
+          "TripIt"
+        ]
+      },
+      {
+        "type": "productivity",
+        "example": "A scheduling app finds free time across your day.",
+        "apps": [
+          "Calendly"
+        ]
+      },
+      {
+        "type": "fitness",
+        "example": "A class booking app adds your yoga session and reminds you.",
+        "apps": [
+          "ClassPass"
+        ]
+      },
+      {
+        "type": "education",
+        "example": "A school app adds exam dates and parent evenings.",
+        "apps": []
+      },
+      {
+        "type": "health",
+        "example": "A clinic app adds a doctor visit.",
+        "apps": []
+      },
+      {
+        "type": "games",
+        "example": "A live event game adds a tournament start time.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Shows your routines",
+      "Reveals who you meet",
+      "Health and work details"
+    ],
+    "android_note": "An app can add events through a system screen with no permission.",
+    "ios_note": "iOS 17 added a write only tier, and the event edit screen needs no permission."
+  },
+  "technical_bounds": [
+    "Apps adding one event should use the edit UI or write-only mode",
+    "Subscribed calendars can leak information",
+    "Optional feature; the app must ask before reading"
+  ],
+  "scores": {
+    "sensitivity": 4,
+    "utility": 3,
+    "fingerprint_bits": null,
+    "friction": 2
+  },
+  "value": {
+    "legit_uses": [
+      "Scheduling",
+      "Reminder apps"
+    ],
+    "abuse": [
+      "Reading private meetings"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": true,
+      "how": "Policy 1.1: if members sync calendars, LinkedIn collects meeting information to suggest connections and show event details (times, places, attendees). Play Data safety lists Calendar events (optional). In 2012 the iOS app sent meeting notes in plain text; LinkedIn stopped collecting that field."
+    }
+  },
+  "history": [
+    {
+      "date": "2023-09",
+      "platform": "ios",
+      "version": "iOS 17",
+      "change": "Write-only access tier added; full access prompt reworded"
+    },
+    {
+      "date": "2023-09",
+      "platform": "ios",
+      "version": "iOS 17",
+      "change": "Write-only and full access split"
+    },
+    {
+      "date": "2015-10",
+      "platform": "android",
+      "version": "6.0 (API 23)",
+      "change": "Calendar permissions became runtime"
+    },
+    {
+      "date": "2012-09",
+      "platform": "ios",
+      "version": "iOS 6",
+      "change": "Calendar prompt added"
+    },
+    {
+      "date": "2012-06",
+      "platform": "ios",
+      "version": "iOS 5",
+      "change": "LinkedIn iOS app found sending calendar meeting notes to its servers; LinkedIn stopped sending the notes field"
+    }
+  ],
+  "related": [
+    "mob.contacts.read",
+    "mob.linkedin.people-you-may-know"
+  ],
+  "refs": [
+    {
+      "t": "android",
+      "label": "Android: Calendar provider",
+      "url": "https://developer.android.com/identity/providers/calendar-provider"
+    },
+    {
+      "t": "apple",
+      "label": "Apple: Accessing the event store",
+      "url": "https://developer.apple.com/documentation/eventkit/accessing-the-event-store"
+    },
+    {
+      "t": "android",
+      "label": "Android: Calendar provider",
+      "url": "https://developer.android.com/guide/topics/providers/calendar-provider"
+    },
+    {
+      "t": "apple",
+      "label": "Apple: EventKit",
+      "url": "https://developer.apple.com/documentation/eventkit"
+    },
+    {
+      "t": "news",
+      "label": "CSO: LinkedIn stops collecting calendar meeting notes through its mobile apps (2012)",
+      "url": "https://www.csoonline.com/article/536084/privacy-linkedin-stops-collecting-calendar-meeting-notes-through-its-mobile-apps.html"
+    },
+    {
+      "t": "policy",
+      "label": "LinkedIn Privacy Policy (effective 3 Nov 2025)",
+      "url": "https://www.linkedin.com/legal/privacy-policy"
+    }
+  ],
+  "confidence": "docs"
+}

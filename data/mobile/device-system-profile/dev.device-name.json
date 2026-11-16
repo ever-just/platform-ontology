@@ -1,0 +1,194 @@
+{
+  "id": "mob.dev.device-name",
+  "name": "User-assigned device name",
+  "kind": "signal",
+  "group": "device-system-profile",
+  "subgroup": "Identity of hardware",
+  "tags": [
+    "device-name",
+    "privacy-change"
+  ],
+  "plain": "Reads the name the person gave their phone: free on Android, locked to a generic name on iOS 16 and later.",
+  "meaning": "A name like Jane's iPhone leaks a real name and maybe a family. Apple stopped this in iOS 16; Android still shows it.",
+  "lifecycle": [
+    "on-launch",
+    "in-session"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "y",
+      "v": "7.1",
+      "api": 25,
+      "permission": "",
+      "protection": "none",
+      "grant": "none",
+      "prompt_ui": "",
+      "persistence": "",
+      "revocation": "",
+      "store_policy": "",
+      "api_surface": "Settings.Global.DEVICE_NAME (API 25); BluetoothAdapter.getName() needs BLUETOOTH_CONNECT on Android 12+",
+      "note": "Often the model name by default"
+    },
+    "ios": {
+      "s": "r",
+      "v": "16.0",
+      "permission": "entitlement",
+      "protection": "entitlement",
+      "grant": "not-exposed",
+      "prompt_ui": "",
+      "persistence": "",
+      "revocation": "App Review: needs justification",
+      "store_policy": "",
+      "api_surface": "Returns a generic iPhone since iOS 16 unless Apple approves the entitlement (managed or enterprise cases)",
+      "note": ""
+    }
+  },
+  "data": {
+    "type": "string",
+    "metric": "Device name",
+    "update": "Static until edited",
+    "fields": [
+      {
+        "name": "name",
+        "type": "string",
+        "unit": "",
+        "range": "free text up to about 32 chars",
+        "precision": "exact"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can see the name you gave your phone on Android, but a generic one on iPhone",
+    "user_action": "Nothing on Android. The app checks when it starts",
+    "can": [
+      "See the phone name you set on Android, often just the model by default",
+      "See the Bluetooth name on Android 12 and newer, if you allow Nearby devices",
+      "Show your name in a welcome or pairing screen"
+    ],
+    "cannot": [
+      "See your custom name on iPhone 16 and newer; apps only get a generic iPhone name",
+      "Get your real iPhone name unless Apple approves an entitlement for a managed or business app",
+      "See the Bluetooth name on Android 12 and newer without the Nearby devices permission"
+    ],
+    "reach": 2,
+    "reach_label": "Always available on Android",
+    "differs": "Android shares the name by default. iPhone hides it from apps since iOS 16 unless Apple approves a special case."
+  },
+  "story": {
+    "what_it_is": "The name you gave your phone, like Jane's iPhone.",
+    "icon": "smartphone",
+    "tags": [
+      "Personal",
+      "Silent",
+      "Android"
+    ],
+    "marketing": [
+      {
+        "vendor": "Apple",
+        "name": "User assigned device name entitlement",
+        "pitch": "Developer rule: apps need a special Apple approved entitlement to read the name a person gave their device.",
+        "url": "https://developer.apple.com/documentation/bundleresources/entitlements/com.apple.developer.device-information.user-assigned-device-name"
+      }
+    ],
+    "for_you": "If your phone is called Jane's Pixel, any Android app can read that. On iPhone, apps see only a generic name like iPhone. Rename your phone to remove your name from the open.",
+    "for_makers": "A real name is a strong ID. Makers can use it to greet you, show device lists and pair devices. Ad and data firms can use it to link a phone to a real person.",
+    "use_cases": [
+      {
+        "type": "social",
+        "example": "A chat app shows 'Jane's Pixel' in your list of signed in devices, so you can spot a stranger.",
+        "apps": []
+      },
+      {
+        "type": "smart-home",
+        "example": "A smart home app pairs with a speaker and lists phones by the names you gave them.",
+        "apps": []
+      },
+      {
+        "type": "games",
+        "example": "A local multiplayer game shows each player's phone name in the lobby.",
+        "apps": []
+      },
+      {
+        "type": "ads",
+        "example": "A data firm reads the name to guess a first and last name for a profile.",
+        "apps": []
+      },
+      {
+        "type": "security",
+        "example": "A bank shows trusted devices by name so you can remove an old one.",
+        "apps": []
+      },
+      {
+        "type": "utilities",
+        "example": "A file sharing app lists nearby phones by their names.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Leaks your real name",
+      "Easy to read"
+    ],
+    "android_note": "Readable with no prompt on Android, though newer versions limit it more.",
+    "ios_note": "Locked to a generic name since iOS 16 unless the app has an Apple approved entitlement."
+  },
+  "technical_bounds": [
+    "iOS: entitlement only for approved cases"
+  ],
+  "scores": {
+    "sensitivity": 3,
+    "utility": 1,
+    "fingerprint_bits": 6,
+    "friction": 1
+  },
+  "value": {
+    "legit_uses": [
+      "Show device in account lists"
+    ],
+    "abuse": [
+      "Identity leak",
+      "Cross-app fingerprint"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2022-09",
+      "platform": "ios",
+      "version": "iOS 16",
+      "change": "UIDevice.name returns generic device name without entitlement"
+    },
+    {
+      "date": "2021-10",
+      "platform": "android",
+      "version": "12 (API 31)",
+      "change": "Bluetooth name needs BLUETOOTH_CONNECT"
+    }
+  ],
+  "related": [
+    "mob.dev.model"
+  ],
+  "refs": [
+    {
+      "t": "apple",
+      "label": "Apple: User-assigned device name entitlement",
+      "url": "https://developer.apple.com/documentation/bundleresources/entitlements/com.apple.developer.device-information.user-assigned-device-name"
+    },
+    {
+      "t": "apple",
+      "label": "Apple: UIDevice",
+      "url": "https://developer.apple.com/documentation/uikit/uidevice"
+    },
+    {
+      "t": "android",
+      "label": "Android 12 behavior changes",
+      "url": "https://developer.android.com/about/versions/12/behavior-changes-12"
+    }
+  ],
+  "confidence": "docs"
+}

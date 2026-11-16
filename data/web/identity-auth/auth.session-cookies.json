@@ -1,0 +1,233 @@
+{
+  "id": "web.auth.session-cookies",
+  "name": "Session cookies and tokens",
+  "kind": "capability",
+  "group": "identity-auth",
+  "subgroup": "Session security",
+  "tags": [
+    "session",
+    "httponly",
+    "samesite",
+    "__host"
+  ],
+  "plain": "The cookie or token that keeps a person signed in between pages.",
+  "meaning": "A random session ID (OWASP: at least 64 bits of entropy) ties each request to an account. Whoever holds it is the person. Timeouts are 2 to 5 minutes idle for high risk apps and up to 30 minutes for low risk, per OWASP.",
+  "lifecycle": [
+    "signed-in",
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "Set-Cookie: sid=...; HttpOnly; Secure; SameSite=Lax; __Host- prefix",
+      "access": {
+        "grant": "none",
+        "prompt_ui": "None",
+        "secure_context": false,
+        "user_gesture": false,
+        "persistence": "Session until browser close, or persistent up to 400 days. Idle and absolute server timeouts apply",
+        "revocation": "Clear site data, browser privacy settings",
+        "iframe": "",
+        "steps": []
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "1",
+          "note": ":Standard in every browser",
+          "date": "2008-12-11"
+        },
+        "edge": {
+          "s": "y",
+          "v": "1",
+          "note": ":Standard in every browser",
+          "date": ""
+        },
+        "firefox": {
+          "s": "y",
+          "v": "1",
+          "note": ":Standard in every browser",
+          "date": "2004-11-09"
+        },
+        "safari": {
+          "s": "y",
+          "v": "1",
+          "note": ":Standard in every browser",
+          "date": "2003-06-23"
+        },
+        "ios_safari": {
+          "s": "y",
+          "v": "1",
+          "note": ":Standard in every browser",
+          "date": "2007-06-29"
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "1",
+          "note": ":Standard in every browser",
+          "date": ""
+        },
+        "samsung": {
+          "s": "y",
+          "v": "1",
+          "note": ":Standard in every browser",
+          "date": "2013-04-27"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "string",
+    "metric": "Session ID",
+    "update": "per request",
+    "fields": [
+      {
+        "name": "entropy",
+        "type": "integer",
+        "unit": "bits",
+        "range": "at least 64, 128 recommended",
+        "precision": "exact"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can keep you signed in between pages with a small ID stored in your browser",
+    "user_action": "Nothing extra. It starts when you sign in and continues as you click around",
+    "can": [
+      "Remember who you are on every page you open until you sign out or it times out",
+      "Keep items in your cart or settings tied to your signed in session",
+      "Sign you out automatically after a set time, often 2 to 30 minutes of no activity",
+      "Treat anyone who holds that ID as you"
+    ],
+    "cannot": [
+      "Know who you are after the session ends or you clear cookies",
+      "Follow you onto other sites; the ID belongs to this site",
+      "Show your password; only a random session ID is stored",
+      "Stay valid after you sign out on a well built site"
+    ],
+    "reach": 3,
+    "reach_label": "Whole session, until sign out",
+    "differs": ""
+  },
+  "story": {
+    "what_it_is": "A small token that keeps you signed in as you move from page to page.",
+    "icon": "cookie",
+    "tags": [
+      "Sign in",
+      "Cookies",
+      "Always on"
+    ],
+    "marketing": [],
+    "for_you": "You sign in once and stay signed in while you click around, add things to a cart or play a web game. You never see the token. If it times out you are asked to sign in again.",
+    "for_makers": "Every logged in site needs a way to remember who you are between clicks. Makers also use the same token to count active users, limit abuse, and tie purchases and saved progress to the right account.",
+    "use_cases": [
+      {
+        "type": "games",
+        "example": "A browser game keeps a player signed in so a multiplayer match, friends list and in game purchases all point to the same account.",
+        "apps": [
+          "Roblox",
+          "Wordle (NYT)",
+          "Poki"
+        ]
+      },
+      {
+        "type": "shopping",
+        "example": "A cart stays full while a shopper browses for an hour, and the checkout page knows who they are.",
+        "apps": [
+          "Amazon",
+          "Etsy"
+        ]
+      },
+      {
+        "type": "banking",
+        "example": "A bank signs a person out after a few minutes of quiet and ties each session to one browser to block hijacking.",
+        "apps": []
+      },
+      {
+        "type": "video",
+        "example": "A video call web app keeps the host signed in while a meeting runs, so screen sharing and chat stay linked to their account.",
+        "apps": [
+          "Google Meet",
+          "Zoom"
+        ]
+      },
+      {
+        "type": "security",
+        "example": "A fraud engine watches for a session token suddenly used from a different country or device, which hints at theft.",
+        "apps": []
+      },
+      {
+        "type": "analytics",
+        "example": "A product team counts how many signed in people are active each day by counting session tokens.",
+        "apps": [
+          "Google Analytics"
+        ]
+      },
+      {
+        "type": "creative",
+        "example": "A design web app keeps every browser tab signed in so edits sync live to a teammate's view.",
+        "apps": [
+          "Figma",
+          "Canva"
+        ]
+      }
+    ],
+    "risks": [
+      "Stolen token equals stolen account",
+      "Long sessions on shared computers"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "HttpOnly hides it from scripts",
+    "__Host- prefix forces Secure, Path=/ and no Domain",
+    "Chrome caps lifetime at 400 days",
+    "Browser restore can bring session cookies back after restart"
+  ],
+  "scores": {
+    "sensitivity": 5,
+    "utility": 5,
+    "fingerprint_bits": null,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Keeping a person signed in"
+    ],
+    "abuse": [
+      "Session theft and fixation"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2020-02",
+      "browser": "chrome",
+      "version": "80",
+      "change": "SameSite=Lax default reduced CSRF"
+    }
+  ],
+  "related": [
+    "web.storage.cookies-first-party",
+    "web.auth.dbsc"
+  ],
+  "refs": [
+    {
+      "t": "vendor",
+      "label": "OWASP Session Management Cheat Sheet",
+      "url": "https://cheatsheetseries.owasp.org/cheatsheets/Session_Management_Cheat_Sheet.html"
+    },
+    {
+      "t": "mdn",
+      "label": "MDN Set-Cookie prefixes",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/Set-Cookie#cookie_prefixes"
+    }
+  ],
+  "confidence": "docs"
+}

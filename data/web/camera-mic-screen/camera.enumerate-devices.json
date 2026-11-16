@@ -1,0 +1,259 @@
+{
+  "id": "web.camera.enumerate-devices",
+  "name": "enumerateDevices label gating",
+  "kind": "signal",
+  "group": "camera-mic-screen",
+  "subgroup": "Capture",
+  "tags": [
+    "fingerprint"
+  ],
+  "plain": "Lists camera, microphone and speaker counts; names only after permission.",
+  "meaning": "Reveals how many cameras, mics and speakers exist (before consent, labels empty), and device names after consent. Counts and kinds are a mild fingerprint and show setup type.",
+  "lifecycle": [
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "navigator.mediaDevices.enumerateDevices(); devicechange event",
+      "permission_name": "camera or microphone (for labels)",
+      "bcd": [
+        "api.MediaDevices.enumerateDevices"
+      ],
+      "access": {
+        "grant": "none",
+        "prompt_ui": "No prompt for the counts; labels appear once the origin has an active camera or microphone grant.",
+        "secure_context": true,
+        "user_gesture": false,
+        "persistence": "Per origin once permitted",
+        "revocation": "Revoke camera or microphone",
+        "iframe": "Not delegated; follows the frame's own grants",
+        "steps": [
+          "Call enumerateDevices()",
+          "Receive list with kind and deviceId",
+          "Labels empty until getUserMedia has been granted",
+          "Listen to devicechange for plug events"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "47",
+          "note": "",
+          "date": "2015-12-01"
+        },
+        "edge": {
+          "s": "y",
+          "v": "12",
+          "note": "",
+          "date": "2015-07-29"
+        },
+        "firefox": {
+          "s": "y",
+          "v": "116",
+          "note": "",
+          "date": "2023-08-01"
+        },
+        "safari": {
+          "s": "y",
+          "v": "11",
+          "note": "",
+          "date": "2017-09-19"
+        },
+        "ios_safari": {
+          "s": "y",
+          "v": "11",
+          "note": "",
+          "date": "2017-09-19"
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "47",
+          "note": "",
+          "date": "2015-12-02"
+        },
+        "samsung": {
+          "s": "y",
+          "v": "5.0",
+          "note": "",
+          "date": "2016-12-15"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "list",
+    "metric": "Devices with kind, deviceId, groupId and label",
+    "update": "on call and on devicechange",
+    "fields": [
+      {
+        "name": "kind",
+        "type": "enum",
+        "unit": "none",
+        "range": "audioinput, audiooutput, videoinput",
+        "precision": "3 kinds"
+      },
+      {
+        "name": "deviceId",
+        "type": "string",
+        "unit": "opaque id",
+        "range": "per-origin",
+        "precision": "32 hex"
+      },
+      {
+        "name": "groupId",
+        "type": "string",
+        "unit": "opaque id",
+        "range": "shared by a physical device's inputs and outputs",
+        "precision": "32 hex"
+      },
+      {
+        "name": "label",
+        "type": "string",
+        "unit": "text",
+        "range": "empty without grant",
+        "precision": "device name"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can count your cameras, mics and speakers, but names stay hidden until you allow access",
+    "user_action": "Nothing. It happens when a call or recording page loads",
+    "can": [
+      "Tell how many cameras, microphones and speakers you have",
+      "Find out which kinds of devices exist before asking for access",
+      "Show device names after you have allowed the camera or microphone"
+    ],
+    "cannot": [
+      "See device names before the site has camera or microphone access",
+      "Turn any device on or capture anything by itself",
+      "Show a prompt, so you only know it happened if the site tells you",
+      "List devices that are unplugged"
+    ],
+    "reach": 1,
+    "reach_label": "A device count, no content",
+    "differs": ""
+  },
+  "story": {
+    "what_it_is": "Lets a site count your cameras, mics and speakers, and see their names only after you allow access.",
+    "icon": "list-checks",
+    "tags": [
+      "Devices",
+      "Silent",
+      "Fingerprinting"
+    ],
+    "marketing": [
+      {
+        "vendor": "Mozilla",
+        "name": "enumerateDevices",
+        "pitch": "Developer docs say it lists media input and output devices, with labels hidden until the person grants access.",
+        "url": "https://developer.mozilla.org/en-US/docs/Web/API/MediaDevices/enumerateDevices"
+      }
+    ],
+    "for_you": "You never see this one run. It happens in the background as a call page loads, so the site can show you a camera picker. Before you allow access, it only learns how many devices you have, not their names.",
+    "for_makers": "Call sites need a list of devices to build the camera and mic picker, and to pick a sensible default. Fraud and ad scripts can also use the device counts as one small clue in a device fingerprint. The maker gets setup data without asking you a thing.",
+    "use_cases": [
+      {
+        "type": "video",
+        "example": "A web call opens a settings panel with a drop down of your headset, built in laptop mic and webcam, so you can choose the right one.",
+        "apps": [
+          "Google Meet",
+          "Zoom web"
+        ]
+      },
+      {
+        "type": "games",
+        "example": "A browser game with voice chat lists your microphones, so you can pick your headset and not the laptop mic.",
+        "apps": [
+          "Discord web"
+        ]
+      },
+      {
+        "type": "security",
+        "example": "A fraud check notices a visitor has no cameras or mics at all, which is common for bots in a cloud server, and adds a risk point.",
+        "apps": [
+          "HUMAN Security",
+          "Arkose Labs"
+        ]
+      },
+      {
+        "type": "ads",
+        "example": "An ad script quietly counts your audio and video devices, and combines them with your screen size and fonts to build a device ID.",
+        "apps": []
+      },
+      {
+        "type": "live",
+        "example": "A streaming page checks whether a webcam is present before showing a Go live button, so it does not offer the feature when it cannot work.",
+        "apps": [
+          "StreamYard",
+          "Twitch"
+        ]
+      },
+      {
+        "type": "developer",
+        "example": "A support tool logs device counts when a call fails, so engineers can see that a customer with no mic was stuck.",
+        "apps": [
+          "Daily",
+          "Twilio Video"
+        ]
+      }
+    ],
+    "risks": [
+      "Counts add to a device fingerprint",
+      "Reveals what gear you own"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Labels need a grant",
+    "Device ids reset when site data is cleared",
+    "No serial numbers or vendor ids"
+  ],
+  "scores": {
+    "sensitivity": 2,
+    "utility": 3,
+    "fingerprint_bits": 3,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Audio and video device pickers"
+    ],
+    "abuse": [
+      "Counting devices to tell setup type",
+      "Persistent ids once granted"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": true,
+      "how": "LinkedIn script enumerates devices and records kinds and counts without labels"
+    }
+  },
+  "history": [
+    {
+      "date": "2025-09",
+      "browser": "safari",
+      "version": "26",
+      "change": "Safari returns no devices when permission is denied and stops checking permission in enumerateDevices"
+    }
+  ],
+  "related": [
+    "web.camera.camera",
+    "web.camera.microphone"
+  ],
+  "refs": [
+    {
+      "t": "mdn",
+      "label": "MDN enumerateDevices",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/MediaDevices/enumerateDevices"
+    },
+    {
+      "t": "spec",
+      "label": "W3C Media Capture and Streams",
+      "url": "https://www.w3.org/TR/mediacapture-streams/"
+    }
+  ],
+  "confidence": "docs"
+}

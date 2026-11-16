@@ -1,0 +1,214 @@
+{
+  "id": "web.peripherals.face-text-detection",
+  "name": "Shape Detection: FaceDetector and TextDetector",
+  "kind": "capability",
+  "group": "peripherals-hardware",
+  "subgroup": "Shape detection",
+  "tags": [
+    "shape detection"
+  ],
+  "plain": "Finds faces and printed text in an image (experimental flag only).",
+  "meaning": "Face boxes and text blocks from images without server calls. Experimental and off by default; not a stable surface.",
+  "lifecycle": [
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "new FaceDetector().detect(img), new TextDetector().detect(img)",
+      "access": {
+        "grant": "settings",
+        "prompt_ui": "Flag chrome://flags/#enable-experimental-web-platform-features",
+        "secure_context": true,
+        "user_gesture": false,
+        "persistence": "Per origin",
+        "revocation": "Site settings",
+        "iframe": "Same as top level; cross-origin iframes need a permissions policy where listed",
+        "steps": [
+          "Call the API",
+          "Browser applies its access rules",
+          "Page receives the result"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "f",
+          "v": "",
+          "note": "Experimental flag only"
+        },
+        "edge": {
+          "s": "f",
+          "v": "",
+          "note": "Experimental flag only"
+        },
+        "firefox": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "safari": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "ios_safari": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "chrome_android": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "samsung": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "object",
+    "metric": "Finds faces and printed text in an image (experimental flag only).",
+    "update": "on demand",
+    "fields": [
+      {
+        "name": "boundingBox",
+        "type": "object",
+        "unit": "pixels",
+        "range": "image rect"
+      },
+      {
+        "name": "landmarks[]",
+        "type": "list",
+        "unit": "pixels",
+        "range": "eyes, nose, mouth"
+      },
+      {
+        "name": "text (TextDetector)",
+        "type": "string",
+        "range": "recognised text"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can find faces and printed text in a picture, but only with a special setting on",
+    "user_action": "You turn on a flag in Chrome, then pick or load a picture.",
+    "can": [
+      "Find where faces are in a picture, without naming them",
+      "Find where printed text sits in a picture",
+      "Work on a photo or a camera frame the page already has"
+    ],
+    "cannot": [
+      "Work in normal Chrome, Edge, Firefox or Safari without the flag turned on",
+      "Tell who a person is",
+      "Work on Android or iPhone browsers",
+      "Work on pictures the page does not have"
+    ],
+    "reach": 1,
+    "reach_label": "A picture it already has",
+    "differs": "Only desktop Chrome and Edge with a flag turned on. No phone browsers."
+  },
+  "story": {
+    "what_it_is": "A page can find faces and printed words in a picture, but only in a test mode.",
+    "icon": "scan-face",
+    "tags": [
+      "Camera",
+      "Experimental",
+      "Privacy"
+    ],
+    "marketing": [
+      {
+        "vendor": "Google",
+        "name": "Shape Detection API",
+        "pitch": "Chrome's docs describe detecting faces, barcodes and text in images, with faces and text still behind a flag.",
+        "url": "https://developer.chrome.com/docs/capabilities/shape-detection"
+      }
+    ],
+    "for_you": "You will not meet it on normal sites. It is behind a flag, so only people who turn it on see it.",
+    "for_makers": "Makers would use it for photo tags, camera filters and reading text from pictures. It is not on by default because face finding raises privacy worries.",
+    "use_cases": [
+      {
+        "type": "creative",
+        "example": "A photo editor crops a picture around the faces it finds.",
+        "apps": []
+      },
+      {
+        "type": "social",
+        "example": "A camera filter app places stickers on faces.",
+        "apps": []
+      },
+      {
+        "type": "education",
+        "example": "A tool reads text on a worksheet photo for a translator.",
+        "apps": [
+          "Google Translate"
+        ]
+      },
+      {
+        "type": "accessibility",
+        "example": "A page reads out the text in a picture to a blind user.",
+        "apps": []
+      },
+      {
+        "type": "security",
+        "example": "A bad site could count faces in a photo you upload.",
+        "apps": []
+      },
+      {
+        "type": "games",
+        "example": "A browser game moves a character as you turn your head.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Face scanning",
+      "Not widely supported"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "No stable release in any browser",
+    "No BCD entry"
+  ],
+  "scores": {
+    "sensitivity": 3,
+    "utility": 2,
+    "fingerprint_bits": null,
+    "friction": 3
+  },
+  "value": {
+    "legit_uses": [
+      "Photo tagging",
+      "Accessibility"
+    ],
+    "abuse": [
+      "Face detection without consent"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2018",
+      "browser": "chrome",
+      "version": "",
+      "change": "Introduced behind experimental flag; no stable release since"
+    }
+  ],
+  "refs": [
+    {
+      "t": "spec",
+      "label": "Shape Detection",
+      "url": "https://wicg.github.io/shape-detection-api/"
+    }
+  ],
+  "confidence": "inferred"
+}

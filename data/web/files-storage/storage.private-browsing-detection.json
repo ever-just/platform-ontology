@@ -1,0 +1,205 @@
+{
+  "id": "web.storage.private-browsing-detection",
+  "name": "Incognito and private mode detection",
+  "kind": "signal",
+  "group": "files-storage",
+  "subgroup": "Storage",
+  "tags": [
+    "incognito",
+    "private-browsing",
+    "fingerprint"
+  ],
+  "plain": "Guesses whether the browser is in private mode using storage quota behavior.",
+  "meaning": "Tells the site when someone is deliberately browsing privately. LinkedIn's script uses the FileSystem quota (Chrome 74 and older) or storage.estimate.",
+  "lifecycle": [
+    "on-arrival",
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "webkitRequestFileSystem quota; navigator.storage.estimate()",
+      "bcd": [
+        "api.StorageManager.estimate"
+      ],
+      "access": {
+        "grant": "none",
+        "prompt_ui": "None (no browser prompt)",
+        "secure_context": false,
+        "user_gesture": false,
+        "persistence": "",
+        "revocation": "",
+        "iframe": "",
+        "steps": [
+          "Script reads the value",
+          "Value joins the fingerprint payload"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "61",
+          "note": "estimate()",
+          "date": "2017-09-05"
+        },
+        "edge": {
+          "s": "y",
+          "v": "79",
+          "note": "",
+          "date": "2020-01-15"
+        },
+        "firefox": {
+          "s": "y",
+          "v": "57",
+          "note": "",
+          "date": "2017-11-14"
+        },
+        "safari": {
+          "s": "y",
+          "v": "17",
+          "note": "",
+          "date": "2023-09-18"
+        },
+        "ios_safari": {
+          "s": "y",
+          "v": "17",
+          "note": "",
+          "date": "2023-09-18"
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "61",
+          "note": "",
+          "date": "2017-09-05"
+        },
+        "samsung": {
+          "s": "y",
+          "v": "8.0",
+          "note": "",
+          "date": "2018-07-18"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "boolean",
+    "metric": "Incognito and private mode detection",
+    "update": "read on demand",
+    "fields": [
+      {
+        "name": "incognito",
+        "type": "boolean",
+        "unit": "",
+        "range": "",
+        "precision": "heuristic"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can guess whether you are in a private or Incognito window",
+    "user_action": "Nothing. It happens when the page loads.",
+    "can": [
+      "Test how much storage it gets, to guess private mode",
+      "Change what it shows, such as article limits",
+      "Add the guess to a profile of you"
+    ],
+    "cannot": [
+      "Be sure, since the guess can be wrong as browsers change",
+      "See your history or what you do in the private window",
+      "Tell your name or account from this"
+    ],
+    "reach": 1,
+    "reach_label": "A guess, taken once",
+    "differs": ""
+  },
+  "story": {
+    "what_it_is": "A site guesses whether you are in private mode by testing how the browser stores data.",
+    "icon": "venetian-mask",
+    "tags": [
+      "Private mode",
+      "Silent",
+      "Detection"
+    ],
+    "marketing": [],
+    "for_you": "You are never asked and never see it. A site can notice that private mode saves less data, and may then change what it shows you.",
+    "for_makers": "Makers use it to enforce paywalls, spot fraud and avoid broken sites. Some publishers hide articles or ask people to log in. Privacy groups say this penalises people who want privacy.",
+    "use_cases": [
+      {
+        "type": "news",
+        "example": "A news site notices private mode and blocks the free article count, asking you to sign in.",
+        "apps": []
+      },
+      {
+        "type": "security",
+        "example": "A bank or fraud service treats a private mode login as a little riskier and may add a code step.",
+        "apps": []
+      },
+      {
+        "type": "ads",
+        "example": "An ad network sees private mode and does not store a profile ID for this visit.",
+        "apps": []
+      },
+      {
+        "type": "games",
+        "example": "A browser game warns that your progress cannot be saved in private mode.",
+        "apps": []
+      },
+      {
+        "type": "shopping",
+        "example": "A store warns that the cart will vanish when you close the private window.",
+        "apps": []
+      },
+      {
+        "type": "analytics",
+        "example": "A site team counts private mode visits to understand how many are missing from stats.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Penalises privacy",
+      "Not fully reliable"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Browsers keep closing the leaks",
+    "Heuristic, can be wrong"
+  ],
+  "scores": {
+    "sensitivity": 2,
+    "utility": 3,
+    "fingerprint_bits": 1,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Paywall metering"
+    ],
+    "abuse": [
+      "Singles out privacy seekers"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": true,
+      "how": "Collector key(s): incognito. "
+    }
+  },
+  "related": [
+    "web.tracking.linkedin-apfc-fingerprint"
+  ],
+  "refs": [
+    {
+      "t": "mdn",
+      "label": "MDN StorageManager.estimate",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/StorageManager/estimate"
+    },
+    {
+      "t": "github",
+      "label": "mdp/linkedin-extension-fingerprinting (LinkedIn script snapshot and ID list)",
+      "url": "https://github.com/mdp/linkedin-extension-fingerprinting"
+    }
+  ],
+  "confidence": "docs"
+}

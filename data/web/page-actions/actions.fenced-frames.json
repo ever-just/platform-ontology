@@ -1,0 +1,225 @@
+{
+  "id": "web.actions.fenced-frames",
+  "name": "Fenced frames",
+  "kind": "capability",
+  "group": "page-actions",
+  "subgroup": "Isolation",
+  "tags": [
+    "fenced-frames",
+    "privacy-sandbox",
+    "ads"
+  ],
+  "plain": "Embeds content that cannot talk to or be read by the page around it.",
+  "meaning": "Used by ad auctions so the embedding page cannot see which ad rendered. It separates the frame's storage and messaging from the parent to block link-back tracking.",
+  "lifecycle": [
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "<fencedframe>; HTMLFencedFrameElement; Fence API",
+      "bcd": [
+        "html.elements.fencedframe",
+        "api.HTMLFencedFrameElement"
+      ],
+      "access": {
+        "grant": "none",
+        "prompt_ui": "None (no browser prompt)",
+        "secure_context": true,
+        "user_gesture": false,
+        "activation": "none",
+        "persistence": "While the frame lives",
+        "revocation": "Nothing to revoke (no permission is stored)",
+        "iframe": "Needs opt-in headers (Supports-Loading-Mode: fenced-frame)",
+        "steps": [
+          "Page creates fencedframe",
+          "Browser loads from URN or opaque URL",
+          "Frame cannot read parent, parent cannot read frame"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "126",
+          "note": "",
+          "date": "2024-06-11"
+        },
+        "edge": {
+          "s": "y",
+          "v": "126",
+          "note": "",
+          "date": "2024-06-13"
+        },
+        "firefox": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "safari": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "ios_safari": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "126",
+          "note": "",
+          "date": "2024-06-11"
+        },
+        "samsung": {
+          "s": "y",
+          "v": "28.0",
+          "note": "",
+          "date": "2025-04-02"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "none",
+    "metric": "",
+    "update": "",
+    "fields": []
+  },
+  "limits": {
+    "headline": "Can embed a box of content that the page around it cannot look into",
+    "user_action": "Nothing. It happens when the page loads, usually where an ad or a widget sits.",
+    "can": [
+      "Show an ad or widget inside the page",
+      "Keep the embedded content walled off from the host site",
+      "Let ad systems pick an ad without sharing your details with the page"
+    ],
+    "cannot": [
+      "Share what is inside the box with the page around it",
+      "Send scrolling or clicks to the host site beyond what the rules allow",
+      "Work in Firefox or Safari, including on iPhone",
+      "Be used by every site yet; it is still limited and new"
+    ],
+    "reach": 1,
+    "reach_label": "A sealed box inside the page",
+    "differs": "Only Chrome based browsers support it today. Firefox and Safari do not."
+  },
+  "story": {
+    "what_it_is": "A box inside a page that is sealed off, so neither side can read the other.",
+    "icon": "frame",
+    "tags": [
+      "Ads",
+      "Privacy",
+      "Silent"
+    ],
+    "marketing": [
+      {
+        "vendor": "Google",
+        "name": "Fenced Frame",
+        "pitch": "Chrome's Privacy Sandbox docs describe it as a frame that can show content without sharing information with the embedding page.",
+        "url": "https://developer.chrome.com/docs/privacy-sandbox/fenced-frame/"
+      }
+    ],
+    "for_you": "You see an ad or embed as normal. What you cannot see is that the page around it is blocked from learning which ad it is, which was meant to stop sites linking your browsing across pages.",
+    "for_makers": "It lets ad tech pick an ad using your interests without handing your identity to the publisher. Advertisers still get counts of views and clicks through special reports, so measurement stays alive.",
+    "use_cases": [
+      {
+        "type": "ads",
+        "example": "An interest based ad is chosen in your browser and shown in a sealed frame, so the news site cannot see which ad you were shown.",
+        "apps": [
+          "Google Ads",
+          "Protected Audience"
+        ]
+      },
+      {
+        "type": "analytics",
+        "example": "An ad network counts that an ad was shown, using a limited summary report instead of a per person log.",
+        "apps": []
+      },
+      {
+        "type": "security",
+        "example": "A payment or login widget is shown in a frame that the host page cannot peek inside.",
+        "apps": []
+      },
+      {
+        "type": "media",
+        "example": "A publisher runs an ad slot on an article page without ever learning your ad profile.",
+        "apps": []
+      },
+      {
+        "type": "shopping",
+        "example": "A retailer retargets you with a product you viewed, without the news site you are reading ever seeing it.",
+        "apps": []
+      },
+      {
+        "type": "games",
+        "example": "A browser game shows rewarded video ads in a sealed frame so the ad cannot read the game page.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Hard to inspect ads",
+      "Still used for tracking"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "No postMessage or storage sharing with the embedder; no access to the DOM from the parent",
+    "Fixed size rules for opaque URLs (no custom size) when used with auctions",
+    "Privacy Sandbox APIs were deprecated by Google in 2025; the feature remains in Chrome but ecosystem use is shrinking (verify current status)",
+    "Supported only in Chromium"
+  ],
+  "scores": {
+    "sensitivity": 1,
+    "utility": 2,
+    "fingerprint_bits": null,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Privacy preserving ads"
+    ],
+    "abuse": [
+      "Opaque ads that hide content from site owners"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2024-06",
+      "browser": "chrome",
+      "version": "126",
+      "change": "Fenced frames ship with Privacy Sandbox"
+    },
+    {
+      "date": "2025-10",
+      "browser": "chrome",
+      "version": "141",
+      "change": "Google announces sunset of Privacy Sandbox ad APIs"
+    }
+  ],
+  "refs": [
+    {
+      "t": "mdn",
+      "label": "MDN Fenced frame API",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/Fenced_frame_API"
+    },
+    {
+      "t": "spec",
+      "label": "WICG Fenced Frame",
+      "url": "https://wicg.github.io/fenced-frame/"
+    },
+    {
+      "t": "vendor",
+      "label": "Privacy Sandbox fenced frames",
+      "url": "https://developers.google.com/privacy-sandbox/private-advertising/fenced-frame"
+    }
+  ],
+  "confidence": "docs"
+}

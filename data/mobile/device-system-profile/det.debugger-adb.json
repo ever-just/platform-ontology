@@ -1,0 +1,173 @@
+{
+  "id": "mob.det.debugger-adb",
+  "name": "Debugger, hooks and developer mode flags",
+  "kind": "signal",
+  "group": "device-system-profile",
+  "subgroup": "Integrity",
+  "tags": [
+    "debugger",
+    "adb",
+    "developer-options"
+  ],
+  "plain": "Apps can read whether ADB, developer options or a debugger are on.",
+  "meaning": "Used in anti-tamper and fraud checks. Reveals a technical person or a reverse-engineer.",
+  "lifecycle": [
+    "on-launch",
+    "in-session"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "y",
+      "v": "4.2",
+      "api": 17,
+      "permission": "",
+      "protection": "none",
+      "grant": "none",
+      "prompt_ui": "",
+      "persistence": "",
+      "revocation": "",
+      "store_policy": "",
+      "api_surface": "Settings.Global.ADB_ENABLED, DEVELOPMENT_SETTINGS_ENABLED, Debug.isDebuggerConnected()",
+      "note": "Readable with no permission"
+    },
+    "ios": {
+      "s": "p",
+      "v": "2.0",
+      "permission": "none",
+      "protection": "none",
+      "grant": "none",
+      "prompt_ui": "",
+      "persistence": "",
+      "revocation": "",
+      "store_policy": "",
+      "api_surface": "Heuristic",
+      "note": ""
+    }
+  },
+  "web_equivalents": [
+    "web.device.webdriver-flag"
+  ],
+  "data": {
+    "type": "boolean",
+    "metric": "Flags",
+    "update": "On check",
+    "fields": [
+      {
+        "name": "adb",
+        "type": "boolean",
+        "unit": "",
+        "range": "true, false",
+        "precision": "1 bit"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can check if developer mode or a debugger is turned on, with no prompt on Android",
+    "user_action": "Nothing. The app checks when it starts or before a sensitive step",
+    "can": [
+      "Check if Android USB debugging is on",
+      "Check if Android developer options are on",
+      "Check if a debugger is attached to the app",
+      "Guess on iPhone with indirect tests, which are not reliable"
+    ],
+    "cannot": [
+      "Turn developer mode on or off",
+      "See what you are doing in a debugger",
+      "Get a clear yes or no on iPhone; no official flag exists",
+      "Tell why developer mode is on"
+    ],
+    "reach": 1,
+    "reach_label": "A quick check at one moment",
+    "differs": "Android shows apps these settings directly. On iPhone apps only guess from side effects."
+  },
+  "story": {
+    "what_it_is": "Apps can check if your phone is in developer mode or is being debugged.",
+    "icon": "bug",
+    "tags": [
+      "Security",
+      "Silent",
+      "Developer"
+    ],
+    "marketing": [],
+    "for_you": "You never see this check. Some apps refuse to run or log you out if developer options or a debugger are on. If you are a technical person, an app may act oddly just because you left them on.",
+    "for_makers": "Banks and games use it to catch people who poke at the app, copy it or cheat. It is one of many signals added to a risk score, not proof on its own.",
+    "use_cases": [
+      {
+        "type": "banking",
+        "example": "A bank app refuses to open while USB debugging is on, to block screen readers that steal logins.",
+        "apps": []
+      },
+      {
+        "type": "games",
+        "example": "A competitive game flags a player running a debugger to change scores or speed.",
+        "apps": []
+      },
+      {
+        "type": "payments",
+        "example": "A payment app asks for extra checks when developer mode is on.",
+        "apps": []
+      },
+      {
+        "type": "security",
+        "example": "A security tool counts debugger flags among signs of reverse engineering of an app.",
+        "apps": []
+      },
+      {
+        "type": "media",
+        "example": "A streaming app blocks playback when a debugger could capture protected video.",
+        "apps": []
+      },
+      {
+        "type": "ads",
+        "example": "An ad firm discards traffic from phones in debug mode as likely test or fraud.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Punishes tinkerers",
+      "False alarms"
+    ],
+    "android_note": "Apps can read settings for ADB and developer options with no prompt.",
+    "ios_note": "iPhone apps can detect a debugger attached to the app, but not Settings flags."
+  },
+  "technical_bounds": [
+    "Heuristic only"
+  ],
+  "scores": {
+    "sensitivity": 2,
+    "utility": 3,
+    "fingerprint_bits": 2,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Anti-tamper"
+    ],
+    "abuse": [
+      "Fingerprint"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "related": [
+    "mob.det.root-jailbreak"
+  ],
+  "refs": [
+    {
+      "t": "android",
+      "label": "Android: Settings.Secure",
+      "url": "https://developer.android.com/reference/android/provider/Settings.Secure"
+    },
+    {
+      "t": "apple",
+      "label": "Apple: ProcessInfo",
+      "url": "https://developer.apple.com/documentation/foundation/processinfo"
+    }
+  ],
+  "confidence": "docs"
+}

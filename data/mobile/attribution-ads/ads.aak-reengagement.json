@@ -1,0 +1,201 @@
+{
+  "id": "mob.ads.aak-reengagement",
+  "name": "AdAttributionKit re-engagement conversions",
+  "kind": "tracking",
+  "group": "attribution-ads",
+  "subgroup": "Apple attribution",
+  "tags": [
+    "aak",
+    "re-engagement",
+    "reopen",
+    "retargeting"
+  ],
+  "plain": "Measures whether an ad brought an existing user back into the app.",
+  "meaning": "SKAN could only count new installs. Re-engagement attribution lets advertisers measure retargeting without an IDFA.",
+  "lifecycle": [
+    "in-session",
+    "before-install"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "n",
+      "v": "",
+      "permission": "",
+      "protection": "none",
+      "grant": "not-exposed",
+      "prompt_ui": "",
+      "persistence": "",
+      "revocation": "",
+      "store_policy": "",
+      "api_surface": "",
+      "note": "No platform equivalent."
+    },
+    "ios": {
+      "s": "y",
+      "v": "17.4",
+      "permission": "",
+      "protection": "none",
+      "grant": "none",
+      "prompt_ui": "",
+      "persistence": "",
+      "revocation": "",
+      "store_policy": "",
+      "api_surface": "AdAttributionKit re-engagement via universal link or URL with conversion tag",
+      "note": "Before iOS 18.4 only one re-engagement window could be active at a time; 18.4 allows overlapping windows through conversion tags."
+    }
+  },
+  "data": {
+    "type": "event",
+    "metric": "Re-engagement postback",
+    "update": "window set by ad network",
+    "fields": [
+      {
+        "name": "conversion tag",
+        "type": "string",
+        "unit": "",
+        "range": "per re-engagement",
+        "precision": ""
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can count whether an ad brought you back to an app you already have, on iPhone",
+    "user_action": "You tap an ad, then open the app you already installed",
+    "can": [
+      "Tell the advertiser an ad led you to reopen the app",
+      "Count it without an ad ID",
+      "Work with overlapping windows from iOS 18.4"
+    ],
+    "cannot": [
+      "Name you or give your device ID in the report",
+      "Report right away; there are delays",
+      "Work on Android; there is no matching feature",
+      "Run more than one window at a time before iOS 18.4"
+    ],
+    "reach": 2,
+    "reach_label": "A delayed count, no ID",
+    "differs": "iPhone only (iOS 17.4 and later). Android has no equivalent."
+  },
+  "story": {
+    "what_it_is": "Apple's way to measure whether an ad brought an existing user back into an app.",
+    "icon": "rotate-ccw",
+    "tags": [
+      "Ads",
+      "Measurement",
+      "Apple"
+    ],
+    "marketing": [
+      {
+        "vendor": "Apple",
+        "name": "AdAttributionKit",
+        "pitch": "Measure installs and re-engagement with privacy preserving reports.",
+        "url": "https://developer.apple.com/documentation/adattributionkit"
+      }
+    ],
+    "for_you": "You tap an ad for an app you already have and it opens. Apple quietly counts that the ad worked, without telling the advertiser who you are.",
+    "for_makers": "Old SKAdNetwork could only count new installs. Re-engagement lets advertisers measure retargeting campaigns, so they can win back lapsed users without the IDFA.",
+    "use_cases": [
+      {
+        "type": "games",
+        "example": "A lapsed player sees 'come back and get a free pack' and returning is counted for the campaign.",
+        "apps": [
+          "Clash Royale",
+          "Roblox"
+        ]
+      },
+      {
+        "type": "shopping",
+        "example": "A shopper taps a sale ad for an app they have and the retailer sees that the ad led to a return.",
+        "apps": [
+          "Target",
+          "Shein"
+        ]
+      },
+      {
+        "type": "rideshare",
+        "example": "A promo for a free ride makes a dormant rider open the app, and the ad network gets the credit.",
+        "apps": [
+          "Lyft"
+        ]
+      },
+      {
+        "type": "media",
+        "example": "A streaming service measures how many ads brought back cancelled subscribers.",
+        "apps": [
+          "Hulu"
+        ]
+      },
+      {
+        "type": "ads",
+        "example": "An ad network reports re-engagement conversions in coarse values after delays.",
+        "apps": []
+      },
+      {
+        "type": "analytics",
+        "example": "A growth team compares the lift from a re-engagement campaign against a control group.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Delayed and coarse data",
+      "Can still measure behavior"
+    ],
+    "android_note": "The Android counterpart for re-engagement was part of the retired Attribution Reporting plan.",
+    "ios_note": "Supported by AdAttributionKit from iOS 17.4."
+  },
+  "technical_bounds": [
+    "Uses the app's open link to carry the tag",
+    "Same crowd anonymity limits"
+  ],
+  "scores": {
+    "sensitivity": 2,
+    "utility": 3,
+    "fingerprint_bits": null,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Retargeting measurement"
+    ],
+    "abuse": [
+      "Reidentification via first-party link params"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2024-03",
+      "platform": "ios",
+      "version": "iOS 17.4",
+      "change": "Re-engagement conversions introduced"
+    },
+    {
+      "date": "2025-03",
+      "platform": "ios",
+      "version": "iOS 18.4",
+      "change": "Overlapping re-engagement windows"
+    }
+  ],
+  "related": [
+    "mob.ads.adattributionkit"
+  ],
+  "refs": [
+    {
+      "t": "apple",
+      "label": "Apple: AdAttributionKit",
+      "url": "https://developer.apple.com/documentation/adattributionkit"
+    },
+    {
+      "t": "vendor",
+      "label": "Adjust: WWDC25 AdAttributionKit",
+      "url": "https://www.adjust.com/blog/wwdc-adattributionkit-2025/"
+    }
+  ],
+  "confidence": "docs"
+}

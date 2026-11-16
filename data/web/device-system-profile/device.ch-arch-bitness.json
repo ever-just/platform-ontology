@@ -1,0 +1,234 @@
+{
+  "id": "web.device.ch-arch-bitness",
+  "name": "Client Hints: architecture and bitness",
+  "kind": "signal",
+  "group": "device-system-profile",
+  "subgroup": "Client Hints",
+  "tags": [
+    "ua-ch",
+    "cpu",
+    "arm-vs-x86"
+  ],
+  "plain": "CPU family (x86 or ARM) and 32 or 64 bit, via high-entropy Client Hints.",
+  "meaning": "Reveals Apple Silicon or Windows on ARM vs Intel or AMD, and bitness. Useful to serve the right binary or WebAssembly build; also splits users into hardware cohorts.",
+  "lifecycle": [
+    "on-arrival",
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "getHighEntropyValues(['architecture','bitness']); Sec-CH-UA-Arch, Sec-CH-UA-Bitness",
+      "bcd": [
+        "api.NavigatorUAData.getHighEntropyValues"
+      ],
+      "access": {
+        "grant": "none",
+        "prompt_ui": "None",
+        "secure_context": true,
+        "user_gesture": false,
+        "persistence": "read fresh on every page load; nothing stored",
+        "revocation": "none needed (no grant)",
+        "iframe": "Readable from cross-origin iframes too (same values)",
+        "steps": [
+          "Page script reads the value",
+          "No prompt is shown"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "90",
+          "note": "",
+          "date": "2021-04-13"
+        },
+        "edge": {
+          "s": "y",
+          "v": "90",
+          "note": "",
+          "date": "2021-04-15"
+        },
+        "firefox": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "safari": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "ios_safari": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "90",
+          "note": "",
+          "date": "2021-04-13"
+        },
+        "samsung": {
+          "s": "y",
+          "v": "23.0",
+          "note": "",
+          "date": "2023-10-18"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "object",
+    "metric": "",
+    "update": "static per session",
+    "fields": [
+      {
+        "name": "architecture",
+        "type": "enum",
+        "unit": "",
+        "range": "x86, arm, empty",
+        "precision": ""
+      },
+      {
+        "name": "bitness",
+        "type": "enum",
+        "unit": "bits",
+        "range": "32, 64, empty",
+        "precision": ""
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can tell if your chip is Intel, AMD, or ARM, and 32 or 64 bit",
+    "user_action": "Nothing. The site asks and Chromium answers without a prompt",
+    "can": [
+      "See whether you have an Apple Silicon, ARM, Intel, or AMD processor",
+      "Check if your system is 32 or 64 bit",
+      "Offer the right download or app build",
+      "Put you into a hardware group for tracking"
+    ],
+    "cannot": [
+      "Work in Firefox, Safari, or on iPhone",
+      "See the exact chip model",
+      "Get an answer until the site asks for it",
+      "See your RAM or disk size"
+    ],
+    "reach": 2,
+    "reach_label": "Chip family, only when the site asks",
+    "differs": "Chrome, Edge, and Samsung Internet answer. Firefox and Safari do not."
+  },
+  "story": {
+    "what_it_is": "Tells a site whether your chip is ARM or Intel, and whether it is 32 or 64 bit.",
+    "icon": "microchip",
+    "tags": [
+      "Hardware",
+      "Silent",
+      "Chrome"
+    ],
+    "marketing": [
+      {
+        "vendor": "Google",
+        "name": "User-Agent Client Hints",
+        "pitch": "Chrome's replacement for the old user agent string: sites ask for the details they need instead of getting everything.",
+        "url": "https://developer.chrome.com/docs/privacy-sandbox/user-agent/"
+      }
+    ],
+    "for_you": "You never see it. It quietly helps a download page offer the right installer, so you do not get an app that will not run on your Mac. It is the kind of detail that stays out of view.",
+    "for_makers": "Software makers need the right build for each chip. Hardware type also splits people into groups: Apple Silicon owners behave differently from budget Windows machines. Fraud teams compare it against what the user agent claims.",
+    "use_cases": [
+      {
+        "type": "developer",
+        "example": "A download page offers the Apple Silicon version of an app to a Mac with an M-series chip and the Intel version to others.",
+        "apps": [
+          "Zoom",
+          "Discord"
+        ]
+      },
+      {
+        "type": "games",
+        "example": "A web game picks a WebAssembly build tuned for 64 bit memory and threads on a capable machine.",
+        "apps": [
+          "Unity WebGL games"
+        ]
+      },
+      {
+        "type": "creative",
+        "example": "A browser photo editor loads the faster build that uses ARM or SIMD instructions.",
+        "apps": [
+          "Photopea"
+        ]
+      },
+      {
+        "type": "ads",
+        "example": "An advertiser targets owners of newer Apple Silicon Macs with an offer for pro tools.",
+        "apps": []
+      },
+      {
+        "type": "analytics",
+        "example": "A product team counts ARM users to decide whether to ship a separate build.",
+        "apps": []
+      },
+      {
+        "type": "security",
+        "example": "A fraud tool sees a claimed iPhone user agent with an Intel desktop chip, and flags a fake device.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Splits people into hardware groups",
+      "Fingerprint piece"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Chromium only",
+    "Chrome may report empty on some platforms"
+  ],
+  "scores": {
+    "sensitivity": 1,
+    "utility": 3,
+    "fingerprint_bits": 1.5,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Serve native installers"
+    ],
+    "abuse": [
+      "Hardware cohorting"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2022-10",
+      "browser": "chrome",
+      "version": "107",
+      "change": "Arch and bitness removed from UA string"
+    }
+  ],
+  "related": [
+    "web.device.ua-client-hints-high",
+    "web.rendering.float-architecture"
+  ],
+  "refs": [
+    {
+      "t": "mdn",
+      "label": "MDN Sec-CH-UA-Arch",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/Sec-CH-UA-Arch"
+    },
+    {
+      "t": "github",
+      "label": "fingerprintjs source: architecture",
+      "url": "https://github.com/fingerprintjs/fingerprintjs/blob/master/src/sources/architecture.ts"
+    }
+  ],
+  "confidence": "docs"
+}

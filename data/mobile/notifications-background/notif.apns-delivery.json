@@ -1,0 +1,246 @@
+{
+  "id": "mob.notif.apns-delivery",
+  "name": "APNs delivery: payload, priority, expiration, collapse",
+  "kind": "capability",
+  "group": "notifications-background",
+  "subgroup": "Push",
+  "tags": [
+    "push",
+    "apns",
+    "payload-limit",
+    "collapse-id"
+  ],
+  "plain": "Apple's push channel: 4 KB payload (5 KB VoIP), priority 10 or 5, optional expiry and collapse id.",
+  "meaning": "Apple holds only the latest push per collapse id and can drop or delay low priority ones. The company learns delivery only as best effort, so apps pair pushes with a fetch on open.",
+  "lifecycle": [
+    "background"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "n",
+      "v": "",
+      "permission": "",
+      "protection": "none",
+      "grant": "not-exposed",
+      "prompt_ui": "",
+      "persistence": "",
+      "revocation": "",
+      "store_policy": "",
+      "api_surface": "",
+      "note": "Android equivalent is FCM; see mob.notif.fcm-delivery"
+    },
+    "ios": {
+      "s": "y",
+      "v": "3.0",
+      "permission": "aps-environment entitlement; apns-push-type header",
+      "protection": "entitlement",
+      "grant": "entitlement",
+      "prompt_ui": "Alert permission prompt for visible notifications",
+      "persistence": "Stored up to 30 days when apns-expiration is omitted; 0 means one delivery attempt; only the newest notification per collapse id is kept",
+      "revocation": "Settings > Notifications; uninstall",
+      "store_policy": "App Review 4.5.4; APNs token auth key or certificate",
+      "api_surface": "api.push.apple.com:443 HTTP/2, UNUserNotificationCenter",
+      "note": "Payload 4096 bytes (5120 for VoIP), uncompressed JSON; apns-collapse-id max 64 bytes; apns-priority 10 immediate, 5 power considerate, 1 never wakes the device; keep HTTP/2 connections open for hours to days"
+    }
+  },
+  "web_equivalents": [
+    "web.notify.push-api",
+    "web.notify.push-declarative-safari"
+  ],
+  "data": {
+    "type": "object",
+    "metric": "APNs request",
+    "update": "Per push",
+    "fields": [
+      {
+        "name": "payload",
+        "type": "binary",
+        "unit": "binary",
+        "range": "0 to 4096 (5120 VoIP)",
+        "precision": "exact"
+      },
+      {
+        "name": "apns-priority",
+        "type": "enum",
+        "unit": "",
+        "range": "10, 5, 1",
+        "precision": ""
+      },
+      {
+        "name": "apns-expiration",
+        "type": "integer",
+        "unit": "unix seconds",
+        "range": "0 or future",
+        "precision": "1 s"
+      },
+      {
+        "name": "apns-collapse-id",
+        "type": "string",
+        "unit": "binary",
+        "range": "up to 64",
+        "precision": ""
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can send alerts to an iPhone through Apple, up to 4 KB of data per message",
+    "user_action": "You allow notifications when the app asks, or you sign in so it can reach your device",
+    "can": [
+      "Send an alert, banner, sound or badge update to your iPhone",
+      "Mark a message as urgent or low priority so it is delivered right away or later",
+      "Replace an older message with a newer one, and let a message expire if you were offline"
+    ],
+    "cannot": [
+      "Send a visible alert if you said Don't Allow",
+      "Send more than about 4 KB per message, or 5 KB for call pushes",
+      "Make a message arrive faster than Apple allows; low priority pushes can wait",
+      "Use this on Android, which has its own system"
+    ],
+    "reach": 3,
+    "reach_label": "Ongoing, whenever the app's server sends",
+    "differs": "Apple's system is APNs. Android uses Google's FCM instead."
+  },
+  "story": {
+    "what_it_is": "Apple's push system that carries small alerts from an app's server to your iPhone.",
+    "icon": "send",
+    "tags": [
+      "Push",
+      "iPhone",
+      "Messaging"
+    ],
+    "marketing": [
+      {
+        "vendor": "Apple",
+        "name": "Apple Push Notification service",
+        "pitch": "Apple describes APNs as the service that securely delivers remote notifications from developers' servers to devices.",
+        "url": "https://developer.apple.com/documentation/usernotifications/setting-up-a-remote-notification-server"
+      }
+    ],
+    "for_you": "You see the alert pop up. Behind the scenes, Apple holds the message, may delay low urgency ones, and keeps only the newest version of a repeated alert.",
+    "for_makers": "Makers use it for messages, delivery and news alerts. Because delivery is best effort, they never rely on one push alone and refetch the real data when the app opens.",
+    "use_cases": [
+      {
+        "type": "messaging",
+        "example": "A chat app sends a tiny alert so your friend's message shows instantly on the lock screen.",
+        "apps": [
+          "iMessage",
+          "WhatsApp"
+        ]
+      },
+      {
+        "type": "delivery",
+        "example": "A courier app sends your package is arriving with high priority.",
+        "apps": [
+          "DoorDash"
+        ]
+      },
+      {
+        "type": "news",
+        "example": "A news app sends breaking news and collapses older alerts so you only see the newest.",
+        "apps": [
+          "NYT",
+          "BBC"
+        ]
+      },
+      {
+        "type": "games",
+        "example": "A game sends your base is under attack to your phone while the app is closed.",
+        "apps": [
+          "Clash of Clans"
+        ]
+      },
+      {
+        "type": "banking",
+        "example": "A bank sends a card was used alert, with a short expiry so it is not late.",
+        "apps": []
+      },
+      {
+        "type": "ads",
+        "example": "A retailer sends a flash sale alert and counts who opened it as a measure of the campaign.",
+        "apps": []
+      },
+      {
+        "type": "live",
+        "example": "A sports app sends goal alerts to fans, with a one time key so duplicates are merged.",
+        "apps": [
+          "ESPN"
+        ]
+      }
+    ],
+    "risks": [
+      "Opens can be tracked",
+      "Spam if overused"
+    ],
+    "android_note": "Android uses FCM instead.",
+    "ios_note": "Alerts need your permission. Messages are small, around 4 KB."
+  },
+  "technical_bounds": [
+    "Delivery is best effort",
+    "Force quit by the user stops background content pushes until relaunch"
+  ],
+  "scores": {
+    "sensitivity": 2,
+    "utility": 5,
+    "fingerprint_bits": null,
+    "friction": 1
+  },
+  "value": {
+    "legit_uses": [
+      "Messaging",
+      "Delivery alerts"
+    ],
+    "abuse": [
+      "Spam; apps tracking opens via pushes"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": true,
+      "how": "LinkedIn iOS app uses APNs for alerts"
+    }
+  },
+  "history": [
+    {
+      "date": "2014-09",
+      "platform": "ios",
+      "version": "iOS 8",
+      "change": "Payload limit raised from 256 bytes to 2 KB on the legacy channel"
+    },
+    {
+      "date": "2015-12",
+      "platform": "ios",
+      "version": "iOS 9 era",
+      "change": "HTTP/2 APNs provider API announced with a 4 KB payload limit"
+    },
+    {
+      "date": "2021-03",
+      "platform": "ios",
+      "version": "APNs",
+      "change": "Legacy binary provider interface switched off; HTTP/2 only"
+    },
+    {
+      "date": "2019-09",
+      "platform": "ios",
+      "version": "iOS 13",
+      "change": "apns-push-type header introduced (required for watchOS, recommended elsewhere)"
+    }
+  ],
+  "related": [
+    "mob.notif.apns-silent-push",
+    "mob.notif.service-extension"
+  ],
+  "refs": [
+    {
+      "t": "apple",
+      "label": "Apple: Sending notification requests to APNs",
+      "url": "https://developer.apple.com/documentation/usernotifications/sending-notification-requests-to-apns"
+    },
+    {
+      "t": "apple",
+      "label": "Apple: Setting up a remote notification server",
+      "url": "https://developer.apple.com/documentation/usernotifications/setting-up-a-remote-notification-server"
+    }
+  ],
+  "confidence": "verified"
+}

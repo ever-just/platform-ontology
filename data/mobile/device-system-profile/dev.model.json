@@ -1,0 +1,214 @@
+{
+  "id": "mob.dev.model",
+  "name": "Device model and manufacturer",
+  "kind": "signal",
+  "group": "device-system-profile",
+  "subgroup": "Identity of hardware",
+  "tags": [
+    "model",
+    "user-agent",
+    "no-prompt",
+    "fingerprint"
+  ],
+  "plain": "Reads exact model and manufacturer on Android; iOS gives a model code via sysctl.",
+  "meaning": "Tells price tier, age, and often region. It is the biggest single device-fingerprint field: Android has thousands of models, iPhone has about 40 live models.",
+  "lifecycle": [
+    "on-launch",
+    "in-session"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "y",
+      "v": "1.0",
+      "api": 1,
+      "permission": "",
+      "protection": "none",
+      "grant": "none",
+      "prompt_ui": "No prompt",
+      "persistence": "n/a",
+      "revocation": "n/a",
+      "store_policy": "",
+      "api_surface": "Build.MODEL, MANUFACTURER, BRAND, DEVICE, PRODUCT, HARDWARE",
+      "note": "Free text, for example Pixel 9 Pro; about 10,000 distinct models in the wild"
+    },
+    "ios": {
+      "s": "p",
+      "v": "2.0",
+      "permission": "none",
+      "protection": "none",
+      "grant": "none",
+      "prompt_ui": "No prompt",
+      "persistence": "n/a",
+      "revocation": "n/a",
+      "store_policy": "",
+      "api_surface": "hw.machine is not in the Required Reason list; the marketing name needs a lookup table",
+      "note": "Marketing name not exposed; model identifier such as iPhone16,1 is"
+    }
+  },
+  "web_equivalents": [
+    "web.device.ch-model",
+    "web.notexposed.ios-device-model",
+    "web.device.user-agent-string",
+    "web.device.hardware-concurrency"
+  ],
+  "data": {
+    "type": "string",
+    "metric": "Model string",
+    "update": "Static",
+    "fields": [
+      {
+        "name": "model",
+        "type": "string",
+        "unit": "",
+        "range": "about 10,000 Android values",
+        "precision": "exact"
+      },
+      {
+        "name": "hw_machine",
+        "type": "string",
+        "unit": "",
+        "range": "about 40 iPhone codes",
+        "precision": "exact"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can see your exact phone model and maker on Android, and a model code on iPhone",
+    "user_action": "Nothing. The app can ask the moment it opens",
+    "can": [
+      "See your exact Android model and brand, such as Pixel 9 Pro",
+      "See an iPhone model code, such as iPhone16,1",
+      "Pick layouts and fixes for your kind of phone",
+      "Tell your phone apart from one of about 10,000 Android models"
+    ],
+    "cannot": [
+      "Get the iPhone marketing name directly; the app must look up the code in its own table",
+      "Learn who you are from the model alone",
+      "Change the model or unlock hidden features"
+    ],
+    "reach": 2,
+    "reach_label": "Always available, simple facts",
+    "differs": "Android gives a readable model name. iPhone gives a code the app has to translate."
+  },
+  "story": {
+    "what_it_is": "An app can read your exact phone model and maker.",
+    "icon": "smartphone",
+    "tags": [
+      "Silent",
+      "Fingerprint",
+      "Device"
+    ],
+    "marketing": [],
+    "for_you": "You never see it. The model tells an app how new and costly your phone is, and often which country you live in. It is the biggest single detail used to tell phones apart.",
+    "for_makers": "Makers fix bugs for one model and tune games to match. Ad and fraud tools use it as a main fingerprint field, since Android has thousands of models and iPhone about 40.",
+    "use_cases": [
+      {
+        "type": "games",
+        "example": "A game applies special settings for one tablet model with a known graphics bug.",
+        "apps": []
+      },
+      {
+        "type": "shopping",
+        "example": "A store app shows premium offers to people on expensive phones.",
+        "apps": []
+      },
+      {
+        "type": "security",
+        "example": "A bank blocks a login where the model does not match what the account normally uses.",
+        "apps": []
+      },
+      {
+        "type": "ads",
+        "example": "An advertiser targets accessories to people with one phone model.",
+        "apps": []
+      },
+      {
+        "type": "developer",
+        "example": "A crash tool shows which models fail most, to guide testing.",
+        "apps": [
+          "Firebase Crashlytics"
+        ]
+      },
+      {
+        "type": "media",
+        "example": "A streaming app picks a video profile known to work on your model.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Reveals price tier and age",
+      "Strong fingerprint detail"
+    ],
+    "android_note": "Exact model and maker are readable with no prompt.",
+    "ios_note": "iOS gives a model code through system calls, like iPhone15,2, which maps to one model."
+  },
+  "technical_bounds": [
+    "No prompt on either platform",
+    "Cannot read serial or IMEI"
+  ],
+  "scores": {
+    "sensitivity": 1,
+    "utility": 4,
+    "fingerprint_bits": 7,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Bug triage",
+      "Device specific fixes"
+    ],
+    "abuse": [
+      "Fingerprint",
+      "Price discrimination"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": true,
+      "how": "Policy 1.5: LinkedIn receives network and device data including device identifier and features, IP address and operating system. Play Data safety lists crash logs, diagnostics and performance data."
+    }
+  },
+  "history": [
+    {
+      "date": "2008-09",
+      "platform": "android",
+      "version": "1.0 (API 1)",
+      "change": "Build.MODEL available"
+    },
+    {
+      "date": "2008-07",
+      "platform": "ios",
+      "version": "iOS 2",
+      "change": "hw.machine readable by sysctl"
+    }
+  ],
+  "related": [
+    "mob.dev.os-version",
+    "mob.dev.screen-metrics",
+    "mob.device.identifiers"
+  ],
+  "refs": [
+    {
+      "t": "android",
+      "label": "Android: Build",
+      "url": "https://developer.android.com/reference/android/os/Build"
+    },
+    {
+      "t": "apple",
+      "label": "Apple: UIDevice",
+      "url": "https://developer.apple.com/documentation/uikit/uidevice"
+    },
+    {
+      "t": "paper",
+      "label": "Kurtz et al.: Fingerprinting Mobile Devices Using Personalized Configurations (PoPETs 2016)",
+      "url": "https://petsymposium.org/popets/2016/popets-2015-0027.php"
+    },
+    {
+      "t": "policy",
+      "label": "LinkedIn Privacy Policy (effective 3 Nov 2025)",
+      "url": "https://www.linkedin.com/legal/privacy-policy"
+    }
+  ],
+  "confidence": "inferred"
+}

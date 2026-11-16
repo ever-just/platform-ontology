@@ -1,0 +1,213 @@
+{
+  "id": "mob.pay.wallet-passes",
+  "name": "Wallet passes (boarding passes, tickets, loyalty)",
+  "kind": "capability",
+  "group": "payments-commerce",
+  "subgroup": "Wallets",
+  "tags": [
+    "passkit",
+    "google-wallet-api",
+    "loyalty",
+    "tickets"
+  ],
+  "plain": "Adds tickets, loyalty cards and keys to the Wallet app.",
+  "meaning": "Passes can appear on the lock screen at a time or place, using location and time relevance without the app running.",
+  "lifecycle": [
+    "signed-in",
+    "background"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "y",
+      "v": "",
+      "permission": "None; Google Wallet API issuer account and JWT",
+      "protection": "none",
+      "grant": "prompt",
+      "prompt_ui": "Add to Google Wallet button",
+      "persistence": "Until removed",
+      "revocation": "Google Wallet",
+      "store_policy": "",
+      "api_surface": "Google Wallet API (Generic, Loyalty, Event, Flight passes), Smart Tap",
+      "note": "Passes can include NFC Smart Tap with a merchant."
+    },
+    "ios": {
+      "s": "y",
+      "v": "6.0",
+      "permission": "com.apple.developer.pass-type-identifiers; NFC passes need an approved certificate",
+      "protection": "entitlement",
+      "grant": "prompt",
+      "prompt_ui": "Add to Wallet sheet",
+      "persistence": "Until removed",
+      "revocation": "Wallet app",
+      "store_policy": "",
+      "api_surface": "PassKit PKAddPassesViewController, PKPass, .pkpass bundles",
+      "note": "Pass updates use APNs web service."
+    }
+  },
+  "data": {
+    "type": "object",
+    "metric": "Pass",
+    "update": "per issue",
+    "fields": [
+      {
+        "name": "barcode",
+        "type": "string",
+        "unit": "text",
+        "range": "QR, PDF417, Aztec",
+        "precision": "exact"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can add tickets, boarding passes and loyalty cards to your wallet when you tap Add",
+    "user_action": "You tap Add to Apple Wallet or Add to Google Wallet",
+    "can": [
+      "Save a pass into your wallet app",
+      "Show the pass on the lock screen near a set time or place",
+      "Update the pass later, for example a gate change",
+      "Let you tap to redeem at a store or gate when the pass supports NFC"
+    ],
+    "cannot": [
+      "Add a pass without your tap on the Add sheet",
+      "See your other passes or cards",
+      "Pay with your cards, which is a separate feature",
+      "Use NFC passes on iPhone without a certificate Apple approved"
+    ],
+    "reach": 2,
+    "reach_label": "Only passes you choose to add",
+    "differs": ""
+  },
+  "story": {
+    "what_it_is": "Digital tickets, boarding passes, loyalty cards and keys that live in your phone's Wallet app.",
+    "icon": "ticket",
+    "tags": [
+      "Wallet",
+      "Tickets",
+      "Silent"
+    ],
+    "marketing": [
+      {
+        "vendor": "Apple",
+        "name": "Apple Wallet",
+        "pitch": "Keep boarding passes, tickets, cards and keys in one place and open them when you need them.",
+        "url": "https://developer.apple.com/wallet/"
+      },
+      {
+        "vendor": "Google",
+        "name": "Google Wallet",
+        "pitch": "Save passes, tickets and cards to your phone and use them in stores or at gates.",
+        "url": "https://developers.google.com/wallet"
+      }
+    ],
+    "for_you": "You tap Add to Wallet and the pass is saved. Later it pops up on your lock screen near the airport gate or the venue, and updates if your gate changes. You never open the app.",
+    "for_makers": "A pass is a link between the app maker and your lock screen. It can show a message at a time or place with no app open. Airlines and event companies use it to cut support calls, and stores use it to bring back customers.",
+    "use_cases": [
+      {
+        "type": "travel",
+        "example": "An airline pushes a gate change to your boarding pass and it appears on the lock screen at the airport.",
+        "apps": [
+          "Delta",
+          "United"
+        ]
+      },
+      {
+        "type": "live",
+        "example": "A concert ticket pops up when you walk near the venue so you can scan it fast at the door.",
+        "apps": [
+          "Ticketmaster"
+        ]
+      },
+      {
+        "type": "shopping",
+        "example": "A coffee shop loyalty card shows on your lock screen when you walk in and keeps your stamp count.",
+        "apps": [
+          "Starbucks"
+        ]
+      },
+      {
+        "type": "games",
+        "example": "A theme park or esports event pass doubles as an entry code and a prize voucher.",
+        "apps": []
+      },
+      {
+        "type": "automotive",
+        "example": "A hotel or car share company stores a digital key in Wallet to open a room or car.",
+        "apps": [
+          "Hertz"
+        ]
+      },
+      {
+        "type": "education",
+        "example": "A student ID in Wallet opens the campus door and pays at the cafeteria.",
+        "apps": []
+      },
+      {
+        "type": "ads",
+        "example": "A retailer pushes a coupon pass that shows near a store, then measures how many people used it.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Location based nudges",
+      "Pass holds personal ID",
+      "Marketing use"
+    ],
+    "android_note": "Google Wallet adds passes from a website or app and supports tap to use at some shops through Smart Tap.",
+    "ios_note": "Passes update through Apple's push system, and ones that use tap need an approved certificate."
+  },
+  "technical_bounds": [
+    "Lock screen display uses relevance info set by issuer"
+  ],
+  "scores": {
+    "sensitivity": 2,
+    "utility": 3,
+    "fingerprint_bits": 1,
+    "friction": 1
+  },
+  "value": {
+    "legit_uses": [
+      "Tickets",
+      "Boarding passes"
+    ],
+    "abuse": [
+      "Marketing push"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2012-09",
+      "platform": "ios",
+      "version": "iOS 6",
+      "change": "Passbook introduced"
+    },
+    {
+      "date": "2015-05",
+      "platform": "android",
+      "version": "Google Wallet API",
+      "change": "Passes API"
+    }
+  ],
+  "related": [
+    "mob.hw.nfc-secure-element"
+  ],
+  "refs": [
+    {
+      "t": "apple",
+      "label": "Apple: Wallet passes",
+      "url": "https://developer.apple.com/wallet/"
+    },
+    {
+      "t": "android",
+      "label": "Google Wallet API",
+      "url": "https://developers.google.com/wallet"
+    }
+  ],
+  "confidence": "docs"
+}

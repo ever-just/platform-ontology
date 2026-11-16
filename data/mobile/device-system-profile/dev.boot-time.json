@@ -1,0 +1,202 @@
+{
+  "id": "mob.dev.boot-time",
+  "name": "Boot time and uptime",
+  "kind": "signal",
+  "group": "device-system-profile",
+  "subgroup": "Software state",
+  "tags": [
+    "uptime",
+    "required-reason-api",
+    "fingerprint"
+  ],
+  "plain": "Reads time since boot; the boot timestamp itself is a classic stable ID until restart.",
+  "meaning": "now minus uptime gives a boot timestamp that stays constant until reboot and is near-unique across devices. That is why Apple made it a Required Reason API.",
+  "lifecycle": [
+    "on-launch",
+    "in-session"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "y",
+      "v": "1.0",
+      "api": 1,
+      "permission": "",
+      "protection": "none",
+      "grant": "none",
+      "prompt_ui": "",
+      "persistence": "",
+      "revocation": "",
+      "store_policy": "",
+      "api_surface": "SystemClock.elapsedRealtime() (ms, with sleep), uptimeMillis(); Settings.Global.BOOT_COUNT (API 24)",
+      "note": "Millisecond resolution; boot count is an integer"
+    },
+    "ios": {
+      "s": "f",
+      "v": "17.0",
+      "permission": "entitlement",
+      "protection": "entitlement",
+      "grant": "none",
+      "prompt_ui": "",
+      "persistence": "",
+      "revocation": "Fingerprinting banned regardless of ATT",
+      "store_policy": "",
+      "api_surface": "Reason codes 35F9.1, 8FFB.1, 3D61.1; enforced 2024-05-01",
+      "note": ""
+    }
+  },
+  "data": {
+    "type": "float",
+    "metric": "Seconds since boot",
+    "update": "Continuous",
+    "fields": [
+      {
+        "name": "uptime_ms",
+        "type": "integer",
+        "unit": "ms",
+        "range": "0 to 1e10",
+        "precision": "1 ms"
+      },
+      {
+        "name": "boot_count",
+        "type": "integer",
+        "unit": "boots",
+        "range": "0 to thousands",
+        "precision": "1"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can see how long your phone has been on, and on Android its restart count",
+    "user_action": "Nothing. The app checks when it starts",
+    "can": [
+      "See time since the last restart on Android, to the millisecond",
+      "See the boot count on Android 7 and newer",
+      "Use the restart time as a rough ID until the next restart"
+    ],
+    "cannot": [
+      "Use boot time on iPhone without a stated reason; Apple has enforced a reason rule since 1 May 2024",
+      "Keep a stable ID after you restart the phone",
+      "Learn what you did before the restart"
+    ],
+    "reach": 2,
+    "reach_label": "Quick check, until restart",
+    "differs": "Android shares uptime with no prompt. iPhone only allows it for approved reasons that developers must declare."
+  },
+  "story": {
+    "what_it_is": "An app can work out the exact moment your phone last restarted.",
+    "icon": "clock",
+    "tags": [
+      "Silent",
+      "Fingerprint",
+      "Time"
+    ],
+    "marketing": [
+      {
+        "vendor": "Apple",
+        "name": "Required Reason APIs",
+        "pitch": "Developer rules: apps that read system boot time must declare an approved reason in their privacy manifest.",
+        "url": "https://developer.apple.com/documentation/bundleresources/describing-use-of-required-reason-api"
+      }
+    ],
+    "for_you": "You never see it. Subtract uptime from the clock and you get the time you rebooted. That time stays the same for days, so it can act as a tag until you restart.",
+    "for_makers": "Makers use it to measure startup speed and spot reboots after crashes. Trackers used it as a near unique ID, which is why Apple made it a Required Reason API.",
+    "use_cases": [
+      {
+        "type": "games",
+        "example": "A game checks uptime to see if a crash happened after a restart, and uses it to fix freezes.",
+        "apps": []
+      },
+      {
+        "type": "analytics",
+        "example": "A crash tool shows that most failures happen soon after a reboot.",
+        "apps": []
+      },
+      {
+        "type": "security",
+        "example": "A fraud tool notes that two logins share the same boot time and flags a copied device.",
+        "apps": []
+      },
+      {
+        "type": "ads",
+        "example": "An ad partner joins sessions with the same boot time into one device.",
+        "apps": []
+      },
+      {
+        "type": "banking",
+        "example": "A bank detects a time jump that suggests the clock was changed to cheat a code.",
+        "apps": []
+      },
+      {
+        "type": "developer",
+        "example": "A developer measures cold start time of the app after the phone restarts.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Works like a short term ID",
+      "Hard to notice"
+    ],
+    "android_note": "Available with no prompt through system uptime.",
+    "ios_note": "Apps must give an approved reason or Apple may reject them."
+  },
+  "technical_bounds": [
+    "Fingerprinting banned by Apple even with reasons"
+  ],
+  "scores": {
+    "sensitivity": 1,
+    "utility": 2,
+    "fingerprint_bits": 18,
+    "friction": 1
+  },
+  "value": {
+    "legit_uses": [
+      "Measure intervals",
+      "Absolute timestamps for in-app events"
+    ],
+    "abuse": [
+      "Cross-app device ID until reboot"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2024-05",
+      "platform": "ios",
+      "version": "iOS 17.x",
+      "change": "System boot time is a Required Reason API"
+    },
+    {
+      "date": "2016-08",
+      "platform": "android",
+      "version": "7.0 (API 24)",
+      "change": "BOOT_COUNT setting exposed"
+    }
+  ],
+  "related": [
+    "mob.rr.boot-time"
+  ],
+  "refs": [
+    {
+      "t": "android",
+      "label": "Android: Build",
+      "url": "https://developer.android.com/reference/android/os/Build"
+    },
+    {
+      "t": "apple",
+      "label": "Apple: Describing use of required reason API",
+      "url": "https://developer.apple.com/documentation/bundleresources/describing-use-of-required-reason-api"
+    },
+    {
+      "t": "apple",
+      "label": "Apple: ProcessInfo",
+      "url": "https://developer.apple.com/documentation/foundation/processinfo"
+    }
+  ],
+  "confidence": "inferred"
+}

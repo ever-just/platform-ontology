@@ -1,0 +1,177 @@
+{
+  "id": "mob.id.survive-uninstall",
+  "name": "IDs that survive uninstall (Keychain, Block Store)",
+  "kind": "tracking",
+  "group": "cross-site-tracking",
+  "subgroup": "Persistence",
+  "tags": [
+    "keychain",
+    "block-store",
+    "reinstall"
+  ],
+  "plain": "iOS Keychain items and Android Block Store data can outlive an uninstall.",
+  "meaning": "Lets an app re-recognize a returning person after delete and reinstall. Keychain items often remain after app deletion; Block Store also restores to a new phone.",
+  "lifecycle": [
+    "after-uninstall"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "y",
+      "v": "6.0",
+      "api": 23,
+      "permission": "",
+      "protection": "none",
+      "grant": "none",
+      "prompt_ui": "",
+      "persistence": "Until device wipe or user clears",
+      "revocation": "Settings > Google > Backup",
+      "store_policy": "Play: user data policy",
+      "api_surface": "Block Store API (Play services); Auto Backup",
+      "note": "Block Store: up to 16 items of up to 4 KB each, end-to-end encrypted backup"
+    },
+    "ios": {
+      "s": "y",
+      "v": "2.0",
+      "permission": "none",
+      "protection": "none",
+      "grant": "none",
+      "prompt_ui": "",
+      "persistence": "Reset device or delete item",
+      "revocation": "App Review: tracking rules",
+      "store_policy": "",
+      "api_surface": "Keychain items often remain after app deletion; iCloud Keychain can sync them",
+      "note": "Until device wipe or reset"
+    }
+  },
+  "data": {
+    "type": "binary",
+    "metric": "Persisted token",
+    "update": "Persistent",
+    "fields": [
+      {
+        "name": "block_store_bytes",
+        "type": "integer",
+        "unit": "bytes",
+        "range": "4096 per item, 16 items",
+        "precision": "exact"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can keep a small stored ID that may come back after you delete and reinstall",
+    "user_action": "Nothing. The app saves it quietly while you use it",
+    "can": [
+      "Save a secret or ID in the iPhone Keychain that often stays after the app is deleted",
+      "Save up to 16 items of up to 4 KB each in Android Block Store",
+      "Sync saved items to a new device through iCloud Keychain or Google backup",
+      "Recognize you when you reinstall the app"
+    ],
+    "cannot": [
+      "Survive a full device wipe or reset",
+      "Be seen by apps from other developers",
+      "Keep growing on Android; Block Store caps the number and size of items",
+      "Come back on Android if you turn off backup or Google blocks the restore"
+    ],
+    "reach": 4,
+    "reach_label": "Survives uninstall and reinstall",
+    "differs": "iPhone Keychain items often stay by default. Android needs Block Store or Auto Backup, and you can turn backup off."
+  },
+  "story": {
+    "what_it_is": "Small saved data that stays on your phone or in the cloud even after you delete the app.",
+    "icon": "archive-restore",
+    "tags": [
+      "Silent",
+      "Fraud",
+      "Tracking"
+    ],
+    "marketing": [
+      {
+        "vendor": "Google",
+        "name": "Block Store",
+        "pitch": "Developer pitch: save credentials or small data so users can restore their sign in on a new Android device.",
+        "url": "https://developers.google.com/identity/blockstore/android"
+      }
+    ],
+    "for_you": "After you delete and reinstall an app, it may still know who you are and sign you in without a password. You might see that as helpful. You will not see that the app also remembers things you thought were wiped.",
+    "for_makers": "Makers use it to restore sign in after a phone upgrade and to stop abuse, like free trials claimed over and over. The same trick also lets a company recognize a returning person after a clean install.",
+    "use_cases": [
+      {
+        "type": "games",
+        "example": "You buy a new phone and the game signs you in and brings your saved profile back with no password.",
+        "apps": []
+      },
+      {
+        "type": "shopping",
+        "example": "A shopping app remembers a coupon was used on this phone even after you reinstall.",
+        "apps": []
+      },
+      {
+        "type": "payments",
+        "example": "A wallet app notices a reinstall by the same person and avoids sending a second verification text.",
+        "apps": []
+      },
+      {
+        "type": "security",
+        "example": "A dating or banking app spots a banned user who deleted the app and started again.",
+        "apps": []
+      },
+      {
+        "type": "media",
+        "example": "A streaming app limits a free trial to one per phone, even if you remove and add the app.",
+        "apps": []
+      },
+      {
+        "type": "ads",
+        "example": "An ad firm keeps a stable ID that outlives uninstall so campaign results are not broken by reinstalls.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Survives a clean start",
+      "Hard to find and clear"
+    ],
+    "android_note": "Block Store can also move data to a new phone, and Auto Backup can restore app data.",
+    "ios_note": "Keychain items often remain after the app is deleted, and the person cannot easily see or clear them."
+  },
+  "technical_bounds": [
+    "Cleared on factory reset"
+  ],
+  "scores": {
+    "sensitivity": 4,
+    "utility": 3,
+    "fingerprint_bits": null,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Restore sign-in after reinstall"
+    ],
+    "abuse": [
+      "Resurrecting tracking IDs"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "related": [
+    "mob.id.ssaid",
+    "mob.id.idfv"
+  ],
+  "refs": [
+    {
+      "t": "apple",
+      "label": "Apple: Keychain services",
+      "url": "https://developer.apple.com/documentation/security/keychain-services"
+    },
+    {
+      "t": "android",
+      "label": "Android: Best practices for unique identifiers",
+      "url": "https://developer.android.com/training/articles/user-data-ids"
+    }
+  ],
+  "confidence": "inferred"
+}

@@ -1,0 +1,263 @@
+{
+  "id": "web.device.speech-voices",
+  "name": "Speech synthesis voices",
+  "kind": "signal",
+  "group": "device-system-profile",
+  "subgroup": "OS profile",
+  "tags": [
+    "tts",
+    "voices",
+    "os-fingerprint",
+    "language-packs"
+  ],
+  "plain": "Installed text-to-speech voices, which reveal OS, version and installed language packs.",
+  "meaning": "macOS lists 100+ voices, Windows 10 to 30, Android per Google TTS pack. Exact list shows OS version and which languages the person installed, a strong stable fingerprint.",
+  "lifecycle": [
+    "on-arrival",
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "speechSynthesis.getVoices()",
+      "bcd": [
+        "api.SpeechSynthesis.getVoices"
+      ],
+      "access": {
+        "grant": "none",
+        "prompt_ui": "None",
+        "secure_context": false,
+        "user_gesture": false,
+        "persistence": "read fresh on every page load; nothing stored",
+        "revocation": "none needed (no grant)",
+        "iframe": "Readable from cross-origin iframes too (same values)",
+        "steps": [
+          "Page script reads the value",
+          "No prompt is shown"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "33",
+          "note": "",
+          "date": "2014-02-20"
+        },
+        "edge": {
+          "s": "y",
+          "v": "14",
+          "note": "",
+          "date": "2016-08-02"
+        },
+        "firefox": {
+          "s": "y",
+          "v": "49",
+          "note": "",
+          "date": "2016-09-20"
+        },
+        "safari": {
+          "s": "y",
+          "v": "7",
+          "note": "",
+          "date": "2013-10-22"
+        },
+        "ios_safari": {
+          "s": "y",
+          "v": "7",
+          "note": "",
+          "date": "2013-09-18"
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "33",
+          "note": "",
+          "date": "2014-02-26"
+        },
+        "samsung": {
+          "s": "y",
+          "v": "3.0",
+          "note": "",
+          "date": "2015-04-10"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "object",
+    "metric": "",
+    "update": "static per session",
+    "fields": [
+      {
+        "name": "name",
+        "type": "string",
+        "unit": "",
+        "range": "e.g. Samantha, Microsoft David, Google US English",
+        "precision": ""
+      },
+      {
+        "name": "lang",
+        "type": "string",
+        "unit": "BCP 47",
+        "range": "e.g. en-US",
+        "precision": ""
+      },
+      {
+        "name": "localService",
+        "type": "boolean",
+        "unit": "",
+        "range": "true or false",
+        "precision": ""
+      },
+      {
+        "name": "voiceURI",
+        "type": "string",
+        "unit": "",
+        "range": "OS-specific",
+        "precision": ""
+      },
+      {
+        "name": "default",
+        "type": "boolean",
+        "unit": "",
+        "range": "",
+        "precision": ""
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can list the speech voices on your device, which hint at your OS and languages",
+    "user_action": "Nothing. It happens when the page loads or speaks text",
+    "can": [
+      "List installed voices, from about 10 on Windows to 100 or more on macOS",
+      "Guess your OS version and language packs from the list",
+      "Offer a speak text feature in a voice you pick",
+      "Use the list as a steady tracking clue"
+    ],
+    "cannot": [
+      "Listen to you or record sound",
+      "See your speech or text you wrote",
+      "Know which voice you like best",
+      "Get the same list on every browser or device"
+    ],
+    "reach": 3,
+    "reach_label": "Voice list, silently",
+    "differs": ""
+  },
+  "story": {
+    "what_it_is": "The list of text to speech voices installed on your device, which reveals system and languages.",
+    "icon": "speaker",
+    "tags": [
+      "Voices",
+      "Silent",
+      "Fingerprinting"
+    ],
+    "marketing": [
+      {
+        "vendor": "MDN",
+        "name": "Web Speech API",
+        "pitch": "Docs describe how pages can speak text aloud using voices on the device.",
+        "url": "https://developer.mozilla.org/en-US/docs/Web/API/Web_Speech_API"
+      }
+    ],
+    "for_you": "You never see the check. If a site reads text aloud, it can use a voice you have installed. The same list can show which languages you added and what system you run.",
+    "for_makers": "Reading aloud helps accessibility and language learning. The voice list changes by system, version and language pack, so it is also a strong fingerprint. Trackers read it for that reason.",
+    "use_cases": [
+      {
+        "type": "accessibility",
+        "example": "A news site offers a Listen button that reads the story aloud in the voice you have installed.",
+        "apps": []
+      },
+      {
+        "type": "education",
+        "example": "A language learning site picks a native speaker style voice for your language to read sentences aloud.",
+        "apps": []
+      },
+      {
+        "type": "games",
+        "example": "A browser story game reads dialogue out loud with the best voice available on the device.",
+        "apps": []
+      },
+      {
+        "type": "kids",
+        "example": "A children's reading site speaks each word aloud so early readers can follow.",
+        "apps": []
+      },
+      {
+        "type": "productivity",
+        "example": "A web editor reads your draft back so you can hear mistakes.",
+        "apps": []
+      },
+      {
+        "type": "security",
+        "example": "A fingerprint vendor reads the voice list as a stable ID piece.",
+        "apps": [
+          "FingerprintJS"
+        ]
+      },
+      {
+        "type": "analytics",
+        "example": "A traffic tool estimates language packs installed to judge international audiences.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Strong stable fingerprint",
+      "Reveals languages you added"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "List may load asynchronously (voiceschanged)",
+    "Safari 26 blocks known fingerprinters"
+  ],
+  "scores": {
+    "sensitivity": 1,
+    "utility": 3,
+    "fingerprint_bits": 5.0,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Pick voice for reading aloud"
+    ],
+    "abuse": [
+      "OS and language-pack fingerprint"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2025-09",
+      "browser": "safari",
+      "version": "26",
+      "change": "Voice list restricted for known fingerprinting scripts (Advanced Fingerprinting Protection)"
+    }
+  ],
+  "related": [
+    "web.device.installed-fonts"
+  ],
+  "refs": [
+    {
+      "t": "webkit",
+      "label": "WebKit features in Safari 26.0 (fingerprinting protection)",
+      "url": "https://webkit.org/blog/17333/webkit-features-in-safari-26-0/"
+    },
+    {
+      "t": "github",
+      "label": "CreepJS (abrahamjuliot)",
+      "url": "https://github.com/abrahamjuliot/creepjs"
+    },
+    {
+      "t": "mdn",
+      "label": "MDN getVoices",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/SpeechSynthesis/getVoices"
+    }
+  ],
+  "confidence": "inferred"
+}

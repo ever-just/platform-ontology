@@ -1,0 +1,218 @@
+{
+  "id": "web.render.fonts",
+  "name": "Installed font detection (and Flash fonts)",
+  "kind": "signal",
+  "group": "rendering-fingerprint",
+  "subgroup": "Rendering",
+  "tags": [
+    "fonts",
+    "fingerprint"
+  ],
+  "plain": "Measures text width to guess which fonts are installed.",
+  "meaning": "Font lists reflect installed apps, languages and OS version. Flash font enumeration was another method before Flash ended in 2020.",
+  "lifecycle": [
+    "on-arrival",
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "Measure text in offscreen elements; Flash getFontList (obsolete)",
+      "access": {
+        "grant": "none",
+        "prompt_ui": "None (no browser prompt)",
+        "secure_context": false,
+        "user_gesture": false,
+        "persistence": "",
+        "revocation": "",
+        "iframe": "",
+        "steps": [
+          "Script reads the value",
+          "Value joins the fingerprint payload"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "",
+          "note": ""
+        },
+        "edge": {
+          "s": "y",
+          "v": "",
+          "note": ""
+        },
+        "firefox": {
+          "s": "y",
+          "v": "",
+          "note": ""
+        },
+        "safari": {
+          "s": "y",
+          "v": "",
+          "note": ""
+        },
+        "ios_safari": {
+          "s": "y",
+          "v": "",
+          "note": ""
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "",
+          "note": ""
+        },
+        "samsung": {
+          "s": "y",
+          "v": "",
+          "note": ""
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "list",
+    "metric": "Installed font detection (and Flash fonts)",
+    "update": "static per setup",
+    "fields": [
+      {
+        "name": "fonts",
+        "type": "list",
+        "unit": "",
+        "range": "up to 1500 chars collected",
+        "precision": "by name"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can measure text widths to guess which fonts are on your device",
+    "user_action": "Nothing. It happens when the page loads",
+    "can": [
+      "Compare text width across many font names",
+      "Guess which fonts you installed",
+      "Learn your system, languages and sometimes installed apps"
+    ],
+    "cannot": [
+      "Open your font files",
+      "Ask permission first",
+      "Use the old Flash method, which ended in 2020",
+      "Know who you are by itself"
+    ],
+    "reach": 3,
+    "reach_label": "Silent, repeatable device number",
+    "differs": ""
+  },
+  "story": {
+    "what_it_is": "A script measures text width to guess which fonts are installed on your device.",
+    "icon": "type",
+    "tags": [
+      "Silent",
+      "Fonts",
+      "Fingerprinting"
+    ],
+    "marketing": [
+      {
+        "vendor": "Google Chrome",
+        "name": "Local Font Access API",
+        "pitch": "Chrome offers a permission based way for apps to read installed fonts, instead of guessing by measuring.",
+        "url": "https://developer.chrome.com/docs/capabilities/web-apis/local-fonts"
+      }
+    ],
+    "for_you": "You see no sign of it. The page tries many fonts and measures the text, so it knows which ones you have. People with design or office apps tend to have a more unusual list.",
+    "for_makers": "Sites use font checks to decide what to load and to match designs. Ad tech and fraud teams use the font list as a classic trait to tell devices apart.",
+    "use_cases": [
+      {
+        "type": "creative",
+        "example": "A web design tool lists the fonts on your computer so you can use them in your design.",
+        "apps": [
+          "Figma",
+          "Canva"
+        ]
+      },
+      {
+        "type": "productivity",
+        "example": "A document editor shows which fonts it will substitute because they are not on your device.",
+        "apps": []
+      },
+      {
+        "type": "ads",
+        "example": "An ad script records which fonts you have as a part of an anonymous device ID.",
+        "apps": []
+      },
+      {
+        "type": "security",
+        "example": "A bank's fraud tool compares the font list to the last visit to see if it is the same machine.",
+        "apps": []
+      },
+      {
+        "type": "shopping",
+        "example": "A site loads its own web font only if a close match is missing, to speed up the page.",
+        "apps": []
+      },
+      {
+        "type": "analytics",
+        "example": "A visitor tool separates Mac and Windows users partly by the default fonts found.",
+        "apps": []
+      },
+      {
+        "type": "games",
+        "example": "A browser game with a text editor for custom names lists fonts so players can style a team badge.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Reveals software you own",
+      "Works without asking"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Flash is gone since 2021",
+    "Some browsers limit fonts to a fixed list"
+  ],
+  "scores": {
+    "sensitivity": 3,
+    "utility": 3,
+    "fingerprint_bits": 9,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Pick fonts"
+    ],
+    "abuse": [
+      "Fingerprint input"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": true,
+      "how": "Collector key(s): fonts, fontsFlash. dataLimit 1500."
+    }
+  },
+  "history": [
+    {
+      "date": "2021-01",
+      "browser": "chrome",
+      "version": "88",
+      "change": "Flash removed"
+    }
+  ],
+  "related": [
+    "web.tracking.linkedin-apfc-fingerprint"
+  ],
+  "refs": [
+    {
+      "t": "mdn",
+      "label": "MDN Font loading API",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/CSS_Font_Loading_API"
+    },
+    {
+      "t": "github",
+      "label": "mdp/linkedin-extension-fingerprinting (LinkedIn script snapshot and ID list)",
+      "url": "https://github.com/mdp/linkedin-extension-fingerprinting"
+    }
+  ],
+  "confidence": "docs"
+}

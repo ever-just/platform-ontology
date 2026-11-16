@@ -1,0 +1,259 @@
+{
+  "id": "web.actions.open-popup",
+  "name": "Open popup or new window",
+  "kind": "action",
+  "group": "page-actions",
+  "subgroup": "Windows and navigation",
+  "tags": [
+    "popup",
+    "window.open",
+    "popup-blocker",
+    "user-activation",
+    "5-seconds"
+  ],
+  "plain": "Opens a new tab or popup window, but only right after a click or tap.",
+  "meaning": "A site can put another page in front of the person (ads, login flows, payment pages). Popup blockers decide whether it happens, so it is the main way a site can steer attention to a second origin.",
+  "lifecycle": [
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "window.open(url, target, features); <a target=_blank>",
+      "bcd": [
+        "api.Window.open"
+      ],
+      "access": {
+        "grant": "gesture",
+        "prompt_ui": "No prompt (needs a click, tap or keypress)",
+        "secure_context": false,
+        "user_gesture": true,
+        "activation": "transient",
+        "persistence": "Per window; users can allow pop-ups per site (Chrome Pop-ups and redirects setting, Firefox exceptions, Safari per-site setting)",
+        "revocation": "Nothing to revoke (no permission is stored)",
+        "iframe": "Needs sandbox allow-popups (and allow-popups-to-escape-sandbox for unsandboxed children)",
+        "steps": [
+          "Person clicks or taps",
+          "Handler calls window.open within about 5 s of the click",
+          "Browser opens window or shows blocked-popup icon"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "1",
+          "note": "",
+          "date": "2008-12-11"
+        },
+        "edge": {
+          "s": "y",
+          "v": "12",
+          "note": "",
+          "date": "2015-07-29"
+        },
+        "firefox": {
+          "s": "y",
+          "v": "1",
+          "note": "",
+          "date": "2004-11-09"
+        },
+        "safari": {
+          "s": "y",
+          "v": "1",
+          "note": "",
+          "date": "2003-06-23"
+        },
+        "ios_safari": {
+          "s": "p",
+          "v": "1",
+          "note": "Partial implementation per MDN BCD",
+          "date": "2007-06-29"
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "18",
+          "note": "",
+          "date": "2012-06-27"
+        },
+        "samsung": {
+          "s": "y",
+          "v": "1.0",
+          "note": "",
+          "date": "2013-04-27"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "none",
+    "metric": "",
+    "update": "",
+    "fields": []
+  },
+  "limits": {
+    "headline": "Can open a new tab or window, but only right after you tap or click",
+    "user_action": "You tap a link, a button, or Share, Print or Open in new tab.",
+    "can": [
+      "Open a new tab or small window after a tap or click",
+      "Open a sign in window for a login or a payment",
+      "Open a link in a new tab you can close"
+    ],
+    "cannot": [
+      "Open a window with no tap or click, which browsers block by default",
+      "Open lots of windows from one tap in most cases",
+      "Control a window that belongs to a different site",
+      "Hide the address bar of the new window in modern browsers"
+    ],
+    "reach": 1,
+    "reach_label": "One window per tap",
+    "differs": "iPhone Safari is a little stricter about which taps count."
+  },
+  "story": {
+    "what_it_is": "After a click, a page can open a new tab or small window.",
+    "icon": "app-window",
+    "tags": [
+      "Needs a click",
+      "Ads",
+      "Annoying"
+    ],
+    "marketing": [],
+    "for_you": "You click a link and a new tab opens, or you sign in with Google and a small window appears. Without a click, the browser blocks the pop up.",
+    "for_makers": "Makers use pop ups for sign in windows, payment confirmations and help chats. The click rule exists because pop up ads were once everywhere.",
+    "use_cases": [
+      {
+        "type": "social",
+        "example": "Clicking 'Sign in with Google' opens a small window to approve, then closes.",
+        "apps": [
+          "Spotify",
+          "Canva"
+        ]
+      },
+      {
+        "type": "payments",
+        "example": "A PayPal button opens a small window to confirm payment, then returns you to the shop.",
+        "apps": [
+          "PayPal"
+        ]
+      },
+      {
+        "type": "ads",
+        "example": "A shady ad site tries to open a new tab with every click anywhere on the page.",
+        "apps": []
+      },
+      {
+        "type": "games",
+        "example": "A browser game portal opens the leaderboard in a pop up.",
+        "apps": []
+      },
+      {
+        "type": "live",
+        "example": "A streamer's chat is popped out to a separate window so it can sit on a second monitor.",
+        "apps": [
+          "Twitch"
+        ]
+      },
+      {
+        "type": "banking",
+        "example": "A bank opens a secure help chat in a small window.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Pop under ads",
+      "Fake sign in windows"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Blocked without transient user activation (Chrome, Safari, Firefox all block popups outside input handlers)",
+    "Transient activation lasts about 5 s in Chrome and Firefox (dom.user_activation.transient.timeout = 5000 ms); Safari uses a much shorter window (about 1 s)",
+    "window.open consumes the activation in Chrome and Safari, so a second popup in the same click is blocked",
+    "Firefox allows up to dom.popup_maximum (default 20) popups from one event",
+    "target=_blank and window.open imply noopener for links (Chrome 88, Firefox 79, Safari 12.1)",
+    "Popup features width and height are clamped to a minimum of 100 CSS px; position cannot be placed off screen"
+  ],
+  "scores": {
+    "sensitivity": 2,
+    "utility": 5,
+    "fingerprint_bits": null,
+    "friction": 1
+  },
+  "value": {
+    "legit_uses": [
+      "OAuth sign in windows",
+      "Payment 3-D Secure windows",
+      "Print or preview windows"
+    ],
+    "abuse": [
+      "Pop-under ads",
+      "Phishing windows that mimic browser chrome",
+      "Tab-nabbing via window.opener (mitigated by noopener)"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2012",
+      "browser": "chrome",
+      "version": "21",
+      "change": "Popups opened from user clicks only; blocker icon in the address bar"
+    },
+    {
+      "date": "2018-01",
+      "browser": "chrome",
+      "version": "64",
+      "change": "Popups in cross-origin iframes limited; abusive redirect and popup interventions"
+    },
+    {
+      "date": "2020-12",
+      "browser": "chrome",
+      "version": "88",
+      "change": "Anchors with target=_blank get implicit rel=noopener"
+    },
+    {
+      "date": "2021-03",
+      "browser": "firefox",
+      "version": "79",
+      "change": "Implicit noopener for target=_blank"
+    },
+    {
+      "date": "2023-01",
+      "browser": "chrome",
+      "version": "109",
+      "change": "popup=true feature and window.open consumes transient activation across browsers (HTML spec)"
+    }
+  ],
+  "related": [
+    "web.actions.window-close",
+    "web.actions.focus-stealing"
+  ],
+  "refs": [
+    {
+      "t": "mdn",
+      "label": "MDN open",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/Window/open"
+    },
+    {
+      "t": "mdn",
+      "label": "MDN User activation",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/Security/User_activation"
+    },
+    {
+      "t": "spec",
+      "label": "HTML Standard: user activation",
+      "url": "https://html.spec.whatwg.org/multipage/interaction.html#tracking-user-activation"
+    },
+    {
+      "t": "chromestatus",
+      "label": "Chrome pop-up blocker help",
+      "url": "https://support.google.com/chrome/answer/95472"
+    }
+  ],
+  "confidence": "docs"
+}

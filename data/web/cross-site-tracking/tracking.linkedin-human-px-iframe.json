@@ -1,0 +1,228 @@
+{
+  "id": "web.tracking.linkedin-human-px-iframe",
+  "name": "HUMAN Security (PerimeterX) hidden iframe",
+  "kind": "tracking",
+  "group": "cross-site-tracking",
+  "subgroup": "Anti-abuse vendors",
+  "tags": [
+    "third-party",
+    "bot-detection",
+    "iframe",
+    "human-security",
+    "perimeterx"
+  ],
+  "plain": "A hidden iframe from li.protechts.net runs HUMAN's bot detection with a hash of LinkedIn's browser ID.",
+  "meaning": "A third-party vendor runs its own behavior and device checks in the page and sets its own cookies, tied to the person through a hash of LinkedIn's bcookie.",
+  "lifecycle": [
+    "on-arrival",
+    "in-session",
+    "signed-in"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "iframe https://li.protechts.net/index.html?ts=<ms>&r_id=<treeId>&app_id=PXdOjV695v&uc=scraping&d_id=<SHA256(bcookie)>",
+      "access": {
+        "grant": "none",
+        "prompt_ui": "None (no browser prompt)",
+        "secure_context": false,
+        "user_gesture": false,
+        "persistence": "Cookies _pxvid, _pxmvid, _pxhd, _pxde, pxcts, _px<id>, _pxff_<id>, _pxttld per LinkedIn cookie table",
+        "revocation": "",
+        "iframe": "",
+        "steps": [
+          "LIX flag pemberly.tracking.human.integration loads the iframe (id humanThirdPartyIframe)",
+          "HUMAN script collects its own device and behavior signals",
+          "Cookies set under LinkedIn's domain for risk scoring",
+          "d_id is SHA256 of bcookie so HUMAN can join its data to LinkedIn's browser ID"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "",
+          "note": ""
+        },
+        "edge": {
+          "s": "y",
+          "v": "",
+          "note": ""
+        },
+        "firefox": {
+          "s": "y",
+          "v": "",
+          "note": ""
+        },
+        "safari": {
+          "s": "y",
+          "v": "",
+          "note": ""
+        },
+        "ios_safari": {
+          "s": "y",
+          "v": "",
+          "note": ""
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "",
+          "note": ""
+        },
+        "samsung": {
+          "s": "y",
+          "v": "",
+          "note": ""
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "object",
+    "metric": "Vendor risk telemetry",
+    "update": "continuous",
+    "fields": [
+      {
+        "name": "d_id",
+        "type": "hash",
+        "unit": "SHA256",
+        "range": "64 hex",
+        "precision": "stable per bcookie"
+      },
+      {
+        "name": "app_id",
+        "type": "string",
+        "unit": "",
+        "range": "PXdOjV695v (prod), PXgoH0hfKu (non prod)",
+        "precision": "fixed"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can run a hidden bot check on LinkedIn pages and tie it to its browser ID",
+    "user_action": "Nothing. It happens when a LinkedIn page loads",
+    "can": [
+      "Load a hidden frame from a security company during the page visit",
+      "Score whether you look like a person or a bot",
+      "Send a scrambled version of LinkedIn's browser ID with the check"
+    ],
+    "cannot": [
+      "Show you anything, since the frame is hidden",
+      "See your files, other tabs or other apps",
+      "Run if the page or its frames are blocked, though blocking may break the page",
+      "Name you on its own without the LinkedIn ID"
+    ],
+    "reach": 2,
+    "reach_label": "Each LinkedIn page visit",
+    "differs": ""
+  },
+  "story": {
+    "what_it_is": "A hidden frame from a security firm runs bot checks on the page and sets its own cookies.",
+    "icon": "bot",
+    "tags": [
+      "Bot checks",
+      "Silent",
+      "Third party"
+    ],
+    "marketing": [],
+    "for_you": "You never see this hidden frame. It runs checks on how your device and mouse behave, and sets its own cookie. The security firm links its data to you through a code made from LinkedIn's browser ID.",
+    "for_makers": "Bots cost LinkedIn real money and trust, so it hires a specialist to spot them. The vendor learns patterns across many sites, and that sharpens the score. A critic notes the vendor also gets a link to a person.",
+    "use_cases": [
+      {
+        "type": "security",
+        "example": "A script posing as a person tries to log in thousands of times, and the bot checks give each try a risk score.",
+        "apps": [
+          "HUMAN Security",
+          "LinkedIn"
+        ]
+      },
+      {
+        "type": "games",
+        "example": "A bot solves LinkedIn Games puzzles at superhuman speed to climb a leaderboard, and the checks help catch it.",
+        "apps": [
+          "LinkedIn Games"
+        ]
+      },
+      {
+        "type": "ads",
+        "example": "A bot clicks a paid ad over and over, and the checks mark those clicks invalid so the advertiser is not billed.",
+        "apps": [
+          "LinkedIn Ads"
+        ]
+      },
+      {
+        "type": "social",
+        "example": "A fake account sends spam invites, and the checks notice the browser does not behave like a human one.",
+        "apps": [
+          "LinkedIn"
+        ]
+      },
+      {
+        "type": "shopping",
+        "example": "Ticket and sneaker sites use the same kind of check to block bots that buy stock before people can.",
+        "apps": [
+          "Ticketmaster",
+          "Nike"
+        ]
+      },
+      {
+        "type": "analytics",
+        "example": "A team removes bot traffic from its reports so real person numbers are accurate.",
+        "apps": [
+          "Adobe Analytics"
+        ]
+      }
+    ],
+    "risks": [
+      "Third party sees device and behavior data",
+      "Tied to your LinkedIn ID by a hash"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Exact HUMAN signal set is not published",
+    "BleepingComputer could not verify further sharing beyond the iframe"
+  ],
+  "scores": {
+    "sensitivity": 3,
+    "utility": 2,
+    "fingerprint_bits": 10,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Stop scrapers and credential stuffing"
+    ],
+    "abuse": [
+      "Third party gets a browser keyed identifier"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": true,
+      "how": "Verified in the snapshot (iframe URL, app ids, id humanThirdPartyIframe). LinkedIn's cookie table lists the _px cookies. What HUMAN collects inside is not documented publicly."
+    }
+  },
+  "related": [
+    "web.tracking.linkedin-cookies-antiabuse",
+    "web.tracking.linkedin-apfc-fingerprint"
+  ],
+  "refs": [
+    {
+      "t": "github",
+      "label": "mdp/linkedin-extension-fingerprinting (LinkedIn script snapshot and ID list)",
+      "url": "https://github.com/mdp/linkedin-extension-fingerprinting"
+    },
+    {
+      "t": "vendor",
+      "label": "LinkedIn cookie table",
+      "url": "https://www.linkedin.com/legal/l/cookie-table"
+    },
+    {
+      "t": "news",
+      "label": "BleepingComputer: LinkedIn scans for 6,000+ Chrome extensions",
+      "url": "https://www.bleepingcomputer.com/news/security/linkedin-secretely-scans-for-6-000-plus-chrome-extensions-collects-data/"
+    }
+  ],
+  "confidence": "verified"
+}

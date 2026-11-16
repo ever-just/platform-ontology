@@ -1,0 +1,214 @@
+{
+  "id": "mob.os.alt-marketplaces",
+  "name": "Alternative app marketplaces and web distribution",
+  "kind": "capability",
+  "group": "os-integration-install",
+  "subgroup": "Distribution",
+  "tags": [
+    "alternative-app-stores",
+    "marketplacekit",
+    "web-distribution",
+    "dma",
+    "sideloading"
+  ],
+  "plain": "Installs apps from stores other than the official one.",
+  "meaning": "Android always allowed other sources. iOS added regional alternative marketplaces and web distribution in the EU (17.4), then Japan (26.2), but each still needs Apple authorisation or notarization.",
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "y",
+      "v": "1.0",
+      "api": 1,
+      "permission": "REQUEST_INSTALL_PACKAGES (special) plus Install unknown apps toggle",
+      "protection": "special",
+      "grant": "settings",
+      "prompt_ui": "Settings > Install unknown apps per source app",
+      "persistence": "Until revoked",
+      "revocation": "Settings > Apps > Special app access",
+      "store_policy": "Play: policy does not apply to other stores",
+      "api_surface": "PackageInstaller, Session API, Play Integrity",
+      "note": "Developer verification will apply to certified devices from Sep 2026; Android 17 adds Registered App Stores under Epic v Google settlement."
+    },
+    "ios": {
+      "s": "f",
+      "v": "17.4",
+      "permission": "com.apple.developer.marketplace.app-installation; marketplace entitlement; web distribution via authorised developer",
+      "protection": "entitlement",
+      "grant": "entitlement",
+      "prompt_ui": "System install sheets with developer name; marketplace must be approved",
+      "persistence": "Per install",
+      "revocation": "Settings > Apps > Default marketplace",
+      "store_policy": "EU and Japan only; Apple notarization still applies",
+      "api_surface": "MarketplaceKit, ActionKit on web distribution, AppDistributor",
+      "note": "US and rest of world still App Store only."
+    }
+  },
+  "data": {
+    "type": "event",
+    "metric": "Install",
+    "update": "per install",
+    "fields": [
+      {
+        "name": "source",
+        "type": "string",
+        "unit": "store",
+        "range": "n/a",
+        "precision": "exact"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can install apps from stores other than the main one, only in the EU on iPhone",
+    "user_action": "You open the other store's page and confirm the install on the system sheet",
+    "can": [
+      "Install from an alternative store on Android after you allow that store",
+      "Install from an approved marketplace or the web on iPhone in the EU",
+      "Show a system sheet with the developer's name before it installs"
+    ],
+    "cannot": [
+      "Do this on iPhone in the US or most other countries, which stay with the App Store only",
+      "Install from a store that Apple has not approved in the EU",
+      "Skip developer checks on certified Android phones from September 2026"
+    ],
+    "reach": 2,
+    "reach_label": "Only stores you allow",
+    "differs": "Android has always allowed other stores. iPhone allows them only in the EU from iOS 17.4."
+  },
+  "story": {
+    "what_it_is": "Installing apps from stores other than the phone maker's own.",
+    "icon": "store",
+    "tags": [
+      "Install",
+      "Stores",
+      "Rules"
+    ],
+    "marketing": [
+      {
+        "vendor": "Apple",
+        "name": "Alternative app marketplaces in the EU",
+        "pitch": "Apple describes how developers in the EU can distribute apps through alternative marketplaces with Apple authorization.",
+        "url": "https://developer.apple.com/support/alternative-app-marketplace-in-the-eu/"
+      }
+    ],
+    "for_you": "On Android you can install from another store in settings. On iPhone this only exists in the EU and Japan, where you see install screens that name the developer.",
+    "for_makers": "Makers get another way to reach people with different fees and rules. It also adds risk of malware and scams, so platforms keep checks like notarization.",
+    "use_cases": [
+      {
+        "type": "games",
+        "example": "A big game studio sells its game from its own store with lower fees.",
+        "apps": [
+          "Epic Games Store"
+        ]
+      },
+      {
+        "type": "enterprise",
+        "example": "A company ships a private app to its staff outside the public store.",
+        "apps": []
+      },
+      {
+        "type": "media",
+        "example": "An alternative store lists apps the main store rejected.",
+        "apps": [
+          "AltStore PAL"
+        ]
+      },
+      {
+        "type": "security",
+        "example": "A banking trojan is spread by a fake store.",
+        "apps": []
+      },
+      {
+        "type": "developer",
+        "example": "A small studio sells outside the store to avoid a commission.",
+        "apps": []
+      },
+      {
+        "type": "social",
+        "example": "A web page offers a social app download directly.",
+        "apps": []
+      },
+      {
+        "type": "utilities",
+        "example": "A privacy focused store lists open source apps.",
+        "apps": [
+          "F-Droid"
+        ]
+      }
+    ],
+    "risks": [
+      "Malware and scams",
+      "Fewer protections"
+    ],
+    "android_note": "Android always allowed other sources. Developer verification applies to certified devices from Sep 2026.",
+    "ios_note": "EU since iOS 17.4 and Japan since iOS 26.2. The US and other places stay with the App Store."
+  },
+  "technical_bounds": [
+    "Android verification starts in four countries; global rollout planned for 2027"
+  ],
+  "scores": {
+    "sensitivity": 4,
+    "utility": 4,
+    "fingerprint_bits": 1,
+    "friction": 3
+  },
+  "value": {
+    "legit_uses": [
+      "Alternative stores",
+      "Enterprise distribution"
+    ],
+    "abuse": [
+      "Malware installs",
+      "Banking trojans via sideload"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2024-03",
+      "platform": "ios",
+      "version": "iOS 17.4",
+      "change": "EU alternative marketplaces"
+    },
+    {
+      "date": "2025-12",
+      "platform": "ios",
+      "version": "iOS 26.2",
+      "change": "Japan alternative marketplaces"
+    },
+    {
+      "date": "2026-09",
+      "platform": "android",
+      "version": "developer verification",
+      "change": "Verified developer required on certified devices in Brazil, Indonesia, Singapore and Thailand"
+    }
+  ],
+  "related": [
+    "mob.os.sideloading-verification",
+    "mob.os.notarization",
+    "mob.pay.eu-dma",
+    "mob.pay.japan-msca"
+  ],
+  "refs": [
+    {
+      "t": "apple",
+      "label": "Apple: Distributing apps in the EU",
+      "url": "https://developer.apple.com/support/alternative-app-marketplace-in-the-eu/"
+    },
+    {
+      "t": "android",
+      "label": "Android developer verification",
+      "url": "https://developer.android.com/developer-verification"
+    },
+    {
+      "t": "apple",
+      "label": "Apple: Japan changes",
+      "url": "https://developer.apple.com/news/?id=074b3wzz"
+    }
+  ],
+  "confidence": "verified"
+}

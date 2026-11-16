@@ -1,0 +1,244 @@
+{
+  "id": "web.device.installed-fonts",
+  "name": "Installed fonts via measurement",
+  "kind": "signal",
+  "group": "device-system-profile",
+  "subgroup": "OS profile",
+  "tags": [
+    "fonts",
+    "measureText",
+    "fingerprint"
+  ],
+  "plain": "Detects which fonts are installed by measuring text width, no permission needed.",
+  "meaning": "Shows OS, office suites and design tools installed (Adobe, Microsoft Office add fonts). FingerprintJS tests dozens of fonts against 3 fallbacks; list entropy was 13.9 bits in 2016.",
+  "lifecycle": [
+    "on-arrival",
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "canvas.measureText(), offsetWidth of spans per font-family",
+      "bcd": [
+        "api.CanvasRenderingContext2D.measureText"
+      ],
+      "access": {
+        "grant": "none",
+        "prompt_ui": "None",
+        "secure_context": false,
+        "user_gesture": false,
+        "persistence": "read fresh on every page load; nothing stored",
+        "revocation": "none needed (no grant)",
+        "iframe": "Readable from cross-origin iframes too (same values)",
+        "steps": [
+          "Page script reads the value",
+          "No prompt is shown"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "2",
+          "note": "",
+          "date": "2009-05-21"
+        },
+        "edge": {
+          "s": "y",
+          "v": "12",
+          "note": "",
+          "date": "2015-07-29"
+        },
+        "firefox": {
+          "s": "y",
+          "v": "3.5",
+          "note": "",
+          "date": "2009-06-30"
+        },
+        "safari": {
+          "s": "y",
+          "v": "4",
+          "note": "",
+          "date": "2009-06-08"
+        },
+        "ios_safari": {
+          "s": "y",
+          "v": "3.2",
+          "note": "",
+          "date": "2010-04-03"
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "18",
+          "note": "",
+          "date": "2012-06-27"
+        },
+        "samsung": {
+          "s": "y",
+          "v": "1.0",
+          "note": "",
+          "date": "2013-04-27"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "object",
+    "metric": "",
+    "update": "static per session",
+    "fields": [
+      {
+        "name": "detected fonts",
+        "type": "list",
+        "unit": "",
+        "range": "dozens to hundreds of candidate names tested",
+        "precision": "binary present or absent"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can tell which fonts you have installed by measuring text, with no prompt",
+    "user_action": "Nothing. It happens when the page loads",
+    "can": [
+      "Test dozens of font names to see which ones are present",
+      "Spot software that adds fonts, like Office or Adobe tools",
+      "Tell your operating system apart from others",
+      "Use the font list as a strong tell for tracking you"
+    ],
+    "cannot": [
+      "List every font in one call; it tests names one by one",
+      "See your font files or documents",
+      "See which apps you actually use",
+      "Work for fonts the site does not think to test"
+    ],
+    "reach": 3,
+    "reach_label": "Fonts it tests for, silently",
+    "differs": ""
+  },
+  "story": {
+    "what_it_is": "Finds out which fonts you have installed by measuring text sizes.",
+    "icon": "type",
+    "tags": [
+      "Fonts",
+      "Silent",
+      "Fingerprinting"
+    ],
+    "marketing": [],
+    "for_you": "You never see it. A page draws hidden text in dozens of fonts and measures how wide each one is. Your answer reveals your system and software, such as Microsoft Office or Adobe tools.",
+    "for_makers": "Font lists are one of the most unique things about a device. Trackers use them to recognise a visitor without cookies. Design tools use a similar method to show which fonts a person has.",
+    "use_cases": [
+      {
+        "type": "analytics",
+        "example": "A fingerprinting service tests dozens of fonts and mixes the result into a device ID that survives cookie clearing.",
+        "apps": [
+          "FingerprintJS"
+        ]
+      },
+      {
+        "type": "security",
+        "example": "A fraud tool compares the font list with the claimed operating system and flags a mismatch.",
+        "apps": []
+      },
+      {
+        "type": "creative",
+        "example": "A browser design tool such as Figma checks which fonts you have so designs show correctly.",
+        "apps": [
+          "Figma",
+          "Canva"
+        ]
+      },
+      {
+        "type": "productivity",
+        "example": "An online document editor warns that a font is missing on your device.",
+        "apps": [
+          "Google Docs"
+        ]
+      },
+      {
+        "type": "ads",
+        "example": "An ad network keeps a long-lived ID from your font list to connect your visits across sites.",
+        "apps": []
+      },
+      {
+        "type": "games",
+        "example": "A browser game checks fonts to choose the best looking interface text.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Very unique fingerprint",
+      "Reveals software you own"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Cannot enumerate arbitrary fonts, only test names",
+    "Local Font Access API needs a permission"
+  ],
+  "scores": {
+    "sensitivity": 1,
+    "utility": 3,
+    "fingerprint_bits": 6.0,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Font fallback decisions"
+    ],
+    "abuse": [
+      "Strong stable fingerprint"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": true,
+      "how": "Installed fonts and Flash font detection. Read by the LinkedIn APFC fingerprint script (48 features, alleged by BrowserGate, partly confirmed by BleepingComputer)."
+    }
+  },
+  "history": [
+    {
+      "date": "2016-06",
+      "browser": "paper",
+      "version": "",
+      "change": "AmIUnique: fonts 13.9 bits with Flash font list; JS probing weaker"
+    },
+    {
+      "date": "2023-09",
+      "browser": "safari",
+      "version": "17",
+      "change": "Private Browsing and AFP restrict fonts to system set"
+    },
+    {
+      "date": "2025-11",
+      "browser": "firefox",
+      "version": "145",
+      "change": "Fingerprinting protection limits website access to fonts (Private Browsing and ETP Strict)"
+    }
+  ],
+  "related": [
+    "web.device.speech-voices"
+  ],
+  "refs": [
+    {
+      "t": "github",
+      "label": "fingerprintjs source: fonts",
+      "url": "https://github.com/fingerprintjs/fingerprintjs/blob/master/src/sources/fonts.ts"
+    },
+    {
+      "t": "github",
+      "label": "fingerprintjs source: font_preferences",
+      "url": "https://github.com/fingerprintjs/fingerprintjs/blob/master/src/sources/font_preferences.ts"
+    },
+    {
+      "t": "paper",
+      "label": "AmIUnique: Beauty and the Beast, Laperdrix et al. 2016 (attribute entropy)",
+      "url": "https://hal.inria.fr/hal-01285470"
+    },
+    {
+      "t": "mozilla",
+      "label": "Mozilla Security Blog 2026-11-10: harder to fingerprint",
+      "url": "https://blog.mozilla.org/security/2026/11/10/open-research-stronger-privacy-making-firefox-users-harder-to-fingerprint/"
+    }
+  ],
+  "confidence": "docs"
+}

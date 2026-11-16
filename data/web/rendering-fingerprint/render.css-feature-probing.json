@@ -1,0 +1,257 @@
+{
+  "id": "web.render.css-feature-probing",
+  "name": "CSS feature and media query probing",
+  "kind": "tracking",
+  "group": "rendering-fingerprint",
+  "subgroup": "CSS",
+  "tags": [
+    "css",
+    "supports",
+    "media-queries",
+    "version"
+  ],
+  "plain": "Tests which CSS properties, at-rules and media queries the browser understands.",
+  "meaning": "Each CSS feature has a first-supported version, so a handful of CSS.supports calls pin the browser version within 1 to 2 releases and expose spoofed user agents. Media queries add color gamut, HDR, contrast and motion settings.",
+  "lifecycle": [
+    "on-arrival"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "CSS.supports(); @supports; matchMedia(); getComputedStyle()",
+      "bcd": [
+        "api.CSS.supports_static",
+        "api.Window.matchMedia"
+      ],
+      "access": {
+        "grant": "none",
+        "prompt_ui": "",
+        "secure_context": false,
+        "user_gesture": false,
+        "persistence": "",
+        "revocation": "",
+        "iframe": "",
+        "steps": [
+          "Run CSS.supports for 50 to 300 property:value pairs",
+          "Query matchMedia for color-gamut, dynamic-range, prefers-contrast, forced-colors, pointer, hover",
+          "Compare against per-version tables"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "28",
+          "note": "",
+          "date": "2013-07-09"
+        },
+        "edge": {
+          "s": "y",
+          "v": "12",
+          "note": "",
+          "date": "2015-07-29"
+        },
+        "firefox": {
+          "s": "y",
+          "v": "22",
+          "note": "",
+          "date": "2013-06-25"
+        },
+        "safari": {
+          "s": "y",
+          "v": "9",
+          "note": "",
+          "date": "2015-09-30"
+        },
+        "ios_safari": {
+          "s": "y",
+          "v": "9",
+          "note": "",
+          "date": "2015-09-16"
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "28",
+          "note": "",
+          "date": "2013-07-10"
+        },
+        "samsung": {
+          "s": "y",
+          "v": "1.5",
+          "note": "",
+          "date": "2013-09-25"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "list",
+    "metric": "Bit vector of 100 to 300 feature results plus about 15 media query values",
+    "update": "",
+    "fields": [
+      {
+        "name": "supports bits",
+        "type": "list",
+        "unit": "",
+        "range": "0 or 1 each",
+        "precision": "exact"
+      },
+      {
+        "name": "color-gamut",
+        "type": "enum",
+        "unit": "",
+        "range": "srgb, p3, rec2020",
+        "precision": "exact"
+      },
+      {
+        "name": "prefers-reduced-motion",
+        "type": "enum",
+        "unit": "",
+        "range": "no-preference, reduce",
+        "precision": "exact"
+      },
+      {
+        "name": "forced-colors",
+        "type": "enum",
+        "unit": "",
+        "range": "none, active",
+        "precision": "exact"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can find your browser version by testing which style features it knows",
+    "user_action": "Nothing. It happens when the page loads",
+    "can": [
+      "Test which CSS features and media queries your browser supports",
+      "Narrow your browser version to within about 1 to 2 releases",
+      "Spot a fake browser label, such as a spoofed user agent"
+    ],
+    "cannot": [
+      "Know who you are by itself",
+      "Ask permission first",
+      "See anything you typed or saved",
+      "Tell your exact device model"
+    ],
+    "reach": 2,
+    "reach_label": "Silent, browser version only",
+    "differs": ""
+  },
+  "story": {
+    "what_it_is": "A script checks which CSS features and screen settings your browser understands to guess its make and version.",
+    "icon": "palette",
+    "tags": [
+      "Silent",
+      "Browser version",
+      "Fingerprinting"
+    ],
+    "marketing": [
+      {
+        "vendor": "MDN",
+        "name": "CSS @supports",
+        "pitch": "Lets a page test whether the browser supports a CSS feature, and apply styles only if it does.",
+        "url": "https://developer.mozilla.org/en-US/docs/Web/CSS/@supports"
+      }
+    ],
+    "for_you": "You never see it. It looks like normal page loading. The page asks your browser many yes or no questions about style features, and the pattern of answers shows what browser and version you have.",
+    "for_makers": "Sites use it to ship modern designs with a safe fallback. Trackers use the same answers to pin your exact browser version and spot fake ones, such as a bot pretending to be Chrome.",
+    "use_cases": [
+      {
+        "type": "developer",
+        "example": "A website checks whether your browser supports grid layout, then uses it or falls back to a simpler layout.",
+        "apps": []
+      },
+      {
+        "type": "security",
+        "example": "A bot detector notices a browser claiming to be Chrome 120 that fails a test only new Chrome passes.",
+        "apps": [
+          "Cloudflare Turnstile",
+          "DataDome"
+        ]
+      },
+      {
+        "type": "analytics",
+        "example": "A fingerprint library records dozens of CSS answers as one part of a visitor ID.",
+        "apps": [
+          "FingerprintJS"
+        ]
+      },
+      {
+        "type": "media",
+        "example": "A streaming site checks for modern color and HDR display settings to offer the best video.",
+        "apps": [
+          "Netflix"
+        ]
+      },
+      {
+        "type": "accessibility",
+        "example": "A page checks whether you prefer dark mode, reduced motion or high contrast and adjusts itself.",
+        "apps": []
+      },
+      {
+        "type": "games",
+        "example": "A browser game checks for features like high frame rate or wide color before switching on fancy visuals.",
+        "apps": []
+      },
+      {
+        "type": "ads",
+        "example": "An ad tech script uses screen and color settings to separate an iPhone from a lookalike emulator.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Hard to hide",
+      "Lets sites spot fake browsers"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Cannot read the stylesheet of other origins",
+    "Entropy mostly browser version and accessibility settings"
+  ],
+  "scores": {
+    "sensitivity": 3,
+    "utility": 1,
+    "fingerprint_bits": 4,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": "Progressive enhancement",
+    "abuse": "Version pinning, UA spoof detection, accessibility setting disclosure"
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2018-05",
+      "browser": "paper",
+      "version": "",
+      "change": "FP-Stalker and CreepJS use CSS feature sets to track version evolution"
+    }
+  ],
+  "related": [
+    "web.render.js-engine-feature-detection"
+  ],
+  "refs": [
+    {
+      "t": "mdn",
+      "label": "MDN CSS.supports",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/CSS/supports_static"
+    },
+    {
+      "t": "paper",
+      "label": "Vastel et al., FP-Stalker (S&P 2018)",
+      "url": "https://hal.inria.fr/hal-01652021"
+    },
+    {
+      "t": "github",
+      "label": "CreepJS",
+      "url": "https://github.com/abrahamjuliot/creepjs"
+    }
+  ],
+  "confidence": "docs"
+}

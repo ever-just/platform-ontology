@@ -1,0 +1,205 @@
+{
+  "id": "mob.input.paste-prompt",
+  "name": "Paste permission and PasteButton",
+  "kind": "permission",
+  "group": "input-clipboard",
+  "subgroup": "Clipboard",
+  "tags": [
+    "paste",
+    "clipboard",
+    "prompt"
+  ],
+  "plain": "iOS asks when an app reads the clipboard from another app; a system paste button skips the prompt.",
+  "meaning": "Added after apps were caught reading the clipboard on launch. Android has no prompt, only a toast.",
+  "lifecycle": [
+    "in-session"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "p",
+      "v": "12",
+      "api": 31,
+      "permission": "None",
+      "protection": "none",
+      "grant": "none",
+      "prompt_ui": "Toast Pasted from clipboard (Android 12 and later)",
+      "persistence": "n/a",
+      "revocation": "Settings > Developer",
+      "store_policy": "",
+      "api_surface": "ClipboardManager",
+      "note": "No prompt; sensitive flag since API 33"
+    },
+    "ios": {
+      "s": "y",
+      "v": "16",
+      "permission": "None; user allows or denies paste from other apps per app",
+      "protection": "prompt",
+      "grant": "prompt",
+      "prompt_ui": "Allow Paste prompt",
+      "persistence": "Until changed in Settings",
+      "revocation": "Settings > Apps > Paste from other apps",
+      "store_policy": "",
+      "api_surface": "UIPasteboard, UIPasteControl, PasteButton",
+      "note": "Paste control and Edit menu paste skip the prompt"
+    }
+  },
+  "web_equivalents": [
+    "web.input.clipboard-read"
+  ],
+  "data": {
+    "type": "string",
+    "metric": "Clipboard text",
+    "update": "per paste",
+    "fields": [
+      {
+        "name": "size",
+        "type": "integer",
+        "unit": "bytes",
+        "range": "up to MBs",
+        "precision": ""
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can ask to paste from another app, and a paste button skips the prompt",
+    "user_action": "You tap Paste in a text box, or the app asks to look at the clipboard",
+    "can": [
+      "Ask to paste what you copied in another app (iPhone)",
+      "Use the Paste button so you do not see a prompt, since you tapped it yourself",
+      "Remember your Allow or Don't Allow choice per app",
+      "Paste the clipboard on Android with no prompt"
+    ],
+    "cannot": [
+      "Look at what you copied in another app without Allow Paste, unless you tap a paste button",
+      "Keep asking after you choose Don't Allow",
+      "See copies marked sensitive in previews (Android 13)",
+      "Look at your clipboard in secret on iPhone with iOS 16 and newer"
+    ],
+    "reach": 2,
+    "reach_label": "One paste, only when you say",
+    "differs": "iPhone asks Allow Paste from iOS 16. Android has no prompt but marks sensitive copies from Android 13."
+  },
+  "story": {
+    "what_it_is": "Your iPhone asks before an app reads what you copied elsewhere, and a Paste button skips the question.",
+    "icon": "clipboard-paste",
+    "tags": [
+      "Clipboard",
+      "Asks first",
+      "Privacy"
+    ],
+    "marketing": [
+      {
+        "vendor": "Apple",
+        "name": "Paste control",
+        "pitch": "iOS 16 asks before an app reads the clipboard from another app. A system paste button avoids the prompt.",
+        "url": "https://developer.apple.com/documentation/uikit/uipastecontrol"
+      }
+    ],
+    "for_you": "You see a small popup saying an app wants to paste from another app, with Allow Paste and Don't Allow. When you tap the Paste button the app provides, there is no popup at all. That keeps copied passwords and codes safer.",
+    "for_makers": "Makers who want a smooth paste use the system Paste button, because tapping it counts as consent and the popup never shows. Apps that read the clipboard on launch get the popup and look pushy. It pushes honest design.",
+    "use_cases": [
+      {
+        "type": "messaging",
+        "example": "You tap Paste in a chat app to drop a copied photo or link straight into a message.",
+        "apps": [
+          "iMessage",
+          "WhatsApp"
+        ]
+      },
+      {
+        "type": "payments",
+        "example": "A banking app shows a Paste button next to the code box so you can fill a copied one time code.",
+        "apps": []
+      },
+      {
+        "type": "productivity",
+        "example": "A notes or doc app has a Paste button for a copied table or image from a website.",
+        "apps": [
+          "Notion",
+          "Google Docs"
+        ]
+      },
+      {
+        "type": "shopping",
+        "example": "A shopping app has a Paste link field so you can search by a copied product link.",
+        "apps": []
+      },
+      {
+        "type": "games",
+        "example": "A game shows a Paste friend code button, so you add a friend in one tap.",
+        "apps": []
+      },
+      {
+        "type": "security",
+        "example": "A password manager lets you paste a copied password into a field without reading your clipboard in the background.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Prompt fatigue",
+      "Silent reads still exist on Android"
+    ],
+    "android_note": "Android has no prompt for paste, only a short message after an app reads.",
+    "ios_note": "This is the iPhone behavior. Since iOS 16, reads from other apps ask first unless you used the system Paste button."
+  },
+  "technical_bounds": [
+    "Only cross app reads are gated on iOS"
+  ],
+  "scores": {
+    "sensitivity": 3,
+    "utility": 4,
+    "fingerprint_bits": null,
+    "friction": 2
+  },
+  "value": {
+    "legit_uses": [
+      "Quick form fill"
+    ],
+    "abuse": [
+      "Silent clipboard scraping"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2020-09",
+      "platform": "ios",
+      "version": "iOS 14",
+      "change": "Clipboard banner introduced"
+    },
+    {
+      "date": "2022-09",
+      "platform": "ios",
+      "version": "iOS 16",
+      "change": "Allow Paste prompt"
+    },
+    {
+      "date": "2021-10",
+      "platform": "android",
+      "version": "12 (API 31)",
+      "change": "Clipboard toast"
+    }
+  ],
+  "related": [
+    "mob.input.clipboard-banner"
+  ],
+  "refs": [
+    {
+      "t": "apple",
+      "label": "Apple: UIPasteControl",
+      "url": "https://developer.apple.com/documentation/uikit/uipastecontrol"
+    },
+    {
+      "t": "android",
+      "label": "Android: Clipboard",
+      "url": "https://developer.android.com/develop/ui/views/touch-and-input/copy-paste"
+    }
+  ],
+  "confidence": "docs"
+}

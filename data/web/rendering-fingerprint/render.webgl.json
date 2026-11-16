@@ -1,0 +1,235 @@
+{
+  "id": "web.render.webgl",
+  "name": "WebGL renderer and parameters",
+  "kind": "signal",
+  "group": "rendering-fingerprint",
+  "subgroup": "Rendering",
+  "tags": [
+    "webgl",
+    "gpu",
+    "fingerprint"
+  ],
+  "plain": "Reads the graphics card name and GPU capability values.",
+  "meaning": "Reveals the GPU vendor and model and a set of limits, which together identify a hardware class and often a precise device.",
+  "lifecycle": [
+    "on-arrival",
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "getParameter(UNMASKED_VENDOR_WEBGL, UNMASKED_RENDERER_WEBGL) and others",
+      "bcd": [
+        "api.WebGLRenderingContext.getParameter"
+      ],
+      "access": {
+        "grant": "none",
+        "prompt_ui": "None (no browser prompt)",
+        "secure_context": false,
+        "user_gesture": false,
+        "persistence": "",
+        "revocation": "",
+        "iframe": "",
+        "steps": [
+          "Script reads the value",
+          "Value joins the fingerprint payload"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "9",
+          "note": "",
+          "date": "2011-02-03"
+        },
+        "edge": {
+          "s": "y",
+          "v": "12",
+          "note": "",
+          "date": "2015-07-29"
+        },
+        "firefox": {
+          "s": "y",
+          "v": "4",
+          "note": "",
+          "date": "2011-03-22"
+        },
+        "safari": {
+          "s": "y",
+          "v": "5.1",
+          "note": "",
+          "date": "2011-07-20"
+        },
+        "ios_safari": {
+          "s": "y",
+          "v": "8",
+          "note": "",
+          "date": "2014-09-17"
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "25",
+          "note": "",
+          "date": "2013-02-27"
+        },
+        "samsung": {
+          "s": "y",
+          "v": "1.5",
+          "note": "",
+          "date": "2013-09-25"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "object",
+    "metric": "WebGL renderer and parameters",
+    "update": "static per setup",
+    "fields": [
+      {
+        "name": "renderer",
+        "type": "string",
+        "unit": "",
+        "range": "e.g. ANGLE (Apple, Apple M2, ...)",
+        "precision": ""
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can see your graphics card name and its capability limits",
+    "user_action": "Nothing. It happens when the page loads",
+    "can": [
+      "Get your graphics card maker and model",
+      "Get a set of hardware limits",
+      "Often narrow you to a small group of devices"
+    ],
+    "cannot": [
+      "Ask permission first",
+      "See your files",
+      "Show you anything on screen",
+      "Get the exact model in browsers that hide or round it, such as Safari or Brave"
+    ],
+    "reach": 3,
+    "reach_label": "Silent, hardware model",
+    "differs": "Chrome and Edge show the graphics card model. Safari and Brave hide or generalise it."
+  },
+  "story": {
+    "what_it_is": "A page reads your graphics card's name and its capability values, usually without any prompt.",
+    "icon": "cpu",
+    "tags": [
+      "Graphics",
+      "Games",
+      "Silent"
+    ],
+    "marketing": [
+      {
+        "vendor": "MDN",
+        "name": "WebGL API",
+        "pitch": "Lets a page draw 2D and 3D graphics in the browser using the graphics chip, with no plugin.",
+        "url": "https://developer.mozilla.org/en-US/docs/Web/API/WebGL_API"
+      },
+      {
+        "vendor": "Khronos",
+        "name": "WebGL",
+        "pitch": "The group behind the standard describes it as hardware accelerated 3D graphics for the web.",
+        "url": "https://www.khronos.org/webgl/"
+      }
+    ],
+    "for_you": "You see games, maps and 3D tools that run smoothly in the tab. You are never asked, and the page can see which graphics chip you have and what it can do.",
+    "for_makers": "Browser games, 3D product viewers and design tools use your graphics card to look good. They read the graphics name and limits to pick the right quality. Trackers read the same values for device IDs.",
+    "use_cases": [
+      {
+        "type": "games",
+        "example": "Krunker.io and Shell Shockers run full 3D shooters in a tab using WebGL, and set quality by your graphics chip.",
+        "apps": [
+          "Krunker.io",
+          "Shell Shockers"
+        ]
+      },
+      {
+        "type": "maps",
+        "example": "Google Earth and Mapbox draw the 3D globe, buildings and terrain on your graphics card.",
+        "apps": [
+          "Google Earth",
+          "Mapbox"
+        ]
+      },
+      {
+        "type": "creative",
+        "example": "Figma draws huge design files using WebGL so zooming and panning stays smooth.",
+        "apps": [
+          "Figma"
+        ]
+      },
+      {
+        "type": "shopping",
+        "example": "A 3D shoe or furniture viewer lets you spin a product, using your graphics chip.",
+        "apps": [
+          "Sketchfab"
+        ]
+      },
+      {
+        "type": "ads",
+        "example": "A tracker reads the graphics card name and adds it to a device ID.",
+        "apps": []
+      },
+      {
+        "type": "security",
+        "example": "A fraud engine sees a graphics name from a cloud server and treats the visit as a bot risk.",
+        "apps": []
+      },
+      {
+        "type": "education",
+        "example": "A science site shows a 3D model of a cell or planet you can rotate with your mouse.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Reveals your graphics chip",
+      "Adds to a device ID"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Firefox and Safari may mask the renderer",
+    "dataLimit 6 per BrowserGate table"
+  ],
+  "scores": {
+    "sensitivity": 2,
+    "utility": 3,
+    "fingerprint_bits": 8,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Pick shaders",
+      "Bug workarounds"
+    ],
+    "abuse": [
+      "Fingerprint input"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": true,
+      "how": "Collector key(s): webgl. dataLimit 6."
+    }
+  },
+  "related": [
+    "web.tracking.linkedin-apfc-fingerprint"
+  ],
+  "refs": [
+    {
+      "t": "mdn",
+      "label": "MDN WebGL",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/WebGL_API"
+    },
+    {
+      "t": "github",
+      "label": "mdp/linkedin-extension-fingerprinting (LinkedIn script snapshot and ID list)",
+      "url": "https://github.com/mdp/linkedin-extension-fingerprinting"
+    }
+  ],
+  "confidence": "docs"
+}

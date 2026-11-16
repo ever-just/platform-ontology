@@ -1,0 +1,235 @@
+{
+  "id": "web.render.webgl-render-hash",
+  "name": "WebGL render hash",
+  "kind": "tracking",
+  "group": "rendering-fingerprint",
+  "subgroup": "WebGL",
+  "tags": [
+    "webgl",
+    "shader",
+    "gpu",
+    "hash"
+  ],
+  "plain": "Renders a fixed 3D scene with custom shaders and hashes the output pixels.",
+  "meaning": "Floating point and rasterization differences across GPU, driver and ANGLE backend produce a hash that separates devices better than the renderer string, even hardware with the same label.",
+  "lifecycle": [
+    "on-arrival"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "gl.drawArrays(); gl.readPixels(); canvas.toDataURL()",
+      "bcd": [
+        "api.WebGLRenderingContext.readPixels"
+      ],
+      "access": {
+        "grant": "none",
+        "prompt_ui": "",
+        "secure_context": false,
+        "user_gesture": false,
+        "persistence": "",
+        "revocation": "",
+        "iframe": "",
+        "steps": [
+          "Compile vertex and fragment shaders",
+          "Draw a gradient or textured triangle",
+          "readPixels or toDataURL",
+          "Hash the pixels"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "9",
+          "note": "",
+          "date": "2011-02-03"
+        },
+        "edge": {
+          "s": "y",
+          "v": "12",
+          "note": "",
+          "date": "2015-07-29"
+        },
+        "firefox": {
+          "s": "y",
+          "v": "4",
+          "note": "",
+          "date": "2011-03-22"
+        },
+        "safari": {
+          "s": "y",
+          "v": "5.1",
+          "note": "",
+          "date": "2011-07-20"
+        },
+        "ios_safari": {
+          "s": "y",
+          "v": "8",
+          "note": "",
+          "date": "2014-09-17"
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "25",
+          "note": "",
+          "date": "2013-02-27"
+        },
+        "samsung": {
+          "s": "y",
+          "v": "1.5",
+          "note": "",
+          "date": "2013-09-25"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "hash",
+    "metric": "Hash of the framebuffer, typically 256x128 px",
+    "update": "",
+    "fields": [
+      {
+        "name": "pixel hash",
+        "type": "hash",
+        "unit": "bits",
+        "range": "32 to 256",
+        "precision": "stable per GPU and driver version"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can draw a hidden 3D scene and use the pixels to tell your device apart",
+    "user_action": "Nothing. It happens when the page loads",
+    "can": [
+      "Draw a fixed 3D scene out of sight",
+      "Hash the pixels your graphics card and driver made",
+      "Tell devices apart better than the graphics card name alone",
+      "Recognise you again on later visits"
+    ],
+    "cannot": [
+      "Show anything on your screen",
+      "Ask permission first",
+      "Give an exact result when a browser adds noise",
+      "Know who you are by itself"
+    ],
+    "reach": 3,
+    "reach_label": "Silent, repeatable device number",
+    "differs": ""
+  },
+  "story": {
+    "what_it_is": "A script draws a fixed 3D scene with custom shaders and hashes the output pixels.",
+    "icon": "fingerprint",
+    "tags": [
+      "Graphics",
+      "Silent",
+      "Tracking"
+    ],
+    "marketing": [],
+    "for_you": "You see nothing, since the 3D scene is hidden. Your graphics chip and driver draw it with tiny differences, so the result works like a quiet ID for your device.",
+    "for_makers": "This is a strong fingerprint because it depends on hardware, driver and system together. Fraud tools use it to recognize devices. Ad tech uses it to track without cookies.",
+    "use_cases": [
+      {
+        "type": "security",
+        "example": "A bank draws a hidden 3D scene and compares the hash to the one from your trusted laptop.",
+        "apps": []
+      },
+      {
+        "type": "ads",
+        "example": "A data broker uses the hash to connect your visits across different sites.",
+        "apps": []
+      },
+      {
+        "type": "games",
+        "example": "A cheater banned from a browser game cannot easily start over, since the device hash matches.",
+        "apps": []
+      },
+      {
+        "type": "shopping",
+        "example": "A retailer spots hundreds of new accounts that share the same graphics hash.",
+        "apps": []
+      },
+      {
+        "type": "payments",
+        "example": "A payments company adds the hash to a risk score before approving an order.",
+        "apps": [
+          "Stripe Radar",
+          "Sift"
+        ]
+      },
+      {
+        "type": "analytics",
+        "example": "A cookie free analytics tool uses the hash to count unique visitors.",
+        "apps": []
+      },
+      {
+        "type": "social",
+        "example": "A social site finds a bot farm because many fake profiles show the same 3D hash.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Very hard to change",
+      "Works across sites",
+      "Works without cookies"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Driver updates change the hash",
+    "Brave farbling and Safari noise alter readback",
+    "Blocked or generic in Tor Browser"
+  ],
+  "scores": {
+    "sensitivity": 4,
+    "utility": 1,
+    "fingerprint_bits": 7,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": "GPU bug triage",
+    "abuse": "Stable device fingerprint component"
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2017-01",
+      "browser": "paper",
+      "version": "",
+      "change": "Cao et al. render tasks identify 99.24% of 1,903 devices in the study"
+    },
+    {
+      "date": "2022-01",
+      "browser": "paper",
+      "version": "",
+      "change": "Laor et al. DrawnApart separates identical GPUs by timing instead of pixels"
+    }
+  ],
+  "related": [
+    "web.render.canvas-2d-fingerprint",
+    "web.render.gpu-timing-drawnapart"
+  ],
+  "refs": [
+    {
+      "t": "paper",
+      "label": "Cao et al., NDSS 2017",
+      "url": "https://www.ndss-symposium.org/ndss2017/ndss-2017-programme/cross-browser-fingerprinting-os-and-hardware-level-features/"
+    },
+    {
+      "t": "github",
+      "label": "FingerprintJS",
+      "url": "https://github.com/fingerprintjs/fingerprintjs"
+    },
+    {
+      "t": "github",
+      "label": "CreepJS",
+      "url": "https://github.com/abrahamjuliot/creepjs"
+    }
+  ],
+  "confidence": "docs"
+}

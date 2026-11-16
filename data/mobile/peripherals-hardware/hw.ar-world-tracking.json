@@ -1,0 +1,231 @@
+{
+  "id": "mob.hw.ar-world-tracking",
+  "name": "Augmented reality world tracking",
+  "kind": "capability",
+  "group": "peripherals-hardware",
+  "subgroup": "Sensors",
+  "tags": [
+    "arkit",
+    "arcore",
+    "slam",
+    "geospatial",
+    "anchors"
+  ],
+  "plain": "Maps the surroundings and places digital objects on surfaces.",
+  "meaning": "Builds a 3D map of a person's room and tracks where they look. Cloud and geospatial anchors can send visual data to the platform vendor.",
+  "lifecycle": [
+    "in-session"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "y",
+      "v": "7.0",
+      "api": 24,
+      "permission": "CAMERA; ACCESS_FINE_LOCATION for Geospatial API; Google Play Services for AR",
+      "protection": "dangerous",
+      "grant": "prompt",
+      "prompt_ui": "Camera prompt; location prompt for Geospatial",
+      "persistence": "Until revoked",
+      "revocation": "Settings > Apps > Permissions",
+      "store_policy": "Play: AR apps declare uses-feature and ARCore as required or optional",
+      "api_surface": "ARCore Session, Geospatial API, Cloud Anchors (data sent to Google)",
+      "note": "Cloud and Geospatial features upload feature points and need ARCore Cloud ID."
+    },
+    "ios": {
+      "s": "y",
+      "v": "11.0",
+      "permission": "NSCameraUsageDescription; NSLocationWhenInUseUsageDescription for geo anchoring",
+      "protection": "prompt",
+      "grant": "prompt",
+      "prompt_ui": "Camera prompt",
+      "persistence": "Until revoked",
+      "revocation": "Settings > Privacy & Security > Camera",
+      "store_policy": "",
+      "api_surface": "ARKit ARSession, ARWorldTrackingConfiguration, ARGeoTrackingConfiguration (iOS 14), RealityKit",
+      "note": "World mapping stays on device; iOS 26 adds spatial widgets and Shared World Anchors on visionOS."
+    }
+  },
+  "web_equivalents": [
+    "web.peripherals.webxr-immersive",
+    "web.peripherals.webxr-world-sensing"
+  ],
+  "data": {
+    "type": "stream",
+    "metric": "Camera pose and anchors",
+    "update": "30 to 60 Hz",
+    "fields": [
+      {
+        "name": "pose",
+        "type": "object",
+        "unit": "6 DoF",
+        "range": "unbounded",
+        "precision": "about 1 to 2 cm drift"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can see through the camera and map your room while the app is open",
+    "user_action": "You tap Try it in your room or open a camera based AR feature",
+    "can": [
+      "Find floors and tables through the camera and place digital objects on them",
+      "Track where the phone is pointing",
+      "Use your location to pin objects to real places, if you allow it",
+      "Upload visual feature points to Google for cloud or Geospatial features (Android)"
+    ],
+    "cannot": [
+      "Start without the camera prompt",
+      "Use your location for geo anchors unless you allow location",
+      "Send the room map off an iPhone by default; it stays on the device",
+      "Run on Android without Google Play Services for AR"
+    ],
+    "reach": 2,
+    "reach_label": "While the camera is open",
+    "differs": "iPhone keeps the world map on the device; Android cloud and Geospatial features send data to Google."
+  },
+  "story": {
+    "what_it_is": "The phone maps the room around you and keeps digital objects stuck to floors, tables and walls.",
+    "icon": "scan-eye",
+    "tags": [
+      "Camera",
+      "AR",
+      "Games"
+    ],
+    "marketing": [
+      {
+        "vendor": "Apple",
+        "name": "ARKit",
+        "pitch": "Build augmented reality that tracks the real world and places virtual objects with precision.",
+        "url": "https://developer.apple.com/augmented-reality/"
+      },
+      {
+        "vendor": "Google",
+        "name": "ARCore",
+        "pitch": "Build augmented reality experiences that blend digital content with the real world.",
+        "url": "https://developers.google.com/ar"
+      }
+    ],
+    "for_you": "You point your phone at the floor and a virtual dragon or couch appears and stays put as you walk around it. It feels magical, but the camera is on and the phone is looking at your room.",
+    "for_makers": "AR needs a live map of the room, which unlocks games, shopping previews and measuring tools. Cloud anchors let two people see the same object. Makers also learn the layout of homes and stores if the data leaves the phone.",
+    "use_cases": [
+      {
+        "type": "games",
+        "example": "You throw Poke Balls at a Pikachu standing in your living room and the creature seems to sit on your floor.",
+        "apps": [
+          "Pokemon GO"
+        ]
+      },
+      {
+        "type": "shopping",
+        "example": "You place a sofa in your lounge to see if it fits and what colour looks right.",
+        "apps": [
+          "IKEA Place",
+          "Amazon"
+        ]
+      },
+      {
+        "type": "games",
+        "example": "A multiplayer AR game lets two friends see the same castle on a table and play at once.",
+        "apps": [
+          "Minecraft Earth (retired)"
+        ]
+      },
+      {
+        "type": "maps",
+        "example": "A walking app paints arrows on the street through the camera view.",
+        "apps": [
+          "Google Maps Live View"
+        ]
+      },
+      {
+        "type": "education",
+        "example": "A biology class lets students walk around a giant virtual heart.",
+        "apps": []
+      },
+      {
+        "type": "creative",
+        "example": "A face and world filter adds animated effects to a video.",
+        "apps": [
+          "Snapchat"
+        ]
+      },
+      {
+        "type": "utilities",
+        "example": "A measuring app turns your phone into a tape measure.",
+        "apps": [
+          "Measure"
+        ]
+      }
+    ],
+    "risks": [
+      "Camera sees your home",
+      "Shared maps can leak layouts",
+      "Battery drain"
+    ],
+    "android_note": "Cloud and geospatial features upload camera feature points to Google and need an ARCore cloud ID.",
+    "ios_note": "World mapping stays on the device. iOS 26 adds spatial widgets and shared world anchors on visionOS."
+  },
+  "technical_bounds": [
+    "Camera dot and permission apply on both"
+  ],
+  "scores": {
+    "sensitivity": 4,
+    "utility": 3,
+    "fingerprint_bits": 3,
+    "friction": 2
+  },
+  "value": {
+    "legit_uses": [
+      "Furniture preview",
+      "Navigation",
+      "Games"
+    ],
+    "abuse": [
+      "Scanning private rooms",
+      "Sending visual maps to cloud"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2017-06",
+      "platform": "ios",
+      "version": "iOS 11",
+      "change": "ARKit introduced"
+    },
+    {
+      "date": "2018-03",
+      "platform": "android",
+      "version": "ARCore 1.0 (Android 7)",
+      "change": "ARCore introduced"
+    },
+    {
+      "date": "2022-05",
+      "platform": "android",
+      "version": "ARCore 1.31",
+      "change": "Geospatial API"
+    }
+  ],
+  "related": [
+    "mob.hw.lidar-depth",
+    "mob.hw.camera-extensions"
+  ],
+  "refs": [
+    {
+      "t": "apple",
+      "label": "Apple: ARKit",
+      "url": "https://developer.apple.com/documentation/arkit"
+    },
+    {
+      "t": "android",
+      "label": "Google: ARCore",
+      "url": "https://developers.google.com/ar"
+    }
+  ],
+  "confidence": "docs"
+}

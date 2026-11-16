@@ -1,0 +1,198 @@
+{
+  "id": "mob.xtrack.probabilistic-matching",
+  "name": "Probabilistic install matching (IP plus user agent)",
+  "kind": "tracking",
+  "group": "cross-site-tracking",
+  "subgroup": "Install to click linking",
+  "tags": [
+    "fingerprint",
+    "mmp",
+    "probabilistic",
+    "ip-ua"
+  ],
+  "plain": "An MMP guesses which ad click led to an install by matching IP, device model and OS version within a short time window.",
+  "meaning": "Without IDs, the vendor matches the click (IP, UA, language, OS) with the first app open from the same signals, usually within hours. Apple treats this as fingerprinting for ATT-denied users.",
+  "lifecycle": [
+    "before-install",
+    "on-launch"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "y",
+      "v": "",
+      "permission": "",
+      "protection": "none",
+      "grant": "none",
+      "prompt_ui": "",
+      "persistence": "",
+      "revocation": "",
+      "store_policy": "Play does not ban it; used as fallback to referrer",
+      "api_surface": "MMP click redirect + SDK first open",
+      "note": "Used when Install Referrer is not available, e.g. non-Play installs."
+    },
+    "ios": {
+      "s": "p",
+      "v": "",
+      "permission": "",
+      "protection": "none",
+      "grant": "none",
+      "prompt_ui": "",
+      "persistence": "",
+      "revocation": "",
+      "store_policy": "App Review 5.1.2(i): fingerprinting prohibited for tracking; vendors limit it to non-user-level modeling",
+      "api_surface": "MMP click redirect + first open",
+      "note": "iCloud Private Relay hides the Safari IP, breaking matches; Apple leaves enforcement to review."
+    }
+  },
+  "web_equivalents": [
+    "web.net.referrer-origin"
+  ],
+  "data": {
+    "type": "object",
+    "metric": "Match score",
+    "update": "single, within a window",
+    "fields": [
+      {
+        "name": "match window",
+        "type": "integer",
+        "unit": "hours",
+        "range": "usually 1 to 24",
+        "precision": ""
+      },
+      {
+        "name": "signals",
+        "type": "list",
+        "unit": "",
+        "range": "IP, UA, language, OS, model",
+        "precision": ""
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can guess which ad led to your install by matching your IP, phone model and timing",
+    "user_action": "You tap an ad, install the app, then open it within a short window",
+    "can": [
+      "Match your ad click to your first open using IP, phone model and system version",
+      "Credit the right ad when no exact install code is available",
+      "Work for installs outside Google Play on Android and, with gaps, on iPhone"
+    ],
+    "cannot": [
+      "Match you for sure; it is a guess and can be wrong",
+      "Match you on a long delay; it needs a short time window",
+      "Match you on iPhone when iCloud Private Relay hides your Safari IP",
+      "See anything else about you from this step alone"
+    ],
+    "reach": 2,
+    "reach_label": "One guess, near first open",
+    "differs": "Android has a reliable referrer for Play installs, so guessing is a backup. On iPhone it is often the main method, though Private Relay breaks it."
+  },
+  "story": {
+    "what_it_is": "A guess about which ad led to an install, made by comparing network and device details.",
+    "icon": "scale",
+    "tags": [
+      "Install tracking",
+      "Ads",
+      "Guess"
+    ],
+    "marketing": [],
+    "for_you": "You tap an ad, install the app and the ad firm quietly matches the two by network address and device details. You never see this. It can be wrong, especially on shared Wi-Fi.",
+    "for_makers": "When IDs are blocked, ad firms still need to say which campaign worked. Matching in a short window gives an estimate for budgets. Apple treats it as fingerprinting when the person said no to tracking.",
+    "use_cases": [
+      {
+        "type": "ads",
+        "example": "A game studio checks which of five video ads brought a new player, using the click and first open from the same Wi-Fi.",
+        "apps": [
+          "AppsFlyer",
+          "Adjust"
+        ]
+      },
+      {
+        "type": "shopping",
+        "example": "A retailer measures whether an influencer link caused app installs.",
+        "apps": []
+      },
+      {
+        "type": "games",
+        "example": "A mobile game pays an ad network per install, and the match decides who gets paid.",
+        "apps": []
+      },
+      {
+        "type": "security",
+        "example": "Fraud teams spot clicks that claim installs by guessing from the same address at odd hours.",
+        "apps": []
+      },
+      {
+        "type": "travel",
+        "example": "A booking app estimates which search ad led to its first booking in the app.",
+        "apps": []
+      },
+      {
+        "type": "analytics",
+        "example": "A marketing team compares the guess to Apple's own aggregate ad reports.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Can be wrong",
+      "Works around no-tracking choice"
+    ],
+    "android_note": "Allowed more freely, though Google Play rules limit ad use.",
+    "ios_note": "Apple warns it counts as fingerprinting for people who tapped Ask App Not to Track."
+  },
+  "technical_bounds": [
+    "Accuracy falls with shared Wi-Fi, VPN, Private Relay",
+    "Not allowed on iOS for denied users per Apple"
+  ],
+  "scores": {
+    "sensitivity": 4,
+    "utility": 4,
+    "fingerprint_bits": 20,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Last-resort attribution on non-Play installs"
+    ],
+    "abuse": [
+      "Joining a click to a device without consent"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2021-04",
+      "platform": "ios",
+      "version": "iOS 14.5",
+      "change": "ATT: IP+UA matching not allowed for denied users; vendors restrict or rebrand"
+    },
+    {
+      "date": "2021-09",
+      "platform": "ios",
+      "version": "iOS 15",
+      "change": "iCloud Private Relay hides Safari IP from apps' redirectors"
+    }
+  ],
+  "related": [
+    "mob.ads.fingerprinting-ban",
+    "mob.xtrack.deferred-deep-link"
+  ],
+  "refs": [
+    {
+      "t": "vendor",
+      "label": "Adjust: probabilistic attribution glossary",
+      "url": "https://www.adjust.com/glossary/probabilistic-attribution/"
+    },
+    {
+      "t": "apple",
+      "label": "Apple: App Review Guidelines 5.1.2",
+      "url": "https://developer.apple.com/app-store/review/guidelines/#data-use-and-sharing"
+    }
+  ],
+  "confidence": "inferred"
+}

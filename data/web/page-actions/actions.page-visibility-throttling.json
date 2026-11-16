@@ -1,0 +1,251 @@
+{
+  "id": "web.actions.page-visibility-throttling",
+  "name": "Background tab timer throttling",
+  "kind": "capability",
+  "group": "page-actions",
+  "subgroup": "Scheduling",
+  "tags": [
+    "visibility",
+    "throttling",
+    "timers",
+    "background-tab",
+    "page-lifecycle"
+  ],
+  "plain": "Hidden tabs get slower timers: 1 per second, then 1 per minute after 5 minutes in Chrome.",
+  "meaning": "Tells the site whether the tab is visible and caps how much it can do while hidden. Useful for battery, but sites also detect tab switches via visibilitychange.",
+  "lifecycle": [
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "document.visibilityState, visibilitychange; setTimeout/setInterval; Page Lifecycle freeze/resume",
+      "bcd": [
+        "api.Document.visibilityState",
+        "api.Document.visibilitychange_event",
+        "api.Document.wasDiscarded"
+      ],
+      "access": {
+        "grant": "none",
+        "prompt_ui": "None (no browser prompt)",
+        "secure_context": false,
+        "user_gesture": false,
+        "activation": "none",
+        "persistence": "While hidden",
+        "revocation": "Nothing to revoke (no permission is stored)",
+        "iframe": "Applies per page, including iframes",
+        "steps": [
+          "Tab becomes hidden",
+          "Chrome aligns timers to 1 s; after 5 min with chained timers it runs them once per minute",
+          "Page can be frozen then discarded"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "33",
+          "note": "",
+          "date": "2014-02-20"
+        },
+        "edge": {
+          "s": "y",
+          "v": "12",
+          "note": "",
+          "date": "2015-07-29"
+        },
+        "firefox": {
+          "s": "y",
+          "v": "18",
+          "note": "",
+          "date": "2013-01-08"
+        },
+        "safari": {
+          "s": "y",
+          "v": "7",
+          "note": "",
+          "date": "2013-10-22"
+        },
+        "ios_safari": {
+          "s": "y",
+          "v": "7",
+          "note": "All iOS browsers use WebKit",
+          "date": "2013-09-18"
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "33",
+          "note": "",
+          "date": "2014-02-26"
+        },
+        "samsung": {
+          "s": "y",
+          "v": "2.0",
+          "note": "",
+          "date": "2014-10-17"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "none",
+    "metric": "",
+    "update": "",
+    "fields": []
+  },
+  "limits": {
+    "headline": "Can't keep its timers running fast once you switch to another tab",
+    "user_action": "You switch to another tab or app and leave the page.",
+    "can": [
+      "Run its code once a second while the tab is hidden",
+      "Keep playing sound, if the page plays audio",
+      "Slow down by itself to save battery"
+    ],
+    "cannot": [
+      "Keep fast timers in a hidden tab; they drop to once a second, then once a minute after 5 minutes in Chrome",
+      "Stay running as normal after you lock your phone",
+      "Turn off the browser's own power saving limit",
+      "Do heavy work in the background without a background task such as a worker or a service worker"
+    ],
+    "reach": 1,
+    "reach_label": "Slows down when hidden",
+    "differs": ""
+  },
+  "story": {
+    "what_it_is": "When a tab is hidden, the browser slows its clocks to save battery.",
+    "icon": "timer",
+    "tags": [
+      "Battery",
+      "Silent",
+      "Real time"
+    ],
+    "marketing": [
+      {
+        "vendor": "Google",
+        "name": "Timer throttling in Chrome 88",
+        "pitch": "Chrome explains that background tabs get less frequent timers, to save power and CPU.",
+        "url": "https://developer.chrome.com/blog/timer-throttling-in-chrome-88"
+      }
+    ],
+    "for_you": "You switch away from a tab and your laptop fan stays quiet. The cost is that some live things, like a countdown or a game, may lag or stall until you return.",
+    "for_makers": "Makers must design around it: pause animations, use server time, and keep calls and live connections alive for real time apps. Browsers use it to keep ads and trackers from burning battery.",
+    "use_cases": [
+      {
+        "type": "games",
+        "example": "An idle game or a browser multiplayer game must handle the tab being frozen, or it drops you from the match.",
+        "apps": [
+          "Agar.io",
+          "Krunker.io"
+        ]
+      },
+      {
+        "type": "live",
+        "example": "A live auction or sports score page catches up with the server when you return to its tab.",
+        "apps": [
+          "eBay"
+        ]
+      },
+      {
+        "type": "video",
+        "example": "A video call tab keeps audio running even when hidden, because audio is allowed to play.",
+        "apps": [
+          "Google Meet",
+          "Zoom web"
+        ]
+      },
+      {
+        "type": "ads",
+        "example": "Ad measurement counts a view only when the tab is visible, so hidden tabs do not inflate numbers.",
+        "apps": [
+          "Google Ad Manager"
+        ]
+      },
+      {
+        "type": "productivity",
+        "example": "A web chat app uses a push connection so it notifies you even when throttled.",
+        "apps": [
+          "Slack"
+        ]
+      },
+      {
+        "type": "analytics",
+        "example": "Time on page tools pause counting when the tab is hidden.",
+        "apps": [
+          "Google Analytics"
+        ]
+      }
+    ],
+    "risks": [
+      "Stalled live pages",
+      "Time on page distortions"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Chrome 57: budget based throttling; hidden timers wake about once per second",
+    "Chrome 88 intensive throttling: after 5 min hidden, timer chains of 5 or more run once per minute (page silent 30 s, not using WebRTC or audio)",
+    "Exempt: audible tabs, active WebRTC data channels or media streams, pages with Web Locks or IndexedDB transactions in flight",
+    "requestAnimationFrame pauses completely in hidden tabs; Safari throttles to 1 s then suspends; Firefox clamps to 1 s (and 10 s in some setups)",
+    "Memory Saver (Chrome 108+) can discard inactive tabs; wasDiscarded reveals prior discard"
+  ],
+  "scores": {
+    "sensitivity": 2,
+    "utility": 4,
+    "fingerprint_bits": null,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Pause polling",
+      "Save battery"
+    ],
+    "abuse": [
+      "Detecting tab switches (attention tracking)",
+      "Hidden miners hiding in background"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2017-03",
+      "browser": "chrome",
+      "version": "57",
+      "change": "Budget-based background timer throttling"
+    },
+    {
+      "date": "2021-01",
+      "browser": "chrome",
+      "version": "88",
+      "change": "Intensive wake up throttling after 5 minutes hidden"
+    },
+    {
+      "date": "2018-07",
+      "browser": "chrome",
+      "version": "68",
+      "change": "Page Lifecycle API with freeze and resume"
+    }
+  ],
+  "refs": [
+    {
+      "t": "mdn",
+      "label": "MDN Page Visibility API",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/Page_Visibility_API"
+    },
+    {
+      "t": "chromestatus",
+      "label": "Chrome 88 timer throttling",
+      "url": "https://developer.chrome.com/blog/timer-throttling-in-chrome-88"
+    },
+    {
+      "t": "chromestatus",
+      "label": "Page Lifecycle API",
+      "url": "https://developer.chrome.com/docs/web-platform/page-lifecycle-api"
+    }
+  ],
+  "confidence": "docs"
+}

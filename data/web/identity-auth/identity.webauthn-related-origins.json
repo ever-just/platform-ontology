@@ -1,0 +1,224 @@
+{
+  "id": "web.identity.webauthn-related-origins",
+  "name": "WebAuthn Related Origin Requests",
+  "kind": "capability",
+  "group": "identity-auth",
+  "subgroup": "WebAuthn",
+  "tags": [
+    "webauthn"
+  ],
+  "plain": "Lets one passkey work across several of a company's domains.",
+  "meaning": "Allows an RP ID to be shared by listed sites so passkeys follow brand domains. Limited labels prevent abuse.",
+  "lifecycle": [
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "https://{RPID}/.well-known/webauthn  {\"origins\":[...]}",
+      "bcd": [
+        "api.PublicKeyCredential"
+      ],
+      "access": {
+        "grant": "none",
+        "prompt_ui": "None",
+        "secure_context": true,
+        "user_gesture": false,
+        "persistence": "Per origin",
+        "revocation": "Site settings",
+        "iframe": "Same as top level; cross-origin iframes need a permissions policy where listed",
+        "steps": [
+          "Call the API",
+          "Browser applies its access rules",
+          "Page receives the result"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "67",
+          "note": "",
+          "date": "2018-05-29"
+        },
+        "edge": {
+          "s": "y",
+          "v": "18",
+          "note": "",
+          "date": "2018-10-02"
+        },
+        "firefox": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "safari": {
+          "s": "y",
+          "v": "13",
+          "note": "",
+          "date": "2019-09-19"
+        },
+        "ios_safari": {
+          "s": "y",
+          "v": "13",
+          "note": "",
+          "date": "2019-09-19"
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "70",
+          "note": "",
+          "date": "2018-10-17"
+        },
+        "samsung": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "object",
+    "metric": "Lets one passkey work across several of a company's domains.",
+    "update": "on demand",
+    "fields": [
+      {
+        "name": "origins",
+        "type": "list",
+        "range": "up to 5 labels (eTLD+1 groups) in Chrome"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can let one passkey work across a company's own listed websites",
+    "user_action": "Nothing extra. It happens when you use a passkey on any of that company's sites",
+    "can": [
+      "Share one passkey across a short list of the company's own domains",
+      "Let you sign in on a brand's country sites with the same passkey"
+    ],
+    "cannot": [
+      "Share your passkey with sites not on the company's list",
+      "Add more than a small number of site names",
+      "Work in older browsers that lack the feature"
+    ],
+    "reach": 1,
+    "reach_label": "Only the company's listed sites",
+    "differs": "Chrome, Safari and Edge support it. Firefox does not yet."
+  },
+  "story": {
+    "what_it_is": "One passkey can work across several websites owned by the same company.",
+    "icon": "globe",
+    "tags": [
+      "Passkey",
+      "Sign in",
+      "Brands"
+    ],
+    "marketing": [
+      {
+        "vendor": "web.dev (Google)",
+        "name": "Related Origin Requests",
+        "pitch": "Google describes a way for one passkey to be used on several of a company's domains, such as country sites.",
+        "url": "https://web.dev/articles/webauthn-related-origin-requests"
+      }
+    ],
+    "for_you": "You create a passkey on one site and later sign in with it on the same company's other web addresses. You never notice anything except that it just works.",
+    "for_makers": "Large brands own many domains for different countries and products. This lets them use one passkey across them all and avoids making customers sign up again.",
+    "use_cases": [
+      {
+        "type": "games",
+        "example": "A game publisher with separate stores and regional sites lets a player's passkey work on all of them.",
+        "apps": [
+          "Epic Games"
+        ]
+      },
+      {
+        "type": "shopping",
+        "example": "A retailer with country sites for each market keeps a shopper's passkey working when they travel.",
+        "apps": [
+          "Amazon",
+          "IKEA"
+        ]
+      },
+      {
+        "type": "media",
+        "example": "A streaming company with brand domains for each service lets one passkey open all of them.",
+        "apps": [
+          "Disney"
+        ]
+      },
+      {
+        "type": "travel",
+        "example": "A travel group with several booking brands sees fewer sign in drop offs.",
+        "apps": []
+      },
+      {
+        "type": "banking",
+        "example": "A bank with separate login and mobile domains shares passkeys between them.",
+        "apps": []
+      },
+      {
+        "type": "security",
+        "example": "A security team grows passkey use faster since customers do not need a new one for each domain.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "More domains in one trust circle",
+      "Complex to set up safely"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Chrome allows at most 5 labels",
+    "Firefox still considering it",
+    "Needs the file served on the RP ID domain"
+  ],
+  "scores": {
+    "sensitivity": 2,
+    "utility": 3,
+    "fingerprint_bits": null,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Brand sites sharing passkeys"
+    ],
+    "abuse": [
+      "None notable"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2025",
+      "browser": "chrome",
+      "version": "128",
+      "change": "Related origins ships"
+    },
+    {
+      "date": "2025",
+      "browser": "safari",
+      "version": "18",
+      "change": "Safari supports it"
+    }
+  ],
+  "refs": [
+    {
+      "t": "spec",
+      "label": "WebAuthn Level 3",
+      "url": "https://www.w3.org/TR/webauthn-3/"
+    },
+    {
+      "t": "news",
+      "label": "web.dev passkey related origins",
+      "url": "https://web.dev/articles/webauthn-related-origin-requests"
+    }
+  ],
+  "confidence": "docs"
+}

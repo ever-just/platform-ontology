@@ -1,0 +1,232 @@
+{
+  "id": "web.contacts.get-installed-related-apps",
+  "name": "getInstalledRelatedApps",
+  "kind": "signal",
+  "group": "personal-data-contacts",
+  "subgroup": "App presence",
+  "tags": [
+    "app presence"
+  ],
+  "plain": "Lets a site check whether its own native app is installed.",
+  "meaning": "Reveals only whether the site's declared related app is installed, to hide install banners.",
+  "lifecycle": [
+    "on-arrival",
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "navigator.getInstalledRelatedApps()",
+      "bcd": [
+        "api.Navigator.getInstalledRelatedApps"
+      ],
+      "access": {
+        "grant": "none",
+        "prompt_ui": "None",
+        "secure_context": true,
+        "user_gesture": false,
+        "persistence": "Per origin",
+        "revocation": "Site settings",
+        "iframe": "Same as top level; cross-origin iframes need a permissions policy where listed",
+        "steps": [
+          "Call the API",
+          "Browser applies its access rules",
+          "Page receives the result"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "85",
+          "note": "Supported on Windows for checking of Universal Windows Platform (UWP) app installation. Resolves with an empty array on other platforms.",
+          "date": "2020-08-25"
+        },
+        "edge": {
+          "s": "y",
+          "v": "85",
+          "note": "Supported on Windows for checking of Universal Windows Platform (UWP) app installation. Resolves with an empty array on other platforms.",
+          "date": "2020-08-27"
+        },
+        "firefox": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "safari": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "ios_safari": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "84",
+          "note": "Supports checking of Progressive Web App (PWA) installation.",
+          "date": "2020-07-27"
+        },
+        "samsung": {
+          "s": "y",
+          "v": "14.0",
+          "note": "Supports checking of Progressive Web App (PWA) installation.",
+          "date": "2021-04-17"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "object",
+    "metric": "Lets a site check whether its own native app is installed.",
+    "update": "on demand",
+    "fields": [
+      {
+        "name": "platform",
+        "type": "enum",
+        "range": "play, chromeos_play, webapp, windows, f-droid, amazon"
+      },
+      {
+        "name": "id",
+        "type": "string",
+        "range": "package or app id"
+      },
+      {
+        "name": "url",
+        "type": "string",
+        "range": "manifest url"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can check if its own app is installed, but not see your other apps",
+    "user_action": "Nothing. It happens when the page loads, to show Open in app or Get the app.",
+    "can": [
+      "Check if its own app is installed on your device",
+      "Show Open in app instead of Get the app",
+      "Check apps that the site has linked to itself in its settings"
+    ],
+    "cannot": [
+      "See a list of your installed apps",
+      "Check apps that are not linked to the site",
+      "Work in Firefox, Safari or on iPhone",
+      "Say what version or how often you use the app"
+    ],
+    "reach": 1,
+    "reach_label": "Only its own linked apps",
+    "differs": "Chrome and Edge on Android support it. Firefox, Safari and iPhone do not."
+  },
+  "story": {
+    "what_it_is": "A site can check if its own app is installed on your device.",
+    "icon": "package-search",
+    "tags": [
+      "Silent",
+      "Apps",
+      "Signals"
+    ],
+    "marketing": [
+      {
+        "vendor": "Google",
+        "name": "getInstalledRelatedApps()",
+        "pitch": "Chrome's docs say the API lets a site check whether its own app is installed.",
+        "url": "https://developer.chrome.com/docs/capabilities/get-installed-related-apps"
+      }
+    ],
+    "for_you": "You never see it. A site can hide its 'install our app' banner if it finds the app on your device.",
+    "for_makers": "Makers use it to hide install prompts and to nudge you into the app where they make more money. The result also tells them whether you are an app user, which they can use in profiles.",
+    "use_cases": [
+      {
+        "type": "shopping",
+        "example": "A store hides its install banner when you already have the app.",
+        "apps": [
+          "Amazon",
+          "Walmart"
+        ]
+      },
+      {
+        "type": "social",
+        "example": "A social site sends you to its app instead of asking you to install.",
+        "apps": [
+          "X",
+          "Instagram"
+        ]
+      },
+      {
+        "type": "media",
+        "example": "A music site skips the 'get our app' pop up if it is installed.",
+        "apps": [
+          "Spotify"
+        ]
+      },
+      {
+        "type": "games",
+        "example": "A web game page hides its install ad once you installed the app.",
+        "apps": []
+      },
+      {
+        "type": "ads",
+        "example": "An ad system treats app users as a different, more valuable audience.",
+        "apps": []
+      },
+      {
+        "type": "analytics",
+        "example": "A product team counts how many web visitors also have the app.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "App presence signal",
+      "Chromium only"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Only apps listed in manifest related_applications that also link back",
+    "No general app list",
+    "Not in Firefox or Safari"
+  ],
+  "scores": {
+    "sensitivity": 2,
+    "utility": 2,
+    "fingerprint_bits": 1,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Hide install prompt"
+    ],
+    "abuse": [
+      "App presence as signal"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2017",
+      "browser": "chrome",
+      "version": "84",
+      "change": "Android"
+    },
+    {
+      "date": "2021-02",
+      "browser": "chrome",
+      "version": "85",
+      "change": "Desktop for webapp/windows"
+    }
+  ],
+  "refs": [
+    {
+      "t": "mdn",
+      "label": "MDN getInstalledRelatedApps",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/Navigator/getInstalledRelatedApps"
+    }
+  ],
+  "confidence": "verified"
+}

@@ -1,0 +1,202 @@
+{
+  "id": "web.rendering.float-architecture",
+  "name": "CPU architecture via float behavior",
+  "kind": "signal",
+  "group": "rendering-fingerprint",
+  "subgroup": "Math",
+  "tags": [
+    "architecture",
+    "float32",
+    "fingerprintjs"
+  ],
+  "plain": "Telling ARM from x86 by how Float32 values behave in JavaScript.",
+  "meaning": "FingerprintJS writes a Float32Array and reads bytes to detect endianness-like behavior. Chromium reduced UA hides CPU, but such probes can infer the architecture class anyway.",
+  "lifecycle": [
+    "on-arrival",
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "new Float32Array / Uint8Array reinterpretation",
+      "access": {
+        "grant": "none",
+        "prompt_ui": "None",
+        "secure_context": false,
+        "user_gesture": false,
+        "persistence": "read fresh on every page load; nothing stored",
+        "revocation": "none needed (no grant)",
+        "iframe": "Readable from cross-origin iframes too (same values)",
+        "steps": [
+          "Page script reads the value",
+          "No prompt is shown"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "1",
+          "note": "",
+          "date": "2008-12-11"
+        },
+        "edge": {
+          "s": "y",
+          "v": "12",
+          "note": "",
+          "date": "2015-07-29"
+        },
+        "firefox": {
+          "s": "y",
+          "v": "1",
+          "note": "",
+          "date": "2004-11-09"
+        },
+        "safari": {
+          "s": "y",
+          "v": "4",
+          "note": "",
+          "date": "2009-06-08"
+        },
+        "ios_safari": {
+          "s": "y",
+          "v": "4",
+          "note": "",
+          "date": "2010-06-21"
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "18",
+          "note": "",
+          "date": "2012-06-27"
+        },
+        "samsung": {
+          "s": "y",
+          "v": "1.0",
+          "note": "",
+          "date": "2013-04-27"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "object",
+    "metric": "",
+    "update": "static per session",
+    "fields": [
+      {
+        "name": "architecture code",
+        "type": "integer",
+        "unit": "",
+        "range": "small enumerated set (e.g. 127, 255)",
+        "precision": ""
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can run number tests to tell whether your chip is ARM or x86",
+    "user_action": "Nothing. It happens when the page loads",
+    "can": [
+      "Store numbers in memory and check how they behave",
+      "Guess your chip family, such as ARM or x86",
+      "Work even when Chrome hides the chip in its browser label"
+    ],
+    "cannot": [
+      "See your files or what you typed",
+      "Ask permission first",
+      "Name your exact device model",
+      "Know who you are by itself"
+    ],
+    "reach": 2,
+    "reach_label": "Silent, chip family only",
+    "differs": ""
+  },
+  "story": {
+    "what_it_is": "A script tells ARM chips from Intel style chips by how tiny decimal numbers behave in JavaScript.",
+    "icon": "cpu",
+    "tags": [
+      "Silent",
+      "Chip type",
+      "Fingerprinting"
+    ],
+    "marketing": [],
+    "for_you": "You never see it. Your chip does a math trick in a hidden way and the answer shows whether it is an Apple or phone style chip or a PC style chip.",
+    "for_makers": "It lets fraud tools check that the chip matches the claimed device, such as a phone that claims to be a Mac. Trackers add it to a device ID. Sites rarely need it for features.",
+    "use_cases": [
+      {
+        "type": "security",
+        "example": "A fraud tool sees a device claim to be an Intel laptop but behave like a phone chip, and flags an emulator.",
+        "apps": []
+      },
+      {
+        "type": "ads",
+        "example": "A tracker uses the chip type as one more small piece of a device ID.",
+        "apps": []
+      },
+      {
+        "type": "analytics",
+        "example": "A visitor tool splits users by chip family to learn how many use Apple silicon or ARM Windows.",
+        "apps": []
+      },
+      {
+        "type": "games",
+        "example": "A game studio gathers chip types to decide which builds of a web game need testing.",
+        "apps": []
+      },
+      {
+        "type": "developer",
+        "example": "A developer finds why a number result looks different on one chip and fixes the bug.",
+        "apps": []
+      },
+      {
+        "type": "banking",
+        "example": "A bank compares chip type with the device model on file to spot a copied profile.",
+        "apps": []
+      },
+      {
+        "type": "shopping",
+        "example": "A retailer checks that a device really is the phone it claims to be, to catch bots.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Reveals your chip",
+      "Adds to a device ID"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Coarse CPU class"
+  ],
+  "scores": {
+    "sensitivity": 1,
+    "utility": 1,
+    "fingerprint_bits": 1.0,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "None"
+    ],
+    "abuse": [
+      "UA-reduction bypass"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "related": [
+    "web.device.ch-arch-bitness"
+  ],
+  "refs": [
+    {
+      "t": "github",
+      "label": "fingerprintjs source: architecture",
+      "url": "https://github.com/fingerprintjs/fingerprintjs/blob/master/src/sources/architecture.ts"
+    }
+  ],
+  "confidence": "docs"
+}

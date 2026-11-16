@@ -1,0 +1,222 @@
+{
+  "id": "web.notify.background-fetch",
+  "name": "Background Fetch",
+  "kind": "capability",
+  "group": "notifications-background",
+  "subgroup": "Background",
+  "tags": [
+    "service-worker",
+    "download"
+  ],
+  "plain": "Downloads large files after the person leaves, with a progress notification.",
+  "meaning": "Lets a site download or upload big files outside the tab. The browser shows progress UI so the person can see and cancel it.",
+  "lifecycle": [
+    "after-leaving"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "registration.backgroundFetch.fetch(id, requests, {downloadTotal, icons, title}); 'backgroundfetchsuccess' event",
+      "permission_name": "background-fetch",
+      "bcd": [
+        "api.BackgroundFetchManager"
+      ],
+      "access": {
+        "grant": "none",
+        "prompt_ui": "No prompt; Chrome shows a persistent progress notification the person can cancel.",
+        "secure_context": true,
+        "user_gesture": false,
+        "persistence": "Per fetch",
+        "revocation": "Cancel from the progress UI",
+        "iframe": "Service worker only",
+        "steps": [
+          "Call backgroundFetch.fetch with requests and downloadTotal",
+          "Browser shows progress notification",
+          "Worker handles success or failure events"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "74",
+          "note": "",
+          "date": "2019-04-23"
+        },
+        "edge": {
+          "s": "y",
+          "v": "79",
+          "note": "",
+          "date": "2020-01-15"
+        },
+        "firefox": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "safari": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "ios_safari": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "74",
+          "note": "",
+          "date": "2019-04-24"
+        },
+        "samsung": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "event",
+    "metric": "Fetch progress and result events",
+    "update": "per download",
+    "fields": [
+      {
+        "name": "downloadTotal",
+        "type": "integer",
+        "unit": "bytes",
+        "range": "expected size, hint only",
+        "precision": "1"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can download or upload big files after you leave the tab, with a progress notice",
+    "user_action": "You tap Download for a movie, podcast or large file and close the tab",
+    "can": [
+      "Keep a large download or upload going after you leave the page",
+      "Show a progress notice that you can see and cancel",
+      "Finish the file and tell the site when it is done"
+    ],
+    "cannot": [
+      "Run silently, since Chrome shows a persistent progress notice",
+      "Work in Firefox or Safari",
+      "Work on Samsung Internet",
+      "Keep going forever, since it stops when you cancel or the file finishes"
+    ],
+    "reach": 3,
+    "reach_label": "One download, in the background",
+    "differs": "Chrome, Edge and Chrome for Android only. Firefox, Safari and iPhone browsers do not support it."
+  },
+  "story": {
+    "what_it_is": "A site can keep downloading a big file after you leave the page, and show progress in a notification.",
+    "icon": "cloud-download",
+    "tags": [
+      "Background",
+      "Downloads",
+      "Installed apps"
+    ],
+    "marketing": [
+      {
+        "vendor": "Google Chrome",
+        "name": "Background Fetch",
+        "pitch": "Lets web apps start large downloads that keep going even if you close the tab, with a progress notice.",
+        "url": "https://developer.chrome.com/blog/background-fetch"
+      }
+    ],
+    "for_you": "You see a progress notification for a big download, like a movie or a game level. You can close the tab and it keeps going. When it finishes you get a note.",
+    "for_makers": "Makers can offer offline movies, music and big game assets on the web, as native apps do. It keeps users from losing a half finished download. It uses the service worker, so it runs after the tab is gone.",
+    "use_cases": [
+      {
+        "type": "video",
+        "example": "A web streaming app downloads a movie for a flight. You can close the tab while it finishes in the background.",
+        "apps": []
+      },
+      {
+        "type": "games",
+        "example": "A browser game downloads a large map pack after you leave the menu, and you get a notice when it is ready.",
+        "apps": []
+      },
+      {
+        "type": "music",
+        "example": "A web music player saves an album for offline listening while you do other things.",
+        "apps": []
+      },
+      {
+        "type": "education",
+        "example": "A learning site downloads a course video set for the commute.",
+        "apps": []
+      },
+      {
+        "type": "news",
+        "example": "A news reader site downloads the day's articles and images overnight for offline reading.",
+        "apps": []
+      },
+      {
+        "type": "productivity",
+        "example": "A web office app saves a large shared folder to the device for offline work.",
+        "apps": []
+      },
+      {
+        "type": "travel",
+        "example": "A trip planner web app downloads offline maps and guides before you travel.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Uses data and storage",
+      "Runs after you leave"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Not in Firefox or Safari",
+    "Visible UI cannot be hidden"
+  ],
+  "scores": {
+    "sensitivity": 2,
+    "utility": 3,
+    "fingerprint_bits": null,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Movie and podcast downloads"
+    ],
+    "abuse": [
+      "Large hidden uploads (progress UI shown)"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2019-04",
+      "browser": "chrome",
+      "version": "74",
+      "change": "Background Fetch ships"
+    }
+  ],
+  "related": [
+    "web.notify.background-sync"
+  ],
+  "refs": [
+    {
+      "t": "mdn",
+      "label": "MDN Background Fetch",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/Background_Fetch_API"
+    },
+    {
+      "t": "chromestatus",
+      "label": "Chrome Background Fetch",
+      "url": "https://developer.chrome.com/blog/background-fetch"
+    }
+  ],
+  "confidence": "docs"
+}

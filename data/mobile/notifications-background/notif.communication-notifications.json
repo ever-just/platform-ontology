@@ -1,0 +1,213 @@
+{
+  "id": "mob.notif.communication-notifications",
+  "name": "Communication notifications and conversations",
+  "kind": "capability",
+  "group": "notifications-background",
+  "subgroup": "Permission and presentation",
+  "tags": [
+    "notifications",
+    "messaging",
+    "people",
+    "intents"
+  ],
+  "plain": "Shows who a message is from with their photo, tied to the system's contact graph.",
+  "meaning": "Links alerts to a person so Focus can allow only certain people through. It also feeds the system's idea of who the user talks to; apps declare the intent for each message.",
+  "lifecycle": [
+    "background"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "y",
+      "v": "11",
+      "api": 30,
+      "permission": "",
+      "protection": "none",
+      "grant": "install",
+      "prompt_ui": "Conversation space in the shade; bubbles toggle",
+      "persistence": "Per conversation; per app",
+      "revocation": "Settings > Notifications > Conversations",
+      "store_policy": "",
+      "api_surface": "MessagingStyle, ShortcutInfo, Bubble API",
+      "note": "Conversation shortcuts publish contacts to the launcher"
+    },
+    "ios": {
+      "s": "y",
+      "v": "15.0",
+      "permission": "com.apple.developer.usernotifications.communication",
+      "protection": "entitlement",
+      "grant": "entitlement",
+      "prompt_ui": "Contact avatar and name in the banner",
+      "persistence": "Per app",
+      "revocation": "Settings > Notifications",
+      "store_policy": "App Review 4.5.4",
+      "api_surface": "INSendMessageIntent, UNNotificationContentProviding, NSE donate",
+      "note": "Needs a service extension to update the content with the intent"
+    }
+  },
+  "web_equivalents": [
+    "web.notify.notifications"
+  ],
+  "data": {
+    "type": "object",
+    "metric": "Person info",
+    "update": "Per message",
+    "fields": [
+      {
+        "name": "sender",
+        "type": "string",
+        "unit": "",
+        "range": "name, handle, image",
+        "precision": ""
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can show who a message is from, with their photo, in the alert",
+    "user_action": "You allow notifications and get a message from someone in your contacts",
+    "can": [
+      "Show the sender's name and picture in the alert banner",
+      "Group chats into a conversation space on Android",
+      "Share frequent contacts with the launcher on Android so you can reach them fast"
+    ],
+    "cannot": [
+      "Do this on iPhone without Apple's approval for communication notifications",
+      "See your whole contact list just because it shows one sender's photo",
+      "Show up if you turned off notifications for the app"
+    ],
+    "reach": 2,
+    "reach_label": "Only the people in your messages",
+    "differs": "iPhone needs an Apple approved entitlement and an extension to add the sender. Android uses conversation shortcuts and bubbles."
+  },
+  "story": {
+    "what_it_is": "Alerts that show the sender's photo and name and connect to your contacts.",
+    "icon": "messages-square",
+    "tags": [
+      "Messaging",
+      "Notifications",
+      "Contacts"
+    ],
+    "marketing": [
+      {
+        "vendor": "Apple",
+        "name": "Communication notifications",
+        "pitch": "Apple lets messaging apps show alerts with a contact's picture and name, and work with Focus filters.",
+        "url": "https://developer.apple.com/documentation/usernotifications/implementing-communication-notifications"
+      }
+    ],
+    "for_you": "You see your friend's face and name on the alert. Focus modes can let that person through while blocking everyone else.",
+    "for_makers": "Makers get messages that feel personal and are easy to answer. The system also learns who you talk to most, which helps ranking and suggestions.",
+    "use_cases": [
+      {
+        "type": "messaging",
+        "example": "A message from your sister shows her photo, so you spot it on the lock screen.",
+        "apps": [
+          "iMessage",
+          "WhatsApp"
+        ]
+      },
+      {
+        "type": "social",
+        "example": "A social app shows a person you follow in your notifications.",
+        "apps": [
+          "Instagram"
+        ]
+      },
+      {
+        "type": "productivity",
+        "example": "A work chat app shows the teammate name and lets Focus allow only your boss.",
+        "apps": [
+          "Slack",
+          "Teams"
+        ]
+      },
+      {
+        "type": "dating",
+        "example": "A dating app shows a match picture on a new message alert.",
+        "apps": [
+          "Hinge"
+        ]
+      },
+      {
+        "type": "games",
+        "example": "A game with chat shows which friend sent an invite to join a match.",
+        "apps": [
+          "Discord"
+        ]
+      },
+      {
+        "type": "kids",
+        "example": "A family app shows which child sent a message to a parent.",
+        "apps": []
+      },
+      {
+        "type": "automotive",
+        "example": "Messages read out in the car use the sender name.",
+        "apps": [
+          "CarPlay"
+        ]
+      }
+    ],
+    "risks": [
+      "Builds a map of who you talk to",
+      "Photos shown on the lock screen"
+    ],
+    "android_note": "Android groups chats in a conversation area and supports bubbles.",
+    "ios_note": "iOS needs a service extension and special permission to show the contact image."
+  },
+  "technical_bounds": [
+    "iOS needs a service extension",
+    "Android bubbles can be disabled by the user"
+  ],
+  "scores": {
+    "sensitivity": 3,
+    "utility": 3,
+    "fingerprint_bits": null,
+    "friction": 1
+  },
+  "value": {
+    "legit_uses": [
+      "Messaging apps"
+    ],
+    "abuse": [
+      "Social graph building via donated intents"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2021-09",
+      "platform": "ios",
+      "version": "iOS 15",
+      "change": "Communication notifications added"
+    },
+    {
+      "date": "2020-09",
+      "platform": "android",
+      "version": "11 (API 30)",
+      "change": "Conversation section and bubbles"
+    }
+  ],
+  "related": [
+    "mob.notif.service-extension",
+    "mob.system.focus-status"
+  ],
+  "refs": [
+    {
+      "t": "apple",
+      "label": "Apple: Implementing communication notifications",
+      "url": "https://developer.apple.com/documentation/usernotifications/implementing-communication-notifications"
+    },
+    {
+      "t": "android",
+      "label": "Android: Create a notification",
+      "url": "https://developer.android.com/develop/ui/views/notifications/build-notification"
+    }
+  ],
+  "confidence": "docs"
+}

@@ -1,0 +1,200 @@
+{
+  "id": "mob.bg.ble-background",
+  "name": "Bluetooth Low Energy in the background",
+  "kind": "capability",
+  "group": "notifications-background",
+  "subgroup": "Background modes",
+  "tags": [
+    "ble",
+    "bluetooth",
+    "background",
+    "scanning"
+  ],
+  "plain": "Apps can keep talking to Bluetooth devices when closed, with strict scan rules on iOS.",
+  "meaning": "Used by wearables, trackers and beacons. iOS wakes apps for known peripherals; Android needs a foreground service or a companion device grant to scan reliably.",
+  "lifecycle": [
+    "background"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "y",
+      "v": "4.3",
+      "api": 18,
+      "permission": "BLUETOOTH_SCAN, BLUETOOTH_CONNECT (API 31); FGS type connectedDevice",
+      "protection": "dangerous",
+      "grant": "prompt",
+      "prompt_ui": "Nearby devices permission",
+      "persistence": "Until revoked",
+      "revocation": "Settings > Permissions > Nearby devices",
+      "store_policy": "Play: BLUETOOTH_SCAN used for location needs declaration",
+      "api_surface": "BluetoothLeScanner, CompanionDeviceManager",
+      "note": "Background scans are throttled; Doze limits scanning; companion device apps exempt from several limits"
+    },
+    "ios": {
+      "s": "y",
+      "v": "5.0",
+      "permission": "NSBluetoothAlwaysUsageDescription; bluetooth-central or bluetooth-peripheral UIBackgroundModes",
+      "protection": "prompt",
+      "grant": "prompt",
+      "prompt_ui": "Bluetooth permission prompt",
+      "persistence": "Wakes the app on events for peripherals it connected to; scanning in background needs service UUIDs and coalesces results",
+      "revocation": "Settings > Privacy > Bluetooth",
+      "store_policy": "App Review 5.1.1; 2.5.4",
+      "api_surface": "CBCentralManager, CBPeripheralManager, state restoration",
+      "note": "Background scans must specify service UUIDs; duplicate advertisements coalesced; state preservation relaunches the app"
+    }
+  },
+  "data": {
+    "type": "event",
+    "metric": "BLE event",
+    "update": "Device driven",
+    "fields": []
+  },
+  "limits": {
+    "headline": "Can keep talking to Bluetooth gadgets with the app closed, with strict scan rules",
+    "user_action": "You tap Allow for Bluetooth and connect a device, then leave the app",
+    "can": [
+      "Stay connected to a paired Bluetooth gadget",
+      "Get data from a watch, lock or tracker in the background",
+      "Wake the app on iPhone when the gadget sends something",
+      "Scan for devices in the background, at a slower pace"
+    ],
+    "cannot": [
+      "Scan freely in the background on iPhone; you must name service UUIDs",
+      "Scan without limits in the background on Android; Doze and throttling slow it",
+      "See duplicate advertisements on iPhone",
+      "Use Bluetooth if you tap Don't Allow"
+    ],
+    "reach": 3,
+    "reach_label": "Bluetooth gadgets, even when closed",
+    "differs": "iPhone requires UUID filtered background scans and can relaunch the app. Android throttles scans and exempts companion device apps."
+  },
+  "story": {
+    "what_it_is": "An app keeps talking to Bluetooth gadgets when it is closed.",
+    "icon": "bluetooth",
+    "tags": [
+      "Background",
+      "Bluetooth",
+      "Gadgets"
+    ],
+    "marketing": [
+      {
+        "vendor": "Apple",
+        "name": "Core Bluetooth background",
+        "pitch": "Apple lets apps connect to and get data from Bluetooth devices in the background.",
+        "url": "https://developer.apple.com/library/archive/documentation/NetworkingInternetWeb/Conceptual/CoreBluetooth_concepts/CoreBluetoothBackgroundProcessingForIOSApps/PerformingTasksWhileYourAppIsInTheBackground.html"
+      },
+      {
+        "vendor": "Google",
+        "name": "Bluetooth Low Energy",
+        "pitch": "Android apps can connect to low power Bluetooth devices, with rules for background scans.",
+        "url": "https://developer.android.com/develop/connectivity/bluetooth/ble/ble-overview"
+      }
+    ],
+    "for_you": "You walk up to your car or your smart lock and it works, with no app open. Your fitness band keeps syncing. You never need to launch the app first.",
+    "for_makers": "Makers of wearables, trackers and locks need this for the product to feel automatic. It also lets beacons notice you when you pass a shop. Platforms limit scans to protect battery and privacy.",
+    "use_cases": [
+      {
+        "type": "wearables",
+        "example": "A fitness band syncs steps to the app while the phone is in your pocket.",
+        "apps": [
+          "Fitbit",
+          "Garmin Connect"
+        ]
+      },
+      {
+        "type": "smart-home",
+        "example": "A smart lock senses your phone as you approach and unlocks the door.",
+        "apps": [
+          "August",
+          "Level"
+        ]
+      },
+      {
+        "type": "automotive",
+        "example": "A digital car key lets you unlock the car when you walk up.",
+        "apps": []
+      },
+      {
+        "type": "shopping",
+        "example": "A store beacon wakes the app when you walk in and offers a coupon.",
+        "apps": []
+      },
+      {
+        "type": "health",
+        "example": "A glucose monitor sends readings to the phone all day.",
+        "apps": [
+          "Dexcom"
+        ]
+      },
+      {
+        "type": "analytics",
+        "example": "A tracker uses nearby Bluetooth beacons to learn how long you stay somewhere.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Tracking by beacon",
+      "Battery drain"
+    ],
+    "android_note": "Android needs a foreground service or a companion device grant to scan reliably in the background.",
+    "ios_note": "iPhone wakes an app for known devices and has strict rules on background scans."
+  },
+  "technical_bounds": [
+    "Scan filters required in iOS background",
+    "Android throttles background scans"
+  ],
+  "scores": {
+    "sensitivity": 3,
+    "utility": 4,
+    "fingerprint_bits": null,
+    "friction": 2
+  },
+  "value": {
+    "legit_uses": [
+      "Wearables",
+      "Trackers"
+    ],
+    "abuse": [
+      "Tracking by beacon proximity"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2020-09",
+      "platform": "ios",
+      "version": "iOS 13",
+      "change": "Bluetooth permission prompt (NSBluetoothAlwaysUsageDescription)"
+    },
+    {
+      "date": "2021-10",
+      "platform": "android",
+      "version": "12 (API 31)",
+      "change": "Nearby devices permissions BLUETOOTH_SCAN and BLUETOOTH_CONNECT"
+    }
+  ],
+  "related": [
+    "mob.bg.ios-modes",
+    "mob.bg.fgs-types"
+  ],
+  "refs": [
+    {
+      "t": "apple",
+      "label": "Apple: Performing long term actions in the background",
+      "url": "https://developer.apple.com/documentation/corebluetooth/performing-long-term-actions-in-the-background"
+    },
+    {
+      "t": "android",
+      "label": "Android: Bluetooth permissions",
+      "url": "https://developer.android.com/develop/connectivity/bluetooth/bt-permissions"
+    }
+  ],
+  "confidence": "docs"
+}

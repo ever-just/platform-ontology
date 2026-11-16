@@ -1,0 +1,211 @@
+{
+  "id": "web.device.css-system-colors-fonts",
+  "name": "CSS system colors and system fonts",
+  "kind": "signal",
+  "group": "device-system-profile",
+  "subgroup": "OS profile",
+  "tags": [
+    "css",
+    "system-colors",
+    "os-theme",
+    "creepjs"
+  ],
+  "plain": "Computed values of system color keywords and font names reveal OS and theme.",
+  "meaning": "getComputedStyle on keywords like ActiveText, Canvas, ButtonFace, and system-ui fonts returns OS-specific RGB values and font names. CreepJS uses them to detect OS, theme and spoofing.",
+  "lifecycle": [
+    "on-arrival",
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "getComputedStyle(el).color for system keywords; font: caption, menu, status-bar",
+      "access": {
+        "grant": "none",
+        "prompt_ui": "None",
+        "secure_context": false,
+        "user_gesture": false,
+        "persistence": "read fresh on every page load; nothing stored",
+        "revocation": "none needed (no grant)",
+        "iframe": "Readable from cross-origin iframes too (same values)",
+        "steps": [
+          "Page script reads the value",
+          "No prompt is shown"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "1",
+          "note": "",
+          "date": "2008-12-11"
+        },
+        "edge": {
+          "s": "y",
+          "v": "12",
+          "note": "",
+          "date": "2015-07-29"
+        },
+        "firefox": {
+          "s": "y",
+          "v": "1",
+          "note": "",
+          "date": "2004-11-09"
+        },
+        "safari": {
+          "s": "y",
+          "v": "1",
+          "note": "",
+          "date": "2003-06-23"
+        },
+        "ios_safari": {
+          "s": "y",
+          "v": "1",
+          "note": "",
+          "date": "2007-06-29"
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "18",
+          "note": "",
+          "date": "2012-06-27"
+        },
+        "samsung": {
+          "s": "y",
+          "v": "1.0",
+          "note": "",
+          "date": "2013-04-27"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "object",
+    "metric": "",
+    "update": "static per session",
+    "fields": [
+      {
+        "name": "system color RGB",
+        "type": "string",
+        "unit": "rgb()",
+        "range": "about 30 keywords",
+        "precision": "exact"
+      },
+      {
+        "name": "system font family and size",
+        "type": "string",
+        "unit": "",
+        "range": "per OS",
+        "precision": ""
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can guess your OS and theme from how system colors and fonts look",
+    "user_action": "Nothing. It happens when the page loads",
+    "can": [
+      "Check the colors of built in items like buttons and links",
+      "Check the system font names and sizes",
+      "Tell Windows, macOS, and Android apart",
+      "Spot a browser that is faking its identity"
+    ],
+    "cannot": [
+      "See your wallpaper or personal files",
+      "See a list of every font you installed",
+      "Learn your name from the colors",
+      "Tell your exact OS version"
+    ],
+    "reach": 2,
+    "reach_label": "OS look and theme, on page load",
+    "differs": ""
+  },
+  "story": {
+    "what_it_is": "Reads how your system draws buttons, links and fonts, which varies by operating system and theme.",
+    "icon": "type",
+    "tags": [
+      "Look and feel",
+      "Silent",
+      "Fingerprinting"
+    ],
+    "marketing": [],
+    "for_you": "You never see it. It runs in the background by asking the browser what color your system uses for plain buttons and which font it uses for menus. Different systems give different answers.",
+    "for_makers": "Some sites use it to match your system theme. Tracking and anti-fraud tools use the same answers to guess the operating system and spot tools that hide it. CreepJS style tests use it to see whether privacy tools are lying.",
+    "use_cases": [
+      {
+        "type": "security",
+        "example": "A fingerprinting library reads system colors to notice that a browser claiming to be Windows draws buttons like macOS.",
+        "apps": [
+          "FingerprintJS",
+          "CreepJS"
+        ]
+      },
+      {
+        "type": "productivity",
+        "example": "A web app matches buttons and menus to your system theme, so it looks native in dark or light mode.",
+        "apps": []
+      },
+      {
+        "type": "accessibility",
+        "example": "A page reads forced-colors system keywords to respect a person using high contrast mode.",
+        "apps": []
+      },
+      {
+        "type": "creative",
+        "example": "A browser design tool checks system fonts to show previews that match your computer.",
+        "apps": [
+          "Figma"
+        ]
+      },
+      {
+        "type": "ads",
+        "example": "An ad network adds the theme and font answers to its device ID to tell visitors apart.",
+        "apps": []
+      },
+      {
+        "type": "games",
+        "example": "A browser game uses the system color scheme to choose a dark or light menu automatically.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Reveals OS and settings",
+      "Helps tracking without cookies"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Tor Browser and RFP normalize them"
+  ],
+  "scores": {
+    "sensitivity": 1,
+    "utility": 2,
+    "fingerprint_bits": 3.0,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Match native UI"
+    ],
+    "abuse": [
+      "OS and theme fingerprint"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "related": [
+    "web.display.prefers-color-scheme"
+  ],
+  "refs": [
+    {
+      "t": "github",
+      "label": "CreepJS (abrahamjuliot)",
+      "url": "https://github.com/abrahamjuliot/creepjs"
+    }
+  ],
+  "confidence": "inferred"
+}

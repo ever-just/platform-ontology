@@ -1,0 +1,209 @@
+{
+  "id": "web.display.refresh-rate",
+  "name": "Display refresh rate (measured)",
+  "kind": "signal",
+  "group": "display-window",
+  "subgroup": "Screen",
+  "tags": [
+    "refresh-rate",
+    "requestAnimationFrame",
+    "timing"
+  ],
+  "plain": "Estimated by timing animation frames; 60, 90, 120 or 144 Hz.",
+  "meaning": "No API reports refresh rate; scripts measure the gap between requestAnimationFrame callbacks. Distinguishes high-refresh phones and gaming monitors, but is noisy under load.",
+  "lifecycle": [
+    "on-arrival",
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "requestAnimationFrame timestamp deltas over about 1 second",
+      "access": {
+        "grant": "none",
+        "prompt_ui": "None",
+        "secure_context": false,
+        "user_gesture": false,
+        "persistence": "read fresh on every page load; nothing stored",
+        "revocation": "none needed (no grant)",
+        "iframe": "Readable from cross-origin iframes too (same values)",
+        "steps": [
+          "Page script reads the value",
+          "No prompt is shown"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "24",
+          "note": "",
+          "date": "2013-01-10"
+        },
+        "edge": {
+          "s": "y",
+          "v": "12",
+          "note": "",
+          "date": "2015-07-29"
+        },
+        "firefox": {
+          "s": "y",
+          "v": "23",
+          "note": "",
+          "date": "2013-08-06"
+        },
+        "safari": {
+          "s": "y",
+          "v": "6.1",
+          "note": "",
+          "date": "2012-07-25"
+        },
+        "ios_safari": {
+          "s": "y",
+          "v": "7",
+          "note": "",
+          "date": "2013-09-18"
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "25",
+          "note": "",
+          "date": "2013-02-27"
+        },
+        "samsung": {
+          "s": "y",
+          "v": "1.5",
+          "note": "",
+          "date": "2013-09-25"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "object",
+    "metric": "",
+    "update": "static per session",
+    "fields": [
+      {
+        "name": "refresh",
+        "type": "float",
+        "unit": "Hz",
+        "range": "30, 48, 60, 75, 90, 120, 144, 165, 240",
+        "precision": "within about 1 Hz"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can estimate your screen's refresh rate by timing about one second of animation",
+    "user_action": "Nothing. It runs for about a second when the page loads or an animation starts.",
+    "can": [
+      "Count animation frames to guess 60, 90, 120 or 144 Hz",
+      "Tune animations and games to match",
+      "Add the result to a browser fingerprint"
+    ],
+    "cannot": [
+      "Get an exact value, since busy or power saving devices give slightly wrong numbers",
+      "Measure while the tab is hidden",
+      "Learn your monitor model"
+    ],
+    "reach": 1,
+    "reach_label": "A guess, taken once",
+    "differs": ""
+  },
+  "story": {
+    "what_it_is": "A page estimates how fast your screen redraws, such as 60, 120 or 144 times a second.",
+    "icon": "gauge",
+    "tags": [
+      "Display",
+      "Games",
+      "Silent"
+    ],
+    "marketing": [],
+    "for_you": "You never see the test. The page counts how quickly the screen redraws. It is why a game can feel smoother on a fast gaming screen.",
+    "for_makers": "Games use it to set a smooth frame rate and spare weak devices. Ad and fraud teams use it too, because real screens redraw in a steady rhythm and bots often do not.",
+    "use_cases": [
+      {
+        "type": "games",
+        "example": "A browser game matches its frame rate to a 120 Hz display so motion looks silky.",
+        "apps": []
+      },
+      {
+        "type": "games",
+        "example": "A cloud gaming site asks the server for a stream at 60 or 120 frames to match your screen.",
+        "apps": [
+          "Xbox Cloud Gaming",
+          "GeForce NOW"
+        ]
+      },
+      {
+        "type": "video",
+        "example": "A video player picks smoother playback modes on high refresh screens.",
+        "apps": []
+      },
+      {
+        "type": "creative",
+        "example": "A drawing app updates ink as fast as the screen allows, so pen strokes feel instant.",
+        "apps": [
+          "Figma"
+        ]
+      },
+      {
+        "type": "security",
+        "example": "A bot check sees a browser with odd frame timing, such as a virtual machine or a headless browser.",
+        "apps": []
+      },
+      {
+        "type": "ads",
+        "example": "A measurement script uses the display speed as one more clue in a device ID.",
+        "apps": []
+      },
+      {
+        "type": "analytics",
+        "example": "A team measures page smoothness on real devices to find slow spots.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Fingerprint clue",
+      "Reveals device power"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Throttled in background tabs",
+    "Safari low power mode caps at 30 or 60"
+  ],
+  "scores": {
+    "sensitivity": 1,
+    "utility": 2,
+    "fingerprint_bits": 2.0,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Smooth animation pacing"
+    ],
+    "abuse": [
+      "Hardware class"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "refs": [
+    {
+      "t": "github",
+      "label": "CreepJS (abrahamjuliot)",
+      "url": "https://github.com/abrahamjuliot/creepjs"
+    },
+    {
+      "t": "mdn",
+      "label": "MDN requestAnimationFrame",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/Window/requestAnimationFrame"
+    }
+  ],
+  "confidence": "inferred"
+}

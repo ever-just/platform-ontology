@@ -1,0 +1,200 @@
+{
+  "id": "mob.net.network-type",
+  "name": "Network type, metered and constrained flags",
+  "kind": "signal",
+  "group": "network-connectivity",
+  "subgroup": "Connectivity",
+  "tags": [
+    "connectivity",
+    "metered"
+  ],
+  "plain": "Reads whether the phone is on Wi-Fi, cellular or VPN, and if the connection is metered.",
+  "meaning": "Tells whether the person is at home or out, and whether data saving is on.",
+  "lifecycle": [
+    "on-launch",
+    "in-session"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "y",
+      "v": "1.0",
+      "api": 1,
+      "permission": "ACCESS_NETWORK_STATE",
+      "protection": "normal",
+      "grant": "install",
+      "prompt_ui": "",
+      "persistence": "",
+      "revocation": "",
+      "store_policy": "",
+      "api_surface": "ConnectivityManager.getNetworkCapabilities(), NET_CAPABILITY_NOT_METERED",
+      "note": "Transports: WIFI, CELLULAR, ETHERNET, VPN, BLUETOOTH"
+    },
+    "ios": {
+      "s": "y",
+      "v": "12.0",
+      "permission": "none",
+      "protection": "none",
+      "grant": "none",
+      "prompt_ui": "",
+      "persistence": "",
+      "revocation": "",
+      "store_policy": "",
+      "api_surface": "Interface types: wifi, cellular, wiredEthernet, other",
+      "note": ""
+    }
+  },
+  "web_equivalents": [
+    "web.network.network-information"
+  ],
+  "data": {
+    "type": "enum",
+    "metric": "Transport and flags",
+    "update": "On change",
+    "fields": [
+      {
+        "name": "transport",
+        "type": "enum",
+        "unit": "",
+        "range": "WIFI, CELLULAR, ETHERNET, VPN",
+        "precision": "4 values"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can tell if you are on Wi-Fi, cellular or VPN, and if data is metered",
+    "user_action": "Nothing. It happens when the app loads or before it downloads something big",
+    "can": [
+      "Check if the phone uses Wi-Fi, cellular, Ethernet, VPN or Bluetooth",
+      "Check if the connection is metered or limited",
+      "Wait for Wi-Fi before big downloads"
+    ],
+    "cannot": [
+      "See the network's name without more permission",
+      "See what you send or receive",
+      "Switch networks for you"
+    ],
+    "reach": 1,
+    "reach_label": "The kind of connection",
+    "differs": "Android needs a normal permission granted at install. iPhone needs none."
+  },
+  "story": {
+    "what_it_is": "An app can see if you are on Wi-Fi, cellular or a VPN, and whether data saving is on.",
+    "icon": "wifi",
+    "tags": [
+      "Network",
+      "Silent",
+      "Data"
+    ],
+    "marketing": [
+      {
+        "vendor": "Google",
+        "name": "Connectivity status",
+        "pitch": "Android lets apps check what network you are on so they can save your data.",
+        "url": "https://developer.android.com/training/monitoring-device-state/connectivity-status-type"
+      },
+      {
+        "vendor": "Apple",
+        "name": "Network path monitor",
+        "pitch": "Apple lets apps watch the connection type and whether it is expensive or constrained.",
+        "url": "https://developer.apple.com/documentation/network/nwpathmonitor"
+      }
+    ],
+    "for_you": "You do not see it. You notice that a podcast app waits for Wi-Fi to download, or a video drops to a lower quality on cellular. It also tells an app whether you are at home or out.",
+    "for_makers": "Makers use it to save your data, lower video quality, and defer big downloads. It is a low risk signal. Over time it shows when you are at home, at work or on the move.",
+    "use_cases": [
+      {
+        "type": "media",
+        "example": "A streaming app drops video quality on cellular to protect your data plan.",
+        "apps": [
+          "Netflix",
+          "YouTube"
+        ]
+      },
+      {
+        "type": "music",
+        "example": "A music app only downloads your playlists when you are on Wi-Fi.",
+        "apps": [
+          "Spotify"
+        ]
+      },
+      {
+        "type": "games",
+        "example": "A game waits for Wi-Fi before it downloads a big update.",
+        "apps": []
+      },
+      {
+        "type": "live",
+        "example": "A live stream app lowers its picture when your signal gets weak.",
+        "apps": [
+          "Twitch"
+        ]
+      },
+      {
+        "type": "productivity",
+        "example": "A cloud photo backup runs only on Wi-Fi or when plugged in.",
+        "apps": [
+          "Google Photos"
+        ]
+      },
+      {
+        "type": "analytics",
+        "example": "A tracker logs when you switch from home Wi-Fi to cellular to learn your day.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Reveals home and away",
+      "Little fingerprint value"
+    ],
+    "android_note": "Android reads network type, metered and VPN flags with the normal network state permission.",
+    "ios_note": "iPhone apps see whether a connection is expensive or constrained, which covers cellular and Low Data Mode."
+  },
+  "technical_bounds": [
+    "No SSID or IP info"
+  ],
+  "scores": {
+    "sensitivity": 1,
+    "utility": 3,
+    "fingerprint_bits": 2,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Defer big downloads"
+    ],
+    "abuse": [
+      "Little"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2019-09",
+      "platform": "ios",
+      "version": "iOS 13",
+      "change": "isConstrained (Low Data Mode) added"
+    }
+  ],
+  "related": [
+    "mob.net.vpn"
+  ],
+  "refs": [
+    {
+      "t": "android",
+      "label": "Android: ConnectivityManager",
+      "url": "https://developer.android.com/reference/android/net/ConnectivityManager"
+    },
+    {
+      "t": "apple",
+      "label": "Apple: ProcessInfo",
+      "url": "https://developer.apple.com/documentation/foundation/processinfo"
+    }
+  ],
+  "confidence": "docs"
+}

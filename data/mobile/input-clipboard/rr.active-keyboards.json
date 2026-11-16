@@ -1,0 +1,195 @@
+{
+  "id": "mob.rr.active-keyboards",
+  "name": "Required Reason: active keyboards",
+  "kind": "capability",
+  "group": "input-clipboard",
+  "subgroup": "Privacy manifests",
+  "tags": [
+    "required-reason-api",
+    "keyboards"
+  ],
+  "plain": "iOS reading active input modes needs 3EC4.1 or 54BD.1.",
+  "meaning": "Keyboard lists show languages and third-party keyboards. 3EC4.1 is for keyboard apps, 54BD.1 adjusts UI to active keyboards; neither may leave the device.",
+  "lifecycle": [
+    "on-launch",
+    "in-session"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "n",
+      "v": "",
+      "api": "",
+      "permission": "none",
+      "protection": "none",
+      "grant": "not-exposed",
+      "prompt_ui": "",
+      "persistence": "",
+      "revocation": "",
+      "store_policy": "",
+      "api_surface": "Android has no gate: getEnabledInputMethodList is open",
+      "note": "Android analog: no reason needed"
+    },
+    "ios": {
+      "s": "f",
+      "v": "17.0",
+      "permission": "entitlement",
+      "protection": "entitlement",
+      "grant": "none",
+      "prompt_ui": "",
+      "persistence": "",
+      "revocation": "App Review: fingerprinting banned",
+      "store_policy": "",
+      "api_surface": "3EC4.1 custom keyboard apps only; 54BD.1 UI adjusts observably to keyboards; no off-device send",
+      "note": ""
+    }
+  },
+  "web_equivalents": [
+    "web.locale.keyboard-layout"
+  ],
+  "data": {
+    "type": "object",
+    "metric": "Reason codes",
+    "update": "At upload",
+    "fields": [
+      {
+        "name": "reason_codes",
+        "type": "list",
+        "unit": "code",
+        "range": "2 values",
+        "precision": "exact"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can list your keyboards on iPhone only for approved reasons; Android lists them freely",
+    "user_action": "Nothing. It happens when the app checks your keyboard setup",
+    "can": [
+      "Check the keyboards and input languages that are turned on",
+      "Adjust the app's layout when a keyboard changes (iPhone reason 54BD.1)",
+      "Detect its own keyboard on iPhone (custom keyboard apps only)",
+      "List keyboards on Android with no gate"
+    ],
+    "cannot": [
+      "Use the list on iPhone without a declared reason in the App Store listing",
+      "Send the list off the phone on iPhone for tracking",
+      "See what you type from the list alone",
+      "Pass App Review on iPhone for a reason it does not meet"
+    ],
+    "reach": 1,
+    "reach_label": "A list of installed keyboards",
+    "differs": "iPhone requires a declared reason (3EC4.1 or 54BD.1) and rejects other uses. Android has no gate."
+  },
+  "story": {
+    "what_it_is": "Apple makes apps give a reason before they list your active keyboards and languages.",
+    "icon": "keyboard",
+    "tags": [
+      "Keyboard",
+      "iPhone",
+      "Rules"
+    ],
+    "marketing": [
+      {
+        "vendor": "Apple",
+        "name": "Required Reason APIs",
+        "pitch": "Apple asks developers to declare approved reasons when they use certain system APIs that could be used to fingerprint users.",
+        "url": "https://developer.apple.com/documentation/bundleresources/describing-use-of-required-reason-api"
+      }
+    ],
+    "for_you": "You never see this. It is a rule between Apple and the app maker. An app that lists your keyboards must say why, and Apple can reject it if the reason does not fit.",
+    "for_makers": "Makers of keyboard apps have an approved reason to read active keyboards, as do apps that adjust their layout. The rule means the answer cannot be used for tracking or ads. Apps that break it risk rejection.",
+    "use_cases": [
+      {
+        "type": "utilities",
+        "example": "A keyboard app checks which keyboards are on so it can show a setup hint if its own is off.",
+        "apps": [
+          "Gboard",
+          "SwiftKey"
+        ]
+      },
+      {
+        "type": "messaging",
+        "example": "A chat app adjusts the input bar for a right to left language keyboard.",
+        "apps": [
+          "WhatsApp"
+        ]
+      },
+      {
+        "type": "education",
+        "example": "A language learning app shows the right character set for the keyboard you use.",
+        "apps": [
+          "Duolingo"
+        ]
+      },
+      {
+        "type": "accessibility",
+        "example": "An accessibility app changes its layout for a custom input method.",
+        "apps": []
+      },
+      {
+        "type": "analytics",
+        "example": "An ad SDK would like to read the list to guess your language and country, which the rule bans.",
+        "apps": []
+      },
+      {
+        "type": "developer",
+        "example": "A developer must add a reason code to the app's privacy manifest before shipping.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Rule can be misused",
+      "Hard for users to see"
+    ],
+    "android_note": "Android has no matching rule. Apps can read the list of enabled keyboards with fewer limits.",
+    "ios_note": "This is an Apple only rule that came in with privacy manifests for apps."
+  },
+  "technical_bounds": [
+    "No off-device use"
+  ],
+  "scores": {
+    "sensitivity": 1,
+    "utility": 2,
+    "fingerprint_bits": null,
+    "friction": 3
+  },
+  "value": {
+    "legit_uses": [
+      "Keyboard apps"
+    ],
+    "abuse": [
+      "Language profiling"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2024-05",
+      "platform": "ios",
+      "version": "iOS 17.x",
+      "change": "Reason required to ship"
+    }
+  ],
+  "related": [
+    "mob.rr.regime",
+    "mob.loc.keyboards"
+  ],
+  "refs": [
+    {
+      "t": "apple",
+      "label": "Apple: Describing use of required reason API",
+      "url": "https://developer.apple.com/documentation/bundleresources/describing-use-of-required-reason-api"
+    },
+    {
+      "t": "apple",
+      "label": "Apple: Privacy manifest files",
+      "url": "https://developer.apple.com/documentation/bundleresources/privacy-manifest-files"
+    }
+  ],
+  "confidence": "verified"
+}

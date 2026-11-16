@@ -1,0 +1,322 @@
+{
+  "id": "web.camera.display-capture",
+  "name": "Screen, window and tab capture",
+  "kind": "permission",
+  "group": "camera-mic-screen",
+  "subgroup": "Capture",
+  "tags": [
+    "screen-share",
+    "picker",
+    "capture-controller"
+  ],
+  "plain": "Asks to record or stream a screen, window or browser tab.",
+  "meaning": "Gives the site a live copy of whatever the person picks: their whole screen, an app window, or a tab. Can expose private messages, tabs and credentials visible on screen.",
+  "lifecycle": [
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "navigator.mediaDevices.getDisplayMedia({video, audio, preferCurrentTab, selfBrowserSurface, systemAudio, surfaceSwitching, monitorTypeSurfaces, controller})",
+      "permission_name": "display-capture",
+      "permissions_policy": "display-capture",
+      "bcd": [
+        "api.MediaDevices.getDisplayMedia",
+        "api.CaptureController"
+      ],
+      "access": {
+        "grant": "picker",
+        "prompt_ui": "Browser-drawn chooser every time: Chrome tab, window, entire screen tabs; Share audio checkbox; Firefox and Safari simple list. No stored grant: each call prompts. Indicator bar Stop sharing stays visible while active.",
+        "secure_context": true,
+        "user_gesture": true,
+        "persistence": "None: every call needs a fresh gesture and picker choice",
+        "revocation": "Stop sharing button, closing the shared surface, or track.stop()",
+        "iframe": "Cross-origin iframes need allow=\"display-capture\"",
+        "steps": [
+          "Call getDisplayMedia from a click handler",
+          "Browser shows picker",
+          "Person picks tab, window or screen and optionally audio",
+          "Promise resolves with MediaStream; constraints apply only to the picked surface"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "72",
+          "note": "",
+          "date": "2019-01-29"
+        },
+        "edge": {
+          "s": "y",
+          "v": "79",
+          "note": "",
+          "date": "2020-01-15"
+        },
+        "firefox": {
+          "s": "y",
+          "v": "66",
+          "note": "",
+          "date": "2019-03-19"
+        },
+        "safari": {
+          "s": "y",
+          "v": "13",
+          "note": "",
+          "date": "2019-09-19"
+        },
+        "ios_safari": {
+          "s": "n",
+          "v": "getDisplayMedia not on iOS",
+          "note": ""
+        },
+        "chrome_android": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "samsung": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "stream",
+    "metric": "Video (and optional audio) of the chosen surface",
+    "update": "continuous, frame rate up to about 30 fps default",
+    "fields": [
+      {
+        "name": "displaySurface",
+        "type": "enum",
+        "unit": "none",
+        "range": "browser, window, monitor",
+        "precision": "hint only; reflects what was picked"
+      },
+      {
+        "name": "frameRate",
+        "type": "float",
+        "unit": "fps",
+        "range": "1 to 60",
+        "precision": "depends on surface"
+      },
+      {
+        "name": "width x height",
+        "type": "integer",
+        "unit": "pixels",
+        "range": "up to physical screen size",
+        "precision": "1 px"
+      },
+      {
+        "name": "systemAudio",
+        "type": "enum",
+        "unit": "none",
+        "range": "include or exclude",
+        "precision": "Chrome desktop only"
+      },
+      {
+        "name": "suppressLocalAudioPlayback",
+        "type": "boolean",
+        "unit": "none",
+        "range": "true or false",
+        "precision": "hint"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can see the screen, window or tab you choose to share, until you stop",
+    "user_action": "You click Share screen or Present, then pick a tab, window or screen in the browser chooser",
+    "can": [
+      "Show a live copy of the tab, window or whole screen you pick",
+      "Send that view to others on a call or into a recording",
+      "Include the sound of a shared tab if you tick the audio box",
+      "Record the shared view in the page"
+    ],
+    "cannot": [
+      "Start sharing without the browser chooser, which appears every time",
+      "See anything you did not pick in the chooser",
+      "Remember your choice, so the next share asks again",
+      "Work on iPhone or Android browsers, which do not offer screen sharing to sites"
+    ],
+    "reach": 2,
+    "reach_label": "What you pick, while sharing",
+    "differs": "Desktop browsers only. Chrome can share tab audio; Firefox and Safari show a simpler list. Phone browsers do not support it."
+  },
+  "story": {
+    "what_it_is": "Lets a website record or live stream your screen, a window or a browser tab.",
+    "icon": "monitor-up",
+    "tags": [
+      "Screen sharing",
+      "Asks first",
+      "Sensitive"
+    ],
+    "marketing": [
+      {
+        "vendor": "Mozilla",
+        "name": "getDisplayMedia",
+        "pitch": "Developer docs say a page can capture a screen, window or tab after the person picks what to share.",
+        "url": "https://developer.mozilla.org/en-US/docs/Web/API/MediaDevices/getDisplayMedia"
+      }
+    ],
+    "for_you": "A browser picker opens and you choose what to share: your whole screen, one window, or one tab. A banner or border shows while sharing is on, and you can stop with one click.",
+    "for_makers": "Screen sharing is what makes web calls, demos, support and game streaming work with no download. It also lets a maker record bug reports or train and test tools using what the user sees. The picker means the maker cannot grab more than the person chose.",
+    "use_cases": [
+      {
+        "type": "video",
+        "example": "In a browser video call you click Share screen, pick a window, and your coworkers see your spreadsheet.",
+        "apps": [
+          "Google Meet",
+          "Zoom web",
+          "Microsoft Teams"
+        ]
+      },
+      {
+        "type": "games",
+        "example": "A cloud gaming site streams a game to your tab, and a streaming tool captures a game window so you can go live on Twitch from the browser.",
+        "apps": [
+          "Xbox Cloud Gaming",
+          "GeForce NOW",
+          "Twitch"
+        ]
+      },
+      {
+        "type": "creative",
+        "example": "A screen recorder in Chrome captures your tab and your voice to produce a how to video, saved right to your computer.",
+        "apps": [
+          "Loom",
+          "Screencastify",
+          "Clipchamp"
+        ]
+      },
+      {
+        "type": "enterprise",
+        "example": "A support agent asks you to share your screen, so they can see an error message and walk you through the fix.",
+        "apps": [
+          "Intercom",
+          "Zendesk",
+          "Smartsheet"
+        ]
+      },
+      {
+        "type": "education",
+        "example": "A coding class student shares an editor tab so the teacher can see their code in real time.",
+        "apps": [
+          "Replit",
+          "Zoom web"
+        ]
+      },
+      {
+        "type": "developer",
+        "example": "A bug report tool records your tab for 30 seconds and attaches the clip to a ticket for the engineers.",
+        "apps": [
+          "Jam.dev",
+          "Sentry feedback"
+        ]
+      },
+      {
+        "type": "security",
+        "example": "A scam site tricks you into sharing a fake support window, then watches your screen for bank details, which is why the picker matters.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Private messages or passwords visible on shared screen",
+      "Tricking people into sharing the wrong window"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Site cannot silently capture: picker every call",
+    "Cannot choose the surface for the person",
+    "Constraints applied after pick",
+    "Audio only for tabs on most platforms, system audio on Windows and ChromeOS",
+    "No iOS support"
+  ],
+  "scores": {
+    "sensitivity": 5,
+    "utility": 4,
+    "fingerprint_bits": null,
+    "friction": 2
+  },
+  "value": {
+    "legit_uses": [
+      "Screen sharing in meetings",
+      "Bug reporting",
+      "Remote support",
+      "Game streaming"
+    ],
+    "abuse": [
+      "Social engineering to share a banking tab",
+      "Capturing credentials displayed on screen"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2018-12",
+      "browser": "chrome",
+      "version": "72",
+      "change": "getDisplayMedia ships unflagged"
+    },
+    {
+      "date": "2019-01",
+      "browser": "firefox",
+      "version": "66",
+      "change": "getDisplayMedia ships"
+    },
+    {
+      "date": "2019-09",
+      "browser": "safari",
+      "version": "13",
+      "change": "Safari adds getDisplayMedia"
+    },
+    {
+      "date": "2022-03",
+      "browser": "chrome",
+      "version": "105",
+      "change": "systemAudio constraint"
+    },
+    {
+      "date": "2021-09",
+      "browser": "chrome",
+      "version": "94",
+      "change": "preferCurrentTab and selfBrowserSurface hints"
+    },
+    {
+      "date": "2023-10",
+      "browser": "chrome",
+      "version": "119",
+      "change": "monitorTypeSurfaces hint"
+    }
+  ],
+  "related": [
+    "web.camera.captured-surface-control",
+    "web.camera.region-element-capture",
+    "web.camera.media-recorder"
+  ],
+  "refs": [
+    {
+      "t": "mdn",
+      "label": "MDN getDisplayMedia",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/MediaDevices/getDisplayMedia"
+    },
+    {
+      "t": "spec",
+      "label": "W3C Screen Capture",
+      "url": "https://www.w3.org/TR/screen-capture/"
+    },
+    {
+      "t": "chromestatus",
+      "label": "Chrome Screen Capture guide",
+      "url": "https://developer.chrome.com/docs/web-platform/screen-sharing-controls"
+    }
+  ],
+  "confidence": "docs"
+}

@@ -1,0 +1,231 @@
+{
+  "id": "mob.notif.apns-silent-push",
+  "name": "Silent (background) push",
+  "kind": "capability",
+  "group": "notifications-background",
+  "subgroup": "Push",
+  "tags": [
+    "push",
+    "silent",
+    "content-available",
+    "throttled",
+    "background-capable",
+    "uninstall-tracking"
+  ],
+  "plain": "A push with no alert that wakes the app in the background; Apple asks for 2 or 3 per hour at most.",
+  "meaning": "Lets a server trigger a data refresh without the person seeing anything, and also reveals whether the install is still alive. Apple throttles it, so it is a nudge, not a reliable timer.",
+  "lifecycle": [
+    "background",
+    "after-uninstall"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "p",
+      "v": "6.0",
+      "permission": "None; data-only FCM message",
+      "protection": "none",
+      "grant": "install",
+      "prompt_ui": "None",
+      "persistence": "Data messages reach the app unless it is in the stopped state; high priority data messages are quota limited",
+      "revocation": "Force stop blocks delivery",
+      "store_policy": "Play policy: no stealth background work that harms battery",
+      "api_surface": "onMessageReceived() for data messages; short execution window then hand off to expedited WorkManager",
+      "note": "Android treats this as an ordinary data message; no separate throttle number published; high priority ones can be deprioritized",
+      "api": 8
+    },
+    "ios": {
+      "s": "y",
+      "v": "7.0",
+      "permission": "remote-notification UIBackgroundModes; aps content-available:1; apns-push-type background; apns-priority 5",
+      "protection": "entitlement",
+      "grant": "entitlement",
+      "prompt_ui": "None",
+      "persistence": "Delivery not guaranteed; newest held notification replaces older; discarded after force quit",
+      "revocation": "Background App Refresh off; Low Power Mode; Force quit",
+      "store_policy": "App Review 2.5.4 on background modes",
+      "api_surface": "application(_:didReceiveRemoteNotification:fetchCompletionHandler:), about 30 s of run time",
+      "note": "Apple: do not send more than 2 or 3 per hour; excessive use is throttled; aps may contain only content-available"
+    }
+  },
+  "web_equivalents": [
+    "web.notify.push-api",
+    "web.notify.background-sync"
+  ],
+  "data": {
+    "type": "event",
+    "metric": "Background wake by push",
+    "update": "Server driven, throttled",
+    "fields": [
+      {
+        "name": "rate_guidance",
+        "type": "float",
+        "unit": "per hour",
+        "range": "2 to 3",
+        "precision": "Apple guidance"
+      },
+      {
+        "name": "run_time",
+        "type": "integer",
+        "unit": "seconds",
+        "range": "about 30",
+        "precision": "approx"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can wake the app quietly with a push, but only a few times an hour",
+    "user_action": "Nothing. The app's server sends it, and you see nothing on screen",
+    "can": [
+      "Wake the app to fetch fresh data before you open it",
+      "Refresh content in the background without an alert",
+      "Work on iPhone only if you did not force quit the app"
+    ],
+    "cannot": [
+      "Wake it more than about 2 or 3 times an hour; Apple slows down apps that send too many",
+      "Wake it after a force quit or when Background App Refresh is off",
+      "Carry a long message; it only holds a small amount of data",
+      "Act as a separate type on Android, where it is just a normal data message"
+    ],
+    "reach": 3,
+    "reach_label": "Ongoing, but rate limited",
+    "differs": "iPhone treats silent pushes as a special type with throttling. Android treats them as ordinary data messages."
+  },
+  "story": {
+    "what_it_is": "A push message with no alert that quietly wakes an app to refresh data.",
+    "icon": "ghost",
+    "tags": [
+      "Silent",
+      "Push",
+      "Tracking"
+    ],
+    "marketing": [
+      {
+        "vendor": "Apple",
+        "name": "Pushing background updates",
+        "pitch": "Apple documents background pushes as a way to wake the app and fetch content without showing anything to the person.",
+        "url": "https://developer.apple.com/documentation/usernotifications/pushing-background-updates-to-your-app"
+      }
+    ],
+    "for_you": "You never see it. The app just has fresh content when you open it. It also means a company can tell an app is still installed and alive, without you doing anything.",
+    "for_makers": "Makers use it to sync data and prefetch. Some also use it to check if an install is still there, which feeds measurement and cleanup of dead users. Apple throttles it, so it is a nudge, not a timer.",
+    "use_cases": [
+      {
+        "type": "messaging",
+        "example": "A chat app wakes up in the background to decrypt and pre-load new messages.",
+        "apps": [
+          "Signal"
+        ]
+      },
+      {
+        "type": "news",
+        "example": "A news app downloads the latest stories as you sleep.",
+        "apps": [
+          "Apple News"
+        ]
+      },
+      {
+        "type": "media",
+        "example": "A podcast app pulls a new episode in the background.",
+        "apps": []
+      },
+      {
+        "type": "analytics",
+        "example": "A marketing team sends a silent push to each device to count how many installs are still alive.",
+        "apps": []
+      },
+      {
+        "type": "ads",
+        "example": "An ad platform checks that an install is live before it counts it in a campaign.",
+        "apps": []
+      },
+      {
+        "type": "games",
+        "example": "A game refreshes its daily rewards shop quietly before you open it.",
+        "apps": []
+      },
+      {
+        "type": "security",
+        "example": "A bank app quietly refreshes a fraud rule list without bothering you.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Reveals the app is still installed",
+      "Can drain battery if overused"
+    ],
+    "android_note": "Android treats this as an ordinary data message with no separate published limit.",
+    "ios_note": "Apple asks for no more than 2 or 3 per hour and throttles abuse. Force quitting the app blocks it."
+  },
+  "technical_bounds": [
+    "Not delivered after force quit",
+    "Needs Background App Refresh enabled",
+    "Throttled by the system",
+    "System throttles delivery"
+  ],
+  "scores": {
+    "sensitivity": 2,
+    "utility": 3,
+    "fingerprint_bits": null,
+    "friction": 1
+  },
+  "value": {
+    "legit_uses": [
+      "Sync",
+      "Prefetch"
+    ],
+    "abuse": [
+      "Pinging installs to confirm they are alive"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2019-09",
+      "platform": "ios",
+      "version": "iOS 13",
+      "change": "apns-push-type header introduced; background pushes must use type background and priority 5"
+    },
+    {
+      "date": "2017-08",
+      "platform": "android",
+      "version": "8.0 (API 26)",
+      "change": "Background execution limits"
+    },
+    {
+      "date": "2013-09",
+      "platform": "ios",
+      "version": "iOS 7",
+      "change": "Silent remote notifications (content-available) and background fetch introduced"
+    },
+    {
+      "date": "2013-09",
+      "platform": "ios",
+      "version": "iOS 7",
+      "change": "Silent remote notifications introduced"
+    }
+  ],
+  "related": [
+    "mob.notif.uninstall-detection",
+    "mob.bg.ios-refresh-processing",
+    "mob.notifications.post-notifications"
+  ],
+  "refs": [
+    {
+      "t": "apple",
+      "label": "Apple: Pushing background updates to your app",
+      "url": "https://developer.apple.com/documentation/usernotifications/pushing-background-updates-to-your-app"
+    },
+    {
+      "t": "android",
+      "label": "Firebase: FCM message options",
+      "url": "https://firebase.google.com/docs/cloud-messaging/concept-options"
+    }
+  ],
+  "confidence": "verified"
+}

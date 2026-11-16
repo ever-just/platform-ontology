@@ -1,0 +1,250 @@
+{
+  "id": "web.notify.push-declarative-safari",
+  "name": "Declarative Web Push (Safari)",
+  "kind": "capability",
+  "group": "notifications-background",
+  "subgroup": "Push",
+  "tags": [
+    "declarative",
+    "safari"
+  ],
+  "plain": "A push format that shows a notification without running site code.",
+  "meaning": "The browser renders the notification straight from JSON, so no service worker runs. Cuts battery use and removes the old silent-push abuse path; the site still learns when a device is online.",
+  "lifecycle": [
+    "after-leaving"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "pushManager.subscribe via window; payload {\"web_push\": 8030, \"notification\": {title, navigate, body, lang, dir, silent, app_badge}}",
+      "permission_name": "push",
+      "bcd": [
+        "api.PushManager"
+      ],
+      "access": {
+        "grant": "prompt",
+        "prompt_ui": "Same system notification prompt as classic Web Push; subscription made from the window with no service worker.",
+        "secure_context": true,
+        "user_gesture": true,
+        "persistence": "Same as Web Push subscription",
+        "revocation": "Same as notifications",
+        "iframe": "Same",
+        "steps": [
+          "Subscribe from the page",
+          "Send JSON with web_push 8030 and a notification object",
+          "Safari shows the notification itself",
+          "Tap opens the navigate URL"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "n",
+          "v": "Different proposal",
+          "note": ""
+        },
+        "edge": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "firefox": {
+          "s": "n",
+          "v": "Different proposal",
+          "note": ""
+        },
+        "safari": {
+          "s": "y",
+          "v": "16",
+          "note": "macOS 15.5 Safari (beta)",
+          "date": "2022-09-12"
+        },
+        "ios_safari": {
+          "s": "y",
+          "v": "16.4",
+          "note": "iPadOS 18.4",
+          "date": "2023-03-27"
+        },
+        "chrome_android": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "samsung": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "object",
+    "metric": "Notification JSON handled by the browser",
+    "update": "any time",
+    "fields": [
+      {
+        "name": "web_push",
+        "type": "integer",
+        "unit": "magic",
+        "range": "must be 8030",
+        "precision": "fixed"
+      },
+      {
+        "name": "title",
+        "type": "string",
+        "unit": "text",
+        "range": "required",
+        "precision": "any"
+      },
+      {
+        "name": "navigate",
+        "type": "string",
+        "unit": "URL",
+        "range": "required",
+        "precision": "absolute URL"
+      },
+      {
+        "name": "body, lang, dir, silent, app_badge",
+        "type": "mixed",
+        "unit": "none",
+        "range": "optional",
+        "precision": "per field"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can show you a notification from Safari's new push format without running site code",
+    "user_action": "You tap Allow on the notification pop up in Safari",
+    "can": [
+      "Show a notification straight from the message, with no site script running",
+      "Save battery compared with older push",
+      "Learn when your device is online, as with classic push"
+    ],
+    "cannot": [
+      "Send anything before you tap Allow",
+      "Run hidden code in the background to do something else",
+      "Work in Chrome, Edge, Firefox or Samsung Internet",
+      "Reach iPhone unless the site is a Home Screen web app"
+    ],
+    "reach": 3,
+    "reach_label": "Ongoing, until you block it",
+    "differs": "Only Safari on Mac and iPhone supports this format. Other browsers use the classic push format."
+  },
+  "story": {
+    "what_it_is": "A push format that shows a notification without running the site's code first.",
+    "icon": "bell-ring",
+    "tags": [
+      "Notifications",
+      "Privacy",
+      "Safari"
+    ],
+    "marketing": [
+      {
+        "vendor": "WebKit",
+        "name": "Declarative Web Push",
+        "pitch": "A simpler push format where the browser shows the notice itself, with no background script, for better privacy and battery.",
+        "url": "https://webkit.org/blog/16535/meet-declarative-web-push/"
+      }
+    ],
+    "for_you": "You tap Allow once and notifications show up as usual. Under the hood the browser shows them without waking the site. This saves battery and reduces what the site learns.",
+    "for_makers": "Makers send a ready made message in a set format. It is simpler to build, more reliable and cheaper to run, but gives less control to run code on arrival. It suits news, chat and alerts.",
+    "use_cases": [
+      {
+        "type": "news",
+        "example": "A news site sends a headline, picture and link in the set format, and Safari shows it with no site code.",
+        "apps": []
+      },
+      {
+        "type": "messaging",
+        "example": "A web chat sends a short message notice. Safari shows the sender and text, and the tap opens the thread.",
+        "apps": []
+      },
+      {
+        "type": "shopping",
+        "example": "A store sends a shipping update as a ready made notice.",
+        "apps": []
+      },
+      {
+        "type": "live",
+        "example": "A sports site sends a score alert with a link to the live page.",
+        "apps": []
+      },
+      {
+        "type": "games",
+        "example": "A browser game sends a turn ready alert without a heavy background script.",
+        "apps": []
+      },
+      {
+        "type": "social",
+        "example": "A social site sends new follower notices that open the profile on tap.",
+        "apps": []
+      },
+      {
+        "type": "security",
+        "example": "A bank sends a sign in notice that shows safely with no site script involved.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Less control for makers",
+      "Safari only"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Always shows a visible notification (no silent push)",
+    "Optional service worker can still adjust the message",
+    "Safari only"
+  ],
+  "scores": {
+    "sensitivity": 4,
+    "utility": 4,
+    "fingerprint_bits": null,
+    "friction": 2
+  },
+  "value": {
+    "legit_uses": [
+      "Reliable low battery notifications"
+    ],
+    "abuse": [
+      "Same as classic push"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2025-03",
+      "browser": "ios_safari",
+      "version": "18.4",
+      "change": "Declarative Web Push ships in iOS and iPadOS 18.4"
+    },
+    {
+      "date": "2025-05",
+      "browser": "safari",
+      "version": "18.5",
+      "change": "macOS 15.5 Safari beta adds it"
+    }
+  ],
+  "related": [
+    "web.notify.push-api"
+  ],
+  "refs": [
+    {
+      "t": "webkit",
+      "label": "WebKit blog: Web Push for Web Apps on iOS and iPadOS",
+      "url": "https://webkit.org/blog/13878/web-push-for-web-apps-on-ios-and-ipados/"
+    },
+    {
+      "t": "webkit",
+      "label": "WebKit blog: Declarative Web Push",
+      "url": "https://webkit.org/blog/16535/meet-declarative-web-push/"
+    }
+  ],
+  "confidence": "verified"
+}

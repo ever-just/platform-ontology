@@ -1,0 +1,186 @@
+{
+  "id": "mob.loc.clock-calendar",
+  "name": "24-hour clock, calendar and number formats",
+  "kind": "signal",
+  "group": "locale-preferences",
+  "subgroup": "Locale",
+  "tags": [
+    "clock",
+    "calendar"
+  ],
+  "plain": "Reads 12 or 24 hour clock, first weekday, calendar type and number format.",
+  "meaning": "Small habit signals that add fingerprint bits: 24 hour clock, Monday start, Hijri or Buddhist calendar.",
+  "lifecycle": [
+    "on-launch",
+    "in-session"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "y",
+      "v": "1.0",
+      "api": 1,
+      "permission": "",
+      "protection": "none",
+      "grant": "none",
+      "prompt_ui": "",
+      "persistence": "",
+      "revocation": "",
+      "store_policy": "",
+      "api_surface": "DateFormat.is24HourFormat(), Calendar.getInstance(), Settings.System.TIME_12_24",
+      "note": "Boolean plus calendar ID"
+    },
+    "ios": {
+      "s": "y",
+      "v": "2.0",
+      "permission": "none",
+      "protection": "none",
+      "grant": "none",
+      "prompt_ui": "",
+      "persistence": "",
+      "revocation": "",
+      "store_policy": "",
+      "api_surface": "Calendar identifier, 12 or 24 hour cycle (hourCycle iOS 16)",
+      "note": ""
+    }
+  },
+  "web_equivalents": [
+    "web.locale.intl-formats"
+  ],
+  "data": {
+    "type": "object",
+    "metric": "Clock, week start, calendar",
+    "update": "On change",
+    "fields": [
+      {
+        "name": "hour_cycle",
+        "type": "enum",
+        "unit": "",
+        "range": "h12, h23",
+        "precision": "1 bit"
+      },
+      {
+        "name": "first_weekday",
+        "type": "integer",
+        "unit": "day",
+        "range": "1 to 7",
+        "precision": "exact"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can see your 12 or 24 hour clock setting, calendar type and number style",
+    "user_action": "Nothing. It happens when the app shows dates, times or numbers",
+    "can": [
+      "Check for a 12 or 24 hour clock",
+      "Find your calendar type and first day of the week",
+      "Format numbers and dates the way you expect"
+    ],
+    "cannot": [
+      "See your calendar events or contacts",
+      "Change your clock or calendar settings",
+      "Tell who you are from these settings alone, though they add to a device fingerprint"
+    ],
+    "reach": 1,
+    "reach_label": "A few display settings",
+    "differs": ""
+  },
+  "story": {
+    "what_it_is": "An app sees whether you use a 24 hour clock, which day your week starts and your calendar style.",
+    "icon": "clock",
+    "tags": [
+      "Settings",
+      "Silent",
+      "Fingerprint"
+    ],
+    "marketing": [],
+    "for_you": "You do not see it. Apps just show dates the way you like them, like 17:30 instead of 5:30 PM. It is a convenience that also tells the app a little about where you may come from.",
+    "for_makers": "Makers need this to format dates and numbers correctly. Ad and anti fraud systems also use the combination as a small clue about a device. It adds only a few bits, but together with other habits it helps pick one phone out of many.",
+    "use_cases": [
+      {
+        "type": "travel",
+        "example": "A flight app shows departure times in 24 hour time because your phone is set that way.",
+        "apps": [
+          "Skyscanner"
+        ]
+      },
+      {
+        "type": "productivity",
+        "example": "A calendar app starts the week on Monday or Sunday to match your setting.",
+        "apps": [
+          "Google Calendar",
+          "Fantastical"
+        ]
+      },
+      {
+        "type": "fitness",
+        "example": "A running app shows distance and pace with your number format.",
+        "apps": [
+          "Strava"
+        ]
+      },
+      {
+        "type": "games",
+        "example": "A live event in a game shows start times in your own clock style.",
+        "apps": [
+          "Fortnite"
+        ]
+      },
+      {
+        "type": "banking",
+        "example": "A bank app shows amounts with the right decimal and thousands separators.",
+        "apps": []
+      },
+      {
+        "type": "analytics",
+        "example": "A tracking script adds clock and calendar to a quiet device profile, which makes two phones easier to tell apart.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Adds fingerprint bits",
+      "Hints at country"
+    ],
+    "android_note": "Android apps read these through the locale and settings with no prompt.",
+    "ios_note": "iPhone apps read these through the locale with no prompt."
+  },
+  "technical_bounds": [
+    "Low entropy per field"
+  ],
+  "scores": {
+    "sensitivity": 1,
+    "utility": 2,
+    "fingerprint_bits": 3,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Date formatting"
+    ],
+    "abuse": [
+      "Fingerprint"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "related": [
+    "mob.loc.language-region"
+  ],
+  "refs": [
+    {
+      "t": "android",
+      "label": "Android: Locale and language",
+      "url": "https://developer.android.com/guide/topics/resources/localization"
+    },
+    {
+      "t": "apple",
+      "label": "Apple: Locale",
+      "url": "https://developer.apple.com/documentation/foundation/locale"
+    }
+  ],
+  "confidence": "inferred"
+}

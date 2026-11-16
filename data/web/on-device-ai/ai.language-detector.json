@@ -1,0 +1,227 @@
+{
+  "id": "web.ai.language-detector",
+  "name": "Language Detector API",
+  "kind": "capability",
+  "group": "on-device-ai",
+  "subgroup": "Built in AI",
+  "tags": [
+    "built in ai"
+  ],
+  "plain": "Guesses the language of text on the device.",
+  "meaning": "Local detection with confidence scores.",
+  "lifecycle": [
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "LanguageDetector.create(); d.detect(text)",
+      "permissions_policy": "language-detector",
+      "bcd": [
+        "api.LanguageDetector"
+      ],
+      "access": {
+        "grant": "gesture",
+        "prompt_ui": "Model download on first use",
+        "secure_context": true,
+        "user_gesture": true,
+        "persistence": "Per origin",
+        "revocation": "Site settings",
+        "iframe": "Same as top level; cross-origin iframes need a permissions policy where listed",
+        "steps": [
+          "Call the API",
+          "Browser applies its access rules",
+          "Page receives the result"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "138",
+          "note": "Availability may be subject to geographical restrictions.",
+          "date": "2025-06-24"
+        },
+        "edge": {
+          "s": "y",
+          "v": "148",
+          "note": "",
+          "date": "2026-05-07"
+        },
+        "firefox": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "safari": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "ios_safari": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "chrome_android": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "samsung": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "object",
+    "metric": "Guesses the language of text on the device.",
+    "update": "on demand",
+    "fields": [
+      {
+        "name": "detectedLanguage",
+        "type": "string",
+        "range": "BCP 47"
+      },
+      {
+        "name": "confidence",
+        "type": "float",
+        "range": "0 to 1"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can guess the language of text on your device, without sending it away",
+    "user_action": "You tap a button like Translate this page or Detect language",
+    "can": [
+      "Guess the language of a text snippet with a confidence score",
+      "Choose the right language before translating",
+      "Download the small model the first time"
+    ],
+    "cannot": [
+      "Start without a click or tap on the page",
+      "Send the text to a server for this check",
+      "Work in Firefox, Safari or on Chrome for Android",
+      "Be sure with very short or mixed language text"
+    ],
+    "reach": 1,
+    "reach_label": "One text at a time",
+    "differs": "Chrome and Edge on computers only."
+  },
+  "story": {
+    "what_it_is": "A page can guess which language a piece of text is written in, without sending it away.",
+    "icon": "languages",
+    "tags": [
+      "AI",
+      "On device",
+      "Language"
+    ],
+    "marketing": [
+      {
+        "vendor": "Google Chrome",
+        "name": "Language Detector API",
+        "pitch": "Detects the language of text on the device, so sites can offer the right translation without a cloud call.",
+        "url": "https://developer.chrome.com/docs/ai/language-detection"
+      }
+    ],
+    "for_you": "You do not see it. The site may offer to translate a message or page because it spotted another language. It works without sending your text to a server.",
+    "for_makers": "Makers use it to route text to the right translator, show the right keyboard or tag content. Doing it on device saves cost and keeps text private. The small model may need a download first.",
+    "use_cases": [
+      {
+        "type": "social",
+        "example": "A social site spots a post in Spanish and shows a Translate button for an English reader.",
+        "apps": [
+          "X"
+        ]
+      },
+      {
+        "type": "messaging",
+        "example": "A web chat detects a friend's message language and offers a translation.",
+        "apps": [
+          "WhatsApp Web"
+        ]
+      },
+      {
+        "type": "games",
+        "example": "A browser game chat guesses the language of players and routes them to the right room.",
+        "apps": []
+      },
+      {
+        "type": "shopping",
+        "example": "A store marks reviews by language so you can filter to those you can read.",
+        "apps": [
+          "Amazon"
+        ]
+      },
+      {
+        "type": "news",
+        "example": "A news reader picks the right text to speech voice for each article.",
+        "apps": []
+      },
+      {
+        "type": "education",
+        "example": "A learning site checks that an answer is in the right language for the lesson.",
+        "apps": [
+          "Duolingo"
+        ]
+      },
+      {
+        "type": "security",
+        "example": "A moderation tool detects language before checking a post against the right rules.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Can guess wrong",
+      "Needs a model download"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Desktop only"
+  ],
+  "scores": {
+    "sensitivity": 1,
+    "utility": 3,
+    "fingerprint_bits": null,
+    "friction": 2
+  },
+  "value": {
+    "legit_uses": [
+      "Routing translation"
+    ],
+    "abuse": [
+      "None"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2025-06",
+      "browser": "chrome",
+      "version": "138",
+      "change": "Stable (Edge 148)"
+    }
+  ],
+  "refs": [
+    {
+      "t": "vendor",
+      "label": "Chrome Language Detector",
+      "url": "https://developer.chrome.com/docs/ai/language-detection"
+    },
+    {
+      "t": "mdn",
+      "label": "MDN LanguageDetector",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/LanguageDetector"
+    }
+  ],
+  "confidence": "verified"
+}

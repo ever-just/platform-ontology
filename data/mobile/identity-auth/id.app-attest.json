@@ -1,0 +1,183 @@
+{
+  "id": "mob.id.app-attest",
+  "name": "App Attest",
+  "kind": "capability",
+  "group": "identity-auth",
+  "subgroup": "Attestation",
+  "tags": [
+    "app-attest",
+    "integrity"
+  ],
+  "plain": "Cryptographic proof to a server that a request came from a genuine copy of the app on real Apple hardware.",
+  "meaning": "Cuts bots and cloned apps; per-install key kept in the Secure Enclave. Can lock out jailbroken or modified devices.",
+  "lifecycle": [
+    "signed-in"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "n",
+      "v": "",
+      "api": "",
+      "permission": "none",
+      "protection": "not-exposed",
+      "grant": "not-exposed",
+      "prompt_ui": "",
+      "persistence": "",
+      "revocation": "",
+      "store_policy": "",
+      "api_surface": "Use Play Integrity or Key Attestation",
+      "note": "See Play Integrity entry"
+    },
+    "ios": {
+      "s": "y",
+      "v": "14.0",
+      "permission": "entitlement",
+      "protection": "entitlement",
+      "grant": "none",
+      "prompt_ui": "",
+      "persistence": "Delete app",
+      "revocation": "App Review: used for security",
+      "store_policy": "",
+      "api_surface": "Per-install key; counter increments on each assertion",
+      "note": "Until reinstall"
+    }
+  },
+  "data": {
+    "type": "object",
+    "metric": "Attestation object",
+    "update": "On request",
+    "fields": [
+      {
+        "name": "key_id",
+        "type": "string",
+        "unit": "",
+        "range": "32 bytes",
+        "precision": "exact"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can prove its requests come from the real app on a real iPhone",
+    "user_action": "Nothing. It happens when the app signs in, buys, or sends something it wants to protect",
+    "can": [
+      "Create a key for this app install that stays in the phone's secure chip",
+      "Sign requests so the server trusts they came from the genuine app",
+      "Count each signed request to spot copies being replayed",
+      "Check the app on Apple hardware without asking you anything"
+    ],
+    "cannot": [
+      "Work on Android; Android uses Play Integrity instead",
+      "See who you are or identify you across other apps",
+      "Move the key to another device or keep it after you reinstall the app",
+      "Prove the iPhone is free of every kind of tampering"
+    ],
+    "reach": 2,
+    "reach_label": "Proof about the app, not you",
+    "differs": "Only iPhone has App Attest. Android offers Play Integrity for a similar job."
+  },
+  "story": {
+    "what_it_is": "Apple gives a server proof that a request came from your real, unmodified app on a real iPhone.",
+    "icon": "shield-check",
+    "tags": [
+      "Anti fraud",
+      "Silent",
+      "Identity"
+    ],
+    "marketing": [
+      {
+        "vendor": "Apple",
+        "name": "App Attest",
+        "pitch": "Apple's service that lets a server check that requests come from a legitimate instance of its app on Apple hardware.",
+        "url": "https://developer.apple.com/documentation/devicecheck/establishing-your-app-s-integrity"
+      }
+    ],
+    "for_you": "You do not see it. Behind the scenes your phone makes a secret key for the app and signs important requests. The result is fewer bots and fake copies of the app, and more accounts that just work.",
+    "for_makers": "Makers use it to stop cloned apps, scripted bots and tampered builds from hitting their servers. It protects revenue in games and shops, and keeps free offers from being farmed. The cost is that jailbroken phones may be refused.",
+    "use_cases": [
+      {
+        "type": "games",
+        "example": "A multiplayer game checks that a score comes from the real app, not a cheat tool, before it goes on a leaderboard.",
+        "apps": []
+      },
+      {
+        "type": "shopping",
+        "example": "A store app proves a coupon claim came from a real phone, so bots cannot drain a promo budget.",
+        "apps": []
+      },
+      {
+        "type": "social",
+        "example": "A social app stops fake account farms by asking new sign ups to prove they come from the genuine app.",
+        "apps": []
+      },
+      {
+        "type": "banking",
+        "example": "A bank uses it to be sure a money request was not sent by a script pretending to be the app.",
+        "apps": []
+      },
+      {
+        "type": "ads",
+        "example": "An ad network checks that clicks and installs come from real devices, which cuts fraud billing.",
+        "apps": []
+      },
+      {
+        "type": "developer",
+        "example": "A developer protects a paid AI feature so only the true app can call the server and run up costs.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Locks out modified phones",
+      "Per install key is still an identifier"
+    ],
+    "android_note": "Android has a similar service called Play Integrity, which answers the same question differently.",
+    "ios_note": "This is an Apple only service that needs a real iPhone or iPad with a Secure Enclave and a server that checks the proof."
+  },
+  "technical_bounds": [
+    "Not available on all device types"
+  ],
+  "scores": {
+    "sensitivity": 1,
+    "utility": 4,
+    "fingerprint_bits": null,
+    "friction": 3
+  },
+  "value": {
+    "legit_uses": [
+      "Block clones and bots"
+    ],
+    "abuse": [
+      "Lock out modified devices"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2020-09",
+      "platform": "ios",
+      "version": "iOS 14",
+      "change": "App Attest introduced"
+    }
+  ],
+  "related": [
+    "mob.id.play-integrity"
+  ],
+  "refs": [
+    {
+      "t": "apple",
+      "label": "Apple: Establishing your app's integrity (App Attest)",
+      "url": "https://developer.apple.com/documentation/devicecheck/establishing-your-app-s-integrity"
+    },
+    {
+      "t": "apple",
+      "label": "Apple: DeviceCheck",
+      "url": "https://developer.apple.com/documentation/devicecheck"
+    }
+  ],
+  "confidence": "docs"
+}

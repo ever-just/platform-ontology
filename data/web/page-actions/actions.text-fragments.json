@@ -1,0 +1,242 @@
+{
+  "id": "web.actions.text-fragments",
+  "name": "Scroll to text fragment",
+  "kind": "action",
+  "group": "page-actions",
+  "subgroup": "Windows and navigation",
+  "tags": [
+    "text-fragment",
+    "scroll-to-text",
+    "target-text"
+  ],
+  "plain": "Highlights and scrolls to quoted text in a page when a link includes #:~:text=.",
+  "meaning": "A link can point at one sentence on any page. The browser, not the page, does the highlighting, and the page cannot see the fragment, so it cannot learn what the visitor was searching for.",
+  "lifecycle": [
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "https://example.com/#:~:text=start,end; document.fragmentDirective; ::target-text",
+      "bcd": [
+        "api.FragmentDirective",
+        "css.selectors.target-text"
+      ],
+      "access": {
+        "grant": "none",
+        "prompt_ui": "None (no browser prompt)",
+        "secure_context": false,
+        "user_gesture": false,
+        "activation": "none",
+        "persistence": "One-shot per navigation",
+        "revocation": "Nothing to revoke (no permission is stored)",
+        "iframe": "Only full navigations in top-level browsing contexts",
+        "steps": [
+          "Person opens a link with a text directive",
+          "Browser finds the first match and scrolls",
+          "Highlight is drawn by the browser"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "81",
+          "note": "",
+          "date": "2020-04-07"
+        },
+        "edge": {
+          "s": "y",
+          "v": "83",
+          "note": "",
+          "date": "2020-05-21"
+        },
+        "firefox": {
+          "s": "y",
+          "v": "131",
+          "note": "",
+          "date": "2024-10-01"
+        },
+        "safari": {
+          "s": "y",
+          "v": "18.4",
+          "note": "",
+          "date": "2025-03-31"
+        },
+        "ios_safari": {
+          "s": "y",
+          "v": "18.4",
+          "note": "All iOS browsers use WebKit",
+          "date": "2025-03-31"
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "81",
+          "note": "",
+          "date": "2020-04-07"
+        },
+        "samsung": {
+          "s": "y",
+          "v": "13.0",
+          "note": "",
+          "date": "2020-12-02"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "none",
+    "metric": "",
+    "update": "",
+    "fields": []
+  },
+  "limits": {
+    "headline": "Can scroll to and highlight text on a page when you open a special link",
+    "user_action": "You tap a link that ends with a text highlight, like a link shared from search results.",
+    "can": [
+      "Jump to quoted text on the page and highlight it",
+      "Open from a link that someone shared with you",
+      "Show a short highlight in yellow"
+    ],
+    "cannot": [
+      "Let the page's own code see which text was highlighted",
+      "Highlight text that is not on the page",
+      "Highlight text inside embedded frames in most cases",
+      "Run without you opening that link"
+    ],
+    "reach": 1,
+    "reach_label": "One link, one highlight",
+    "differs": ""
+  },
+  "story": {
+    "what_it_is": "A link can highlight and scroll to exact words on a page.",
+    "icon": "text-select",
+    "tags": [
+      "Links",
+      "Silent",
+      "Sharing"
+    ],
+    "marketing": [
+      {
+        "vendor": "Google",
+        "name": "Text fragments",
+        "pitch": "Chrome's docs say you can link right to a specific passage of a page.",
+        "url": "https://developer.chrome.com/docs/web-platform/text-fragments"
+      }
+    ],
+    "for_you": "You tap a link and the page jumps to a highlighted sentence. Search results use it so you land on the answer, not the top of the page.",
+    "for_makers": "Makers and search engines use it to send people to the exact passage. Google search snippets use it and some sharing tools make quote links with it.",
+    "use_cases": [
+      {
+        "type": "news",
+        "example": "A search result links to the exact sentence that answers your question.",
+        "apps": [
+          "Google Search"
+        ]
+      },
+      {
+        "type": "social",
+        "example": "A reader copies a link to a quote from an article and sends it to a friend.",
+        "apps": [
+          "Chrome",
+          "Edge"
+        ]
+      },
+      {
+        "type": "education",
+        "example": "A teacher links students to the exact definition inside a long page.",
+        "apps": [
+          "Wikipedia"
+        ]
+      },
+      {
+        "type": "productivity",
+        "example": "A research tool saves quotes as links back to the highlighted text.",
+        "apps": []
+      },
+      {
+        "type": "ads",
+        "example": "A site may use it to find out whether specific words exist on a page.",
+        "apps": []
+      },
+      {
+        "type": "developer",
+        "example": "A docs site links straight to the line about a function.",
+        "apps": [
+          "MDN"
+        ]
+      }
+    ],
+    "risks": [
+      "Probing page text",
+      "Misleading highlights"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Needs user activation or browser-initiated navigation (search results, address bar)",
+    "Page script cannot read the directive (stripped from location.hash and document.fragmentDirective is empty)",
+    "Matches visible text only, word boundary aware, first match wins",
+    "Cross-origin initiated navigations need noopener; not applied in iframes",
+    "Can be disabled by Document-Policy: force-load-at-top"
+  ],
+  "scores": {
+    "sensitivity": 1,
+    "utility": 3,
+    "fingerprint_bits": null,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Search engine deep links",
+      "Shareable quotes"
+    ],
+    "abuse": [
+      "Probing page contents with crafted links (mitigated by activation, no readable fragment)"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2020-02",
+      "browser": "chrome",
+      "version": "80",
+      "change": "Scroll to Text Fragment ships"
+    },
+    {
+      "date": "2022-10",
+      "browser": "safari",
+      "version": "16.1",
+      "change": "Text fragment support"
+    },
+    {
+      "date": "2024-10",
+      "browser": "firefox",
+      "version": "131",
+      "change": "Text fragment support ships"
+    }
+  ],
+  "refs": [
+    {
+      "t": "mdn",
+      "label": "MDN Text fragments",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/URI/Reference/Fragment/Text_fragments"
+    },
+    {
+      "t": "spec",
+      "label": "WICG Text Fragments",
+      "url": "https://wicg.github.io/scroll-to-text-fragment/"
+    },
+    {
+      "t": "chromestatus",
+      "label": "Chrome Scroll to Text Fragment",
+      "url": "https://chromestatus.com/feature/4733392803332096"
+    }
+  ],
+  "confidence": "docs"
+}

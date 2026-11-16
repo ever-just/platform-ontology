@@ -1,0 +1,228 @@
+{
+  "id": "web.display.window-move-resize",
+  "name": "Move and resize own window",
+  "kind": "action",
+  "group": "display-window",
+  "subgroup": "Windows and navigation",
+  "tags": [
+    "window.moveTo",
+    "resizeTo",
+    "popup",
+    "legacy"
+  ],
+  "plain": "Moves or resizes a popup the site opened; ignored for normal tabs.",
+  "meaning": "A site can reshape a popup it created, but the browser blocks changes to tabs and pre-existing windows, so scripts cannot yank your main window around or hide it off screen.",
+  "lifecycle": [
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "win.moveTo(x, y); win.resizeTo(w, h); win.moveBy(dx, dy)",
+      "bcd": [
+        "api.Window.moveTo",
+        "api.Window.resizeTo",
+        "api.Window.moveBy",
+        "api.Window.resizeBy"
+      ],
+      "access": {
+        "grant": "none",
+        "prompt_ui": "None (no browser prompt)",
+        "secure_context": false,
+        "user_gesture": false,
+        "activation": "none",
+        "persistence": "Per window; applies once, no stored state",
+        "revocation": "Nothing to revoke (no permission is stored)",
+        "iframe": "Same rules in iframes: only a window the script opened can be moved or resized",
+        "steps": [
+          "Page opens a popup with window.open",
+          "Script calls moveTo or resizeTo on the popup reference",
+          "Browser applies it within limits"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "1",
+          "note": "",
+          "date": "2008-12-11"
+        },
+        "edge": {
+          "s": "y",
+          "v": "12",
+          "note": "",
+          "date": "2015-07-29"
+        },
+        "firefox": {
+          "s": "y",
+          "v": "1",
+          "note": "",
+          "date": "2004-11-09"
+        },
+        "safari": {
+          "s": "y",
+          "v": "1",
+          "note": "",
+          "date": "2003-06-23"
+        },
+        "ios_safari": {
+          "s": "y",
+          "v": "1",
+          "note": "All iOS browsers use WebKit",
+          "date": "2007-06-29"
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "18",
+          "note": "",
+          "date": "2012-06-27"
+        },
+        "samsung": {
+          "s": "y",
+          "v": "1.0",
+          "note": "",
+          "date": "2013-04-27"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "none",
+    "metric": "",
+    "update": "",
+    "fields": []
+  },
+  "limits": {
+    "headline": "Can move or resize only a popup window it opened itself",
+    "user_action": "You click a link that opens a popup or small window.",
+    "can": [
+      "Move a popup it opened",
+      "Resize a popup it opened",
+      "Nudge a popup by a small amount"
+    ],
+    "cannot": [
+      "Move or resize a normal tab or your main window",
+      "Move windows from other sites or apps",
+      "Hide the popup from you"
+    ],
+    "reach": 1,
+    "reach_label": "Only its own popup",
+    "differs": ""
+  },
+  "story": {
+    "what_it_is": "Moves or resizes a popup the site opened. It is ignored for your normal tabs.",
+    "icon": "move",
+    "tags": [
+      "Window",
+      "Popups",
+      "Silent"
+    ],
+    "marketing": [
+      {
+        "vendor": "MDN",
+        "name": "Window.moveTo",
+        "pitch": "Documents how a script can move a window, with limits that stop it for normal tabs.",
+        "url": "https://developer.mozilla.org/en-US/docs/Web/API/Window/moveTo"
+      }
+    ],
+    "for_you": "If a site opened a small popup, like a login box, it can move or resize that box. Your normal tabs and windows are never moved.",
+    "for_makers": "Makers use it to place sign in, payment and chat popups neatly. Browsers block it for ordinary tabs because old ads abused it to jump windows around.",
+    "use_cases": [
+      {
+        "type": "payments",
+        "example": "A shop opens a payment window and centers it over the page.",
+        "apps": []
+      },
+      {
+        "type": "social",
+        "example": "A site opens a small share or login window sized to fit.",
+        "apps": []
+      },
+      {
+        "type": "games",
+        "example": "A browser game opens a chat or inventory popup and sizes it to fit.",
+        "apps": []
+      },
+      {
+        "type": "ads",
+        "example": "In the past, pop up ads moved themselves around or ran off screen. Browsers now block that.",
+        "apps": []
+      },
+      {
+        "type": "security",
+        "example": "A scam popup tries to resize to cover the whole screen and look like a system alert.",
+        "apps": []
+      },
+      {
+        "type": "productivity",
+        "example": "A web app opens a floating tool palette and keeps it next to the main window.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Popup tricks",
+      "Mostly blocked now"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Only windows opened by window.open are affected; main browser windows and tabs in a multi tab window ignore the calls",
+    "Firefox disables the call when dom.disable_window_move_resize is set and for tabs; Chrome and Safari ignore it for tabs in a window with other tabs",
+    "Size has a minimum of about 100 by 100 CSS px in major browsers",
+    "The window cannot be moved so far that it leaves the screen",
+    "Mobile browsers and Safari on iOS ignore the calls"
+  ],
+  "scores": {
+    "sensitivity": 1,
+    "utility": 1,
+    "fingerprint_bits": null,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Legacy popup tools",
+      "Helper or print windows"
+    ],
+    "abuse": [
+      "Pop-under ads",
+      "Chasing the person with windows (blocked in modern browsers)"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2008-09",
+      "browser": "chrome",
+      "version": "1",
+      "change": "Present from the first release; calls are ignored for tabs that share a window with other tabs"
+    }
+  ],
+  "related": [
+    "web.actions.open-popup",
+    "web.display.window-sizes"
+  ],
+  "refs": [
+    {
+      "t": "mdn",
+      "label": "MDN moveTo",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/Window/moveTo"
+    },
+    {
+      "t": "mdn",
+      "label": "MDN resizeTo",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/Window/resizeTo"
+    },
+    {
+      "t": "spec",
+      "label": "CSSOM View Window",
+      "url": "https://drafts.csswg.org/cssom-view/#extensions-to-the-window-interface"
+    }
+  ],
+  "confidence": "inferred"
+}

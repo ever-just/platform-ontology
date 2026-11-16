@@ -1,0 +1,204 @@
+{
+  "id": "mob.os.uninstall-data-deletion",
+  "name": "What uninstall deletes and what survives",
+  "kind": "signal",
+  "group": "os-integration-install",
+  "subgroup": "Uninstall behavior",
+  "tags": [
+    "uninstall",
+    "after-uninstall",
+    "data-lifecycle",
+    "residual-data"
+  ],
+  "plain": "Uninstall wipes app storage on both systems, but some data survives in backups, the cloud or the keychain.",
+  "meaning": "Residual data is how a company recognises a returning user. Survivors: iOS Keychain, iCloud data, Android backups, shared media and server records.",
+  "lifecycle": [
+    "after-uninstall"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "y",
+      "v": "1.0",
+      "api": 1,
+      "permission": "",
+      "protection": "none",
+      "grant": "settings",
+      "prompt_ui": "Settings > Apps > Uninstall",
+      "persistence": "Deletes internal and app specific external storage; shared media, Auto Backup copies (25 MB) and server data remain",
+      "revocation": "n/a",
+      "store_policy": "",
+      "api_surface": "PackageManager, ACTION_PACKAGE_FULLY_REMOVED broadcast to others",
+      "note": "Backed up data restores at next install if Auto Backup was on; MediaStore files you created remain"
+    },
+    "ios": {
+      "s": "y",
+      "v": "2.0",
+      "permission": "",
+      "protection": "none",
+      "grant": "settings",
+      "prompt_ui": "Delete App from Home Screen",
+      "persistence": "Deletes the app container; Keychain items, iCloud Drive and CloudKit data, and server records remain",
+      "revocation": "n/a",
+      "store_policy": "",
+      "api_surface": "Keychain, ubiquity container",
+      "note": "Keychain items survive uninstall and reinstall on the same device (docs and developer reports); restored backups also restore keychain"
+    }
+  },
+  "web_equivalents": [
+    "web.storage.persistence-eviction"
+  ],
+  "data": {
+    "type": "none",
+    "metric": "Residual data",
+    "update": "n/a",
+    "fields": []
+  },
+  "limits": {
+    "headline": "Can't keep most data after uninstall, though backups, cloud and keychain may restore some",
+    "user_action": "You uninstall the app from Settings or delete it from the Home Screen",
+    "can": [
+      "Restore backed up data on the next install if Auto Backup was on",
+      "Keep files it made in shared media on Android",
+      "Bring back Keychain items on iPhone after a reinstall on the same device"
+    ],
+    "cannot": [
+      "Keep its private storage, which is wiped on both systems",
+      "Keep Android Keystore entries; they go with the app",
+      "Keep anything you also removed from your cloud backup"
+    ],
+    "reach": 2,
+    "reach_label": "Local data goes, some data survives",
+    "differs": "Both wipe app storage. iPhone Keychain items usually survive, and Android restores from Auto Backup."
+  },
+  "story": {
+    "what_it_is": "Deleting an app clears its storage, but some data stays in backups, the cloud or the keychain.",
+    "icon": "trash-2",
+    "tags": [
+      "Install",
+      "Tracking",
+      "Reset"
+    ],
+    "marketing": [
+      {
+        "vendor": "Apple",
+        "name": "Offering account deletion in your app",
+        "pitch": "Apple requires apps that let you create an account to also let you delete it in the app.",
+        "url": "https://developer.apple.com/support/offering-account-deletion-in-your-app/"
+      }
+    ],
+    "for_you": "You delete the app thinking it is gone for good. Later you reinstall and find your login, scores or settings still there, because some data lived somewhere else.",
+    "for_makers": "Makers use what survives to recognize a returning customer. It helps restore progress, and it also lets a person be re identified after a reset.",
+    "use_cases": [
+      {
+        "type": "games",
+        "example": "You delete a game and come back to find your progress waiting.",
+        "apps": [
+          "Clash Royale"
+        ]
+      },
+      {
+        "type": "media",
+        "example": "A streaming app remembers your profile after a reinstall.",
+        "apps": [
+          "Netflix"
+        ]
+      },
+      {
+        "type": "ads",
+        "example": "A marketer matches a returning install to the same person using a kept ID.",
+        "apps": []
+      },
+      {
+        "type": "shopping",
+        "example": "A store keeps your cart on the server and finds it again.",
+        "apps": []
+      },
+      {
+        "type": "security",
+        "example": "A bank app spots a device that deleted the app and came back with a different login.",
+        "apps": []
+      },
+      {
+        "type": "fitness",
+        "example": "A fitness app returns with your history from the cloud.",
+        "apps": [
+          "Strava"
+        ]
+      },
+      {
+        "type": "analytics",
+        "example": "A team groups before and after a reinstall as one user.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Re identifying after a reset",
+      "Data lingers in backups"
+    ],
+    "android_note": "Backed up data returns if Auto Backup was on. Files in shared media stay.",
+    "ios_note": "Keychain items stay after delete and return on reinstall, including from a restored backup."
+  },
+  "technical_bounds": [
+    "Keychain survival is documented behavior with caveats",
+    "Server side data is outside the device"
+  ],
+  "scores": {
+    "sensitivity": 3,
+    "utility": 3,
+    "fingerprint_bits": 4,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Restore user state",
+      "Returning customer recognition"
+    ],
+    "abuse": [
+      "Re-identifying after a deliberate reset"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2008-07",
+      "platform": "ios",
+      "version": "iOS 2",
+      "change": "Keychain introduced, persists across uninstall by design"
+    },
+    {
+      "date": "2022-06",
+      "platform": "ios",
+      "version": "App Store rule",
+      "change": "Apps with account creation must offer account deletion in app"
+    }
+  ],
+  "related": [
+    "mob.os.keychain-persistence",
+    "mob.os.auto-backup",
+    "mob.notif.uninstall-detection"
+  ],
+  "refs": [
+    {
+      "t": "apple",
+      "label": "Apple: Offering account deletion in your app",
+      "url": "https://developer.apple.com/support/offering-account-deletion-in-your-app/"
+    },
+    {
+      "t": "android",
+      "label": "Android: Back up user data with Auto Backup",
+      "url": "https://developer.android.com/identity/data/autobackup"
+    },
+    {
+      "t": "policy",
+      "label": "Google Play: Account deletion requirements",
+      "url": "https://support.google.com/googleplay/android-developer/answer/13327111"
+    }
+  ],
+  "confidence": "docs"
+}

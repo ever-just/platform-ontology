@@ -1,0 +1,249 @@
+{
+  "id": "web.notify.push-abuse-defenses",
+  "name": "Chrome and OS defenses against notification abuse",
+  "kind": "permission",
+  "group": "notifications-background",
+  "subgroup": "Push",
+  "tags": [
+    "abuse",
+    "auto-revocation"
+  ],
+  "plain": "Browser rules that quiet, throttle and auto-revoke abusive notification sites.",
+  "meaning": "Shows how the browser limits what an ignored or abusive site can do: a quiet prompt chip, auto-revocation, server-side throttling at FCM. A site that is ignored keeps no permission and sends nothing.",
+  "lifecycle": [
+    "after-leaving"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "n/a (browser policy, Safety Hub, FCM throttling)",
+      "permission_name": "notifications",
+      "access": {
+        "grant": "settings",
+        "prompt_ui": "Quiet prompt chip, Notifications blocked message in the address bar, Safety Hub revocation list, Android one-tap unsubscribe.",
+        "secure_context": true,
+        "user_gesture": false,
+        "persistence": "Revoked permissions can be re-granted from Safety Hub",
+        "revocation": "Safety Hub, Site settings, notification Unsubscribe action",
+        "iframe": "Not applicable",
+        "steps": [
+          "Site asks for permission",
+          "Chrome decides to show quiet UI based on past allow rate and abuse signals",
+          "Chrome revokes after low engagement or repeated warnings",
+          "FCM throttles domains above 1,000 messages per minute and returns HTTP 429"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "80",
+          "note": "Quiet UI 80, auto-revocation 2024 to 2026",
+          "date": "2020-02-04"
+        },
+        "edge": {
+          "s": "y",
+          "v": "80",
+          "note": "",
+          "date": "2020-02-07"
+        },
+        "firefox": {
+          "s": "y",
+          "v": "72",
+          "note": "",
+          "date": "2020-01-07"
+        },
+        "safari": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "ios_safari": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "80",
+          "note": "",
+          "date": "2020-02-04"
+        },
+        "samsung": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "none",
+    "metric": "Policy outcomes",
+    "update": "ongoing",
+    "fields": [
+      {
+        "name": "FCM throttle",
+        "type": "integer",
+        "unit": "messages per minute",
+        "range": "1,000",
+        "precision": "per domain"
+      },
+      {
+        "name": "Chrome dismissals before block",
+        "type": "integer",
+        "unit": "count",
+        "range": "3 consecutive dismissals",
+        "precision": "then 7 day embargo (not primary verified)"
+      },
+      {
+        "name": "Auto-revoke escalation",
+        "type": "days",
+        "unit": "days",
+        "range": "1 then 7 then 14",
+        "precision": "back to normal after about 42 days (secondary source)"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can't keep sending spam if you block it; Chrome quiets and removes abusers",
+    "user_action": "You ignore the prompt, tap Block, or tap Unsubscribe on a notification",
+    "can": [
+      "Show a quiet chip instead of a loud pop up for sites people rarely allow",
+      "Remove permission for sites you have not used in a while",
+      "Let you review removed sites in Safety Hub, or unsubscribe with one tap on Android"
+    ],
+    "cannot": [
+      "Send anything after you block it or it is auto removed",
+      "Send notifications from a site you never allowed",
+      "Use a big pop up on every visit for a site that you ignored",
+      "Skip these checks in Chrome, Edge or Firefox"
+    ],
+    "reach": 1,
+    "reach_label": "Limits what a site can do",
+    "differs": "Chrome, Edge and Firefox have these protections. Safari and iPhone browsers use different rules."
+  },
+  "story": {
+    "what_it_is": "Browser rules that quiet, limit and switch off notification permissions from sites that spam you.",
+    "icon": "shield-check",
+    "tags": [
+      "Safety",
+      "Notifications",
+      "Browser rules"
+    ],
+    "marketing": [
+      {
+        "vendor": "Google Chrome",
+        "name": "Quieter notification permissions",
+        "pitch": "Chrome shows a quieter prompt and can auto remove permissions from sites that send unwanted alerts.",
+        "url": "https://developer.chrome.com/blog/notification-permission-changes"
+      }
+    ],
+    "for_you": "You may see a small quiet icon instead of a big prompt. Chrome may also remove permissions from sites you never use. You get fewer pop ups and fewer spam alerts.",
+    "for_makers": "Makers must earn permission by asking at the right moment and sending useful alerts. Spammy sites lose permission automatically. Browsers use this to keep notifications trusted.",
+    "use_cases": [
+      {
+        "type": "news",
+        "example": "A news site that asks for permission on first page load gets quiet prompts, so it waits to ask after a reader reads two articles.",
+        "apps": []
+      },
+      {
+        "type": "shopping",
+        "example": "A store that sends too many promos sees low opt in and users turning alerts off.",
+        "apps": []
+      },
+      {
+        "type": "security",
+        "example": "Fake virus warning sites that abused alerts for scams lose permission and show fewer pop ups.",
+        "apps": []
+      },
+      {
+        "type": "games",
+        "example": "A browser game portal sends one useful alert for a turn ready, instead of daily nags that cause blocks.",
+        "apps": []
+      },
+      {
+        "type": "social",
+        "example": "A social site tests asking after a user follows an account, not at once, to keep its permission rate high.",
+        "apps": []
+      },
+      {
+        "type": "ads",
+        "example": "A push ad network sees reduced reach as browsers block spam and remove stale permissions.",
+        "apps": []
+      },
+      {
+        "type": "enterprise",
+        "example": "A company dashboard sends few, high value alerts to keep permission across staff browsers.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Hidden prompts",
+      "Real alerts can be missed"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Cannot be opted out of by the site",
+    "Installed PWAs keep access in Chrome",
+    "Numbers other than the FCM limit come from secondary sources"
+  ],
+  "scores": {
+    "sensitivity": 3,
+    "utility": 2,
+    "fingerprint_bits": null,
+    "friction": 1
+  },
+  "value": {
+    "legit_uses": [
+      "Reducing spam for users"
+    ],
+    "abuse": [
+      "Spammy sites lose access"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2020-02",
+      "browser": "chrome",
+      "version": "80",
+      "change": "Quieter notification permission UI"
+    },
+    {
+      "date": "2025",
+      "browser": "chrome",
+      "version": "",
+      "change": "Auto-revocation for sites not recently engaged begins rolling out (exact version unconfirmed)"
+    },
+    {
+      "date": "2026",
+      "browser": "chrome",
+      "version": "",
+      "change": "Chrome Security blog: FCM throttling at 1,000 messages per minute (exact version unconfirmed)"
+    }
+  ],
+  "related": [
+    "web.notify.notifications",
+    "web.notify.push-api"
+  ],
+  "refs": [
+    {
+      "t": "vendor",
+      "label": "Chrome Security blog: notification abuse defenses (2026-08-11)",
+      "url": "https://security.googleblog.com/"
+    },
+    {
+      "t": "chromestatus",
+      "label": "Chrome notification permission UX",
+      "url": "https://developer.chrome.com/blog/notification-permission-changes"
+    }
+  ],
+  "confidence": "inferred"
+}

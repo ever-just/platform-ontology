@@ -1,0 +1,221 @@
+{
+  "id": "web.peripherals.eyedropper",
+  "name": "EyeDropper",
+  "kind": "picker",
+  "group": "peripherals-hardware",
+  "subgroup": "Display hardware",
+  "tags": [
+    "display hardware"
+  ],
+  "plain": "Lets the person pick a colour from anywhere on screen.",
+  "meaning": "Returns one pixel colour the person points at, including outside the page. Cannot capture other pixels.",
+  "lifecycle": [
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "new EyeDropper().open() resolves {sRGBHex}",
+      "bcd": [
+        "api.EyeDropper"
+      ],
+      "access": {
+        "grant": "picker",
+        "prompt_ui": "Magnifier cursor over the screen; Esc cancels",
+        "secure_context": true,
+        "user_gesture": true,
+        "persistence": "Per origin",
+        "revocation": "Site settings",
+        "iframe": "Same as top level; cross-origin iframes need a permissions policy where listed",
+        "steps": [
+          "Call the API",
+          "Browser applies its access rules",
+          "Page receives the result"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "95",
+          "note": "Before Chrome 120, the EyeDropper API is not available on ChromeOS. See <a href=\"https://crbug.com/40720753\">bug 40720753</a>. Available on Linux X11, but not a",
+          "date": "2021-10-19"
+        },
+        "edge": {
+          "s": "y",
+          "v": "95",
+          "note": "Before Edge 120, the EyeDropper API is not available on ChromeOS. See <a href=\"https://crbug.com/40720753\">bug 40720753</a>. Available on Linux X11, but not ava",
+          "date": "2021-10-21"
+        },
+        "firefox": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "safari": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "ios_safari": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "chrome_android": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "samsung": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "object",
+    "metric": "Lets the person pick a colour from anywhere on screen.",
+    "update": "on demand",
+    "fields": [
+      {
+        "name": "sRGBHex",
+        "type": "string",
+        "range": "#000000 to #ffffff",
+        "precision": "24 bit colour"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can pick one color from anywhere on your screen when you click",
+    "user_action": "You tap Pick color and click a spot on the screen.",
+    "can": [
+      "Show a magnifier so you can choose a color",
+      "Get the color code of the one spot you click",
+      "Work on any part of the screen, even outside the page"
+    ],
+    "cannot": [
+      "Take a screenshot or see anything but the color you click",
+      "Pick without you clicking; Esc cancels it",
+      "Keep picking after you click once",
+      "Work in Firefox, Safari, or on phones"
+    ],
+    "reach": 1,
+    "reach_label": "One spot you click",
+    "differs": "Only desktop Chrome and Edge support it. Firefox, Safari and phone browsers do not."
+  },
+  "story": {
+    "what_it_is": "A site can let you pick a colour from anywhere on your screen.",
+    "icon": "pipette",
+    "tags": [
+      "Design",
+      "Picker",
+      "Safe"
+    ],
+    "marketing": [
+      {
+        "vendor": "Google",
+        "name": "EyeDropper API",
+        "pitch": "Chrome's blog says the API lets users sample a colour from anywhere on the screen.",
+        "url": "https://developer.chrome.com/blog/eyedropper"
+      }
+    ],
+    "for_you": "You click a pipette tool and your cursor turns into a magnifier. You click and the page learns only that one colour.",
+    "for_makers": "Makers can add a colour picker to design tools without extra apps. The page gets one value at a time and only after you click, so it cannot read your screen.",
+    "use_cases": [
+      {
+        "type": "creative",
+        "example": "A web design tool lets you grab a colour from a photo on another window.",
+        "apps": [
+          "Figma",
+          "Canva"
+        ]
+      },
+      {
+        "type": "productivity",
+        "example": "A slide tool matches a chart colour to your logo.",
+        "apps": [
+          "Google Slides"
+        ]
+      },
+      {
+        "type": "developer",
+        "example": "A developer tool copies a colour from any site into code.",
+        "apps": [
+          "Chrome DevTools"
+        ]
+      },
+      {
+        "type": "shopping",
+        "example": "A makeup site lets you match a shade from a picture.",
+        "apps": []
+      },
+      {
+        "type": "education",
+        "example": "A drawing lesson lets kids sample colours from art.",
+        "apps": []
+      },
+      {
+        "type": "games",
+        "example": "A browser pixel art maker picks colours from a reference image.",
+        "apps": [
+          "Pixilart"
+        ]
+      }
+    ],
+    "risks": [
+      "Low risk",
+      "Chrome only"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "One pixel per call",
+    "Needs gesture",
+    "Desktop Chrome and Edge only"
+  ],
+  "scores": {
+    "sensitivity": 1,
+    "utility": 2,
+    "fingerprint_bits": null,
+    "friction": 1
+  },
+  "value": {
+    "legit_uses": [
+      "Design tools",
+      "Colour pickers"
+    ],
+    "abuse": [
+      "None; one pixel only"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2021-09",
+      "browser": "chrome",
+      "version": "95",
+      "change": "EyeDropper ships"
+    }
+  ],
+  "refs": [
+    {
+      "t": "mdn",
+      "label": "MDN EyeDropper",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/EyeDropper_API"
+    },
+    {
+      "t": "spec",
+      "label": "EyeDropper",
+      "url": "https://wicg.github.io/eyedropper-api/"
+    }
+  ],
+  "confidence": "verified"
+}

@@ -1,0 +1,233 @@
+{
+  "id": "web.actions.speculation-rules",
+  "name": "Speculation Rules (prefetch and prerender)",
+  "kind": "action",
+  "group": "page-actions",
+  "subgroup": "Windows and navigation",
+  "tags": [
+    "speculation-rules",
+    "prerender",
+    "prefetch"
+  ],
+  "plain": "A page can tell the browser to load and render the next page in the background.",
+  "meaning": "A site can preload other URLs the person may visit. Prerendered pages run scripts before the person arrives, so analytics and counters may fire on a visit that never happens.",
+  "lifecycle": [
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "<script type=speculationrules>{\"prerender\":[...]}</script>; Speculation-Rules header",
+      "bcd": [
+        "html.elements.script.type.speculationrules"
+      ],
+      "access": {
+        "grant": "none",
+        "prompt_ui": "None (no browser prompt)",
+        "secure_context": false,
+        "user_gesture": false,
+        "activation": "none",
+        "persistence": "While the page is open; discarded when not used",
+        "revocation": "Nothing to revoke (no permission is stored)",
+        "iframe": "Same-site prerender by default; cross-origin prefetch needs opt-in",
+        "steps": [
+          "Page injects speculation rules",
+          "Browser fetches or prerenders per eagerness",
+          "Navigation activates the prerendered page"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "109",
+          "note": "",
+          "date": "2023-01-10"
+        },
+        "edge": {
+          "s": "y",
+          "v": "109",
+          "note": "",
+          "date": "2023-01-12"
+        },
+        "firefox": {
+          "s": "n",
+          "v": "",
+          "note": "In preview builds only"
+        },
+        "safari": {
+          "s": "y",
+          "v": "27.3",
+          "note": "",
+          "date": ""
+        },
+        "ios_safari": {
+          "s": "y",
+          "v": "27.3",
+          "note": "All iOS browsers use WebKit",
+          "date": ""
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "109",
+          "note": "",
+          "date": "2023-01-10"
+        },
+        "samsung": {
+          "s": "y",
+          "v": "21.0",
+          "note": "",
+          "date": "2023-05-19"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "none",
+    "metric": "",
+    "update": "",
+    "fields": []
+  },
+  "limits": {
+    "headline": "Can tell your browser to load the likely next page before you tap",
+    "user_action": "Nothing. It happens as you hover over or get close to a link.",
+    "can": [
+      "Load the next page in the background before you tap it",
+      "Show the next page right away when you do tap",
+      "Pick pages to preload on its own site"
+    ],
+    "cannot": [
+      "Preload pages when your browser has data saver or low power on",
+      "Run the other page's sign in or purchase actions",
+      "Preload pages from other sites with your logged in details",
+      "Work in Firefox"
+    ],
+    "reach": 2,
+    "reach_label": "Only its own likely next pages",
+    "differs": "Chrome and Edge and Safari support it. Firefox does not yet."
+  },
+  "story": {
+    "what_it_is": "A page can tell the browser to load the next page before you click it.",
+    "icon": "fast-forward",
+    "tags": [
+      "Speed",
+      "Silent",
+      "Prediction"
+    ],
+    "marketing": [
+      {
+        "vendor": "Google",
+        "name": "Prerender pages in Chrome",
+        "pitch": "Chrome's docs say prerendering the likely next page can make navigation feel instant.",
+        "url": "https://developer.chrome.com/docs/web-platform/prerender-pages"
+      }
+    ],
+    "for_you": "The next page appears almost instantly when you click. What you do not see is that your browser may have loaded it for you earlier, even if you never opened it.",
+    "for_makers": "Makers bet on where you will click next and load it early to boost speed, which lifts search ranking and sales. The cost is extra data use and the site may count visits you never made.",
+    "use_cases": [
+      {
+        "type": "shopping",
+        "example": "On a store listing, the top product page is loaded in the background so tapping it feels instant.",
+        "apps": [
+          "Shopify stores",
+          "Amazon"
+        ]
+      },
+      {
+        "type": "news",
+        "example": "A news site prerenders the next top story from the home page.",
+        "apps": []
+      },
+      {
+        "type": "media",
+        "example": "A streaming service prefetches the title page of a show you are hovering over.",
+        "apps": []
+      },
+      {
+        "type": "analytics",
+        "example": "Analytics must avoid counting prerendered pages that the person never actually viewed.",
+        "apps": [
+          "Google Analytics"
+        ]
+      },
+      {
+        "type": "ads",
+        "example": "An ad system waits to count an impression until a prerendered page is really shown.",
+        "apps": []
+      },
+      {
+        "type": "travel",
+        "example": "A booking site prerenders the next step of search results.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Phantom page loads",
+      "Extra data use"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Chrome limits: eagerness immediate or eager up to 50 prefetches and 10 prerenders; moderate or conservative up to 2 (FIFO)",
+    "Disabled when Data Saver or Energy Saver is on, when Preload pages is off, or memory is low",
+    "Prerendered pages defer permission prompts, notifications, geolocation and other sensitive APIs until activation",
+    "Cross-origin prerender is not allowed; same-site cross-origin prefetch needs opt in",
+    "Support per MDN BCD: Chrome and Edge 109, Safari 27.3; Firefox has not shipped it"
+  ],
+  "scores": {
+    "sensitivity": 2,
+    "utility": 4,
+    "fingerprint_bits": null,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Instant navigations"
+    ],
+    "abuse": [
+      "Phantom analytics hits",
+      "Loading pages to disclose IP or cookies before click"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2023-01",
+      "browser": "chrome",
+      "version": "109",
+      "change": "Prefetch and prerender via speculation rules"
+    },
+    {
+      "date": "2023-12",
+      "browser": "chrome",
+      "version": "121",
+      "change": "Document rules and eagerness"
+    }
+  ],
+  "related": [
+    "web.actions.fenced-frames"
+  ],
+  "refs": [
+    {
+      "t": "mdn",
+      "label": "MDN Speculation Rules API",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/Speculation_Rules_API"
+    },
+    {
+      "t": "spec",
+      "label": "WICG Speculation Rules",
+      "url": "https://wicg.github.io/nav-speculation/speculation-rules.html"
+    },
+    {
+      "t": "chromestatus",
+      "label": "Chrome prerender guide",
+      "url": "https://developer.chrome.com/docs/web-platform/prerender-pages"
+    }
+  ],
+  "confidence": "docs"
+}

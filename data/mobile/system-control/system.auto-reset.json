@@ -1,0 +1,196 @@
+{
+  "id": "mob.system.auto-reset",
+  "name": "Unused app permission reset",
+  "kind": "capability",
+  "group": "system-control",
+  "subgroup": "Mechanics",
+  "tags": [
+    "mechanics",
+    "hibernation",
+    "auto-reset"
+  ],
+  "plain": "Automatically removes permissions from apps not opened for months.",
+  "meaning": "Limits dormant exposure. Android resets runtime permissions after about three months unused; iOS has no automatic revocation.",
+  "lifecycle": [
+    "background"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "y",
+      "v": "11",
+      "api": 30,
+      "permission": "n/a (system behavior)",
+      "protection": "none",
+      "grant": "system-only",
+      "prompt_ui": "Notification when reset occurs",
+      "persistence": "Resets after a few months unused; app hibernates",
+      "revocation": "Settings > Apps > Unused apps",
+      "store_policy": "Play: apps must not circumvent",
+      "api_surface": "PackageManager.isAutoRevokeWhitelisted, ACTION_AUTO_REVOKE_PERMISSIONS",
+      "note": "Applies to apps targeting API 30 and later by default; backported to 6.0 via Play services in 2021-22."
+    },
+    "ios": {
+      "s": "n",
+      "v": "",
+      "permission": "n/a",
+      "protection": "none",
+      "grant": "not-exposed",
+      "prompt_ui": "none",
+      "persistence": "none",
+      "revocation": "",
+      "store_policy": "none",
+      "api_surface": "none",
+      "note": "iOS never auto-revokes; location reminders prompt periodically."
+    }
+  },
+  "data": {
+    "type": "none",
+    "metric": "Unused threshold",
+    "update": "continuous",
+    "fields": [
+      {
+        "name": "threshold",
+        "type": "integer",
+        "unit": "days",
+        "range": "about 90",
+        "precision": "days"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can remove permissions from apps you have not opened for about three months, on Android",
+    "user_action": "Nothing. Android does it on its own and sends you a notice",
+    "can": [
+      "Reset the permissions of apps you stopped using",
+      "Tell you when a reset happens",
+      "Apply to apps built for Android 11 and later by default, and older ones through Google Play services"
+    ],
+    "cannot": [
+      "Do this on iPhone; it never removes permissions by itself",
+      "Reset permissions for apps you keep opening",
+      "Replace your own choices in Settings"
+    ],
+    "reach": 1,
+    "reach_label": "Removes permissions from idle apps",
+    "differs": "Android resets unused app permissions after about three months; iPhone only reminds you now and then about location."
+  },
+  "story": {
+    "what_it_is": "Automatically takes away permissions from apps you have not opened for months.",
+    "icon": "history",
+    "tags": [
+      "Permissions",
+      "Automatic",
+      "Privacy"
+    ],
+    "marketing": [
+      {
+        "vendor": "Google",
+        "name": "Permission auto reset",
+        "pitch": "Android removes permissions from apps you have not used in a few months, and tells you.",
+        "url": "https://support.google.com/android/answer/9431959"
+      }
+    ],
+    "for_you": "If you have not opened an app for about three months, its permissions go away. You get a notice and can turn them back on. You never need to clean up old apps yourself.",
+    "for_makers": "Dormant apps keep access forever, which is a risk. Auto reset cuts that exposure. Makers have to ask again when the person returns, so they need a good reason to win trust back.",
+    "use_cases": [
+      {
+        "type": "games",
+        "example": "A game you played last summer loses location access and asks again when you open it.",
+        "apps": []
+      },
+      {
+        "type": "shopping",
+        "example": "A holiday shopping app loses camera access until you come back in winter.",
+        "apps": []
+      },
+      {
+        "type": "travel",
+        "example": "A trip app that you used once loses its location permission.",
+        "apps": [
+          "Booking.com"
+        ]
+      },
+      {
+        "type": "fitness",
+        "example": "A fitness app you forgot about loses health data access.",
+        "apps": []
+      },
+      {
+        "type": "social",
+        "example": "An old social app loses its contacts access.",
+        "apps": []
+      },
+      {
+        "type": "ads",
+        "example": "A tracking SDK inside a stale app loses its sensor access.",
+        "apps": []
+      },
+      {
+        "type": "security",
+        "example": "A security team sees fewer old permissions across a fleet of phones.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Apps may break after reset",
+      "Missed alerts",
+      "Some apps are exempt"
+    ],
+    "android_note": "Applies to apps for Android 11 and later by default, and was backported to Android 6 through Play services in 2021 and 2022.",
+    "ios_note": "iPhone never takes permissions away on its own. It reminds you now and then about location use."
+  },
+  "technical_bounds": [
+    "No iOS equivalent"
+  ],
+  "scores": {
+    "sensitivity": 4,
+    "utility": 3,
+    "fingerprint_bits": null,
+    "friction": 3
+  },
+  "value": {
+    "legit_uses": [
+      "Dormant app protection"
+    ],
+    "abuse": [
+      "None"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2020-09",
+      "platform": "android",
+      "version": "11 (API 30)",
+      "change": "Auto-reset introduced"
+    },
+    {
+      "date": "2021-12",
+      "platform": "android",
+      "version": "6.0 to 10",
+      "change": "Auto-reset backported via Google Play services"
+    }
+  ],
+  "related": [
+    "mob.system.one-time-permission"
+  ],
+  "refs": [
+    {
+      "t": "android",
+      "label": "Android: Permission auto-reset",
+      "url": "https://developer.android.com/training/permissions/requesting#auto-reset"
+    },
+    {
+      "t": "android",
+      "label": "Android 11 permissions and privacy changes",
+      "url": "https://developer.android.com/about/versions/11/privacy/permissions"
+    }
+  ],
+  "confidence": "docs"
+}

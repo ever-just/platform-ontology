@@ -1,0 +1,214 @@
+{
+  "id": "web.net.vpn-proxy-tor-detection",
+  "name": "VPN, proxy and Tor detection",
+  "kind": "signal",
+  "group": "network-connectivity",
+  "subgroup": "Anonymity",
+  "tags": [
+    "vpn",
+    "proxy",
+    "tor",
+    "fraud"
+  ],
+  "plain": "Sites guess whether the visitor hides behind a VPN, proxy or Tor.",
+  "meaning": "Methods: IP lists (Tor exit list, hosting ASNs), latency versus claimed geography, timezone and language versus IP, WebRTC leaks, open ports, MTU and TCP quirks. Residential VPN IPs often slip through.",
+  "lifecycle": [
+    "on-arrival"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "IP reputation; Tor bulk exit list; RTT triangulation; timezone mismatch",
+      "access": {
+        "grant": "none",
+        "prompt_ui": "",
+        "secure_context": false,
+        "user_gesture": false,
+        "persistence": "",
+        "revocation": "",
+        "iframe": "",
+        "steps": [
+          "Check IP against lists",
+          "Compare IP geo with timezone and Accept-Language",
+          "Measure latency and run WebRTC probe"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "1",
+          "note": "",
+          "date": "2008-12-11"
+        },
+        "edge": {
+          "s": "y",
+          "v": "79",
+          "note": "",
+          "date": "2020-01-15"
+        },
+        "firefox": {
+          "s": "y",
+          "v": "1",
+          "note": "",
+          "date": "2004-11-09"
+        },
+        "safari": {
+          "s": "y",
+          "v": "1",
+          "note": "",
+          "date": "2003-06-23"
+        },
+        "ios_safari": {
+          "s": "y",
+          "v": "1",
+          "note": "",
+          "date": "2007-06-29"
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "1",
+          "note": "",
+          "date": ""
+        },
+        "samsung": {
+          "s": "y",
+          "v": "5.0",
+          "note": "",
+          "date": "2016-12-15"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "boolean",
+    "metric": "Risk score",
+    "update": "",
+    "fields": [
+      {
+        "name": "is_vpn",
+        "type": "boolean",
+        "unit": "",
+        "range": "true or false",
+        "precision": "vendor score, false positives about 1 to 10%"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can guess whether you are hiding behind a VPN, proxy or Tor, but not always correctly",
+    "user_action": "Nothing. It happens when you load a page, sign in, or watch video",
+    "can": [
+      "Check your address against lists of VPN, hosting and Tor addresses",
+      "Compare your timezone and language with where your address seems to be",
+      "Spot slow response times that suggest a faraway server",
+      "Block or challenge you, or show a different catalog"
+    ],
+    "cannot": [
+      "Be sure when you use a home internet VPN address, which often slips through",
+      "Learn your real address if the VPN holds up",
+      "See your name or account from detection alone",
+      "Avoid wrongly flagging people who use privacy tools for safety"
+    ],
+    "reach": 2,
+    "reach_label": "A guess, not proof",
+    "differs": ""
+  },
+  "story": {
+    "what_it_is": "Sites guess if you are hiding behind a VPN, proxy or Tor, using address lists and timing clues.",
+    "icon": "eye-off",
+    "tags": [
+      "Privacy",
+      "Anti fraud",
+      "Silent"
+    ],
+    "marketing": [],
+    "for_you": "You may see a block page, a missing video or extra checks, and no clear reason. The site thinks your address belongs to a VPN, a data center or Tor, so it treats you with caution.",
+    "for_makers": "Makers buy lists of VPN, proxy and Tor addresses to enforce region rules, stop fraud and slow bots. It is a blunt tool. It also catches honest people who use a VPN for privacy.",
+    "use_cases": [
+      {
+        "type": "video",
+        "example": "Streaming sites such as Netflix and BBC iPlayer block known VPN addresses to enforce regional licenses, so a viewer abroad sees a proxy error.",
+        "apps": [
+          "Netflix",
+          "BBC iPlayer"
+        ]
+      },
+      {
+        "type": "games",
+        "example": "A game's store checks for VPN use at purchase to stop regional price tricks, and may ask for a card from the local country.",
+        "apps": [
+          "Steam"
+        ]
+      },
+      {
+        "type": "banking",
+        "example": "A bank asks for extra proof when a login arrives from Tor or a known proxy, which may lock out a traveler.",
+        "apps": []
+      },
+      {
+        "type": "shopping",
+        "example": "A checkout page scores VPN traffic as higher risk and holds the first order for review.",
+        "apps": []
+      },
+      {
+        "type": "ads",
+        "example": "An ad network refuses to bill clicks from data center and proxy addresses, because they are mostly bots.",
+        "apps": []
+      },
+      {
+        "type": "social",
+        "example": "A social site restricts new accounts from Tor to slow spam, though a journalist in a risky country may need Tor.",
+        "apps": []
+      },
+      {
+        "type": "live",
+        "example": "A ticket queue blocks proxy addresses so one buyer cannot hold many places in line.",
+        "apps": [
+          "Ticketmaster"
+        ]
+      }
+    ],
+    "risks": [
+      "Blocks honest VPN users",
+      "Wrong guesses"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "False positives on corporate and school networks",
+    "Residential proxies and private relays are hard to flag"
+  ],
+  "scores": {
+    "sensitivity": 2,
+    "utility": 5,
+    "fingerprint_bits": 3,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": "Fraud prevention, streaming licensing",
+    "abuse": "Blocking privacy users, discrimination"
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "related": [
+    "web.net.webrtc-host-candidates",
+    "web.net.ip-masking"
+  ],
+  "refs": [
+    {
+      "t": "vendor",
+      "label": "Tor Project exit list",
+      "url": "https://check.torproject.org/torbulkexitlist"
+    },
+    {
+      "t": "vendor",
+      "label": "IPinfo privacy detection",
+      "url": "https://ipinfo.io/products/proxy-vpn-detection-api"
+    }
+  ],
+  "confidence": "docs"
+}

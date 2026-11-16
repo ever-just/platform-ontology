@@ -1,0 +1,300 @@
+{
+  "id": "web.peripherals.webusb",
+  "name": "WebUSB",
+  "kind": "permission",
+  "group": "peripherals-hardware",
+  "subgroup": "USB",
+  "tags": [
+    "usb",
+    "chooser",
+    "hardware"
+  ],
+  "plain": "Lets a site talk directly to a USB device the person picks.",
+  "meaning": "Reveals which USB gadgets are plugged in (vendor, product, serial number) and lets the site control them. Used for dev boards, label printers and security keys; a path to device fingerprinting.",
+  "lifecycle": [
+    "in-session",
+    "after-leaving"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "navigator.usb.requestDevice({filters}), getDevices(), device.open(), transferIn/transferOut",
+      "permission_name": "usb",
+      "permissions_policy": "usb",
+      "bcd": [
+        "api.USB",
+        "api.USBDevice",
+        "api.Navigator.usb"
+      ],
+      "access": {
+        "grant": "picker",
+        "prompt_ui": "Browser chooser lists only devices matching filters; person selects one and clicks Connect",
+        "secure_context": true,
+        "user_gesture": true,
+        "persistence": "Per origin and per device until revoked; getDevices() returns previously granted devices without a prompt",
+        "revocation": "Site settings, chooser 'forget' button, device.forget() (Chrome 101+), 'disconnect' event",
+        "iframe": "Needs allow=\"usb\" in cross-origin iframes; available in dedicated and service workers from Chrome 118",
+        "steps": [
+          "User clicks a button",
+          "requestDevice() shows chooser",
+          "Page calls open(), selectConfiguration(), claimInterface()",
+          "Page does bulk, interrupt, isochronous or control transfers"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "61",
+          "note": "",
+          "date": "2017-09-05"
+        },
+        "edge": {
+          "s": "y",
+          "v": "79",
+          "note": "",
+          "date": "2020-01-15"
+        },
+        "firefox": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "safari": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "ios_safari": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "61",
+          "note": "",
+          "date": "2017-09-05"
+        },
+        "samsung": {
+          "s": "y",
+          "v": "8.0",
+          "note": "",
+          "date": "2018-07-18"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "object",
+    "metric": "USB device descriptors plus raw data transfers",
+    "update": "on demand; connect and disconnect events",
+    "fields": [
+      {
+        "name": "vendorId",
+        "type": "integer",
+        "range": "0 to 65535",
+        "precision": "16 bit USB-IF id"
+      },
+      {
+        "name": "productId",
+        "type": "integer",
+        "range": "0 to 65535",
+        "precision": "16 bit"
+      },
+      {
+        "name": "serialNumber",
+        "type": "string",
+        "range": "device defined",
+        "precision": "unique per unit when present"
+      },
+      {
+        "name": "productName / manufacturerName",
+        "type": "string",
+        "range": "device defined"
+      },
+      {
+        "name": "usbVersionMajor/Minor/Subminor",
+        "type": "integer",
+        "range": "0 to 255"
+      },
+      {
+        "name": "configurations[].interfaces[].alternates[]",
+        "type": "list",
+        "range": "per device",
+        "precision": "class, subclass, protocol, endpoints"
+      },
+      {
+        "name": "transfer payload",
+        "type": "binary",
+        "unit": "bytes",
+        "range": "up to 64 bytes per control transfer on low speed; bulk limited by endpoint packet size"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can talk to one USB device you pick from a list",
+    "user_action": "You tap Connect device, pick one in the chooser and click Connect.",
+    "can": [
+      "Show USB devices that match what the site asks for",
+      "Connect to the one you pick",
+      "Send and get data from it, such as a flash tool or a printer"
+    ],
+    "cannot": [
+      "Use USB devices you did not pick",
+      "Use devices your computer already claims, like storage drives and keyboards",
+      "Work in Firefox, Safari or on iPhone",
+      "Keep access after you remove the permission or unplug it"
+    ],
+    "reach": 2,
+    "reach_label": "One device you pick",
+    "differs": "Chrome and Edge, including on Android, support it. Firefox and Safari, including iPhone, do not."
+  },
+  "story": {
+    "what_it_is": "A site can talk straight to a USB gadget that you pick.",
+    "icon": "usb",
+    "tags": [
+      "Hardware",
+      "You pick",
+      "Makers"
+    ],
+    "marketing": [
+      {
+        "vendor": "Google",
+        "name": "WebUSB",
+        "pitch": "Chrome's docs say WebUSB lets pages safely use USB devices, with the user in control.",
+        "url": "https://developer.chrome.com/docs/capabilities/usb"
+      }
+    ],
+    "for_you": "A picker lists USB devices. You choose one and the page can set it up or talk to it, with no driver to install.",
+    "for_makers": "Makers can ship device setup and firmware updates as a web page. It cuts support cost since there is nothing to install.",
+    "use_cases": [
+      {
+        "type": "developer",
+        "example": "A web page updates a keyboard or a microcontroller board over USB.",
+        "apps": [
+          "Arduino",
+          "QMK"
+        ]
+      },
+      {
+        "type": "creative",
+        "example": "A web tool lets you adjust a drawing tablet's buttons.",
+        "apps": []
+      },
+      {
+        "type": "enterprise",
+        "example": "A web based label printer app prints directly over USB.",
+        "apps": [
+          "Zebra",
+          "Brother"
+        ]
+      },
+      {
+        "type": "health",
+        "example": "A web page reads data from a USB glucose meter.",
+        "apps": []
+      },
+      {
+        "type": "games",
+        "example": "A web page flashes new firmware onto a game controller.",
+        "apps": []
+      },
+      {
+        "type": "security",
+        "example": "A bad site could try to talk to a USB device that holds keys or data.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Picking the wrong device",
+      "Not on Safari"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Cannot list devices without a user selection (filters required unless exclusionFilters/empty filters used with chooser)",
+    "Cannot claim interfaces of protected classes: HID, mass storage, audio, video, printer, smart card, wireless controller",
+    "Windows needs WinUSB driver or MS OS 2.0 descriptors; Linux needs udev rules",
+    "No access without HTTPS",
+    "Not in Firefox, Safari or iOS"
+  ],
+  "scores": {
+    "sensitivity": 4,
+    "utility": 4,
+    "fingerprint_bits": null,
+    "friction": 2
+  },
+  "value": {
+    "legit_uses": [
+      "Firmware flashing (Arduino, ESP32, ZMK keyboards)",
+      "Label and receipt printers",
+      "Security key setup tools"
+    ],
+    "abuse": [
+      "Fingerprinting by serial number once granted",
+      "Malicious firmware flashing",
+      "Phishing sites mimicking a hardware setup flow"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2016-07",
+      "browser": "chrome",
+      "version": "61",
+      "change": "WebUSB ships (Chrome 61 stable Sep 2017, origin trial from 54)"
+    },
+    {
+      "date": "2018-04",
+      "browser": "chrome",
+      "version": "67",
+      "change": "Protected interface classes (HID, mass storage, audio, video, smart card) blocked from claim"
+    },
+    {
+      "date": "2021-04",
+      "browser": "chrome",
+      "version": "89",
+      "change": "Removed 'Serial number readable without permission' paths; granted devices persist"
+    },
+    {
+      "date": "2023-10",
+      "browser": "chrome",
+      "version": "118",
+      "change": "WebUSB exposed in workers"
+    },
+    {
+      "date": "2024-01",
+      "browser": "chrome",
+      "version": "101",
+      "change": "device.forget() added"
+    }
+  ],
+  "related": [
+    "web.peripherals.webhid",
+    "web.peripherals.web-serial"
+  ],
+  "refs": [
+    {
+      "t": "mdn",
+      "label": "MDN WebUSB API",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/WebUSB_API"
+    },
+    {
+      "t": "spec",
+      "label": "WebUSB spec",
+      "url": "https://wicg.github.io/webusb/"
+    },
+    {
+      "t": "vendor",
+      "label": "Chrome WebUSB guide",
+      "url": "https://developer.chrome.com/docs/capabilities/usb"
+    }
+  ],
+  "confidence": "verified"
+}

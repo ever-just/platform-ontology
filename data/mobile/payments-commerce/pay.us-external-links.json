@@ -1,0 +1,203 @@
+{
+  "id": "mob.pay.us-external-links",
+  "name": "US external links and alternative billing (post Epic rulings)",
+  "kind": "capability",
+  "group": "payments-commerce",
+  "subgroup": "Store rules",
+  "tags": [
+    "epic-v-apple",
+    "epic-v-google",
+    "external-purchase",
+    "anti-steering"
+  ],
+  "plain": "In the US, apps can link out to web checkout and may offer other billing.",
+  "meaning": "Court rulings forced both stores to allow links to outside payment. Fees on those purchases are still being decided in Apple's case.",
+  "lifecycle": [
+    "in-session"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "f",
+      "v": "",
+      "permission": "Play Console: External offers program or alternative billing program (launched Dec 9 2025 in the US after the Epic injunction)",
+      "protection": "none",
+      "grant": "enterprise",
+      "prompt_ui": "Play shows an informational screen when leaving to external offer",
+      "persistence": "Per program enrolment",
+      "revocation": "Play Console program settings",
+      "store_policy": "Play: transaction reporting and service fees apply",
+      "api_surface": "Play Billing alternative billing; external offers links",
+      "note": "Terms vary by program; Epic settlement filed Mar 2026 still needs approvals."
+    },
+    "ios": {
+      "s": "f",
+      "v": "",
+      "permission": "com.apple.developer.storekit.external-purchase-link",
+      "protection": "entitlement",
+      "grant": "entitlement",
+      "prompt_ui": "No Apple warning sheet for US links since Apr 30 2025",
+      "persistence": "Per entitlement",
+      "revocation": "n/a",
+      "store_policy": "US only; fee on linked purchases remanded after the Ninth Circuit ruling of Dec 11 2025",
+      "api_surface": "StoreKit External Purchase Link, ExternalPurchaseLink entitlement",
+      "note": "Apple was barred from charging a commission and from limiting link style; Ninth Circuit later let it seek a justified cost based fee."
+    }
+  },
+  "data": {
+    "type": "none",
+    "metric": "Policy",
+    "update": "n/a",
+    "fields": [
+      {
+        "name": "commission",
+        "type": "float",
+        "unit": "percent",
+        "range": "0 to 27",
+        "precision": "varies by court order"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can send you to outside web checkout in the US, with fees still being settled",
+    "user_action": "You tap a Buy on the web style link inside an app",
+    "can": [
+      "Send you to a website to pay instead of using in app billing",
+      "Offer a different billing system in the US",
+      "Show links on iPhone with no Apple warning sheet (US, since April 2025)"
+    ],
+    "cannot": [
+      "Skip Google's information screen when you leave for an outside offer on Android",
+      "Work the same way outside the US",
+      "Stay free of fees for good; Apple may still seek a cost based fee and the Epic settlement needs approvals"
+    ],
+    "reach": 1,
+    "reach_label": "One purchase at a time",
+    "differs": "iPhone shows no warning sheet for US links; Android shows an information screen when you leave for an external offer."
+  },
+  "story": {
+    "what_it_is": "After US court rulings, apps can link to web checkout and offer other billing, with fees still disputed.",
+    "icon": "external-link",
+    "tags": [
+      "Payments",
+      "US",
+      "Rules"
+    ],
+    "marketing": [],
+    "for_you": "You may now see a button in an app that says buy on the web, sometimes with a lower price. You are sent to a browser to pay. Some people like the savings, others miss the one tap buy.",
+    "for_makers": "Apps like Spotify and Epic's games can steer buyers away from the app store's cut. That can mean better margins or lower prices. Apple and Google are still fighting over what fee they may charge on those sales.",
+    "use_cases": [
+      {
+        "type": "music",
+        "example": "A music app shows a link to its website to sign up at a lower price, rather than using the store subscription.",
+        "apps": [
+          "Spotify"
+        ]
+      },
+      {
+        "type": "games",
+        "example": "A shooter game sells its in-game coins through its own web shop and links to it from inside the game.",
+        "apps": [
+          "Fortnite"
+        ]
+      },
+      {
+        "type": "media",
+        "example": "A reading app lets you buy a book on the web and then open it in the app.",
+        "apps": [
+          "Kindle"
+        ]
+      },
+      {
+        "type": "video",
+        "example": "A streaming app lets you sign up in the browser and then log in on the phone.",
+        "apps": []
+      },
+      {
+        "type": "dating",
+        "example": "A dating app offers a cheaper monthly pass through its own checkout.",
+        "apps": [
+          "Match Group apps"
+        ]
+      },
+      {
+        "type": "ads",
+        "example": "A growth team sends ad clicks straight to a web checkout and measures the sale.",
+        "apps": []
+      },
+      {
+        "type": "payments",
+        "example": "A game accepts a local bank transfer for people with no credit card.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Scammy look alike links",
+      "Refunds handled by the app maker",
+      "Rules still being decided"
+    ],
+    "android_note": "Google and Epic filed a settlement in 2026 that still needs approvals, so Play terms vary by program.",
+    "ios_note": "A US court barred Apple from charging a commission on link outs at first. Later rulings let Apple seek a reasonable fee."
+  },
+  "technical_bounds": [
+    "Rules apply to US storefronts; other regions have their own programs"
+  ],
+  "scores": {
+    "sensitivity": 2,
+    "utility": 4,
+    "fingerprint_bits": 0,
+    "friction": 3
+  },
+  "value": {
+    "legit_uses": [
+      "Lower fees for subscriptions via web"
+    ],
+    "abuse": [
+      "Manipulating users away from safer billing"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2025-04",
+      "platform": "ios",
+      "version": "iOS 17.4+ US storefront",
+      "change": "Apple allowed links to external purchases with no commission after the April 30 order"
+    },
+    {
+      "date": "2025-10",
+      "platform": "android",
+      "version": "Play policy",
+      "change": "Google must allow external links and alternative billing in the US after Epic ruling"
+    },
+    {
+      "date": "2025-12",
+      "platform": "ios",
+      "version": "Ninth Circuit ruling",
+      "change": "Contempt upheld; zero commission ban partly reversed and remanded"
+    }
+  ],
+  "related": [
+    "mob.pay.iap",
+    "mob.pay.eu-dma",
+    "mob.pay.japan-msca"
+  ],
+  "refs": [
+    {
+      "t": "policy",
+      "label": "Google Play: External offers and alternative billing",
+      "url": "https://support.google.com/googleplay/android-developer/answer/15582165"
+    },
+    {
+      "t": "news",
+      "label": "Apple developer news: US link entitlement",
+      "url": "https://developer.apple.com/support/storekit-external-entitlement-us/"
+    }
+  ],
+  "confidence": "docs"
+}

@@ -1,0 +1,215 @@
+{
+  "id": "web.tracking.linkedin-enhanced-matching",
+  "name": "Enhanced matching (hashed email from the browser)",
+  "kind": "tracking",
+  "group": "cross-site-tracking",
+  "subgroup": "Advertising pixels",
+  "tags": [
+    "hashed-email",
+    "identity-resolution",
+    "advertising"
+  ],
+  "plain": "The tag hashes an email address in the browser and sends the hash to LinkedIn to match a member.",
+  "meaning": "Turns an anonymous visitor into a known LinkedIn member when their email is on the advertiser's form. SHA-256 is deterministic, so the hash is still an identifier.",
+  "lifecycle": [
+    "in-session",
+    "signed-in"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "Insight Tag enhanced matching: SHA-256 of normalized email",
+      "access": {
+        "grant": "none",
+        "prompt_ui": "None (no browser prompt)",
+        "secure_context": false,
+        "user_gesture": false,
+        "persistence": "Per event",
+        "revocation": "",
+        "iframe": "",
+        "steps": [
+          "Visitor enters an email on the advertiser's site",
+          "Tag lowercases and hashes it with SHA-256",
+          "Hash sent to LinkedIn and matched to a member"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "",
+          "note": ""
+        },
+        "edge": {
+          "s": "y",
+          "v": "",
+          "note": ""
+        },
+        "firefox": {
+          "s": "y",
+          "v": "",
+          "note": ""
+        },
+        "safari": {
+          "s": "y",
+          "v": "",
+          "note": ""
+        },
+        "ios_safari": {
+          "s": "y",
+          "v": "",
+          "note": ""
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "",
+          "note": ""
+        },
+        "samsung": {
+          "s": "y",
+          "v": "",
+          "note": ""
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "hash",
+    "metric": "SHA-256 email hash",
+    "update": "per form event",
+    "fields": [
+      {
+        "name": "sha256_email",
+        "type": "hash",
+        "unit": "SHA256",
+        "range": "64 hex",
+        "precision": "deterministic"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can send a scrambled version of your email to LinkedIn to match you to a member",
+    "user_action": "You type or autofill your email on a site that uses the LinkedIn tag",
+    "can": [
+      "Turn your email into a scrambled code in the browser",
+      "Send that code to LinkedIn to find a matching member",
+      "Improve how conversions and audiences are matched"
+    ],
+    "cannot": [
+      "Send the plain email address, only the scrambled code",
+      "Match you if LinkedIn has no account using that email",
+      "Work if the tag is blocked or you never enter an email",
+      "See emails typed on sites without the tag"
+    ],
+    "reach": 3,
+    "reach_label": "Your email's hash, once matched",
+    "differs": ""
+  },
+  "story": {
+    "what_it_is": "The tag scrambles an email you type and sends the scramble to LinkedIn so it can find your profile.",
+    "icon": "mail-check",
+    "tags": [
+      "Ads",
+      "Email",
+      "Silent"
+    ],
+    "marketing": [
+      {
+        "vendor": "LinkedIn",
+        "name": "Enhanced matching",
+        "pitch": "LinkedIn presents it as a way for advertisers to improve match rates by sending hashed email from forms on their sites.",
+        "url": "https://www.linkedin.com/help/lms/answer/81195"
+      }
+    ],
+    "for_you": "You type your email into a form and nothing seems different. Behind the scenes, the page turns your email into a code and sends it to LinkedIn. LinkedIn can then tell which of its members you are.",
+    "for_makers": "Cookies alone miss many visitors. Matching an email to a member makes an anonymous form fill a known lead. That helps advertisers measure sales and build audiences, and it lifts how much LinkedIn can charge.",
+    "use_cases": [
+      {
+        "type": "ads",
+        "example": "You download a white paper with your work email. The advertiser can then show you follow up ads on LinkedIn, tied to that email.",
+        "apps": [
+          "LinkedIn Ads"
+        ]
+      },
+      {
+        "type": "analytics",
+        "example": "A marketing team sees that a signup came from a LinkedIn ad, even though you used a different browser than the one you clicked in.",
+        "apps": [
+          "HubSpot",
+          "Marketo"
+        ]
+      },
+      {
+        "type": "enterprise",
+        "example": "A software firm builds a list of people who requested a demo, so it can send ads to their coworkers too.",
+        "apps": [
+          "Salesforce"
+        ]
+      },
+      {
+        "type": "shopping",
+        "example": "A course seller matches a purchase email to a LinkedIn member to check the sale came from a paid post.",
+        "apps": [
+          "Udemy",
+          "Coursera"
+        ]
+      },
+      {
+        "type": "security",
+        "example": "A scrambled email is stable, so anyone who has your email can compute the same code and match you, which is why it is not anonymous.",
+        "apps": []
+      },
+      {
+        "type": "education",
+        "example": "A business school ties a brochure request to a LinkedIn profile, to find more people with similar jobs.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Hashed email is still an identifier",
+      "Happens before you press submit in some setups"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Needs a form or data layer with the email",
+    "Matches only if LinkedIn knows the email"
+  ],
+  "scores": {
+    "sensitivity": 4,
+    "utility": 4,
+    "fingerprint_bits": null,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Better conversion match rates"
+    ],
+    "abuse": [
+      "Re-identification by email hash"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": true,
+      "how": "Per LinkedIn help pages the Insight Tag hashes emails in the browser (summary of pages; marked docs)."
+    }
+  },
+  "related": [
+    "web.tracking.linkedin-insight-tag",
+    "web.tracking.linkedin-matched-audiences"
+  ],
+  "refs": [
+    {
+      "t": "vendor",
+      "label": "LinkedIn Help: Matched Audiences",
+      "url": "https://www.linkedin.com/help/lms/answer/81195"
+    },
+    {
+      "t": "vendor",
+      "label": "LinkedIn Help: Insight Tag data",
+      "url": "https://www.linkedin.com/help/lms/answer/a427660"
+    }
+  ],
+  "confidence": "docs"
+}

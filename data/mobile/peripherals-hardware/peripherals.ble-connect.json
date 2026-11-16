@@ -1,0 +1,180 @@
+{
+  "id": "mob.peripherals.ble-connect",
+  "name": "Bluetooth connect",
+  "kind": "permission",
+  "group": "peripherals-hardware",
+  "subgroup": "Bluetooth",
+  "tags": [
+    "runtime-permission",
+    "nearby-devices"
+  ],
+  "plain": "Lets the app talk to Bluetooth devices that are already paired.",
+  "meaning": "Exposes paired device names and lets the app read data from headphones, trackers and medical devices.",
+  "lifecycle": [
+    "in-session"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "y",
+      "v": "12",
+      "api": 31,
+      "permission": "BLUETOOTH_CONNECT",
+      "protection": "dangerous",
+      "grant": "prompt",
+      "prompt_ui": "Nearby devices prompt",
+      "persistence": "Until revoked or auto-reset",
+      "revocation": "Settings > Apps > Permissions > Nearby devices",
+      "store_policy": "Play: data-safety disclosure",
+      "api_surface": "BluetoothDevice, BluetoothGatt",
+      "note": "Needed for paired device lists and GATT connections on Android 12+."
+    },
+    "ios": {
+      "s": "y",
+      "v": "13",
+      "permission": "NSBluetoothAlwaysUsageDescription",
+      "protection": "prompt",
+      "grant": "prompt",
+      "prompt_ui": "Bluetooth prompt (shared)",
+      "persistence": "Until revoked",
+      "revocation": "Settings > Privacy & Security > Bluetooth",
+      "store_policy": "App Review 5.1.1",
+      "api_surface": "CBCentralManager connect",
+      "note": "Same prompt as scan."
+    }
+  },
+  "web_equivalents": [
+    "web.peripherals.web-bluetooth"
+  ],
+  "data": {
+    "type": "stream",
+    "metric": "GATT data",
+    "update": "on demand",
+    "fields": []
+  },
+  "limits": {
+    "headline": "Can talk to Bluetooth devices you already paired, after you allow Bluetooth",
+    "user_action": "You open the app and tap Connect to your headphones, tracker or device",
+    "can": [
+      "List paired device names (Android 12 and later)",
+      "Connect to headphones, trackers and medical devices",
+      "Get data from the device and send it settings"
+    ],
+    "cannot": [
+      "Connect before you answer the Bluetooth prompt",
+      "Find new, unpaired devices without the separate scan permission (Android)",
+      "Use a prompt apart from the scan one on iPhone; it is shared"
+    ],
+    "reach": 2,
+    "reach_label": "Devices you already paired",
+    "differs": "Android 12 and later has a separate Nearby devices permission for connecting; iPhone uses one Bluetooth prompt for everything."
+  },
+  "story": {
+    "what_it_is": "Lets the app talk to Bluetooth devices that are already paired with the phone.",
+    "icon": "bluetooth-connected",
+    "tags": [
+      "Bluetooth",
+      "Gadgets",
+      "Permission"
+    ],
+    "marketing": [],
+    "for_you": "The app asks to connect to Bluetooth devices. You say yes and it can control your earbuds, read your heart band or check a device. It cannot find new ones without scan access.",
+    "for_makers": "This is how an app uses gear you have already paired. It unlocks battery levels, settings and data from earbuds, trackers and health devices. The app also sees device names, which can say a lot about your life.",
+    "use_cases": [
+      {
+        "type": "music",
+        "example": "A headphone app changes noise cancelling and shows the case battery.",
+        "apps": [
+          "Sony Headphones Connect"
+        ]
+      },
+      {
+        "type": "health",
+        "example": "A blood pressure cuff sends your readings to a health app.",
+        "apps": []
+      },
+      {
+        "type": "fitness",
+        "example": "A bike computer reads power and cadence from a sensor.",
+        "apps": [
+          "Zwift"
+        ]
+      },
+      {
+        "type": "smart-home",
+        "example": "A thermostat or lock app connects to the paired device to change a setting.",
+        "apps": []
+      },
+      {
+        "type": "automotive",
+        "example": "A car app reads tire pressure and fuel from the paired car.",
+        "apps": []
+      },
+      {
+        "type": "accessibility",
+        "example": "A hearing aid app tunes volume and programs from the phone.",
+        "apps": []
+      },
+      {
+        "type": "games",
+        "example": "A game controller app maps buttons and shows battery.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Paired device names reveal habits",
+      "Health data reaches apps",
+      "Device control"
+    ],
+    "android_note": "Android 12 and later uses a Bluetooth connect permission for paired device lists and connections.",
+    "ios_note": "The iPhone prompt is the same one used for scan and advertise."
+  },
+  "technical_bounds": [
+    "Shared grant group on both OSes"
+  ],
+  "scores": {
+    "sensitivity": 3,
+    "utility": 4,
+    "fingerprint_bits": 2,
+    "friction": 2
+  },
+  "value": {
+    "legit_uses": [
+      "Headphone control",
+      "Medical devices"
+    ],
+    "abuse": [
+      "Device list profiling"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2021-10",
+      "platform": "android",
+      "version": "12 (API 31)",
+      "change": "BLUETOOTH_CONNECT introduced"
+    }
+  ],
+  "related": [
+    "mob.peripherals.ble-scan"
+  ],
+  "refs": [
+    {
+      "t": "android",
+      "label": "Android: Bluetooth permissions",
+      "url": "https://developer.android.com/develop/connectivity/bluetooth/bt-permissions"
+    },
+    {
+      "t": "apple",
+      "label": "Apple: Core Bluetooth authorization",
+      "url": "https://developer.apple.com/documentation/corebluetooth/cbmanager/authorization"
+    }
+  ],
+  "confidence": "verified"
+}

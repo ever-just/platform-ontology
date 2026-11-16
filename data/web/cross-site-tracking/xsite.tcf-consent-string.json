@@ -1,0 +1,238 @@
+{
+  "id": "web.xsite.tcf-consent-string",
+  "name": "IAB TCF consent string",
+  "kind": "signal",
+  "group": "cross-site-tracking",
+  "subgroup": "Consent",
+  "tags": [
+    "tcf",
+    "consent",
+    "euconsent-v2",
+    "cmp"
+  ],
+  "plain": "A coded record of which ad vendors and purposes the person agreed to in the EU consent banner.",
+  "meaning": "Stored in the euconsent-v2 cookie and read through __tcfapi. TCF v2.3 requires the disclosedVendors segment, and strings without it were invalid from Feb 28 2026. Consent is valid for up to 13 months.",
+  "lifecycle": [
+    "on-arrival",
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "window.__tcfapi('getTCData', 2, cb); euconsent-v2 cookie",
+      "access": {
+        "grant": "prompt",
+        "prompt_ui": "CMP cookie banner",
+        "secure_context": false,
+        "user_gesture": false,
+        "persistence": "euconsent-v2 cookie up to 13 months",
+        "revocation": "Clear site data, browser privacy settings",
+        "iframe": "",
+        "steps": []
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "1",
+          "note": ":Cookie and JS API, any browser",
+          "date": "2008-12-11"
+        },
+        "edge": {
+          "s": "y",
+          "v": "1",
+          "note": ":Cookie and JS API, any browser",
+          "date": ""
+        },
+        "firefox": {
+          "s": "y",
+          "v": "1",
+          "note": ":Cookie and JS API, any browser",
+          "date": "2004-11-09"
+        },
+        "safari": {
+          "s": "y",
+          "v": "1",
+          "note": ":Cookie and JS API, any browser",
+          "date": "2003-06-23"
+        },
+        "ios_safari": {
+          "s": "y",
+          "v": "1",
+          "note": ":Cookie and JS API, any browser",
+          "date": "2007-06-29"
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "1",
+          "note": ":Cookie and JS API, any browser",
+          "date": ""
+        },
+        "samsung": {
+          "s": "y",
+          "v": "1",
+          "note": ":Cookie and JS API, any browser",
+          "date": "2013-04-27"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "string",
+    "metric": "Consent string",
+    "update": "per consent change",
+    "fields": []
+  },
+  "limits": {
+    "headline": "Can see which ad vendors you agreed to in the EU cookie banner",
+    "user_action": "You tap Accept, Reject, or Manage choices on a cookie banner",
+    "can": [
+      "Check which ad vendors and purposes you said yes to",
+      "Pass your choices along to the ad partners it works with",
+      "Remember your answer for up to 13 months",
+      "Show the banner again if the record is missing or out of date"
+    ],
+    "cannot": [
+      "Count a choice you never made as your consent",
+      "Use a record that lacks the vendor list; since Feb 28 2026 those strings are invalid",
+      "Keep your choices past 13 months without asking again",
+      "Tell vendors you agreed when you picked Reject all"
+    ],
+    "reach": 2,
+    "reach_label": "Only choices you made in the banner",
+    "differs": ""
+  },
+  "story": {
+    "what_it_is": "A saved note of which ad companies and purposes you said yes or no to on a cookie banner.",
+    "icon": "list-checks",
+    "tags": [
+      "Consent",
+      "Ads",
+      "Europe"
+    ],
+    "marketing": [
+      {
+        "vendor": "IAB Europe",
+        "name": "Transparency and Consent Framework",
+        "pitch": "The industry standard that lets sites, ad vendors and consent banners share one record of what a person agreed to.",
+        "url": "https://iabeurope.eu/transparency-consent-framework/"
+      }
+    ],
+    "for_you": "You see it as the cookie banner in Europe, with a button to accept, reject or manage choices. After you tap, the site stores a coded note of your answers. Ad companies on the page read that note instead of asking you again.",
+    "for_makers": "Publishers and ad vendors need proof that a person agreed before personal data is used for ads. The string travels with every ad request, so each buyer knows what it may do. It also keeps a paper trail for regulators.",
+    "use_cases": [
+      {
+        "type": "news",
+        "example": "A European newspaper shows a banner, then passes your choices to every ad vendor on the page so only allowed ones load.",
+        "apps": [
+          "The Guardian"
+        ]
+      },
+      {
+        "type": "ads",
+        "example": "In a real-time ad auction, the exchange reads the string first and drops bidders that were not approved.",
+        "apps": [
+          "Google Ad Manager",
+          "Prebid"
+        ]
+      },
+      {
+        "type": "games",
+        "example": "A free browser games portal shows a consent banner on first visit and only runs personalised ads between rounds if you agreed.",
+        "apps": [
+          "Poki",
+          "CrazyGames"
+        ]
+      },
+      {
+        "type": "video",
+        "example": "A streaming site plays a generic pre-roll ad instead of a targeted one when you reject the banner.",
+        "apps": []
+      },
+      {
+        "type": "analytics",
+        "example": "A measurement tag waits for the consent note before it fires, so rejected visitors are not counted individually.",
+        "apps": [
+          "Google Tag Manager"
+        ]
+      },
+      {
+        "type": "shopping",
+        "example": "A web shop only loads retargeting pixels from vendors you ticked, so you do not see its ads follow you around.",
+        "apps": []
+      },
+      {
+        "type": "enterprise",
+        "example": "A compliance team keeps logs of consent strings to show a regulator that a visitor really said yes.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Banners with pushy design",
+      "Consent claims that regulators have challenged"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Covers 11 purposes and 3 special purposes plus vendor IDs",
+    "Needs a registered CMP",
+    "Not a legal proof by itself"
+  ],
+  "scores": {
+    "sensitivity": 3,
+    "utility": 3,
+    "fingerprint_bits": null,
+    "friction": 2
+  },
+  "value": {
+    "legit_uses": [
+      "Documenting consent"
+    ],
+    "abuse": [
+      "Weak consent flows (CNIL and Belgian DPA rulings on TCF)"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2020-08",
+      "browser": "all",
+      "version": "",
+      "change": "TCF v2.0 launched"
+    },
+    {
+      "date": "2023-05",
+      "browser": "all",
+      "version": "",
+      "change": "TCF v2.2 removed legitimate interest for some purposes"
+    },
+    {
+      "date": "2026-02",
+      "browser": "all",
+      "version": "",
+      "change": "TCF v2.3 with disclosedVendors mandatory from Feb 28 2026"
+    }
+  ],
+  "related": [
+    "web.xsite.gpp",
+    "web.xsite.global-privacy-control"
+  ],
+  "refs": [
+    {
+      "t": "vendor",
+      "label": "IAB Europe TCF",
+      "url": "https://iabeurope.eu/transparency-consent-framework/"
+    },
+    {
+      "t": "vendor",
+      "label": "TCF v2.3 changes",
+      "url": "https://iabeurope.eu/tcf-v2-3/"
+    }
+  ],
+  "confidence": "docs"
+}

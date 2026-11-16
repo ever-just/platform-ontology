@@ -1,0 +1,208 @@
+{
+  "id": "web.tracking.linkedin-matched-audiences",
+  "name": "Matched Audiences (website retargeting and list upload)",
+  "kind": "tracking",
+  "group": "cross-site-tracking",
+  "subgroup": "Server side tracking",
+  "tags": [
+    "retargeting",
+    "audience",
+    "hashed-email",
+    "advertising"
+  ],
+  "plain": "Advertisers build ad audiences from site visitors or from uploaded email lists.",
+  "meaning": "Visits on other sites and email lists are turned into ad audiences. Lists are hashed (SHA-256) in the browser or uploaded as hashes. Needs at least 300 matched members.",
+  "lifecycle": [
+    "before-visit",
+    "after-leaving"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "Campaign Manager upload; Insight Tag cookie based website audiences",
+      "access": {
+        "grant": "none",
+        "prompt_ui": "None (no browser prompt)",
+        "secure_context": false,
+        "user_gesture": false,
+        "persistence": "Contact lists deleted after 30 days; audiences deleted after 90 days unless used or edited; website audience windows 30 to 180 days",
+        "revocation": "",
+        "iframe": "",
+        "steps": [
+          "Advertiser uploads hashed emails or defines a website rule",
+          "LinkedIn matches to members",
+          "Audience is used in campaigns once 300 members match"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "",
+          "note": ""
+        },
+        "edge": {
+          "s": "y",
+          "v": "",
+          "note": ""
+        },
+        "firefox": {
+          "s": "y",
+          "v": "",
+          "note": ""
+        },
+        "safari": {
+          "s": "y",
+          "v": "",
+          "note": ""
+        },
+        "ios_safari": {
+          "s": "y",
+          "v": "",
+          "note": ""
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "",
+          "note": ""
+        },
+        "samsung": {
+          "s": "y",
+          "v": "",
+          "note": ""
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "list",
+    "metric": "Audience membership",
+    "update": "daily",
+    "fields": [
+      {
+        "name": "membership_window",
+        "type": "integer",
+        "unit": "days",
+        "range": "30 to 180",
+        "precision": "1 day"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can put you on an ad list after a site visit or an uploaded email",
+    "user_action": "Nothing. It happens when you visit a tagged site or give an email to an advertiser",
+    "can": [
+      "Add visitors of tagged pages to a retargeting list",
+      "Match an uploaded list of emails to LinkedIn members",
+      "Show those people ads on LinkedIn later"
+    ],
+    "cannot": [
+      "Add you without a tag visit or a matching email",
+      "Show you ads if you have no LinkedIn account matching the visit",
+      "Reveal the list to the advertiser as names, only match counts",
+      "Follow you if you opt out of ad personalization in LinkedIn settings"
+    ],
+    "reach": 3,
+    "reach_label": "Lists built from visits or emails",
+    "differs": ""
+  },
+  "story": {
+    "what_it_is": "Advertisers build ad groups from people who visited their site or from lists of emails.",
+    "icon": "users",
+    "tags": [
+      "Ads",
+      "Email lists",
+      "Retargeting"
+    ],
+    "marketing": [
+      {
+        "vendor": "LinkedIn",
+        "name": "Matched Audiences",
+        "pitch": "LinkedIn pitches it as a way to retarget website visitors and reach contacts from your own lists with ads.",
+        "url": "https://www.linkedin.com/help/lms/answer/81195"
+      }
+    ],
+    "for_you": "You never see how you were picked. You visited a site or gave a company your email, and later you start to see its ads on LinkedIn. The company chose you from a list.",
+    "for_makers": "Advertisers want to speak to people who already know them. Retargeting site visitors and uploading customer lists turns warm leads into ad targets. A minimum size of 300 matched members keeps small lists from singling someone out.",
+    "use_cases": [
+      {
+        "type": "ads",
+        "example": "A software firm uploads its trial users list, and shows them ads for a paid plan on LinkedIn.",
+        "apps": [
+          "LinkedIn Ads"
+        ]
+      },
+      {
+        "type": "ads",
+        "example": "A company retargets everyone who visited its pricing page in the last 30 days with a case study ad.",
+        "apps": [
+          "LinkedIn Ads"
+        ]
+      },
+      {
+        "type": "enterprise",
+        "example": "A sales team uploads names of target accounts and shows only those companies a custom message.",
+        "apps": [
+          "Demandbase",
+          "6sense"
+        ]
+      },
+      {
+        "type": "education",
+        "example": "A school retargets people who read its program page, with a short video on scholarships.",
+        "apps": []
+      },
+      {
+        "type": "media",
+        "example": "A conference shows reminder ads to past attendees, matched by their email lists.",
+        "apps": []
+      },
+      {
+        "type": "security",
+        "example": "A customer list goes up as hashes, but a hash of an email can still be matched, so it is not private from LinkedIn.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Your email list can be matched to you",
+      "Follow up ads you did not expect"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Needs 300 matches",
+    "Company CSV raw file deleted after one week"
+  ],
+  "scores": {
+    "sensitivity": 4,
+    "utility": 4,
+    "fingerprint_bits": null,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Retarget visitors and customers"
+    ],
+    "abuse": [
+      "Third party profile building"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": true,
+      "how": "Follows the Insight Tag cookie for website audiences. Documented in LinkedIn Help 81195."
+    }
+  },
+  "related": [
+    "web.tracking.linkedin-insight-tag",
+    "web.tracking.linkedin-enhanced-matching"
+  ],
+  "refs": [
+    {
+      "t": "vendor",
+      "label": "LinkedIn Help: Matched Audiences",
+      "url": "https://www.linkedin.com/help/lms/answer/81195"
+    }
+  ],
+  "confidence": "docs"
+}

@@ -1,0 +1,232 @@
+{
+  "id": "mob.location.approximate",
+  "name": "Approximate location",
+  "kind": "permission",
+  "group": "location-motion",
+  "subgroup": "Position",
+  "tags": [
+    "coarse-location",
+    "runtime-permission",
+    "privacy-downgrade"
+  ],
+  "plain": "Asks for a city-block level location instead of the exact spot.",
+  "meaning": "Reveals the neighborhood but not the exact address. Useful for weather and local content; still shows commuting patterns over time.",
+  "lifecycle": [
+    "in-session"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "y",
+      "v": "6.0",
+      "api": 23,
+      "permission": "ACCESS_COARSE_LOCATION",
+      "protection": "dangerous",
+      "grant": "prompt",
+      "prompt_ui": "Android 12+: Approximate chosen in the Precise or Approximate selector",
+      "persistence": "Until revoked; one-time option available (Android 11+)",
+      "revocation": "Settings > Apps > Permissions > Location > Use precise location toggle",
+      "store_policy": "Play: same location data-safety disclosure as fine",
+      "api_surface": "FusedLocationProviderClient (PRIORITY_BALANCED_POWER_ACCURACY)",
+      "note": "Android documents coarse accuracy as about 3 square kilometers."
+    },
+    "ios": {
+      "s": "y",
+      "v": "14",
+      "permission": "NSLocationWhenInUseUsageDescription (user turns Precise Location off)",
+      "protection": "prompt",
+      "grant": "prompt",
+      "prompt_ui": "Precise Location off in the iOS 14 prompt returns reduced accuracy",
+      "persistence": "Until the user switches Precise back on in Settings",
+      "revocation": "Settings > Privacy & Security > Location Services > app > Precise Location",
+      "store_policy": "App Review 5.1.1",
+      "api_surface": "CLLocationManager.accuracyAuthorization == .reducedAccuracy",
+      "note": "Reduced accuracy returns a region of roughly 1 to 20 km and updates less often."
+    }
+  },
+  "web_equivalents": [
+    "web.location.geolocation"
+  ],
+  "data": {
+    "type": "object",
+    "metric": "Blurred coordinates",
+    "update": "reduced update rate (a few fixes per hour)",
+    "fields": [
+      {
+        "name": "latitude",
+        "type": "float",
+        "unit": "degrees",
+        "range": "-90 to 90",
+        "precision": "about 3 square km on Android; roughly 1 to 20 km region on iOS"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can see roughly where you are, in a region of a few to 20 km",
+    "user_action": "You tap Allow and choose Approximate location, or turn Precise off on iPhone",
+    "can": [
+      "Find your area within a few square kilometers on Android",
+      "Find your region (about 1 to 20 km) on iPhone",
+      "Show nearby stores or local weather without your exact spot"
+    ],
+    "cannot": [
+      "See your street or building",
+      "Follow your moves in fine detail",
+      "Get exact location unless you allow it, or the app asks once for temporary full accuracy on iPhone",
+      "Choose approximate for you; you pick it in the prompt"
+    ],
+    "reach": 2,
+    "reach_label": "A few kilometers, while in use",
+    "differs": "Android coarse location is about 3 square kilometers. iPhone reduced accuracy is a region of 1 to 20 km and updates less often."
+  },
+  "story": {
+    "what_it_is": "An app learns roughly where you are, like your neighborhood, but not your exact spot.",
+    "icon": "map-pin",
+    "tags": [
+      "Location",
+      "Asks first",
+      "Privacy"
+    ],
+    "marketing": [
+      {
+        "vendor": "Google",
+        "name": "Approximate location",
+        "pitch": "Android 12 lets you share an approximate location, a block or so wide, instead of your exact spot.",
+        "url": "https://developer.android.com/training/location/permissions"
+      },
+      {
+        "vendor": "Apple",
+        "name": "Precise Location off",
+        "pitch": "iPhone lets you turn off Precise Location so apps see only your general area.",
+        "url": "https://support.apple.com/en-us/102515"
+      }
+    ],
+    "for_you": "You see a location prompt with a choice for approximate or exact. If you pick approximate, apps know your area but not your door, so weather and local news still work. Delivery or ride apps may ask for exact.",
+    "for_makers": "Makers can often do their job with an area, and less sensitive data means fewer privacy worries. It is enough for weather, local results and regional content. It is not enough to find your door, so some features ask for more.",
+    "use_cases": [
+      {
+        "type": "utilities",
+        "example": "A weather app shows the forecast for your area without knowing your street.",
+        "apps": [
+          "AccuWeather",
+          "Weather Channel"
+        ]
+      },
+      {
+        "type": "news",
+        "example": "A news app puts local stories at the top for your city.",
+        "apps": [
+          "Apple News",
+          "Patch"
+        ]
+      },
+      {
+        "type": "shopping",
+        "example": "A store app shows the nearest region's deals and stock.",
+        "apps": [
+          "Walmart",
+          "Target"
+        ]
+      },
+      {
+        "type": "games",
+        "example": "A game picks a nearby server or a regional event based on your area.",
+        "apps": []
+      },
+      {
+        "type": "social",
+        "example": "A social app shows trending local events without pinpointing you.",
+        "apps": [
+          "Nextdoor"
+        ]
+      },
+      {
+        "type": "ads",
+        "example": "An advertiser targets a neighborhood, and repeated reads over time can still reveal home and work.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Slow tracking of home area",
+      "Many apps still ask for exact"
+    ],
+    "android_note": "Android lets you grant approximate location only, and apps must work with it when asked for exact too.",
+    "ios_note": "iPhone has a Precise Location switch for each app, and apps get a rough area when it is off."
+  },
+  "technical_bounds": [
+    "Apps cannot force precise after the user picks approximate",
+    "Android requires the app to ask for COARSE together with FINE"
+  ],
+  "scores": {
+    "sensitivity": 4,
+    "utility": 4,
+    "fingerprint_bits": null,
+    "friction": 2
+  },
+  "value": {
+    "legit_uses": [
+      "Weather",
+      "Local news",
+      "Regional search results"
+    ],
+    "abuse": [
+      "Slow tracking of home and work area"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": true,
+      "how": "Play Data safety lists Approximate location as collected (not optional). iOS label lists Coarse Location, Linked to You. Server side, LinkedIn also derives location from IP address (policy section 1.5)."
+    }
+  },
+  "history": [
+    {
+      "date": "2021-10",
+      "platform": "android",
+      "version": "12 (API 31)",
+      "change": "Approximate became a user-visible choice that apps cannot override"
+    },
+    {
+      "date": "2020-09",
+      "platform": "ios",
+      "version": "iOS 14",
+      "change": "Reduced accuracy introduced with a lower update rate"
+    }
+  ],
+  "related": [
+    "mob.location.precise"
+  ],
+  "refs": [
+    {
+      "t": "android",
+      "label": "Android 12: Approximate location",
+      "url": "https://developer.android.com/about/versions/12/approximate-location"
+    },
+    {
+      "t": "android",
+      "label": "Android: Request location permissions",
+      "url": "https://developer.android.com/develop/sensors-and-location/location/permissions"
+    },
+    {
+      "t": "apple",
+      "label": "Apple: CLAccuracyAuthorization",
+      "url": "https://developer.apple.com/documentation/corelocation/claccuracyauthorization"
+    },
+    {
+      "t": "apple",
+      "label": "Apple: Requesting authorization to use location services",
+      "url": "https://developer.apple.com/documentation/corelocation/requesting-authorization-to-use-location-services"
+    },
+    {
+      "t": "vendor",
+      "label": "Google Play Data safety, LinkedIn (com.linkedin.android)",
+      "url": "https://play.google.com/store/apps/datasafety?id=com.linkedin.android&hl=en_US"
+    },
+    {
+      "t": "vendor",
+      "label": "App Store listing and App Privacy label, LinkedIn (id288429040)",
+      "url": "https://apps.apple.com/us/app/linkedin-professional-network/id288429040"
+    }
+  ],
+  "confidence": "verified"
+}

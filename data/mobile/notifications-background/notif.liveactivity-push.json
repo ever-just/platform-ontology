@@ -1,0 +1,223 @@
+{
+  "id": "mob.notif.liveactivity-push",
+  "name": "Live Activity push updates and budget",
+  "kind": "capability",
+  "group": "notifications-background",
+  "subgroup": "Live surfaces",
+  "tags": [
+    "live-activity",
+    "push",
+    "budget",
+    "push-to-start"
+  ],
+  "plain": "Updates a Live Activity by push; priority 10 pushes count against an hourly budget.",
+  "meaning": "Lets a server start and update a lock screen widget while the app is closed. Apple budgets pushes, so heavy tracking apps must justify a frequent-updates entitlement.",
+  "lifecycle": [
+    "background"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "n",
+      "v": "",
+      "permission": "",
+      "protection": "none",
+      "grant": "not-exposed",
+      "prompt_ui": "",
+      "persistence": "",
+      "revocation": "",
+      "store_policy": "",
+      "api_surface": "",
+      "note": "Android Live Updates are updated through ordinary notification updates, not a separate push channel"
+    },
+    "ios": {
+      "s": "y",
+      "v": "16.2",
+      "permission": "apns-push-type liveactivity; topic bundleid.push-type.liveactivity; NSSupportsLiveActivitiesFrequentUpdates",
+      "protection": "entitlement",
+      "grant": "entitlement",
+      "prompt_ui": "Per app Live Activities toggle; frequent updates toggle",
+      "persistence": "Per activity push token can change; stale-date marks outdated content",
+      "revocation": "Settings > App > Live Activities, More Frequent Updates",
+      "store_policy": "App Review 4.5.4",
+      "api_surface": "ActivityKit push tokens, push-to-start (17.2), input-push-token, broadcast channels (18)",
+      "note": "Priority 10 (default) counts against an hourly budget; priority 5 does not; frequent updates key raises the budget; push-to-start needs iOS 17.2; broadcast cannot start an activity"
+    }
+  },
+  "web_equivalents": [
+    "web.notify.push-api"
+  ],
+  "data": {
+    "type": "object",
+    "metric": "Update push",
+    "update": "Per push",
+    "fields": [
+      {
+        "name": "apns-priority",
+        "type": "enum",
+        "unit": "",
+        "range": "10 (budgeted), 5 (not counted)",
+        "precision": ""
+      },
+      {
+        "name": "payload",
+        "type": "binary",
+        "unit": "binary",
+        "range": "about 4096",
+        "precision": "approx"
+      },
+      {
+        "name": "stale-date",
+        "type": "integer",
+        "unit": "unix s",
+        "range": "future",
+        "precision": "1 s"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can update a Live Activity by push, but important updates count against an hourly budget",
+    "user_action": "Nothing. The app's server sends updates while your Live Activity is running",
+    "can": [
+      "Update the lock screen card without opening the app",
+      "Start a new Live Activity by push on newer iPhones",
+      "Send more frequent updates if the app asks for that and you allow it"
+    ],
+    "cannot": [
+      "Send unlimited high priority updates; the hourly budget runs out",
+      "Run if you turned Live Activities off in Settings",
+      "Work on Android, which updates Live Updates with ordinary notification updates"
+    ],
+    "reach": 2,
+    "reach_label": "Updates while an activity is live",
+    "differs": "iPhone has a push budget for Live Activities. Android uses normal notification updates."
+  },
+  "story": {
+    "what_it_is": "Servers can start and update a live lock screen card by push, within a budget.",
+    "icon": "zap",
+    "tags": [
+      "Push",
+      "Live",
+      "iPhone"
+    ],
+    "marketing": [
+      {
+        "vendor": "Apple",
+        "name": "Starting and updating Live Activities with push",
+        "pitch": "Apple lets servers update Live Activities remotely and budgets high priority updates per hour.",
+        "url": "https://developer.apple.com/documentation/activitykit/starting-and-updating-live-activities-with-activitykit-push-notifications"
+      }
+    ],
+    "for_you": "You see a live card update by itself, even when the app is closed. If it updates too much, Apple may slow it down.",
+    "for_makers": "Makers can push live sports scores and delivery steps from the server. A frequent updates option exists, but Apple asks apps to justify it.",
+    "use_cases": [
+      {
+        "type": "live",
+        "example": "A live match pushes a score update the second a goal is scored.",
+        "apps": [
+          "ESPN",
+          "Apple Sports"
+        ]
+      },
+      {
+        "type": "delivery",
+        "example": "Your courier moves on the map and the card updates from the server.",
+        "apps": [
+          "DoorDash"
+        ]
+      },
+      {
+        "type": "rideshare",
+        "example": "Your ride card updates as the driver arrives.",
+        "apps": [
+          "Uber"
+        ]
+      },
+      {
+        "type": "travel",
+        "example": "An airline pushes a gate change to the lock screen at once.",
+        "apps": [
+          "Delta"
+        ]
+      },
+      {
+        "type": "games",
+        "example": "An esports app pushes live scores for tournament matches.",
+        "apps": []
+      },
+      {
+        "type": "ads",
+        "example": "A retailer may be tempted to use the card to keep presence on screen, but Apple rules limit it.",
+        "apps": []
+      },
+      {
+        "type": "productivity",
+        "example": "A food timer or ticket status updates from a server without opening the app.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Can be used to stay on the lock screen",
+      "Hourly budget limits the speed"
+    ],
+    "android_note": "Android updates its live card through ordinary notification updates, not a separate push channel.",
+    "ios_note": "Priority 10 pushes count against an hourly budget. Push to start needs iOS 17.2."
+  },
+  "technical_bounds": [
+    "Hourly push budget is not published as a number",
+    "Broadcast cannot start an activity"
+  ],
+  "scores": {
+    "sensitivity": 2,
+    "utility": 4,
+    "fingerprint_bits": null,
+    "friction": 3
+  },
+  "value": {
+    "legit_uses": [
+      "Live sports",
+      "Delivery"
+    ],
+    "abuse": [
+      "Re-engagement via lock screen presence"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2022-12",
+      "platform": "ios",
+      "version": "iOS 16.2",
+      "change": "ActivityKit push updates introduced"
+    },
+    {
+      "date": "2023-12",
+      "platform": "ios",
+      "version": "iOS 17.2",
+      "change": "Push-to-start tokens let a server start an activity"
+    },
+    {
+      "date": "2024-09",
+      "platform": "ios",
+      "version": "iOS 18",
+      "change": "Broadcast push channels; start activities from watchOS"
+    }
+  ],
+  "related": [
+    "mob.notif.live-activities",
+    "mob.notif.apns-delivery"
+  ],
+  "refs": [
+    {
+      "t": "apple",
+      "label": "Apple: Starting and updating Live Activities with ActivityKit push notifications",
+      "url": "https://developer.apple.com/documentation/activitykit/starting-and-updating-live-activities-with-activitykit-push-notifications"
+    }
+  ],
+  "confidence": "verified"
+}

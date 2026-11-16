@@ -1,0 +1,236 @@
+{
+  "id": "web.xsite.email-hash-identity",
+  "name": "Hashed email as identity",
+  "kind": "tracking",
+  "group": "cross-site-tracking",
+  "subgroup": "Before the visit",
+  "tags": [
+    "email-hash",
+    "sha256",
+    "customer-match",
+    "advanced-matching"
+  ],
+  "plain": "A SHA-256 hash of an email lets ad platforms recognise a person without the plain email.",
+  "meaning": "Normalised lowercase email hashed with SHA-256 is accepted by Meta, Google, LinkedIn and TikTok for matching. Hashing is deterministic, so the same email gives the same value everywhere. The FTC stated in July 2024 that hashing does not make data anonymous.",
+  "lifecycle": [
+    "signed-in",
+    "after-leaving"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "Pixel advanced matching fields, Conversions APIs, Customer Match uploads",
+      "access": {
+        "grant": "none",
+        "prompt_ui": "None",
+        "secure_context": false,
+        "user_gesture": false,
+        "persistence": "Lives on platform side for the account lifetime",
+        "revocation": "Clear site data, browser privacy settings",
+        "iframe": "",
+        "steps": []
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "1",
+          "note": "Not browser dependent",
+          "date": "2008-12-11"
+        },
+        "edge": {
+          "s": "y",
+          "v": "1",
+          "note": "Not browser dependent",
+          "date": ""
+        },
+        "firefox": {
+          "s": "y",
+          "v": "1",
+          "note": "Not browser dependent",
+          "date": "2004-11-09"
+        },
+        "safari": {
+          "s": "y",
+          "v": "1",
+          "note": "Not browser dependent",
+          "date": "2003-06-23"
+        },
+        "ios_safari": {
+          "s": "y",
+          "v": "1",
+          "note": "Not browser dependent",
+          "date": "2007-06-29"
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "1",
+          "note": "Not browser dependent",
+          "date": ""
+        },
+        "samsung": {
+          "s": "y",
+          "v": "1",
+          "note": "Not browser dependent",
+          "date": "2013-04-27"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "hash",
+    "metric": "SHA-256 hex digest of normalised email",
+    "update": "per form submit or login",
+    "fields": [
+      {
+        "name": "digest",
+        "type": "hash",
+        "unit": "hex",
+        "range": "64 chars",
+        "precision": "256 bit"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can recognize you across sites by a scrambled version of your email",
+    "user_action": "You sign in, check out or subscribe with your email on a site",
+    "can": [
+      "Turn your email into a scrambled code that stays the same everywhere",
+      "Share that code with ad partners",
+      "Match you across sites and devices where you used the same email"
+    ],
+    "cannot": [
+      "Give out your plain email in the code, but the code can be matched if a company already has your email",
+      "Match you if you use a different email on each site",
+      "Work without you entering the email somewhere",
+      "Be cleared like a cookie, since it stays the same until you change your email"
+    ],
+    "reach": 4,
+    "reach_label": "A stable ID tied to your email",
+    "differs": ""
+  },
+  "story": {
+    "what_it_is": "A scrambled email that ad platforms treat as your name tag.",
+    "icon": "hash",
+    "tags": [
+      "Email",
+      "Ads",
+      "Identity"
+    ],
+    "marketing": [
+      {
+        "vendor": "US Federal Trade Commission",
+        "name": "No, hashing still doesn't make your data anonymous",
+        "pitch": "The FTC warned that hashing a value like email does not make it anonymous, since the same email gives the same code.",
+        "url": "https://www.ftc.gov/policy/advocacy-research/tech-at-ftc/2024/07/no-hashing-still-doesnt-make-your-data-anonymous"
+      }
+    ],
+    "for_you": "You type your email and press submit. The site may turn it into a code and share it with ad partners. You do not see it, and the same code follows you from site to site.",
+    "for_makers": "Hashing the same email gives the same value everywhere, so platforms can match one person across companies. It replaces cookies as the main ID. The FTC says it is not anonymous, so makers face legal risk if they call it so.",
+    "use_cases": [
+      {
+        "type": "ads",
+        "example": "A store sends a scrambled email to Meta, Google and TikTok to find you on each, and to show you the right ads.",
+        "apps": [
+          "Meta",
+          "Google Ads",
+          "TikTok"
+        ]
+      },
+      {
+        "type": "analytics",
+        "example": "A company joins its web, app and store data by one hashed email to see one customer.",
+        "apps": [
+          "LiveRamp",
+          "Segment"
+        ]
+      },
+      {
+        "type": "games",
+        "example": "A game studio matches a player sign up email to a social account to find lookalike players.",
+        "apps": [
+          "Zynga",
+          "Supercell"
+        ]
+      },
+      {
+        "type": "media",
+        "example": "A publisher shares logged in readers hashed email with an ad network, to sell targeting without cookies.",
+        "apps": [
+          "The New York Times",
+          "Forbes"
+        ]
+      },
+      {
+        "type": "shopping",
+        "example": "A retailer matches a purchase to a Facebook account using a hashed email.",
+        "apps": [
+          "Sephora"
+        ]
+      },
+      {
+        "type": "security",
+        "example": "A fraud team checks if one scrambled email appears on many accounts.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Same email gives the same code",
+      "Not anonymous in law"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Needs the person to have given or entered an email",
+    "Match rates vary, often 30 to 70% of uploaded records (vendor reports)",
+    "Subject to GDPR and CCPA consent and opt-out rules"
+  ],
+  "scores": {
+    "sensitivity": 5,
+    "utility": 5,
+    "fingerprint_bits": null,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Customer Match audiences",
+      "Offline to online conversion matching"
+    ],
+    "abuse": [
+      "Cross-site and cross-platform identity linking",
+      "Re-identification by dictionary on known emails"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2024-07",
+      "browser": "all",
+      "version": "",
+      "change": "FTC blog: hashing still does not make data anonymous"
+    }
+  ],
+  "related": [
+    "web.xsite.id-graphs",
+    "web.xsite.conversions-api",
+    "web.xsite.google-enhanced-conversions"
+  ],
+  "refs": [
+    {
+      "t": "vendor",
+      "label": "FTC: No, hashing still doesn't make your data anonymous (Jul 2024)",
+      "url": "https://www.ftc.gov/policy/advocacy-research/tech-at-ftc/2024/07/no-hashing-still-doesnt-make-your-data-anonymous"
+    },
+    {
+      "t": "vendor",
+      "label": "Google Enhanced Conversions",
+      "url": "https://support.google.com/google-ads/answer/9888656"
+    }
+  ],
+  "confidence": "docs"
+}

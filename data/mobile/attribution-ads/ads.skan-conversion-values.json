@@ -1,0 +1,219 @@
+{
+  "id": "mob.ads.skan-conversion-values",
+  "name": "SKAN conversion values (fine and coarse)",
+  "kind": "capability",
+  "group": "attribution-ads",
+  "subgroup": "Apple attribution",
+  "tags": [
+    "skan",
+    "conversion-value",
+    "coarse",
+    "fine"
+  ],
+  "plain": "A 6-bit number the app sets after install so the ad network learns how valuable the user was.",
+  "meaning": "Encodes early behavior (purchase, level) into at most 64 values, which is the only per-campaign performance signal left for non-consenting iOS users.",
+  "lifecycle": [
+    "on-launch",
+    "in-session"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "n",
+      "v": "",
+      "permission": "",
+      "protection": "none",
+      "grant": "not-exposed",
+      "prompt_ui": "",
+      "persistence": "",
+      "revocation": "",
+      "store_policy": "",
+      "api_surface": "",
+      "note": "No equivalent: Android attribution carries identifiers and arbitrary events."
+    },
+    "ios": {
+      "s": "y",
+      "v": "14.0",
+      "permission": "",
+      "protection": "none",
+      "grant": "none",
+      "prompt_ui": "",
+      "persistence": "",
+      "revocation": "",
+      "store_policy": "",
+      "api_surface": "SKAdNetwork.updatePostbackConversionValue(_:coarseValue:lockWindow:) (iOS 16.1+)",
+      "note": "Fine value is only returned in the first postback and only at the highest crowd tier; later postbacks carry coarse low, medium or high."
+    }
+  },
+  "data": {
+    "type": "integer",
+    "metric": "Fine value 0 to 63 (6 bits), coarse 3 levels",
+    "update": "can be updated until the window locks or closes",
+    "fields": [
+      {
+        "name": "fine value",
+        "type": "integer",
+        "unit": "",
+        "range": "0 to 63",
+        "precision": ""
+      },
+      {
+        "name": "coarse value",
+        "type": "enum",
+        "unit": "",
+        "range": "low, medium, high",
+        "precision": ""
+      },
+      {
+        "name": "lockWindow",
+        "type": "boolean",
+        "unit": "",
+        "range": "true ends the window early so the postback can send sooner",
+        "precision": ""
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can send the ad network a small score about what you did after install",
+    "user_action": "You use the app, for example buy something or reach a level",
+    "can": [
+      "Set a number from 0 to 63 that sums up early behavior",
+      "Send a detailed score in the first report, when enough people installed",
+      "Send a coarse low, medium or high score in later reports"
+    ],
+    "cannot": [
+      "Send more than 64 values",
+      "Send a detailed score when too few installs came from the campaign",
+      "Work on Android; it sends events and IDs instead"
+    ],
+    "reach": 2,
+    "reach_label": "One small score per install",
+    "differs": "iPhone only (iOS 14 and later). Android attribution can carry IDs and many events."
+  },
+  "story": {
+    "what_it_is": "A tiny number the app sets after install, so the ad network learns how valuable the new user is.",
+    "icon": "hourglass",
+    "tags": [
+      "Ads",
+      "Measurement",
+      "Apple"
+    ],
+    "marketing": [
+      {
+        "vendor": "Apple",
+        "name": "Conversion values",
+        "pitch": "A short value an app updates after install, to report coarse in app results to the ad network.",
+        "url": "https://developer.apple.com/documentation/storekit/skadnetwork"
+      }
+    ],
+    "for_you": "You just play the app. Without your knowing, early actions such as a first purchase or level 5 bump a tiny number that is later sent to the ad network.",
+    "for_makers": "It holds at most 64 values, so makers must pick what matters most: first purchase, level or sign up. It is the only per campaign performance signal left for people who say no to tracking.",
+    "use_cases": [
+      {
+        "type": "games",
+        "example": "A studio sets the value to 'finished tutorial and bought a $5 pack' so ad networks can find more payers.",
+        "apps": [
+          "Candy Crush",
+          "Clash Royale"
+        ]
+      },
+      {
+        "type": "shopping",
+        "example": "A retail app sets a higher value for people who add to cart on day one.",
+        "apps": [
+          "Shein"
+        ]
+      },
+      {
+        "type": "fitness",
+        "example": "A workout app marks 'subscribed after trial' so networks learn who pays.",
+        "apps": [
+          "Peloton"
+        ]
+      },
+      {
+        "type": "ads",
+        "example": "An ad network uses the value to bid more for campaigns that bring higher quality users.",
+        "apps": [
+          "Meta"
+        ]
+      },
+      {
+        "type": "analytics",
+        "example": "A growth team tests different value maps and checks which predicts revenue.",
+        "apps": [
+          "AppsFlyer"
+        ]
+      },
+      {
+        "type": "banking",
+        "example": "A fintech app marks 'funded account' so the network learns which ads bring real customers.",
+        "apps": [
+          "Robinhood"
+        ]
+      }
+    ],
+    "risks": [
+      "Reveals how you behave in aggregate",
+      "Hard to design well"
+    ],
+    "android_note": "Android has no equal tool. Apps send full events with the advertising ID.",
+    "ios_note": "SKAN 4 adds fine and coarse values with different privacy tiers."
+  },
+  "technical_bounds": [
+    "Fine value only at crowd tier 3",
+    "Only one fine value across 3 windows (first postback)",
+    "MMP conversion studios map events to values"
+  ],
+  "scores": {
+    "sensitivity": 2,
+    "utility": 4,
+    "fingerprint_bits": null,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Measure revenue quality"
+    ],
+    "abuse": [
+      "Hiding fingerprint-like bits in the value"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2021-04",
+      "platform": "ios",
+      "version": "iOS 14.5",
+      "change": "6-bit value (SKAN 3, single value)"
+    },
+    {
+      "date": "2022-10",
+      "platform": "ios",
+      "version": "iOS 16.1",
+      "change": "Coarse values and lockWindow added in SKAN 4"
+    }
+  ],
+  "related": [
+    "mob.ads.skadnetwork",
+    "mob.ads.skan-crowd-anonymity"
+  ],
+  "refs": [
+    {
+      "t": "apple",
+      "label": "Apple: Updating conversion values",
+      "url": "https://developer.apple.com/documentation/storekit/skadnetwork"
+    },
+    {
+      "t": "apple",
+      "label": "Apple: SKAdNetwork",
+      "url": "https://developer.apple.com/documentation/storekit/skadnetwork"
+    }
+  ],
+  "confidence": "docs"
+}

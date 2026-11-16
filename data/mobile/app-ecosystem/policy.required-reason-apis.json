@@ -1,0 +1,200 @@
+{
+  "id": "mob.policy.required-reason-apis",
+  "name": "Required reason APIs",
+  "kind": "capability",
+  "group": "app-ecosystem",
+  "subgroup": "Store transparency",
+  "tags": [
+    "required-reason",
+    "fingerprinting",
+    "userdefaults",
+    "file-timestamp",
+    "boot-time"
+  ],
+  "plain": "Apple lists APIs that can be used to fingerprint a device and requires the app to state an approved reason.",
+  "meaning": "Five categories: file timestamp, system boot time, disk space, active keyboards, and UserDefaults. An unapproved reason is a rejection, so fingerprinting uses are fenced in.",
+  "lifecycle": [
+    "in-session"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "n",
+      "v": "",
+      "permission": "",
+      "protection": "none",
+      "grant": "not-exposed",
+      "prompt_ui": "",
+      "persistence": "",
+      "revocation": "",
+      "store_policy": "",
+      "api_surface": "",
+      "note": "Android has no required reason list; Play bans some identifiers instead."
+    },
+    "ios": {
+      "s": "y",
+      "v": "17.0",
+      "permission": "",
+      "protection": "none",
+      "grant": "none",
+      "prompt_ui": "",
+      "persistence": "",
+      "revocation": "",
+      "store_policy": "Approved reason codes per API category (for example CA92.1 for UserDefaults app own data)",
+      "api_surface": "NSPrivacyAccessedAPITypes in manifest",
+      "note": "Enforced 1 May 2024. Covers third party SDK use too. Apple has said it targets fingerprint inputs."
+    }
+  },
+  "web_equivalents": [
+    "web.render.composite-fingerprint"
+  ],
+  "data": {
+    "type": "list",
+    "metric": "Approved reason codes",
+    "update": "static",
+    "fields": [
+      {
+        "name": "NSPrivacyAccessedAPIType",
+        "type": "string",
+        "unit": "",
+        "range": "",
+        "precision": ""
+      },
+      {
+        "name": "NSPrivacyAccessedAPITypeReasons",
+        "type": "list",
+        "unit": "",
+        "range": "",
+        "precision": ""
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can't use fingerprint prone phone details on iPhone without an approved reason",
+    "user_action": "Nothing. Apple checks the reasons when the developer submits the app",
+    "can": [
+      "Use file times, boot time, free disk space, active keyboards and saved settings for approved reasons",
+      "Include these reasons for third party tools as well",
+      "Show the reasons in a file Apple checks"
+    ],
+    "cannot": [
+      "Use these details to fingerprint your phone, even if you said yes",
+      "Use them for any reason not on Apple's list, or the app is rejected",
+      "Skip the reasons after 1 May 2024 and still get through review",
+      "Apply on Android; Play bans some IDs in other ways"
+    ],
+    "reach": 1,
+    "reach_label": "Rules, not data",
+    "differs": "This is Apple only, in force since 1 May 2024. Android has no required reason list."
+  },
+  "story": {
+    "what_it_is": "Apple's list of device clues that need a stated reason because they can fingerprint a phone.",
+    "icon": "fingerprint",
+    "tags": [
+      "Apple rules",
+      "Fingerprinting",
+      "Silent"
+    ],
+    "marketing": [
+      {
+        "vendor": "Apple",
+        "name": "Describing use of required reason API",
+        "pitch": "Apps must state an approved reason for using certain APIs that could identify a device.",
+        "url": "https://developer.apple.com/documentation/bundleresources/describing-use-of-required-reason-api"
+      }
+    ],
+    "for_you": "You do not see it. It means apps cannot quietly check things like how long your phone has been on and use that to follow you around.",
+    "for_makers": "The five groups are file timestamps, boot time, disk space, active keyboards and UserDefaults. Makers must pick an allowed reason, or Apple rejects the upload, which kills most casual fingerprinting.",
+    "use_cases": [
+      {
+        "type": "games",
+        "example": "A game reads free disk space to decide whether to download high resolution art, and states that reason.",
+        "apps": [
+          "Genshin Impact"
+        ]
+      },
+      {
+        "type": "ads",
+        "example": "An ad SDK that used boot time as part of an ID must stop or state a legitimate reason.",
+        "apps": [
+          "AppLovin",
+          "Unity Ads"
+        ]
+      },
+      {
+        "type": "analytics",
+        "example": "An analytics SDK reads the system uptime to measure app launch speed only.",
+        "apps": [
+          "Firebase"
+        ]
+      },
+      {
+        "type": "security",
+        "example": "A fraud tool lists the exact use of each API so Apple can check it against abuse.",
+        "apps": []
+      },
+      {
+        "type": "social",
+        "example": "A photo app reads file creation dates to sort a gallery.",
+        "apps": [
+          "Instagram"
+        ]
+      },
+      {
+        "type": "developer",
+        "example": "A developer finds an old library using UserDefaults for tracking and swaps it out.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Reasons are self reported",
+      "Workarounds keep appearing"
+    ],
+    "android_note": "Android has no direct counterpart. Google limits fingerprinting through policy and API changes.",
+    "ios_note": "Enforced when the app is uploaded to App Store Connect."
+  },
+  "technical_bounds": [
+    "Reasons must match real use",
+    "No cross-app tracking use allowed"
+  ],
+  "scores": {
+    "sensitivity": 3,
+    "utility": 3,
+    "fingerprint_bits": null,
+    "friction": 1
+  },
+  "value": {
+    "legit_uses": [
+      "Limits covert fingerprinting"
+    ],
+    "abuse": [
+      "Reason shopping"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2024-05",
+      "platform": "ios",
+      "version": "App Store",
+      "change": "Enforcement on 1 May 2024"
+    }
+  ],
+  "related": [
+    "mob.policy.privacy-manifests",
+    "mob.xtrack.device-fingerprinting"
+  ],
+  "refs": [
+    {
+      "t": "apple",
+      "label": "Apple: Describing use of required reason API",
+      "url": "https://developer.apple.com/documentation/bundleresources/describing-use-of-required-reason-api"
+    }
+  ],
+  "confidence": "docs"
+}

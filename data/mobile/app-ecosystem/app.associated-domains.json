@@ -1,0 +1,208 @@
+{
+  "id": "mob.app.associated-domains",
+  "name": "Linking an app to a website",
+  "kind": "capability",
+  "group": "app-ecosystem",
+  "subgroup": "Links",
+  "tags": [
+    "universal-links",
+    "app-links",
+    "webcredentials"
+  ],
+  "plain": "Proves the app and website are owned together, enabling app links and shared passwords.",
+  "meaning": "Domain verification file on the website, not a user prompt. Also feeds password autofill.",
+  "lifecycle": [
+    "on-launch"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "y",
+      "v": "6.0",
+      "api": 23,
+      "permission": "None; autoVerify intent filter plus assetlinks.json",
+      "protection": "none",
+      "grant": "install",
+      "prompt_ui": "None; user can change in Settings",
+      "persistence": "Until app update",
+      "revocation": "Settings > Apps > Open by default",
+      "store_policy": "",
+      "api_surface": "Digital Asset Links, intent filters",
+      "note": "Verified at install; Android 12 tightens link handling"
+    },
+    "ios": {
+      "s": "y",
+      "v": "9",
+      "permission": "com.apple.developer.associated-domains (applinks, webcredentials, activitycontinuation)",
+      "protection": "entitlement",
+      "grant": "install",
+      "prompt_ui": "None; Settings per app link toggle",
+      "persistence": "Until app update",
+      "revocation": "Settings > Apps > Open links",
+      "store_policy": "",
+      "api_surface": "apple-app-site-association file",
+      "note": "Apple CDN caches the file; iOS 14 added swcd checks"
+    }
+  },
+  "data": {
+    "type": "none",
+    "metric": "Verified domain list",
+    "update": "static",
+    "fields": [
+      {
+        "name": "domains",
+        "type": "list",
+        "unit": "hosts",
+        "range": "up to about 20",
+        "precision": ""
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can open web links in the app and offer saved passwords once linked",
+    "user_action": "Nothing at install. You later tap a web link or a password field",
+    "can": [
+      "Open web links from that company directly in its app",
+      "Offer your saved website passwords inside the app",
+      "Hand off what you were doing between your devices (iPhone)"
+    ],
+    "cannot": [
+      "Link to a site that has not published a matching proof file",
+      "Show a prompt; you can only turn link opening off in Settings",
+      "See your saved passwords without you picking one"
+    ],
+    "reach": 1,
+    "reach_label": "One check at install, then per link",
+    "differs": "iPhone has a per link switch in Settings. Android 12 and later lets you change link handling per app."
+  },
+  "story": {
+    "what_it_is": "A secret handshake that proves an app and a website belong to the same company.",
+    "icon": "link",
+    "tags": [
+      "Links",
+      "Silent",
+      "Passwords"
+    ],
+    "marketing": [
+      {
+        "vendor": "Apple",
+        "name": "Associated Domains",
+        "pitch": "Lets your app and website share links and saved passwords once you prove you own both.",
+        "url": "https://developer.apple.com/documentation/xcode/supporting-associated-domains"
+      },
+      {
+        "vendor": "Google",
+        "name": "Verify Android App Links",
+        "pitch": "Prove your site and app are linked so web links open straight in the app.",
+        "url": "https://developer.android.com/training/app-links/verify-android-applinks"
+      }
+    ],
+    "for_you": "You never see a prompt. You just notice that tapping a link opens the right app, and that your saved password pops up for both the app and the website.",
+    "for_makers": "Makers publish a small file on their website that says 'this app is ours'. That unlocks links that open in the app, shared password autofill and sign in handoff, and it keeps look-alike apps from hijacking links.",
+    "use_cases": [
+      {
+        "type": "shopping",
+        "example": "You tap an Amazon link in a text message and the Amazon app opens on that exact product instead of a web page.",
+        "apps": [
+          "Amazon"
+        ]
+      },
+      {
+        "type": "social",
+        "example": "A friend sends an Instagram post link and it opens in the Instagram app, already logged in.",
+        "apps": [
+          "Instagram"
+        ]
+      },
+      {
+        "type": "banking",
+        "example": "Your bank's app shows your saved login suggestion because the phone knows the app and bank.com are the same company.",
+        "apps": [
+          "Chase",
+          "Bank of America"
+        ]
+      },
+      {
+        "type": "games",
+        "example": "A friend's invite link for a mobile match opens the game lobby directly, so you join the party in one tap.",
+        "apps": [
+          "Roblox",
+          "Fortnite"
+        ]
+      },
+      {
+        "type": "rideshare",
+        "example": "A shared trip link opens Uber on the live map so a friend can follow your ride.",
+        "apps": [
+          "Uber",
+          "Lyft"
+        ]
+      },
+      {
+        "type": "security",
+        "example": "The phone refuses to open a fake app that tries to catch links meant for a real bank, because it cannot show the handshake file.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Link hijacking if misconfigured",
+      "Hidden link between app and site"
+    ],
+    "android_note": "Android checks the file when the app installs and can open verified links without asking.",
+    "ios_note": "iOS caches the file through Apple's servers and also uses it for shared password autofill."
+  },
+  "technical_bounds": [
+    "Verification file hosted by developer"
+  ],
+  "scores": {
+    "sensitivity": 2,
+    "utility": 3,
+    "fingerprint_bits": null,
+    "friction": 1
+  },
+  "value": {
+    "legit_uses": [
+      "Deep links",
+      "Autofill"
+    ],
+    "abuse": [
+      "Link hijacking"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2015-09",
+      "platform": "ios",
+      "version": "iOS 9",
+      "change": "Universal Links"
+    },
+    {
+      "date": "2015-10",
+      "platform": "android",
+      "version": "6.0 (API 23)",
+      "change": "App Links verification"
+    }
+  ],
+  "related": [
+    "mob.identity.sign-in-with-apple"
+  ],
+  "refs": [
+    {
+      "t": "apple",
+      "label": "Apple: Associated Domains",
+      "url": "https://developer.apple.com/documentation/xcode/supporting-associated-domains"
+    },
+    {
+      "t": "android",
+      "label": "Android: Verify App Links",
+      "url": "https://developer.android.com/training/app-links/verify-android-applinks"
+    }
+  ],
+  "confidence": "docs"
+}

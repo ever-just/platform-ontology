@@ -1,0 +1,209 @@
+{
+  "id": "mob.peripherals.ble-advertise",
+  "name": "Bluetooth advertise",
+  "kind": "permission",
+  "group": "peripherals-hardware",
+  "subgroup": "Bluetooth",
+  "tags": [
+    "runtime-permission",
+    "nearby-devices",
+    "ble",
+    "advertising",
+    "peripheral"
+  ],
+  "plain": "Lets the app make the phone discoverable to other Bluetooth devices.",
+  "meaning": "Broadcasting makes the phone detectable by anyone nearby; useful for proximity features but also for tracking.",
+  "lifecycle": [
+    "in-session",
+    "background"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "y",
+      "v": "12",
+      "api": 31,
+      "permission": "BLUETOOTH_ADVERTISE",
+      "protection": "dangerous",
+      "grant": "prompt",
+      "prompt_ui": "Nearby devices prompt",
+      "persistence": "Until revoked or auto-reset",
+      "revocation": "Settings > Apps > Permissions > Nearby devices",
+      "store_policy": "Play: data-safety disclosure",
+      "api_surface": "BluetoothLeAdvertiser",
+      "note": "Required for LE advertising on Android 12+."
+    },
+    "ios": {
+      "s": "y",
+      "v": "13",
+      "permission": "NSBluetoothAlwaysUsageDescription",
+      "protection": "prompt",
+      "grant": "prompt",
+      "prompt_ui": "Bluetooth prompt (shared)",
+      "persistence": "Until revoked",
+      "revocation": "Settings > Privacy & Security > Bluetooth",
+      "store_policy": "App Review 5.1.1",
+      "api_surface": "CBPeripheralManager",
+      "note": "Advertising stops in the background to a limited packet form."
+    }
+  },
+  "web_equivalents": [
+    "web.peripherals.web-bluetooth"
+  ],
+  "data": {
+    "type": "event",
+    "metric": "Advertisement broadcasts",
+    "update": "interval 20 ms to 10 s",
+    "fields": []
+  },
+  "limits": {
+    "headline": "Can make the phone visible to nearby Bluetooth devices, mostly while the app is open",
+    "user_action": "You turn on a feature like Find nearby friends or Share with a device",
+    "can": [
+      "Broadcast that the phone is nearby",
+      "Let other devices find and connect to it",
+      "Support proximity features such as tap to share"
+    ],
+    "cannot": [
+      "Start before you allow Bluetooth or Nearby devices",
+      "Send full broadcasts from the background on iPhone; they shrink to a limited form",
+      "Stop others nearby from detecting the phone while it advertises"
+    ],
+    "reach": 2,
+    "reach_label": "Broadcasting, mostly while open",
+    "differs": "Android 12 and later asks for Nearby devices; iPhone uses its single Bluetooth prompt."
+  },
+  "story": {
+    "what_it_is": "Lets the phone announce itself over Bluetooth so other devices nearby can find it.",
+    "icon": "radio-tower",
+    "tags": [
+      "Bluetooth",
+      "Nearby",
+      "Permission"
+    ],
+    "marketing": [],
+    "for_you": "The app asks to make your phone discoverable to nearby gear. Your phone then sends tiny radio hello messages. You do not see them, but a device in the room can notice you.",
+    "for_makers": "Broadcasting makes proximity features work. A phone can be found by a friend's phone, a lock or a venue. It was also used by exposure notification apps. The signal can be sniffed by anyone nearby.",
+    "use_cases": [
+      {
+        "type": "social",
+        "example": "A nearby sharing feature lets friends send photos to each other in a room.",
+        "apps": [
+          "Quick Share"
+        ]
+      },
+      {
+        "type": "health",
+        "example": "A pandemic exposure notification app swaps random codes with nearby phones.",
+        "apps": [
+          "Exposure Notifications"
+        ]
+      },
+      {
+        "type": "shopping",
+        "example": "A store app announces your phone so a nearby beacon can prompt a greeting.",
+        "apps": []
+      },
+      {
+        "type": "smart-home",
+        "example": "Your phone announces itself to a door lock and the door opens as you approach.",
+        "apps": []
+      },
+      {
+        "type": "games",
+        "example": "A local multiplayer game finds other players in the same room without Wi-Fi.",
+        "apps": []
+      },
+      {
+        "type": "live",
+        "example": "A conference app lets nearby attendees find each other and swap contact details.",
+        "apps": []
+      },
+      {
+        "type": "security",
+        "example": "An office door reads the phone's advertised code and logs you in.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Phone can be detected by anyone",
+      "Tracking by signal",
+      "Battery"
+    ],
+    "android_note": "Android 12 and later requires its own Bluetooth advertise permission.",
+    "ios_note": "On iPhone advertising in the background is cut to a limited form."
+  },
+  "technical_bounds": [
+    "iOS background advertising limited to service UUIDs",
+    "iOS background advertising is restricted and invisible to non-iOS scanners",
+    "Android 14+ limits some background Bluetooth launches"
+  ],
+  "scores": {
+    "sensitivity": 3,
+    "utility": 3,
+    "fingerprint_bits": 2,
+    "friction": 2
+  },
+  "value": {
+    "legit_uses": [
+      "Proximity features",
+      "Contact tracing"
+    ],
+    "abuse": [
+      "Persistent beaconing"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2021-10",
+      "platform": "android",
+      "version": "12 (API 31)",
+      "change": "BLUETOOTH_ADVERTISE introduced"
+    },
+    {
+      "date": "2021-10",
+      "platform": "android",
+      "version": "12 (API 31)",
+      "change": "BLUETOOTH_ADVERTISE permission"
+    },
+    {
+      "date": "2014-11",
+      "platform": "android",
+      "version": "5.0 (API 21)",
+      "change": "BluetoothLeAdvertiser added"
+    }
+  ],
+  "related": [
+    "mob.peripherals.ble-scan",
+    "mob.hw.ble-central"
+  ],
+  "refs": [
+    {
+      "t": "android",
+      "label": "Android: Bluetooth permissions",
+      "url": "https://developer.android.com/develop/connectivity/bluetooth/bt-permissions"
+    },
+    {
+      "t": "apple",
+      "label": "Apple: Core Bluetooth authorization",
+      "url": "https://developer.apple.com/documentation/corebluetooth/cbmanager/authorization"
+    },
+    {
+      "t": "android",
+      "label": "Android: BLE advertising",
+      "url": "https://developer.android.com/develop/connectivity/bluetooth/ble/ble-overview"
+    },
+    {
+      "t": "apple",
+      "label": "Apple: CBPeripheralManager",
+      "url": "https://developer.apple.com/documentation/corebluetooth/cbperipheralmanager"
+    }
+  ],
+  "confidence": "verified"
+}

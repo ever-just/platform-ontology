@@ -1,0 +1,202 @@
+{
+  "id": "mob.ads.pcm",
+  "name": "Private Click Measurement (Safari to app)",
+  "kind": "tracking",
+  "group": "attribution-ads",
+  "subgroup": "Apple attribution",
+  "tags": [
+    "pcm",
+    "safari",
+    "web-to-app",
+    "webkit"
+  ],
+  "plain": "Safari can report that an ad click on a web page led to an app install or purchase, without IDs.",
+  "meaning": "Lets a publisher site and an app measure click-to-install conversions through Apple's own delays and limited data bits.",
+  "lifecycle": [
+    "before-install",
+    "on-launch"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "n",
+      "v": "",
+      "permission": "",
+      "protection": "none",
+      "grant": "not-exposed",
+      "prompt_ui": "",
+      "persistence": "",
+      "revocation": "",
+      "store_policy": "",
+      "api_surface": "",
+      "note": "Chrome Attribution Reporting for Android web-to-app is retired with the rest of Privacy Sandbox."
+    },
+    "ios": {
+      "s": "y",
+      "v": "14.5",
+      "permission": "",
+      "protection": "none",
+      "grant": "none",
+      "prompt_ui": "",
+      "persistence": "",
+      "revocation": "",
+      "store_policy": "",
+      "api_surface": "HTML attributionsourceid, attributiondestination; SKAdNetwork/AdAttributionKit for app conversion",
+      "note": "Click side: ad link on a web page. App side: conversion value update through SKAN or AdAttributionKit."
+    }
+  },
+  "web_equivalents": [
+    "web.xsite.attribution-reporting"
+  ],
+  "data": {
+    "type": "object",
+    "metric": "Attribution report",
+    "update": "randomized 24 to 48 hour delay",
+    "fields": [
+      {
+        "name": "source id",
+        "type": "integer",
+        "unit": "",
+        "range": "0 to 255",
+        "precision": ""
+      },
+      {
+        "name": "trigger data",
+        "type": "integer",
+        "unit": "",
+        "range": "0 to 15 (web)",
+        "precision": ""
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can tell a site an ad click led to an install, without a device ID",
+    "user_action": "You tap an ad in Safari, then install or buy in the app",
+    "can": [
+      "Report that a click led to an install or purchase",
+      "Send a few small bits of data after a delay",
+      "Use Apple's delayed reports to carry the result"
+    ],
+    "cannot": [
+      "Name you or give your device ID",
+      "Send exact timing; Apple adds delays and limits the data",
+      "Work on Android; Chrome's version was retired"
+    ],
+    "reach": 1,
+    "reach_label": "A delayed, anonymous count",
+    "differs": "iPhone only (iOS 14.5 and later). Chrome's Android version was retired."
+  },
+  "story": {
+    "what_it_is": "Safari can report that an ad click on a website led to an app install or purchase, without IDs.",
+    "icon": "mouse-pointer-click",
+    "tags": [
+      "Ads",
+      "Measurement",
+      "Safari"
+    ],
+    "marketing": [
+      {
+        "vendor": "Apple",
+        "name": "Private Click Measurement",
+        "pitch": "Measure ad conversions from the web without tracking people across sites.",
+        "url": "https://webkit.org/blog/11529/introducing-private-click-measurement-pcm/"
+      }
+    ],
+    "for_you": "You tap an ad on a web page, install the app and buy. Safari quietly tells the publisher and the app maker that the ad worked, but not who you are.",
+    "for_makers": "It lets a site and an app measure clicks to installs using only a few bits of data and a built in delay. Makers get honest counts while Apple holds the line on privacy.",
+    "use_cases": [
+      {
+        "type": "ads",
+        "example": "A news site runs an ad for a game and gets a count of installs after the click.",
+        "apps": [
+          "The New York Times"
+        ]
+      },
+      {
+        "type": "games",
+        "example": "A game maker learns that a web ad led to a first purchase, with no user ID.",
+        "apps": []
+      },
+      {
+        "type": "shopping",
+        "example": "A retailer sees how many Safari clicks became app orders.",
+        "apps": [
+          "Target"
+        ]
+      },
+      {
+        "type": "ads",
+        "example": "An ad network reports a weekly total of conversions with random delays.",
+        "apps": []
+      },
+      {
+        "type": "analytics",
+        "example": "A growth team compares PCM counts with SKAN counts to cross check them.",
+        "apps": []
+      },
+      {
+        "type": "security",
+        "example": "Delays and noise prevent anyone from tracing a click to a person.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Aggregated counts only",
+      "Delayed and noisy"
+    ],
+    "android_note": "Android's matching plan was the Attribution Reporting API, which Google is retiring.",
+    "ios_note": "Works in Safari and in apps that use SKAdNetwork."
+  },
+  "technical_bounds": [
+    "Delays and few bits",
+    "Safari only"
+  ],
+  "scores": {
+    "sensitivity": 2,
+    "utility": 3,
+    "fingerprint_bits": null,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Click to app measurement"
+    ],
+    "abuse": []
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2021-04",
+      "platform": "ios",
+      "version": "iOS 14.5",
+      "change": "PCM shipped in Safari and WebKit"
+    },
+    {
+      "date": "2022-10",
+      "platform": "ios",
+      "version": "iOS 16.1",
+      "change": "Web-to-app path folded into SKAN 4"
+    }
+  ],
+  "related": [
+    "mob.ads.skadnetwork"
+  ],
+  "refs": [
+    {
+      "t": "vendor",
+      "label": "WebKit: Introducing Private Click Measurement",
+      "url": "https://webkit.org/blog/11529/introducing-private-click-measurement-pcm/"
+    },
+    {
+      "t": "apple",
+      "label": "Apple: SKAdNetwork",
+      "url": "https://developer.apple.com/documentation/storekit/skadnetwork"
+    }
+  ],
+  "confidence": "docs"
+}

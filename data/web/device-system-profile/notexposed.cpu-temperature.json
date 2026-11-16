@@ -1,0 +1,224 @@
+{
+  "id": "web.notexposed.cpu-temperature",
+  "name": "CPU temperature, fan and power",
+  "kind": "not-exposed",
+  "group": "device-system-profile",
+  "subgroup": "Sensors",
+  "tags": [
+    "not-exposed",
+    "cpu",
+    "temperature",
+    "sensors"
+  ],
+  "plain": "No API reads CPU heat; only coarse pressure buckets exist.",
+  "meaning": "Compute Pressure API (Chrome 125, secure context) returns nominal, fair, serious or critical, throttled to at most 1 update per second and capped per origin. Exact degrees, fan speed and wattage are not exposed. Battery level is separate.",
+  "lifecycle": [
+    "on-arrival",
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "PressureObserver('cpu') (secure context, Permissions-Policy compute-pressure)",
+      "access": {
+        "grant": "not-exposed",
+        "prompt_ui": "None",
+        "secure_context": false,
+        "user_gesture": false,
+        "persistence": "read fresh on every page load; nothing stored",
+        "revocation": "not applicable",
+        "iframe": "Readable from cross-origin iframes too (same values)",
+        "steps": [
+          "Page script reads the value",
+          "No prompt is shown"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "edge": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "firefox": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "safari": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "ios_safari": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "chrome_android": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "samsung": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "none",
+    "metric": "",
+    "update": "static per session",
+    "fields": [
+      {
+        "name": "proxy: Compute Pressure states",
+        "type": "string",
+        "unit": "",
+        "range": "nominal, fair, serious, critical (4 buckets)",
+        "precision": ""
+      },
+      {
+        "name": "proxy: rate limit",
+        "type": "string",
+        "unit": "",
+        "range": "default sample interval 1000 ms, min 1 s",
+        "precision": ""
+      },
+      {
+        "name": "proxy: performance timing jitter",
+        "type": "string",
+        "unit": "",
+        "range": "indirect load signal only",
+        "precision": ""
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can't see your CPU heat, fan speed, or power use",
+    "user_action": "Nothing. Pages have no way to ask for this",
+    "can": [
+      "Check four coarse busy levels in Chrome and Edge (nominal to critical)",
+      "Get an update at most once a second",
+      "Slow down heavy work when the level gets high"
+    ],
+    "cannot": [
+      "See degrees, fan speed, or watts",
+      "Check busy levels in Firefox, Safari, or on iPhone",
+      "Check it from a hidden tab or a page that is not HTTPS",
+      "Check it if the site or iframe is blocked by Permissions Policy"
+    ],
+    "reach": 1,
+    "reach_label": "Four coarse levels only",
+    "differs": "Only Chrome and Edge offer the coarse levels. Firefox and Safari offer none."
+  },
+  "story": {
+    "what_it_is": "No tool lets a page read how hot your processor is. Only coarse busy levels exist.",
+    "icon": "thermometer",
+    "tags": [
+      "Blocked",
+      "Heat",
+      "Performance"
+    ],
+    "marketing": [
+      {
+        "vendor": "Google",
+        "name": "Compute Pressure API",
+        "pitch": "Chrome describes a coarse busy signal instead of raw temperature readings.",
+        "url": "https://developer.chrome.com/docs/web-platform/compute-pressure"
+      }
+    ],
+    "for_you": "A site cannot see your laptop's temperature or fan speed. The nearest thing is a basic busy level, so a video call can lower quality before your laptop overheats.",
+    "for_makers": "Heat and fan data would reveal exactly what is running on a device. The web gives only four rough levels, updated slowly. Apps use those to avoid pushing a laptop too hard.",
+    "use_cases": [
+      {
+        "type": "video",
+        "example": "A video call app wanted real temperature to avoid overheating and uses the busy level.",
+        "apps": [
+          "Google Meet"
+        ]
+      },
+      {
+        "type": "games",
+        "example": "A browser game wanted fan speed to lower graphics and uses frame rate drops as a hint.",
+        "apps": []
+      },
+      {
+        "type": "games",
+        "example": "A cloud gaming tab wanted heat readings and watches decoder stalls instead.",
+        "apps": [
+          "Xbox Cloud Gaming"
+        ]
+      },
+      {
+        "type": "creative",
+        "example": "A browser editor wanted to throttle exports based on heat and reads the busy level.",
+        "apps": [
+          "Clipchamp"
+        ]
+      },
+      {
+        "type": "security",
+        "example": "A tracker wanted temperature as a device clue and cannot get it.",
+        "apps": []
+      },
+      {
+        "type": "enterprise",
+        "example": "An IT portal wanted to monitor laptop health and needs a managed agent instead.",
+        "apps": []
+      },
+      {
+        "type": "utilities",
+        "example": "A browser hardware monitor site can show only coarse pressure, not true temperatures.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Coarse level still leaks activity"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Thermal side channels"
+  ],
+  "scores": {
+    "sensitivity": 2,
+    "utility": 2,
+    "fingerprint_bits": 0.0,
+    "friction": 3
+  },
+  "value": {
+    "legit_uses": [
+      "None: the browser deliberately withholds it"
+    ],
+    "abuse": [
+      "Sites attempt proxies to recover it"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "refs": [
+    {
+      "t": "mdn",
+      "label": "MDN Compute Pressure API",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/Compute_Pressure_API"
+    },
+    {
+      "t": "spec",
+      "label": "W3C Compute Pressure",
+      "url": "https://www.w3.org/TR/compute-pressure/"
+    }
+  ],
+  "confidence": "docs"
+}

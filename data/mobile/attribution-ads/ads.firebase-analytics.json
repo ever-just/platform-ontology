@@ -1,0 +1,211 @@
+{
+  "id": "mob.ads.firebase-analytics",
+  "name": "Google Analytics for Firebase",
+  "kind": "tracking",
+  "group": "attribution-ads",
+  "subgroup": "SDKs and measurement",
+  "tags": [
+    "firebase",
+    "analytics",
+    "app-instance-id",
+    "consent-mode"
+  ],
+  "plain": "Google's free analytics SDK that gives every install an ID and logs automatic events.",
+  "meaning": "Builds an app-level event stream and links it to Google Ads and BigQuery. Also provides the identifiers Google ad products use.",
+  "lifecycle": [
+    "on-launch",
+    "in-session"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "y",
+      "v": "",
+      "permission": "AD_ID (Android 13+), INTERNET",
+      "protection": "normal",
+      "grant": "install",
+      "prompt_ui": "",
+      "persistence": "",
+      "revocation": "",
+      "store_policy": "Data safety: app activity, device IDs; Consent Mode v2",
+      "api_surface": "FirebaseAnalytics.logEvent, setConsent",
+      "note": "App instance ID resets on reinstall or data clear."
+    },
+    "ios": {
+      "s": "y",
+      "v": "",
+      "permission": "NSUserTrackingUsageDescription if IDFA, optional IDFV collection",
+      "protection": "prompt",
+      "grant": "prompt",
+      "prompt_ui": "",
+      "persistence": "",
+      "revocation": "",
+      "store_policy": "Privacy manifest; ATT when linking with ads",
+      "api_surface": "FirebaseAnalytics",
+      "note": "Can run with IDFV only; Google Signals needs consent."
+    }
+  },
+  "web_equivalents": [
+    "web.xsite.tcf-consent-string"
+  ],
+  "data": {
+    "type": "object",
+    "metric": "Event stream with app_instance_id",
+    "update": "continuous, batched",
+    "fields": [
+      {
+        "name": "app_instance_id",
+        "type": "string",
+        "unit": "",
+        "range": "",
+        "precision": ""
+      },
+      {
+        "name": "automatic events",
+        "type": "list",
+        "unit": "",
+        "range": "first_open, session_start, screen_view",
+        "precision": ""
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can give each install an ID and log your taps and screens for Google",
+    "user_action": "Nothing. It starts when the app opens and runs while you use it",
+    "can": [
+      "Count sessions, screens and purchases for the developer",
+      "Give each install its own ID that resets on reinstall (Android)",
+      "Link to Google Ads and BigQuery reports",
+      "Run with the developer ID only on iPhone, without tracking permission"
+    ],
+    "cannot": [
+      "Join you across other companies' apps without your yes on iPhone",
+      "Use Google Signals on iPhone without consent",
+      "Keep the same ID after you clear the app data or reinstall (Android)"
+    ],
+    "reach": 3,
+    "reach_label": "Ongoing, tied to the install",
+    "differs": "Android gives each install an app instance ID that resets on reinstall. iPhone can run with the developer ID alone."
+  },
+  "story": {
+    "what_it_is": "Google's free tool that counts what people do in an app and links it to Google Ads.",
+    "icon": "chart-bar",
+    "tags": [
+      "Analytics",
+      "Google",
+      "Tracking"
+    ],
+    "marketing": [
+      {
+        "vendor": "Google",
+        "name": "Google Analytics for Firebase",
+        "pitch": "Free, unlimited event reporting that shows how people use your app and what drives growth.",
+        "url": "https://firebase.google.com/products/analytics"
+      }
+    ],
+    "for_you": "You never see it. It logs each time you open the app, how long you stay and what you tap, and gives your install a long random ID.",
+    "for_makers": "It builds an event stream per install and links it to Google Ads and BigQuery. Teams use it to find drop off points, test ideas and send audiences to ads, and it is free, so nearly every app has it.",
+    "use_cases": [
+      {
+        "type": "games",
+        "example": "A studio sees that 40 percent of players quit at level 3, so it makes the level easier.",
+        "apps": [
+          "Subway Surfers",
+          "Candy Crush"
+        ]
+      },
+      {
+        "type": "shopping",
+        "example": "A retail app tracks how many users add to cart but never pay, then sends a reminder.",
+        "apps": [
+          "Zalando",
+          "Etsy"
+        ]
+      },
+      {
+        "type": "fitness",
+        "example": "A running app measures which workout types people finish and which they skip.",
+        "apps": [
+          "Strava"
+        ]
+      },
+      {
+        "type": "ads",
+        "example": "Google Ads uses the events to find similar users and judge which ads bring buyers.",
+        "apps": [
+          "Google Ads"
+        ]
+      },
+      {
+        "type": "media",
+        "example": "A video app measures play time and tests a new recommendation row.",
+        "apps": [
+          "Netflix",
+          "Hulu"
+        ]
+      },
+      {
+        "type": "developer",
+        "example": "A team ties crashes to a version using the same install ID and fixes the bug.",
+        "apps": [
+          "Crashlytics"
+        ]
+      }
+    ],
+    "risks": [
+      "Event stream per install",
+      "Linked to ad accounts"
+    ],
+    "android_note": "On Android it can also use the advertising ID if the app has the AD_ID permission.",
+    "ios_note": "On iOS it respects ATT for IDFA and otherwise uses an app instance ID."
+  },
+  "technical_bounds": [
+    "EEA consent required for ads linking",
+    "Data retention 2 or 14 months default"
+  ],
+  "scores": {
+    "sensitivity": 3,
+    "utility": 4,
+    "fingerprint_bits": null,
+    "friction": 1
+  },
+  "value": {
+    "legit_uses": [
+      "Product analytics, crash funnels"
+    ],
+    "abuse": [
+      "Merging with Google Ads audiences without disclosure"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2024-03",
+      "platform": "android",
+      "version": "Firebase SDK",
+      "change": "Consent Mode v2 signals for ad_user_data and ad_personalization"
+    }
+  ],
+  "related": [
+    "mob.ads.google-ads-app-measurement",
+    "mob.ads.sdk-data-sharing"
+  ],
+  "refs": [
+    {
+      "t": "vendor",
+      "label": "Firebase: Google Analytics",
+      "url": "https://firebase.google.com/docs/analytics"
+    },
+    {
+      "t": "vendor",
+      "label": "Firebase: Consent mode",
+      "url": "https://firebase.google.com/docs/analytics/configure-data-collection"
+    }
+  ],
+  "confidence": "docs"
+}

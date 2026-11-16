@@ -1,0 +1,217 @@
+{
+  "id": "web.perf.crystal-timing-fingerprint",
+  "name": "Clock skew and crystal timing fingerprint",
+  "kind": "tracking",
+  "group": "timing-performance",
+  "subgroup": "Compute",
+  "tags": [
+    "clock-skew",
+    "oscillator",
+    "timing",
+    "hardware"
+  ],
+  "plain": "Measures tiny clock speed differences between a device's timers.",
+  "meaning": "Each device has slightly different oscillator frequencies. Comparing performance.now, Date, requestAnimationFrame and server timestamps over many seconds yields a device-specific drift signature, researched as time-based fingerprinting.",
+  "lifecycle": [
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "performance.now(); Date.now(); requestAnimationFrame; WebSocket timestamps",
+      "access": {
+        "grant": "none",
+        "prompt_ui": "",
+        "secure_context": false,
+        "user_gesture": false,
+        "persistence": "",
+        "revocation": "",
+        "iframe": "",
+        "steps": [
+          "Sample timers repeatedly",
+          "Compute drift ratio against server clock",
+          "Cluster across visits"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "1",
+          "note": "",
+          "date": "2008-12-11"
+        },
+        "edge": {
+          "s": "y",
+          "v": "79",
+          "note": "",
+          "date": "2020-01-15"
+        },
+        "firefox": {
+          "s": "y",
+          "v": "1",
+          "note": "",
+          "date": "2004-11-09"
+        },
+        "safari": {
+          "s": "y",
+          "v": "1",
+          "note": "",
+          "date": "2003-06-23"
+        },
+        "ios_safari": {
+          "s": "y",
+          "v": "1",
+          "note": "",
+          "date": "2007-06-29"
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "1",
+          "note": "",
+          "date": ""
+        },
+        "samsung": {
+          "s": "y",
+          "v": "5.0",
+          "note": "",
+          "date": "2016-12-15"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "float",
+    "metric": "Drift in parts per million",
+    "update": "",
+    "fields": [
+      {
+        "name": "skew",
+        "type": "float",
+        "unit": "ppm",
+        "range": "-100 to 100",
+        "precision": "needs minutes of samples"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can compare your device clocks over many seconds to tell it apart",
+    "user_action": "Nothing. It happens while the page stays open for some seconds",
+    "can": [
+      "Compare several clocks, such as the page timer, the date and screen refresh",
+      "Compare them with the site's server time",
+      "Build a device number from tiny speed differences"
+    ],
+    "cannot": [
+      "Work in the first moments of a visit, since it needs many seconds",
+      "Ask permission first",
+      "See your files",
+      "Know who you are by itself"
+    ],
+    "reach": 3,
+    "reach_label": "Silent, while the page stays open",
+    "differs": ""
+  },
+  "story": {
+    "what_it_is": "A script measures tiny speed differences between your device's clocks to make a hardware ID.",
+    "icon": "clock",
+    "tags": [
+      "Silent",
+      "Hardware",
+      "Tracking"
+    ],
+    "marketing": [],
+    "for_you": "You never see it. Every device has tiny flaws in its clock chips. A page can measure those flaws over a few seconds and get a number that stays about the same for your device.",
+    "for_makers": "It works even when software signals are hidden or randomized, since it comes from the hardware itself. Researchers have shown it can separate nearly identical phones. Browsers fight it by blurring timers.",
+    "use_cases": [
+      {
+        "type": "security",
+        "example": "A research team shows that two phones of the same model can be told apart by clock skew.",
+        "apps": []
+      },
+      {
+        "type": "ads",
+        "example": "An ad tracker could use clock skew to recognize one device across apps and sites.",
+        "apps": []
+      },
+      {
+        "type": "banking",
+        "example": "A bank looks for a hardware trait to link a login to a stolen or cloned device.",
+        "apps": []
+      },
+      {
+        "type": "games",
+        "example": "A game with strict anti cheat checks for devices reused by a banned player.",
+        "apps": []
+      },
+      {
+        "type": "analytics",
+        "example": "A cookie free counter uses clock skew to count unique devices.",
+        "apps": []
+      },
+      {
+        "type": "developer",
+        "example": "A browser maker adds noise to timers so these tricks lose accuracy.",
+        "apps": [
+          "Chrome",
+          "Firefox",
+          "Safari"
+        ]
+      },
+      {
+        "type": "shopping",
+        "example": "A ticket site tries to find a scalper using one laptop with many fake browsers.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Hard to hide a hardware trait",
+      "Mostly research so far"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Needs seconds to minutes and low noise, less reliable on mobile",
+    "Timer coarsening reduces accuracy"
+  ],
+  "scores": {
+    "sensitivity": 3,
+    "utility": 1,
+    "fingerprint_bits": 5,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": "None",
+    "abuse": "Device-bound identification not reset by clearing cookies"
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2018-10",
+      "browser": "paper",
+      "version": "",
+      "change": "Sanchez-Rola et al. Clock Around the Clock (CCS 2018)"
+    }
+  ],
+  "related": [
+    "web.perf.cpu-benchmark"
+  ],
+  "refs": [
+    {
+      "t": "paper",
+      "label": "Sanchez-Rola et al., Clock Around the Clock (CCS 2018)",
+      "url": "https://dl.acm.org/doi/10.1145/3243734.3243792"
+    },
+    {
+      "t": "paper",
+      "label": "Kohno et al., Remote Physical Device Fingerprinting (2005)",
+      "url": "https://cseweb.ucsd.edu/~savage/papers/Oakland05.pdf"
+    }
+  ],
+  "confidence": "docs"
+}

@@ -1,0 +1,229 @@
+{
+  "id": "mob.ads.idfa",
+  "name": "IDFA (Identifier for Advertisers)",
+  "kind": "tracking",
+  "group": "attribution-ads",
+  "subgroup": "Advertising IDs",
+  "tags": [
+    "idfa",
+    "advertising-id",
+    "zeros",
+    "att-gated"
+  ],
+  "plain": "A resettable device ad ID that apps can read only if the person allowed tracking.",
+  "meaning": "A stable cross-app key that joins a person's activity across apps for targeting, frequency caps and install attribution. Without a yes it is all zeros, so apps must fall back to aggregate methods.",
+  "lifecycle": [
+    "on-launch",
+    "in-session",
+    "signed-in"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "n",
+      "v": "",
+      "permission": "",
+      "protection": "none",
+      "grant": "not-exposed",
+      "prompt_ui": "",
+      "persistence": "",
+      "revocation": "",
+      "store_policy": "",
+      "api_surface": "",
+      "note": "Android's equivalent is the Google advertising ID (see mob.ads.aaid)."
+    },
+    "ios": {
+      "s": "p",
+      "v": "6.0",
+      "permission": "NSUserTrackingUsageDescription (iOS 14.5+); none before",
+      "protection": "prompt",
+      "grant": "prompt",
+      "prompt_ui": "ATT prompt",
+      "persistence": "One value per device shared by all apps; changes on device reset or restore",
+      "revocation": "Settings > Privacy & Security > Tracking",
+      "store_policy": "App Review 5.1.2(i); privacy label 'Data Used to Track You'",
+      "api_surface": "ASIdentifierManager.advertisingIdentifier",
+      "note": "Returns 00000000-0000-0000-0000-000000000000 unless ATT status is authorized. Limit Ad Tracking (Settings > Privacy > Advertising) also zeroed it before iOS 14.5."
+    }
+  },
+  "web_equivalents": [
+    "web.xsite.third-party-cookies-status"
+  ],
+  "data": {
+    "type": "string",
+    "metric": "UUID, 128 bits",
+    "update": "read any time, value changes only on device reset or restore",
+    "fields": [
+      {
+        "name": "advertisingIdentifier",
+        "type": "string",
+        "unit": "",
+        "range": "UUID or all zeros",
+        "precision": ""
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can use your iPhone ad ID only if you tap Allow on the tracking prompt",
+    "user_action": "You tap Allow or Ask App Not to Track on the tracking prompt",
+    "can": [
+      "Link your activity across companies' apps once you allow it",
+      "Count installs and limit how often you see an ad",
+      "Keep using the ID until you change the setting"
+    ],
+    "cannot": [
+      "Get the real ID after you tap Ask App Not to Track; the app gets all zeros",
+      "Ask without the system tracking prompt",
+      "Use the ID on Android; Android has the Google advertising ID"
+    ],
+    "reach": 4,
+    "reach_label": "Follows you across apps, if allowed",
+    "differs": "iPhone only. Android uses the Google advertising ID, which you can delete in Settings."
+  },
+  "story": {
+    "what_it_is": "Apple's advertising ID, a resettable number that apps can read only if you tap Allow Tracking.",
+    "icon": "fingerprint",
+    "tags": [
+      "Ads",
+      "Tracking",
+      "Asks first"
+    ],
+    "marketing": [
+      {
+        "vendor": "Apple",
+        "name": "App Tracking Transparency",
+        "pitch": "Apps must ask permission before tracking you across apps and websites owned by other companies.",
+        "url": "https://developer.apple.com/documentation/apptrackingtransparency"
+      },
+      {
+        "vendor": "Apple",
+        "name": "Identifier for Advertisers",
+        "pitch": "A device identifier that advertisers use for ads, available only with the person's permission.",
+        "url": "https://developer.apple.com/documentation/adsupport/asidentifiermanager"
+      }
+    ],
+    "for_you": "A pop up asks 'Allow this app to track your activity across other companies' apps and websites?' If you say no, the app gets a string of zeros.",
+    "for_makers": "The IDFA used to be the key that joined activity across apps for targeting, frequency caps and install attribution. Since iOS 14.5 most people say no, so makers moved to Apple's own reports and first party data.",
+    "use_cases": [
+      {
+        "type": "ads",
+        "example": "An ad network that has your IDFA can show you more shoe ads after you looked at shoes in another app.",
+        "apps": [
+          "Meta",
+          "Google Ads"
+        ]
+      },
+      {
+        "type": "games",
+        "example": "A game studio matches installs to ads and learns which campaign brings paying fans, but only for those who say yes.",
+        "apps": [
+          "Zynga",
+          "Supercell"
+        ]
+      },
+      {
+        "type": "shopping",
+        "example": "A retailer builds a group of past buyers to show a loyalty offer in other apps.",
+        "apps": [
+          "Target"
+        ]
+      },
+      {
+        "type": "analytics",
+        "example": "A growth team measures lifetime value per ad source for the opted in group only.",
+        "apps": [
+          "AppsFlyer"
+        ]
+      },
+      {
+        "type": "ads",
+        "example": "A fraud filter spots one device with many fake installs by its IDFA.",
+        "apps": []
+      },
+      {
+        "type": "social",
+        "example": "A social app uses it to find friends who also installed the same game, if you allow.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Joins your activity across apps",
+      "Zeros if you decline"
+    ],
+    "android_note": "Android's version is the Google advertising ID, available without a prompt.",
+    "ios_note": "iOS shows the ATT prompt first, and the IDFA is only available after a yes (about 25 percent in industry surveys)."
+  },
+  "technical_bounds": [
+    "Zero value when ATT is not authorized",
+    "No user-facing reset button on current iOS; Limit Ad Tracking toggle removed",
+    "Prohibited in apps rated for Kids Category"
+  ],
+  "scores": {
+    "sensitivity": 4,
+    "utility": 5,
+    "fingerprint_bits": null,
+    "friction": 2
+  },
+  "value": {
+    "legit_uses": [
+      "Install attribution and retargeting for consenting users"
+    ],
+    "abuse": [
+      "Joining a profile across apps and sold-on data sets"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": true,
+      "how": "Apple label lists Device ID (Linked To You), Advertising Data and Third-Party Advertising among purposes. Whether LinkedIn shows the ATT prompt is unverified; the fetched label showed no Data Used to Track You section."
+    }
+  },
+  "history": [
+    {
+      "date": "2012-09",
+      "platform": "ios",
+      "version": "iOS 6",
+      "change": "IDFA introduced, replacing UDID"
+    },
+    {
+      "date": "2016-09",
+      "platform": "ios",
+      "version": "iOS 10",
+      "change": "Limit Ad Tracking returns zeros"
+    },
+    {
+      "date": "2021-04",
+      "platform": "ios",
+      "version": "iOS 14.5",
+      "change": "Zeroed unless ATT authorized"
+    }
+  ],
+  "related": [
+    "mob.attrib.att",
+    "mob.ads.aaid",
+    "mob.ads.idfv"
+  ],
+  "refs": [
+    {
+      "t": "apple",
+      "label": "Apple: advertisingIdentifier",
+      "url": "https://developer.apple.com/documentation/adsupport/asidentifiermanager/advertisingidentifier"
+    },
+    {
+      "t": "apple",
+      "label": "Apple: App Tracking Transparency",
+      "url": "https://developer.apple.com/documentation/apptrackingtransparency"
+    },
+    {
+      "t": "apple",
+      "label": "Apple: ASIdentifierManager",
+      "url": "https://developer.apple.com/documentation/adsupport/asidentifiermanager"
+    },
+    {
+      "t": "vendor",
+      "label": "App Store listing and App Privacy label, LinkedIn (id288429040)",
+      "url": "https://apps.apple.com/us/app/linkedin-professional-network/id288429040"
+    }
+  ],
+  "confidence": "verified"
+}

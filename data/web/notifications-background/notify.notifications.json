@@ -1,0 +1,331 @@
+{
+  "id": "web.notify.notifications",
+  "name": "Notifications",
+  "kind": "permission",
+  "group": "notifications-background",
+  "subgroup": "Notifications",
+  "tags": [
+    "quiet-ui",
+    "notifications-permission"
+  ],
+  "plain": "Asks to show system notifications outside the browser tab.",
+  "meaning": "Lets a site put messages on the person's desktop or lock screen. Reaches the person after they leave the page; abuse is spam, scams and fake alerts, so browsers add quiet prompts and auto-revocation.",
+  "lifecycle": [
+    "in-session",
+    "after-leaving"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "Notification.requestPermission(); new Notification(title, options); ServiceWorkerRegistration.showNotification(); notificationclick",
+      "permission_name": "notifications",
+      "bcd": [
+        "api.Notification",
+        "api.Notification.requestPermission",
+        "api.ServiceWorkerRegistration.showNotification"
+      ],
+      "access": {
+        "grant": "prompt",
+        "prompt_ui": "Chrome: bubble with Allow or Block, or a quiet address-bar chip (Notifications blocked) from Chrome 80 for sites people rarely allow. Firefox: Allow or Not now plus Always block, needs a gesture since 72. Safari: system sheet, needs a gesture.",
+        "secure_context": true,
+        "user_gesture": true,
+        "persistence": "Persistent per origin; Chrome auto-revokes unused or abusive sites and tells the person; Safari ties to the Notification Center",
+        "revocation": "Padlock, Site settings, OS notification settings, Safety Hub one-tap unsubscribe on Android; Permissions API 'change' event.",
+        "iframe": "Cross-origin iframes cannot request it; the requesting document must be top-level or same-origin with a gesture",
+        "steps": [
+          "Call Notification.requestPermission() from a click (required in Firefox and Safari)",
+          "Browser shows prompt or quiet chip",
+          "Permission becomes granted, denied or stays default",
+          "Show with showNotification() or new Notification()"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "20",
+          "note": "Persistent notifications from 42",
+          "date": "2012-06-26"
+        },
+        "edge": {
+          "s": "y",
+          "v": "14",
+          "note": "",
+          "date": "2016-08-02"
+        },
+        "firefox": {
+          "s": "y",
+          "v": "22",
+          "note": "",
+          "date": "2013-06-25"
+        },
+        "safari": {
+          "s": "y",
+          "v": "7",
+          "note": "Desktop Safari, page notifications from 7",
+          "date": "2013-10-22"
+        },
+        "ios_safari": {
+          "s": "y",
+          "v": "16.4",
+          "note": "Home Screen web apps only, requires iOS 16.4",
+          "date": "2023-03-27"
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "42",
+          "note": "Constructor throws on Android, use showNotification",
+          "date": "2015-04-15"
+        },
+        "samsung": {
+          "s": "y",
+          "v": "4.0",
+          "note": "",
+          "date": "2016-03-11"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "object",
+    "metric": "Notification display with title, body, icon, actions",
+    "update": "on demand, no rate limit besides OS",
+    "fields": [
+      {
+        "name": "title",
+        "type": "string",
+        "unit": "text",
+        "range": "any",
+        "precision": "OS truncates about 50 to 100 characters"
+      },
+      {
+        "name": "body",
+        "type": "string",
+        "unit": "text",
+        "range": "any",
+        "precision": "OS truncates about 100 to 400 characters"
+      },
+      {
+        "name": "actions",
+        "type": "list",
+        "unit": "buttons",
+        "range": "up to Notification.maxActions (2 in Chrome desktop, 3 Android)",
+        "precision": "per platform"
+      },
+      {
+        "name": "icon, image, badge",
+        "type": "string",
+        "unit": "URLs",
+        "range": "images fetched on show",
+        "precision": "platform scaled"
+      },
+      {
+        "name": "requireInteraction",
+        "type": "boolean",
+        "unit": "none",
+        "range": "true or false",
+        "precision": "desktop Chrome only"
+      },
+      {
+        "name": "silent",
+        "type": "boolean",
+        "unit": "none",
+        "range": "true or false",
+        "precision": "suppress sound"
+      },
+      {
+        "name": "tag, renotify",
+        "type": "string and boolean",
+        "unit": "none",
+        "range": "replace earlier notification with same tag",
+        "precision": "one visible per tag"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can show messages on your screen outside the browser tab, once you tap Allow",
+    "user_action": "You tap Allow on the site's notification pop up",
+    "can": [
+      "Show alerts on your desktop or lock screen after you leave the page",
+      "Send chat, delivery or calendar updates you asked for",
+      "Keep sending until you block it in site settings"
+    ],
+    "cannot": [
+      "Show anything before you tap Allow",
+      "Keep showing alerts if you block the site or the browser auto removes it",
+      "Use a loud pop up if Chrome decides to show a quiet icon instead",
+      "Ask on iPhone unless the site is installed to the Home Screen"
+    ],
+    "reach": 3,
+    "reach_label": "Ongoing, until you block it",
+    "differs": "Chrome and Firefox ask in the browser. On iPhone, the site must be installed to the Home Screen. Chrome may show a quiet chip for sites people rarely allow."
+  },
+  "story": {
+    "what_it_is": "A site asks to show pop up alerts on your device, even when you are not on the page.",
+    "icon": "bell",
+    "tags": [
+      "Permission",
+      "Notifications",
+      "Asks first"
+    ],
+    "marketing": [
+      {
+        "vendor": "Google Chrome",
+        "name": "Notification permission changes",
+        "pitch": "Chrome moves unwanted notification requests to a quiet prompt, so pages ask less and you see fewer spam alerts.",
+        "url": "https://developer.chrome.com/blog/notification-permission-changes"
+      }
+    ],
+    "for_you": "A prompt asks if the site can send you notifications. If you allow, alerts appear on screen like app alerts. You can turn them off later in site settings.",
+    "for_makers": "Makers use alerts to bring people back for news, messages, deals and live events. They are one of the strongest tools for return visits. Abuse is common, so browsers now quiet the prompts.",
+    "use_cases": [
+      {
+        "type": "news",
+        "example": "A news site asks to alert you about breaking stories, which can pull you back several times a day.",
+        "apps": [
+          "BBC News"
+        ]
+      },
+      {
+        "type": "messaging",
+        "example": "A web chat shows a pop up when a friend replies while you are in another tab.",
+        "apps": [
+          "WhatsApp Web",
+          "Slack"
+        ]
+      },
+      {
+        "type": "games",
+        "example": "A browser game says your build has finished or a friend joined your game lobby.",
+        "apps": []
+      },
+      {
+        "type": "shopping",
+        "example": "A store alerts you about a price drop on a saved item or a delivery update.",
+        "apps": [
+          "Amazon"
+        ]
+      },
+      {
+        "type": "live",
+        "example": "A sports site sends goal alerts during a live match.",
+        "apps": [
+          "ESPN"
+        ]
+      },
+      {
+        "type": "productivity",
+        "example": "A calendar or task site alerts you before a meeting or due date.",
+        "apps": [
+          "Google Calendar"
+        ]
+      },
+      {
+        "type": "ads",
+        "example": "Some sites use alerts as an ad channel, sending promotions for a fee from advertisers.",
+        "apps": []
+      },
+      {
+        "type": "security",
+        "example": "A bank sends a sign in alert when a new device logs in.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Spam alerts",
+      "Fake alert scams"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "No notification display when the OS denies Do Not Disturb or the browser is closed (service worker needed for push)",
+    "Cannot read other apps' notifications",
+    "Cannot request without gesture on Firefox and Safari",
+    "iOS only for installed Home Screen web apps"
+  ],
+  "scores": {
+    "sensitivity": 4,
+    "utility": 5,
+    "fingerprint_bits": null,
+    "friction": 2
+  },
+  "value": {
+    "legit_uses": [
+      "Chat and email alerts",
+      "Order and delivery updates",
+      "Calendar reminders"
+    ],
+    "abuse": [
+      "Scam and fake virus alerts",
+      "Spam re-engagement",
+      "Phishing impersonation of system dialogs"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2020-01",
+      "browser": "firefox",
+      "version": "72",
+      "change": "Prompt requires a user gesture and shows quiet UI"
+    },
+    {
+      "date": "2020-02",
+      "browser": "chrome",
+      "version": "80",
+      "change": "Quieter notification UI for low-allow sites and abusive prompts"
+    },
+    {
+      "date": "2022-09",
+      "browser": "safari",
+      "version": "16",
+      "change": "Web Push and notifications on macOS 13 (Safari 16.1 in Ventura)"
+    },
+    {
+      "date": "2023-03",
+      "browser": "ios_safari",
+      "version": "16.4",
+      "change": "Notifications for Home Screen web apps"
+    },
+    {
+      "date": "2025",
+      "browser": "chrome",
+      "version": "",
+      "change": "Auto-revocation of notification permission for unengaged and suspicious sites rolls out (exact version unconfirmed)"
+    },
+    {
+      "date": "2026",
+      "browser": "chrome",
+      "version": "",
+      "change": "Chrome describes FCM throttling of disruptive domains at 1,000 messages per minute (exact version unconfirmed)"
+    }
+  ],
+  "related": [
+    "web.notify.push-api",
+    "web.notify.push-abuse-defenses",
+    "web.notify.badging"
+  ],
+  "refs": [
+    {
+      "t": "mdn",
+      "label": "MDN Notifications API",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/Notifications_API"
+    },
+    {
+      "t": "spec",
+      "label": "Notifications API Living Standard",
+      "url": "https://notifications.spec.whatwg.org/"
+    },
+    {
+      "t": "chromestatus",
+      "label": "Chrome notification permission UX",
+      "url": "https://developer.chrome.com/blog/notification-permission-changes"
+    }
+  ],
+  "confidence": "docs"
+}

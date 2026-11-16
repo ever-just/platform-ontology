@@ -1,0 +1,216 @@
+{
+  "id": "web.display.device-pixel-ratio",
+  "name": "Device pixel ratio and zoom",
+  "kind": "signal",
+  "group": "display-window",
+  "subgroup": "Screen",
+  "tags": [
+    "dpr",
+    "zoom",
+    "retina"
+  ],
+  "plain": "How many physical pixels per CSS pixel; also changes with browser zoom.",
+  "meaning": "Values like 1, 1.25, 1.5, 2, 2.625, 3 reveal retina screens, Windows scaling and the person's zoom level (50% to 500%). Zoom shifts DPR so it leaks accessibility settings.",
+  "lifecycle": [
+    "on-arrival",
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "window.devicePixelRatio, matchMedia('(resolution: ...dppx)'), Sec-CH-DPR",
+      "bcd": [
+        "api.Window.devicePixelRatio"
+      ],
+      "access": {
+        "grant": "none",
+        "prompt_ui": "None",
+        "secure_context": false,
+        "user_gesture": false,
+        "persistence": "read fresh on every page load; nothing stored",
+        "revocation": "none needed (no grant)",
+        "iframe": "Readable from cross-origin iframes too (same values)",
+        "steps": [
+          "Page script reads the value",
+          "No prompt is shown"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "1",
+          "note": "",
+          "date": "2008-12-11"
+        },
+        "edge": {
+          "s": "y",
+          "v": "12",
+          "note": "",
+          "date": "2015-07-29"
+        },
+        "firefox": {
+          "s": "y",
+          "v": "18",
+          "note": "RFP forces 1",
+          "date": "2013-01-08"
+        },
+        "safari": {
+          "s": "y",
+          "v": "3",
+          "note": "",
+          "date": "2007-10-26"
+        },
+        "ios_safari": {
+          "s": "y",
+          "v": "2",
+          "note": "",
+          "date": "2008-07-11"
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "18",
+          "note": "",
+          "date": "2012-06-27"
+        },
+        "samsung": {
+          "s": "y",
+          "v": "1.0",
+          "note": "",
+          "date": "2013-04-27"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "object",
+    "metric": "",
+    "update": "static per session",
+    "fields": [
+      {
+        "name": "devicePixelRatio",
+        "type": "float",
+        "unit": "ratio",
+        "range": "0.5 to 5; common 1, 1.25, 1.5, 2, 3",
+        "precision": "0.01 to exact"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can see your screen's sharpness factor, which also shifts when you zoom",
+    "user_action": "Nothing. It happens when the page loads or you zoom.",
+    "can": [
+      "Check how many real pixels sit behind each page pixel",
+      "Notice when you zoom in or out",
+      "Pick sharper images to match",
+      "Use the number as part of a fingerprint"
+    ],
+    "cannot": [
+      "See your exact screen size or model",
+      "Tell for sure whether a change came from zoom or a new screen",
+      "Change your zoom"
+    ],
+    "reach": 1,
+    "reach_label": "One number, no prompt",
+    "differs": ""
+  },
+  "story": {
+    "what_it_is": "Tells a page how many real screen dots sit behind each page dot. It also changes when you zoom.",
+    "icon": "ratio",
+    "tags": [
+      "Display",
+      "Zoom",
+      "Silent"
+    ],
+    "marketing": [
+      {
+        "vendor": "MDN",
+        "name": "Window.devicePixelRatio",
+        "pitch": "Explains how the ratio of real pixels to page pixels is used to draw sharp images and text.",
+        "url": "https://developer.mozilla.org/en-US/docs/Web/API/Window/devicePixelRatio"
+      }
+    ],
+    "for_you": "You never see it. It is why text looks sharp on a Retina screen. When you press zoom in your browser the number changes and the page may redraw.",
+    "for_makers": "Makers use it to draw crisp canvases and send the right image size. It also leaks your zoom level, which is one more clue to tell your browser apart from others.",
+    "use_cases": [
+      {
+        "type": "games",
+        "example": "A browser game sizes its drawing canvas by the ratio so pixel art stays sharp on Retina and does not crush a weak phone.",
+        "apps": []
+      },
+      {
+        "type": "creative",
+        "example": "A design tool redraws lines and text when you zoom the browser so they stay crisp.",
+        "apps": [
+          "Figma"
+        ]
+      },
+      {
+        "type": "maps",
+        "example": "A web map picks sharp or standard tiles and keeps labels readable.",
+        "apps": [
+          "Google Maps"
+        ]
+      },
+      {
+        "type": "shopping",
+        "example": "A store gives a phone small high quality images and a desktop the larger ones.",
+        "apps": []
+      },
+      {
+        "type": "security",
+        "example": "A fraud check notices a login from a window whose ratio never changes, a sign of an automated browser.",
+        "apps": []
+      },
+      {
+        "type": "ads",
+        "example": "A tracking script reads the ratio and zoom to help recognise the same browser across sites.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Leaks zoom level",
+      "Fingerprint clue"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Desktop DPR mixes OS scaling and browser zoom"
+  ],
+  "scores": {
+    "sensitivity": 1,
+    "utility": 4,
+    "fingerprint_bits": 3.0,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Pick image density"
+    ],
+    "abuse": [
+      "Zoom and accessibility inference"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": true,
+      "how": "Collected as device pixel ratio. Read by the LinkedIn APFC fingerprint script (alleged by BrowserGate, partly confirmed by BleepingComputer)."
+    }
+  },
+  "related": [
+    "web.locale.zoom-text-size"
+  ],
+  "refs": [
+    {
+      "t": "mdn",
+      "label": "MDN devicePixelRatio",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/Window/devicePixelRatio"
+    },
+    {
+      "t": "news",
+      "label": "BrowserGate: how LinkedIn's script works",
+      "url": "https://browsergate.eu/how-it-works/"
+    }
+  ],
+  "confidence": "docs"
+}

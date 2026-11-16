@@ -1,0 +1,215 @@
+{
+  "id": "mob.ads.facebook-sdk",
+  "name": "Meta (Facebook) SDK and app events",
+  "kind": "tracking",
+  "group": "attribution-ads",
+  "subgroup": "SDKs and measurement",
+  "tags": [
+    "facebook-sdk",
+    "meta",
+    "app-events",
+    "advanced-matching"
+  ],
+  "plain": "Meta's SDK logs installs and in-app events and can send hashed email or phone to match people.",
+  "meaning": "Ties activity to a Meta account for ads. Can send hashed email or phone (advanced matching). Logs events even for signed-out Facebook users.",
+  "lifecycle": [
+    "on-launch",
+    "in-session",
+    "signed-in"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "y",
+      "v": "",
+      "permission": "INTERNET; AD_ID; Install Referrer; optional Facebook Login",
+      "protection": "normal",
+      "grant": "install",
+      "prompt_ui": "",
+      "persistence": "",
+      "revocation": "",
+      "store_policy": "Data safety: advertising ID, app activity; Play SDK Index lists the SDK",
+      "api_surface": "Facebook SDK for Android, FacebookSdk.setAutoLogAppEventsEnabled",
+      "note": "Meta Install Referrer (encrypted referrer) lets Meta see install attribution."
+    },
+    "ios": {
+      "s": "y",
+      "v": "",
+      "permission": "NSUserTrackingUsageDescription for advertiser ID; privacy manifest for the SDK",
+      "protection": "prompt",
+      "grant": "prompt",
+      "prompt_ui": "",
+      "persistence": "",
+      "revocation": "",
+      "store_policy": "Privacy manifest; ATT; 5.1.2",
+      "api_surface": "FBSDKCoreKit, AEM (Aggregated Event Measurement), Limited Login",
+      "note": "After iOS 14.5 Meta used AEM on top of SKAN and Limited Login without ATT."
+    }
+  },
+  "web_equivalents": [
+    "web.xsite.email-hash-identity"
+  ],
+  "data": {
+    "type": "object",
+    "metric": "App events, advertiser ID, hashed identifiers",
+    "update": "continuous",
+    "fields": [
+      {
+        "name": "advertiser_id",
+        "type": "string",
+        "unit": "",
+        "range": "GAID or IDFA",
+        "precision": ""
+      },
+      {
+        "name": "hashed email/phone",
+        "type": "hash",
+        "unit": "SHA-256",
+        "range": "",
+        "precision": ""
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can send your app activity to Meta and match it to your account",
+    "user_action": "Nothing. It happens when the app opens or you do something in it",
+    "can": [
+      "Send installs and in app actions, such as purchases, to Meta",
+      "Match you using a scrambled email or phone number",
+      "Record events for people signed out of Facebook",
+      "Use Meta's install referrer to see which ad led to the install (Android)"
+    ],
+    "cannot": [
+      "Track you across apps on iPhone after you tap Ask App Not to Track, within Apple's rules",
+      "Show the real email, only a scrambled version",
+      "Stay out of ad matching if you never use Meta products; it can still send events"
+    ],
+    "reach": 4,
+    "reach_label": "Ongoing, tied to a Meta account",
+    "differs": "Android uses the install referrer and ad ID. iPhone asks for tracking permission, with Meta's own tools as backup."
+  },
+  "story": {
+    "what_it_is": "Meta's code library that reports installs and in app actions so Facebook can match them to ads.",
+    "icon": "share-2",
+    "tags": [
+      "Ads",
+      "Tracking",
+      "Social"
+    ],
+    "marketing": [
+      {
+        "vendor": "Meta",
+        "name": "Facebook SDK for iOS and Android",
+        "pitch": "Add Facebook Login, sharing and app events to measure ads and understand your audience.",
+        "url": "https://developers.facebook.com/docs/app-events"
+      }
+    ],
+    "for_you": "You never see it. If you used Facebook or clicked a Meta ad, the app might tell Meta you opened it, bought something or reached a level.",
+    "for_makers": "Meta uses the events to match purchases to ads and to build audiences. Advanced matching can send hashed email or phone, and the SDK can log events even for people signed out of Facebook.",
+    "use_cases": [
+      {
+        "type": "games",
+        "example": "A game reports 'level 10 reached' so Meta can find more players like your best ones.",
+        "apps": [
+          "Candy Crush",
+          "Words With Friends"
+        ]
+      },
+      {
+        "type": "shopping",
+        "example": "A store app reports a purchase so the advertiser sees which Instagram ad drove the sale.",
+        "apps": [
+          "Shein",
+          "Temu"
+        ]
+      },
+      {
+        "type": "social",
+        "example": "A login button lets you sign in with Facebook and shares your name and email.",
+        "apps": [
+          "Spotify",
+          "Pinterest"
+        ]
+      },
+      {
+        "type": "ads",
+        "example": "Advanced matching sends a hashed email so Meta can join an app purchase to your account.",
+        "apps": []
+      },
+      {
+        "type": "analytics",
+        "example": "A dating app counts how many installs came from video ads on Instagram.",
+        "apps": [
+          "Bumble"
+        ]
+      },
+      {
+        "type": "security",
+        "example": "Privacy researchers found the SDK sending data before consent in some apps.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Joins app use to your Facebook profile",
+      "Logs events when signed out"
+    ],
+    "android_note": "Android sends the install referrer and the advertising ID to Meta's systems.",
+    "ios_note": "On iOS, SKAN and ATT limit how much Meta can link, but hashed email matching still works."
+  },
+  "technical_bounds": [
+    "Needs consent for ads use under GDPR",
+    "Events can be disabled",
+    "Privacy manifest and signature required"
+  ],
+  "scores": {
+    "sensitivity": 4,
+    "utility": 5,
+    "fingerprint_bits": null,
+    "friction": 1
+  },
+  "value": {
+    "legit_uses": [
+      "Ad optimization for Meta campaigns"
+    ],
+    "abuse": [
+      "Collecting health or sensitive events (FTC and state cases)"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2021-04",
+      "platform": "ios",
+      "version": "iOS 14.5",
+      "change": "Aggregated Event Measurement for ATT-denied users"
+    },
+    {
+      "date": "2022-03",
+      "platform": "ios",
+      "version": "iOS 15",
+      "change": "Limited Login for Facebook Login without ATT"
+    }
+  ],
+  "related": [
+    "mob.ads.server-side-conversions",
+    "mob.ads.sdk-data-sharing"
+  ],
+  "refs": [
+    {
+      "t": "vendor",
+      "label": "Meta: App Events",
+      "url": "https://developers.facebook.com/docs/app-events/"
+    },
+    {
+      "t": "vendor",
+      "label": "Meta: Advanced Matching (app)",
+      "url": "https://developers.facebook.com/docs/app-events/advanced-matching"
+    }
+  ],
+  "confidence": "docs"
+}

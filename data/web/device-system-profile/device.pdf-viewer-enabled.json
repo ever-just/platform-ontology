@@ -1,0 +1,224 @@
+{
+  "id": "web.device.pdf-viewer-enabled",
+  "name": "PDF viewer enabled",
+  "kind": "signal",
+  "group": "device-system-profile",
+  "subgroup": "Browser identity",
+  "tags": [
+    "navigator",
+    "pdf",
+    "plugins-replacement"
+  ],
+  "plain": "Whether the browser shows PDFs inline instead of downloading them.",
+  "meaning": "A single boolean that replaced plugin enumeration. False on some mobile browsers and on users who disabled the viewer. Low entropy but common in bot checks.",
+  "lifecycle": [
+    "on-arrival",
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "navigator.pdfViewerEnabled",
+      "bcd": [
+        "api.Navigator.pdfViewerEnabled"
+      ],
+      "access": {
+        "grant": "none",
+        "prompt_ui": "None",
+        "secure_context": false,
+        "user_gesture": false,
+        "persistence": "read fresh on every page load; nothing stored",
+        "revocation": "none needed (no grant)",
+        "iframe": "Readable from cross-origin iframes too (same values)",
+        "steps": [
+          "Page script reads the value",
+          "No prompt is shown"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "94",
+          "note": "",
+          "date": "2021-09-21"
+        },
+        "edge": {
+          "s": "y",
+          "v": "94",
+          "note": "",
+          "date": "2021-09-24"
+        },
+        "firefox": {
+          "s": "y",
+          "v": "99",
+          "note": "",
+          "date": "2022-04-05"
+        },
+        "safari": {
+          "s": "y",
+          "v": "16.4",
+          "note": "",
+          "date": "2023-03-27"
+        },
+        "ios_safari": {
+          "s": "y",
+          "v": "16.4",
+          "note": "Safari iOS true",
+          "date": "2023-03-27"
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "94",
+          "note": "false on Android Chrome by default",
+          "date": "2021-09-21"
+        },
+        "samsung": {
+          "s": "y",
+          "v": "17.0",
+          "note": "",
+          "date": "2022-05-04"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "object",
+    "metric": "",
+    "update": "static per session",
+    "fields": [
+      {
+        "name": "pdfViewerEnabled",
+        "type": "boolean",
+        "unit": "",
+        "range": "true or false",
+        "precision": ""
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can see if your browser shows PDFs inline instead of downloading them",
+    "user_action": "Nothing. It happens when the page loads",
+    "can": [
+      "Check one yes or no setting",
+      "Decide to embed a PDF or offer a download link",
+      "Use it with other checks to spot bots"
+    ],
+    "cannot": [
+      "See which PDF files you opened",
+      "See which other plugins you have",
+      "Learn much; it is a single yes or no",
+      "Change your PDF setting"
+    ],
+    "reach": 1,
+    "reach_label": "One yes or no",
+    "differs": ""
+  },
+  "story": {
+    "what_it_is": "A yes or no: does your browser show PDF files inside the page instead of downloading them?",
+    "icon": "file-text",
+    "tags": [
+      "Browser",
+      "Silent",
+      "Bot checks"
+    ],
+    "marketing": [
+      {
+        "vendor": "MDN",
+        "name": "Navigator.pdfViewerEnabled",
+        "pitch": "Docs describe it as a simple flag that replaced the old plugin list.",
+        "url": "https://developer.mozilla.org/en-US/docs/Web/API/Navigator/pdfViewerEnabled"
+      }
+    ],
+    "for_you": "You never see it asked. It only decides whether a PDF link opens right in your tab or downloads. A site can also see the answer, but it tells little about you.",
+    "for_makers": "It is one yes or no flag, so it is a weak clue. Bot defence teams include it because headless browsers and odd setups often answer differently. Some sites use it to choose between an inline viewer and a download button.",
+    "use_cases": [
+      {
+        "type": "productivity",
+        "example": "A document site shows a Preview button when your browser can display PDFs, and a Download button when it cannot.",
+        "apps": []
+      },
+      {
+        "type": "shopping",
+        "example": "A shop offers a size guide as an inline PDF only if the browser can show it.",
+        "apps": []
+      },
+      {
+        "type": "banking",
+        "example": "A bank statement page opens a PDF in a tab on desktop and downloads it on a phone that cannot show it.",
+        "apps": []
+      },
+      {
+        "type": "security",
+        "example": "A bot defence tool notices a visitor with no PDF viewer and no plugins, and raises the risk score.",
+        "apps": [
+          "DataDome"
+        ]
+      },
+      {
+        "type": "education",
+        "example": "An online course shows reading material in the page for browsers that support PDFs.",
+        "apps": []
+      },
+      {
+        "type": "analytics",
+        "example": "A fingerprinting library adds the flag to a device profile.",
+        "apps": [
+          "FingerprintJS"
+        ]
+      }
+    ],
+    "risks": [
+      "Very low value alone",
+      "Part of a bigger profile"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "One bit only"
+  ],
+  "scores": {
+    "sensitivity": 1,
+    "utility": 2,
+    "fingerprint_bits": 0.5,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Offer PDF vs download"
+    ],
+    "abuse": [
+      "Headless-browser tell (false)"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2021-09",
+      "browser": "chrome",
+      "version": "94",
+      "change": "Shipped; plugins list hardcoded to 5 PDF entries"
+    }
+  ],
+  "related": [
+    "web.device.plugins-mimetypes"
+  ],
+  "refs": [
+    {
+      "t": "mdn",
+      "label": "MDN pdfViewerEnabled",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/Navigator/pdfViewerEnabled"
+    },
+    {
+      "t": "github",
+      "label": "fingerprintjs source: pdf_viewer_enabled",
+      "url": "https://github.com/fingerprintjs/fingerprintjs/blob/master/src/sources/pdf_viewer_enabled.ts"
+    }
+  ],
+  "confidence": "docs"
+}

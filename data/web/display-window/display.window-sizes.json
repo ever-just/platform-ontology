@@ -1,0 +1,237 @@
+{
+  "id": "web.display.window-sizes",
+  "name": "Window inner and outer size",
+  "kind": "signal",
+  "group": "display-window",
+  "subgroup": "Window",
+  "tags": [
+    "window",
+    "viewport",
+    "letterboxing"
+  ],
+  "plain": "Browser window and viewport dimensions, which change constantly.",
+  "meaning": "Reveals tiling, maximized vs windowed use, sidebars and devtools. Firefox RFP rounds inner size to 200x100 steps (letterboxing) so everyone shares a few buckets.",
+  "lifecycle": [
+    "on-arrival",
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "window.innerWidth/innerHeight, outerWidth/outerHeight, visualViewport",
+      "bcd": [
+        "api.Window.innerWidth",
+        "api.Window.outerWidth"
+      ],
+      "access": {
+        "grant": "none",
+        "prompt_ui": "None",
+        "secure_context": false,
+        "user_gesture": false,
+        "persistence": "read fresh on every page load; nothing stored",
+        "revocation": "none needed (no grant)",
+        "iframe": "Readable from cross-origin iframes too (same values)",
+        "steps": [
+          "Page script reads the value",
+          "No prompt is shown"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "1",
+          "note": "",
+          "date": "2008-12-11"
+        },
+        "edge": {
+          "s": "y",
+          "v": "12",
+          "note": "",
+          "date": "2015-07-29"
+        },
+        "firefox": {
+          "s": "y",
+          "v": "1",
+          "note": "",
+          "date": "2004-11-09"
+        },
+        "safari": {
+          "s": "y",
+          "v": "3",
+          "note": "",
+          "date": "2007-10-26"
+        },
+        "ios_safari": {
+          "s": "y",
+          "v": "1",
+          "note": "",
+          "date": "2007-06-29"
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "18",
+          "note": "",
+          "date": "2012-06-27"
+        },
+        "samsung": {
+          "s": "y",
+          "v": "1.0",
+          "note": "",
+          "date": "2013-04-27"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "object",
+    "metric": "",
+    "update": "static per session",
+    "fields": [
+      {
+        "name": "innerWidth, innerHeight",
+        "type": "integer",
+        "unit": "CSS px",
+        "range": "200 to 8000",
+        "precision": "exact; RFP buckets of 200 wide, 100 high"
+      },
+      {
+        "name": "outerWidth, outerHeight",
+        "type": "integer",
+        "unit": "CSS px",
+        "range": "about inner plus chrome (about 80 to 140 px high)",
+        "precision": ""
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can see your browser window and visible page size, as they change",
+    "user_action": "Nothing. It happens when the page loads.",
+    "can": [
+      "Check the window's inner and outer size",
+      "Notice when you resize or rotate",
+      "Choose a layout that fits"
+    ],
+    "cannot": [
+      "See your screen contents or other windows",
+      "See which monitor the window is on",
+      "Resize your window"
+    ],
+    "reach": 1,
+    "reach_label": "Size numbers, no prompt",
+    "differs": ""
+  },
+  "story": {
+    "what_it_is": "The size of your browser window and visible page area, which change all the time.",
+    "icon": "app-window",
+    "tags": [
+      "Window",
+      "Silent",
+      "Fingerprint"
+    ],
+    "marketing": [
+      {
+        "vendor": "MDN",
+        "name": "Window.innerWidth",
+        "pitch": "Documents how a page reads the width of the visible page area, used for responsive design.",
+        "url": "https://developer.mozilla.org/en-US/docs/Web/API/Window/innerWidth"
+      }
+    ],
+    "for_you": "You never see it read. It is why a page reflows when you drag the window narrower, and why a phone gets the mobile layout.",
+    "for_makers": "This is the base of responsive design. Makers also log window sizes to learn real use. Trackers use odd sizes too, since each person resizes their window a bit differently.",
+    "use_cases": [
+      {
+        "type": "games",
+        "example": "A browser game rescales its play field when you resize the window and keeps the aspect ratio.",
+        "apps": []
+      },
+      {
+        "type": "creative",
+        "example": "A design app like Figma redraws the canvas as you drag the window.",
+        "apps": [
+          "Figma"
+        ]
+      },
+      {
+        "type": "video",
+        "example": "A video call grid reshuffles the tiles when the window shrinks.",
+        "apps": [
+          "Zoom",
+          "Google Meet"
+        ]
+      },
+      {
+        "type": "shopping",
+        "example": "A store changes from three columns to one when the window narrows.",
+        "apps": []
+      },
+      {
+        "type": "ads",
+        "example": "An ad network sees a window of exactly 1366 by 768 and sends an ad of the right size.",
+        "apps": []
+      },
+      {
+        "type": "security",
+        "example": "A fraud check sees a window with no space for browser menus, a sign of an automated headless browser.",
+        "apps": []
+      },
+      {
+        "type": "analytics",
+        "example": "A site team learns the real window size, not just the monitor size, to find where designs break.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Fingerprint clue",
+      "Reveals browser setup"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Not the same as screen size"
+  ],
+  "scores": {
+    "sensitivity": 1,
+    "utility": 4,
+    "fingerprint_bits": 3.5,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Layout"
+    ],
+    "abuse": [
+      "Session linking with high-entropy size"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2020-01",
+      "browser": "firefox",
+      "version": "",
+      "change": "Letterboxing in resistFingerprinting rounds window size"
+    }
+  ],
+  "related": [
+    "web.display.screen-size"
+  ],
+  "refs": [
+    {
+      "t": "mdn",
+      "label": "MDN innerWidth",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/Window/innerWidth"
+    },
+    {
+      "t": "github",
+      "label": "CreepJS (abrahamjuliot)",
+      "url": "https://github.com/abrahamjuliot/creepjs"
+    }
+  ],
+  "confidence": "docs"
+}

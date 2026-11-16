@@ -1,0 +1,215 @@
+{
+  "id": "mob.hw.camera-extensions",
+  "name": "Camera extensions and hardware camera controls",
+  "kind": "capability",
+  "group": "camera-mic-screen",
+  "subgroup": "Camera",
+  "tags": [
+    "camera-extensions",
+    "hdr",
+    "night-mode",
+    "camera-control"
+  ],
+  "plain": "Uses vendor camera modes (night, HDR, bokeh) and hardware buttons from inside an app.",
+  "meaning": "Lets third-party apps match the stock camera's processing. The photos still need camera permission; the extras mainly affect image quality, not access.",
+  "lifecycle": [
+    "in-session"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "y",
+      "v": "10",
+      "api": 29,
+      "permission": "CAMERA (runtime) plus extension availability",
+      "protection": "dangerous",
+      "grant": "prompt",
+      "prompt_ui": "Camera prompt: While using the app, Only this time, Don't allow",
+      "persistence": "Until revoked; auto-reset if unused",
+      "revocation": "Settings > Apps > Permissions > Camera",
+      "store_policy": "",
+      "api_surface": "CameraX ExtensionsManager, Camera2 CameraExtensionSession (API 31), Android 16 Camera2 hybrid auto exposure and Night Mode indicator",
+      "note": "Extensions: Night, HDR, Bokeh, Face Retouch, Auto; availability per OEM."
+    },
+    "ios": {
+      "s": "y",
+      "v": "18.0",
+      "permission": "NSCameraUsageDescription; Camera Control via AVCaptureSession; LockedCameraCapture extension entitlement",
+      "protection": "prompt",
+      "grant": "prompt",
+      "prompt_ui": "Camera prompt",
+      "persistence": "Until revoked",
+      "revocation": "Settings > Privacy & Security > Camera",
+      "store_policy": "",
+      "api_surface": "AVCaptureSession, AVCaptureSystemZoomSlider and AVCaptureSlider (Camera Control, iOS 18), LockedCameraCapture, AVCaptureDeviceRotationCoordinator",
+      "note": "iOS 18 adds Camera Control (iPhone 16) hooks and a lock screen camera extension that runs with a limited sandbox."
+    }
+  },
+  "web_equivalents": [
+    "web.camera.camera"
+  ],
+  "data": {
+    "type": "stream",
+    "metric": "Processed frames",
+    "update": "per capture",
+    "fields": [
+      {
+        "name": "frame rate",
+        "type": "float",
+        "unit": "fps",
+        "range": "1 to 240 (device)",
+        "precision": "exact"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can use phone camera modes such as night and HDR, after you allow the camera",
+    "user_action": "You tap Allow for the camera, then choose a mode such as Night",
+    "can": [
+      "Use Night, HDR, Bokeh, Face Retouch or Auto modes where the phone supports them (Android 10)",
+      "Use Camera Control on iPhone 16 and a lock screen camera extension (iOS 18)",
+      "Match the stock camera's photo quality"
+    ],
+    "cannot": [
+      "Use the camera without the Allow prompt",
+      "Use every mode on every phone; it depends on the maker",
+      "Get extra access to your photos from these modes"
+    ],
+    "reach": 2,
+    "reach_label": "While the camera is in use",
+    "differs": "Android lists modes per phone maker. iOS 18 adds Camera Control on iPhone 16."
+  },
+  "story": {
+    "what_it_is": "Lets third party camera apps use the phone's night, HDR and portrait modes.",
+    "icon": "wand-sparkles",
+    "tags": [
+      "Camera",
+      "Quality",
+      "Capabilities"
+    ],
+    "marketing": [
+      {
+        "vendor": "Google",
+        "name": "CameraX Extensions API",
+        "pitch": "Use device vendors' camera modes like night, HDR and bokeh in your app.",
+        "url": "https://developer.android.com/media/camera/camerax/extensions-api"
+      }
+    ],
+    "for_you": "Photos in your favorite camera or social app can look as good as the stock camera, with night mode and portrait blur.",
+    "for_makers": "Matching the stock camera's processing makes third party apps feel premium. Camera permission is still needed, and the extras mainly improve image quality, not access.",
+    "use_cases": [
+      {
+        "type": "social",
+        "example": "You take a night photo in Instagram and it looks bright and sharp.",
+        "apps": [
+          "Instagram",
+          "Snapchat"
+        ]
+      },
+      {
+        "type": "creative",
+        "example": "A pro camera app uses the phone's portrait blur on a headshot.",
+        "apps": [
+          "Halide",
+          "ProCam"
+        ]
+      },
+      {
+        "type": "video",
+        "example": "A video call app uses HDR to fix a dark room.",
+        "apps": [
+          "Zoom"
+        ]
+      },
+      {
+        "type": "shopping",
+        "example": "A marketplace app shows clearer item photos at night.",
+        "apps": [
+          "eBay",
+          "Poshmark"
+        ]
+      },
+      {
+        "type": "banking",
+        "example": "A deposit app uses better focus to read a check.",
+        "apps": [
+          "Chase"
+        ]
+      },
+      {
+        "type": "games",
+        "example": "An AR game gets a cleaner image under low light.",
+        "apps": [
+          "Pokemon GO"
+        ]
+      }
+    ],
+    "risks": [
+      "Needs camera permission",
+      "Varies by phone"
+    ],
+    "android_note": "CameraX Extensions work on supported Android phones from several makers.",
+    "ios_note": "iOS apps use AVFoundation with similar camera controls on newer iPhones."
+  },
+  "technical_bounds": [
+    "Camera indicator dot and permission still apply"
+  ],
+  "scores": {
+    "sensitivity": 5,
+    "utility": 4,
+    "fingerprint_bits": 3,
+    "friction": 2
+  },
+  "value": {
+    "legit_uses": [
+      "Social camera apps",
+      "Document scanning"
+    ],
+    "abuse": [
+      "Hidden capture"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2019-09",
+      "platform": "android",
+      "version": "10 (API 29)",
+      "change": "Camera extensions through CameraX"
+    },
+    {
+      "date": "2021-10",
+      "platform": "android",
+      "version": "12 (API 31)",
+      "change": "Camera2 extensions API"
+    },
+    {
+      "date": "2024-09",
+      "platform": "ios",
+      "version": "iOS 18",
+      "change": "Camera Control and lock screen camera extensions"
+    }
+  ],
+  "related": [
+    "mob.hw.lidar-depth",
+    "mob.hw.ar-world-tracking"
+  ],
+  "refs": [
+    {
+      "t": "android",
+      "label": "Android: Camera extensions",
+      "url": "https://developer.android.com/media/camera/camerax/extensions-api"
+    },
+    {
+      "t": "apple",
+      "label": "Apple: Capture setup",
+      "url": "https://developer.apple.com/documentation/avfoundation/capture-setup"
+    }
+  ],
+  "confidence": "docs"
+}

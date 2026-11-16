@@ -1,0 +1,239 @@
+{
+  "id": "web.render.audio-offline-fingerprint",
+  "name": "AudioContext rendering fingerprint",
+  "kind": "tracking",
+  "group": "rendering-fingerprint",
+  "subgroup": "Audio",
+  "tags": [
+    "web-audio",
+    "OfflineAudioContext",
+    "DynamicsCompressor"
+  ],
+  "plain": "Renders a silent tone through an audio graph offline and sums the output samples.",
+  "meaning": "Tiny floating point differences in the audio stack (DynamicsCompressor, oscillator math, CPU SIMD) give a number that is stable per browser build and hardware. It never plays sound.",
+  "lifecycle": [
+    "on-arrival"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "new OfflineAudioContext(1,44100,44100); createOscillator(); createDynamicsCompressor(); startRendering()",
+      "bcd": [
+        "api.OfflineAudioContext",
+        "api.DynamicsCompressorNode"
+      ],
+      "access": {
+        "grant": "none",
+        "prompt_ui": "",
+        "secure_context": false,
+        "user_gesture": false,
+        "persistence": "",
+        "revocation": "",
+        "iframe": "",
+        "steps": [
+          "Build triangle oscillator into compressor",
+          "startRendering()",
+          "Sum abs of a slice of the Float32Array",
+          "Hash or keep as float"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "35",
+          "note": "",
+          "date": "2014-05-20"
+        },
+        "edge": {
+          "s": "y",
+          "v": "12",
+          "note": "",
+          "date": "2015-07-29"
+        },
+        "firefox": {
+          "s": "y",
+          "v": "25",
+          "note": "",
+          "date": "2013-10-29"
+        },
+        "safari": {
+          "s": "y",
+          "v": "14.1",
+          "note": "",
+          "date": "2021-04-26"
+        },
+        "ios_safari": {
+          "s": "y",
+          "v": "14.5",
+          "note": "",
+          "date": "2021-04-26"
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "35",
+          "note": "",
+          "date": "2014-05-20"
+        },
+        "samsung": {
+          "s": "y",
+          "v": "3.0",
+          "note": "",
+          "date": "2015-04-10"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "float",
+    "metric": "Sum of about 500 samples, 15 digit float",
+    "update": "",
+    "fields": [
+      {
+        "name": "fingerprint sum",
+        "type": "float",
+        "unit": "",
+        "range": "about 124.04 for Chrome desktop",
+        "precision": "varies at the 1e-14 level by browser"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can run a silent sound test and turn the result into a device number",
+    "user_action": "Nothing. It happens when the page loads",
+    "can": [
+      "Render a quiet tone in memory and add up the results",
+      "Turn those tiny differences into one repeatable number",
+      "Match that number across visits, even with cookies cleared"
+    ],
+    "cannot": [
+      "Play anything you can hear",
+      "Use your microphone",
+      "Work the same way in Brave, Safari 26 and Firefox private mode, which add noise",
+      "Identify you by name alone"
+    ],
+    "reach": 3,
+    "reach_label": "Repeatable on every visit",
+    "differs": "Brave, Firefox in strict or private mode and Safari 26 add noise to the result. Chrome and Edge do not."
+  },
+  "story": {
+    "what_it_is": "A script plays a silent tone through a sound chain offline and adds up the numbers to make an ID.",
+    "icon": "fingerprint",
+    "tags": [
+      "Tracking",
+      "Audio",
+      "Silent"
+    ],
+    "marketing": [],
+    "for_you": "Nothing you can see or hear happens. Your device does a small math job, and the answer is nearly the same every time, so it can recognize you without cookies.",
+    "for_makers": "It is one of the classic fingerprinting tricks. It needs no permission and adds extra bits to a visitor ID. Fraud teams like it because it survives cookie clearing and private windows in some browsers.",
+    "use_cases": [
+      {
+        "type": "ads",
+        "example": "An ad broker links your visits across unrelated sites by checking the same audio result each time.",
+        "apps": []
+      },
+      {
+        "type": "security",
+        "example": "A login page compares the audio result to the one stored when you set up the account, and asks for more proof if it differs.",
+        "apps": []
+      },
+      {
+        "type": "analytics",
+        "example": "A site counting unique visitors uses it to tell apart two people on the same office network.",
+        "apps": [
+          "FingerprintJS"
+        ]
+      },
+      {
+        "type": "shopping",
+        "example": "A shop spots one person making hundreds of accounts to abuse a coupon, because the audio result matches.",
+        "apps": []
+      },
+      {
+        "type": "games",
+        "example": "A game with a free trial limit stops people from creating new accounts again and again on the same device.",
+        "apps": []
+      },
+      {
+        "type": "banking",
+        "example": "A bank adds the audio result to its device recognition so a stolen password alone is not enough.",
+        "apps": []
+      },
+      {
+        "type": "social",
+        "example": "A social site finds the same person behind a fake follower network using shared device traits.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Hard to avoid without breaking audio",
+      "Works across sites",
+      "Privacy browsers add noise on purpose"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Mostly identifies browser and OS build, not individual devices",
+    "Same hardware with same browser collides",
+    "Safari and Brave perturb output"
+  ],
+  "scores": {
+    "sensitivity": 3,
+    "utility": 1,
+    "fingerprint_bits": 5,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": "Audio capability checks",
+    "abuse": "Cheap fingerprint component that survives cookie clearing"
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2016-05",
+      "browser": "paper",
+      "version": "",
+      "change": "Englehardt and Narayanan find audio fingerprinting scripts on the web"
+    },
+    {
+      "date": "2023-09",
+      "browser": "safari",
+      "version": "17",
+      "change": "Web Audio readback noise in Private Browsing"
+    },
+    {
+      "date": "2025-09",
+      "browser": "safari",
+      "version": "26",
+      "change": "Noise extended to all browsing for known fingerprinting scripts"
+    }
+  ],
+  "related": [
+    "web.render.audio-context-properties",
+    "web.render.countermeasure-brave-farbling"
+  ],
+  "refs": [
+    {
+      "t": "paper",
+      "label": "Englehardt and Narayanan, Online Tracking: a 1-million-site Measurement (CCS 2016)",
+      "url": "https://webtransparency.cs.princeton.edu/webcensus/"
+    },
+    {
+      "t": "github",
+      "label": "FingerprintJS audio source",
+      "url": "https://github.com/fingerprintjs/fingerprintjs"
+    },
+    {
+      "t": "mdn",
+      "label": "MDN OfflineAudioContext",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/OfflineAudioContext"
+    }
+  ],
+  "confidence": "docs"
+}

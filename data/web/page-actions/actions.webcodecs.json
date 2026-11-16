@@ -1,0 +1,248 @@
+{
+  "id": "web.actions.webcodecs",
+  "name": "WebCodecs (video and audio encode and decode)",
+  "kind": "capability",
+  "group": "page-actions",
+  "subgroup": "Media",
+  "tags": [
+    "webcodecs",
+    "video",
+    "hardware-acceleration"
+  ],
+  "plain": "Gives direct access to the browser's video and audio codecs with no prompt.",
+  "meaning": "A site can encode or decode media frames in code, often with hardware acceleration. Great for editors, but also lets a page probe which codecs and accelerators the device has.",
+  "lifecycle": [
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "VideoDecoder, VideoEncoder, AudioDecoder, ImageDecoder, VideoFrame",
+      "bcd": [
+        "api.VideoEncoder",
+        "api.VideoDecoder",
+        "api.AudioEncoder"
+      ],
+      "access": {
+        "grant": "none",
+        "prompt_ui": "None (no browser prompt)",
+        "secure_context": true,
+        "user_gesture": false,
+        "activation": "none",
+        "persistence": "While objects live",
+        "revocation": "Nothing to revoke (no permission is stored)",
+        "iframe": "Available in workers; no iframe flag",
+        "steps": [
+          "Create a decoder with configure()",
+          "Feed chunks",
+          "Receive VideoFrame objects"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "94",
+          "note": "",
+          "date": "2021-09-21"
+        },
+        "edge": {
+          "s": "y",
+          "v": "94",
+          "note": "",
+          "date": "2021-09-24"
+        },
+        "firefox": {
+          "s": "y",
+          "v": "130",
+          "note": "",
+          "date": "2024-09-03"
+        },
+        "safari": {
+          "s": "y",
+          "v": "16.4",
+          "note": "",
+          "date": "2023-03-27"
+        },
+        "ios_safari": {
+          "s": "y",
+          "v": "16.4",
+          "note": "All iOS browsers use WebKit",
+          "date": "2023-03-27"
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "94",
+          "note": "",
+          "date": "2021-09-21"
+        },
+        "samsung": {
+          "s": "y",
+          "v": "17.0",
+          "note": "",
+          "date": "2022-05-04"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "none",
+    "metric": "",
+    "update": "",
+    "fields": []
+  },
+  "limits": {
+    "headline": "Can open and make video and sound files by itself inside the page",
+    "user_action": "Nothing. It happens when the page plays, edits or records media.",
+    "can": [
+      "Decode video and audio frame by frame",
+      "Make new video or audio files in the page",
+      "Use your device's chip to speed up video"
+    ],
+    "cannot": [
+      "Turn on your camera or microphone without a permission pop up",
+      "Go past what your device's chip can handle",
+      "Work on files it was not given",
+      "Run after you close the page"
+    ],
+    "reach": 2,
+    "reach_label": "Media it already has",
+    "differs": ""
+  },
+  "story": {
+    "what_it_is": "A page can use your device's video and sound chips directly to pack and unpack media.",
+    "icon": "clapperboard",
+    "tags": [
+      "Video",
+      "Power",
+      "Silent"
+    ],
+    "marketing": [
+      {
+        "vendor": "Google",
+        "name": "WebCodecs",
+        "pitch": "Chrome's docs say WebCodecs gives low level control over video and audio encoding and decoding in the browser.",
+        "url": "https://developer.chrome.com/docs/web-platform/best-practices/webcodecs"
+      }
+    ],
+    "for_you": "You never see it. Web video editors, cloud games and calls just look sharper and use less battery, because the page uses hardware built for video.",
+    "for_makers": "Makers get fast video processing without a plugin: custom players, editing, streaming with very low delay. It turns a tab into a serious media tool.",
+    "use_cases": [
+      {
+        "type": "games",
+        "example": "Cloud gaming in a browser decodes the game video stream frame by frame with very little delay.",
+        "apps": [
+          "Xbox Cloud Gaming",
+          "GeForce NOW"
+        ]
+      },
+      {
+        "type": "creative",
+        "example": "A web video editor cuts, exports and previews clips using hardware encoding.",
+        "apps": [
+          "Clipchamp",
+          "CapCut web"
+        ]
+      },
+      {
+        "type": "video",
+        "example": "A video call app packs your camera into small frames for the network.",
+        "apps": [
+          "Google Meet",
+          "Zoom web"
+        ]
+      },
+      {
+        "type": "live",
+        "example": "A live streaming tool sends your webcam to viewers at very low delay.",
+        "apps": [
+          "Twitch",
+          "Restream"
+        ]
+      },
+      {
+        "type": "security",
+        "example": "A camera monitoring dashboard decodes many streams at once for a security guard.",
+        "apps": []
+      },
+      {
+        "type": "ads",
+        "example": "A video ad player decodes ads with exact timing, so the ad counts as viewed.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Heavy battery use",
+      "Used to hide video fingerprints"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "isConfigSupported() reveals codec and hardware support (fingerprint)",
+    "Hardware decoder instances are limited by the platform (a few at once on many devices)",
+    "Frames must be closed (VideoFrame.close()) or memory fills quickly",
+    "Safari support arrived at 16.4 for video; AudioEncoder later",
+    "No access to camera without getUserMedia"
+  ],
+  "scores": {
+    "sensitivity": 1,
+    "utility": 4,
+    "fingerprint_bits": 3,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Video editors",
+      "Cloud gaming",
+      "Transcoding in browser"
+    ],
+    "abuse": [
+      "Codec capability fingerprinting",
+      "Covert hardware load"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2021-09",
+      "browser": "chrome",
+      "version": "94",
+      "change": "WebCodecs ships"
+    },
+    {
+      "date": "2023-03",
+      "browser": "safari",
+      "version": "16.4",
+      "change": "VideoDecoder and VideoEncoder"
+    },
+    {
+      "date": "2024-09",
+      "browser": "firefox",
+      "version": "130",
+      "change": "WebCodecs on desktop"
+    }
+  ],
+  "refs": [
+    {
+      "t": "mdn",
+      "label": "MDN WebCodecs API",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/WebCodecs_API"
+    },
+    {
+      "t": "spec",
+      "label": "W3C WebCodecs",
+      "url": "https://www.w3.org/TR/webcodecs/"
+    },
+    {
+      "t": "chromestatus",
+      "label": "Chrome WebCodecs",
+      "url": "https://chromestatus.com/feature/5669293909868544"
+    }
+  ],
+  "confidence": "docs"
+}

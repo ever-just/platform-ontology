@@ -1,0 +1,207 @@
+{
+  "id": "mob.hw.bluetooth-classic",
+  "name": "Bluetooth Classic (RFCOMM, A2DP, HID)",
+  "kind": "capability",
+  "group": "peripherals-hardware",
+  "subgroup": "Bluetooth",
+  "tags": [
+    "bluetooth-classic",
+    "rfcomm",
+    "audio",
+    "mfi"
+  ],
+  "plain": "Pairs and talks to classic Bluetooth devices such as headsets, printers and car kits.",
+  "meaning": "Classic links expose paired devices by name and address, and serial links can carry any data. iPhone apps cannot open raw Classic sockets, which blocks many hobby and industrial uses.",
+  "lifecycle": [
+    "in-session"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "y",
+      "v": "2.0",
+      "api": 5,
+      "permission": "BLUETOOTH_CONNECT (API 31); BLUETOOTH earlier",
+      "protection": "dangerous",
+      "grant": "prompt",
+      "prompt_ui": "Nearby devices prompt",
+      "persistence": "Until revoked",
+      "revocation": "Settings > Apps > Permissions",
+      "store_policy": "",
+      "api_surface": "BluetoothSocket (RFCOMM), BluetoothAdapter, A2DP and HFP profiles",
+      "note": ""
+    },
+    "ios": {
+      "s": "p",
+      "v": "3.0",
+      "permission": "UISupportedExternalAccessoryProtocols (MFi), com.apple.developer.external-accessory.wireless-configuration",
+      "protection": "entitlement",
+      "grant": "entitlement",
+      "prompt_ui": "No raw prompt; MFi program membership and Bluetooth prompt for accessories",
+      "persistence": "Per accessory pairing in Settings",
+      "revocation": "Settings > Bluetooth > Forget",
+      "store_policy": "MFi licence required to ship hardware",
+      "api_surface": "ExternalAccessory (EAAccessory), AVAudioSession routes, AccessorySetupKit",
+      "note": "No public RFCOMM sockets; only MFi accessories speak Classic to apps."
+    }
+  },
+  "web_equivalents": [
+    "web.peripherals.web-bluetooth",
+    "web.peripherals.web-serial"
+  ],
+  "data": {
+    "type": "stream",
+    "metric": "Bidirectional byte stream",
+    "update": "up to about 2 to 3 Mbit/s (EDR)",
+    "fields": [
+      {
+        "name": "paired device name",
+        "type": "string",
+        "unit": "text",
+        "range": "any",
+        "precision": "varies"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can talk to headsets, printers and car kits on Android; iPhone allows only certified accessories",
+    "user_action": "You pair a headset, printer or car kit, then use the app with it",
+    "can": [
+      "List paired devices by name and address (Android)",
+      "Open a serial style link and exchange any data (Android)",
+      "Use audio and hands free profiles with headsets and car kits",
+      "Connect to Apple certified (MFi) accessories on iPhone"
+    ],
+    "cannot": [
+      "Open raw Classic Bluetooth links on iPhone",
+      "Support many hobby and industrial gadgets on iPhone",
+      "Connect on Android 12 and later before you allow Nearby devices"
+    ],
+    "reach": 2,
+    "reach_label": "Paired devices, while connected",
+    "differs": "Android lets apps open Classic links directly; iPhone limits Classic to MFi accessories and has no raw sockets."
+  },
+  "story": {
+    "what_it_is": "The older Bluetooth that links to headsets, printers, car kits and card readers.",
+    "icon": "printer",
+    "tags": [
+      "Bluetooth",
+      "Printers",
+      "Older"
+    ],
+    "marketing": [],
+    "for_you": "You pair a printer, a handheld scanner or a car kit and it just works. On iPhone only some certified accessories can use this link with apps. On Android the app can talk to many more devices.",
+    "for_makers": "Classic Bluetooth carries audio and plain serial data, so it is used for receipt printers, card readers and car diagnostic tools. Android gives apps room to build with it. iPhone limits it to certified accessories.",
+    "use_cases": [
+      {
+        "type": "payments",
+        "example": "A shop's receipt printer pairs to the point of sale app and prints when a sale ends.",
+        "apps": [
+          "Square"
+        ]
+      },
+      {
+        "type": "automotive",
+        "example": "A car diagnostic dongle reads engine codes into a phone app.",
+        "apps": [
+          "Torque Pro"
+        ]
+      },
+      {
+        "type": "music",
+        "example": "Your car stereo pairs your phone for calls and music.",
+        "apps": []
+      },
+      {
+        "type": "enterprise",
+        "example": "A warehouse handheld scanner sends barcodes to an inventory app.",
+        "apps": [
+          "Zebra"
+        ]
+      },
+      {
+        "type": "health",
+        "example": "A pulse oximeter or older medical gadget sends numbers to a health app.",
+        "apps": []
+      },
+      {
+        "type": "games",
+        "example": "A wireless game controller connects to a phone for a console style game.",
+        "apps": [
+          "Xbox Controller"
+        ]
+      },
+      {
+        "type": "utilities",
+        "example": "A label printer prints parcel labels from a shipping app.",
+        "apps": [
+          "Brother"
+        ]
+      }
+    ],
+    "risks": [
+      "Paired devices expose names",
+      "Serial links can carry anything",
+      "Old security design"
+    ],
+    "android_note": "Android lets apps open Classic Bluetooth serial links to paired devices.",
+    "ios_note": "iPhone has no public serial link for apps. Only certified accessories (MFi) can talk Classic Bluetooth to apps."
+  },
+  "technical_bounds": [
+    "iOS needs MFi membership for Classic accessories",
+    "Pairing happens in system UI on both OS"
+  ],
+  "scores": {
+    "sensitivity": 3,
+    "utility": 3,
+    "fingerprint_bits": 4,
+    "friction": 2
+  },
+  "value": {
+    "legit_uses": [
+      "Printers",
+      "POS card readers",
+      "OBD adapters"
+    ],
+    "abuse": [
+      "Silent device census of paired items"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2009-10",
+      "platform": "android",
+      "version": "2.0 (API 5)",
+      "change": "Bluetooth APIs introduced"
+    },
+    {
+      "date": "2021-10",
+      "platform": "android",
+      "version": "12 (API 31)",
+      "change": "Runtime Nearby devices permission"
+    }
+  ],
+  "related": [
+    "mob.hw.ble-central",
+    "mob.hw.accessory-setup"
+  ],
+  "refs": [
+    {
+      "t": "android",
+      "label": "Android: Bluetooth overview",
+      "url": "https://developer.android.com/develop/connectivity/bluetooth"
+    },
+    {
+      "t": "apple",
+      "label": "Apple: External Accessory framework",
+      "url": "https://developer.apple.com/documentation/externalaccessory"
+    }
+  ],
+  "confidence": "docs"
+}

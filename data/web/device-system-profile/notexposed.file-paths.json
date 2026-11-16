@@ -1,0 +1,221 @@
+{
+  "id": "web.notexposed.file-paths",
+  "name": "File system paths and directories",
+  "kind": "not-exposed",
+  "group": "device-system-profile",
+  "subgroup": "Software",
+  "tags": [
+    "not-exposed",
+    "files",
+    "paths"
+  ],
+  "plain": "Sites cannot list your folders or see where files live.",
+  "meaning": "The File System Access API (Chromium) returns handles after a picker; the real path is withheld (fakepath). OPFS is a private sandbox. Only the file name, size and last modified are readable.",
+  "lifecycle": [
+    "on-arrival",
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "showOpenFilePicker (prompt, gesture)",
+      "access": {
+        "grant": "not-exposed",
+        "prompt_ui": "None",
+        "secure_context": false,
+        "user_gesture": false,
+        "persistence": "read fresh on every page load; nothing stored",
+        "revocation": "not applicable",
+        "iframe": "Readable from cross-origin iframes too (same values)",
+        "steps": [
+          "Page script reads the value",
+          "No prompt is shown"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "edge": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "firefox": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "safari": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "ios_safari": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "chrome_android": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "samsung": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "none",
+    "metric": "",
+    "update": "static per session",
+    "fields": [
+      {
+        "name": "proxy: File.name, size, lastModified",
+        "type": "string",
+        "unit": "",
+        "range": "readable after user pick",
+        "precision": ""
+      },
+      {
+        "name": "proxy: input[type=file] value",
+        "type": "string",
+        "unit": "",
+        "range": "shows C:\\fakepath\\name only",
+        "precision": ""
+      },
+      {
+        "name": "proxy: OPFS",
+        "type": "string",
+        "unit": "",
+        "range": "private origin sandbox, no host paths",
+        "precision": ""
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can't see your folders or where your files are stored",
+    "user_action": "You tap Choose file or Open file and pick one in the file picker",
+    "can": [
+      "Open the file you pick, once or for the visit",
+      "See its name, size, and last changed date",
+      "Save back to a file you picked, after you agree in Chrome or Edge",
+      "Use a private storage area just for the site"
+    ],
+    "cannot": [
+      "See the folder path; browsers hide it",
+      "List files you did not pick",
+      "Open a file or folder without a picker",
+      "See your OS folders or home directory"
+    ],
+    "reach": 1,
+    "reach_label": "Only the file you pick",
+    "differs": "Chrome and Edge let you pick files for later saving. Safari and Firefox only give one time picks."
+  },
+  "story": {
+    "what_it_is": "Sites cannot see your folders or where your files live. They only get the file you choose.",
+    "icon": "folder-open",
+    "tags": [
+      "Blocked",
+      "Files",
+      "Asks first"
+    ],
+    "marketing": [
+      {
+        "vendor": "Google",
+        "name": "File System Access API",
+        "pitch": "Chrome describes a way for web apps to open and save files you pick, as if they were desktop apps.",
+        "url": "https://developer.chrome.com/docs/capabilities/web-apis/file-system-access"
+      }
+    ],
+    "for_you": "When you pick a file to upload, the site gets the file, not the folder path. The path shows as something like fakepath. Chrome also lets a site save to a file you chose after you approve it.",
+    "for_makers": "Folder paths reveal a person's name and how they organise their life. Web apps need the file itself, not the place. Pickers give that, and the browser keeps the real path hidden.",
+    "use_cases": [
+      {
+        "type": "creative",
+        "example": "A browser photo editor opens the picture you chose and saves back after you approve, without ever seeing your folders.",
+        "apps": [
+          "Photopea"
+        ]
+      },
+      {
+        "type": "productivity",
+        "example": "A web code editor opens a project folder you pick and cannot browse the rest of the disk.",
+        "apps": [
+          "VS Code for the Web"
+        ]
+      },
+      {
+        "type": "games",
+        "example": "A browser game lets you load a save file you choose and cannot scan for others.",
+        "apps": []
+      },
+      {
+        "type": "shopping",
+        "example": "A print shop site uploads the one picture you picked and cannot see other photos.",
+        "apps": []
+      },
+      {
+        "type": "security",
+        "example": "A malicious page wanted to search for files like wallet or password files, which the web blocks.",
+        "apps": []
+      },
+      {
+        "type": "enterprise",
+        "example": "A company portal accepts a spreadsheet you pick and cannot explore your drives.",
+        "apps": []
+      },
+      {
+        "type": "music",
+        "example": "A browser music tool loads your chosen samples and cannot browse your library.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Granted folders can be broad",
+      "File names may reveal details"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Directory layout reveals identity"
+  ],
+  "scores": {
+    "sensitivity": 4,
+    "utility": 2,
+    "fingerprint_bits": 0.0,
+    "friction": 3
+  },
+  "value": {
+    "legit_uses": [
+      "None: the browser deliberately withholds it"
+    ],
+    "abuse": [
+      "Sites attempt proxies to recover it"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "related": [
+    "web.notexposed.os-username"
+  ],
+  "refs": [
+    {
+      "t": "mdn",
+      "label": "MDN File System API",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/File_System_API"
+    }
+  ],
+  "confidence": "docs"
+}

@@ -1,0 +1,231 @@
+{
+  "id": "web.xsite.navigational-tracking",
+  "name": "Navigational tracking",
+  "kind": "tracking",
+  "group": "cross-site-tracking",
+  "subgroup": "Before the visit",
+  "tags": [
+    "navigational-tracking",
+    "link-decoration",
+    "redirects",
+    "bounce"
+  ],
+  "plain": "Passing IDs through link URLs or redirects when the person moves between sites.",
+  "meaning": "Works even with third-party cookies blocked: site A appends an ID to the outbound link, site B reads it and sets a first-party cookie, or a tracker redirect sets its own first-party cookie for a moment. The main workaround to ITP and TCP.",
+  "lifecycle": [
+    "before-visit",
+    "after-leaving"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "URL query or fragment decoration; HTTP 302 redirect chains; first-party cookies",
+      "access": {
+        "grant": "none",
+        "prompt_ui": "None",
+        "secure_context": false,
+        "user_gesture": false,
+        "persistence": "First-party cookie lifetime (Safari caps to 24 hours if set by script after tracker link decoration)",
+        "revocation": "Clear site data, browser privacy settings",
+        "iframe": "",
+        "steps": []
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "1",
+          "note": "Technique, works in every browser unless mitigated",
+          "date": "2008-12-11"
+        },
+        "edge": {
+          "s": "y",
+          "v": "1",
+          "note": "Technique, works in every browser unless mitigated",
+          "date": ""
+        },
+        "firefox": {
+          "s": "y",
+          "v": "1",
+          "note": "Technique, works in every browser unless mitigated",
+          "date": "2004-11-09"
+        },
+        "safari": {
+          "s": "y",
+          "v": "1",
+          "note": "Technique, works in every browser unless mitigated",
+          "date": "2003-06-23"
+        },
+        "ios_safari": {
+          "s": "y",
+          "v": "1",
+          "note": "Technique, works in every browser unless mitigated",
+          "date": "2007-06-29"
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "1",
+          "note": "Technique, works in every browser unless mitigated",
+          "date": ""
+        },
+        "samsung": {
+          "s": "y",
+          "v": "1",
+          "note": "Technique, works in every browser unless mitigated",
+          "date": "2013-04-27"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "string",
+    "metric": "ID in URL",
+    "update": "per navigation",
+    "fields": []
+  },
+  "limits": {
+    "headline": "Can pass an ID along when you move between sites by link or redirect",
+    "user_action": "You click a link or get redirected to another site",
+    "can": [
+      "Add an ID to the link's address",
+      "Pass the ID through a chain of redirects",
+      "Let the next site recognize you as the same visitor"
+    ],
+    "cannot": [
+      "Follow you if you type the address or use a bookmark",
+      "Work if the browser strips known IDs from links",
+      "See what you did on the first site beyond what is in the link",
+      "Last if you clear cookies and the ID is not stored"
+    ],
+    "reach": 2,
+    "reach_label": "One hop between sites",
+    "differs": "Firefox, Safari and Brave remove some IDs from links. Chrome does not."
+  },
+  "story": {
+    "what_it_is": "Passing IDs in links or quick redirects as you move from one site to another.",
+    "icon": "route",
+    "tags": [
+      "Tracking",
+      "Links",
+      "Cookies"
+    ],
+    "marketing": [
+      {
+        "vendor": "Apple",
+        "name": "Tracking prevention",
+        "pitch": "WebKit documents how Safari fights tracking that uses link decoration and redirects.",
+        "url": "https://webkit.org/tracking-prevention/"
+      }
+    ],
+    "for_you": "You click a link and land on another site. You may not notice an ID in the web address or a flash redirect. The new site saves it in its own cookie, so third party blocking does not help.",
+    "for_makers": "It is the main workaround for browsers that block third party cookies. IDs in links or redirects join your visit across companies. Browsers answer with caps on cookie life and stripping of known IDs.",
+    "use_cases": [
+      {
+        "type": "ads",
+        "example": "You click an ad and the ad network adds an ID to the link. The store saves it and ties your sale to the ad.",
+        "apps": [
+          "Google Ads",
+          "Meta Ads"
+        ]
+      },
+      {
+        "type": "analytics",
+        "example": "A site passes your visitor ID from its main site to its shop on another domain, to keep one session.",
+        "apps": []
+      },
+      {
+        "type": "games",
+        "example": "A game site sends you to a partner store with a code, so the partner can credit the referral.",
+        "apps": [
+          "Steam",
+          "Epic Games"
+        ]
+      },
+      {
+        "type": "shopping",
+        "example": "A coupon site redirects you through a tracker so the store knows which coupon you used.",
+        "apps": [
+          "RetailMeNot",
+          "Honey"
+        ]
+      },
+      {
+        "type": "security",
+        "example": "A login redirect passes a one time code between domains, which is not tracking but looks the same.",
+        "apps": [
+          "Okta"
+        ]
+      },
+      {
+        "type": "media",
+        "example": "A newsletter link wrapper counts your click and then sends you to the story.",
+        "apps": [
+          "Mailchimp",
+          "Substack"
+        ]
+      }
+    ],
+    "risks": [
+      "Works with cookies blocked",
+      "Hard to see in the address bar"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Safari caps script-set cookies to 24 hours when the landing URL carries decoration from a tracker classified origin",
+    "Chrome bounce tracking mitigation deletes state of redirect-only sites",
+    "Cannot read the previous site's cookies"
+  ],
+  "scores": {
+    "sensitivity": 4,
+    "utility": 3,
+    "fingerprint_bits": null,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Cross-domain analytics (Google _gl linker)",
+      "Affiliate attribution"
+    ],
+    "abuse": [
+      "Cross-site ID passing after third-party cookies are blocked"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2019-02",
+      "browser": "safari",
+      "version": "12.1",
+      "change": "ITP 2.1 capped script cookies to 7 days; ITP 2.2 capped to 24 hours when decoration present"
+    },
+    {
+      "date": "2023-08",
+      "browser": "chrome",
+      "version": "116",
+      "change": "Bounce tracking mitigation shipped for users with third-party cookies blocked"
+    }
+  ],
+  "related": [
+    "web.xsite.bounce-tracking-mitigations",
+    "web.xsite.outbound-link-decoration"
+  ],
+  "refs": [
+    {
+      "t": "webkit",
+      "label": "WebKit Tracking Prevention",
+      "url": "https://webkit.org/tracking-prevention/"
+    },
+    {
+      "t": "spec",
+      "label": "W3C Navigational Tracking Mitigations",
+      "url": "https://privacycg.github.io/nav-tracking-mitigations/"
+    }
+  ],
+  "confidence": "docs"
+}

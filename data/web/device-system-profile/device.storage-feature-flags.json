@@ -1,0 +1,225 @@
+{
+  "id": "web.device.storage-feature-flags",
+  "name": "Storage and cookie availability flags",
+  "kind": "signal",
+  "group": "device-system-profile",
+  "subgroup": "Browser state",
+  "tags": [
+    "cookies",
+    "localStorage",
+    "indexedDB",
+    "feature-detection"
+  ],
+  "plain": "Tests whether cookies, localStorage, sessionStorage and IndexedDB work.",
+  "meaning": "Four booleans plus openDatabase and addBehavior legacy checks. Almost always all true, so low entropy, but they flag locked-down privacy modes and blocked storage.",
+  "lifecycle": [
+    "on-arrival",
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "navigator.cookieEnabled, window.localStorage, sessionStorage, indexedDB.open()",
+      "access": {
+        "grant": "none",
+        "prompt_ui": "None",
+        "secure_context": false,
+        "user_gesture": false,
+        "persistence": "read fresh on every page load; nothing stored",
+        "revocation": "none needed (no grant)",
+        "iframe": "Readable from cross-origin iframes too (same values)",
+        "steps": [
+          "Page script reads the value",
+          "No prompt is shown"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "1",
+          "note": "",
+          "date": "2008-12-11"
+        },
+        "edge": {
+          "s": "y",
+          "v": "12",
+          "note": "",
+          "date": "2015-07-29"
+        },
+        "firefox": {
+          "s": "y",
+          "v": "1",
+          "note": "",
+          "date": "2004-11-09"
+        },
+        "safari": {
+          "s": "y",
+          "v": "4",
+          "note": "",
+          "date": "2009-06-08"
+        },
+        "ios_safari": {
+          "s": "y",
+          "v": "3.2",
+          "note": "",
+          "date": "2010-04-03"
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "18",
+          "note": "",
+          "date": "2012-06-27"
+        },
+        "samsung": {
+          "s": "y",
+          "v": "1.0",
+          "note": "",
+          "date": "2013-04-27"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "object",
+    "metric": "",
+    "update": "static per session",
+    "fields": [
+      {
+        "name": "cookieEnabled, localStorage, sessionStorage, indexedDB",
+        "type": "boolean",
+        "unit": "",
+        "range": "true or false each",
+        "precision": ""
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can check whether cookies and site storage work in your browser",
+    "user_action": "Nothing. It happens when the page loads",
+    "can": [
+      "Test cookies, localStorage, sessionStorage, and IndexedDB",
+      "Spot a locked down privacy mode or blocked storage",
+      "Choose how to save your settings"
+    ],
+    "cannot": [
+      "See the contents of your storage for other sites",
+      "See which sites you visited",
+      "Learn much; almost everyone gets all yes",
+      "See your cookies from other sites"
+    ],
+    "reach": 1,
+    "reach_label": "A few yes or no checks",
+    "differs": ""
+  },
+  "story": {
+    "what_it_is": "Checks whether cookies and browser storage work, which shows locked down privacy settings.",
+    "icon": "database",
+    "tags": [
+      "Storage",
+      "Silent",
+      "Privacy tools"
+    ],
+    "marketing": [],
+    "for_you": "You never see it. A site quickly tests whether it can save a small note in your browser. If it cannot, you may see a message like Please enable cookies, or a feature may stop working.",
+    "for_makers": "Sites need storage for logins, carts and settings. They check first so the page does not break. The answers also reveal locked down privacy settings, so fraud teams use them too.",
+    "use_cases": [
+      {
+        "type": "shopping",
+        "example": "A shop tests whether cookies work, and if not, shows a warning that your cart will not be saved.",
+        "apps": []
+      },
+      {
+        "type": "games",
+        "example": "A browser game checks if it can save progress, and warns that scores will not be kept when storage is blocked.",
+        "apps": []
+      },
+      {
+        "type": "banking",
+        "example": "A bank login shows a clear Please enable cookies message instead of a blank error.",
+        "apps": []
+      },
+      {
+        "type": "security",
+        "example": "A bot defence tool notes visitors with all storage blocked as slightly more risky.",
+        "apps": []
+      },
+      {
+        "type": "analytics",
+        "example": "An analytics tag falls back to server side counting when it cannot save a cookie.",
+        "apps": [
+          "Google Analytics"
+        ]
+      },
+      {
+        "type": "education",
+        "example": "An online course asks students to enable storage so lesson progress is saved.",
+        "apps": []
+      },
+      {
+        "type": "ads",
+        "example": "An ad vendor skips cookie based targeting if storage is blocked.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Low value alone",
+      "Highlights privacy settings"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Booleans only"
+  ],
+  "scores": {
+    "sensitivity": 1,
+    "utility": 2,
+    "fingerprint_bits": 0.6,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Graceful degradation"
+    ],
+    "abuse": [
+      "Fingerprint bits"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": true,
+      "how": "Storage features detected (BleepingComputer). Read by the LinkedIn APFC fingerprint script (48 features, alleged by BrowserGate, partly confirmed by BleepingComputer)."
+    }
+  },
+  "history": [
+    {
+      "date": "2016-06",
+      "browser": "paper",
+      "version": "",
+      "change": "AmIUnique: cookies enabled 0.25 bits, local storage 0.36 bits"
+    }
+  ],
+  "refs": [
+    {
+      "t": "github",
+      "label": "fingerprintjs source: cookies_enabled",
+      "url": "https://github.com/fingerprintjs/fingerprintjs/blob/master/src/sources/cookies_enabled.ts"
+    },
+    {
+      "t": "github",
+      "label": "fingerprintjs source: local_storage",
+      "url": "https://github.com/fingerprintjs/fingerprintjs/blob/master/src/sources/local_storage.ts"
+    },
+    {
+      "t": "github",
+      "label": "fingerprintjs source: indexed_db",
+      "url": "https://github.com/fingerprintjs/fingerprintjs/blob/master/src/sources/indexed_db.ts"
+    },
+    {
+      "t": "paper",
+      "label": "AmIUnique: Beauty and the Beast, Laperdrix et al. 2016 (attribute entropy)",
+      "url": "https://hal.inria.fr/hal-01285470"
+    }
+  ],
+  "confidence": "verified"
+}

@@ -1,0 +1,183 @@
+{
+  "id": "mob.files.media-audio",
+  "name": "Read audio files",
+  "kind": "permission",
+  "group": "files-storage",
+  "subgroup": "Media",
+  "tags": [
+    "runtime-permission",
+    "audio",
+    "music"
+  ],
+  "plain": "Lets the app read music and audio files on the device.",
+  "meaning": "Reveals music taste and voice recordings stored as files. A separate permission group on Android 13.",
+  "lifecycle": [
+    "in-session"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "y",
+      "v": "13",
+      "api": 33,
+      "permission": "READ_MEDIA_AUDIO",
+      "protection": "dangerous",
+      "grant": "prompt",
+      "prompt_ui": "Music and audio prompt",
+      "persistence": "Until revoked or auto-reset",
+      "revocation": "Settings > Apps > Permissions > Music and audio",
+      "store_policy": "Play: data-safety disclosure",
+      "api_surface": "MediaStore.Audio",
+      "note": "Separate from photos and videos."
+    },
+    "ios": {
+      "s": "y",
+      "v": "9.3",
+      "permission": "NSAppleMusicUsageDescription",
+      "protection": "prompt",
+      "grant": "prompt",
+      "prompt_ui": "OK or Don't Allow",
+      "persistence": "Until revoked",
+      "revocation": "Settings > Privacy & Security > Media & Apple Music",
+      "store_policy": "App Review 5.1.1",
+      "api_surface": "MPMediaLibrary",
+      "note": "Covers the user's music library only."
+    }
+  },
+  "data": {
+    "type": "list",
+    "metric": "Audio files",
+    "update": "on demand",
+    "fields": []
+  },
+  "limits": {
+    "headline": "Can list and play the music and audio files on your phone once you allow it",
+    "user_action": "You tap Allow on the music and audio prompt, often in a player or editor app",
+    "can": [
+      "List and open the music and audio files in your shared storage on Android",
+      "See your music library on iPhone, after you tap OK",
+      "Play songs and build playlists inside the app",
+      "Keep access until you turn it off in Settings"
+    ],
+    "cannot": [
+      "See your photos or videos with this permission; Android treats them separately",
+      "Open Spotify or YouTube Music libraries; no system access exists",
+      "Get your iPhone music library without the prompt",
+      "See audio files from other apps' private folders"
+    ],
+    "reach": 3,
+    "reach_label": "All audio, once you allow",
+    "differs": "Android opens audio files through MediaStore. iPhone covers your own music library only."
+  },
+  "story": {
+    "what_it_is": "Lets an app read music and other audio files on the phone.",
+    "icon": "audio-lines",
+    "tags": [
+      "Permission",
+      "Asks first",
+      "Audio"
+    ],
+    "marketing": [
+      {
+        "vendor": "Google",
+        "name": "Granular media permissions",
+        "pitch": "Android 13 notes: apps ask for photos, video or audio separately instead of all storage at once.",
+        "url": "https://developer.android.com/about/versions/13/behavior-changes-13#granular-media-permissions"
+      }
+    ],
+    "for_you": "A pop up asks Allow this app to access music and audio. If you say yes, it can see songs and also voice recordings stored as files, which may be more than you expect.",
+    "for_makers": "Needed by music players, editors and voice note tools. Android 13 split this from photos and video so apps ask only for what they need.",
+    "use_cases": [
+      {
+        "type": "music",
+        "example": "A music player finds and plays songs you stored on the phone.",
+        "apps": [
+          "VLC"
+        ]
+      },
+      {
+        "type": "creative",
+        "example": "A podcast or music editor opens audio clips from your phone to mix.",
+        "apps": []
+      },
+      {
+        "type": "games",
+        "example": "A rhythm game builds a level from a song file on your device.",
+        "apps": []
+      },
+      {
+        "type": "productivity",
+        "example": "A transcription app opens a voice recording from your phone to turn into text.",
+        "apps": []
+      },
+      {
+        "type": "fitness",
+        "example": "A workout app lets you pick songs from your own files for a run playlist.",
+        "apps": []
+      },
+      {
+        "type": "education",
+        "example": "A language app opens your recorded pronunciation clips.",
+        "apps": []
+      },
+      {
+        "type": "ads",
+        "example": "An ad firm could learn music taste from file names if an app gave out the list.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Reveals music taste",
+      "Voice recordings may be included"
+    ],
+    "android_note": "Needs READ_MEDIA_AUDIO on Android 13 and later.",
+    "ios_note": "iOS handles this through the media library permission and file picker."
+  },
+  "technical_bounds": [
+    "Only music library on iOS"
+  ],
+  "scores": {
+    "sensitivity": 3,
+    "utility": 3,
+    "fingerprint_bits": null,
+    "friction": 2
+  },
+  "value": {
+    "legit_uses": [
+      "Music players"
+    ],
+    "abuse": [
+      "Taste profiling"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2022-08",
+      "platform": "android",
+      "version": "13 (API 33)",
+      "change": "READ_MEDIA_AUDIO introduced"
+    }
+  ],
+  "related": [
+    "mob.files.media-images"
+  ],
+  "refs": [
+    {
+      "t": "android",
+      "label": "Android 13: Granular media permissions",
+      "url": "https://developer.android.com/about/versions/13/behavior-changes-13#granular-media-permissions"
+    },
+    {
+      "t": "apple",
+      "label": "Apple: MPMediaLibrary",
+      "url": "https://developer.apple.com/documentation/mediaplayer/mpmedialibrary"
+    }
+  ],
+  "confidence": "verified"
+}

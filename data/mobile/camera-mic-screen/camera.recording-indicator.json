@@ -1,0 +1,204 @@
+{
+  "id": "mob.camera.recording-indicator",
+  "name": "Recording indicator dot",
+  "kind": "signal",
+  "group": "camera-mic-screen",
+  "subgroup": "Indicators",
+  "tags": [
+    "indicator",
+    "camera",
+    "microphone",
+    "transparency"
+  ],
+  "plain": "A green or orange dot shows when an app is using the camera or microphone.",
+  "meaning": "System drawn, so apps cannot hide it. Android also adds hardware toggles that cut access.",
+  "lifecycle": [
+    "in-session"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "y",
+      "v": "12",
+      "api": 31,
+      "permission": "None",
+      "protection": "none",
+      "grant": "none",
+      "prompt_ui": "Green dot with chip, camera and microphone toggles in Quick Settings",
+      "persistence": "n/a",
+      "revocation": "Quick Settings toggles",
+      "store_policy": "",
+      "api_surface": "System UI",
+      "note": "Indicator shown for camera and microphone; Android 14 adds location indicator"
+    },
+    "ios": {
+      "s": "y",
+      "v": "14",
+      "permission": "None",
+      "protection": "none",
+      "grant": "none",
+      "prompt_ui": "Orange dot for microphone, green for camera, Control Center shows app",
+      "persistence": "n/a",
+      "revocation": "n/a",
+      "store_policy": "",
+      "api_surface": "System UI",
+      "note": "Dot can't be hidden by apps; iOS 14 also shows source app in Control Center"
+    }
+  },
+  "data": {
+    "type": "event",
+    "metric": "Dot",
+    "update": "while recording",
+    "fields": [
+      {
+        "name": "shown",
+        "type": "boolean",
+        "unit": "",
+        "range": "true",
+        "precision": ""
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can't use the camera or mic without a green or orange dot showing",
+    "user_action": "Nothing. The dot shows by itself when the camera or mic is in use",
+    "can": [
+      "Show a green dot for the camera and an orange dot for the mic",
+      "Show the app name in Control Center (iPhone)",
+      "Show a chip with toggles in Quick Settings (Android)"
+    ],
+    "cannot": [
+      "Hide the dot; apps cannot",
+      "Show on older phones before iOS 14 or Android 12",
+      "Show a location indicator with this dot; Android 14 adds one separately"
+    ],
+    "reach": 1,
+    "reach_label": "Shown while in use",
+    "differs": "Android 12 and later has a chip and toggles, and Android 14 adds location. iPhone (iOS 14 and later) uses dots."
+  },
+  "story": {
+    "what_it_is": "A system drawn green or orange dot that shows when an app uses the camera or mic.",
+    "icon": "circle-dot",
+    "tags": [
+      "Camera",
+      "Microphone",
+      "Warning"
+    ],
+    "marketing": [
+      {
+        "vendor": "Apple",
+        "name": "Privacy features",
+        "pitch": "The recording indicator shows when an app has access to your camera or microphone.",
+        "url": "https://www.apple.com/privacy/features/"
+      },
+      {
+        "vendor": "Google",
+        "name": "Privacy indicators",
+        "pitch": "Android shows icons in the status bar when apps use the camera or mic.",
+        "url": "https://source.android.com/docs/security/features/privacy-indicators"
+      }
+    ],
+    "for_you": "You see a dot that apps cannot hide. Control Center or the chip tells you which app is using the sensor, so you can check and shut it off.",
+    "for_makers": "Because the system draws it, makers cannot disguise sensor use. Teams plan features so that the camera or mic starts only when the person clearly expects it.",
+    "use_cases": [
+      {
+        "type": "video",
+        "example": "A call app lights the dot when you join and stops when you leave.",
+        "apps": [
+          "Zoom",
+          "Teams"
+        ]
+      },
+      {
+        "type": "games",
+        "example": "A voice chat game keeps the mic indicator only during talk.",
+        "apps": [
+          "Discord"
+        ]
+      },
+      {
+        "type": "social",
+        "example": "A short video app shows the dot while you film.",
+        "apps": [
+          "TikTok"
+        ]
+      },
+      {
+        "type": "security",
+        "example": "A user spots a flashlight app using the mic and deletes it.",
+        "apps": []
+      },
+      {
+        "type": "accessibility",
+        "example": "A screen reader announces the dot so a blind user knows a sensor is on.",
+        "apps": [
+          "VoiceOver"
+        ]
+      },
+      {
+        "type": "enterprise",
+        "example": "An IT team teaches staff to check the dot during sensitive meetings.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Easy to miss",
+      "Does not show where data goes"
+    ],
+    "android_note": "Android also adds hardware toggles on some phones that cut access.",
+    "ios_note": "iOS draws the dot above all apps in the status area."
+  },
+  "technical_bounds": [
+    "Cannot be turned off by apps"
+  ],
+  "scores": {
+    "sensitivity": 4,
+    "utility": 1,
+    "fingerprint_bits": null,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Transparency"
+    ],
+    "abuse": [
+      "None"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2020-09",
+      "platform": "ios",
+      "version": "iOS 14",
+      "change": "Recording indicators"
+    },
+    {
+      "date": "2021-10",
+      "platform": "android",
+      "version": "12 (API 31)",
+      "change": "Indicators and toggles"
+    }
+  ],
+  "related": [
+    "mob.notify.push-to-talk"
+  ],
+  "refs": [
+    {
+      "t": "apple",
+      "label": "Apple: Privacy features",
+      "url": "https://www.apple.com/privacy/features/"
+    },
+    {
+      "t": "android",
+      "label": "Android: Privacy indicators",
+      "url": "https://source.android.com/docs/security/features/privacy-indicators"
+    }
+  ],
+  "confidence": "docs"
+}

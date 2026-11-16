@@ -1,0 +1,209 @@
+{
+  "id": "web.notexposed.contacts-list",
+  "name": "Full contact list",
+  "kind": "not-exposed",
+  "group": "device-system-profile",
+  "subgroup": "Identity",
+  "tags": [
+    "not-exposed",
+    "contacts",
+    "pii"
+  ],
+  "plain": "Sites cannot read your address book; they only see contacts you pick.",
+  "meaning": "The Contact Picker (Android Chrome 80, Chrome iOS no) returns only the entries the person ticks, per call. No bulk read exists, unlike native apps that hold the contacts permission.",
+  "lifecycle": [
+    "on-arrival",
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "navigator.contacts.select() (prompt, picker only)",
+      "access": {
+        "grant": "not-exposed",
+        "prompt_ui": "None",
+        "secure_context": false,
+        "user_gesture": false,
+        "persistence": "read fresh on every page load; nothing stored",
+        "revocation": "not applicable",
+        "iframe": "Readable from cross-origin iframes too (same values)",
+        "steps": [
+          "Page script reads the value",
+          "No prompt is shown"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "edge": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "firefox": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "safari": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "ios_safari": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "chrome_android": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "samsung": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "none",
+    "metric": "",
+    "update": "static per session",
+    "fields": [
+      {
+        "name": "proxy: Contact Picker selection",
+        "type": "string",
+        "unit": "",
+        "range": "name, email, tel, address, icon of chosen contacts only",
+        "precision": ""
+      },
+      {
+        "name": "proxy: size of selection",
+        "type": "string",
+        "unit": "",
+        "range": "page sees count of picks",
+        "precision": ""
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can't see your full contact list; only the contacts you pick",
+    "user_action": "You tap Choose contacts and tick the people you want to share",
+    "can": [
+      "Show a picker in Chrome on Android",
+      "Get the names, emails, or numbers of the contacts you tick",
+      "Ask again each time you tap the button"
+    ],
+    "cannot": [
+      "See contacts you did not tick",
+      "Copy the whole address book in one go",
+      "Work in Safari, Firefox, or on iPhone",
+      "Keep access after you pick; each tap is a new pick"
+    ],
+    "reach": 1,
+    "reach_label": "Only contacts you tick",
+    "differs": "Only Chrome on Android offers a picker. iPhone browsers have none; native apps with the contacts permission can see more."
+  },
+  "story": {
+    "what_it_is": "Sites cannot read your address book. They only see the contacts you pick.",
+    "icon": "contact",
+    "tags": [
+      "Blocked",
+      "Contacts",
+      "Asks first"
+    ],
+    "marketing": [
+      {
+        "vendor": "Google",
+        "name": "Contact Picker API",
+        "pitch": "Chrome describes a way for sites to receive only the contacts you choose, never the whole book.",
+        "url": "https://developer.chrome.com/docs/capabilities/web-apis/contact-picker"
+      }
+    ],
+    "for_you": "A website cannot copy your whole address book. On supported Android Chrome, a picker lets you tick a few people to share. Nothing else goes through.",
+    "for_makers": "Apps want contact lists to grow quickly by inviting friends and matching people. The web picker gives only the ticked names each time. Native apps can take the whole list, which is why apps are in the news for it.",
+    "use_cases": [
+      {
+        "type": "social",
+        "example": "A social site wanted all your contacts to find friends and now uses the picker or an invite link.",
+        "apps": []
+      },
+      {
+        "type": "messaging",
+        "example": "A web chat app wants to invite someone and lets you pick one contact.",
+        "apps": []
+      },
+      {
+        "type": "payments",
+        "example": "A money app on the web lets you pick a friend to pay instead of sharing all contacts.",
+        "apps": []
+      },
+      {
+        "type": "rideshare",
+        "example": "A ride site lets you pick a contact to share a trip with.",
+        "apps": []
+      },
+      {
+        "type": "dating",
+        "example": "A dating site wanted to hide your profile from your contacts, which needs the full list and is not possible on the web.",
+        "apps": []
+      },
+      {
+        "type": "shopping",
+        "example": "A gift site wanted birthdays from contacts and uses the picker for one person.",
+        "apps": []
+      },
+      {
+        "type": "ads",
+        "example": "An advertiser wanted contact lists for matching, which the web does not allow.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Picker is Android Chrome only",
+      "You can still pick too many"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Social graph exposure"
+  ],
+  "scores": {
+    "sensitivity": 5,
+    "utility": 2,
+    "fingerprint_bits": 0.0,
+    "friction": 3
+  },
+  "value": {
+    "legit_uses": [
+      "None: the browser deliberately withholds it"
+    ],
+    "abuse": [
+      "Native apps harvest contacts; web cannot"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "related": [
+    "web.notexposed.phone-number"
+  ],
+  "refs": [
+    {
+      "t": "mdn",
+      "label": "MDN Contact Picker API",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/Contact_Picker_API"
+    }
+  ],
+  "confidence": "docs"
+}

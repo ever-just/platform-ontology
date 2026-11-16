@@ -1,0 +1,229 @@
+{
+  "id": "web.rendering.applepay-pcm-state",
+  "name": "Apple Pay and Private Click Measurement flags",
+  "kind": "signal",
+  "group": "rendering-fingerprint",
+  "subgroup": "Platform features",
+  "tags": [
+    "apple-pay",
+    "safari",
+    "pcm"
+  ],
+  "plain": "Safari-only flags: Apple Pay availability and ad attribution support.",
+  "meaning": "ApplePaySession.canMakePayments reveals whether Apple Pay is set up on the device (a financial hint) and PCM support marks Safari. Both are tested by FingerprintJS.",
+  "lifecycle": [
+    "on-arrival",
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "ApplePaySession.canMakePayments(), 'attributionSourceId' in <a> element",
+      "access": {
+        "grant": "none",
+        "prompt_ui": "None",
+        "secure_context": true,
+        "user_gesture": false,
+        "persistence": "read fresh on every page load; nothing stored",
+        "revocation": "none needed (no grant)",
+        "iframe": "Readable from cross-origin iframes too (same values)",
+        "steps": [
+          "Page script reads the value",
+          "No prompt is shown"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "edge": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "firefox": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "safari": {
+          "s": "y",
+          "v": "10",
+          "note": "Safari and WebKit browsers only",
+          "date": "2016-09-20"
+        },
+        "ios_safari": {
+          "s": "y",
+          "v": "10",
+          "note": "",
+          "date": "2016-09-13"
+        },
+        "chrome_android": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "samsung": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "object",
+    "metric": "",
+    "update": "static per session",
+    "fields": [
+      {
+        "name": "applePayState",
+        "type": "enum",
+        "unit": "",
+        "range": "-1 unavailable, 0 available no card, 1 card set up",
+        "precision": ""
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can check if Apple Pay is set up and if you use Safari",
+    "user_action": "Nothing. It happens when the page loads",
+    "can": [
+      "Tell if Apple Pay can be used on your device",
+      "Tell if ad attribution features exist, which marks the browser as Safari",
+      "Add both as clues to a device profile"
+    ],
+    "cannot": [
+      "See your cards or card numbers",
+      "Start a payment without you confirming it",
+      "Work in Chrome, Edge or Firefox",
+      "Ask permission first"
+    ],
+    "reach": 2,
+    "reach_label": "Silent, Safari only",
+    "differs": "Only Safari on iPhone and Mac has these checks. Chrome, Edge and Firefox do not."
+  },
+  "story": {
+    "what_it_is": "Safari tells a site whether Apple Pay works on this device and whether ad click measurement is supported.",
+    "icon": "smartphone",
+    "tags": [
+      "Safari",
+      "Payments",
+      "Ads"
+    ],
+    "marketing": [
+      {
+        "vendor": "Apple",
+        "name": "Apple Pay on the Web",
+        "pitch": "Apple describes a fast and private way to check out on websites with Touch ID or Face ID.",
+        "url": "https://developer.apple.com/documentation/apple_pay_on_the_web"
+      },
+      {
+        "vendor": "WebKit",
+        "name": "Private Click Measurement",
+        "pitch": "WebKit explains a way to measure ad conversions while keeping people's browsing private.",
+        "url": "https://webkit.org/blog/11529/introducing-private-click-measurement-pcm/"
+      }
+    ],
+    "for_you": "You see an Apple Pay button on a checkout only when your device can use it. The site learns you are on Safari, and may use a private ad click report that does not identify you.",
+    "for_makers": "Shops show the button only to people who can use it, which lifts checkout rates. Advertisers use the private measurement to learn which ads led to a sale without tracking people across sites. Trackers also use the flags to confirm a real Apple device.",
+    "use_cases": [
+      {
+        "type": "shopping",
+        "example": "A retailer shows the Apple Pay button only on devices where it works, so checkout takes one tap.",
+        "apps": []
+      },
+      {
+        "type": "payments",
+        "example": "A payment provider checks Apple Pay readiness before it offers the option.",
+        "apps": [
+          "Stripe Checkout",
+          "Shopify"
+        ]
+      },
+      {
+        "type": "ads",
+        "example": "An advertiser measures how many Safari users bought after clicking an ad, with a coarse and private report.",
+        "apps": []
+      },
+      {
+        "type": "news",
+        "example": "A news site offers a quick Apple Pay subscription button to Safari readers.",
+        "apps": []
+      },
+      {
+        "type": "delivery",
+        "example": "A food ordering site shows Apple Pay first on iPhone, so you can pay in a few seconds.",
+        "apps": []
+      },
+      {
+        "type": "security",
+        "example": "A fraud engine checks that the claimed iPhone really supports Apple Pay, to catch fake devices.",
+        "apps": []
+      },
+      {
+        "type": "travel",
+        "example": "A booking site shows Apple Pay on Safari so you can finish a booking on your phone quickly.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Confirms you use Apple",
+      "Adds to a device ID"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Safari only",
+    "Secure context"
+  ],
+  "scores": {
+    "sensitivity": 1,
+    "utility": 2,
+    "fingerprint_bits": 1.2,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Show Apple Pay button"
+    ],
+    "abuse": [
+      "Wealth or ecosystem inference"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2025-09",
+      "browser": "safari",
+      "version": "26",
+      "change": "Payment capabilities readback restricted for known fingerprinters"
+    }
+  ],
+  "refs": [
+    {
+      "t": "github",
+      "label": "fingerprintjs source: apple_pay",
+      "url": "https://github.com/fingerprintjs/fingerprintjs/blob/master/src/sources/apple_pay.ts"
+    },
+    {
+      "t": "github",
+      "label": "fingerprintjs source: private_click_measurement",
+      "url": "https://github.com/fingerprintjs/fingerprintjs/blob/master/src/sources/private_click_measurement.ts"
+    },
+    {
+      "t": "webkit",
+      "label": "WebKit features in Safari 26.0 (fingerprinting protection)",
+      "url": "https://webkit.org/blog/17333/webkit-features-in-safari-26-0/"
+    }
+  ],
+  "confidence": "docs"
+}

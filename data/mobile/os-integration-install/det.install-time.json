@@ -1,0 +1,175 @@
+{
+  "id": "mob.det.install-time",
+  "name": "App install and update time",
+  "kind": "signal",
+  "group": "os-integration-install",
+  "subgroup": "Install",
+  "tags": [
+    "install-time"
+  ],
+  "plain": "Android gives exact install and update timestamps; iOS gives them only indirectly.",
+  "meaning": "Install time pins when a person got an app, and (with install referrer) which campaign. Android values are exact to the millisecond.",
+  "lifecycle": [
+    "on-launch"
+  ],
+  "space": "mobile",
+  "platforms": {
+    "android": {
+      "s": "y",
+      "v": "1.0",
+      "api": 1,
+      "permission": "",
+      "protection": "none",
+      "grant": "none",
+      "prompt_ui": "",
+      "persistence": "",
+      "revocation": "",
+      "store_policy": "",
+      "api_surface": "PackageInfo.firstInstallTime, lastUpdateTime",
+      "note": "Milliseconds since epoch"
+    },
+    "ios": {
+      "s": "p",
+      "v": "16.0",
+      "permission": "entitlement",
+      "protection": "entitlement",
+      "grant": "none",
+      "prompt_ui": "",
+      "persistence": "",
+      "revocation": "",
+      "store_policy": "",
+      "api_surface": "Container timestamps are covered by the file timestamp Required Reason API",
+      "note": ""
+    }
+  },
+  "data": {
+    "type": "integer",
+    "metric": "Epoch ms",
+    "update": "Static",
+    "fields": [
+      {
+        "name": "first_install",
+        "type": "integer",
+        "unit": "ms",
+        "range": "epoch",
+        "precision": "1 ms"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can see when it was installed and last updated, with exact times on Android",
+    "user_action": "Nothing. It happens when the app starts up",
+    "can": [
+      "Check the exact install and update times on Android",
+      "Estimate the install date on iPhone from file clues",
+      "Use this to tell new users from older ones"
+    ],
+    "cannot": [
+      "See install times for other apps",
+      "Get exact times on iPhone, where it is only indirect",
+      "Know when you deleted it"
+    ],
+    "reach": 1,
+    "reach_label": "Two dates about itself",
+    "differs": "Android gives exact install and update times. iPhone only gives it indirectly."
+  },
+  "story": {
+    "what_it_is": "Apps can read the date and time they were installed and last updated.",
+    "icon": "calendar-check",
+    "tags": [
+      "Silent",
+      "Tracking",
+      "Install"
+    ],
+    "marketing": [],
+    "for_you": "You never see it. An app knows exactly when you got it. It can show how many days are left on a trial or tell which ad campaign brought you.",
+    "for_makers": "Makers use it for trial timers and to match an install to an ad. The exact Android time helps join datasets and attribute installs.",
+    "use_cases": [
+      {
+        "type": "media",
+        "example": "A streaming app counts down a seven day free trial from the install time.",
+        "apps": [
+          "Spotify"
+        ]
+      },
+      {
+        "type": "games",
+        "example": "A game gives a new player welcome rewards for the first three days.",
+        "apps": []
+      },
+      {
+        "type": "ads",
+        "example": "An ad network matches an install time to a click to give credit to a campaign.",
+        "apps": [
+          "AppsFlyer",
+          "Adjust"
+        ]
+      },
+      {
+        "type": "analytics",
+        "example": "A product team measures how long people use the app after install.",
+        "apps": []
+      },
+      {
+        "type": "security",
+        "example": "A fraud tool flags a brand new install used for a big transfer.",
+        "apps": []
+      },
+      {
+        "type": "shopping",
+        "example": "A store gives a first order discount only to new installs.",
+        "apps": []
+      },
+      {
+        "type": "fitness",
+        "example": "A fitness app builds a 30 day plan starting from install.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Joins data across sources",
+      "Reveals when you got an app"
+    ],
+    "android_note": "Android gives exact install and update times to the millisecond.",
+    "ios_note": "iOS gives it only in indirect ways."
+  },
+  "technical_bounds": [
+    "iOS needs StoreKit 2 or file timestamps"
+  ],
+  "scores": {
+    "sensitivity": 2,
+    "utility": 2,
+    "fingerprint_bits": 6,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Show trial length"
+    ],
+    "abuse": [
+      "Attribution joins"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "related": [
+    "mob.rr.file-timestamps"
+  ],
+  "refs": [
+    {
+      "t": "android",
+      "label": "Android: PackageManager",
+      "url": "https://developer.android.com/reference/android/content/pm/PackageManager"
+    },
+    {
+      "t": "apple",
+      "label": "Apple: Describing use of required reason API",
+      "url": "https://developer.apple.com/documentation/bundleresources/describing-use-of-required-reason-api"
+    }
+  ],
+  "confidence": "inferred"
+}

@@ -1,0 +1,246 @@
+{
+  "id": "web.actions.beforeunload",
+  "name": "Leave-page confirmation (beforeunload)",
+  "kind": "action",
+  "group": "page-actions",
+  "subgroup": "Windows and navigation",
+  "tags": [
+    "beforeunload",
+    "leave-site",
+    "sticky-activation",
+    "bfcache"
+  ],
+  "plain": "Shows a generic Leave site? dialog, only if the person interacted with the page.",
+  "meaning": "A site can ask the person to confirm closing or leaving, often to protect unsaved work. Browsers hide the site's own text, so it cannot scare people with custom messages.",
+  "lifecycle": [
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "window.addEventListener('beforeunload', e => { e.preventDefault(); e.returnValue = ''; })",
+      "bcd": [
+        "api.Window.beforeunload_event",
+        "api.BeforeUnloadEvent"
+      ],
+      "access": {
+        "grant": "gesture",
+        "prompt_ui": "No prompt (needs a click, tap or keypress)",
+        "secure_context": false,
+        "user_gesture": true,
+        "activation": "sticky",
+        "persistence": "Fires on each unload attempt while the listener exists",
+        "revocation": "Nothing to revoke (no permission is stored)",
+        "iframe": "Dialog suppressed in cross-origin iframes without activation",
+        "steps": [
+          "Person interacts with the page (sticky activation)",
+          "Page registers beforeunload and sets returnValue",
+          "On close or navigate, browser shows generic confirmation"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "1",
+          "note": "",
+          "date": "2008-12-11"
+        },
+        "edge": {
+          "s": "y",
+          "v": "12",
+          "note": "",
+          "date": "2015-07-29"
+        },
+        "firefox": {
+          "s": "y",
+          "v": "1",
+          "note": "",
+          "date": "2004-11-09"
+        },
+        "safari": {
+          "s": "y",
+          "v": "3",
+          "note": "",
+          "date": "2007-10-26"
+        },
+        "ios_safari": {
+          "s": "n",
+          "v": "",
+          "note": ""
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "18",
+          "note": "",
+          "date": "2012-06-27"
+        },
+        "samsung": {
+          "s": "y",
+          "v": "1.0",
+          "note": "",
+          "date": "2013-04-27"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "none",
+    "metric": "",
+    "update": "",
+    "fields": []
+  },
+  "limits": {
+    "headline": "Can show a generic Leave site? warning when you close or leave, after you have interacted",
+    "user_action": "You click, tap or type on the page, then try to close or leave it",
+    "can": [
+      "Show a Leave site? box to protect your unsaved work",
+      "Show it when you close the tab or window",
+      "Show it when you press back or go to another site"
+    ],
+    "cannot": [
+      "Show custom text, since browsers hide the site's own message",
+      "Show the box if you have not touched the page",
+      "Block you for good, since you can still leave",
+      "Work on iPhone browsers"
+    ],
+    "reach": 1,
+    "reach_label": "One warning per attempt",
+    "differs": "Works in Chrome, Edge, Firefox and Safari on computers. iPhone browsers do not show it."
+  },
+  "story": {
+    "what_it_is": "A page can show a generic Are you sure you want to leave dialog, only after you used the page.",
+    "icon": "log-out",
+    "tags": [
+      "Safety",
+      "Dialogs",
+      "Browser rules"
+    ],
+    "marketing": [
+      {
+        "vendor": "MDN Web Docs",
+        "name": "beforeunload event",
+        "pitch": "Lets a page warn before you leave, with a standard message, only if you have interacted with it.",
+        "url": "https://developer.mozilla.org/en-US/docs/Web/API/Window/beforeunload_event"
+      }
+    ],
+    "for_you": "If you try to close a page with unsaved work, a box asks Leave site? You can stay or leave. Pages you never touched cannot show it.",
+    "for_makers": "Makers use it to protect unsaved work in forms, editors and checkouts. Browsers use a fixed message to stop it being used to trap people. Misuse by scam sites is limited by the click rule.",
+    "use_cases": [
+      {
+        "type": "productivity",
+        "example": "A web editor like Google Docs warns you if edits are not saved yet when you close the tab.",
+        "apps": [
+          "Google Docs"
+        ]
+      },
+      {
+        "type": "shopping",
+        "example": "A checkout page asks if you want to leave with items in your cart and a half filled form.",
+        "apps": []
+      },
+      {
+        "type": "games",
+        "example": "A browser game asks before you leave a ranked match where leaving counts as a loss.",
+        "apps": []
+      },
+      {
+        "type": "creative",
+        "example": "A web design tool warns about unsynced changes.",
+        "apps": [
+          "Figma"
+        ]
+      },
+      {
+        "type": "education",
+        "example": "A test platform warns a student before they close an exam.",
+        "apps": []
+      },
+      {
+        "type": "banking",
+        "example": "A bank page warns you before you leave a half finished transfer.",
+        "apps": []
+      },
+      {
+        "type": "security",
+        "example": "A scam page tries to trap you with repeated Leave prompts, but browsers allow it only after you click.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Can trap users",
+      "Annoying prompts"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Needs sticky user activation: no dialog if the page was never clicked or typed in (Chrome 60)",
+    "Custom message text is ignored (Chrome 51, Firefox 44, Safari 9.1)",
+    "Cannot run async work or block navigation indefinitely: dialog is the only block",
+    "A beforeunload listener makes a page ineligible for the back/forward cache in Chrome desktop and Firefox",
+    "Not reliable on mobile: tab discard and app switch skip it; use pagehide and visibilitychange"
+  ],
+  "scores": {
+    "sensitivity": 1,
+    "utility": 4,
+    "fingerprint_bits": null,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Unsaved form or document warning"
+    ],
+    "abuse": [
+      "Retention dark pattern",
+      "Exit-intent friction"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2016-05",
+      "browser": "chrome",
+      "version": "51",
+      "change": "Custom beforeunload message removed"
+    },
+    {
+      "date": "2017-07",
+      "browser": "chrome",
+      "version": "60",
+      "change": "Dialog requires user interaction with the page"
+    },
+    {
+      "date": "2016-01",
+      "browser": "firefox",
+      "version": "44",
+      "change": "Custom message removed"
+    }
+  ],
+  "related": [
+    "web.actions.history-pushstate",
+    "web.actions.send-beacon"
+  ],
+  "refs": [
+    {
+      "t": "mdn",
+      "label": "MDN beforeunload event",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/Window/beforeunload_event"
+    },
+    {
+      "t": "mdn",
+      "label": "MDN User activation",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/Security/User_activation"
+    },
+    {
+      "t": "chromestatus",
+      "label": "Chrome beforeunload requires gesture",
+      "url": "https://chromestatus.com/feature/5082396709879808"
+    }
+  ],
+  "confidence": "docs"
+}
