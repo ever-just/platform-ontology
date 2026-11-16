@@ -1,7 +1,8 @@
 import { FlaskConical, Link2, Play, Plus, Sparkles, Square } from "lucide-react";
 import { getSession, isActive, request, series, setSource, stop, useVersion } from "../core/harness";
 import type { Session } from "../core/types";
-import { CapIcon, LayerGlyph, MechBadge, mechanismOf } from "../ui/icons";
+import { CapIcon, MechBadge, mechanismOf } from "../ui/icons";
+import { DepsOverview } from "../ui/deps-graph";
 import { Spark } from "../ui/kit";
 import { listLinks, registerLink, registerView, type ConsoleCtx, type LinkDef } from "./registry";
 
@@ -113,7 +114,7 @@ function LinkCard({ ctx, link }: { ctx: ConsoleCtx; link: LinkDef }) {
           })}
         </span>
         <h3>{link.title}</h3>
-        <LayerGlyph layer={3} />
+        <span className="jn-x" title="Joins capabilities from different groups">{link.parts.length} joined</span>
       </header>
       <p className="jn-p">{link.plain}</p>
       <div className="jn-parts">
@@ -149,5 +150,10 @@ function JoinedPanel({ ctx }: { ctx: ConsoleCtx }) {
   useVersion();
   const all = listLinks().filter((l) => l.parts.every((p) => ctx.scopes.some((s) => s.id === p.id)));
   if (!all.length) return <p className="empty">No linked views are registered.</p>;
-  return <div className={"jn" + (ctx.chart.density === "compact" ? " dense" : "")}>{all.map((l) => <LinkCard key={l.id} ctx={ctx} link={l} />)}</div>;
+  return (
+    <>
+      <DepsOverview ctx={ctx} />
+      <div className={"jn" + (ctx.chart.density === "compact" ? " dense" : "")}>{all.map((l) => <LinkCard key={l.id} ctx={ctx} link={l} />)}</div>
+    </>
+  );
 }

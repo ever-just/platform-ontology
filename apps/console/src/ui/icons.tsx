@@ -1,6 +1,6 @@
 import { siAndroid, siApple, siFirefoxbrowser, siGooglechrome, siSafari } from "simple-icons";
 import { Activity, Aperture, Ban, Eye, Flag, Hand, CircleHelp, MousePointerClick, ScanSearch, ShieldQuestion, CircleCheck, CircleDashed } from "lucide-react";
-import type { AccessMode, DataLayer, IconType, ScopeDef } from "../core/types";
+import type { AccessMode, IconType, ScopeDef } from "../core/types";
 
 // One icon vocabulary for the console: browser logos, access modes, access mechanisms and data layers.
 
@@ -125,26 +125,6 @@ export function mechanismOf(scope: ScopeDef, supChar?: string): Mechanism {
 export function MechBadge({ mech, label }: { mech: Mechanism; label?: boolean }) {
   const m = MECH[mech];
   return <span className={"mech k-" + mech} title={`${m.label}: ${m.plain}`}><m.Icon size={12} />{label && m.label}</span>;
-}
-
-// Data layers -------------------------------------------------------------------------------
-
-export const LAYERS: Record<DataLayer, { label: string; plain: string }> = {
-  1: { label: "Layer 1", plain: "Insightful on its own." },
-  2: { label: "Layer 2", plain: "Joined with related data in its group." },
-  3: { label: "Layer 3", plain: "Joined across groups. The most revealing, often with actions." },
-};
-
-export function LayerGlyph({ layer = 1, label }: { layer?: DataLayer; label?: boolean }) {
-  const l = LAYERS[layer];
-  return (
-    <span className={"layer l" + layer} title={`${l.label}: ${l.plain}`}>
-      <svg viewBox="0 0 14 14" width="14" height="14" aria-hidden="true">
-        {[0, 1, 2].map((i) => <rect key={i} x={1 + i * 4.5} y={12 - (4 + i * 4)} width="3.2" height={4 + i * 4} rx="1" className={i < layer ? "on" : "off"} />)}
-      </svg>
-      {label && <span>L{layer}</span>}
-    </span>
-  );
 }
 
 export function CapIcon({ scope, size = 16, fallback }: { scope: ScopeDef; size?: number; fallback?: IconType }) {
