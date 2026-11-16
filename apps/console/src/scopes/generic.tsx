@@ -86,7 +86,7 @@ export function genericScope(h: RealHandler, node: AtlasNode): ScopeDef {
     call: node.api ? node.api.split(/[;\n]/)[0].slice(0, 90) : h.label,
     permission: node.perm ? node.perm.split(/[ ,;(]/)[0] : undefined,
     gesture: h.needsGesture,
-    passive: node.gr === "none" || !node.perm,
+    passive: !h.needsGesture && (node.gr === "none" || !node.perm),
     reveals: [node.p || h.label].filter(Boolean),
     metrics: [{ key: "n", label: "fields" }],
     live: async (ctx) => {
@@ -147,14 +147,22 @@ export function genericScopes(curated: ScopeDef[], nodes: AtlasNode[]): ScopeDef
   const seen = new Set<string>();
   const taken = new Set(curated.map((s) => s.id));
   const out: ScopeDef[] = [];
+  const byLabel = new Map<string, ScopeDef>();
   for (const [id, h] of Object.entries(realHandlers)) {
-    if (seen.has(h.label) || covered.has(id)) continue;
+    if (covered.has(id)) continue;
+    if (seen.has(h.label)) {
+      // One handler registered for several atlas ids: the first scope covers them all.
+      const s0 = byLabel.get(h.label);
+      if (s0 && byId.has(id) && !s0.atlas.includes(id)) s0.atlas.push(id);
+      continue;
+    }
     seen.add(h.label);
     const node = byId.get(id);
     if (!node) continue;
     const s = genericScope(h, node);
     if (taken.has(s.id)) continue;
     taken.add(s.id);
+    byLabel.set(h.label, s);
     out.push(s);
   }
   return out;

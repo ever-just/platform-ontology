@@ -68,6 +68,8 @@ export type ScopeDef = {
   gesture?: boolean;
   /** No prompt: data is collected silently. */
   passive?: boolean;
+  /** A reference card for an atlas entry with no live call: running it only checks availability. */
+  reference?: boolean;
   /** Icon for this capability. Falls back to its group icon. */
   icon?: IconType;
   /** Access modes this capability offers, each with one plain sentence. */

@@ -4,11 +4,13 @@ import type { Atlas, AtlasNode, ScopeDef } from "./core/types";
 import { allSessions, isActive, registerScopes, stopAll } from "./core/harness";
 import { feed, startTimeline, useTimeline } from "./core/timeline";
 import { buildScopes } from "./scopes";
+import { referenceScopes } from "./scopes/reference";
 import { applyMeta } from "./scopes/meta";
 import { detectProfile } from "./browser/profile";
 import { collectPassive, type PassiveSignal } from "./real";
 import { listGroups, listViews, onRegistryChange, pluginScopes, resolveGroup, OTHER, type ChartOpts, type ConsoleCtx, type GroupDef } from "./ext/registry";
 import { registerBuiltins } from "./ext/builtins";
+import { registerThisBrowser } from "./ext/this-browser";
 import { registerLinks } from "./ext/links";
 import { Capabilities } from "./ui/Capabilities";
 import { Inspector } from "./ui/Inspector";
@@ -16,6 +18,7 @@ import { clock } from "./ui/charts";
 import { Spark } from "./ui/kit";
 
 registerBuiltins();
+registerThisBrowser();
 registerLinks();
 
 const RANGES: [number, string][] = [[60, "1m"], [300, "5m"], [900, "15m"], [3600, "1h"]];
@@ -48,7 +51,8 @@ function Console({ atlas }: { atlas: Atlas }) {
   useEffect(() => { const off = onRegistryChange(() => setRegVer((v) => v + 1)); return () => { off(); }; }, []);
 
   const scopes = useMemo(() => {
-    const list = applyMeta([...buildScopes(atlas.nodes), ...pluginScopes()]);
+    const base = [...buildScopes(atlas.nodes), ...pluginScopes()];
+    const list = applyMeta([...base, ...referenceScopes(base, atlas.nodes)]);
     registerScopes(list);
     return list;
     // eslint-disable-next-line react-hooks/exhaustive-deps

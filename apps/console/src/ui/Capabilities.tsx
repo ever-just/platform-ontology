@@ -9,11 +9,12 @@ import { short } from "./charts";
 import { Spark } from "./kit";
 import { CapIcon, LayerGlyph, MechBadge, ModeBadges, mechanismOf } from "./icons";
 
-type Tab = "all" | "live" | "used" | "blocked";
-const TABS: [Tab, string][] = [["all", "All"], ["live", "Live"], ["used", "Used"], ["blocked", "Blocked"]];
+type Tab = "all" | "live" | "used" | "blocked" | "ref";
+const TABS: [Tab, string][] = [["all", "All"], ["live", "Live"], ["used", "Used"], ["blocked", "Blocked"], ["ref", "Reference"]];
 const BLOCKED = new Set(["denied", "unsupported", "error"]);
 
-function inTab(tab: Tab, id: string) {
+function inTab(tab: Tab, id: string, scope?: ScopeDef) {
+  if (tab === "ref") return !!scope?.reference;
   const s = getSession(id);
   if (tab === "live") return isActive(s);
   if (tab === "used") return s.count > 0 || s.state !== "idle";
@@ -46,10 +47,10 @@ export function Capabilities({ ctx, selected }: { ctx: ConsoleCtx; selected: str
     return m;
   }, [ctx]);
   const groups: GroupDef[] = [...ctx.groups, OTHER].filter((g) => all.has(g.id));
-  const counts = Object.fromEntries(TABS.map(([t]) => [t, ctx.scopes.filter((s) => inTab(t, s.id)).length]));
+  const counts = Object.fromEntries(TABS.map(([t]) => [t, ctx.scopes.filter((s) => inTab(t, s.id, s)).length]));
   const visible = groups
     .filter((g) => !group || g.id === group)
-    .map((g) => ({ g, list: (all.get(g.id) || []).filter((s) => match(s) && inTab(tab, s.id)).sort((a, b) => Number(works(b)) - Number(works(a))) }))
+    .map((g) => ({ g, list: (all.get(g.id) || []).filter((s) => match(s) && inTab(tab, s.id, s)).sort((a, b) => Number(!b.reference) - Number(!a.reference) || Number(works(b)) - Number(works(a))) }))
     .filter((x) => x.list.length);
 
   // A site can read every silent capability the moment it loads, so the console does the same and
@@ -80,7 +81,7 @@ export function Capabilities({ ctx, selected }: { ctx: ConsoleCtx; selected: str
         {groups.map((g) => { const I = g.icon; return <button key={g.id} className={group === g.id ? "on" : ""} onClick={() => setGroup(group === g.id ? null : g.id)}>{I && <I size={13} />}{g.label}<em>{all.get(g.id)?.length}</em></button>; })}
       </div>
       <div className="caps-list">
-        {visible.length === 0 && <div className="empty">{tab === "live" ? "Nothing is running." : tab === "blocked" ? "Nothing has been refused." : tab === "used" ? "Nothing has run yet." : "No match."}</div>}
+        {visible.length === 0 && <div className="empty">{tab === "live" ? "Nothing is running." : tab === "blocked" ? "Nothing has been refused." : tab === "used" ? "Nothing has run yet." : tab === "ref" ? "Every entry has a live call." : "No match."}</div>}
         {visible.map(({ g, list }) => {
           const I = g.icon;
           const silent = list.filter((s) => s.passive && works(s)).length;
@@ -109,6 +110,7 @@ const Row = memo(function Row({ scope, on, ok, ctx }: { scope: ScopeDef; on: boo
       <span className="row-n">{scope.name}</span>
       <span className="row-k"><ModeBadges modes={scope.modes} compact /><LayerGlyph layer={scope.layer} /></span>
       <MechBadge mech={mech} />
+      {scope.reference && <span className="logged" title="Reference entry: the page can only check for it here">ref</span>}
       {scope.passive && s.count > 0 && <span className="logged" title="Already read on page load, without asking"><History size={11} />logged</span>}
       <RowSpark scope={scope} records={s.records} />
       <span className="row-v">{active && s.hz ? s.hz.toFixed(1) + " Hz" : s.count ? short(s.count) : ""}</span>
