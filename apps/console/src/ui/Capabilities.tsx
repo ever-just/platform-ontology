@@ -1,11 +1,12 @@
 import { memo, useEffect, useMemo, useRef, useState } from "react";
-import { Play, Square, Search, Zap, X } from "lucide-react";
-import type { ScopeDef } from "../core/types";
-import { getSession, isActive, request, stop, useSession } from "../core/harness";
+import { History, Play, Square, Search, Zap, X } from "lucide-react";
+import type { Rec, ScopeDef } from "../core/types";
+import { getSession, isActive, request, series, stop, useSession } from "../core/harness";
 import { useTimeline } from "../core/timeline";
 import { supportOf } from "../browser/profile";
 import { OTHER, type ConsoleCtx, type GroupDef } from "../ext/registry";
 import { short } from "./charts";
+import { Spark } from "./kit";
 import { CapIcon, LayerGlyph, MechBadge, ModeBadges, mechanismOf } from "./icons";
 
 type Tab = "all" | "live" | "used" | "blocked";
@@ -51,6 +52,15 @@ export function Capabilities({ ctx, selected }: { ctx: ConsoleCtx; selected: str
     .map((g) => ({ g, list: (all.get(g.id) || []).filter((s) => match(s) && inTab(tab, s.id)).sort((a, b) => Number(works(b)) - Number(works(a))) }))
     .filter((x) => x.list.length);
 
+  // A site can read every silent capability the moment it loads, so the console does the same and
+  // shows those readings as already logged. Only one-shot reads run here, never live streams.
+  useEffect(() => {
+    const auto = ctx.scopes.filter((s) => s.passive && !s.gesture && !s.modes?.stream && !s.modes?.create && works(s) && getSession(s.id).count === 0 && !isActive(getSession(s.id)));
+    auto.forEach((s) => void request(s.id));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+  const logged = ctx.scopes.filter((s) => s.passive && getSession(s.id).count > 0).length;
+
   const runSilent = (list: ScopeDef[]) => list.filter((s) => s.passive && works(s) && !isActive(getSession(s.id))).forEach((s) => void request(s.id));
 
   return (
@@ -64,6 +74,7 @@ export function Capabilities({ ctx, selected }: { ctx: ConsoleCtx; selected: str
       <div className="caps-tools">
         <label className="search"><Search size={14} /><input ref={input} value={q} onChange={(e) => setQ(e.target.value)} placeholder="Search capabilities" /><kbd>/</kbd>{q && <button onClick={() => setQ("")} aria-label="Clear"><X size={13} /></button>}</label>
       </div>
+      {logged > 0 && <div className="logged-note"><History size={13} /><span><b>{logged} silent readings</b> were taken when this page opened, with no prompt. Any site can do the same.</span></div>}
       <div className="chips">
         <button className={!group ? "on" : ""} onClick={() => setGroup(null)}>All groups</button>
         {groups.map((g) => { const I = g.icon; return <button key={g.id} className={group === g.id ? "on" : ""} onClick={() => setGroup(group === g.id ? null : g.id)}>{I && <I size={13} />}{g.label}<em>{all.get(g.id)?.length}</em></button>; })}
@@ -98,6 +109,8 @@ const Row = memo(function Row({ scope, on, ok, ctx }: { scope: ScopeDef; on: boo
       <span className="row-n">{scope.name}</span>
       <span className="row-k"><ModeBadges modes={scope.modes} compact /><LayerGlyph layer={scope.layer} /></span>
       <MechBadge mech={mech} />
+      {scope.passive && s.count > 0 && <span className="logged" title="Already read on page load, without asking"><History size={11} />logged</span>}
+      <RowSpark scope={scope} records={s.records} />
       <span className="row-v">{active && s.hz ? s.hz.toFixed(1) + " Hz" : s.count ? short(s.count) : ""}</span>
       <button className={"row-b" + (active ? " stop" : "")} onClick={(e) => { e.stopPropagation(); active ? stop(scope.id) : void request(scope.id); }} aria-label={active ? "Stop" : "Run"} title={active ? "Stop" : "Run"}>
         {active ? <Square size={11} /> : <Play size={11} />}
@@ -105,3 +118,12 @@ const Row = memo(function Row({ scope, on, ok, ctx }: { scope: ScopeDef; on: boo
     </div>
   );
 });
+
+/** A tiny trend of the first number the capability reports. */
+function RowSpark({ scope, records }: { scope: ScopeDef; records: Rec[] }) {
+  if (records.length < 3) return <span className="row-sp" />;
+  const d = records[records.length - 1].data as Record<string, unknown>;
+  const key = scope.metrics?.find((m) => typeof d[m.key] === "number")?.key ?? Object.keys(d).find((k) => typeof d[k] === "number");
+  const vals = key ? series(records, key, 60) : [];
+  return <span className="row-sp" title={key ? `Trend of ${key}` : undefined}>{vals.length > 2 && <Spark values={vals} w={46} h={16} />}</span>;
+}

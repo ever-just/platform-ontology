@@ -1,5 +1,6 @@
 import { useSyncExternalStore } from "react";
 import type { Ctx, Params, Rec, ScopeDef, Session, Source, Stop } from "./types";
+import { persist } from "./history";
 
 // The harness: one store, one request/stop surface for every scope. Adapters push normalized
 // records through ctx.emit; the console only ever reads sessions from here.
@@ -142,6 +143,7 @@ export async function request(id: string) {
       const first = prev.firstAt || Date.now();
       if (prev.state !== "streaming") log(id, `first record after ${Math.round(now - t0)} ms`, "ok");
       patch(id, { state: "streaming", records, last: rec, count: seq, hz, firstAt: first });
+      persist(id, rec);
     },
     setMedia: (m) => alive && patch(id, { media: m }),
     log: (msg) => alive && log(id, msg),
