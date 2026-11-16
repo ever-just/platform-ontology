@@ -91,7 +91,8 @@ cd apps/docs && npm ci && npm run build
 cd apps/lab && npm ci && npm run build
 ```
 
-GitHub Actions builds everything and publishes to GitHub Pages on every push to `main`.
+The site is served by GitHub Pages from the `gh-pages` branch. `bash scripts/publish-pages.sh` builds everything and
+pushes it there. `.github/workflows/pages.yml` does the same automatically when Actions is available.
 
 ## Contributing
 
