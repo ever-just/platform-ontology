@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { HistoryChart } from "./history-view";
 import { AccessRows, FieldMeanings, LogTimeline, Provenance, Reveals } from "./inspector-views";
 import { Play, Square, Copy, X, ShieldCheck, TriangleAlert } from "lucide-react";
 import type { ScopeDef, Session } from "../core/types";
@@ -85,6 +86,8 @@ function ScopeInspector({ ctx, scope, onClose }: { ctx: ConsoleCtx; scope: Scope
                 <div key={m.key}><span>{m.label}</span><b>{session.last ? fmt((session.last.data as any)[m.key], m.digits ?? 2) : "n/a"}{m.unit && <em> {m.unit}</em>}</b></div>
               ))}
             </div>
+            <h5>Change over time</h5>
+            <HistoryChart scope={scope} session={session} />
             <h5>Where it comes from</h5>
             <Provenance scope={scope} session={session} mech={mech} />
             <h5>What each value means</h5>
