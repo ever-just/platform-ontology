@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { AccessRows, FieldMeanings, LogTimeline, Provenance, Reveals } from "./inspector-views";
 import { Play, Square, Copy, X, ShieldCheck, TriangleAlert } from "lucide-react";
 import type { ScopeDef, Session } from "../core/types";
 import { isActive, request, setParam, setSource, stop, useSession } from "../core/harness";
@@ -84,7 +85,11 @@ function ScopeInspector({ ctx, scope, onClose }: { ctx: ConsoleCtx; scope: Scope
                 <div key={m.key}><span>{m.label}</span><b>{session.last ? fmt((session.last.data as any)[m.key], m.digits ?? 2) : "n/a"}{m.unit && <em> {m.unit}</em>}</b></div>
               ))}
             </div>
-            <pre className="code">{session.last ? json(session.last) : "// Run it to see the normalized record.\n// Every capability returns { seq, t, data }."}</pre>
+            <h5>Where it comes from</h5>
+            <Provenance scope={scope} session={session} mech={mech} />
+            <h5>What each value means</h5>
+            <FieldMeanings scope={scope} session={session} node={node} />
+            <details className="raw"><summary>Raw record</summary><pre className="code">{session.last ? json(session.last) : "// Run it to see the normalized record.\n// Every capability returns { seq, t, data }."}</pre></details>
           </div>
         )}
         {tab === "scope" && (
@@ -97,17 +102,9 @@ function ScopeInspector({ ctx, scope, onClose }: { ctx: ConsoleCtx; scope: Scope
               <div className="mode-row m-layer"><span className="mode-ic"><LayerGlyph layer={scope.layer} /></span><div><b>{LAYERS[scope.layer || 1].label}</b><span>{LAYERS[scope.layer || 1].plain}</span></div></div>
             </div>
             <h5>What it reveals</h5>
-            <div className="tags">{scope.reveals.map((r) => <span key={r}>{r}</span>)}</div>
+            <Reveals items={scope.reveals} />
             <h5>Access</h5>
-            <dl className="dl">
-              <dt>How</dt><dd><MechBadge mech={mech} label /> {MECH[mech].plain}</dd>
-              <dt>Prompt</dt><dd>{scope.passive ? "None. Read silently." : node?.ui || (scope.gesture ? "Chooser after a click" : "Browser prompt")}</dd>
-              <dt>Permission</dt><dd>{scope.permission || "none"}{session.permState ? ` (${session.permState})` : ""}</dd>
-              {node?.gr && <><dt>Grant</dt><dd>{node.gr}</dd></>}
-              {node?.ps && <><dt>Remembered</dt><dd>{node.ps}</dd></>}
-              {node?.rv && <><dt>Revoke</dt><dd>{node.rv}</dd></>}
-              <dt>Browser call</dt><dd><code>{scope.call}</code></dd>
-            </dl>
+            <AccessRows scope={scope} session={session} node={node} mech={mech} />
             {node && (
               <>
                 <h5>Support</h5>
@@ -136,8 +133,7 @@ function ScopeInspector({ ctx, scope, onClose }: { ctx: ConsoleCtx; scope: Scope
         )}
         {tab === "log" && (
           <div className="ins-pad">
-            {session.logs.length === 0 && <p className="empty">Nothing yet.</p>}
-            <div className="feed">{[...session.logs].reverse().map((l, i) => <div key={i} className={"fe " + l.level}><time>{clock(l.t)}</time><span>{l.msg}</span></div>)}</div>
+            <LogTimeline session={session} />
           </div>
         )}
       </div>
