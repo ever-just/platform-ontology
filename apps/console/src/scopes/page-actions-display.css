@@ -1,0 +1,37 @@
+/* Display, input and window demos. */
+.pd-zoom { overflow: auto; max-height: 190px; border: 1px dashed var(--line); border-radius: 10px; padding: 10px; }
+.pd-zoom-box { display: grid; gap: 4px; padding: 12px; border-radius: 8px; background: var(--line2); font-size: 13px; transform-origin: top left; }
+.pd-zoom-box span { color: var(--mute); font-size: 12px; }
+.pd-pad { display: grid; gap: 4px; place-content: center; min-height: 110px; padding: 14px; border: 1px dashed var(--line); border-radius: 10px; background: var(--line2); text-align: center; font-size: 13px; }
+.pd-pad span { color: var(--mute); font-size: 12px; }
+.pd-scroll { height: 150px; overflow-y: auto; border: 1px solid var(--line); border-radius: 10px; padding: 0 12px; }
+.pd-scroll p { margin: 0; padding: 14px 0; border-bottom: 1px solid var(--line2); font-size: 13px; color: var(--ink2); }
+.pd-scroll[data-snap="on"] p { scroll-snap-align: start; min-height: 134px; }
+.pd-stage { position: relative; height: 90px; border: 1px solid var(--line); border-radius: 10px; background: var(--line2); overflow: hidden; }
+.pd-mini { position: absolute; display: grid; place-content: center; border: 2px solid var(--accent); border-radius: 6px; background: var(--bg); font-size: 11px; color: var(--mute); transition: all .25s; }
+.pd-phone { display: grid; place-content: center; gap: 2px; margin: 0 auto; border: 3px solid var(--ink2); border-radius: 14px; background: var(--line2); font: 11px var(--mono); color: var(--mute); text-align: center; transition: all .3s; }
+.pd-phone.p { width: 64px; height: 110px; }
+.pd-phone.l { width: 110px; height: 64px; }
+.pd-phone b { font-size: 15px; color: var(--ink); }
+.pd-video { position: relative; max-width: 320px; aspect-ratio: 16 / 9; border-radius: 10px; overflow: hidden; background: #111; }
+.pd-video video, .pd-fake { width: 100%; height: 100%; object-fit: cover; display: grid; place-content: center; color: #aaa; font-size: 12px; }
+.pd-badge { position: absolute; top: 8px; right: 8px; padding: 2px 8px; border-radius: 99px; background: var(--accent); color: #fff; font-size: 11px; }
+.pd-chip { display: inline-block; padding: 5px 11px; border: 1px solid var(--line); border-radius: 99px; background: var(--bg); font-size: 12.5px; cursor: grab; user-select: none; }
+.pd-drop { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 6px; min-height: 80px; padding: 12px; border: 2px dashed var(--line); border-radius: 10px; font-size: 12.5px; color: var(--mute); transition: border-color .15s, background .15s; }
+.pd-drop.over { border-color: var(--accent); background: var(--line2); }
+.pd-dialog { max-width: 320px; padding: 16px; border: 1px solid var(--line); border-radius: 12px; background: var(--bg); color: var(--ink); }
+.pd-dialog::backdrop { background: rgba(0, 0, 0, .45); }
+.pd-dialog span { display: block; margin: 6px 0 12px; font-size: 12.5px; color: var(--mute); }
+.pd-pop { max-width: 260px; padding: 14px; border: 1px solid var(--line); border-radius: 12px; background: var(--bg); color: var(--ink); box-shadow: 0 8px 28px rgba(0, 0, 0, .18); }
+.pd-pop span { display: block; margin-top: 4px; font-size: 12.5px; color: var(--mute); }
+.pd-log { margin: 0; padding-left: 18px; font-size: 12.5px; color: var(--ink2); }
+.pd-vt-stage { display: grid; place-content: center; height: 100px; border: 1px solid var(--line); border-radius: 10px; background: var(--line2); }
+.pd-vt-box { width: 90px; padding: 12px; border-radius: 10px; background: var(--accent); color: #fff; text-align: center; font-size: 13px; }
+.pd-vt-box[data-state="b"] { background: var(--ink2); margin-left: 120px; }
+.pd-quote { padding: 10px 12px; border-left: 3px solid var(--accent); background: var(--line2); border-radius: 4px; font-size: 13px; }
+.pd-frame { width: 100%; height: 56px; border: 1px solid var(--line); border-radius: 8px; background: var(--bg); }
+html[data-pcvt="slide"]::view-transition-old(pcvt) { animation: pd-out var(--pc-vt-ms, 500ms) ease both; }
+html[data-pcvt="slide"]::view-transition-new(pcvt) { animation: pd-in var(--pc-vt-ms, 500ms) ease both; }
+html[data-pcvt="fade"]::view-transition-group(pcvt) { animation-duration: var(--pc-vt-ms, 500ms); }
+@keyframes pd-out { to { opacity: 0; transform: translateX(-30px); } }
+@keyframes pd-in { from { opacity: 0; transform: translateX(30px); } }

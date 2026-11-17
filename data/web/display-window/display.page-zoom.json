@@ -1,0 +1,219 @@
+{
+  "id": "web.display.page-zoom",
+  "name": "Page zoom: read it, restyle it, intercept the shortcuts",
+  "kind": "action",
+  "group": "display-window",
+  "subgroup": "Viewport",
+  "tags": [
+    "zoom",
+    "ctrl-wheel",
+    "pinch",
+    "viewport",
+    "accessibility"
+  ],
+  "plain": "Reads how zoomed the page is, zooms its own content, and can swallow the zoom shortcuts, but cannot set the browser zoom itself.",
+  "meaning": "A page can notice browser zoom (the pixel ratio and window size change, and a resize event fires), zoom its own elements with CSS, and intercept Ctrl+wheel and Ctrl plus, minus and zero before the browser acts. It can also switch off pinch zoom on touch screens with the viewport meta tag. It cannot change the real browser zoom level or the address bar zoom setting.",
+  "lifecycle": [
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "devicePixelRatio, visualViewport.scale, resize event, CSS zoom, wheel and keydown preventDefault, meta viewport user-scalable and maximum-scale",
+      "bcd": [
+        "api.Window.devicePixelRatio",
+        "api.VisualViewport",
+        "css.properties.zoom",
+        "api.Event.preventDefault"
+      ],
+      "access": {
+        "grant": "none",
+        "prompt_ui": "None (no browser prompt)",
+        "secure_context": false,
+        "user_gesture": false,
+        "activation": "none",
+        "persistence": "Only while the page runs; the browser keeps its own zoom per site",
+        "revocation": "Nothing to revoke (no permission is stored)",
+        "iframe": "A frame sees its own pixel ratio; it cannot intercept zoom for the parent page",
+        "steps": [
+          "Page reads devicePixelRatio and visualViewport.scale, and listens for resize",
+          "Page applies CSS zoom to one of its own elements",
+          "Page listens for wheel with ctrlKey and keydown for plus, minus and zero, and calls preventDefault to stop or replace the browser action",
+          "Page adds user-scalable=no and maximum-scale=1 to the viewport meta tag to stop pinch zoom on touch screens"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "1",
+          "note": "",
+          "date": ""
+        },
+        "edge": {
+          "s": "y",
+          "v": "12",
+          "note": "",
+          "date": ""
+        },
+        "firefox": {
+          "s": "y",
+          "v": "1",
+          "note": "",
+          "date": ""
+        },
+        "safari": {
+          "s": "y",
+          "v": "1",
+          "note": "",
+          "date": ""
+        },
+        "ios_safari": {
+          "s": "y",
+          "v": "1",
+          "note": "",
+          "date": ""
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "18",
+          "note": "",
+          "date": ""
+        },
+        "samsung": {
+          "s": "y",
+          "v": "1.0",
+          "note": "",
+          "date": ""
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "object",
+    "metric": "zoom level",
+    "update": "on resize",
+    "fields": [
+      {
+        "name": "devicePixelRatio",
+        "type": "float",
+        "unit": "ratio",
+        "range": "0.25 to 5",
+        "precision": "exact"
+      },
+      {
+        "name": "visualViewport.scale",
+        "type": "float",
+        "unit": "ratio",
+        "range": "1 to 5",
+        "precision": "exact"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can read zoom, zoom its own content and block the shortcuts, but cannot set the browser zoom",
+    "user_action": "You press Ctrl plus or minus, scroll with Ctrl held, pinch, or use the browser zoom menu.",
+    "can": [
+      "Read the pixel ratio and the pinch scale, and notice when you change zoom",
+      "Zoom or scale its own elements with CSS",
+      "Block or replace Ctrl+wheel and Ctrl plus, minus and zero while the page has focus",
+      "Turn off pinch zoom on touch screens with the viewport meta tag"
+    ],
+    "cannot": [
+      "Set the browser zoom level for the tab or the site",
+      "Block the browser zoom menu or the address bar zoom button",
+      "Stop pinch zoom in iOS Safari, which ignores user-scalable since iOS 10 for accessibility"
+    ],
+    "reach": 2,
+    "reach_label": "Only inside the page",
+    "differs": "Desktop browsers zoom the whole page and change the pixel ratio; phones pinch the visual viewport and leave the pixel ratio alone."
+  },
+  "technical_bounds": [
+    "Browser zoom changes devicePixelRatio and the CSS pixel size of the window; the page cannot tell zoom from a high density screen without a baseline",
+    "wheel listeners must be non-passive to call preventDefault; trackpad pinch on desktop arrives as wheel with ctrlKey set",
+    "Keyboard shortcuts are only seen while the page has focus; the browser menu zoom never reaches the page as a key event",
+    "CSS zoom is non-standard in older engines (Firefox from 126); transform: scale is the portable alternative",
+    "user-scalable and maximum-scale in the viewport meta are honoured by Chrome on Android, ignored by iOS Safari"
+  ],
+  "scores": {
+    "sensitivity": 1,
+    "utility": 3,
+    "fingerprint_bits": 3,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Maps, games and canvas apps that handle zoom themselves",
+      "Design tools with their own zoom",
+      "Kiosks that lock the layout"
+    ],
+    "abuse": [
+      "Trapping people in a tiny layout by blocking zoom",
+      "Defeating accessibility zoom on low vision users"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [],
+  "related": [
+    "web.locale.zoom-text-size",
+    "web.display.device-pixel-ratio",
+    "web.display.screen-refresh-and-viewport-meta",
+    "web.input.keyboard-events"
+  ],
+  "refs": [
+    {
+      "t": "mdn",
+      "label": "MDN devicePixelRatio",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/Window/devicePixelRatio"
+    },
+    {
+      "t": "mdn",
+      "label": "MDN VisualViewport",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/VisualViewport"
+    },
+    {
+      "t": "mdn",
+      "label": "MDN CSS zoom",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/CSS/zoom"
+    }
+  ],
+  "confidence": "docs",
+  "story": {
+    "what_it_is": "A page can see that you zoomed, zoom its own content, and sometimes stop you zooming.",
+    "icon": "zoom-in",
+    "tags": [
+      "Display",
+      "Accessibility",
+      "Input"
+    ],
+    "marketing": [],
+    "for_you": "Most pages let you zoom freely. A few map, game or kiosk pages take over the zoom keys. A page that blocks zoom makes text hard to read, so it is worth knowing it is possible.",
+    "for_makers": "Apps with their own canvas zoom block the browser shortcut and zoom the canvas instead. Blocking zoom on ordinary pages hurts people with low vision and fails accessibility rules.",
+    "use_cases": [
+      {
+        "type": "games",
+        "example": "A map game turns Ctrl+scroll into its own map zoom.",
+        "apps": []
+      },
+      {
+        "type": "accessibility",
+        "example": "A page keeps zoom enabled so low vision users can enlarge text.",
+        "apps": []
+      },
+      {
+        "type": "security",
+        "example": "A fraud tool notes odd zoom values as a hint of an emulator.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Blocking zoom hurts people with low vision"
+    ],
+    "android_note": "",
+    "ios_note": "iOS Safari ignores user-scalable=no."
+  }
+}
