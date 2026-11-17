@@ -25,13 +25,17 @@ const active = () => !!accountState()?.user && document.visibilityState === "vis
 
 async function loop() {
   running = true;
+  const start = accountState()?.user?.id;
   let backoff = 1000;
   while (active()) {
     try {
       const r = await post("/api/account", { action: "relay_claim" });
       if (!r.ok) throw new Error(String(r.status));
+      const owner = accountState()?.user?.id === start ? start : null;
       const jobs = (await r.json()) as { id: number; request: RpcRequest }[];
       backoff = 1000;
+      // Signed out (or switched account) while the poll was open: drop the batch unrun.
+      if (!owner || !active()) break;
       await Promise.all(jobs.map(async (j) => {
         const res = (await mcp()?.handle(j.request)) ?? { jsonrpc: "2.0", id: j.request?.id ?? null, result: {} };
         await post("/api/account", { action: "relay_answer", id: j.id, response: res });

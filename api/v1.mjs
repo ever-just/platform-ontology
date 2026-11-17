@@ -31,8 +31,8 @@ export async function GET(req) {
       const q = (u.searchParams.get("q") || "").toLowerCase();
       const g = u.searchParams.get("group");
       const nodes = (atlas.nodes || [])
-        .filter((n) => (!g || n.g === g) && (!q || `${n.id} ${n.n || ""}`.toLowerCase().includes(q)))
-        .map((n) => ({ id: n.id, name: n.n, group: n.g, kind: n.k }));
+        .filter((n) => (!g || n.g === g) && (!q || `${n.i} ${n.n || ""} ${n.p || ""}`.toLowerCase().includes(q)))
+        .map((n) => ({ id: n.i, name: n.n, group: n.g, domain: n.d, kind: n.k, summary: n.p }));
       return out(200, { count: nodes.length, capabilities: nodes });
     }
     const k = await resolveKey(req);
