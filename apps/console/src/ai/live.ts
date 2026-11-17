@@ -121,6 +121,9 @@ export class LiveSession {
     this.on.ended(reason ? `Ended: ${reason}` : "Session ended");
   }
 
+  /** True while the model is speaking. */
+  get speaking() { return this.talking; }
+
   /** Tell the model something without the person having said it. reply false keeps it quiet. */
   note(text: string, reply = false) {
     if (this.talking) { this.held = this.held.filter((h) => reply || !h.text.startsWith("[screen update")); this.held.push({ text, reply }); return; }
