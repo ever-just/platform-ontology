@@ -914,3 +914,26 @@ html, body { overflow: hidden; overscroll-behavior: none; }
 .ins .frame-side { max-height: none; overflow: visible; }
 /* A row's reading never takes more than about half the row, so the capability name always stays legible. */
 .row-v { max-width: min(118px, 45%); }
+
+/* The ai. host stage: pure white, one Start button, then the conversation centered on white until the AI acts on
+   the screen. Fixed light colors on purpose: the stage is the same whatever look the console uses underneath. */
+.po-stage { position: fixed; inset: 0; z-index: 55; background: #fff; color: #111; display: grid; place-items: center; overflow: hidden; overscroll-behavior: none;
+  padding: env(safe-area-inset-top, 0px) max(16px, env(safe-area-inset-right, 0px)) env(safe-area-inset-bottom, 0px) max(16px, env(safe-area-inset-left, 0px)); animation: po-fade .25s ease; }
+.po-stage-c { display: flex; flex-direction: column; align-items: center; gap: 22px; text-align: center; max-width: 420px; }
+.po-start { width: 132px; height: 132px; border-radius: 50%; border: 0; background: #111; color: #fff; font-family: inherit; font-size: 19px; font-weight: 600; letter-spacing: .02em; cursor: pointer;
+  box-shadow: 0 10px 30px rgb(0 0 0 / .14); transition: transform .15s, box-shadow .15s; }
+.po-start:hover { transform: scale(1.04); box-shadow: 0 14px 40px rgb(0 0 0 / .2); }
+.po-start:focus-visible { outline: 3px solid #2d72d2; outline-offset: 4px; }
+.po-stage-n { margin: 0; color: #5f6b7c; font-size: 13px; line-height: 1.5; }
+.po-stage-t { position: fixed; top: calc(14px + env(safe-area-inset-top, 0px)); right: max(16px, env(safe-area-inset-right, 0px)); border: 1px solid #d3d8de; background: #fff; color: #1c2127;
+  border-radius: 999px; padding: 8px 14px; font-family: inherit; font-size: 13px; font-weight: 500; cursor: pointer; }
+.po-stage-t:hover { background: #f6f7f9; }
+.voice.staged { left: 50%; right: auto; transform: translateX(-50%); top: calc(64px + env(safe-area-inset-top, 0px)); width: min(640px, calc(100vw - 32px)); max-height: calc(100dvh - 96px);
+  background: #fff; color: #1c2127; border: 0; box-shadow: none; --bg: #fff; --ink: #1c2127; --mute: #5f6b7c; --line: #e5e8eb; --line2: #f0f2f4; }
+.voice.staged .voice-h { border-bottom: 0; }
+.voice.staged .voice-f { max-height: none; font-size: 16px; line-height: 1.55; }
+.voice.staged .voice-hint { font-size: 15px; }
+@keyframes po-fade { from { opacity: 0; } to { opacity: 1; } }
+.foot-links { display: inline-flex; gap: 12px; flex-wrap: wrap; }
+.foot-links a { color: inherit; }
+.po-stage-s { margin: 0; color: #1c2127; font-size: 13px; }

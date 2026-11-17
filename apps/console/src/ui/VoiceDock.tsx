@@ -36,7 +36,15 @@ function loadSaved(): Saved | null {
 function save(p: Partial<Saved>) {
   try { sessionStorage.setItem(KEY, JSON.stringify({ ...(loadSaved() || { on: false, handle: null, lines: [], ui: UI0 }), ...p, at: Date.now() })); } catch { /* blocked */ }
 }
-const autoHost = () => /^ai\./.test(location.hostname) || new URLSearchParams(location.search).has("voice");
+// The ai. host (or ?voice) is the stage: a blank white page with one Start button. Nothing connects until the
+// person presses Start, so a page load never spends a voice token. The console stays mounted underneath so the AI
+// can drive it, and it comes into view when the AI acts on the screen or the person asks to see it.
+const stageHost = () => /^ai\./.test(location.hostname) || new URLSearchParams(location.search).has("voice");
+type Stage = "curtain" | "talk" | "screen";
+const HELLO = "Talk to the console. It can show you anything on this page.";
+// Tools that change what is on screen: when the AI uses one, the white stage lifts so the person sees it happen.
+const SCREEN_TOOLS = new Set(["show", "point_at", "press_control", "set_control", "set_value", "start_capability", "stop_capability",
+  "turn_on_everything", "draw", "run_action", "enter", "play", "set_param", "push_query", "replace_query", "highlight"]);
 
 const SET_TRANSCRIPT: ToolDef = {
   name: "set_transcript",
@@ -50,10 +58,12 @@ const SET_TRANSCRIPT: ToolDef = {
 export function VoiceDock({ atlas, scopes }: { atlas: Atlas; scopes: ScopeDef[] }) {
   const saved0 = useRef(loadSaved());
   const resumable = !!(saved0.current?.on && Date.now() - saved0.current.at < FRESH_MS);
-  const [open, setOpen] = useState(() => resumable || autoHost());
+  const staged = useRef(stageHost()).current;
+  const [stage, setStage] = useState<Stage | null>(() => (staged ? "curtain" : null));
+  const [open, setOpen] = useState(() => resumable && !staged);
   const [on, setOn] = useState(false);
   const [busy, setBusy] = useState(false);
-  const [status, setStatus] = useState("Talk to the console. It can show you anything on this page.");
+  const [status, setStatus] = useState(HELLO);
   const [lines, setLines] = useState<Line[]>(() => (resumable ? saved0.current!.lines || [] : []));
   const [uiTick, setUiTick] = useState(0);
   const [ui, setUi] = useState<Ui>(() => ({ ...UI0, ...(saved0.current?.ui || {}) }));
@@ -125,7 +135,7 @@ export function VoiceDock({ atlas, scopes }: { atlas: Atlas; scopes: ScopeDef[] 
     const wake = () => session.current?.outCtx.resume().catch(() => {});
     window.addEventListener("pointerdown", wake);
     window.addEventListener("keydown", wake);
-    if (resumable || autoHost()) void start(resumable ? saved0.current!.handle : null, false);
+    if (resumable && !staged) void start(saved0.current!.handle, false);
     return () => { off(); offAsks(); offUi(); setPressHandler(null); window.removeEventListener("pointerdown", wake); window.removeEventListener("keydown", wake); session.current?.close(); session.current = null; };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -169,6 +179,7 @@ export function VoiceDock({ atlas, scopes }: { atlas: Atlas; scopes: ScopeDef[] 
     setOn(false);
     setStatus(msg);
     save({ on: false, handle: null });
+    if (staged) { setStage("curtain"); setOpen(false); }
   }
 
   /** What is on screen, short and stable, so a change is worth a quiet note to the AI. */
@@ -222,6 +233,7 @@ export function VoiceDock({ atlas, scopes }: { atlas: Atlas; scopes: ScopeDef[] 
       say: (k, t) => { if (!t) return; add({ k, t }); logTalk(k, t); },
       turnDone: () => { merge.current = false; },
       step: (name, args) => {
+        if (staged && SCREEN_TOOLS.has(name)) setStage((x) => (x === "talk" ? "screen" : x));
         const id = ++seq;
         setLines((xs) => [...xs, { k: "step", t: stepLabel(name, args), id }]);
         merge.current = false;
@@ -252,9 +264,39 @@ export function VoiceDock({ atlas, scopes }: { atlas: Atlas; scopes: ScopeDef[] 
     setDraft("");
   }
 
-  const cls = `voice side-${ui.side} size-${ui.size}`;
+  // While the white stage covers the console, screen readers should not wander into the page behind it.
+  useEffect(() => {
+    if (!staged) return;
+    const shell = document.querySelector(".shell");
+    if (stage === "screen") shell?.removeAttribute("aria-hidden"); else shell?.setAttribute("aria-hidden", "true");
+  }, [stage, staged]);
+
+  /** Start from the white stage. Runs inside the click so the browser lets audio and the microphone start. */
+  function begin() {
+    setStage("talk");
+    setOpen(true);
+    setUi({ ...ui, hidden: false });
+    void start(null, false);
+  }
+
+  const onStage = stage === "talk";
+  const cls = `voice side-${ui.side} size-${ui.size}` + (onStage ? " staged" : "");
   return (
     <>
+      {staged && stage !== "screen" && createPortal(
+        <div className={"po-stage" + (stage === "curtain" ? " curtain" : "")} aria-label="Platform Ontology AI">
+          {stage === "curtain" ? (
+            <div className="po-stage-c">
+              <button data-control="stage.start" className="po-start" onClick={begin} autoFocus>Start</button>
+              <p className="po-stage-n">Platform Ontology AI. It talks with you, runs this device's capabilities, reads their data and works every control on the page. It uses your microphone.</p>
+              {status !== HELLO && <p className="po-stage-s" role="status">{status}</p>}
+            </div>
+          ) : (
+            <button data-control="stage.show-screen" className="po-stage-t" onClick={() => setStage("screen")}>Show the screen</button>
+          )}
+        </div>,
+        document.body,
+      )}
       <button data-control="voice.toggle" className={"icon-b voice-b" + (on ? " on" : "")} onClick={() => { if (ui.hidden) { setUi({ ...ui, hidden: false }); setOpen(true); } else setOpen(!open); }} aria-expanded={open && !ui.hidden} aria-label="Talk to the console" title="Talk to the console">
         <AudioLines size={16} />
       </button>
@@ -267,8 +309,9 @@ export function VoiceDock({ atlas, scopes }: { atlas: Atlas; scopes: ScopeDef[] 
       {open && !ui.hidden && createPortal(
         <aside className={cls} aria-label="Voice assistant">
           <div className="voice-h">
-            <b>Ask the console</b>
+            <b>{staged ? "Platform Ontology AI" : "Ask the console"}</b>
             <span className="grow" />
+            {staged && on && <button data-control="voice.stage" className="lnk" onClick={() => setStage(onStage ? "screen" : "talk")}>{onStage ? "Show screen" : "White screen"}</button>}
             <button data-control="voice.hide" className="icon-b" onClick={() => setUi({ ...ui, hidden: true })} aria-label="Hide the conversation" title="Hide (keeps listening)"><EyeOff size={15} /></button>
             <button data-control="voice.close" className="icon-b" onClick={() => { stop(); setOpen(false); }} aria-label="Close voice assistant"><X size={15} /></button>
           </div>

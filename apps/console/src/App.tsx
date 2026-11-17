@@ -284,7 +284,7 @@ function Console({ atlas }: { atlas: Atlas }) {
           </div>
           <Activity ctx={ctx} />
           <footer className="foot">
-            <span><PrivacyLink>Privacy notice</PrivacyLink></span>
+            <span className="foot-links"><a href="/docs/">Docs</a><a href="/wiki/">Wiki</a><PrivacyLink>Privacy notice</PrivacyLink></span>
             <span>{atlas.nodes.length} attributes, {atlas.browsers.length} browsers, built {atlas.built}</span>
           </footer>
         </section>
