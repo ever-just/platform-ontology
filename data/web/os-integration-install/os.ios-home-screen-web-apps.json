@@ -1,0 +1,212 @@
+{
+  "id": "web.os.ios-home-screen-web-apps",
+  "name": "iOS Home Screen web apps",
+  "kind": "capability",
+  "group": "os-integration-install",
+  "subgroup": "Install",
+  "tags": [
+    "install",
+    "ios",
+    "safari",
+    "push"
+  ],
+  "plain": "On iPhone a site can only be installed by you from the Share menu, and some features work only after that.",
+  "meaning": "iOS has no beforeinstallprompt, so a site cannot offer install. Web Push works only for a Home Screen app (iOS 16.4 and later). Installed apps are exempt from Safari's 7 day script storage cap.",
+  "lifecycle": [
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "Share > Add to Home Screen; navigator.standalone; matchMedia display-mode; PushManager (Home Screen apps only)",
+      "bcd": [
+        "api.Navigator.standalone"
+      ],
+      "access": {
+        "grant": "gesture",
+        "prompt_ui": "Add to Home Screen sheet, started by you",
+        "secure_context": true,
+        "user_gesture": true,
+        "persistence": "Per origin",
+        "revocation": "Clear site data",
+        "iframe": "Same as top level",
+        "steps": [
+          "Page calls the API",
+          "Browser answers with no prompt",
+          "Page reads the result"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "n",
+          "v": "",
+          "note": "Not applicable"
+        },
+        "edge": {
+          "s": "p",
+          "v": "",
+          "note": "Not applicable"
+        },
+        "safari": {
+          "s": "n",
+          "v": "",
+          "note": "Add to Dock (17) on macOS; no beforeinstallprompt"
+        },
+        "firefox": {
+          "s": "n",
+          "v": "",
+          "note": "Not applicable"
+        },
+        "ios_safari": {
+          "s": "y",
+          "v": "",
+          "note": "Home Screen web apps get Web Push (16.4+) and are exempt from the 7 day storage cap"
+        },
+        "chrome_android": {
+          "s": "n",
+          "v": "",
+          "note": "Not applicable"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "object",
+    "metric": "On iPhone a site can only be installed by you from the Share menu, and some features work only after that.",
+    "update": "on demand",
+    "fields": [
+      {
+        "name": "navigator.standalone",
+        "type": "boolean"
+      },
+      {
+        "name": "push permission",
+        "type": "enum",
+        "range": "only for Home Screen apps"
+      },
+      {
+        "name": "storage cap",
+        "type": "duration",
+        "range": "7 days in a tab, exempt when installed"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can use push and keep storage on iPhone only after you add it to the Home Screen",
+    "user_action": "None, the page reads it silently",
+    "can": [
+      "Send web push once you add the site and allow it",
+      "Keep script storage past the 7 day cap",
+      "Detect Home Screen launches with navigator.standalone"
+    ],
+    "cannot": [
+      "Offer an install button",
+      "Send push from a normal Safari tab",
+      "Fire appinstalled"
+    ],
+    "reach": 1,
+    "reach_label": "Your Home Screen app",
+    "differs": "EU behavior under the Digital Markets Act is low confidence and not checked against a fetched source."
+  },
+  "story": {
+    "what_it_is": "On iPhone, adding a site to the Home Screen unlocks push and longer storage.",
+    "icon": "smartphone",
+    "tags": [
+      "Installed apps",
+      "Asks first",
+      "Capability"
+    ],
+    "marketing": [
+      {
+        "vendor": "WebKit",
+        "name": "Web Push for Web Apps on iOS and iPadOS",
+        "pitch": "Home Screen web apps can receive push notifications on iOS 16.4 and later.",
+        "url": "https://webkit.org/blog/13878/web-push-for-web-apps-on-ios-and-ipados/"
+      }
+    ],
+    "for_you": "A site cannot pop up an install offer on iPhone. If you add it yourself, it can then ask to send notifications and keeps its data longer.",
+    "for_makers": "Makers coach iPhone users through Share > Add to Home Screen before asking for push.",
+    "use_cases": [
+      {
+        "type": "news",
+        "example": "A news site tells iPhone readers how to add it before asking for alerts.",
+        "apps": []
+      },
+      {
+        "type": "social",
+        "example": "A web chat app asks for push only inside the Home Screen app.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Instructions can be faked",
+      "Installed apps escape the storage cap that limits tracking in tabs"
+    ],
+    "android_note": "",
+    "ios_note": "This entry is about iOS. Safari on Mac has Add to Dock but no install prompt either."
+  },
+  "technical_bounds": [
+    "No beforeinstallprompt on iOS",
+    "Web Push needs a Home Screen app on iOS 16.4+",
+    "EU DMA behavior is low confidence"
+  ],
+  "scores": {
+    "sensitivity": 2,
+    "utility": 4,
+    "fingerprint_bits": null,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Native like web app",
+      "Push on iPhone"
+    ],
+    "abuse": [
+      "Fake add to Home Screen walkthroughs"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2023-03",
+      "browser": "ios_safari",
+      "version": "16.4",
+      "change": "Web Push for Home Screen web apps"
+    },
+    {
+      "date": "2023-09",
+      "browser": "safari",
+      "version": "17",
+      "change": "Add to Dock on macOS"
+    }
+  ],
+  "related": [
+    "web.os.install-prompt",
+    "web.os.install-state-detection",
+    "web.notify.push-api",
+    "web.xsite.safari-7-day-storage-cap"
+  ],
+  "refs": [
+    {
+      "t": "webkit",
+      "label": "WebKit Web Push for Web Apps on iOS and iPadOS (checked 2026-11-16)",
+      "url": "https://webkit.org/blog/13878/web-push-for-web-apps-on-ios-and-ipados/"
+    },
+    {
+      "t": "mdn",
+      "label": "MDN Making PWAs installable (checked 2026-11-16)",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/Progressive_web_apps/Guides/Making_PWAs_installable"
+    },
+    {
+      "t": "bcd",
+      "label": "MDN browser-compat-data 8.1.9 (checked 2026-11-16)",
+      "url": "https://cdn.jsdelivr.net/npm/@mdn/browser-compat-data@8.1.9/data.json"
+    }
+  ],
+  "confidence": "inferred"
+}

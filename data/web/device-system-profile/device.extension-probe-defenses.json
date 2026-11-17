@@ -1,0 +1,182 @@
+{
+  "id": "web.device.extension-probe-defenses",
+  "name": "Extension probe defenses",
+  "kind": "capability",
+  "group": "device-system-profile",
+  "subgroup": "Browser extensions",
+  "tags": [
+    "extensions",
+    "web_accessible_resources",
+    "mitigation"
+  ],
+  "plain": "Browsers blunt the trick of probing for installed extensions by their fixed addresses.",
+  "meaning": "A page can test chrome-extension://id/file for extensions that expose resources. Chromium MV3 use_dynamic_url and Firefox's per install random address make that probe unreliable, and Safari does not expose stable ids.",
+  "lifecycle": [
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "web_accessible_resources with use_dynamic_url (Chromium MV3); moz-extension://UUID; safari-web-extension://",
+      "bcd": [
+        "webextensions.manifest.web_accessible_resources"
+      ],
+      "access": {
+        "grant": "none",
+        "prompt_ui": "None, set by the extension author",
+        "secure_context": true,
+        "user_gesture": false,
+        "persistence": "Per origin",
+        "revocation": "Clear site data",
+        "iframe": "Same as top level",
+        "steps": [
+          "Page calls the API",
+          "Browser answers with no prompt",
+          "Page reads the result"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "",
+          "note": "use_dynamic_url is an opt in per resource entry"
+        },
+        "edge": {
+          "s": "p",
+          "v": "",
+          "note": "Partial, medium confidence"
+        },
+        "safari": {
+          "s": "n",
+          "v": "",
+          "note": "safari-web-extension scheme. Packaging details are low confidence"
+        },
+        "firefox": {
+          "s": "y",
+          "v": "",
+          "note": "Random UUID per install blocks cross site fingerprinting, but a leaked UUID works within a session"
+        },
+        "ios_safari": {
+          "s": "p",
+          "v": "",
+          "note": "Safari scheme as on Mac"
+        },
+        "chrome_android": {
+          "s": "n",
+          "v": "",
+          "note": "No extensions"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "object",
+    "metric": "Browsers blunt the trick of probing for installed extensions by their fixed addresses.",
+    "update": "on demand",
+    "fields": [
+      {
+        "name": "use_dynamic_url",
+        "type": "boolean",
+        "range": "per resource entry"
+      },
+      {
+        "name": "moz-extension UUID",
+        "type": "string",
+        "range": "random per install"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can hide an extension from the address probe, if the extension opts in",
+    "user_action": "None, the page reads it silently",
+    "can": [
+      "Make the extension address change per session in Chromium MV3",
+      "Give each Firefox install its own random address"
+    ],
+    "cannot": [
+      "Stop DOM and global injection traces",
+      "Protect extensions that do not opt in"
+    ],
+    "reach": 1,
+    "reach_label": "Per extension",
+    "differs": "Chromium needs the extension author to opt in. Firefox always randomizes."
+  },
+  "story": {
+    "what_it_is": "Defenses that stop a page from learning your extensions by guessing their addresses.",
+    "icon": "shield",
+    "tags": [
+      "Extensions",
+      "Defense",
+      "Capability"
+    ],
+    "marketing": [
+      {
+        "vendor": "Mozilla",
+        "name": "web_accessible_resources",
+        "pitch": "Explains how Firefox randomizes extension addresses per install.",
+        "url": "https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/manifest.json/web_accessible_resources"
+      }
+    ],
+    "for_you": "Your extensions are harder to list from a web page when they use these defenses.",
+    "for_makers": "Extension authors enable use_dynamic_url to protect their users.",
+    "use_cases": [
+      {
+        "type": "productivity",
+        "example": "A password manager enables dynamic URLs so websites cannot detect it.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Not all extensions opt in"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Chromium MV3 only for use_dynamic_url",
+    "Safari packaging details are low confidence"
+  ],
+  "scores": {
+    "sensitivity": 1,
+    "utility": 3,
+    "fingerprint_bits": null,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Privacy for extension users"
+    ],
+    "abuse": [
+      "None"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [],
+  "related": [
+    "web.device.extension-probing",
+    "web.device.extension-dom-injection"
+  ],
+  "refs": [
+    {
+      "t": "docs",
+      "label": "Chrome web_accessible_resources (checked 2026-11-16)",
+      "url": "https://developer.chrome.com/docs/extensions/reference/manifest/web-accessible-resources"
+    },
+    {
+      "t": "mdn",
+      "label": "MDN web_accessible_resources (WebExtensions) (checked 2026-11-16)",
+      "url": "https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/manifest.json/web_accessible_resources"
+    },
+    {
+      "t": "bcd",
+      "label": "MDN browser-compat-data 8.1.9 (checked 2026-11-16)",
+      "url": "https://cdn.jsdelivr.net/npm/@mdn/browser-compat-data@8.1.9/data.json"
+    }
+  ],
+  "confidence": "inferred"
+}
