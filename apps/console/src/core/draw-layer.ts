@@ -1,9 +1,10 @@
 // A live drawing layer the voice agent paints on: text, boxes, circles, lines, arrows, freehand paths
 // and highlight boxes that follow a page element. It is one fixed SVG over the whole window that never
 // takes the pointer, uses the page's own color tokens so it follows the light or dark theme, and keeps
-// anchored items glued to their element on scroll and resize. Nothing is ever drawn over an account or
-// key panel ([data-agent-off]); an item that would touch one is refused, and one that comes to overlap
-// one later is hidden until it no longer does.
+// anchored items glued to their element on scroll, resize and page changes. While any account or key
+// panel ([data-agent-off]) is on screen the whole layer is hidden and new drawings are refused, so a
+// drawing can never sit over (or disguise) a protected control. A mutation observer and a short timer
+// recheck this whenever the page changes, not only on scroll or resize.
 
 export type DrawKind = "text" | "box" | "circle" | "line" | "arrow" | "path" | "highlight";
 export type Pt = [number, number];
@@ -20,7 +21,7 @@ export type DrawSpec = {
   seconds?: number;
 };
 
-type Item = DrawSpec & { id: string; created: number; expires?: number; g: SVGGElement; hidden?: boolean; gone?: boolean };
+type Item = DrawSpec & { id: string; created: number; expires?: number; g: SVGGElement; gone?: boolean };
 
 const NS = "http://www.w3.org/2000/svg";
 const OFF = "[data-agent-off]";
@@ -62,12 +63,27 @@ function root(): SVGSVGElement | null {
   const kick = () => schedule();
   window.addEventListener("scroll", kick, { passive: true, capture: true });
   window.addEventListener("resize", kick, { passive: true });
+  // Panels mount without a scroll or resize: hide synchronously on any DOM change that shows one.
+  new MutationObserver(() => { guard(); schedule(); }).observe(document.body, { childList: true, subtree: true, attributes: true, attributeFilter: ["data-agent-off", "hidden", "class", "style", "aria-hidden"] });
+  window.setInterval(() => { if (items.size) { guard(); schedule(); } }, 250);
   return svg;
 }
 
 function schedule() {
-  if (raf || typeof window === "undefined") return;
-  raf = window.requestAnimationFrame(() => { raf = 0; items.forEach(render); });
+  if (raf || typeof window === "undefined" || !items.size) return;
+  raf = window.requestAnimationFrame(() => { raf = 0; if (!guard()) items.forEach(render); });
+}
+
+/** True while an account or key panel is visible; the whole layer is hidden for that time. */
+export function privateShown() { return offRects().length > 0; }
+
+/** Hide the whole layer while a private panel shows. Returns whether it is hidden. */
+function guard() {
+  if (!svg) return false;
+  const off = privateShown();
+  const want = off ? "none" : "";
+  if (svg.style.display !== want) svg.style.display = want;
+  return off;
 }
 
 /** Visible rects of private panels, in viewport pixels. */
@@ -75,13 +91,12 @@ function offRects(): Box[] {
   if (typeof document === "undefined") return [];
   return [...document.querySelectorAll(OFF)].map((el) => el.getBoundingClientRect()).filter((b) => b.width && b.height).map((b) => ({ x: b.left, y: b.top, w: b.width, h: b.height }));
 }
-const overlaps = (a: Box, b: Box) => a.x < b.x + b.w && a.x + a.w > b.x && a.y < b.y + b.h && a.y + a.h > b.y;
 
 /** Resolve a control id or CSS selector to a visible element, refusing private panels. */
-export function resolveAnchor(anchor: string): { el?: Element; error?: string } {
+export function resolveAnchor(anchor: string, byControlId?: (id: string) => Element | undefined): { el?: Element; error?: string } {
   if (typeof document === "undefined") return { error: "No page." };
-  let el: Element | null = null;
-  try { el = document.querySelector(`[data-control="${CSS.escape(anchor)}"]`); } catch { /* not an id */ }
+  let el: Element | null = byControlId?.(anchor) || null;
+  if (!el) try { el = document.querySelector(`[data-control="${CSS.escape(anchor)}"]`); } catch { /* not an id */ }
   if (!el) { try { el = document.querySelector(anchor); } catch { return { error: `"${anchor}" is neither a control id nor a valid selector. Call list_controls for ids.` }; } }
   if (!el) return { error: `Nothing on the page matches "${anchor}". Call list_controls for ids.` };
   if (el.closest(OFF)) return { error: "That is inside an account or key panel; you may not draw there." };
@@ -144,10 +159,14 @@ function render(it: Item) {
       label(g, it.text || "", x, y, c, size);
       break;
     }
-    case "box": g.appendChild(el("rect", { x: it.x ?? 0, y: it.y ?? 0, width: it.w ?? 0, height: it.h ?? 0, rx: 6, style: it.fill ? `${stroke};fill:${c};fill-opacity:.15` : stroke })); break;
+    case "box":
     case "circle": {
-      const rx = (it.w ?? 0) / 2, ry = (it.h ?? it.w ?? 0) / 2;
-      g.appendChild(el("ellipse", { cx: (it.x ?? 0) + rx, cy: (it.y ?? 0) + ry, rx, ry, style: it.fill ? `${stroke};fill:${c};fill-opacity:.15` : stroke }));
+      // Wrapping an element: follow it, padded; otherwise the fixed x,y,w,h.
+      const pad = it.kind === "circle" ? 14 : 6;
+      const b = anchorBox ? { x: anchorBox.x - pad, y: anchorBox.y - pad, w: anchorBox.w + pad * 2, h: anchorBox.h + pad * 2 } : { x: it.x ?? 0, y: it.y ?? 0, w: it.w ?? 0, h: it.h ?? 0 };
+      const style = it.fill ? `${stroke};fill:${c};fill-opacity:.15` : stroke;
+      if (it.kind === "box") g.appendChild(el("rect", { x: b.x, y: b.y, width: b.w, height: b.h, rx: 6, style }));
+      else g.appendChild(el("ellipse", { cx: b.x + b.w / 2, cy: b.y + b.h / 2, rx: b.w / 2, ry: b.h / 2, style }));
       break;
     }
     case "line":
@@ -182,10 +201,7 @@ function render(it: Item) {
       label(g, it.label, x, y, c, size);
     }
   }
-  // Hide anything that touches a private panel, including panels that opened after it was drawn.
-  const b = boxOf(it);
-  it.hidden = !!b && offRects().some((o) => overlaps(b, o));
-  g.style.display = it.hidden ? "none" : "";
+  g.style.display = "";
 }
 
 /** The drawn item's box in viewport pixels, measured from the page when it can be. */
@@ -212,7 +228,7 @@ export function describeItem(it: Item) {
     id: it.id, kind: it.kind, color: it.color || "accent",
     ...(it.text ? { text: it.text } : {}), ...(it.label ? { label: it.label } : {}), ...(it.anchor ? { anchor: it.anchor } : {}),
     box: b ? { x: r(b.x), y: r(b.y), w: r(b.w), h: r(b.h) } : null,
-    state: it.gone ? "anchor gone from the page" : it.hidden ? "hidden, it overlaps a private panel" : on ? "visible" : "off screen",
+    state: it.gone ? "anchor gone from the page" : privateShown() ? "hidden while an account or key panel is open" : on ? "visible" : "off screen",
     age_s: r((Date.now() - it.created) / 1000),
     ...(it.expires ? { fades_in_s: Math.max(0, r((it.expires - Date.now()) / 1000)) } : {}),
   };
@@ -226,6 +242,7 @@ export function draw(spec: DrawSpec): { ok: true; item: Drawn } | { ok: false; e
   if (!s) return { ok: false, error: "No page to draw on." };
   if (items.size >= MAX_ITEMS) return { ok: false, error: `${MAX_ITEMS} drawings are already on screen. Erase some first.` };
   if (spec.el?.closest(OFF)) return { ok: false, error: "That is inside an account or key panel; you may not draw there." };
+  if (privateShown()) return { ok: false, error: "An account or key panel is open. Drawing is off until it closes." };
   const id = `d${++seq}`;
   const g = el("g", { "data-draw-id": id });
   s.appendChild(g);
@@ -234,7 +251,6 @@ export function draw(spec: DrawSpec): { ok: true; item: Drawn } | { ok: false; e
   const it: Item = { ...spec, id, created: now, g, expires: secs > 0 ? now + Math.min(secs, 3600) * 1000 : undefined };
   items.set(id, it);
   render(it);
-  if (it.hidden) { erase(id); return { ok: false, error: "That would cover an account or key panel; you may not draw there. Pick another spot." }; }
   if (it.expires) window.setTimeout(() => erase(id), it.expires - now);
   return { ok: true, item: describeItem(it) };
 }

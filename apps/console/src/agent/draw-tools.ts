@@ -1,4 +1,5 @@
 import { DRAW_COLORS, type DrawKind, type DrawSpec, type Pt, draw, eraseAll, erase, listDrawings, resolveAnchor } from "../core/draw-layer";
+import { scanControls } from "./control-tools";
 import type { ToolDef, ToolResult } from "./tools";
 
 // Tools that let the voice agent write and draw on the screen in real time: text, boxes, circles,
@@ -73,7 +74,8 @@ export async function drawCall(name: string, a: Record<string, any>): Promise<To
       };
       let target: Element | undefined;
       if (a.to) {
-        const r = resolveAnchor(String(a.to));
+        // Any id list_controls gives (including auto ids and #2 suffixes), else a data-control value or selector.
+        const r = resolveAnchor(String(a.to), (id) => scanControls().find((c) => c.control.id === id)?.el);
         if (!r.el) return { ok: false, error: r.error };
         target = r.el;
         target.scrollIntoView({ block: "nearest", inline: "nearest" });
@@ -123,11 +125,7 @@ export async function drawCall(name: string, a: Record<string, any>): Promise<To
         }
         case "box":
         case "circle": {
-          if (target) {
-            const b = target.getBoundingClientRect();
-            const pad = kind === "circle" ? 14 : 6;
-            Object.assign(spec, { x: b.left - pad, y: b.top - pad, w: b.width + pad * 2, h: b.height + pad * 2, anchor: String(a.to) });
-          } else if ([x, y, w, h].some((v) => v === undefined)) return { ok: false, error: `${kind} needs x, y, w and h, or to.` };
+          if (target) Object.assign(spec, { el: target, anchor: String(a.to) }); else if ([x, y, w, h].some((v) => v === undefined)) return { ok: false, error: `${kind} needs x, y, w and h, or to.` };
           else Object.assign(spec, { x, y, w, h });
           break;
         }
