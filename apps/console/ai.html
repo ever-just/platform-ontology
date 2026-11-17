@@ -12,14 +12,29 @@
       button.on { background: #fff; color: #111; }
       button:disabled { opacity: .5; cursor: default; }
       #status { min-height: 1.5em; color: #666; text-align: center; max-width: 34em; }
-      #log { font-size: 13px; color: #888; max-width: 34em; text-align: center; }
+      #feed { width: 100%; max-width: 38em; max-height: 50vh; overflow-y: auto; display: flex; flex-direction: column; gap: 6px; }
+      #feed:empty { display: none; }
+      #feed p { margin: 0; padding: 8px 12px; border-radius: 12px; max-width: 85%; overflow-wrap: anywhere; }
+      #feed .you { align-self: flex-end; background: #f1f1f1; }
+      #feed .ai { align-self: flex-start; border: 1px solid #e3e3e3; }
+      #feed .step { align-self: center; font-size: 12px; color: #777; padding: 2px 8px; }
+      #feed .step::before { content: "\2026 "; }
+      #feed .step.ok::before { content: "\2713 "; }
+      #feed .step.bad::before { content: "\2715 "; color: #b00; }
+      @media (prefers-color-scheme: dark) {
+        html, body { background: #111; color: #eee; }
+        button { background: #eee; color: #111; border-color: #eee; }
+        button.on { background: #111; color: #eee; }
+        #feed .you { background: #262626; }
+        #feed .ai { border-color: #333; }
+      }
     </style>
   </head>
   <body>
     <main>
       <button id="go">Start</button>
       <div id="status"></div>
-      <div id="log"></div>
+      <div id="feed" aria-live="polite"></div>
     </main>
     <script type="module" src="/src/ai/main.ts"></script>
   </body>
