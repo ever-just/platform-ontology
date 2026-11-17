@@ -16,7 +16,8 @@ import { createHmac, randomBytes } from "node:crypto";
 import { auth, db } from "./_lib/auth.mjs";
 import { json } from "./_lib/lake.mjs";
 
-const MODEL = process.env.GEMINI_THINK_MODEL || "gemini-flash-latest";
+// Tried in order: a model under high demand (503), out of quota (429) or too slow moves on to the next.
+const MODELS = [...new Set([process.env.GEMINI_THINK_MODEL, "gemini-3.5-flash", "gemini-3.5-flash-lite", "gemini-flash-latest"].filter(Boolean))];
 const LIVE_MODEL = process.env.GEMINI_LIVE_MODEL || "gemini-2.5-flash-native-audio-preview-12-2025";
 const ORIGINS = /^https:\/\/(ai\.platformontology\.lol|platformontology\.lol|[a-z0-9-]+\.vercel\.app)$|^http:\/\/localhost(:\d+)?$/;
 const PER_USER = 30;
@@ -166,28 +167,31 @@ export async function POST(req) {
   }
 
   const user = context ? `${problem}\n\nCONTEXT:\n${context}` : problem;
-  const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${MODEL}:generateContent`, {
-    method: "POST",
-    headers: { "x-goog-api-key": key, "content-type": "application/json" },
-    body: JSON.stringify({
-      systemInstruction: { parts: [{ text: PROMPTS[mode] }] },
-      contents: [{ role: "user", parts: [{ text: user }] }],
-      ...(mode === "code" ? { tools: [{ codeExecution: {} }] } : {}),
-      generationConfig: {
-        maxOutputTokens: MAX_OUT,
-        thinkingConfig: { thinkingLevel: mode === "code" ? "low" : "medium" },
-        ...(mode === "think" ? { responseMimeType: "application/json" } : {}),
-      },
-    }),
-    signal: AbortSignal.timeout(110_000),
-  }).catch(() => null);
-  if (!res?.ok) {
-    if (res) console.error("think", mode, res.status, (await res.text()).slice(0, 300));
-    else console.error("think", mode, "no response");
-    return json(502, { error: "Could not think that through right now. Try again in a minute." });
+  const request = JSON.stringify({
+    systemInstruction: { parts: [{ text: PROMPTS[mode] }] },
+    contents: [{ role: "user", parts: [{ text: user }] }],
+    ...(mode === "code" ? { tools: [{ codeExecution: {} }] } : {}),
+    generationConfig: {
+      maxOutputTokens: MAX_OUT,
+      thinkingConfig: { thinkingLevel: mode === "code" ? "low" : "medium" },
+      ...(mode === "think" ? { responseMimeType: "application/json" } : {}),
+    },
+  });
+  const deadline = now + 100_000;
+  for (const model of MODELS) {
+    const left = deadline - Date.now();
+    if (left < 5_000) break;
+    const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`, {
+      method: "POST", headers: { "x-goog-api-key": key, "content-type": "application/json" }, body: request,
+      signal: AbortSignal.timeout(Math.min(left, 45_000)),
+    }).catch(() => null);
+    if (res?.ok) {
+      const data = await res.json();
+      return json(200, { mode, model, ...(mode === "code" ? readCode(data) : readThink(data)) });
+    }
+    console.error("think", mode, model, res ? res.status : "no response", res ? (await res.text()).slice(0, 200) : "");
   }
-  const data = await res.json();
-  return json(200, { mode, model: MODEL, ...(mode === "code" ? readCode(data) : readThink(data)) });
+  return json(502, { error: "Could not think that through right now. Try again in a minute." });
 }
 
 export const GET = () => json(405, { error: "POST only" });
