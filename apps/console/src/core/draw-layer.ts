@@ -64,7 +64,7 @@ function root(): SVGSVGElement | null {
   window.addEventListener("scroll", kick, { passive: true, capture: true });
   window.addEventListener("resize", kick, { passive: true });
   // Panels mount without a scroll or resize: hide synchronously on any DOM change that shows one.
-  new MutationObserver(() => { guard(); schedule(); }).observe(document.body, { childList: true, subtree: true, attributes: true, attributeFilter: ["data-agent-off", "hidden", "class", "style", "aria-hidden"] });
+  new MutationObserver((muts) => { if (muts.every((m) => svg?.contains(m.target))) return; guard(); schedule(); }).observe(document.body, { childList: true, subtree: true, attributes: true, attributeFilter: ["data-agent-off", "hidden", "class", "style", "aria-hidden"] });
   window.setInterval(() => { if (items.size) { guard(); schedule(); } }, 250);
   return svg;
 }
