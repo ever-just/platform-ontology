@@ -5,9 +5,10 @@ import { getSession, isActive, request, series, stop, useSession } from "../core
 import { useTimeline } from "../core/timeline";
 import { supportOf } from "../browser/profile";
 import { OTHER, type ConsoleCtx, type GroupDef } from "../ext/registry";
-import { short } from "./charts";
 import { Spark } from "./kit";
 import { CapIcon, MechBadge, mechanismOf } from "./icons";
+import { RowValue } from "./value";
+import { QUANT, primaryMetric } from "../core/datatype";
 
 type Tab = "all" | "live" | "used" | "blocked" | "ref";
 const TABS: [Tab, string][] = [["all", "All"], ["live", "Live"], ["used", "Used"], ["blocked", "Blocked"], ["ref", "Reference"]];
@@ -110,7 +111,7 @@ const Row = memo(function Row({ scope, on, ok, ctx }: { scope: ScopeDef; on: boo
       <span className="row-n">{scope.name}</span>
       <MechBadge mech={mech} />
       <RowSpark scope={scope} records={s.records} />
-      <span className="row-v">{active && s.hz ? s.hz.toFixed(1) + " Hz" : s.count ? short(s.count) : ""}</span>
+      <RowValue scope={scope} s={s} />
       <button data-control={`caps.row-run.${scope.id}`} className={"row-b" + (active ? " stop" : "")} onClick={(e) => { e.stopPropagation(); active ? stop(scope.id) : void request(scope.id); }} aria-label={active ? "Stop" : "Run"} title={active ? "Stop" : "Run"}>
         {active ? <Square size={11} /> : <Play size={11} />}
       </button>
@@ -122,7 +123,10 @@ const Row = memo(function Row({ scope, on, ok, ctx }: { scope: ScopeDef; on: boo
 function RowSpark({ scope, records }: { scope: ScopeDef; records: Rec[] }) {
   if (records.length < 3) return <span className="row-sp" />;
   const d = records[records.length - 1].data as Record<string, unknown>;
-  const key = scope.metrics?.find((m) => typeof d[m.key] === "number")?.key ?? Object.keys(d).find((k) => typeof d[k] === "number");
+  // Only quantities trend. A label, a Yes/No or a set has no line to draw.
+  const pm = primaryMetric(scope);
+  if (scope.reference || !pm || !QUANT.has(pm.type || "ratio")) return <span className="row-sp" />;
+  const key = scope.metrics?.find((m) => QUANT.has(m.type || "ratio") && typeof d[m.key] === "number")?.key;
   const vals = key ? series(records, key, 60) : [];
   return <span className="row-sp" title={key ? `Trend of ${key}` : undefined}>{vals.length > 2 && <Spark values={vals} w={46} h={16} />}</span>;
 }

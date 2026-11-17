@@ -52,6 +52,26 @@ export type IconType = ComponentType<{ size?: number; strokeWidth?: number; clas
 export type InstrumentProps = { scope: ScopeDef; session: Session };
 
 /** One endpoint of the unified API, e.g. `surroundings.bluetooth`. */
+/** Kind of data a field holds (Stevens levels plus the practical kinds a console shows).
+ *  ratio, interval and count are quantitative and may get a sparkline; the rest never do. */
+export type DataKind =
+  | "ratio" | "interval" | "count"
+  | "ordinal" | "nominal" | "boolean"
+  | "temporal" | "text" | "identifier" | "geo" | "set" | "media" | "color";
+
+export type Metric = {
+  key: string;
+  label: string;
+  unit?: string;
+  digits?: number;
+  /** Data kind. Filled for every scope by scopes/datatypes.ts when a scope leaves it out. */
+  type?: DataKind;
+  /** Known values for ordinal (in order, lowest first) and nominal fields. */
+  options?: string[];
+  /** The value the row and the voice agent lead with. One per scope. */
+  primary?: boolean;
+};
+
 export type ScopeDef = {
   id: string;
   name: string;
@@ -80,8 +100,9 @@ export type ScopeDef = {
   reveals: string[];
   /** Other scope ids this one combines with to reveal more. */
   feeds?: string[];
-  /** Headline metrics shown in the telemetry strip and overlay. Keys into the latest record's data. */
-  metrics?: { key: string; label: string; unit?: string; digits?: number }[];
+  /** Headline metrics shown in the row, telemetry strip and overlay. Keys into the latest record's data.
+   *  `type` says what kind of data it is, which decides how it is drawn (see core/datatype.ts). */
+  metrics?: Metric[];
   params?: Param[];
   /** Real browser adapter. Throw a DOMException on refusal. Return a stop function. */
   live: (ctx: Ctx) => Promise<Stop | void>;

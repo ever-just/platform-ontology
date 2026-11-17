@@ -1,4 +1,5 @@
 import type { Atlas, AtlasNode, Params, ScopeDef, Session, Source } from "../core/types";
+import { headline, headlineText, primaryMetric } from "../core/datatype";
 import { allSessions, getSession, isActive, request, setParam, setSource, stop, stopAll, subscribe } from "../core/harness";
 import { runPageAction } from "../scopes/page-controls";
 import { ACTIONS, type JsonSchema } from "./actions";
@@ -52,7 +53,9 @@ export function clip(v: unknown, depth = 0): unknown {
 }
 
 function brief(s: ScopeDef, ses: Session) {
-  return { id: s.id, name: s.name, group: s.domain, summary: s.summary, start: kindOf(s), state: ses.state, actions: (ACTIONS[s.id] || []).map((a) => a.name) };
+  // reading: the latest value as its data type says to say it ("Battery: 80 %", "Charging: Yes"), never a bare rate.
+  const h = headline(s, ses.last?.data as Record<string, unknown> | undefined);
+  return { id: s.id, name: s.name, group: s.domain, summary: s.summary, start: kindOf(s), state: ses.state, reading: h ? headlineText(h) : undefined, type: primaryMetric(s)?.type, actions: (ACTIONS[s.id] || []).map((a) => a.name) };
 }
 
 function status(ses: Session) {

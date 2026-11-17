@@ -1,4 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
+import { QUANT } from "../core/datatype";
+import type { DataKind } from "../core/types";
 import { ArrowDownRight, ArrowUpRight, Minus, Pause, Play, RotateCcw, ZoomIn, ZoomOut } from "lucide-react";
 import type { Rec, ScopeDef, Session } from "../core/types";
 import { addTap } from "../core/harness";
@@ -108,7 +110,7 @@ const KINDS: { id: Kind; label: string }[] = [{ id: "line", label: "Line" }, { i
 const RANGES: { id: string; ms: number }[] = [{ id: "10s", ms: 10e3 }, { id: "1m", ms: 60e3 }, { id: "5m", ms: 300e3 }, { id: "15m", ms: 900e3 }, { id: "All", ms: 0 }];
 const MIN_SPAN = 2000;
 
-type Metric = { key: string; label: string; unit?: string; digits?: number };
+type Metric = { key: string; label: string; unit?: string; digits?: number; type?: DataKind };
 
 export function TradeChart({ scope, session, keys, compact = false, height }: { scope: ScopeDef; session: Session; keys?: string[]; compact?: boolean; height?: number }) {
   const records = session.records;
@@ -116,7 +118,8 @@ export function TradeChart({ scope, session, keys, compact = false, height }: { 
   const metrics: Metric[] = useMemo(() => {
     const declared = new Map((scope.metrics || []).map((m) => [m.key, m]));
     const order = keys ? keys : [...(scope.metrics || []).map((m) => m.key), ...avail];
-    const uniq = [...new Set(order)].filter((k) => avail.includes(k));
+    // Only quantities chart: a declared label, Yes/No, set or category never becomes a line.
+    const uniq = [...new Set(order)].filter((k) => avail.includes(k) && (!declared.get(k)?.type || QUANT.has(declared.get(k)!.type!)));
     return uniq.map((k) => declared.get(k) || { key: k, label: k.replace(/_/g, " ") });
   }, [scope, keys, avail]);
   const extra = avail.filter((k) => !metrics.some((m) => m.key === k));

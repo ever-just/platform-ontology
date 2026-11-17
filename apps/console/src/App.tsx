@@ -7,6 +7,7 @@ import { feed, startTimeline, useTimeline } from "./core/timeline";
 import { buildScopes } from "./scopes";
 import { referenceScopes } from "./scopes/reference";
 import { applyMeta } from "./scopes/meta";
+import { applyTypes } from "./scopes/datatypes";
 import { detectProfile } from "./browser/profile";
 import { collectPassive, type PassiveSignal } from "./real";
 import { listGroups, listViews, onRegistryChange, pluginScopes, resolveGroup, OTHER, type ChartOpts, type ConsoleCtx, type GroupDef } from "./ext/registry";
@@ -62,7 +63,7 @@ function Console({ atlas }: { atlas: Atlas }) {
 
   const scopes = useMemo(() => {
     const base = [...buildScopes(atlas.nodes), ...pluginScopes()];
-    const list = applyMeta([...base, ...referenceScopes(base, atlas.nodes)]);
+    const list = applyTypes(applyMeta([...base, ...referenceScopes(base, atlas.nodes)]));
     registerScopes(list);
     return list;
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -121,11 +122,19 @@ function Console({ atlas }: { atlas: Atlas }) {
       if (readHash() === PRIVACY) return;
       const id = resolve(readHash())?.id || null;
       if (!id) pushed.current = false;
+      else if (!docked()) setPane("caps");
       setSelected(id);
     };
     window.addEventListener("hashchange", on);
-    return () => window.removeEventListener("hashchange", on);
+    // Shrinking past the docked breakpoint must not throw a full-screen sheet over the page: a selection that only
+    // lived in the docked column (no hash) closes, while a deep-linked one stays open.
+    const mq = window.matchMedia("(min-width: 1100px)");
+    const onSize = () => { if (!mq.matches && !resolve(readHash())) { pushed.current = false; setSelected(null); } };
+    mq.addEventListener("change", onSize);
+    return () => { window.removeEventListener("hashchange", on); mq.removeEventListener("change", onSize); };
   }, [resolve]);
+  // A deep link on a narrow screen opens over the capability list, so closing it lands where the item lives.
+  useEffect(() => { if (selected && !docked() && resolve(readHash())) setPane("caps"); }, []); // eslint-disable-line react-hooks/exhaustive-deps
   useEffect(() => { store.set(LAST, selected); }, [selected]);
 
   const selRef = useRef(selected);

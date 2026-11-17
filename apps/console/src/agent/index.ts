@@ -3,6 +3,7 @@ import { registerScopes } from "../core/harness";
 import { buildScopes } from "../scopes";
 import { referenceScopes } from "../scopes/reference";
 import { applyMeta } from "../scopes/meta";
+import { applyTypes } from "../scopes/datatypes";
 import { pluginScopes } from "../ext/registry";
 import { createAgentTools } from "./tools";
 import { createMcpServer } from "./mcp";
@@ -16,7 +17,7 @@ export { ACTIONS } from "./actions";
 /** The same capability list the console builds, for pages that host the agent without the console UI. */
 export function consoleScopes(atlas: Atlas): ScopeDef[] {
   const base = [...buildScopes(atlas.nodes), ...pluginScopes()];
-  return applyMeta([...base, ...referenceScopes(base, atlas.nodes)]);
+  return applyTypes(applyMeta([...base, ...referenceScopes(base, atlas.nodes)]));
 }
 
 /** Register every capability with the harness and return the tools and MCP server over them. */
