@@ -53,6 +53,10 @@ const TASKS = [
   { say: "Does this site have a service worker or any background jobs?", want: ["list_background_jobs"] },
   { say: "Are any of my browser extensions leaving traces on this page?", want: ["find_extension_traces"] },
   { say: "Which features does the permissions policy allow here?", want: ["read_permissions_policy"] },
+  { say: "Search the web for who won the most recent Formula 1 Grand Prix.", want: ["web_search"] },
+  { say: "Think this through step by step before answering: which three sensors would best tell whether I am walking or driving?", want: ["sequential_thinking", "think_in_background", "list_capabilities"] },
+  { say: "Work on this in the background while we talk: plan a one week experiment to measure how my browser fingerprint changes.", want: ["think_in_background"] },
+  { say: "Run some code to compute the mean and standard deviation of 3, 9, 4, 12 and 7.", want: ["run_code"] },
 ];
 
 const vite = await createServer({ server: { middlewareMode: true }, appType: "custom", logLevel: "error" });

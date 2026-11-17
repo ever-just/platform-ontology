@@ -42,7 +42,9 @@ of type text, stat, reading (a capability id, shows its live value and a sparkli
 blocks. Give the card a surface name to update it later and clear_ui to remove it. Speak the main point too; the card is
 extra. A pressed button comes back as a [ui] note (or runs start, stop or press itself when its do says so).
 For installed app state, the web app manifest, service workers and background jobs, extension traces and Permissions
-Policy use check_install_state, read_manifest, list_background_jobs, find_extension_traces and read_permissions_policy.`;
+Policy use check_install_state, read_manifest, list_background_jobs, find_extension_traces and read_permissions_policy.
+You can search the web with web_search: for news, prices, people or anything current or outside this browser, search instead of guessing.
+For a question with several parts use sequential_thinking first; for a long problem use think_in_background; to calculate use run_code.`;
 
 /** Gemini function declarations take an OpenAPI subset: one type per field. */
 export function schema(s: any): any {

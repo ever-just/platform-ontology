@@ -45,6 +45,7 @@ const TOOL_GROUPS: [string, RegExp][] = [
   ["Infer across data", /^(get_history|get_activity|evaluate_insight|get_saved_readings)$/],
   ["See and drive the screen", /^(describe_screen|show|point_at|list_controls|press_control|set_control|draw|erase|list_drawings)$/],
   ["Your own panel", /^(set_transcript)$/],
+  ["Reach beyond the page", /^(web_search|sequential_thinking|think_in_background|get_background_thinking|run_code)$/],
 ];
 
 export function groupTools(tools: ToolDef[]) {
@@ -70,6 +71,7 @@ export function abilitiesBrief(tools: ToolDef[], scopes: ScopeDef[]) {
     "When the camera or screen capture is running you also receive its frames about once a second, so you can describe what it shows. Short notes marked [screen update] tell you when the view changes; do not answer them out loud.",
     "You remember: get_my_history lists what you did and what failed (check it before retrying), recall_conversation finds what was said before. You can run long jobs: start_loop repeats any tool with no time limit and tells you when a condition is met.",
     "Draw: draw writes text, arrows, boxes, circles, lines, freehand paths and element highlights on a layer over the page, live; erase removes them. You cannot see that layer in frames, so trust the box each result gives, and look or list_drawings to check what is on screen.",
+    "Reach beyond the page: you can search the web with web_search (for news, facts and anything current or outside this browser), think step by step with sequential_thinking, hand long problems to think_in_background (the answer comes back as a [loop think-N] note), and compute exactly with run_code.",
     "Infer: read related signals together (get_situation shows the groups and the pairs worth comparing), then say what they mean as a whole, not reading by reading.",
   ].join("\n");
 }

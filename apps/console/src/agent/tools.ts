@@ -9,6 +9,7 @@ import { ACCOUNT_TOOLS, INSIGHT_TOOLS, insightCall } from "./insight-tools";
 import { highlight } from "../core/screen";
 import { AWARE_TOOLS, awareCall } from "./aware-tools";
 import { DRAW_TOOLS, drawCall } from "./draw-tools";
+import { REACH_TOOLS, reachCall } from "./reach-tools";
 import { logAction, setLoopRunner } from "../core/agent-memory";
 import { askClick, hasGesture } from "../core/click-asks";
 import { expandQuery, plainResult } from "./plain";
@@ -172,6 +173,7 @@ export function createAgentTools(atlas: Atlas, scopes: ScopeDef[], opts: { pageC
     ...(opts.pageControls ? [...JOB_TOOLS, ASK_CLICK] : []),
     ...PAGE_SCRIPT_TOOLS,
     ...(opts.pageControls ? GENUI_TOOLS : []),
+    ...(opts.pageControls ? REACH_TOOLS : []),
   ];
 
   // Every call is logged so the agent can read back what it did and what failed.
@@ -190,6 +192,8 @@ export function createAgentTools(atlas: Atlas, scopes: ScopeDef[], opts: { pageC
     if (aw) return aw;
     const dc = opts.pageControls ? await drawCall(name, a) : null;
     if (dc) return dc;
+    const rc = opts.pageControls ? await reachCall(name, a) : null;
+    if (rc) return rc;
     const sc = await screenCall(name, a, find);
     if (sc) return sc;
     const cc = opts.pageControls ? await controlCall(name, a) : null;
