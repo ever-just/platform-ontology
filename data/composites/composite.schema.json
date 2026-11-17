@@ -1,0 +1,70 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://platformontology.lol/schema/composite.schema.json",
+  "title": "Composite sensor (super-sensor)",
+  "description": "A named state built from several atlas entries. Draft, see docs/research/sensor-grouping.md. Layers: L0 signal, L1 feature, L2 context, L3 intent, L4 action.",
+  "type": "object",
+  "required": ["id", "name", "layer", "plain", "inputs", "logic", "states", "surfaces", "sensitivity"],
+  "additionalProperties": false,
+  "properties": {
+    "id": { "type": "string", "pattern": "^(ctx|intent)\\.[a-z0-9-]+$", "description": "ctx.* for L2 contexts, intent.* for L3 intents." },
+    "name": { "type": "string" },
+    "layer": { "enum": ["L2", "L3"] },
+    "plain": { "type": "string", "description": "One sentence a non-engineer understands." },
+    "inputs": {
+      "type": "array",
+      "minItems": 2,
+      "items": {
+        "type": "object",
+        "required": ["ref", "role", "feature"],
+        "additionalProperties": false,
+        "properties": {
+          "ref": { "type": "string", "pattern": "^(web|mob)\\.[a-z0-9.-]+$|^(ctx|intent)\\.[a-z0-9-]+$", "description": "An atlas id, or another composite for stacking." },
+          "scope": { "type": "string", "pattern": "^[a-z]+\\.[a-z_-]+$", "description": "Console stream that produces it, when one exists." },
+          "role": { "enum": ["required", "evidence", "veto", "prior", "blind_spot"], "description": "required: no state without it. evidence: raises or lowers belief. veto: forces the state off. prior: static context that shifts thresholds. blind_spot: the page cannot read it; another surface can." },
+          "feature": { "type": "string", "description": "L1 feature computed from the reading, with its window." },
+          "weight": { "type": "number", "description": "Log odds added when the evidence is present (negative lowers belief)." },
+          "modality": { "enum": ["audio", "video", "motion", "position", "input", "attention", "environment", "device", "network", "identity", "content", "schedule"] }
+        }
+      }
+    },
+    "logic": {
+      "type": "object",
+      "required": ["type", "expr"],
+      "additionalProperties": false,
+      "properties": {
+        "type": { "enum": ["log_odds", "rule", "sequence", "ratio", "sum_capped", "cluster"] },
+        "expr": { "type": "string" },
+        "window": { "type": "string", "description": "Sliding window, e.g. 30s/5s means 30 s wide, every 5 s." },
+        "enter": { "type": "number", "description": "Probability needed to enter the state." },
+        "exit": { "type": "number", "description": "Probability below which the state ends (hysteresis)." },
+        "min_dwell": { "type": "string" }
+      }
+    },
+    "states": { "type": "array", "items": { "type": "string" }, "minItems": 2 },
+    "surfaces": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "page": { "enum": ["full", "partial", "none"] },
+        "extension": { "enum": ["full", "partial", "none"] },
+        "mobile": { "enum": ["full", "partial", "none"] }
+      }
+    },
+    "actions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["do", "mode"],
+        "additionalProperties": false,
+        "properties": {
+          "do": { "type": "string" },
+          "mode": { "enum": ["suggest", "auto", "ask"] },
+          "via": { "type": "string", "description": "Console scope, atlas action id or MCP tool." }
+        }
+      }
+    },
+    "sensitivity": { "type": "integer", "minimum": 1, "maximum": 5, "description": "Max of the inputs, plus one when it infers a state about a person." },
+    "analogues": { "type": "array", "items": { "type": "string" }, "description": "Comparable vendor or research metrics." }
+  }
+}
