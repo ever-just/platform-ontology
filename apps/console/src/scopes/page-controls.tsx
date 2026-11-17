@@ -9,12 +9,12 @@ import "./page-controls.css";
 // prompt. Each scope reads the current value, then the Instrument edits it for real while it runs.
 // Stopping puts everything back. The Instrument talks to the running adapter through `sinks`.
 
-type Patch = Record<string, any>;
+export type Patch = Record<string, any>;
 const sinks = new Map<string, (p: Patch) => void>();
-const errText = (e: any) => (e?.name ? `${e.name}: ${e.message}` : String(e));
+export const errText = (e: any) => (e?.name ? `${e.name}: ${e.message}` : String(e));
 
 /** Live: emit the real state now, after every edit, and whenever a watcher fires. Stop restores. */
-function bind(id: string, ctx: Ctx, o: { read: () => any; apply: (p: Patch) => any; watch?: (re: () => void) => Stop | void; restore?: () => void }): Stop {
+export function bind(id: string, ctx: Ctx, o: { read: () => any; apply: (p: Patch) => any; watch?: (re: () => void) => Stop | void; restore?: () => void }): Stop {
   let alive = true;
   let error = "";
   const re = () => {
@@ -38,7 +38,7 @@ function bind(id: string, ctx: Ctx, o: { read: () => any; apply: (p: Patch) => a
 }
 
 /** Simulated: the same editor drives a fake state; the real page is never touched. */
-function simulate<S extends Record<string, any>>(id: string, ctx: Ctx, init: S, reduce: (s: S, p: Patch) => S): Stop {
+export function simulate<S extends Record<string, any>>(id: string, ctx: Ctx, init: S, reduce: (s: S, p: Patch) => S): Stop {
   ctx.granted();
   let s = init;
   ctx.emit({ ...s });
@@ -46,7 +46,7 @@ function simulate<S extends Record<string, any>>(id: string, ctx: Ctx, init: S, 
   return () => { sinks.delete(id); };
 }
 
-function useCtl<T>(scope: ScopeDef, session: Session) {
+export function useCtl<T>(scope: ScopeDef, session: Session) {
   const d = lastData<T & { error?: string }>(session);
   const on = (session.state === "streaming" || session.state === "granted") && sinks.has(scope.id);
   return { d, on, sim: session.source === "sim", send: (p: Patch) => sinks.get(scope.id)?.(p) };
