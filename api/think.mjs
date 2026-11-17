@@ -185,11 +185,15 @@ export async function POST(req) {
       method: "POST", headers: { "x-goog-api-key": key, "content-type": "application/json" }, body: request,
       signal: AbortSignal.timeout(Math.min(left, 45_000)),
     }).catch(() => null);
-    if (res?.ok) {
-      const data = await res.json();
-      return json(200, { mode, model, ...(mode === "code" ? readCode(data) : readThink(data)) });
+    // Reading the body can stall past the timeout too; that counts as this model failing, not the request.
+    const text = res ? await res.text().catch(() => null) : null;
+    if (res?.ok && text) {
+      try {
+        const data = JSON.parse(text);
+        return json(200, { mode, model, ...(mode === "code" ? readCode(data) : readThink(data)) });
+      } catch {}
     }
-    console.error("think", mode, model, res ? res.status : "no response", res ? (await res.text()).slice(0, 200) : "");
+    console.error("think", mode, model, res ? res.status : "no response", (text || "").slice(0, 200));
   }
   return json(502, { error: "Could not think that through right now. Try again in a minute." });
 }
