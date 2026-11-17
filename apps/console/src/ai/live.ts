@@ -27,7 +27,7 @@ export const stepLabel = (name: string, a: Record<string, any> = {}) =>
 
 export class LiveSession {
   ws!: WebSocket;
-  mic!: MediaStream;
+  mic?: MediaStream;
   inCtx!: AudioContext;
   outCtx = new AudioContext({ sampleRate: 24000 });
   playAt = 0;
@@ -56,7 +56,8 @@ export class LiveSession {
     const t = await r.json().catch(() => ({}));
     if (!r.ok) throw new Error(t.error || "Could not start");
     this.alive();
-    this.mic = await navigator.mediaDevices.getUserMedia({ audio: { echoCancellation: true, noiseSuppression: true, channelCount: 1 } });
+    // No microphone (denied, missing or blocked) still leaves a typed session.
+    this.mic = await navigator.mediaDevices?.getUserMedia({ audio: { echoCancellation: true, noiseSuppression: true, channelCount: 1 } }).catch(() => undefined);
     this.alive();
     this.ws = new WebSocket(`${WS}?access_token=${encodeURIComponent(t.token)}`);
     await new Promise<void>((ok, bad) => { this.ws.onopen = () => ok(); this.ws.onerror = () => bad(new Error("Connection failed")); });
@@ -76,6 +77,7 @@ export class LiveSession {
   }
 
   async startMic() {
+    if (!this.mic) { this.on.status("Microphone is off. Type your question below."); return; }
     this.inCtx = new AudioContext({ sampleRate: 16000 });
     const url = URL.createObjectURL(new Blob([WORKLET], { type: "text/javascript" }));
     await this.inCtx.audioWorklet.addModule(url);
