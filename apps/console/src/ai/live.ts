@@ -49,6 +49,7 @@ export class LiveSession {
   handle: string | null = null;
   retries = 0;
   private talking = false;
+  private calm?: ReturnType<typeof setTimeout>;
   private held: { text: string; reply: boolean }[] = [];
   private onSetup?: () => void;
   timers: ReturnType<typeof setInterval>[] = [];
@@ -164,10 +165,23 @@ export class LiveSession {
 
   send(o: unknown) { if (this.ws?.readyState === 1) this.ws.send(JSON.stringify(o)); }
 
+  /** Hold notes while a turn is in progress; a lost turnComplete frees them after 20 s of quiet. */
+  private busy() {
+    this.talking = true;
+    clearTimeout(this.calm);
+    this.calm = setTimeout(() => this.idle(), 20_000);
+  }
+  private idle() {
+    clearTimeout(this.calm);
+    this.talking = false;
+    this.flushNotes();
+  }
+
   /** Type instead of talking. */
   text(t: string) {
     this.on.say("you", t);
     this.on.turnDone();
+    this.busy();
     this.send({ realtimeInput: { text: t } });
   }
 
@@ -222,8 +236,9 @@ export class LiveSession {
     if (sc?.interrupted) this.hush();
     if (sc?.inputTranscription?.text) this.on.say("you", sc.inputTranscription.text);
     if (sc?.outputTranscription?.text) this.on.say("ai", sc.outputTranscription.text);
-    if (sc?.modelTurn || sc?.outputTranscription) this.talking = true;
-    if (sc?.turnComplete || sc?.interrupted) { this.talking = false; this.flushNotes(); }
+    // A turn is under way from the moment the person speaks or a tool is called, not only once the model answers.
+    if (sc?.modelTurn || sc?.outputTranscription || sc?.inputTranscription || m.toolCall) this.busy();
+    if (sc?.turnComplete || sc?.interrupted) this.idle();
     if (sc?.turnComplete) this.on.turnDone();
     sc?.modelTurn?.parts?.forEach((p: any) => { if (p.inlineData?.data) this.play(unb64(p.inlineData.data)); });
     if (m.toolCall?.functionCalls) {
@@ -244,7 +259,7 @@ export class LiveSession {
   close() {
     if (this.closed) return;
     this.closed = true;
-    this.timers.forEach(clearInterval);
+    this.timers.forEach(clearInterval); clearTimeout(this.calm);
     if (this.ctxDue) clearTimeout(this.ctxDue);
     if (this.frame) { this.frame.v.srcObject = null; this.frame = undefined; setSeeing(null); }
     this.hush();
