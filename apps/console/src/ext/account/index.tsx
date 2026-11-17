@@ -70,10 +70,10 @@ function AccountPanel(_: { ctx: ConsoleCtx }) {
   const s = useAccount();
   const [busy, setBusy] = useState(false);
   const run = (f: () => Promise<unknown>) => async () => { setBusy(true); try { await f(); } finally { setBusy(false); } };
-  if (!s) return <div className="vp"><div className="vp-pad"><p className="vp-lede">Checking your account…</p></div></div>;
+  if (!s) return <div className="vp" data-agent-off><div className="vp-pad"><p className="vp-lede">Checking your account…</p></div></div>;
   const top = Object.entries(s.readings?.scopes || {}).sort((a, b) => b[1] - a[1]).slice(0, 12);
   return (
-    <div className="vp">
+    <div className="vp" data-agent-off>
       <div className="vp-pad">
         {!s.user ? (
           <>

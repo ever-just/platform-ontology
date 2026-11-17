@@ -69,7 +69,9 @@ function settle(id: string, ms: number): Promise<Session> {
 
 const DOMAINS = ["place", "motion", "surroundings", "capture", "device", "fingerprint", "link", "identity", "reach"];
 
-export function createAgentTools(atlas: Atlas, scopes: ScopeDef[]): AgentTools {
+/** pageControls adds list_controls, press_control and set_control. Only the local voice agent, with the
+ *  person at the page, turns them on; the remote MCP relay and WebMCP never get them. */
+export function createAgentTools(atlas: Atlas, scopes: ScopeDef[], opts: { pageControls?: boolean } = {}): AgentTools {
   const byId = new Map(scopes.map((s) => [s.id, s]));
   const byAtlas = new Map<string, ScopeDef>();
   scopes.forEach((s) => s.atlas.forEach((a) => { if (!byAtlas.has(a)) byAtlas.set(a, s); }));
@@ -137,13 +139,13 @@ export function createAgentTools(atlas: Atlas, scopes: ScopeDef[]): AgentTools {
       inputSchema: { type: "object", properties: { id: { type: "string" }, key: { type: "string" }, value: { type: ["string", "number", "boolean"] } }, required: ["id", "key", "value"] },
     },
     ...SCREEN_TOOLS,
-    ...CONTROL_TOOLS,
+    ...(opts.pageControls ? CONTROL_TOOLS : []),
   ];
 
   async function call(name: string, a: Record<string, any> = {}): Promise<ToolResult> {
     const sc = await screenCall(name, a, find);
     if (sc) return sc;
-    const cc = await controlCall(name, a);
+    const cc = opts.pageControls ? await controlCall(name, a) : null;
     if (cc) return cc;
     // Show the person which capability the agent is working on.
     const target = a.id ? find(a.id) : undefined;

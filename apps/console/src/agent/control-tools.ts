@@ -31,7 +31,8 @@ const clean = (s: string | null | undefined) => (s || "").replace(/\s+/g, " ").t
 const slug = (s: string) => s.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "").slice(0, 40);
 
 function visible(el: HTMLElement) {
-  if (el.closest("[hidden], [aria-hidden=true], .voice")) return false;
+  // Account and credential views carry data-agent-off: no agent may see or press anything there.
+  if (el.closest("[hidden], [aria-hidden=true], .voice, [data-agent-off]")) return false;
   return el.getClientRects().length > 0;
 }
 

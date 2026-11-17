@@ -38,7 +38,7 @@ function KeysPanel(_: { ctx: ConsoleCtx }) {
 
   if (!acct?.user) {
     return (
-      <div className="vp"><div className="vp-pad">
+      <div className="vp" data-agent-off><div className="vp-pad">
         <p className="vp-lede">API keys let a script or an AI agent read your saved readings and drive this tab through MCP. Start an account first; it needs no email.</p>
         <Button data-control="api-keys.start-account" intent="primary" onClick={() => signInAnonymous()} text="Start an account" />
       </div></div>
@@ -46,7 +46,7 @@ function KeysPanel(_: { ctx: ConsoleCtx }) {
   }
   const mcpJson = JSON.stringify({ mcpServers: { "platform-ontology": { type: "http", url: `${API}/mcp`, headers: { Authorization: `Bearer ${fresh || "<your key>"}` } } } }, null, 2);
   return (
-    <div className="vp"><div className="vp-pad">
+    <div className="vp" data-agent-off><div className="vp-pad">
       <p className="vp-lede">REST at <code>{API}/v1</code> and MCP at <code>{API}/mcp</code>. MCP calls run in this tab, so keep it open and signed in.</p>
       <div style={{ display: "flex", gap: 8, maxWidth: 480, marginBottom: 12 }}>
         <InputGroup placeholder="Key name" value={name} onChange={(e) => setName(e.target.value)} fill />
