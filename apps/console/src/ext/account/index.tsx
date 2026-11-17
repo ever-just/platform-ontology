@@ -46,7 +46,7 @@ export async function signInAnonymous() {
 }
 
 async function linkGithub() {
-  const r = await post("/api/auth/sign-in/oauth2", { providerId: "github", callbackURL: location.href });
+  const r = await post("/api/auth/sign-in/social", { provider: "github", callbackURL: location.href });
   const j = await r.json().catch(() => ({}));
   if (j?.url) location.href = j.url;
 }
