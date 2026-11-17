@@ -25,14 +25,17 @@ const TASKS = [
   { say: "Change the tab title to hello world.", want: ["list_capabilities", "describe_capability", "start_capability", "run_action"] },
   { say: "Find the capabilities about motion sensors.", want: ["list_capabilities"] },
   { say: "Turn everything off.", want: ["stop_all", "get_status"] },
+  { say: "What am I looking at right now?", want: ["describe_screen"] },
+  { say: "Show me the camera.", want: ["show", "point_at", "list_capabilities"] },
+  { say: "Open the camera and show me the record tab.", want: ["show", "list_capabilities"] },
 ];
 
 const vite = await createServer({ server: { middlewareMode: true }, appType: "custom", logLevel: "error" });
 const { createAgentTools } = await vite.ssrLoadModule("/src/agent/tools.ts");
-const { buildSetup } = await vite.ssrLoadModule("/src/ai/setup.ts");
+const { buildSetup, CONSOLE_SYSTEM } = await vite.ssrLoadModule("/src/ai/setup.ts");
 await vite.close();
 const atlas = JSON.parse(fs.readFileSync(new URL("../public/data/console.json", import.meta.url), "utf8"));
-const setup = buildSetup(MODEL, createAgentTools(atlas, []).tools, ["AUDIO"]);
+const setup = buildSetup(MODEL, createAgentTools(atlas, []).tools, ["AUDIO"], CONSOLE_SYSTEM);
 
 async function token() {
   const now = Date.now();

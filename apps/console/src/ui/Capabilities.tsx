@@ -105,7 +105,7 @@ const Row = memo(function Row({ scope, on, ok, ctx }: { scope: ScopeDef; on: boo
   const active = isActive(s);
   const mech = mechanismOf(scope, ok ? undefined : "n");
   return (
-    <div className={"row" + (on ? " on" : "") + (ok ? "" : " dim") + (active ? " live" : "")} onClick={() => ctx.select(scope.id)} title={scope.summary}>
+    <div data-cap={scope.id} className={"row" + (on ? " on" : "") + (ok ? "" : " dim") + (active ? " live" : "")} onClick={() => ctx.select(scope.id)} title={scope.summary}>
       <span className="row-i"><CapIcon scope={scope} size={15} /><i className={"dot st-" + s.state} /></span>
       <span className="row-n">{scope.name}</span>
       <MechBadge mech={mech} />

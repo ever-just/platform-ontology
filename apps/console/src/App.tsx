@@ -20,6 +20,8 @@ import { Spark } from "./ui/kit";
 import { LOOKS, setLook, useLook } from "./ui/look";
 import { PrivacyDialog, PrivacyLink } from "./ui/Privacy";
 import { RunAll } from "./ui/RunAll";
+import { VoiceDock } from "./ui/VoiceDock";
+import { registerScreen } from "./core/screen";
 import { setVisit, startUploader } from "./core/uploader";
 
 registerBuiltins();
@@ -169,6 +171,30 @@ function Console({ atlas }: { atlas: Atlas }) {
   }), [atlas, scopes, profile, passive, groups, range, chart, select, groupMap, byAtlas, nodeById]);
 
   const look = useLook();
+
+  // The voice AI reads and drives this screen through core/screen.ts. Refs keep the API current
+  // without re-registering on every render.
+  const live$ = useRef({ pane, view, selected, views, ctx, look, scopes, resolve, select, close });
+  live$.current = { pane, view, selected, views, ctx, look, scopes, resolve, select, close };
+  useEffect(() => registerScreen({
+    state: () => {
+      const c = live$.current;
+      const sel = c.selected ? c.scopes.find((s) => s.id === c.selected) : null;
+      const views = c.views.map((v) => { let value: string | undefined; try { const m = v.metric(c.ctx); value = `${m.value}${m.unit || ""}`; } catch {} return { id: v.id, label: v.label, value }; });
+      return {
+        pane: c.pane,
+        view: views.find((v) => v.id === c.view) || views[0] || null,
+        views,
+        inspector: sel ? { id: sel.id, name: sel.name } : null,
+        look: c.look,
+        wide: docked(),
+      };
+    },
+    setPane: (p) => setPane(p),
+    setView: (id) => { const v = live$.current.views.find((x) => x.id === id || x.label.toLowerCase() === id.toLowerCase()); if (!v) return false; setView(v.id); if (!docked()) setPane("overview"); return true; },
+    select: (id) => { const s = live$.current.resolve(id); if (!s) return false; live$.current.select(s.id); return true; },
+    close: () => live$.current.close(),
+  }), []);
   useTimeline(); // header and metrics refresh once a second
   const live = allSessions().filter(isActive).length;
   const current = views.find((v) => v.id === view) || views[0];
@@ -194,6 +220,7 @@ function Console({ atlas }: { atlas: Atlas }) {
               <span className="live-dot on" />{live} live<span className="live-x"><Square size={10} />Stop</span>
             </button>
           )}
+          <VoiceDock atlas={atlas} scopes={scopes} />
           <RunAll ctx={ctx} />
           <button className="icon-b look-b" onClick={() => setLook(nextLook.id)} title={`Look: ${LOOKS[lookIdx]?.label}. Switch to ${nextLook.label}`} aria-label={`Switch look to ${nextLook.label}`}><LookIcon size={16} /></button>
           <a className="icon-b gh-b" href="https://github.com/ever-just/platform-ontology" target="_blank" rel="noreferrer" aria-label="Source on GitHub" title="Source on GitHub"><svg viewBox="0 0 24 24" width={16} height={16} aria-hidden="true"><path d={siGithub.path} fill="currentColor" /></svg></a>
@@ -210,7 +237,7 @@ function Console({ atlas }: { atlas: Atlas }) {
               const on = v.id === current?.id;
               const showSpark = m.spark && m.spark.some((x) => x !== m.spark![0]);
               return (
-                <button key={v.id} role="tab" aria-selected={on} title={m.sub} className={"kpi" + (on ? " on" : "")} onClick={() => setView(v.id)}>
+                <button key={v.id} data-view={v.id} role="tab" aria-selected={on} title={m.sub} className={"kpi" + (on ? " on" : "")} onClick={() => setView(v.id)}>
                   <span className="kpi-l">{(m.tone === "err" || m.tone === "ok") && <i className={"kpi-dot " + m.tone} aria-hidden />}{v.label}</span>
                   <b>{m.value}{m.unit && <em>{m.unit}</em>}</b>
                   <span className="kpi-sp" aria-hidden>{showSpark && <Spark values={m.spark!} w={64} h={14} />}</span>
