@@ -24,9 +24,9 @@ let n = 0;
 export const JOB_TOOLS: ToolDef[] = [
   {
     name: "turn_on_everything",
-    description: "Turn on every capability, or every one in a group, one after another in the background. Use when the person says turn everything on, run everything, give it full access, turn on all permissions, or turn on all the sensors (or any other group) with live or simulated data. Call it directly with the group name; no lookup is needed first. Silent ones start first, then ones with a browser prompt (one at a time, waiting for each answer), then ones that need the person's click, which appear as buttons in the chat. Returns a job id at once; the summary arrives as a note when it ends.",
+    description: "Turn on every capability, or every one in a group, one after another in the background. Use when the person says turn everything on, run everything, give it full access, turn on all permissions, or turn on all the sensors with live or simulated data (leave group out for all of them; pass group only for one domain). No lookup is needed first. Silent ones start first, then ones with a browser prompt (one at a time, waiting for each answer), then ones that need the person's click, which appear as buttons in the chat. Returns a job id at once; the summary arrives as a note when it ends.",
     inputSchema: { type: "object", properties: {
-      group: { type: "string", description: "Only this group, for example sensors or media" },
+      group: { type: "string", description: "Only this group (a capability domain such as motion, place, surroundings, capture or device). Leave it out for everything, including all the sensors." },
       source: { type: "string", enum: ["live", "sim"], description: "Default live. sim needs no permission and no clicks." },
       include_prompts: { type: "boolean", description: "Default true. false skips anything that shows a browser prompt." },
     } },
@@ -84,7 +84,16 @@ export async function jobCall(name: string, a: Record<string, any>, ctx: Ctx): P
     case "turn_on_everything": {
       const source = a.source === "sim" ? "sim" : "live";
       let list = ctx.scopes.filter((s) => !s.reference && !ctx.isActive(ctx.getSession(s.id)));
-      if (a.group) list = list.filter((s) => s.domain === a.group || s.id.startsWith(`${a.group}.`));
+      if (a.group) {
+        const g = String(a.group).toLowerCase().trim();
+        const inGroup = (s: ScopeDef) => s.domain === g || s.id.startsWith(`${g}.`);
+        // An unknown group must not look like "everything is already on".
+        if (!ctx.scopes.some((s) => !s.reference && inGroup(s))) {
+          const groups = [...new Set(ctx.scopes.filter((s) => !s.reference).map((s) => s.domain))].sort();
+          return { ok: false, error: `There is no group "${a.group}". Groups: ${groups.join(", ")}. For every sensor, leave group out.` };
+        }
+        list = list.filter(inGroup);
+      }
       if (a.include_prompts === false && source === "live") list = list.filter((s) => ctx.kindOf(s) === "silent");
       const order: Record<Kind, number> = { silent: 0, ask: 1, tap: 2, pick: 3 };
       list.sort((x, y) => order[ctx.kindOf(x)] - order[ctx.kindOf(y)]);

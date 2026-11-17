@@ -95,7 +95,8 @@ export function plainResult(name: string, a: Record<string, any>, r: ToolResult)
   if (m) out.meaning = m;
   if (CHANGES.test(name) && out.said === undefined) {
     if (out.verified === undefined) out.verified = verifyFrom(name, a, out);
-    out.said = out.verified === false ? "I sent that, but could not confirm it took effect. Check before saying it worked." : "Done, and confirmed.";
+    out.said = out.verified === false ? "I sent that, but could not confirm it took effect. Check before saying it worked."
+      : out.verified === true ? "Done, and confirmed." : "Done. Nothing read it back, so check before saying it worked.";
   }
   return out;
 }

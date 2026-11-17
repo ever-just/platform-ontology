@@ -102,6 +102,12 @@ function setNative(el: HTMLInputElement | HTMLTextAreaElement | HTMLSelectElemen
 
 const none: ToolResult = { ok: false, error: "The console is not on this page, so there are no controls to drive." };
 
+/** One visible, public control by its list_controls id (private panels and the voice dock are never matched). */
+export function findControl(id: string): HTMLElement | undefined {
+  const all = scanControls();
+  return (all.find((x) => x.control.id === id) || all.find((x) => x.control.id.split("#")[0] === id))?.el;
+}
+
 export async function controlCall(name: string, a: Record<string, any>): Promise<ToolResult | null> {
   if (!CONTROL_TOOLS.some((t) => t.name === name)) return null;
   if (typeof document === "undefined") return none;

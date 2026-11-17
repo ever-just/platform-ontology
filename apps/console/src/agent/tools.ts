@@ -4,7 +4,7 @@ import { allSessions, getSession, isActive, request, setParam, setSource, stop, 
 import { runPageAction } from "../scopes/page-controls";
 import { ACTIONS, type JsonSchema } from "./actions";
 import { SCREEN_TOOLS, screenCall } from "./screen-tools";
-import { CONTROL_TOOLS, controlCall } from "./control-tools";
+import { CONTROL_TOOLS, controlCall, findControl } from "./control-tools";
 import { ACCOUNT_TOOLS, INSIGHT_TOOLS, insightCall } from "./insight-tools";
 import { highlight } from "../core/screen";
 import { AWARE_TOOLS, awareCall } from "./aware-tools";
@@ -206,7 +206,7 @@ export function createAgentTools(atlas: Atlas, scopes: ScopeDef[], opts: { pageC
       const act = a.act === "press" ? "press" : "start";
       const s = act === "start" ? find(a.id) : undefined;
       if (act === "start" && !s) return nope(a.id);
-      if (act === "press" && !document.querySelector(`[data-control="${CSS.escape(String(a.id))}"]`)) return { ok: false, error: `No control "${a.id}" on the page. Call list_controls.` };
+      if (act === "press" && !findControl(String(a.id))) return { ok: false, error: `No control "${a.id}" on the page. Call list_controls.` };
       const ask = askClick({ id: s ? s.id : String(a.id), act, label: String(a.label || (s ? `Turn on ${s.name}` : "Click to continue")), why: String(a.why || "Your browser only allows this after your own click.") });
       return { ok: true, needs_click: true, button: ask.key, verified: false, said: "I put a button in the chat. It starts as soon as you click it." };
     }
