@@ -85,7 +85,8 @@ async function runJob(j: Job) {
   try {
     for (j.round = 1; j.round <= j.rounds; j.round++) {
       const before = j.answer ? `\n\nYOUR EARLIER ROUND:\n${j.answer}${j.next_focus ? `\nThink next about: ${j.next_focus}` : ""}` : "";
-      const r = await post({ mode: "think", problem: j.problem, context: `${j.context}${before}` });
+      // The server refuses over 12000 characters, so trim the oldest context to fit.
+      const r = await post({ mode: "think", problem: j.problem, context: `${j.context}${before}`.slice(-(11_500 - j.problem.length)) });
       j.thoughts.push(...((r.thoughts || []) as Step[]));
       j.answer = String(r.answer || "");
       j.next_focus = r.needs_more ? String(r.next_focus || "") : "";
@@ -160,7 +161,8 @@ export async function reachCall(name: string, a: Record<string, any>): Promise<T
       if (!task) return { ok: false, error: "Send task." };
       try {
         const r = await post({ mode: "code", problem: task, context: a.data ? `DATA:\n${String(a.data)}` : "" });
-        return { ok: r.outcome !== "OUTCOME_FAILED", result: r.answer, output: r.output, code: r.code, outcome: r.outcome };
+        // Only a clean last run counts: a timeout (OUTCOME_DEADLINE_EXCEEDED) is not a result.
+        return { ok: !r.outcome || r.outcome === "OUTCOME_OK", result: r.answer, output: r.output, code: r.code, outcome: r.outcome };
       } catch (e) {
         return { ok: false, error: e instanceof Error ? e.message : String(e) };
       }

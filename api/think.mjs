@@ -9,7 +9,7 @@
 //                 that session closed with 1011 about half the time once the console had its full set of tools.
 //                 It uses Live because search grounding on the text models has no free tier quota.
 // Guarded like api/gemini-token.mjs: right origin, a session, and hourly quotas per account, per network
-// (HMAC of the IP) and in all, kept as short lived markers in po_auth.verification. Input and output are
+// (HMAC of the IP) and in all, kept as short lived markers in po_auth.verification, reserved before they are counted. Input and output are
 // capped so one call stays cheap. The key belongs to a project with no billing (free tier). Keys are never logged.
 
 import { createHmac, randomBytes } from "node:crypto";
@@ -32,10 +32,12 @@ const live = (identifier, now) => db({
   op: "count", model: "verification",
   where: [{ field: "identifier", value: identifier }, { field: "expires_at", operator: "gt", value: new Date(now).toISOString(), connector: "AND" }],
 }).then((n) => Number(n) || 0);
-const mark = (identifier, now) => db({
-  op: "create", model: "verification",
-  data: { id: randomBytes(12).toString("hex"), identifier, value: "1", expires_at: new Date(now + HOUR).toISOString() },
-});
+const mark = async (identifier, now) => {
+  const id = randomBytes(12).toString("hex");
+  await db({ op: "create", model: "verification", data: { id, identifier, value: "1", expires_at: new Date(now + HOUR).toISOString() } });
+  return id;
+};
+const unmark = (ids) => Promise.all(ids.map((id) => db({ op: "delete", model: "verification", where: [{ field: "id", value: id }] }).catch(() => null)));
 
 const THINK_PROMPT = `You are the slow, careful thinking of a voice assistant inside a web console that maps browser capabilities.
 Work the problem step by step in numbered thoughts. Revise an earlier thought when you find it wrong, and branch when two
@@ -74,7 +76,8 @@ function readCode(data) {
     answer: clip(parts.map((p) => p.text || "").join("").trim(), 2000),
     code: clip(parts.filter((p) => p.executableCode).map((p) => p.executableCode.code).join("\n\n"), 4000),
     output: clip(parts.filter((p) => p.codeExecutionResult).map((p) => p.codeExecutionResult.output || "").join("\n"), 3000),
-    outcome: parts.find((p) => p.codeExecutionResult)?.codeExecutionResult?.outcome || null,
+    // Gemini may retry a failed program; the last run is the one the answer rests on.
+    outcome: parts.filter((p) => p.codeExecutionResult).at(-1)?.codeExecutionResult?.outcome || null,
   };
 }
 
@@ -135,18 +138,27 @@ export async function POST(req) {
 
   const body = await req.json().catch(() => null);
   const mode = Object.hasOwn(PROMPTS, body?.mode) ? body.mode : null;
-  const problem = clip(body?.problem, MAX_IN).trim();
-  const context = clip(body?.context, MAX_IN - problem.length).trim();
+  const problem = String(body?.problem ?? "").trim();
+  const context = String(body?.context ?? "").trim();
   if (!mode || !problem) return json(400, { error: "Send mode (think, code or search) and problem." });
+  // Refuse rather than cut: a calculation over part of the data would look right and be wrong.
+  if (problem.length + context.length > MAX_IN) return json(413, { error: `That is too much text: keep the problem and data under ${MAX_IN} characters together.` });
 
   const now = Date.now();
   const ip = req.headers.get("x-real-ip") || (req.headers.get("x-forwarded-for") || "").split(",")[0].trim() || "none";
   const net = `think:n:${createHmac("sha256", process.env.BETTER_AUTH_SECRET || "").update(`net:${ip}`).digest("hex").slice(0, 32)}`;
   const mine = `think:u:${s.user.id}`;
+  // Reserve first, then count: every request's own markers are in the count it checks, so parallel requests
+  // cannot all pass on the same snapshot. The k-th reservation sees at least k markers, so at most the limit
+  // pass. A refused request takes its markers back so it does not use up the shared allowance.
+  const ids = await Promise.all([mark(mine, now), mark(net, now), mark("think:all", now)]);
   const [used, fromNet, all] = await Promise.all([live(mine, now), live(net, now), live("think:all", now)]);
-  if (used >= PER_USER || fromNet >= PER_NET) return json(429, { error: "That is a lot of thinking for one hour. Try again later." });
-  if (all >= GLOBAL) return json(429, { error: "Thinking is busy right now. Try again later." });
-  await Promise.all([mark(mine, now), mark(net, now), mark("think:all", now)]);
+  if (used > PER_USER || fromNet > PER_NET || all > GLOBAL) {
+    await unmark(ids);
+    return all > GLOBAL && used <= PER_USER && fromNet <= PER_NET
+      ? json(429, { error: "Thinking is busy right now. Try again later." })
+      : json(429, { error: "That is a lot of thinking for one hour. Try again later." });
+  }
 
   if (mode === "search") {
     const r = await liveSearch(key, problem);
