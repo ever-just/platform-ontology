@@ -48,6 +48,9 @@ export class LiveSession {
   micOn = false;
   handle: string | null = null;
   retries = 0;
+  private talking = false;
+  private held: { text: string; reply: boolean }[] = [];
+  private onSetup?: () => void;
   timers: ReturnType<typeof setInterval>[] = [];
   lastCtx = "";
   ctxDue: ReturnType<typeof setTimeout> | null = null;
@@ -89,9 +92,14 @@ export class LiveSession {
     this.ws = ws;
     await new Promise<void>((ok, bad) => { ws.onopen = () => ok(); ws.onerror = () => bad(new Error("Connection failed")); });
     this.alive();
+    let ready = false;
+    const setup = new Promise<void>((ok, bad) => { this.onSetup = ok; ws.addEventListener("close", (e) => { if (!ready) bad(new Error(e.reason || "Session refused")); }); });
     ws.onmessage = (e) => this.onMessage(e);
-    ws.onclose = (e) => { if (!this.closed && this.ws === ws) void this.dropped(e.reason); };
+    ws.onclose = (e) => { if (ready && !this.closed && this.ws === ws) void this.dropped(e.reason); };
     this.send(buildSetup(t.model, this.tools, ["AUDIO"], this.system, this.handle));
+    await setup;
+    ready = true;
+    this.alive();
   }
 
   /** The socket closed without us asking: pick the same conversation back up if we can. */
@@ -114,7 +122,13 @@ export class LiveSession {
 
   /** Tell the model something without the person having said it. reply false keeps it quiet. */
   note(text: string, reply = false) {
+    if (this.talking) { this.held = this.held.filter((h) => reply || !h.text.startsWith("[screen update")); this.held.push({ text, reply }); return; }
     this.send({ clientContent: { turns: [{ role: "user", parts: [{ text }] }], turnComplete: reply } });
+  }
+  private flushNotes() {
+    const h = this.held; this.held = [];
+    const reply = h.some((x) => x.reply);
+    if (h.length) this.send({ clientContent: { turns: h.map((x) => ({ role: "user", parts: [{ text: x.text }] })), turnComplete: reply } });
   }
 
   private watchContext() {
@@ -128,9 +142,11 @@ export class LiveSession {
   /** About once a second, send a still from the newest running camera or screen capture. */
   private sendFrame() {
     if (this.ws?.readyState !== 1 || document.visibilityState !== "visible") return;
+    // A screen share of this tab must not carry an account or key panel to the model.
+    if (document.querySelector("[data-agent-off]")) return;
     const live = allSessions().filter((s) => isActive(s) && s.media?.getVideoTracks().some((t) => t.readyState === "live")).sort((a, b) => b.startedAt - a.startedAt)[0];
     if (!live) { if (this.frame) { this.frame.v.srcObject = null; this.frame = undefined; setSeeing(null); } return; }
-    if (this.frame?.id !== live.id) {
+    if (this.frame?.id !== live.id || this.frame.v.srcObject !== live.media) {
       const v = this.frame?.v || document.createElement("video");
       v.muted = true; v.playsInline = true; v.srcObject = live.media; v.play().catch(() => {});
       this.frame = { v, c: this.frame?.c || document.createElement("canvas"), id: live.id };
@@ -196,7 +212,7 @@ export class LiveSession {
     const text = typeof e.data === "string" ? e.data : await (e.data as Blob).text();
     let m: any;
     try { m = JSON.parse(text); } catch { return; }
-    if (m.setupComplete) { this.retries = 0; await this.startMic(); return; }
+    if (m.setupComplete) { this.retries = 0; this.onSetup?.(); this.onSetup = undefined; await this.startMic(); return; }
     if (m.sessionResumptionUpdate) {
       const u = m.sessionResumptionUpdate;
       if (u.resumable !== false && u.newHandle) { this.handle = u.newHandle; this.opts.onHandle?.(u.newHandle); }
@@ -206,6 +222,8 @@ export class LiveSession {
     if (sc?.interrupted) this.hush();
     if (sc?.inputTranscription?.text) this.on.say("you", sc.inputTranscription.text);
     if (sc?.outputTranscription?.text) this.on.say("ai", sc.outputTranscription.text);
+    if (sc?.modelTurn || sc?.outputTranscription) this.talking = true;
+    if (sc?.turnComplete || sc?.interrupted) { this.talking = false; this.flushNotes(); }
     if (sc?.turnComplete) this.on.turnDone();
     sc?.modelTurn?.parts?.forEach((p: any) => { if (p.inlineData?.data) this.play(unb64(p.inlineData.data)); });
     if (m.toolCall?.functionCalls) {

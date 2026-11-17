@@ -17,9 +17,17 @@ export function startAwareness() {
   window.addEventListener("pointerdown", move, { passive: true });
 }
 
+/** Account and credential views carry data-agent-off: the agent never reads anything inside them. */
+const OFF = "[data-agent-off], input[type=password], [autocomplete~=one-time-code]";
+const isOff = (n: Node | null) => {
+  const el = n instanceof Element ? n : n?.parentElement;
+  return !!el?.closest(OFF);
+};
+
 /** A short plain description of one element: its control id, label and visible text. */
 export function describeEl(el: Element | null): Record<string, string> | null {
   if (!el || !(el instanceof Element)) return null;
+  if (isOff(el)) return { tag: "private", note: "an account or key panel the assistant may not read" };
   const ctl = el.closest("[data-control]");
   const lab = el.closest("[aria-label]");
   const hit = ctl || lab || el;
@@ -49,7 +57,10 @@ export function pointerNow() {
 
 export function pageNow() {
   if (typeof window === "undefined") return null;
-  const sel = String(window.getSelection?.() || "").trim();
+  const s = window.getSelection?.();
+  // Never pass on a selection that touches a private panel (for example a key being copied).
+  const priv = !!s && s.rangeCount > 0 && (isOff(s.anchorNode) || isOff(s.focusNode) || [...document.querySelectorAll("[data-agent-off]")].some((el) => s.containsNode(el, true)));
+  const sel = priv ? "" : String(s || "").trim();
   const focus = document.activeElement && document.activeElement !== document.body ? describeEl(document.activeElement) : null;
   const max = Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
   return {

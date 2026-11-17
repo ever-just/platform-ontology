@@ -84,6 +84,7 @@ export type Loop = { id: string; tool: string; args: Record<string, unknown>; ev
 export type LoopEvent = { loop: string; tool: string; kind: "hit" | "change" | "done" | "error"; text: string };
 
 const loops = new Map<string, Loop>();
+let loopSeq = 0;
 const L_KEY = "po.agent.loops.v1";
 let runner: ((tool: string, args: Record<string, unknown>) => Promise<{ ok: boolean; [k: string]: unknown }>) | null = null;
 const listeners = new Set<(e: LoopEvent) => void>();
@@ -131,7 +132,7 @@ async function tick(l: Loop) {
 }
 
 export function startLoop(o: Omit<Loop, "id" | "runs" | "started">, id?: string): Loop {
-  const l: Loop = { ...o, every_s: Math.min(3600, Math.max(2, Number(o.every_s) || 10)), id: id || `loop${Date.now().toString(36).slice(-5)}`, runs: 0, started: Date.now() };
+  const l: Loop = { ...o, every_s: Math.min(3600, Math.max(2, Number(o.every_s) || 10)), id: id && !loops.has(id) ? id : `loop${Date.now().toString(36).slice(-4)}${(++loopSeq).toString(36)}`, runs: 0, started: Date.now() };
   l.timer = setInterval(() => void tick(l), l.every_s * 1000);
   loops.set(l.id, l);
   persistLoops();
