@@ -45,6 +45,8 @@ export const OPTIONS = () => new Response(null, { status: 204, headers: CORS });
 export const GET = () => new Response("Use POST for MCP requests.", { status: 405, headers: { ...CORS, allow: "POST" } });
 export const DELETE = () => new Response(null, { status: 204, headers: CORS });
 
+const MAX_BATCH = 5;
+
 export async function POST(req) {
   const k = await resolveKey(req).catch(() => null);
   if (!k) return out(401, err(null, -32000, "Missing or unknown API key. Send Authorization: Bearer <key>."));
@@ -52,6 +54,9 @@ export async function POST(req) {
   try { body = await req.json(); } catch { return out(400, err(null, -32700, "Parse error")); }
   try {
     if (Array.isArray(body)) {
+      if (body.length === 0 || body.length > MAX_BATCH) {
+        return out(400, err(null, -32600, `A batch must hold 1 to ${MAX_BATCH} messages.`));
+      }
       const res = (await Promise.all(body.map((m) => one(k.key_id, m)))).filter(Boolean);
       return res.length ? out(200, res) : new Response(null, { status: 202, headers: CORS });
     }
