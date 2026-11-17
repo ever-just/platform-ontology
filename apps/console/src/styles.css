@@ -812,6 +812,17 @@ html, body { overflow: hidden; overscroll-behavior: none; }
 .voice-t input { flex: 1; min-width: 0; height: 34px; padding: 0 10px; border: 1px solid var(--line); border-radius: 8px; background: transparent; color: inherit; font-size: 16px; }
 @media (max-width: 640px) { .voice { left: max(8px, env(safe-area-inset-left, 0px)); right: max(8px, env(safe-area-inset-right, 0px)); width: auto; top: auto; bottom: calc(64px + env(safe-area-inset-bottom, 0px)); } }
 
+/* The assistant can move itself, resize, or fold to a pill while it keeps listening. */
+@media (min-width: 641px) {
+  .voice.side-left { right: auto; left: max(16px, env(safe-area-inset-left, 0px)); }
+  .voice.size-compact .voice-f { max-height: 22dvh; min-height: 72px; }
+  .voice.size-tall { top: 62px; bottom: 16px; }
+  .voice.size-tall .voice-f { max-height: none; }
+}
+.voice-pill { position: fixed; z-index: 60; bottom: calc(16px + env(safe-area-inset-bottom, 0px)); right: max(16px, env(safe-area-inset-right, 0px)); display: inline-flex; align-items: center; gap: 6px; height: 36px; padding: 0 14px; border: 1px solid var(--line); border-radius: 18px; background: var(--bg); color: var(--ink); font-size: 13px; cursor: pointer; box-shadow: 0 6px 20px rgb(0 0 0 / .15); }
+.voice-pill.side-left { right: auto; left: max(16px, env(safe-area-inset-left, 0px)); }
+.voice-pill.on { color: var(--accent); }
+
 /* Where the AI is looking. */
 .ai-look { outline: 2px solid var(--accent); outline-offset: 2px; animation: ai-look 1.3s ease-out 2; }
 @keyframes ai-look { 0% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--accent) 45%, transparent); } 100% { box-shadow: 0 0 0 10px transparent; } }

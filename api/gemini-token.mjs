@@ -12,9 +12,9 @@ import { json } from "./_lib/lake.mjs";
 
 const MODEL = process.env.GEMINI_LIVE_MODEL || "gemini-2.5-flash-native-audio-preview-12-2025";
 const ORIGINS = /^https:\/\/(ai\.platformontology\.lol|platformontology\.lol|[a-z0-9-]+\.vercel\.app)$|^http:\/\/localhost(:\d+)?$/;
-const PER_USER = 6;
-const PER_NET = 10;
-const GLOBAL = 120;
+const PER_USER = 20;
+const PER_NET = 30;
+const GLOBAL = 240;
 const HOUR = 60 * 60e3;
 
 const live = (identifier, now) => db({
