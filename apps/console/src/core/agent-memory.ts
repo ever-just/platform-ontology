@@ -81,7 +81,7 @@ export function memoryBrief() {
 // Loops: repeat a tool on an interval, with no limit on how long they run while the page is open.
 export type LoopCond = { path: string; op: "eq" | "ne" | "gt" | "lt" | "contains" | "changes"; value?: unknown };
 export type Loop = { id: string; tool: string; args: Record<string, unknown>; every_s: number; until?: LoopCond; max_runs?: number; note?: string; runs: number; started: number; last?: unknown; lastAt?: number; timer?: ReturnType<typeof setInterval> };
-export type LoopEvent = { loop: string; tool: string; kind: "hit" | "change" | "done" | "error"; text: string };
+export type LoopEvent = { loop: string; tool: string; kind: "hit" | "change" | "done" | "error"; text: string; quiet?: boolean };
 
 const loops = new Map<string, Loop>();
 let loopSeq = 0;
@@ -92,6 +92,8 @@ const listeners = new Set<(e: LoopEvent) => void>();
 export const setLoopRunner = (f: typeof runner) => { runner = f; };
 export function onLoopEvent(f: (e: LoopEvent) => void) { listeners.add(f); return () => { listeners.delete(f); }; }
 const emit = (e: LoopEvent) => listeners.forEach((f) => f(e));
+/** Send a note to the AI from background work (jobs, clicks). quiet notes are context only, with no spoken reply. */
+export const emitNote = (e: LoopEvent) => emit(e);
 
 function persistLoops() {
   if (typeof sessionStorage === "undefined") return;

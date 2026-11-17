@@ -241,7 +241,23 @@ button.dpl-r { cursor: pointer; } button.dpl-r:hover { background: var(--line2);
 .smx-s { display: inline-flex; align-items: center; gap: 3px; font-size: 10px; color: var(--mute); white-space: nowrap; overflow: hidden; max-width: 100%; }
 .t-ok .smx-s { color: var(--ok); } .t-warn .smx-s { color: var(--warn); } .t-err .smx-s { color: var(--err); }
 .smx-c.me { outline: 1.5px solid var(--ink); outline-offset: -1.5px; }
-.row-v { font-family: var(--mono); font-size: 11.5px; color: var(--ink2); width: 52px; text-align: right; flex: none; }
+.row-v { font-size: 11.5px; color: var(--ink2); max-width: 118px; min-width: 0; display: inline-flex; align-items: center; justify-content: flex-end; gap: 5px; flex: none; overflow: hidden; }
+.row-hz { font-style: normal; font-family: var(--mono); font-size: 10px; color: var(--mute); flex: none; }
+/* typed values: one look per data type */
+.tv { display: inline-flex; align-items: center; gap: 4px; min-width: 0; white-space: nowrap; }
+.tv-t { overflow: hidden; text-overflow: ellipsis; min-width: 0; }
+.tv-num { font-family: var(--mono); font-variant-numeric: tabular-nums; color: var(--ink); }
+.tv-num small { font-size: 10px; color: var(--mute); }
+.tv-bool { font-size: 11px; padding: 1px 6px 1px 4px; border-radius: 10px; background: var(--line2); color: var(--mute); }
+.tv-bool.yes { color: var(--ok); background: color-mix(in srgb, var(--ok) 14%, transparent); }
+.tv-color i { width: 12px; height: 12px; border-radius: 3px; box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--ink) 25%, transparent); flex: none; }
+.tv-color { font-family: var(--mono); }
+.tv-label { max-width: 110px; }
+.tv-ord .pips { display: inline-flex; gap: 2px; flex: none; }
+.tv-ord .pips i { width: 4px; height: 10px; border-radius: 1px; background: var(--line-strong); }
+.tv-ord .pips i.on { background: currentColor; }
+.tv-ord { max-width: 118px; }
+.t-ok { color: var(--ok); } .t-warn { color: var(--warn); } .t-bad { color: var(--err); } .t-off { color: var(--mute); }
 .row-b { width: 26px; height: 26px; display: grid; place-items: center; border-radius: 7px; border: 1px solid transparent; background: none; color: var(--mute); flex: none; }
 .row:hover .row-b { border-color: var(--line); background: var(--bg); color: var(--ink); }
 .row-b:hover { color: var(--accent) !important; border-color: var(--accent) !important; }
@@ -265,6 +281,10 @@ button.dpl-r { cursor: pointer; } button.dpl-r:hover { background: var(--line2);
 .mets span { font-size: 11px; color: var(--mute); }
 .mets b { font-family: var(--mono); font-weight: 500; font-size: 15px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .mets em { font-style: normal; font-size: 11px; color: var(--mute); }
+.mets > .met-lead { grid-column: 1 / -1; }
+.mets > .met-lead b { font-size: 18px; }
+.mets .kind { font-style: normal; font-size: 10px; margin-left: 6px; padding: 0 5px; border-radius: 4px; background: var(--line2); color: var(--mute); text-transform: lowercase; }
+.mets b .tv { font-size: inherit; max-width: 100%; }
 .code { margin: 0; background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 12px; font-size: 11.5px; line-height: 1.55; overflow: auto; max-height: 420px; }
 .code.wrap { white-space: pre-wrap; word-break: break-all; }
 .snip { position: relative; }
@@ -719,7 +739,7 @@ svg.in { animation: fade .4s ease-out; }
    push content), and each pane scrolls inside itself. Layer 0 is the stage, layer 1 the inspector. */
 html, body, #root { height: 100%; }
 html, body { overflow: hidden; overscroll-behavior: none; }
-.shell { height: 100dvh; display: grid; grid-template-rows: auto minmax(0, 1fr) auto; overflow: hidden; }
+.shell { height: 100dvh; display: grid; grid-template-rows: auto minmax(0, 1fr) auto; grid-template-columns: minmax(0, 1fr); overflow: hidden; }
 .bar { position: relative; padding-top: env(safe-area-inset-top, 0px); }
 .bar-in { padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); height: 52px; }
 .bar .nav { display: flex; gap: 2px; }
@@ -803,6 +823,15 @@ html, body { overflow: hidden; overscroll-behavior: none; }
 .vl.step::before { content: "↳ "; }
 .vl.step.ok::after { content: " ✓"; color: var(--ok, #1f7a3a); }
 .vl.step.bad::after { content: " ✕"; color: var(--err, #b42318); }
+.vl.click { align-self: stretch; }
+.voice-ask { display: flex; align-items: center; gap: 10px; width: 100%; min-height: 44px; padding: 8px 12px; border: 1px solid var(--accent, #2f5bea); border-radius: 10px; background: var(--accent-soft); color: inherit; font: inherit; text-align: left; cursor: pointer; }
+.voice-ask:hover:not(:disabled) { filter: brightness(0.97); }
+.voice-ask:focus-visible { outline: 2px solid var(--accent, #2f5bea); outline-offset: 2px; }
+.voice-ask:disabled { cursor: default; opacity: 0.75; border-style: dashed; }
+.voice-ask-i { display: inline-grid; place-items: center; flex: none; width: 28px; height: 28px; border-radius: 8px; background: var(--bg, #fff); }
+.voice-ask-t { display: flex; flex-direction: column; flex: 1; min-width: 0; }
+.voice-ask-t small { color: var(--mute); font-size: 11.5px; }
+.vl.click.bad .voice-ask { border-color: var(--err, #b42318); }
 .voice-s { margin: 0; padding: 0 14px 6px; font-size: 12px; color: var(--mute); }
 .voice-c { display: flex; gap: 8px; padding: 0 10px 10px; align-items: center; flex-wrap: wrap; }
 .voice-go { display: inline-flex; align-items: center; gap: 6px; height: 34px; padding: 0 14px; border: 0; border-radius: 17px; background: var(--accent); color: var(--on-accent, #fff); font-weight: 600; font-size: 13px; cursor: pointer; }
@@ -830,3 +859,41 @@ html, body { overflow: hidden; overscroll-behavior: none; }
 
 /* Keep the assistant beside an open side panel instead of on top of it. */
 @media (min-width: 1100px) { body:has(.ins.open) .voice { right: calc(min(480px, 92vw) + 16px); } }
+
+/* Below the docked breakpoint the inspector is a sheet, so the assistant stacks under it in the same column instead of
+   floating on top: the sheet gives up the bottom of the screen and the dock takes exactly that strip. */
+@media (max-width: 1099.98px) {
+  body:has(.voice) .ins.open { bottom: calc(min(300px, 40dvh) + 20px + env(safe-area-inset-bottom, 0px)); border-bottom-width: 1px; }
+  body:has(.ins.open) .voice { top: auto; left: auto; right: max(8px, env(safe-area-inset-right, 0px)); bottom: calc(8px + env(safe-area-inset-bottom, 0px));
+    width: calc(min(480px, 92vw) - 16px); height: min(300px, 40dvh); max-height: none; }
+  body:has(.ins.open) .voice .voice-f { min-height: 0; max-height: none; }
+}
+@media (max-width: 699.98px) {
+  body:has(.ins.open) .voice { left: max(8px, env(safe-area-inset-left, 0px)); width: auto; }
+}
+
+/* Touch screens: every control is at least 44px tall, and icon-only controls 44px wide, without changing the
+   pointer layout. :where keeps this at zero specificity so component rules still set everything else. */
+@media (pointer: coarse) {
+  :where(button, a[href]:not(p a, li a), select, [role="tab"], input:not([type="hidden"], [type="checkbox"], [type="radio"])) { min-height: 44px; }
+  :where(.icon-b, .row-b, .ins-x, .cg-run, .live-chip) { min-width: 44px; }
+  .row { min-height: 44px; }
+}
+
+/* Phone header: everything that matters fits in one row. Section links live on the home page, the brand truncates
+   before any control does, and the source link drops first on the narrowest screens. */
+@media (max-width: 699.98px) {
+  .bar .nav { display: none; }
+  .bar-in { gap: 4px; }
+  .bar-in .brand { flex: 0 1 auto; min-width: 0; overflow: hidden; text-overflow: ellipsis; }
+  .bar-in .grow { flex: 1 1 0; min-width: 0; }
+  .bar-in > :not(.brand, .grow) { flex: none; }
+}
+@media (max-width: 480px) { .bar-in .gh-b { display: none; } }
+
+/* The inspector is never wider than 480px, so its live view stacks the picture over the readings at every size
+   instead of squeezing the picture into a sliver beside a 300px table. */
+.ins .frame.has-side { grid-template-columns: minmax(0, 1fr); grid-template-rows: minmax(220px, 1fr) auto; }
+.ins .frame-side { max-height: none; overflow: visible; }
+/* A row's reading never takes more than about half the row, so the capability name always stays legible. */
+.row-v { max-width: min(118px, 45%); }

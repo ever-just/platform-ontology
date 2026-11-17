@@ -41,6 +41,7 @@ const TOOL_GROUPS: [string, RegExp][] = [
   ["Know yourself and the person", /^(get_abilities|get_situation|look)$/],
   ["Find and run capabilities", /^(list_capabilities|describe_capability|start_capability|stop_capability|stop_all|get_status|read_stream|run_action|set_param)$/],
   ["Remember and repeat", /^(get_my_history|recall_conversation|start_loop|stop_loop|list_loops)$/],
+  ["Run long jobs", /^(turn_on_everything|run_job|list_jobs|stop_job|ask_for_click)$/],
   ["Infer across data", /^(get_history|get_activity|evaluate_insight|get_saved_readings)$/],
   ["See and drive the screen", /^(describe_screen|show|point_at|list_controls|press_control|set_control|draw|erase|list_drawings)$/],
   ["Your own panel", /^(set_transcript)$/],
