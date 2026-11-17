@@ -20,7 +20,14 @@ Every button, field and switch on the page is in list_controls. When the person 
 something on the page, find it with list_controls (open its panel with show first if needed), then use press_control or set_control.
 For the past, use get_history (this browser's kept readings for one capability) or get_activity (what happened lately);
 get_saved_readings is what the signed in account saved on the server. To combine signals or answer "does X go with Y",
-call evaluate_insight with the capability ids and say what moves together in plain words.`;
+call evaluate_insight with the capability ids and say what moves together in plain words.
+You know yourself: get_abilities lists your tools by purpose, get_situation shows everything running grouped by meaning,
+and look tells you where the pointer is, what has focus and which camera or screen feed you are seeing.
+You remember: before retrying something, check get_my_history for what you already did and what failed; when the person
+refers to earlier, use recall_conversation. For anything that takes time (wait until, watch for, keep checking, every few
+minutes) use start_loop instead of saying you cannot; it has no time limit. When a [loop ...] note arrives, tell the person
+what it found in one sentence. Notes that start with [screen update] are context only: never reply to them out loud.
+set_transcript shows, hides, moves or resizes your own conversation panel when the person asks.`;
 
 /** Gemini function declarations take an OpenAPI subset: one type per field. */
 export function schema(s: any): any {
@@ -39,7 +46,7 @@ export function schema(s: any): any {
 }
 
 /** The setup message. The server token locks only the model, so everything here reaches Gemini. */
-export function buildSetup(model: string, tools: ToolDef[], modalities: string[] = ["AUDIO"], system: string = SYSTEM) {
+export function buildSetup(model: string, tools: ToolDef[], modalities: string[] = ["AUDIO"], system: string = SYSTEM, resume?: string | null) {
   return {
     setup: {
       model: `models/${model}`,
@@ -50,6 +57,8 @@ export function buildSetup(model: string, tools: ToolDef[], modalities: string[]
       outputAudioTranscription: {},
       // Without this an audio session stops at 15 minutes.
       contextWindowCompression: { slidingWindow: {} },
+      // Lets a dropped or refreshed connection pick the same conversation back up.
+      ...(resume === undefined ? {} : { sessionResumption: resume ? { handle: resume } : {} }),
     },
   };
 }

@@ -25,7 +25,7 @@ const TASKS = [
   { say: "Change the tab title to hello world.", want: ["list_capabilities", "describe_capability", "start_capability", "run_action"] },
   { say: "Find the capabilities about motion sensors.", want: ["list_capabilities"] },
   { say: "Turn everything off.", want: ["stop_all", "get_status"] },
-  { say: "What am I looking at right now?", want: ["describe_screen"] },
+  { say: "What am I looking at right now?", want: ["describe_screen", "look"] },
   { say: "Show me the camera.", want: ["show", "point_at", "list_capabilities"] },
   { say: "Open the camera and show me the record tab.", want: ["show", "list_capabilities"] },
   { say: "Click the run all button on the page.", want: ["list_controls", "press_control", "describe_screen"] },
@@ -34,6 +34,10 @@ const TASKS = [
   { say: "What has been happening in the console for the last few minutes?", want: ["get_activity"] },
   { say: "Does my device motion line up with the ambient light level?", want: ["evaluate_insight", "list_capabilities"] },
   { say: "Show me the readings saved to my account.", want: ["get_saved_readings"] },
+  { say: "What is going on around me right now? Look at everything that is running.", want: ["get_situation", "get_abilities"] },
+  { say: "What did you do earlier, and did anything fail?", want: ["get_my_history"] },
+  { say: "Keep checking the battery every minute and tell me when it drops below twenty percent.", want: ["start_loop", "list_capabilities", "describe_capability"] },
+  { say: "Where is my mouse pointer on the page?", want: ["look"] },
 ];
 
 const vite = await createServer({ server: { middlewareMode: true }, appType: "custom", logLevel: "error" });
