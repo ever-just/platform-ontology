@@ -2,16 +2,18 @@
 // The API key stays on the server; the page gets a token that can open one session within a minute
 // and lasts 30 minutes. The key belongs to a project with no billing, so it runs on the free tier.
 // Callers need a session (the page signs in anonymously first). Each mint leaves two short lived
-// markers in po_auth.verification, one per account and one shared, so the quota holds across
-// instances: PER_USER tokens an hour per account and GLOBAL an hour in all.
+// markers in po_auth.verification (per account, per network and shared) so the quota holds across
+// instances: PER_USER an hour per account, PER_NET an hour per client IP (stored only as an HMAC,
+// since anonymous accounts are free to make) and GLOBAL an hour in all.
 
-import { randomBytes } from "node:crypto";
+import { createHmac, randomBytes } from "node:crypto";
 import { auth, db } from "./_lib/auth.mjs";
 import { json } from "./_lib/lake.mjs";
 
 const MODEL = process.env.GEMINI_LIVE_MODEL || "gemini-2.5-flash-native-audio-preview-12-2025";
 const ORIGINS = /^https:\/\/(ai\.platformontology\.lol|platformontology\.lol|[a-z0-9-]+\.vercel\.app)$|^http:\/\/localhost(:\d+)?$/;
 const PER_USER = 6;
+const PER_NET = 10;
 const GLOBAL = 120;
 const HOUR = 60 * 60e3;
 
@@ -33,11 +35,13 @@ export async function POST(req) {
   if (!s?.user?.id) return json(401, { error: "Sign in first." });
 
   const now = Date.now();
+  const ip = req.headers.get("x-real-ip") || (req.headers.get("x-forwarded-for") || "").split(",")[0].trim() || "none";
+  const net = `gemini:n:${createHmac("sha256", process.env.BETTER_AUTH_SECRET || "").update(`net:${ip}`).digest("hex").slice(0, 32)}`;
   const mine = `gemini:u:${s.user.id}`;
-  const [used, all] = await Promise.all([live(mine, now), live("gemini:all", now)]);
-  if (used >= PER_USER) return json(429, { error: "That is a lot of voice sessions. Try again in an hour." });
+  const [used, fromNet, all] = await Promise.all([live(mine, now), live(net, now), live("gemini:all", now)]);
+  if (used >= PER_USER || fromNet >= PER_NET) return json(429, { error: "That is a lot of voice sessions. Try again in an hour." });
   if (all >= GLOBAL) return json(429, { error: "Voice is busy right now. Try again later." });
-  await Promise.all([mark(mine, now), mark("gemini:all", now)]);
+  await Promise.all([mark(mine, now), mark(net, now), mark("gemini:all", now)]);
 
   // REST shape of AuthToken: the session config lock is bidiGenerateContentSetup.
   const res = await fetch("https://generativelanguage.googleapis.com/v1beta/auth_tokens", {
