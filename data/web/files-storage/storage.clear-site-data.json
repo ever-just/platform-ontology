@@ -1,0 +1,178 @@
+{
+  "id": "web.storage.clear-site-data",
+  "name": "Clear-Site-Data header",
+  "kind": "capability",
+  "group": "files-storage",
+  "subgroup": "Storage",
+  "tags": [
+    "header",
+    "storage",
+    "reset"
+  ],
+  "plain": "A site can wipe its own stored data from your browser with one response header.",
+  "meaning": "A server can clear cookies, storage and cache for its origin, and reset service workers. It is a legitimate logout tool and also wipes tracking state.",
+  "lifecycle": [
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "Clear-Site-Data: \"cache\", \"cookies\", \"storage\", \"executionContexts\"",
+      "bcd": [
+        "http.headers.Clear-Site-Data"
+      ],
+      "access": {
+        "grant": "none",
+        "prompt_ui": "None, a server header over a secure connection",
+        "secure_context": true,
+        "user_gesture": false,
+        "persistence": "Per origin",
+        "revocation": "Clear site data",
+        "iframe": "Same as top level",
+        "steps": [
+          "Page calls the API",
+          "Browser answers with no prompt",
+          "Page reads the result"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "",
+          "note": "Supported"
+        },
+        "edge": {
+          "s": "y",
+          "v": "",
+          "note": "Supported"
+        },
+        "safari": {
+          "s": "y",
+          "v": "",
+          "note": "Supported"
+        },
+        "firefox": {
+          "s": "y",
+          "v": "",
+          "note": "Supported"
+        },
+        "ios_safari": {
+          "s": "y",
+          "v": "",
+          "note": "Supported"
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "",
+          "note": "Supported"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "object",
+    "metric": "A site can wipe its own stored data from your browser with one response header.",
+    "update": "on demand",
+    "fields": [
+      {
+        "name": "directive",
+        "type": "enum",
+        "range": "cache, cookies, storage, executionContexts, *"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can erase the site's own stored data from the server side",
+    "user_action": "None, the page reads it silently",
+    "can": [
+      "Clear cookies, storage and cache for its origin",
+      "Unregister service workers",
+      "Log you out cleanly on every tab"
+    ],
+    "cannot": [
+      "Touch other sites' data",
+      "Work over plain http"
+    ],
+    "reach": 1,
+    "reach_label": "One origin",
+    "differs": "All six browsers support it according to the compat data."
+  },
+  "story": {
+    "what_it_is": "The server tells your browser to forget everything the site stored.",
+    "icon": "eraser",
+    "tags": [
+      "Silent",
+      "Capability"
+    ],
+    "marketing": [
+      {
+        "vendor": "MDN Web Docs",
+        "name": "Clear-Site-Data",
+        "pitch": "Lets a server clear locally stored data for a site.",
+        "url": "https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/Clear-Site-Data"
+      }
+    ],
+    "for_you": "You may be logged out everywhere at once. Sites can also use it to shed old tracking state.",
+    "for_makers": "Makers use it for logout, account deletion and fixing broken caches.",
+    "use_cases": [
+      {
+        "type": "shopping",
+        "example": "A store clears cart state after checkout.",
+        "apps": []
+      },
+      {
+        "type": "productivity",
+        "example": "An app resets a broken service worker for all users.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Can wipe a service worker you wanted to keep offline"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Same origin only",
+    "Secure context required"
+  ],
+  "scores": {
+    "sensitivity": 1,
+    "utility": 3,
+    "fingerprint_bits": null,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Logout",
+      "Reset"
+    ],
+    "abuse": [
+      "Shedding evidence of prior tracking state"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [],
+  "related": [
+    "web.notify.sw-fetch-interception",
+    "web.storage.storage-quota"
+  ],
+  "refs": [
+    {
+      "t": "mdn",
+      "label": "MDN browser-compat-data Clear-Site-Data (checked 2026-11-16)",
+      "url": "https://raw.githubusercontent.com/mdn/browser-compat-data/main/http/headers/Clear-Site-Data.json"
+    },
+    {
+      "t": "bcd",
+      "label": "MDN browser-compat-data 8.1.9 (checked 2026-11-16)",
+      "url": "https://cdn.jsdelivr.net/npm/@mdn/browser-compat-data@8.1.9/data.json"
+    }
+  ],
+  "confidence": "verified"
+}

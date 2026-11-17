@@ -1,0 +1,695 @@
+{
+  "generated": "2026-11-16",
+  "weights": {
+    "latency": 0.2,
+    "tool_calling": 0.2,
+    "cost": 0.15,
+    "value": 0.15,
+    "asr": 0.1,
+    "bundle": 0.1,
+    "browser": 0.05,
+    "speed": 0.05
+  },
+  "score_notes": "Scores 1 to 10, higher is better. Latency scored from the figure in latency_first_audio_ms, cost from cost_per_min_usd, bundle from bundle_kb (0 best). Speed means session setup plus tool round trip speed. Several latency values are estimates and flagged in latency_note. Pricing and docs read 2026-11-16 from official pages where reachable; Hume and ElevenLabs free tier figures come from third party reports.",
+  "options": [
+    {
+      "id": "gemini-live",
+      "name": "Google Gemini Live API (gemini-3.8-live, browser WebSocket)",
+      "vendor": "Google",
+      "architecture": "Direct browser WebSocket to Gemini Live API (client to server mode). 16 kHz PCM in, 24 kHz PCM out; you write an AudioWorklet or use the SDK. Backend mints an ephemeral token.",
+      "latency_first_audio_ms": 790,
+      "latency_note": "Independent harness (Aug 2026): Gemini 3.1 Flash Live 786 ms median (endpoint given). Google gives no number.",
+      "asr": {
+        "stt": "Native audio model; optional input transcription",
+        "published_wer": "None published for the Live models",
+        "score_1_10": 8
+      },
+      "cost_per_min_usd": 0.03,
+      "cost_notes": "gemini-3.8-live list price about $0.005/min audio in and $0.018/min audio out ($3 and $12 per 1M audio tokens). Assuming the agent talks half the time, about $0.015/min; $0.03 allowed for tool and context tokens.",
+      "client_sdk": "@google/genai (optional)",
+      "bundle_kb": 0,
+      "browser_support": "Chrome, Edge, Firefox, Safari, iOS Safari (WebSocket + getUserMedia + AudioWorklet; Safari needs a user gesture and 16k to 48k resample handling). 0 KB assumes raw WebSocket; @google/genai is about 75 KB gzip.",
+      "tool_calling": "Yes. Function declarations in setup; toolCall messages arrive in the browser, your JS runs them and replies with sendToolResponse (no automatic handling). NON_BLOCKING async calls on gemini-3.8-live. No MCP on Live API. Docs state no tool count limit.",
+      "ephemeral_token": "Yes. authTokens.create (v1beta) with uses:1, expireTime default 30 min, newSessionExpireTime default 1 min, optional liveConnectConstraints locking model and config. Browser passes it as access_token.",
+      "free_tier": "Free tier exists for Gemini 2.5 Flash Native Audio (content may train Google models). 3.8 Live is paid tier.",
+      "needs_server": "Tiny serverless function to mint tokens",
+      "scores": {
+        "speed": 9,
+        "latency": 9,
+        "asr_accuracy": 8,
+        "cost": 9,
+        "bundle": 10,
+        "browser_support": 8,
+        "tool_calling": 9,
+        "value_for_money": 10
+      },
+      "pros": [
+        "Cheapest high quality S2S",
+        "Native client side tools with async mode",
+        "Locked ephemeral tokens keep system prompt server side",
+        "Free tier for 2.5 native audio"
+      ],
+      "cons": [
+        "Ephemeral tokens are v1beta",
+        "You own the audio capture and playback code unless you pull the SDK",
+        "Session length limits; needs session resumption"
+      ],
+      "sources": [
+        {
+          "url": "https://aistudio.google.com/docs/live-api",
+          "accessed": "2026-11-16"
+        },
+        {
+          "url": "https://aistudio.google.com/docs/live-api/ephemeral-tokens",
+          "accessed": "2026-11-16"
+        },
+        {
+          "url": "https://aistudio.google.com/docs/live-api/tools",
+          "accessed": "2026-11-16"
+        },
+        {
+          "url": "https://aistudio.google.com/docs/pricing",
+          "accessed": "2026-11-16"
+        },
+        {
+          "url": "https://www.codebridge.tech/articles/voice-ai-phone-agents-latency-benchmark",
+          "accessed": "2026-11-16"
+        }
+      ],
+      "overall": 9.1,
+      "rank": 1
+    },
+    {
+      "id": "openai-realtime-webrtc",
+      "name": "OpenAI Realtime API over WebRTC (gpt-realtime-2.1)",
+      "vendor": "OpenAI",
+      "architecture": "Direct browser to OpenAI over WebRTC (mic track in, agent audio track out, JSON events on an 'oai-events' data channel). Backend only mints a short lived client secret or relays the SDP offer. No media room, no long running server.",
+      "latency_first_audio_ms": 900,
+      "latency_note": "Independent harness (499 calls, Aug 2026) measured two OpenAI Realtime variants at 889 ms and 1,140 ms median end of speech to first audio (endpoint given). OpenAI publishes no figure. 900 used.",
+      "asr": {
+        "stt": "Native speech in model; optional gpt-transcribe for input transcripts (billed separately)",
+        "published_wer": "No WER for the S2S model. Independent AA-WER v2 batch: GPT-4o Transcribe about 4.0 percent; one other source about 8.9 percent. GPT Live Transcribe led Vals VoiceCodeBench (structured values).",
+        "score_1_10": 8
+      },
+      "cost_per_min_usd": 0.15,
+      "cost_notes": "Token billing, audio in $32/M, audio out $64/M, cached $0.40/M (gpt-realtime-2.1). OpenAI quotes about $0.30/min before caching; other analyses $0.15 to $0.20. 0.15 assumed with caching. gpt-realtime-2.1-mini is $10/M in, $20/M out, roughly $0.05/min. Audio is about 1 token per 100 ms in and 1 token per 50 ms out. 200 tool schemas add thousands of cached input tokens every turn.",
+      "client_sdk": "none (plain RTCPeerConnection + fetch)",
+      "bundle_kb": 0,
+      "browser_support": "Chrome, Edge, Firefox, desktop Safari and iOS Safari via standard WebRTC. Needs HTTPS and a user gesture for mic and audio playback.",
+      "tool_calling": "Yes. Function tools declared in session.update; call arrives as an event on the data channel; the browser runs the JS and returns a function_call_output item then response.create. Fully client side, results go back to the model. Remote MCP tools are also supported by the Realtime API (not re-verified on the pages read).",
+      "ephemeral_token": "Yes. POST to the client secrets endpoint with the server API key, return the short lived key; browser uses it as Bearer on POST /v1/realtime/calls. Set OpenAI-Safety-Identifier server side.",
+      "free_tier": "None. Pay per token, needs prepaid billing.",
+      "needs_server": "Only a tiny serverless function (Vercel fine) to mint the secret",
+      "scores": {
+        "speed": 9,
+        "latency": 8,
+        "asr_accuracy": 8,
+        "cost": 5,
+        "bundle": 10,
+        "browser_support": 9,
+        "tool_calling": 10,
+        "value_for_money": 8
+      },
+      "pros": [
+        "Zero dependencies, zero SDK bytes",
+        "Best fit for client side tool calls with results returned",
+        "Vercel serverless is enough",
+        "Mini tier cuts cost about 3x"
+      ],
+      "cons": [
+        "Most expensive per minute among the S2S options at full tier",
+        "200 tool schemas bloat context and latency; needs tool grouping",
+        "No free tier"
+      ],
+      "sources": [
+        {
+          "url": "https://developers.openai.com/api/docs/guides/realtime-webrtc",
+          "accessed": "2026-11-16"
+        },
+        {
+          "url": "https://developers.openai.com/api/docs/pricing",
+          "accessed": "2026-11-16"
+        },
+        {
+          "url": "https://developers.openai.com/api/docs/models/gpt-realtime-2.1-mini",
+          "accessed": "2026-11-16"
+        },
+        {
+          "url": "https://developers.openai.com/api/docs/guides/realtime-conversations",
+          "accessed": "2026-11-16"
+        },
+        {
+          "url": "https://www.codebridge.tech/articles/voice-ai-phone-agents-latency-benchmark",
+          "accessed": "2026-11-16"
+        },
+        {
+          "url": "https://developers.openai.com/api/docs/guides/voice-latency-cost",
+          "accessed": "2026-11-16"
+        }
+      ],
+      "overall": 8.25,
+      "rank": 2
+    },
+    {
+      "id": "deepgram-voice-agent",
+      "name": "Deepgram Voice Agent API",
+      "vendor": "Deepgram",
+      "architecture": "Browser connects by WebSocket (@deepgram/agents browser SDK or raw) to a single Deepgram agent endpoint that runs Flux/Nova-3 STT, your chosen LLM and Aura-2 TTS. No media room.",
+      "latency_first_audio_ms": 800,
+      "latency_note": "No Deepgram figure retrieved. Harness cascade with Deepgram Flux at 707 ms best case; 800 estimated for an all Deepgram stack.",
+      "asr": {
+        "stt": "Flux or Nova-3 streaming",
+        "published_wer": "AA-WER streaming June 2026: Flux 7.36 percent, Nova-3 6.69 percent; Deepgram own tests rank Nova-3 first on multilingual. A Coval test shows 25 percent for Nova-3 (outlier).",
+        "score_1_10": 7
+      },
+      "cost_per_min_usd": 0.075,
+      "cost_notes": "Pay as you go Standard $0.075/min bundled STT, LLM and TTS; BYO TTS $0.065; Growth $0.068 and $0.051.",
+      "client_sdk": "@deepgram/agents (raw WebSocket also possible)",
+      "bundle_kb": 29,
+      "browser_support": "Chrome, Edge, Firefox, Safari, iOS Safari (WebSocket + AudioWorklet).",
+      "tool_calling": "Yes. Functions flagged client_side: true arrive as function-call-request events in the browser; reply with sendFunctionCallResponse. Server side functions also supported. MCP not confirmed.",
+      "ephemeral_token": "Yes. Temporary JWT from the auth grant endpoint, default 30 s TTL, sent via Sec-WebSocket-Protocol; SDK tokenFactory re-requests on reconnect.",
+      "free_tier": "$200 free credit, no card, does not expire.",
+      "needs_server": "Tiny serverless function for tokens",
+      "scores": {
+        "speed": 8,
+        "latency": 7,
+        "asr_accuracy": 7,
+        "cost": 7,
+        "bundle": 8,
+        "browser_support": 8,
+        "tool_calling": 9,
+        "value_for_money": 8
+      },
+      "pros": [
+        "Single bundled price",
+        "Big no card free credit",
+        "Small SDK, client side functions"
+      ],
+      "cons": [
+        "Browser SDK is new (v0.2)",
+        "ASR not best in independent tests",
+        "LLM choice limited vs DIY"
+      ],
+      "sources": [
+        {
+          "url": "https://deepgram.com/pricing",
+          "accessed": "2026-11-16"
+        },
+        {
+          "url": "https://developers.deepgram.com/docs/browser-agent-javascript",
+          "accessed": "2026-11-16"
+        },
+        {
+          "url": "https://developers.deepgram.com/docs/voice-agent-function-call-request",
+          "accessed": "2026-11-16"
+        },
+        {
+          "url": "https://developers.deepgram.com/guides/fundamentals/token-based-authentication",
+          "accessed": "2026-11-16"
+        },
+        {
+          "url": "https://bundlephobia.com/package/@deepgram/agents",
+          "accessed": "2026-11-16"
+        },
+        {
+          "url": "https://artificialanalysis.ai/articles/new-streaming-speech-to-text-benchmark-aa-wer-streaming",
+          "accessed": "2026-11-16"
+        }
+      ],
+      "overall": 7.75,
+      "rank": 3
+    },
+    {
+      "id": "ultravox",
+      "name": "Ultravox Realtime",
+      "vendor": "Ultravox (acquired by Inworld)",
+      "architecture": "Server creates a call (POST calls) and returns a joinUrl; browser ultravox-client joins over WebRTC (LiveKit based). Audio native open weight model, hosted.",
+      "latency_first_audio_ms": 800,
+      "latency_note": "No benchmark or vendor number retrieved; estimated for a native audio model. Treat as low confidence.",
+      "asr": {
+        "stt": "No separate ASR; speech goes directly into the model",
+        "published_wer": "None published",
+        "score_1_10": 7
+      },
+      "cost_per_min_usd": 0.05,
+      "cost_notes": "$0.05/min flat pay as you go; 30 free minutes; Pro $100/month removes concurrency cap; model hosted tools extra only for Threads LLM tokens ($2 / $15 per 1M).",
+      "client_sdk": "ultravox-client",
+      "bundle_kb": 135,
+      "browser_support": "Chrome, Edge, Firefox, Safari, iOS Safari (livekit-client inside).",
+      "tool_calling": "Yes. registerToolImplementation(name, fn) in UltravoxSession runs client tools in the page and returns a string result to the model. Server HTTP tools also available.",
+      "ephemeral_token": "Yes. Server mints a call with the API key; browser gets only a single call joinUrl.",
+      "free_tier": "30 free minutes, 5 concurrent calls.",
+      "needs_server": "Tiny serverless function",
+      "scores": {
+        "speed": 8,
+        "latency": 7,
+        "asr_accuracy": 7,
+        "cost": 8,
+        "bundle": 3,
+        "browser_support": 8,
+        "tool_calling": 9,
+        "value_for_money": 8
+      },
+      "pros": [
+        "Flat $0.05/min all in",
+        "Client tools with results",
+        "Simple server step"
+      ],
+      "cons": [
+        "Latency not independently benchmarked",
+        "Heavy SDK",
+        "Ownership change to Inworld adds roadmap risk"
+      ],
+      "sources": [
+        {
+          "url": "https://www.ultravox.ai/pricing",
+          "accessed": "2026-11-16"
+        },
+        {
+          "url": "https://docs.ultravox.ai/tutorials/clienttools.md",
+          "accessed": "2026-11-16"
+        },
+        {
+          "url": "https://docs.ultravox.ai/llms.txt",
+          "accessed": "2026-11-16"
+        },
+        {
+          "url": "https://bundlephobia.com/package/ultravox-client",
+          "accessed": "2026-11-16"
+        }
+      ],
+      "overall": 7.4,
+      "rank": 4
+    },
+    {
+      "id": "livekit-agents",
+      "name": "LiveKit Agents (LiveKit Cloud)",
+      "vendor": "LiveKit",
+      "architecture": "Browser joins a LiveKit room over WebRTC with livekit-client; an agent worker (Python or Node, separate process, hosted on LiveKit Cloud or yours) is dispatched into the room and runs STT, LLM, TTS or a realtime model. Backend mints a room JWT.",
+      "latency_first_audio_ms": 900,
+      "latency_note": "Harness (Aug 2026): tuned LiveKit stack (Nova-3, Groq, Cartesia) 854 to 928 ms median.",
+      "asr": {
+        "stt": "Pluggable: Deepgram Nova-3, Cartesia Ink Whisper, ElevenLabs Scribe, etc.",
+        "published_wer": "Depends on plugin (Nova-3 about 6.7 percent streaming on AA-WER)",
+        "score_1_10": 8
+      },
+      "cost_per_min_usd": 0.04,
+      "cost_notes": "Build plan: agent session $0.01/min after 1,000 free, Nova-3 STT about $0.005, Sonic or Aura TTS $0.009 to $0.03, small LLM $0.001 to $0.003, WebRTC $0.0005. About $0.03 to $0.05.",
+      "client_sdk": "livekit-client",
+      "bundle_kb": 151,
+      "browser_support": "Chrome, Edge, Firefox, Safari, iOS Safari. Best in class WebRTC client.",
+      "tool_calling": "Yes, best architecture for it. Agent tool calls performRpc to the browser, where localParticipant.registerRpcMethod handler runs and returns JSON (5 to 10 s timeout). Also server tools and MCP in the agent.",
+      "ephemeral_token": "Yes. Access token JWT signed server side with livekit-server-sdk, scoped to a room, short TTL.",
+      "free_tier": "Build plan $0, no card: 1,000 agent minutes, $2.50 inference credit, 5 concurrent sessions.",
+      "needs_server": "Yes: agent worker process (LiveKit Cloud hosts it) plus a Vercel function for tokens",
+      "scores": {
+        "speed": 6,
+        "latency": 7,
+        "asr_accuracy": 8,
+        "cost": 8,
+        "bundle": 3,
+        "browser_support": 9,
+        "tool_calling": 9,
+        "value_for_money": 7
+      },
+      "pros": [
+        "Generous free tier",
+        "Frontend RPC tools are first class",
+        "Mix any STT, LLM, TTS or S2S model"
+      ],
+      "cons": [
+        "Needs a deployed agent worker (not Vercel serverless)",
+        "Large client bundle",
+        "Most moving parts"
+      ],
+      "sources": [
+        {
+          "url": "https://docs.livekit.io/agents/",
+          "accessed": "2026-11-16"
+        },
+        {
+          "url": "https://docs.livekit.io/agents/logic/tools/forwarding.md",
+          "accessed": "2026-11-16"
+        },
+        {
+          "url": "https://livekit.com/pricing",
+          "accessed": "2026-11-16"
+        },
+        {
+          "url": "https://bundlephobia.com/package/livekit-client",
+          "accessed": "2026-11-16"
+        },
+        {
+          "url": "https://www.codebridge.tech/articles/voice-ai-phone-agents-latency-benchmark",
+          "accessed": "2026-11-16"
+        }
+      ],
+      "overall": 7.3,
+      "rank": 5
+    },
+    {
+      "id": "cartesia-agents",
+      "name": "Cartesia Managed Agents (successor to Line)",
+      "vendor": "Cartesia",
+      "architecture": "Browser WebSocket directly to wss://api.cartesia.ai/v1/agents/websocket/{agent_id} with a short lived agent access token; base64 audio_input and audio_output events. Hosted agent with Ink STT and Sonic TTS.",
+      "latency_first_audio_ms": 800,
+      "latency_note": "No end to end figure retrieved. Sonic 3.6 TTS first audio about 292 ms (Coval, 30 days to Oct 28, 2026); 800 estimated total.",
+      "asr": {
+        "stt": "Ink Whisper",
+        "published_wer": "None found",
+        "score_1_10": 6
+      },
+      "cost_per_min_usd": 0.045,
+      "cost_notes": "$0.03/min agent call (cut from $0.06 on 2026-11-02 per docs and a tracker) plus LLM tokens billed separately, about $0.01 to $0.015. No telephony needed for web.",
+      "client_sdk": "none required (raw WebSocket; @cartesia/cartesia-js is 22 KB gzip but is a TTS client)",
+      "bundle_kb": 0,
+      "browser_support": "Chrome, Edge, Firefox, Safari, iOS Safari (WebSocket + AudioWorklet; you write capture and playback).",
+      "tool_calling": "Yes. Client tools: server sends client_tool_call, browser replies client_tool_result (4 KiB cap). Tools created via POST /v1/agents/tools and attached in config.tools.",
+      "ephemeral_token": "Yes. Short lived agent access token minted server side, passed as a query parameter.",
+      "free_tier": "Free plan with monthly credits (amount not verified).",
+      "needs_server": "Tiny serverless function",
+      "scores": {
+        "speed": 7,
+        "latency": 6,
+        "asr_accuracy": 6,
+        "cost": 8,
+        "bundle": 9,
+        "browser_support": 7,
+        "tool_calling": 8,
+        "value_for_money": 7
+      },
+      "pros": [
+        "Cheap",
+        "No SDK needed",
+        "Client tools return data"
+      ],
+      "cons": [
+        "Hosted Line SDK agents stop Dec 1 2026; API moved twice this year",
+        "4 KiB tool result cap",
+        "Least documented browser path, DIY audio code"
+      ],
+      "sources": [
+        {
+          "url": "https://docs.cartesia.ai/line/integrations/web-calls",
+          "accessed": "2026-11-16"
+        },
+        {
+          "url": "https://docs.cartesia.ai/agents/client-tools",
+          "accessed": "2026-11-16"
+        },
+        {
+          "url": "https://docs.cartesia.ai/pricing.md",
+          "accessed": "2026-11-16"
+        },
+        {
+          "url": "https://docs.cartesia.ai/agents/migrate-from-line-sdk",
+          "accessed": "2026-11-16"
+        },
+        {
+          "url": "https://www.coval.ai/blog/best-text-to-speech-providers-in-2026-how-to-choose-(and-why-vendor-benchmarks-lie)/",
+          "accessed": "2026-11-16"
+        }
+      ],
+      "overall": 7.25,
+      "rank": 6
+    },
+    {
+      "id": "pipecat-daily",
+      "name": "Pipecat (Daily transport)",
+      "vendor": "Daily / Pipecat",
+      "architecture": "Open source Python bot (STT, LLM, TTS pipeline) must run on a long running server or Pipecat Cloud; browser uses @pipecat-ai/client-js plus Daily or SmallWebRTC transport and RTVI messages.",
+      "latency_first_audio_ms": 850,
+      "latency_note": "Harness (Aug 2026): Deepgram Flux + Groq + ElevenLabs cascade 707 ms best case (Pipecat style cascade). 850 typical estimate.",
+      "asr": {
+        "stt": "Pluggable (Deepgram, AssemblyAI, Whisper, etc.)",
+        "published_wer": "Depends on plugin",
+        "score_1_10": 8
+      },
+      "cost_per_min_usd": 0.04,
+      "cost_notes": "Pipecat Cloud agent-1x $0.01/min active; Deepgram STT about $0.006, TTS about $0.015, small LLM about $0.005; Daily 1:1 voice WebRTC free with Pipecat Cloud key. Self hosting removes the $0.01 but you run the server.",
+      "client_sdk": "@pipecat-ai/client-js + @pipecat-ai/daily-transport (or small-webrtc-transport)",
+      "bundle_kb": 107,
+      "browser_support": "Chrome, Edge, Firefox, Safari, iOS Safari (via Daily or SmallWebRTC).",
+      "tool_calling": "Yes. Browser registerFunctionCallHandler runs on llm-function-call-in-progress RTVI event and returns the result. Needs function_call_report_level FULL; handler must resolve with a defined value or the call stays open.",
+      "ephemeral_token": "Yes via Daily room token or SmallWebRTC offer minted by a backend that also starts the bot (Pipecat Cloud start API).",
+      "free_tier": "No free agent minutes found; Daily WebRTC 1:1 voice free under Pipecat Cloud key.",
+      "needs_server": "Yes: bot host (Pipecat Cloud container or own VM); Vercel can only start sessions",
+      "scores": {
+        "speed": 6,
+        "latency": 7,
+        "asr_accuracy": 8,
+        "cost": 8,
+        "bundle": 5,
+        "browser_support": 8,
+        "tool_calling": 8,
+        "value_for_money": 6
+      },
+      "pros": [
+        "Open source, fully flexible",
+        "Client side tool handlers with result",
+        "Cheap"
+      ],
+      "cons": [
+        "You build and deploy a Python bot",
+        "Not Vercel friendly",
+        "Sharp edges on client function results"
+      ],
+      "sources": [
+        {
+          "url": "https://docs.pipecat.ai/client/js/introduction",
+          "accessed": "2026-11-16"
+        },
+        {
+          "url": "https://docs.pipecat.ai/client/js/api-reference/client-methods",
+          "accessed": "2026-11-16"
+        },
+        {
+          "url": "https://github.com/pipecat-ai/pipecat-examples/pull/241",
+          "accessed": "2026-11-16"
+        },
+        {
+          "url": "https://www.daily.co/pricing/pipecat-cloud/",
+          "accessed": "2026-11-16"
+        },
+        {
+          "url": "https://bundlephobia.com/package/@pipecat-ai/daily-transport",
+          "accessed": "2026-11-16"
+        }
+      ],
+      "overall": 7.1,
+      "rank": 7
+    },
+    {
+      "id": "elevenlabs-agents",
+      "name": "ElevenLabs Agents Platform (ElevenAgents)",
+      "vendor": "ElevenLabs",
+      "architecture": "Browser uses @elevenlabs/client over WebRTC (LiveKit based) or WebSocket to ElevenLabs hosted agent. Agent, tools and prompt are configured in their cloud. Backend mints a conversation token or signed URL.",
+      "latency_first_audio_ms": 1100,
+      "latency_note": "Harness (Aug 2026): ElevenAgents + Qwen3-4B 758 ms, + GPT-4.1 mini about 1,308 ms; phone benchmark median 1,424 ms. New Realtime v1 Mini/Max not measured. 1100 estimated.",
+      "asr": {
+        "stt": "Scribe v2 Realtime (fine tuned STT)",
+        "published_wer": "Artificial Analysis streaming AA-WER June 2026: Scribe v2 Realtime 3.65 percent, best of group (Deepgram Flux 7.36, Nova-3 6.69).",
+        "score_1_10": 9
+      },
+      "cost_per_min_usd": 0.1,
+      "cost_notes": "$0.08 per connected minute (burst $0.16 over concurrency) plus LLM tokens. Realtime v1 Mini tokens $0.20 in / $6 out per 1M; Max $1.80 / $9. Typical total about $0.09 to $0.12.",
+      "client_sdk": "@elevenlabs/client (or @elevenlabs/react)",
+      "bundle_kb": 160,
+      "browser_support": "Chrome, Edge, Firefox, Safari, iOS Safari (WebRTC via livekit-client inside the SDK).",
+      "tool_calling": "Yes. Client tools registered in JS via clientTools in Conversation.startSession; 'wait for response' returns the value to the agent. Tools must also be declared on the agent (dashboard or API). Server webhook tools and MCP servers supported.",
+      "ephemeral_token": "Yes. GET /v1/convai/conversation/token (WebRTC) or signed URL, minted server side with the API key.",
+      "free_tier": "Free plan lists 15 call minutes and 4 concurrent calls (third party report of the pricing page, 2026-11-10); the pricing page itself shows no free agent minutes.",
+      "needs_server": "Tiny serverless function",
+      "scores": {
+        "speed": 7,
+        "latency": 6,
+        "asr_accuracy": 9,
+        "cost": 5,
+        "bundle": 3,
+        "browser_support": 8,
+        "tool_calling": 9,
+        "value_for_money": 6
+      },
+      "pros": [
+        "Best measured ASR",
+        "Polished SDK and React hooks",
+        "Client tools return data to the agent"
+      ],
+      "cons": [
+        "Heavy SDK (livekit inside)",
+        "$0.08/min platform fee plus LLM",
+        "Every tool must be pre-declared on the agent (200 definitions via API)"
+      ],
+      "sources": [
+        {
+          "url": "https://elevenlabs.io/pricing/api",
+          "accessed": "2026-11-16"
+        },
+        {
+          "url": "https://elevenlabs.io/docs/eleven-agents/customization/tools/client-tools.md",
+          "accessed": "2026-11-16"
+        },
+        {
+          "url": "https://elevenlabs.io/docs/eleven-agents/customization/realtime-models.md",
+          "accessed": "2026-11-16"
+        },
+        {
+          "url": "https://elevenlabs.io/docs/eleven-agents/api-reference/conversations/get-webrtc-token.md",
+          "accessed": "2026-11-16"
+        },
+        {
+          "url": "https://bundlephobia.com/package/@elevenlabs/client",
+          "accessed": "2026-11-16"
+        },
+        {
+          "url": "https://artificialanalysis.ai/articles/new-streaming-speech-to-text-benchmark-aa-wer-streaming",
+          "accessed": "2026-11-16"
+        },
+        {
+          "url": "https://openbenchmarks.com/voice-agent-latency",
+          "accessed": "2026-11-16"
+        }
+      ],
+      "overall": 6.6,
+      "rank": 8
+    },
+    {
+      "id": "hume-evi",
+      "name": "Hume EVI",
+      "vendor": "Hume AI",
+      "architecture": "Browser WebSocket (hume SDK or @humeai/voice-react) directly to EVI with a 30 minute access token; EVI orchestrates STT, supplemental LLM and expressive TTS.",
+      "latency_first_audio_ms": 900,
+      "latency_note": "No benchmark or vendor number retrieved; estimated. Low confidence.",
+      "asr": {
+        "stt": "Hume proprietary STT with prosody features",
+        "published_wer": "None published",
+        "score_1_10": 7
+      },
+      "cost_per_min_usd": 0.08,
+      "cost_notes": "Aggregators report $0.07/min on Starter and Creator, $0.06 on Pro ($70 plan, 1,200 min). Official pricing page no longer lists EVI, so unverified. 0.08 includes allowance for the supplemental LLM.",
+      "client_sdk": "hume (or @humeai/voice-react)",
+      "bundle_kb": 47,
+      "browser_support": "Chrome, Edge, Firefox, Safari, iOS Safari (WebSocket).",
+      "tool_calling": "Yes. EVI sends tool_call over the WebSocket, browser runs the function and sends tool_response with the same tool_call_id; works only with supported supplemental LLMs (Claude, GPT, Gemini, Moonshot). Webhooks also available.",
+      "ephemeral_token": "Yes. Server mints an access token (30 minutes) with API key and secret.",
+      "free_tier": "Free plan with about 5 EVI minutes per month (unconfirmed, aggregators).",
+      "needs_server": "Tiny serverless function",
+      "scores": {
+        "speed": 7,
+        "latency": 6,
+        "asr_accuracy": 7,
+        "cost": 6,
+        "bundle": 6,
+        "browser_support": 8,
+        "tool_calling": 8,
+        "value_for_money": 5
+      },
+      "pros": [
+        "Emotion aware voice",
+        "Client tool calls with results"
+      ],
+      "cons": [
+        "Pricing and status unclear, site now emphasizes evaluation tools",
+        "No latency figures",
+        "Tools need a supplemental LLM"
+      ],
+      "sources": [
+        {
+          "url": "https://dev.hume.ai/voice/docs/speech-to-speech-evi/features/tool-use",
+          "accessed": "2026-11-16"
+        },
+        {
+          "url": "https://dev.hume.ai/docs/introduction/api-key",
+          "accessed": "2026-11-16"
+        },
+        {
+          "url": "https://www.activepieces.com/blog/hume-ai-pricing-free-tier-plans-and-costs-2026",
+          "accessed": "2026-11-16"
+        },
+        {
+          "url": "https://bundlephobia.com/package/hume",
+          "accessed": "2026-11-16"
+        }
+      ],
+      "overall": 6.5,
+      "rank": 9
+    },
+    {
+      "id": "vapi",
+      "name": "Vapi Web SDK",
+      "vendor": "Vapi",
+      "architecture": "Browser SDK (@vapi-ai/web, Daily WebRTC inside) calls Vapi hosted assistant using a public key; Vapi orchestrates third party STT, LLM, TTS.",
+      "latency_first_audio_ms": 1558,
+      "latency_note": "Phone benchmark median 1,558 ms (Aug 2026, endpointing 0.1 s, includes telephony). Web likely a few hundred ms lower.",
+      "asr": {
+        "stt": "Pluggable (Deepgram default, others)",
+        "published_wer": "Depends on provider",
+        "score_1_10": 7
+      },
+      "cost_per_min_usd": 0.1,
+      "cost_notes": "$0.05/min platform fee plus STT about $0.01, LLM $0.008 to $0.045, voice $0.015 to $0.024; vendor estimate $82 to $129 per 1,000 minutes.",
+      "client_sdk": "@vapi-ai/web",
+      "bundle_kb": 84,
+      "browser_support": "Chrome, Edge, Firefox, Safari, iOS Safari (Daily WebRTC).",
+      "tool_calling": "Partial. Tools without a server URL emit tool-calls messages to the browser, but results cannot be returned to the model (docs: client tools cannot send a result back). Tools that return data must be server webhooks, which cannot reach in-page state without a relay. MCP tool type exists.",
+      "ephemeral_token": "No true short lived token; uses a domain restricted public key (assistant config can be transient).",
+      "free_tier": "$5 free credits",
+      "needs_server": "No for client only use",
+      "scores": {
+        "speed": 6,
+        "latency": 4,
+        "asr_accuracy": 7,
+        "cost": 5,
+        "bundle": 5,
+        "browser_support": 8,
+        "tool_calling": 4,
+        "value_for_money": 5
+      },
+      "pros": [
+        "Fast to prototype",
+        "Many provider choices"
+      ],
+      "cons": [
+        "Client tools are fire and forget",
+        "Slowest measured latency",
+        "Platform fee on top of providers"
+      ],
+      "sources": [
+        {
+          "url": "https://vapi.ai/pricing",
+          "accessed": "2026-11-16"
+        },
+        {
+          "url": "https://docs.vapi.ai/tools/client-side-websdk",
+          "accessed": "2026-11-16"
+        },
+        {
+          "url": "https://openbenchmarks.com/voice-agent-latency",
+          "accessed": "2026-11-16"
+        },
+        {
+          "url": "https://bundlephobia.com/package/@vapi-ai/web",
+          "accessed": "2026-11-16"
+        }
+      ],
+      "overall": 5.0,
+      "rank": 10
+    }
+  ],
+  "dropped": [
+    {
+      "name": "Daily Bots",
+      "reason": "Deprecated by Daily (announced for July 1 2025) and merged into Pipecat Cloud, which is already covered by the Pipecat entry."
+    },
+    {
+      "name": "Retell AI web call",
+      "reason": "Custom functions are server webhooks only (no documented browser tool execution), slowest median in the Aug 2026 phone benchmark (1,740 ms), about $0.11/min, and a 148 KB gzip SDK. Weakest fit for in-page tools."
+    }
+  ],
+  "recommendation": {
+    "pick": "Google Gemini Live API (gemini-3.8-live) direct from the browser over WebSocket with an ephemeral token minted by one Vercel function; client side tool calls executed in the page.",
+    "runner_up": "OpenAI Realtime over WebRTC (gpt-realtime-2.1, or gpt-realtime-2.1-mini to cut cost): zero SDK, best client side function calling, about 3x to 5x the cost.",
+    "why": "Gemini Live is about $0.03/min versus $0.15 for gpt-realtime-2.1, needs 0 KB of SDK if you use raw WebSocket (about 75 KB gzip with @google/genai), is under 800 ms median in an independent test, and returns tool results to the model from client JS, which fits 200 in-page tools. Ephemeral tokens can be locked to model and config so the system prompt stays server side. No paid plan is strictly needed to prototype: Gemini 2.5 Flash Native Audio is free tier (content may be used by Google); gemini-3.8-live needs a paid key, so the owner must approve billing first. OpenAI needs prepaid billing, ElevenLabs paid beyond 15 minutes, Ultravox beyond 30 minutes, Deepgram uses $200 credit with no card, LiveKit Build is free with no card. Do not register 200 tool schemas: expose about 6 meta tools (list_capabilities, describe_capability, start_demo, stop_demo, read_stream, list_active) and resolve by id in the page, which cuts context tokens and improves tool selection for every option."
+  }
+}

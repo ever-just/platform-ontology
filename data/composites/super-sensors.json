@@ -1,0 +1,366 @@
+{
+  "version": "2026-11-16.draft",
+  "doc": "docs/research/sensor-grouping.md",
+  "schema": "data/composites/composite.schema.json",
+  "composites": [
+    {
+      "id": "ctx.in-call",
+      "name": "In a call or meeting",
+      "layer": "L2",
+      "plain": "The person is talking with others right now, on this page or nearby.",
+      "inputs": [
+        { "ref": "web.camera.microphone", "scope": "capture.microphone", "role": "evidence", "feature": "speech_ratio_30s: share of 100 ms frames with rms above the noise floor and peak_hz in 85 to 255", "weight": 1.6, "modality": "audio" },
+        { "ref": "web.camera.camera", "scope": "capture.camera", "role": "evidence", "feature": "camera_live_30s: track live and faces >= 1", "weight": 1.2, "modality": "video" },
+        { "ref": "web.camera.enumerate-devices", "scope": "surroundings.media_devices", "role": "prior", "feature": "headset_present: an audio input whose label names a headset", "weight": 0.4, "modality": "device" },
+        { "ref": "web.camera.speech-recognition", "scope": "capture.speech", "role": "evidence", "feature": "turns_60s: speech segments separated by silences of 0.5 to 2 s", "weight": 0.8, "modality": "audio" },
+        { "ref": "web.actions.tab-title-favicon", "scope": "motion.tab-title", "role": "evidence", "feature": "own_title_matches_meeting: this page is itself a call page", "weight": 2.0, "modality": "content" },
+        { "ref": "web.perf.page-visibility-focus", "scope": "motion.attention", "role": "evidence", "feature": "hidden_share_60s", "weight": 0.3, "modality": "attention" },
+        { "ref": "web.notexposed.other-tabs", "role": "blind_spot", "feature": "another tab is a meeting app (extension only)", "modality": "content" },
+        { "ref": "web.os.not-exposed-sms-calendar", "role": "blind_spot", "feature": "calendar event now (web cannot read it)", "modality": "schedule" },
+        { "ref": "mob.contacts.calendar", "role": "evidence", "feature": "event_now: a busy calendar event covers the current minute", "weight": 1.5, "modality": "schedule" },
+        { "ref": "mob.telephony.phone-state", "role": "evidence", "feature": "phone_offhook", "weight": 2.5, "modality": "audio" }
+      ],
+      "logic": { "type": "log_odds", "expr": "p = sigmoid(-2.2 + sum(weight * present)); missing inputs add nothing; coverage = available weight / total weight", "window": "30s/5s", "enter": 0.75, "exit": 0.4, "min_dwell": "60s" },
+      "states": ["in_call", "not_in_call", "unknown"],
+      "surfaces": { "page": "partial", "extension": "full", "mobile": "full" },
+      "actions": [
+        { "do": "Hold notifications and voice prompts until the call ends", "mode": "auto", "via": "web.notify.notifications" },
+        { "do": "Offer to mute read-aloud", "mode": "suggest", "via": "surroundings.read-aloud" }
+      ],
+      "sensitivity": 5,
+      "analogues": ["Viva Insights meeting hours", "Viva Insights multitasking hours", "Teams presence 'In a call'"]
+    },
+    {
+      "id": "ctx.away",
+      "name": "Stepped away",
+      "layer": "L2",
+      "plain": "Nobody is at the device: no input, screen locked or the page is hidden for a while.",
+      "inputs": [
+        { "ref": "web.notify.idle-detection", "role": "evidence", "feature": "user_state == idle or screen_state == locked (threshold 60 s minimum)", "weight": 3.0, "modality": "attention" },
+        { "ref": "web.perf.idle-detection-user-activation", "role": "evidence", "feature": "no_activation_120s: navigator.userActivation not active for 120 s", "weight": 1.0, "modality": "input" },
+        { "ref": "web.input.keyboard-events", "scope": "motion.keystroke", "role": "evidence", "feature": "kpm_120s == 0", "weight": 0.8, "modality": "input" },
+        { "ref": "web.input.pointer-events", "scope": "motion.pointer", "role": "evidence", "feature": "dist_120s == 0", "weight": 0.8, "modality": "input" },
+        { "ref": "web.perf.page-visibility-focus", "scope": "motion.attention", "role": "evidence", "feature": "hidden_s >= 120", "weight": 0.7, "modality": "attention" },
+        { "ref": "web.camera.camera", "scope": "capture.camera", "role": "evidence", "feature": "faces == 0 for 30 s (only if already granted)", "weight": 1.5, "modality": "video" },
+        { "ref": "ctx.in-call", "role": "veto", "feature": "a call is live: silence is listening, not absence", "modality": "audio" }
+      ],
+      "logic": { "type": "log_odds", "expr": "p = sigmoid(-3 + sum(weight * present)); veto when ctx.in-call", "window": "120s/10s", "enter": 0.8, "exit": 0.3, "min_dwell": "30s" },
+      "states": ["present", "away", "locked"],
+      "surfaces": { "page": "full", "extension": "full", "mobile": "partial" },
+      "actions": [
+        { "do": "Pause live streams and release the wake lock", "mode": "auto", "via": "reach.wake_lock" },
+        { "do": "Mark the session idle so time counts stop", "mode": "auto", "via": "get_status" }
+      ],
+      "sensitivity": 3,
+      "analogues": ["Hubstaff idle timeout", "Teramind idle threshold (10 min default)", "ActivTrak passive time"]
+    },
+    {
+      "id": "ctx.focused",
+      "name": "Deep focus session",
+      "layer": "L2",
+      "plain": "The person has stayed on this page, working steadily, without switching away.",
+      "inputs": [
+        { "ref": "web.perf.page-visibility-focus", "scope": "motion.attention", "role": "required", "feature": "visible_focused_run: seconds since the last blur or hide", "modality": "attention" },
+        { "ref": "web.perf.page-visibility-focus", "scope": "motion.attention", "role": "evidence", "feature": "switches_10m < 2", "weight": 1.2, "modality": "attention" },
+        { "ref": "web.input.keyboard-events", "scope": "motion.keystroke", "role": "evidence", "feature": "active_seconds_share_10m >= 0.5 (Hubstaff style: a second is active with any key or pointer move)", "weight": 1.0, "modality": "input" },
+        { "ref": "web.input.pointer-events", "scope": "motion.pointer", "role": "evidence", "feature": "active_seconds_share_10m", "weight": 0.5, "modality": "input" },
+        { "ref": "web.perf.typing-cadence-scroll", "role": "evidence", "feature": "steady_scroll: reading speed variance low", "weight": 0.4, "modality": "input" },
+        { "ref": "ctx.away", "role": "veto", "feature": "away ends the run", "modality": "attention" },
+        { "ref": "mob.system.focus-status", "role": "evidence", "feature": "OS focus mode on", "weight": 1.5, "modality": "schedule" }
+      ],
+      "logic": { "type": "rule", "expr": "focused when visible_focused_run >= 25 min and switches_10m < 2 and active_share_10m >= 0.5; ends on ctx.away or a hidden gap > 2 min", "window": "10m/1m", "min_dwell": "25m" },
+      "states": ["focused", "working", "idle"],
+      "surfaces": { "page": "full", "extension": "full", "mobile": "partial" },
+      "actions": [
+        { "do": "Defer non urgent notifications and agent suggestions", "mode": "auto", "via": "web.notify.notifications" },
+        { "do": "Hold a screen wake lock while focused", "mode": "suggest", "via": "reach.wake_lock" }
+      ],
+      "sensitivity": 3,
+      "analogues": ["ActivTrak focused time and focus efficiency", "Viva Insights uninterrupted hours (1 h blocks)", "Viva legacy focus time (2 h blocks)"]
+    },
+    {
+      "id": "ctx.context-switching",
+      "name": "Rapid context switching",
+      "layer": "L2",
+      "plain": "The person keeps leaving and coming back in short bursts.",
+      "inputs": [
+        { "ref": "web.perf.page-visibility-focus", "scope": "motion.attention", "role": "required", "feature": "switches_5m and median visible burst length", "modality": "attention" },
+        { "ref": "web.xsite.page-lifecycle-events", "role": "evidence", "feature": "pagehide or freeze count in 5 min", "weight": 0.5, "modality": "attention" },
+        { "ref": "web.input.paste-event", "role": "evidence", "feature": "pastes_5m >= 3 right after refocus", "weight": 0.6, "modality": "content" }
+      ],
+      "logic": { "type": "rule", "expr": "switching when switches_5m >= 6 and median_burst < 45 s", "window": "5m/30s", "min_dwell": "2m" },
+      "states": ["switching", "settled"],
+      "surfaces": { "page": "full", "extension": "full", "mobile": "none" },
+      "actions": [ { "do": "Keep a resumable summary of where the person left off", "mode": "auto", "via": "read_stream" } ],
+      "sensitivity": 3,
+      "analogues": ["ActivTrak multitasking", "Viva calendar fragmentation"]
+    },
+    {
+      "id": "ctx.fatigue-risk",
+      "name": "Tiring or overloaded",
+      "layer": "L2",
+      "plain": "Typing and pointing are slowing and getting less precise compared with this person's own earlier pace.",
+      "inputs": [
+        { "ref": "web.perf.keystroke-dynamics", "scope": "motion.keystroke", "role": "required", "feature": "z(mean_flight) and z(mean_dwell) against the first 10 min baseline", "modality": "input" },
+        { "ref": "web.input.keyboard-events", "scope": "motion.keystroke", "role": "evidence", "feature": "backspace_ratio_5m rising", "weight": 0.8, "modality": "input" },
+        { "ref": "web.perf.mouse-dynamics", "scope": "motion.pointer", "role": "evidence", "feature": "z(speed) falling, overshoot rising", "weight": 0.7, "modality": "input" },
+        { "ref": "web.locale.timezone", "scope": "place.timezone", "role": "prior", "feature": "local hour outside 8 to 18 lowers the entry threshold", "weight": 0.4, "modality": "schedule" },
+        { "ref": "ctx.focused", "role": "prior", "feature": "session length since the last break", "weight": 0.5, "modality": "attention" }
+      ],
+      "logic": { "type": "log_odds", "expr": "p = sigmoid(-3 + 0.9*z_flight + 0.6*z_dwell + sum(weight * present)); baseline per session only, never across people", "window": "5m/1m", "enter": 0.8, "exit": 0.5, "min_dwell": "10m" },
+      "states": ["fresh", "tiring", "unknown"],
+      "surfaces": { "page": "full", "extension": "full", "mobile": "partial" },
+      "actions": [ { "do": "Suggest a break or save work", "mode": "suggest", "via": "run_action" } ],
+      "sensitivity": 4,
+      "analogues": ["ActivTrak burnout signals (utilization, efficiency, focus, unpublished thresholds)", "Viva after-hours collaboration"]
+    },
+    {
+      "id": "ctx.automation-suspected",
+      "name": "Driven by a script or bot",
+      "layer": "L2",
+      "plain": "The input looks machine made rather than coming from a person's hands.",
+      "inputs": [
+        { "ref": "web.device.webdriver-flag", "scope": "device.profile", "role": "evidence", "feature": "navigator.webdriver === true", "weight": 3.0, "modality": "identity" },
+        { "ref": "web.input.event-istrusted", "role": "evidence", "feature": "untrusted_ratio_60s > 0.2", "weight": 2.5, "modality": "input" },
+        { "ref": "web.input.synthetic-input-patterns", "role": "evidence", "feature": "zero jitter, constant intervals, teleporting pointer", "weight": 1.8, "modality": "input" },
+        { "ref": "web.perf.mouse-dynamics", "scope": "motion.pointer", "role": "evidence", "feature": "path curvature near zero and no micro corrections", "weight": 1.0, "modality": "input" },
+        { "ref": "web.perf.keystroke-dynamics", "scope": "motion.keystroke", "role": "evidence", "feature": "dwell variance below 3 ms", "weight": 1.0, "modality": "input" },
+        { "ref": "web.net.web-bot-auth-signatures", "role": "veto", "feature": "a signed agent declared itself: label as agent, not as attack", "modality": "identity" },
+        { "ref": "web.net.bot-detection-signals", "role": "evidence", "feature": "server side challenge score", "weight": 1.2, "modality": "network" }
+      ],
+      "logic": { "type": "log_odds", "expr": "p = sigmoid(-4 + sum(weight * present)); a Web Bot Auth signature switches the state to declared_agent", "window": "60s/10s", "enter": 0.9, "exit": 0.5 },
+      "states": ["human", "declared_agent", "suspected_automation"],
+      "surfaces": { "page": "full", "extension": "full", "mobile": "partial" },
+      "actions": [ { "do": "Offer the WebMCP tool surface instead of the visual UI", "mode": "suggest", "via": "web.actions.webmcp-model-context" } ],
+      "sensitivity": 2,
+      "analogues": ["bot management scores", "Teramind behavior rules"]
+    },
+    {
+      "id": "ctx.motion-mode",
+      "name": "Still, walking or riding",
+      "layer": "L2",
+      "plain": "Whether the device is resting, carried while walking, or moving in a vehicle.",
+      "inputs": [
+        { "ref": "web.location.sensor-accelerometer", "scope": "motion.accelerometer", "role": "required", "feature": "2.56 s windows at 50 Hz, 50% overlap: mag variance, step frequency 1.5 to 2.5 Hz (UCI HAR recipe)", "modality": "motion" },
+        { "ref": "web.location.device-orientation", "scope": "motion.orientation", "role": "evidence", "feature": "orientation stability", "weight": 0.5, "modality": "motion" },
+        { "ref": "web.location.geolocation", "scope": "place.geolocation", "role": "evidence", "feature": "speed: < 0.5 m/s still, 0.5 to 2.5 walking, > 7 vehicle", "weight": 2.0, "modality": "position" },
+        { "ref": "web.network.connection-info", "scope": "link.network", "role": "evidence", "feature": "cell handovers: rtt jumps and type changes per minute", "weight": 0.5, "modality": "network" },
+        { "ref": "mob.location.activity-recognition", "role": "evidence", "feature": "OS activity label (Android)", "weight": 3.0, "modality": "motion" },
+        { "ref": "mob.location.motion-activity", "role": "evidence", "feature": "OS activity label (iOS CMMotionActivity)", "weight": 3.0, "modality": "motion" }
+      ],
+      "logic": { "type": "rule", "expr": "argmax over {still, walking, vehicle} of class scores from the window features; OS labels win when present; smoothed by a 3 window majority vote", "window": "2.56s/1.28s", "min_dwell": "10s" },
+      "states": ["still", "walking", "vehicle", "unknown"],
+      "surfaces": { "page": "partial", "extension": "none", "mobile": "full" },
+      "actions": [ { "do": "Switch to voice and larger targets while walking; stop asking for input in a vehicle", "mode": "suggest", "via": "surroundings.read-aloud" } ],
+      "sensitivity": 3,
+      "analogues": ["UCI HAR activity classes", "Android Activity Recognition API"]
+    },
+    {
+      "id": "ctx.surroundings",
+      "name": "Dark, bright or noisy surroundings",
+      "layer": "L2",
+      "plain": "What the room is like: light level and background noise.",
+      "inputs": [
+        { "ref": "web.location.sensor-ambient-light", "scope": "capture.light", "role": "evidence", "feature": "lux median 30 s: < 10 dark, > 10000 sunlight", "weight": 2.0, "modality": "environment" },
+        { "ref": "web.camera.camera", "scope": "capture.camera", "role": "evidence", "feature": "frame brightness as a lux proxy when no light sensor", "weight": 1.0, "modality": "video" },
+        { "ref": "web.camera.microphone", "scope": "capture.microphone", "role": "evidence", "feature": "noise floor dB: 10th percentile over 30 s", "weight": 1.5, "modality": "audio" },
+        { "ref": "web.display.prefers-color-scheme", "role": "prior", "feature": "dark scheme preferred", "weight": 0.3, "modality": "environment" },
+        { "ref": "web.locale.timezone", "scope": "place.timezone", "role": "prior", "feature": "local hour vs sunset", "weight": 0.3, "modality": "schedule" }
+      ],
+      "logic": { "type": "rule", "expr": "light = bucket(lux or brightness); noise = bucket(noise floor dB: < 35 quiet, 35 to 60 normal, > 60 loud)", "window": "30s/5s", "min_dwell": "30s" },
+      "states": ["dark", "normal_light", "bright", "quiet", "loud"],
+      "surfaces": { "page": "partial", "extension": "partial", "mobile": "full" },
+      "actions": [ { "do": "Switch theme and raise read-aloud volume or show captions", "mode": "suggest", "via": "device.theme-color" } ],
+      "sensitivity": 3,
+      "analogues": ["phone auto brightness", "context-aware computing (Dey 2001)"]
+    },
+    {
+      "id": "ctx.device-strain",
+      "name": "Device under strain",
+      "layer": "L2",
+      "plain": "The device is low on battery, hot, busy or struggling to keep the page smooth.",
+      "inputs": [
+        { "ref": "web.device.battery", "scope": "device.battery", "role": "evidence", "feature": "level < 0.2 and not charging", "weight": 1.5, "modality": "device" },
+        { "ref": "web.compute.compute-pressure", "scope": "device.pressure", "role": "evidence", "feature": "pressure state serious or critical", "weight": 2.0, "modality": "device" },
+        { "ref": "web.perf.long-animation-frames", "role": "evidence", "feature": "LoAF > 50 ms count per 10 s", "weight": 1.0, "modality": "device" },
+        { "ref": "web.perf.event-timing-inp", "role": "evidence", "feature": "INP p75 over 1 min > 200 ms", "weight": 1.0, "modality": "device" },
+        { "ref": "web.display.prefers-reduced-data", "role": "prior", "feature": "user asked for less data", "weight": 0.5, "modality": "network" }
+      ],
+      "logic": { "type": "log_odds", "expr": "p = sigmoid(-2.5 + sum(weight * present))", "window": "60s/10s", "enter": 0.7, "exit": 0.4, "min_dwell": "30s" },
+      "states": ["ok", "strained"],
+      "surfaces": { "page": "full", "extension": "full", "mobile": "full" },
+      "actions": [ { "do": "Lower sample rates, stop camera preview, use the simulated adapter", "mode": "auto", "via": "set_param" } ],
+      "sensitivity": 1,
+      "analogues": ["SLO burn rate over short and long windows", "OpenTelemetry browser.web_vital"]
+    },
+    {
+      "id": "ctx.link-degraded",
+      "name": "Connection getting worse",
+      "layer": "L2",
+      "plain": "The network is slowing down or about to drop.",
+      "inputs": [
+        { "ref": "web.network.connection-info", "scope": "link.network", "role": "required", "feature": "rtt_ms and downlink trend; jitter_ms", "modality": "network" },
+        { "ref": "web.network.online-offline", "role": "veto", "feature": "offline event means state offline", "modality": "network" },
+        { "ref": "web.timing.opentelemetry-browser", "scope": "link.timing", "role": "evidence", "feature": "fetch error ratio and duration p95", "weight": 1.2, "modality": "network" },
+        { "ref": "ctx.motion-mode", "role": "prior", "feature": "in a vehicle raises the drop risk", "weight": 0.6, "modality": "motion" }
+      ],
+      "logic": { "type": "rule", "expr": "multiwindow burn style: degraded when rtt over 5 min is 2x the 1 h median AND rtt over 30 s is also 2x (both windows must agree)", "window": "30s and 5m", "min_dwell": "30s" },
+      "states": ["good", "degraded", "offline"],
+      "surfaces": { "page": "full", "extension": "full", "mobile": "full" },
+      "actions": [ { "do": "Queue writes locally and warn before uploads", "mode": "auto", "via": "set_param" } ],
+      "sensitivity": 1,
+      "analogues": ["Google SRE multiwindow multi-burn-rate alerts"]
+    },
+    {
+      "id": "ctx.multi-screen-workspace",
+      "name": "Working across screens",
+      "layer": "L2",
+      "plain": "The person has more than one display or is sharing a screen.",
+      "inputs": [
+        { "ref": "web.display.window-management", "scope": "device.screens", "role": "evidence", "feature": "count >= 2", "weight": 2.0, "modality": "device" },
+        { "ref": "web.camera.display-capture", "scope": "capture.screen", "role": "evidence", "feature": "a screen share is live", "weight": 2.0, "modality": "video" },
+        { "ref": "web.display.fullscreen", "scope": "reach.fullscreen", "role": "evidence", "feature": "page is fullscreen on one display", "weight": 0.5, "modality": "device" }
+      ],
+      "logic": { "type": "rule", "expr": "multi when screens >= 2; presenting when display capture is live", "window": "on change" },
+      "states": ["single", "multi", "presenting"],
+      "surfaces": { "page": "partial", "extension": "full", "mobile": "none" },
+      "actions": [ { "do": "Hide private panels while presenting", "mode": "auto", "via": "run_action" } ],
+      "sensitivity": 2,
+      "analogues": ["Teramind screen recording triggers"]
+    },
+    {
+      "id": "ctx.content-leaving",
+      "name": "Content being copied out",
+      "layer": "L2",
+      "plain": "Text is being copied or dragged out of the page, or pasted in from elsewhere, in volume.",
+      "inputs": [
+        { "ref": "web.input.copy-event", "scope": "capture.clipboard", "role": "required", "feature": "copies_5m and copied_chars_5m (length only, never the text)", "modality": "content" },
+        { "ref": "web.input.selection", "role": "evidence", "feature": "large selections before copy", "weight": 0.8, "modality": "content" },
+        { "ref": "web.input.paste-event", "role": "evidence", "feature": "pastes_5m (length only)", "weight": 0.4, "modality": "content" },
+        { "ref": "web.perf.page-visibility-focus", "scope": "motion.attention", "role": "evidence", "feature": "copy then hide within 3 s", "weight": 0.8, "modality": "attention" },
+        { "ref": "web.input.clipboard-read", "role": "blind_spot", "feature": "reading the clipboard needs a prompt; not used by default", "modality": "content" }
+      ],
+      "logic": { "type": "sequence", "expr": "pattern: (select > 200 chars) followedBy copy followedBy hide, within 10 s, repeated >= 3 times in 5 min", "window": "5m/30s" },
+      "states": ["normal", "bulk_copy"],
+      "surfaces": { "page": "full", "extension": "full", "mobile": "partial" },
+      "actions": [ { "do": "Offer an export or share button instead", "mode": "suggest", "via": "reach.download" } ],
+      "sensitivity": 4,
+      "analogues": ["Teramind data loss prevention rules", "Flink CEP followedBy within"]
+    },
+    {
+      "id": "ctx.recognisable-device",
+      "name": "Recognisable device",
+      "layer": "L2",
+      "plain": "How easily this browser could be picked out of a crowd from what the page can read silently.",
+      "inputs": [
+        { "ref": "web.render.canvas", "scope": "fingerprint.canvas", "role": "evidence", "feature": "bits", "modality": "identity" },
+        { "ref": "web.render.fonts", "scope": "fingerprint.fonts", "role": "evidence", "feature": "bits", "modality": "identity" },
+        { "ref": "web.locale.timezone", "scope": "place.timezone", "role": "evidence", "feature": "scores.fingerprint_bits", "modality": "identity" },
+        { "ref": "web.network.device-client-hints", "scope": "device.profile", "role": "evidence", "feature": "scores.fingerprint_bits", "modality": "identity" },
+        { "ref": "web.device.speech-voices", "role": "evidence", "feature": "scores.fingerprint_bits", "modality": "identity" },
+        { "ref": "web.xsite.global-privacy-control", "role": "prior", "feature": "GPC on: the person asked not to be tracked", "modality": "identity" }
+      ],
+      "logic": { "type": "sum_capped", "expr": "bits = sum of fingerprint_bits over distinct inputs after alias collapse, times 0.6 for correlation, capped at 33 (enough to single out one person in 8 billion)", "window": "per session" },
+      "states": ["low", "medium", "unique"],
+      "surfaces": { "page": "full", "extension": "full", "mobile": "partial" },
+      "actions": [ { "do": "Explain which readings add the most bits", "mode": "suggest", "via": "describe_capability" } ],
+      "sensitivity": 4,
+      "analogues": ["EFF Cover Your Tracks surprisal bits"]
+    },
+    {
+      "id": "ctx.place-type",
+      "name": "At home, at work or elsewhere",
+      "layer": "L2",
+      "plain": "Which kind of place the person is at, learned from where they usually are at this hour.",
+      "inputs": [
+        { "ref": "web.location.geolocation", "scope": "place.geolocation", "role": "required", "feature": "fix clustered by DBSCAN (eps 100 m) into visit places; stays >= 10 min", "modality": "position" },
+        { "ref": "web.locale.timezone", "scope": "place.timezone", "role": "prior", "feature": "local hour and weekday", "modality": "schedule" },
+        { "ref": "web.network.connection-info", "scope": "link.network", "role": "evidence", "feature": "wifi vs cellular", "weight": 0.6, "modality": "network" },
+        { "ref": "web.net.ip-geolocation", "role": "evidence", "feature": "coarse city when geolocation is denied", "weight": 0.3, "modality": "position" }
+      ],
+      "logic": { "type": "cluster", "expr": "label the cluster with most night hours home, most weekday 9 to 17 hours work, others elsewhere; needs history across visits (lake, opt-in)", "window": "visit" },
+      "states": ["home", "work", "elsewhere", "unknown"],
+      "surfaces": { "page": "partial", "extension": "partial", "mobile": "full" },
+      "actions": [ { "do": "Pick a default privacy profile per place", "mode": "ask", "via": "set_param" } ],
+      "sensitivity": 5,
+      "analogues": ["Google Maps Timeline places", "context-aware computing location context"]
+    },
+    {
+      "id": "ctx.calm-ui-preferred",
+      "name": "Prefers a calm interface",
+      "layer": "L2",
+      "plain": "The person has told their device they want less motion, more contrast or less data.",
+      "inputs": [
+        { "ref": "web.display.prefers-reduced-motion", "role": "evidence", "feature": "reduce", "weight": 2.0, "modality": "environment" },
+        { "ref": "web.display.prefers-contrast", "role": "evidence", "feature": "more", "weight": 1.0, "modality": "environment" },
+        { "ref": "web.display.forced-colors", "role": "evidence", "feature": "active", "weight": 2.0, "modality": "environment" },
+        { "ref": "web.display.prefers-reduced-transparency", "role": "evidence", "feature": "reduce", "weight": 0.8, "modality": "environment" },
+        { "ref": "web.display.prefers-reduced-data", "role": "evidence", "feature": "reduce", "weight": 0.8, "modality": "network" }
+      ],
+      "logic": { "type": "rule", "expr": "any of the media queries true; recompute on change events", "window": "on change" },
+      "states": ["calm", "default"],
+      "surfaces": { "page": "full", "extension": "full", "mobile": "full" },
+      "actions": [ { "do": "Turn off animated charts and auto play", "mode": "auto", "via": "set_param" } ],
+      "sensitivity": 2,
+      "analogues": ["WCAG 2.3.3 animation from interactions"]
+    },
+    {
+      "id": "intent.about-to-leave",
+      "name": "About to leave the page",
+      "layer": "L3",
+      "plain": "The person is likely to close or leave the page in the next few seconds.",
+      "inputs": [
+        { "ref": "web.input.pointer-events", "scope": "motion.pointer", "role": "evidence", "feature": "pointer exits through the top edge with upward speed", "weight": 1.5, "modality": "input" },
+        { "ref": "web.perf.page-visibility-focus", "scope": "motion.attention", "role": "evidence", "feature": "blur", "weight": 0.8, "modality": "attention" },
+        { "ref": "web.xsite.page-lifecycle-events", "role": "evidence", "feature": "pagehide or freeze", "weight": 3.0, "modality": "attention" },
+        { "ref": "web.actions.beforeunload", "scope": "reach.leave-warning", "role": "evidence", "feature": "beforeunload fired", "weight": 3.0, "modality": "attention" },
+        { "ref": "ctx.context-switching", "role": "prior", "feature": "already switching often", "weight": 0.5, "modality": "attention" }
+      ],
+      "logic": { "type": "sequence", "expr": "pattern: idle typing > 20 s followedBy pointer exit top followedBy blur, within 5 s; or any beforeunload", "window": "5s" },
+      "states": ["staying", "leaving"],
+      "surfaces": { "page": "full", "extension": "full", "mobile": "partial" },
+      "actions": [ { "do": "Save the draft and session state", "mode": "auto", "via": "reach.leave-warning" } ],
+      "sensitivity": 2,
+      "analogues": ["exit intent popups", "Flink CEP strict and relaxed contiguity"]
+    },
+    {
+      "id": "intent.ready-for-voice",
+      "name": "Ready to talk to the agent",
+      "layer": "L3",
+      "plain": "A good moment to offer the voice agent: a mic exists, the room is quiet and no call is on.",
+      "inputs": [
+        { "ref": "web.camera.enumerate-devices", "scope": "surroundings.media_devices", "role": "required", "feature": "mics >= 1", "modality": "device" },
+        { "ref": "ctx.surroundings", "role": "evidence", "feature": "quiet", "weight": 1.0, "modality": "audio" },
+        { "ref": "ctx.in-call", "role": "veto", "feature": "in a call", "modality": "audio" },
+        { "ref": "ctx.motion-mode", "role": "evidence", "feature": "walking or vehicle makes voice better than typing", "weight": 1.0, "modality": "motion" },
+        { "ref": "web.perf.page-visibility-focus", "scope": "motion.attention", "role": "required", "feature": "page visible and focused", "modality": "attention" },
+        { "ref": "web.perf.idle-detection-user-activation", "role": "required", "feature": "recent user activation (mic start needs a gesture)", "modality": "input" }
+      ],
+      "logic": { "type": "rule", "expr": "all required true, no veto, and (quiet or moving)", "window": "10s" },
+      "states": ["offer_voice", "do_not_offer"],
+      "surfaces": { "page": "full", "extension": "full", "mobile": "full" },
+      "actions": [ { "do": "Show the talk button", "mode": "suggest", "via": "capture.microphone" } ],
+      "sensitivity": 2,
+      "analogues": ["docs/research/voice-agents-2026-11.md"]
+    },
+    {
+      "id": "intent.needs-help",
+      "name": "Stuck and might want help",
+      "layer": "L3",
+      "plain": "The person is hesitating: hovering, retyping and rage clicking in one spot.",
+      "inputs": [
+        { "ref": "web.input.pointer-events", "scope": "motion.pointer", "role": "evidence", "feature": "rage clicks: >= 3 clicks within 1 s inside 30 px", "weight": 1.8, "modality": "input" },
+        { "ref": "web.input.keyboard-events", "scope": "motion.keystroke", "role": "evidence", "feature": "backspace_ratio_60s > 0.3", "weight": 1.0, "modality": "input" },
+        { "ref": "web.perf.mouse-dynamics", "scope": "motion.pointer", "role": "evidence", "feature": "dwell over one control > 8 s without click", "weight": 0.8, "modality": "input" },
+        { "ref": "web.perf.event-timing-inp", "role": "veto", "feature": "INP > 500 ms: the page is slow, not the person", "modality": "device" },
+        { "ref": "ctx.fatigue-risk", "role": "prior", "feature": "tiring", "weight": 0.4, "modality": "input" }
+      ],
+      "logic": { "type": "log_odds", "expr": "p = sigmoid(-3 + sum(weight * present)); veto on slow page", "window": "60s/5s", "enter": 0.8, "exit": 0.4, "min_dwell": "5s" },
+      "states": ["fine", "stuck"],
+      "surfaces": { "page": "full", "extension": "full", "mobile": "partial" },
+      "actions": [ { "do": "Offer the agent with the control in question as context", "mode": "suggest", "via": "describe_capability" } ],
+      "sensitivity": 3,
+      "analogues": ["session replay frustration signals (rage clicks)"]
+    }
+  ]
+}

@@ -4,6 +4,7 @@ import "@blueprintjs/core/lib/css/blueprint.css";
 import "./styles.css";
 import { App } from "./App";
 import { applyLook } from "./ui/look";
+import "./ext/account";
 
 applyLook();
 

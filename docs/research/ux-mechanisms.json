@@ -1,0 +1,3370 @@
+{
+ "generated": "2026-11-16",
+ "mechanisms": [
+  {
+   "slug": "autosave-offline-draft",
+   "name": "Autosave and offline drafts",
+   "vertical": "creative-tools",
+   "companies": [
+    "Figma",
+    "Canva",
+    "Descript"
+   ],
+   "importance": "critical",
+   "why": "Edits persist continuously and survive crashes and flaky connections.",
+   "apis": [
+    "IndexedDB",
+    "Service Worker",
+    "Page Lifecycle events",
+    "sendBeacon"
+   ],
+   "atlas_ids": [
+    "web.storage.indexeddb",
+    "web.actions.service-worker-cache",
+    "web.timing.page-lifecycle-bfcache",
+    "web.actions.send-beacon"
+   ],
+   "atlas_status": "partial",
+   "source_url": "https://www.liveblocks.io/blog/understanding-sync-engines-how-figma-linear-and-google-docs-work",
+   "source_date": "2025",
+   "confidence": "documented",
+   "evidence": "search_snippet"
+  },
+  {
+   "slug": "drag-drop-import",
+   "name": "Drag and drop import of media",
+   "vertical": "creative-tools",
+   "companies": [
+    "Canva",
+    "CapCut",
+    "Figma",
+    "Adobe Express"
+   ],
+   "importance": "critical",
+   "why": "Dropping images, video or files onto the canvas is the fastest way to start a project.",
+   "apis": [
+    "HTML Drag and Drop",
+    "DataTransfer",
+    "File API"
+   ],
+   "atlas_ids": [
+    "web.actions.drag-and-drop",
+    "web.files.drop-files"
+   ],
+   "atlas_status": "existing",
+   "source_url": "https://developer.mozilla.org/en-US/docs/Web/API/HTML_Drag_and_Drop_API",
+   "source_date": "2024",
+   "confidence": "documented",
+   "evidence": "agent_recall"
+  },
+  {
+   "slug": "export-to-video-webcodecs",
+   "name": "In browser video export",
+   "vertical": "creative-tools",
+   "companies": [
+    "CapCut",
+    "Canva",
+    "Descript",
+    "Clipchamp"
+   ],
+   "importance": "critical",
+   "why": "Encoding timelines on device with WebCodecs avoids server queues and uploads.",
+   "apis": [
+    "WebCodecs",
+    "OffscreenCanvas",
+    "Web Workers",
+    "FFmpeg WASM"
+   ],
+   "atlas_ids": [
+    "web.actions.webcodecs",
+    "web.actions.web-workers"
+   ],
+   "atlas_status": "existing",
+   "source_url": "https://developer.chrome.com/articles/webcodecs",
+   "source_date": "2021",
+   "confidence": "confirmed",
+   "evidence": "page_read"
+  },
+  {
+   "slug": "gpu-canvas-rendering",
+   "name": "GPU accelerated canvas rendering",
+   "vertical": "creative-tools",
+   "companies": [
+    "Figma",
+    "Canva"
+   ],
+   "importance": "critical",
+   "why": "Pan and zoom of huge documents stays smooth; Figma renders with WebGPU and falls back to WebGL mid session.",
+   "apis": [
+    "WebGPU",
+    "WebGL",
+    "OffscreenCanvas"
+   ],
+   "atlas_ids": [
+    "web.ai.webgpu-compute",
+    "web.render.webgl",
+    "web.render.webgpu-features-limits"
+   ],
+   "atlas_status": "partial",
+   "source_url": "https://www.figma.com/blog/figma-rendering-powered-by-webgpu/",
+   "source_date": "2025-09-18",
+   "confidence": "confirmed",
+   "evidence": "page_read"
+  },
+  {
+   "slug": "multiplayer-cursors-presence",
+   "name": "Multiplayer cursors and presence",
+   "vertical": "creative-tools",
+   "companies": [
+    "Figma",
+    "Canva"
+   ],
+   "importance": "critical",
+   "why": "Seeing collaborators' pointers in real time makes shared canvases feel live; Canva uses WebRTC data channels with a WebSocket fallback.",
+   "apis": [
+    "WebRTC data channels",
+    "WebSocket"
+   ],
+   "atlas_ids": [
+    "web.actions.webrtc-data-channel",
+    "web.actions.websockets"
+   ],
+   "atlas_status": "partial",
+   "source_url": "https://canva.dev/blog/engineering/realtime-mouse-pointers",
+   "source_date": "2024-08-15",
+   "confidence": "confirmed",
+   "evidence": "page_read"
+  },
+  {
+   "slug": "pen-pressure-tilt-input",
+   "name": "Pen pressure, tilt and coalesced input",
+   "vertical": "creative-tools",
+   "companies": [
+    "Procreate-like web tools",
+    "Figma",
+    "Canva"
+   ],
+   "importance": "critical",
+   "why": "Natural strokes need pressure, tilt and every intermediate point, not just frame rate samples.",
+   "apis": [
+    "Pointer Events",
+    "getCoalescedEvents",
+    "pointerrawupdate"
+   ],
+   "atlas_ids": [
+    "web.input.pointer-events"
+   ],
+   "atlas_status": "existing",
+   "source_url": "https://developer.mozilla.org/en-US/docs/Web/API/PointerEvent",
+   "source_date": "2024",
+   "confidence": "confirmed",
+   "evidence": "page_read"
+  },
+  {
+   "slug": "realtime-property-sync",
+   "name": "Real-time document sync (last writer wins registers)",
+   "vertical": "creative-tools",
+   "companies": [
+    "Figma"
+   ],
+   "importance": "critical",
+   "why": "Per property last writer wins ordered by a central server gives simple, conflict free multiplayer without full CRDT cost.",
+   "apis": [
+    "WebSocket",
+    "CRDT inspired data model"
+   ],
+   "atlas_ids": [
+    "web.actions.websockets"
+   ],
+   "atlas_status": "partial",
+   "source_url": "https://madebyevan.com/figma/how-figmas-multiplayer-technology-works/",
+   "source_date": "2019-10-16",
+   "confidence": "confirmed",
+   "evidence": "page_read"
+  },
+  {
+   "slug": "transcript-based-editing",
+   "name": "Edit audio and video by editing text",
+   "vertical": "creative-tools",
+   "companies": [
+    "Descript",
+    "CapCut"
+   ],
+   "importance": "critical",
+   "why": "Deleting words in a transcript cuts the media, making editing as easy as a document.",
+   "apis": [
+    "Speech to text service",
+    "Web Audio API",
+    "WebCodecs"
+   ],
+   "atlas_ids": [
+    "web.actions.web-audio",
+    "web.actions.webcodecs"
+   ],
+   "atlas_status": "new",
+   "source_url": "https://elevenlabs.io/blog/descript",
+   "source_date": "2024",
+   "confidence": "documented",
+   "evidence": "search_snippet"
+  },
+  {
+   "slug": "undo-redo-history",
+   "name": "Undo, redo and version history",
+   "vertical": "creative-tools",
+   "companies": [
+    "Figma",
+    "Canva",
+    "Descript",
+    "CapCut"
+   ],
+   "importance": "critical",
+   "why": "Fearless experimentation depends on multi step undo and named restore points, which collaboration complicates.",
+   "apis": [
+    "Command pattern",
+    "IndexedDB",
+    "Keyboard events"
+   ],
+   "atlas_ids": [
+    "web.input.keyboard-events",
+    "web.storage.indexeddb"
+   ],
+   "atlas_status": "new",
+   "source_url": "https://www.figma.com/blog/building-figmas-code-layers/",
+   "source_date": "2024",
+   "confidence": "inferred",
+   "evidence": "search_snippet"
+  },
+  {
+   "slug": "wasm-core-engine",
+   "name": "WebAssembly engine core",
+   "vertical": "creative-tools",
+   "companies": [
+    "Figma",
+    "Descript"
+   ],
+   "importance": "critical",
+   "why": "C++ editor cores compiled with Emscripten give near native speed and share code with server rendering.",
+   "apis": [
+    "WebAssembly",
+    "Web Workers"
+   ],
+   "atlas_ids": [
+    "web.actions.webassembly",
+    "web.actions.web-workers"
+   ],
+   "atlas_status": "existing",
+   "source_url": "https://www.figma.com/blog/figma-rendering-powered-by-webgpu/",
+   "source_date": "2025-09-18",
+   "confidence": "confirmed",
+   "evidence": "page_read"
+  },
+  {
+   "slug": "ai-generation-panel",
+   "name": "AI generation and enhancement panels",
+   "vertical": "creative-tools",
+   "companies": [
+    "Canva",
+    "Adobe Express",
+    "Descript",
+    "Figma"
+   ],
+   "importance": "helpful",
+   "why": "Prompt panels for images, copy, voice cleanup and background removal sit next to the canvas.",
+   "apis": [
+    "fetch streaming",
+    "Prompt API",
+    "Writer API",
+    "Rewriter API"
+   ],
+   "atlas_ids": [
+    "web.ai.prompt-api",
+    "web.ai.writer-api",
+    "web.ai.rewriter-api"
+   ],
+   "atlas_status": "existing",
+   "source_url": "https://elevenlabs.io/blog/descript",
+   "source_date": "2024",
+   "confidence": "documented",
+   "evidence": "search_snippet"
+  },
+  {
+   "slug": "auto-captions",
+   "name": "Auto generated editable captions",
+   "vertical": "creative-tools",
+   "companies": [
+    "CapCut",
+    "Descript",
+    "Canva"
+   ],
+   "importance": "helpful",
+   "why": "Speech to text creates timed caption blocks users can retime and style.",
+   "apis": [
+    "Web Speech API",
+    "server ASR",
+    "Canvas text rendering"
+   ],
+   "atlas_ids": [
+    "web.camera.speech-recognition"
+   ],
+   "atlas_status": "partial",
+   "source_url": "https://www.capcut.com/help/how-to-recognise-subtitles",
+   "source_date": "2024",
+   "confidence": "documented",
+   "evidence": "search_snippet"
+  },
+  {
+   "slug": "brand-kit-and-templates",
+   "name": "Templates, brand kit and one click resize",
+   "vertical": "creative-tools",
+   "companies": [
+    "Canva",
+    "Adobe Express"
+   ],
+   "importance": "helpful",
+   "why": "Brand colors, fonts and logos auto apply, and one design resizes to many channel formats.",
+   "apis": [
+    "Design tokens",
+    "Canvas layout engine"
+   ],
+   "atlas_ids": [],
+   "atlas_status": "new",
+   "source_url": "https://moda.app/blog/canva-vs-adobe-express",
+   "source_date": "2025",
+   "confidence": "documented",
+   "evidence": "search_snippet"
+  },
+  {
+   "slug": "file-open-save-pickers",
+   "name": "Open and save real files from disk",
+   "vertical": "creative-tools",
+   "companies": [
+    "Figma",
+    "Descript",
+    "Adobe Express"
+   ],
+   "importance": "helpful",
+   "why": "Direct file handles let web editors behave like desktop apps with save in place.",
+   "apis": [
+    "File System Access API",
+    "File Handling API"
+   ],
+   "atlas_ids": [
+    "web.files.file-system-access-pickers",
+    "web.os.file-handling"
+   ],
+   "atlas_status": "existing",
+   "source_url": "https://developer.mozilla.org/en-US/docs/Web/API/File_System_API",
+   "source_date": "2024",
+   "confidence": "documented",
+   "evidence": "agent_recall"
+  },
+  {
+   "slug": "local-font-access",
+   "name": "Installed font access",
+   "vertical": "creative-tools",
+   "companies": [
+    "Figma",
+    "Canva",
+    "Adobe Express"
+   ],
+   "importance": "helpful",
+   "why": "Designers expect their installed fonts in the picker; this needs a permission prompt and is Chromium only.",
+   "apis": [
+    "Local Font Access API queryLocalFonts"
+   ],
+   "atlas_ids": [
+    "web.input.local-fonts",
+    "web.device.installed-fonts"
+   ],
+   "atlas_status": "existing",
+   "source_url": "https://developer.chrome.com/articles/local-fonts",
+   "source_date": "2024",
+   "confidence": "documented",
+   "evidence": "search_snippet"
+  },
+  {
+   "slug": "rich-clipboard-paste",
+   "name": "Rich clipboard copy and paste",
+   "vertical": "creative-tools",
+   "companies": [
+    "Figma",
+    "Canva",
+    "Descript"
+   ],
+   "importance": "helpful",
+   "why": "Pasting images, SVG and styled text between apps keeps design work flowing.",
+   "apis": [
+    "Async Clipboard API",
+    "paste event",
+    "ClipboardItem"
+   ],
+   "atlas_ids": [
+    "web.input.clipboard-read",
+    "web.input.clipboard-write",
+    "web.input.paste-event"
+   ],
+   "atlas_status": "existing",
+   "source_url": "https://developer.mozilla.org/en-US/docs/Web/API/Clipboard_API",
+   "source_date": "2024",
+   "confidence": "documented",
+   "evidence": "agent_recall"
+  },
+  {
+   "slug": "capability-detect",
+   "name": "Device capability and network detection",
+   "vertical": "cross-cutting",
+   "companies": [
+    "Netflix",
+    "YouTube",
+    "Tubi"
+   ],
+   "importance": "critical",
+   "why": "Pick codec, bitrate and quality by whether playback is smooth and power efficient; Network Information is limited availability so degrade gracefully.",
+   "apis": [
+    "MediaCapabilities.decodingInfo",
+    "navigator.connection",
+    "Save-Data"
+   ],
+   "atlas_ids": [
+    "web.device.media-capabilities",
+    "web.network.network-information",
+    "web.network.save-data-header",
+    "web.device.codec-support"
+   ],
+   "atlas_status": "existing",
+   "source_url": "https://developer.mozilla.org/en-US/docs/Web/API/Media_Capabilities_API",
+   "source_date": "2020",
+   "confidence": "confirmed",
+   "evidence": "page_read"
+  },
+  {
+   "slug": "passkeys",
+   "name": "Passkey sign in",
+   "vertical": "cross-cutting",
+   "companies": [
+    "Spotify",
+    "YouTube",
+    "Pokemon TCG Pocket"
+   ],
+   "importance": "critical",
+   "why": "WebAuthn replaces passwords and SMS codes; Baseline since 2021 and cuts friction for returning users.",
+   "apis": [
+    "navigator.credentials.create",
+    "navigator.credentials.get",
+    "WebAuthn conditional UI"
+   ],
+   "atlas_ids": [
+    "web.auth.passkeys",
+    "web.identity.webauthn-create",
+    "web.identity.webauthn-get"
+   ],
+   "atlas_status": "existing",
+   "source_url": "https://developer.mozilla.org/en-US/docs/Web/API/Web_Authentication_API",
+   "source_date": "2021",
+   "confidence": "confirmed",
+   "evidence": "page_read"
+  },
+  {
+   "slug": "payments",
+   "name": "Payments and subscriptions",
+   "vertical": "cross-cutting",
+   "companies": [
+    "Taobao",
+    "Tiimo",
+    "HBO Max"
+   ],
+   "importance": "critical",
+   "why": "Browser managed checkout reduces forms for subscriptions and in app purchases; Digital Goods API is aimed at Play Billing in Android PWAs (not verified on MDN here).",
+   "apis": [
+    "PaymentRequest",
+    "Digital Goods API",
+    "Payment Handler"
+   ],
+   "atlas_ids": [
+    "web.payments.payment-request",
+    "web.payments.digital-goods",
+    "web.payments.google-pay",
+    "web.payments.apple-pay-js"
+   ],
+   "atlas_status": "existing",
+   "source_url": "https://developer.mozilla.org/en-US/docs/Web/API/Payment_Request_API",
+   "source_date": "2025",
+   "confidence": "documented",
+   "evidence": "page_read"
+  },
+  {
+   "slug": "push-new-content",
+   "name": "Push notifications for new content",
+   "vertical": "cross-cutting",
+   "companies": [
+    "YouTube",
+    "Twitch",
+    "StoryGraph"
+   ],
+   "importance": "critical",
+   "why": "Re-engages viewers for new episodes, live starts and releases via a service worker push event. Baseline widely available.",
+   "apis": [
+    "Push API",
+    "Notifications API",
+    "Service Worker"
+   ],
+   "atlas_ids": [
+    "web.notify.push-api",
+    "web.notify.notifications",
+    "web.notify.notification-triggers"
+   ],
+   "atlas_status": "existing",
+   "source_url": "https://developer.mozilla.org/en-US/docs/Web/API/Push_API",
+   "source_date": "2025",
+   "confidence": "confirmed",
+   "evidence": "page_read"
+  },
+  {
+   "slug": "realtime-sync",
+   "name": "Low latency sync with WebTransport and WebSocket",
+   "vertical": "cross-cutting",
+   "companies": [
+    "Twitch",
+    "YouTube Live",
+    "Disney Speedstorm"
+   ],
+   "importance": "critical",
+   "why": "Live chat, multiplayer state and shared playback need low latency streams; WebTransport adds datagrams and multiple streams over HTTP/3 and is Baseline 2026.",
+   "apis": [
+    "WebTransport",
+    "WebSocket",
+    "WebRTC data channel"
+   ],
+   "atlas_ids": [
+    "web.actions.webtransport",
+    "web.actions.websockets",
+    "web.actions.webrtc-data-channel"
+   ],
+   "atlas_status": "existing",
+   "source_url": "https://developer.mozilla.org/en-US/docs/Web/API/WebTransport_API",
+   "source_date": "2026",
+   "confidence": "confirmed",
+   "evidence": "page_read"
+  },
+  {
+   "slug": "reduced-motion",
+   "name": "Reduced motion and accessibility",
+   "vertical": "cross-cutting",
+   "companies": [
+    "HBO Max",
+    "Art of Fauna",
+    "Speechify"
+   ],
+   "importance": "critical",
+   "why": "Honor prefers-reduced-motion for autoplay, parallax and transitions to avoid vestibular triggers; pair with captions, sign language and screen reader support as the awards reward.",
+   "apis": [
+    "prefers-reduced-motion",
+    "prefers-contrast",
+    "forced-colors"
+   ],
+   "atlas_ids": [
+    "web.display.prefers-reduced-motion",
+    "web.display.prefers-contrast",
+    "web.display.forced-colors",
+    "web.locale.accessibility-inference"
+   ],
+   "atlas_status": "existing",
+   "source_url": "https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/At-rules/@media/prefers-reduced-motion",
+   "source_date": "2025",
+   "confidence": "confirmed",
+   "evidence": "page_read"
+  },
+  {
+   "slug": "storage-persistence",
+   "name": "Storage persistence and quota",
+   "vertical": "cross-cutting",
+   "companies": [
+    "Netflix",
+    "Goodnotes",
+    "Procreate Dreams"
+   ],
+   "importance": "critical",
+   "why": "Request persistent storage so offline downloads and projects are not evicted, and read estimate() for quota planning. Baseline widely available.",
+   "apis": [
+    "navigator.storage.persist",
+    "navigator.storage.estimate"
+   ],
+   "atlas_ids": [
+    "web.storage.persistent-storage",
+    "web.storage.persistence-eviction",
+    "web.device.storage-estimate",
+    "web.storage.storage-quota"
+   ],
+   "atlas_status": "existing",
+   "source_url": "https://developer.mozilla.org/en-US/docs/Web/API/Storage_API",
+   "source_date": "2021",
+   "confidence": "confirmed",
+   "evidence": "page_read"
+  },
+  {
+   "slug": "wake-lock",
+   "name": "Screen wake lock during play",
+   "vertical": "cross-cutting",
+   "companies": [
+    "YouTube",
+    "Twitch",
+    "Explore POV"
+   ],
+   "importance": "critical",
+   "why": "Keeps the screen on for video, reading, recipes and streams; must be re-requested after visibilitychange and may be rejected on low battery.",
+   "apis": [
+    "navigator.wakeLock.request",
+    "WakeLockSentinel"
+   ],
+   "atlas_ids": [
+    "web.display.wake-lock",
+    "web.notify.screen-wake-lock"
+   ],
+   "atlas_status": "existing",
+   "source_url": "https://developer.mozilla.org/en-US/docs/Web/API/Screen_Wake_Lock_API",
+   "source_date": "2025",
+   "confidence": "confirmed",
+   "evidence": "page_read"
+  },
+  {
+   "slug": "app-badging",
+   "name": "App badging",
+   "vertical": "cross-cutting",
+   "companies": [
+    "Spotify",
+    "SoundCloud"
+   ],
+   "importance": "helpful",
+   "why": "Shows an unread or new content count on the app icon without a disruptive notification. Limited availability.",
+   "apis": [
+    "navigator.setAppBadge",
+    "navigator.clearAppBadge"
+   ],
+   "atlas_ids": [
+    "web.notify.badging"
+   ],
+   "atlas_status": "existing",
+   "source_url": "https://developer.mozilla.org/en-US/docs/Web/API/Badging_API",
+   "source_date": "2025",
+   "confidence": "confirmed",
+   "evidence": "page_read"
+  },
+  {
+   "slug": "background-fetch",
+   "name": "Background fetch for downloads",
+   "vertical": "cross-cutting",
+   "companies": [
+    "Netflix",
+    "Wiser (15 Minute Audio Books)",
+    "Tubi"
+   ],
+   "importance": "helpful",
+   "why": "Hands large movie, audio and game downloads to the browser with progress UI so they survive navigation. Experimental, limited availability.",
+   "apis": [
+    "BackgroundFetchManager",
+    "Service Worker"
+   ],
+   "atlas_ids": [
+    "web.notify.background-fetch",
+    "web.notify.background-sync"
+   ],
+   "atlas_status": "existing",
+   "source_url": "https://developer.mozilla.org/en-US/docs/Web/API/Background_Fetch_API",
+   "source_date": "2025",
+   "confidence": "confirmed",
+   "evidence": "page_read"
+  },
+  {
+   "slug": "compute-pressure",
+   "name": "Compute Pressure adaptation",
+   "vertical": "cross-cutting",
+   "companies": [
+    "Disney Speedstorm",
+    "Twitch",
+    "Detail"
+   ],
+   "importance": "helpful",
+   "why": "Observe CPU and thermal state (nominal to critical) to lower effects, encode quality or AI work before frames drop. Experimental.",
+   "apis": [
+    "PressureObserver"
+   ],
+   "atlas_ids": [
+    "web.compute.compute-pressure"
+   ],
+   "atlas_status": "existing",
+   "source_url": "https://developer.mozilla.org/en-US/docs/Web/API/Compute_Pressure_API",
+   "source_date": "2025",
+   "confidence": "confirmed",
+   "evidence": "page_read"
+  },
+  {
+   "slug": "gpu-rendering",
+   "name": "WebGPU and WebGL rendering",
+   "vertical": "cross-cutting",
+   "companies": [
+    "Infinity Nikki",
+    "Feather: Draw in 3D",
+    "Procreate Dreams"
+   ],
+   "importance": "helpful",
+   "why": "High fidelity visuals and GPU compute for games and creative tools; WebGPU is limited availability so keep a WebGL fallback.",
+   "apis": [
+    "navigator.gpu",
+    "WebGL2RenderingContext"
+   ],
+   "atlas_ids": [
+    "web.render.webgl",
+    "web.ai.webgpu-compute",
+    "web.render.webgpu-features-limits",
+    "web.device.webgpu-adapter"
+   ],
+   "atlas_status": "existing",
+   "source_url": "https://developer.mozilla.org/en-US/docs/Web/API/WebGPU_API",
+   "source_date": "2025",
+   "confidence": "confirmed",
+   "evidence": "page_read"
+  },
+  {
+   "slug": "haptics",
+   "name": "Haptics and vibration feedback",
+   "vertical": "cross-cutting",
+   "companies": [
+    "PBJ: The Musical",
+    "Art of Fauna",
+    "Pokemon TCG Pocket"
+   ],
+   "importance": "helpful",
+   "why": "Tactile cues make rhythm, card opening and accessibility feedback feel physical; Apple awarded haptic heavy games. Safari lacks navigator.vibrate so feature detect.",
+   "apis": [
+    "navigator.vibrate"
+   ],
+   "atlas_ids": [
+    "web.actions.vibrate"
+   ],
+   "atlas_status": "existing",
+   "source_url": "https://developer.mozilla.org/en-US/docs/Web/API/Vibration_API",
+   "source_date": "2025",
+   "confidence": "documented",
+   "evidence": "page_read"
+  },
+  {
+   "slug": "orientation-lock",
+   "name": "Screen orientation lock",
+   "vertical": "cross-cutting",
+   "companies": [
+    "DREDGE",
+    "Disney Speedstorm",
+    "YouTube"
+   ],
+   "importance": "helpful",
+   "why": "Lock to landscape for games and fullscreen video; typically requires fullscreen on mobile and has limited availability.",
+   "apis": [
+    "screen.orientation.lock",
+    "requestFullscreen"
+   ],
+   "atlas_ids": [
+    "web.peripherals.screen-orientation-lock",
+    "web.display.screen-orientation",
+    "web.display.fullscreen"
+   ],
+   "atlas_status": "existing",
+   "source_url": "https://developer.mozilla.org/en-US/docs/Web/API/ScreenOrientation/lock",
+   "source_date": "2025",
+   "confidence": "confirmed",
+   "evidence": "page_read"
+  },
+  {
+   "slug": "pwa-install",
+   "name": "Install as PWA",
+   "vertical": "cross-cutting",
+   "companies": [
+    "Spotify",
+    "Tubi",
+    "Strava"
+   ],
+   "importance": "helpful",
+   "why": "Installed web apps get their own window and icon, bringing web media apps close to native feel. Needs a manifest and a user confirmed prompt.",
+   "apis": [
+    "Web App Manifest",
+    "beforeinstallprompt",
+    "display-mode media query"
+   ],
+   "atlas_ids": [
+    "web.os.install-prompt",
+    "web.display.display-mode",
+    "web.os.web-install-api"
+   ],
+   "atlas_status": "existing",
+   "source_url": "https://developer.mozilla.org/en-US/docs/Web/Progressive_web_apps/Guides/Installing",
+   "source_date": "2025",
+   "confidence": "documented",
+   "evidence": "page_read"
+  },
+  {
+   "slug": "view-transitions",
+   "name": "View transitions between screens",
+   "vertical": "cross-cutting",
+   "companies": [
+    "Spotify",
+    "TikTok",
+    "Procreate Dreams"
+   ],
+   "importance": "helpful",
+   "why": "Animated state changes between views in SPAs and MPAs give native feeling navigation for media browsing.",
+   "apis": [
+    "document.startViewTransition",
+    "@view-transition"
+   ],
+   "atlas_ids": [
+    "web.actions.view-transitions"
+   ],
+   "atlas_status": "existing",
+   "source_url": "https://developer.mozilla.org/en-US/docs/Web/API/View_Transition_API",
+   "source_date": "2025",
+   "confidence": "documented",
+   "evidence": "page_read"
+  },
+  {
+   "slug": "voice-search",
+   "name": "Speech recognition voice search",
+   "vertical": "cross-cutting",
+   "companies": [
+    "Speechify",
+    "Be My Eyes",
+    "SoundCloud"
+   ],
+   "importance": "helpful",
+   "why": "Voice queries and dictation via SpeechRecognition; recognition is often server side and support varies by browser.",
+   "apis": [
+    "SpeechRecognition",
+    "SpeechSynthesis"
+   ],
+   "atlas_ids": [
+    "web.camera.speech-recognition",
+    "web.actions.speech-synthesis"
+   ],
+   "atlas_status": "existing",
+   "source_url": "https://developer.mozilla.org/en-US/docs/Web/API/Web_Speech_API",
+   "source_date": "2025",
+   "confidence": "documented",
+   "evidence": "page_read"
+  },
+  {
+   "slug": "web-share",
+   "name": "Web Share and share targets",
+   "vertical": "cross-cutting",
+   "companies": [
+    "Spotify",
+    "Edits (Instagram)",
+    "TikTok"
+   ],
+   "importance": "helpful",
+   "why": "Native share sheet for clips, playlists and results; the separate Web Share Target API lets an installed PWA receive shares.",
+   "apis": [
+    "navigator.share",
+    "navigator.canShare",
+    "share_target manifest"
+   ],
+   "atlas_ids": [
+    "web.os.web-share",
+    "web.os.web-share-target"
+   ],
+   "atlas_status": "existing",
+   "source_url": "https://developer.mozilla.org/en-US/docs/Web/API/Web_Share_API",
+   "source_date": "2025",
+   "confidence": "documented",
+   "evidence": "page_read"
+  },
+  {
+   "slug": "webxr",
+   "name": "WebXR immersive sessions",
+   "vertical": "cross-cutting",
+   "companies": [
+    "Explore POV",
+    "Porta Nubi",
+    "Taobao",
+    "Calm"
+   ],
+   "importance": "helpful",
+   "why": "Immersive video, spatial puzzles and 3D shopping on headsets, a category Google Play and Apple now award. Limited availability and experimental.",
+   "apis": [
+    "navigator.xr",
+    "XRSession"
+   ],
+   "atlas_ids": [
+    "web.peripherals.webxr-immersive",
+    "web.peripherals.webxr-hand-tracking",
+    "web.peripherals.webxr-world-sensing"
+   ],
+   "atlas_status": "existing",
+   "source_url": "https://developer.mozilla.org/en-US/docs/Web/API/WebXR_Device_API",
+   "source_date": "2025",
+   "confidence": "confirmed",
+   "evidence": "page_read"
+  },
+  {
+   "slug": "cloud-game-streaming-webrtc",
+   "name": "Cloud game streaming over WebRTC",
+   "vertical": "games",
+   "companies": [
+    "Xbox Cloud Gaming",
+    "GeForce NOW"
+   ],
+   "importance": "critical",
+   "why": "Low latency and packet loss resilience decide whether a streamed game feels playable in a browser.",
+   "apis": [
+    "WebRTC",
+    "RTCPeerConnection",
+    "RTCDataChannel"
+   ],
+   "atlas_ids": [
+    "web.actions.webrtc-data-channel"
+   ],
+   "atlas_status": "partial",
+   "source_url": "https://developer.microsoft.com/en-us/games/articles/2025/03/gdc-2025-xbox-cloud-gaming-beta-expanding-your-reach-enhancing-your-game/",
+   "source_date": "2025-03-21",
+   "confidence": "confirmed",
+   "evidence": "page_read"
+  },
+  {
+   "slug": "deep-link-join-experience",
+   "name": "Deep links into a game or server",
+   "vertical": "games",
+   "companies": [
+    "Roblox",
+    "Discord",
+    "Steam"
+   ],
+   "importance": "critical",
+   "why": "A shared link must open the app straight into a specific game, server or lobby with launch data.",
+   "apis": [
+    "custom URL protocol",
+    "universal links",
+    "launchData"
+   ],
+   "atlas_ids": [
+    "web.os.protocol-handlers"
+   ],
+   "atlas_status": "partial",
+   "source_url": "https://create.roblox.com/docs/production/promotion/deeplinking",
+   "source_date": "2025",
+   "confidence": "documented",
+   "evidence": "search_snippet"
+  },
+  {
+   "slug": "embedded-activities-iframe",
+   "name": "Embedded multiplayer activities in an iframe",
+   "vertical": "games",
+   "companies": [
+    "Discord"
+   ],
+   "importance": "critical",
+   "why": "Web apps run inside Discord via an iframe and SDK so friends can play together in a voice channel.",
+   "apis": [
+    "iframe",
+    "postMessage",
+    "Embedded App SDK"
+   ],
+   "atlas_ids": [
+    "web.display.iframe-embedding"
+   ],
+   "atlas_status": "partial",
+   "source_url": "https://docs.discord.com/developers/activities/overview",
+   "source_date": "2026",
+   "confidence": "confirmed",
+   "evidence": "page_read"
+  },
+  {
+   "slug": "fullscreen-immersive-play",
+   "name": "Fullscreen immersive play",
+   "vertical": "games",
+   "companies": [
+    "GeForce NOW",
+    "Xbox Cloud Gaming",
+    "itch.io",
+    "Roblox"
+   ],
+   "importance": "critical",
+   "why": "Fullscreen removes browser chrome so the game fills the display.",
+   "apis": [
+    "requestFullscreen",
+    "exitFullscreen",
+    "fullscreenchange"
+   ],
+   "atlas_ids": [
+    "web.actions.fullscreen",
+    "web.display.fullscreen"
+   ],
+   "atlas_status": "existing",
+   "source_url": "https://developer.mozilla.org/en-US/docs/Web/API/Fullscreen_API",
+   "source_date": "2026-10-30",
+   "confidence": "confirmed",
+   "evidence": "page_read"
+  },
+  {
+   "slug": "gamepad-input-mapping",
+   "name": "Gamepad input mapping and hot plug",
+   "vertical": "games",
+   "companies": [
+    "Steam",
+    "Xbox Cloud Gaming",
+    "GeForce NOW",
+    "Epic Games Store"
+   ],
+   "importance": "critical",
+   "why": "Controller buttons and axes must map to game actions, with connect and disconnect handled live.",
+   "apis": [
+    "Gamepad API",
+    "navigator.getGamepads",
+    "gamepadconnected"
+   ],
+   "atlas_ids": [
+    "web.peripherals.gamepad",
+    "web.device.gamepad-presence"
+   ],
+   "atlas_status": "existing",
+   "source_url": "https://developer.mozilla.org/en-US/docs/Web/API/Gamepad_API/Using_the_Gamepad_API",
+   "source_date": "2026",
+   "confidence": "confirmed",
+   "evidence": "page_read"
+  },
+  {
+   "slug": "keyboard-lock-capture",
+   "name": "Keyboard lock in fullscreen",
+   "vertical": "games",
+   "companies": [
+    "GeForce NOW",
+    "Xbox Cloud Gaming"
+   ],
+   "importance": "critical",
+   "why": "Games need Escape and browser shortcut keys delivered to the stream instead of the browser.",
+   "apis": [
+    "navigator.keyboard.lock",
+    "Keyboard Map API"
+   ],
+   "atlas_ids": [
+    "web.input.keyboard-lock",
+    "web.display.keyboard-lock"
+   ],
+   "atlas_status": "existing",
+   "source_url": "https://developer.mozilla.org/en-US/docs/Web/API/Keyboard_API",
+   "source_date": "2026-08-22",
+   "confidence": "confirmed",
+   "evidence": "page_read"
+  },
+  {
+   "slug": "pointer-lock-mouse-look",
+   "name": "Pointer lock for mouse look",
+   "vertical": "games",
+   "companies": [
+    "GeForce NOW",
+    "Xbox Cloud Gaming",
+    "itch.io"
+   ],
+   "importance": "critical",
+   "why": "First person games need raw unbounded mouse deltas with the cursor hidden.",
+   "apis": [
+    "requestPointerLock",
+    "movementX",
+    "movementY",
+    "pointerlockchange"
+   ],
+   "atlas_ids": [
+    "web.input.pointer-lock"
+   ],
+   "atlas_status": "existing",
+   "source_url": "https://developer.mozilla.org/en-US/docs/Web/API/Pointer_Lock_API",
+   "source_date": "2025-09-18",
+   "confidence": "confirmed",
+   "evidence": "page_read"
+  },
+  {
+   "slug": "presence-and-chat-websocket",
+   "name": "Live presence and chat over WebSocket",
+   "vertical": "games",
+   "companies": [
+    "Discord",
+    "Steam",
+    "Roblox"
+   ],
+   "importance": "critical",
+   "why": "Persistent sockets deliver friend presence, voice state and in game chat in real time.",
+   "apis": [
+    "WebSocket",
+    "message events"
+   ],
+   "atlas_ids": [
+    "web.actions.websockets"
+   ],
+   "atlas_status": "existing",
+   "source_url": "https://developer.mozilla.org/en-US/docs/Web/API/WebSocket",
+   "source_date": "2026",
+   "confidence": "documented",
+   "evidence": "page_read"
+  },
+  {
+   "slug": "screen-wake-lock-play",
+   "name": "Keep screen awake during play",
+   "vertical": "games",
+   "companies": [
+    "Xbox Cloud Gaming",
+    "GeForce NOW",
+    "Twitch",
+    "YouTube Live"
+   ],
+   "importance": "critical",
+   "why": "Long sessions and streams must not be interrupted by the screen dimming or locking.",
+   "apis": [
+    "navigator.wakeLock.request",
+    "WakeLockSentinel"
+   ],
+   "atlas_ids": [
+    "web.display.wake-lock",
+    "web.notify.screen-wake-lock"
+   ],
+   "atlas_status": "existing",
+   "source_url": "https://developer.mozilla.org/en-US/docs/Web/API/Screen_Wake_Lock_API",
+   "source_date": "2026-11-12",
+   "confidence": "confirmed",
+   "evidence": "page_read"
+  },
+  {
+   "slug": "spatial-navigation-tv-ui",
+   "name": "Controller first spatial navigation",
+   "vertical": "games",
+   "companies": [
+    "Steam",
+    "PlayStation",
+    "Xbox Cloud Gaming"
+   ],
+   "importance": "critical",
+   "why": "Directional focus movement makes store and library UIs usable from a gamepad or TV remote.",
+   "apis": [
+    "CSS Spatial Navigation",
+    "nav-up nav-down",
+    "focus management"
+   ],
+   "atlas_ids": [],
+   "atlas_status": "new",
+   "source_url": "https://engineering.atspotify.com/2023/5/tv-spatial-navigation",
+   "source_date": "2023-05",
+   "confidence": "documented",
+   "evidence": "search_snippet"
+  },
+  {
+   "slug": "touch-overlay-controls",
+   "name": "On screen touch controls for streamed games",
+   "vertical": "games",
+   "companies": [
+    "Xbox Cloud Gaming",
+    "Steam"
+   ],
+   "importance": "critical",
+   "why": "Touch layouts let phone players play without a controller; Microsoft reports 20 percent use touch exclusively.",
+   "apis": [
+    "Touch Events",
+    "Pointer Events",
+    "virtual gamepad overlay"
+   ],
+   "atlas_ids": [
+    "web.input.touch-events",
+    "web.device.touch-support"
+   ],
+   "atlas_status": "partial",
+   "source_url": "https://developer.microsoft.com/en-us/games/articles/2025/03/gdc-2025-xbox-cloud-gaming-beta-expanding-your-reach-enhancing-your-game/",
+   "source_date": "2025-03-21",
+   "confidence": "confirmed",
+   "evidence": "page_read"
+  },
+  {
+   "slug": "achievement-unlock-toasts",
+   "name": "Achievement unlock toasts and progress",
+   "vertical": "games",
+   "companies": [
+    "Steam",
+    "PlayStation",
+    "Xbox Cloud Gaming"
+   ],
+   "importance": "helpful",
+   "why": "Visible unlock moments reward players and drive completion and sharing.",
+   "apis": [
+    "Steamworks ISteamUserStats",
+    "in-app toast"
+   ],
+   "atlas_ids": [],
+   "atlas_status": "new",
+   "source_url": "https://partner.steamgames.com/doc/features/achievements",
+   "source_date": "2024",
+   "confidence": "documented",
+   "evidence": "search_snippet"
+  },
+  {
+   "slug": "browser-support-gating",
+   "name": "Supported browser and codec gating",
+   "vertical": "games",
+   "companies": [
+    "GeForce NOW",
+    "Xbox Cloud Gaming"
+   ],
+   "importance": "helpful",
+   "why": "Cloud gaming only runs on browsers with the required codecs and input APIs, so services gate by browser and version.",
+   "apis": [
+    "User-Agent Client Hints",
+    "MediaCapabilities"
+   ],
+   "atlas_ids": [
+    "web.device.codec-support",
+    "web.device.media-capabilities"
+   ],
+   "atlas_status": "partial",
+   "source_url": "https://www.nvidia.com/en-gb/geforce-now/system-reqs/",
+   "source_date": "2026",
+   "confidence": "documented",
+   "evidence": "search_snippet"
+  },
+  {
+   "slug": "clip-recording-capture",
+   "name": "Clip and highlight recording",
+   "vertical": "games",
+   "companies": [
+    "Xbox Cloud Gaming",
+    "Steam",
+    "Twitch"
+   ],
+   "importance": "helpful",
+   "why": "Recording a MediaStream lets players save and post a moment without leaving the game.",
+   "apis": [
+    "MediaRecorder",
+    "dataavailable",
+    "Blob"
+   ],
+   "atlas_ids": [
+    "web.camera.media-recorder"
+   ],
+   "atlas_status": "existing",
+   "source_url": "https://developer.mozilla.org/en-US/docs/Web/API/MediaRecorder",
+   "source_date": "2026-10-07",
+   "confidence": "confirmed",
+   "evidence": "page_read"
+  },
+  {
+   "slug": "document-pip-overlay",
+   "name": "Always on top mini window overlay",
+   "vertical": "games",
+   "companies": [
+    "Discord",
+    "Twitch",
+    "YouTube Live"
+   ],
+   "importance": "helpful",
+   "why": "A floating window keeps chat or voice controls visible while the player stays in another app.",
+   "apis": [
+    "Document Picture-in-Picture",
+    "documentPictureInPicture.requestWindow"
+   ],
+   "atlas_ids": [
+    "web.display.document-pip",
+    "web.camera.picture-in-picture"
+   ],
+   "atlas_status": "existing",
+   "source_url": "https://developer.mozilla.org/en-US/docs/Web/API/Document_Picture-in-Picture_API",
+   "source_date": "2026",
+   "confidence": "confirmed",
+   "evidence": "page_read"
+  },
+  {
+   "slug": "friend-and-sale-notifications",
+   "name": "Push notifications for friends and releases",
+   "vertical": "games",
+   "companies": [
+    "Steam",
+    "Discord",
+    "Epic Games Store",
+    "Twitch"
+   ],
+   "importance": "helpful",
+   "why": "Notifications bring players back for friend invites, sales and live streams.",
+   "apis": [
+    "Notifications API",
+    "Push API",
+    "service worker"
+   ],
+   "atlas_ids": [
+    "web.notify.notifications",
+    "web.notify.push-api"
+   ],
+   "atlas_status": "existing",
+   "source_url": "https://developer.mozilla.org/en-US/docs/Web/API/Notifications_API",
+   "source_date": "2026-05-25",
+   "confidence": "confirmed",
+   "evidence": "page_read"
+  },
+  {
+   "slug": "gamepad-haptics",
+   "name": "Controller haptic feedback (rumble)",
+   "vertical": "games",
+   "companies": [
+    "Xbox Cloud Gaming",
+    "GeForce NOW"
+   ],
+   "importance": "helpful",
+   "why": "Rumble gives tactile feedback that streamed games rely on for impact and damage cues.",
+   "apis": [
+    "GamepadHapticActuator",
+    "vibrationActuator",
+    "playEffect"
+   ],
+   "atlas_ids": [
+    "web.peripherals.gamepad"
+   ],
+   "atlas_status": "partial",
+   "source_url": "https://developer.mozilla.org/docs/Web/API/GamepadHapticActuator",
+   "source_date": "2026",
+   "confidence": "documented",
+   "evidence": "search_snippet"
+  },
+  {
+   "slug": "html5-embed-fullscreen-frame",
+   "name": "Embeddable HTML5 game frame with fullscreen button",
+   "vertical": "games",
+   "companies": [
+    "itch.io"
+   ],
+   "importance": "helpful",
+   "why": "Browser games embed in other pages and need an explicit fullscreen path from inside an iframe.",
+   "apis": [
+    "iframe allowfullscreen",
+    "Fullscreen API"
+   ],
+   "atlas_ids": [
+    "web.display.iframe-embedding",
+    "web.display.fullscreen"
+   ],
+   "atlas_status": "partial",
+   "source_url": "https://itch.io/updates/more-embed-options-for-html5-games",
+   "source_date": "2019",
+   "confidence": "documented",
+   "evidence": "search_snippet"
+  },
+  {
+   "slug": "media-session-hardware-keys",
+   "name": "Media keys and lock screen controls",
+   "vertical": "games",
+   "companies": [
+    "Twitch",
+    "YouTube Live",
+    "Steam"
+   ],
+   "importance": "helpful",
+   "why": "Hardware keys and lock screen controls keep streams and game audio controllable when the tab is hidden.",
+   "apis": [
+    "Media Session API",
+    "MediaMetadata",
+    "setActionHandler"
+   ],
+   "atlas_ids": [
+    "web.os.web-locks-media-session"
+   ],
+   "atlas_status": "partial",
+   "source_url": "https://developer.mozilla.org/en-US/docs/Web/API/Media_Session_API",
+   "source_date": "2024-08-07",
+   "confidence": "confirmed",
+   "evidence": "page_read"
+  },
+  {
+   "slug": "remote-play-steam-input",
+   "name": "Remote Play with Steam Input configs",
+   "vertical": "games",
+   "companies": [
+    "Steam"
+   ],
+   "importance": "helpful",
+   "why": "Remote Play streams a game to phones and TVs using Steam Input touch and controller layouts.",
+   "apis": [
+    "Steam Input",
+    "Remote Play",
+    "ISteamRemotePlay"
+   ],
+   "atlas_ids": [],
+   "atlas_status": "new",
+   "source_url": "https://partner.steamgames.com/doc/features/remoteplay",
+   "source_date": "2024",
+   "confidence": "documented",
+   "evidence": "search_snippet"
+  },
+  {
+   "slug": "screen-capture-share",
+   "name": "Screen and tab capture for sharing",
+   "vertical": "games",
+   "companies": [
+    "Discord",
+    "Steam",
+    "Xbox Cloud Gaming"
+   ],
+   "importance": "helpful",
+   "why": "Players share their screen or game window with friends or streams.",
+   "apis": [
+    "getDisplayMedia",
+    "MediaStream"
+   ],
+   "atlas_ids": [
+    "web.camera.display-capture"
+   ],
+   "atlas_status": "existing",
+   "source_url": "https://developer.mozilla.org/en-US/docs/Web/API/Screen_Capture_API",
+   "source_date": "2026",
+   "confidence": "confirmed",
+   "evidence": "page_read"
+  },
+  {
+   "slug": "webcodecs-low-latency-decode",
+   "name": "Hardware decode with per frame control",
+   "vertical": "games",
+   "companies": [
+    "Xbox Cloud Gaming",
+    "GeForce NOW",
+    "Twitch"
+   ],
+   "importance": "helpful",
+   "why": "Direct codec access can cut decode and render delay in streamed video.",
+   "apis": [
+    "WebCodecs",
+    "VideoDecoder",
+    "Web Workers"
+   ],
+   "atlas_ids": [
+    "web.actions.webcodecs",
+    "web.device.codec-support"
+   ],
+   "atlas_status": "existing",
+   "source_url": "https://developer.mozilla.org/en-US/docs/Web/API/WebCodecs_API",
+   "source_date": "2026",
+   "confidence": "documented",
+   "evidence": "page_read"
+  },
+  {
+   "slug": "webtransport-datagrams",
+   "name": "Unreliable datagrams for real time state",
+   "vertical": "games",
+   "companies": [
+    "Roblox",
+    "Xbox Cloud Gaming"
+   ],
+   "importance": "helpful",
+   "why": "Datagrams give low latency, loss tolerant transport for input and game state.",
+   "apis": [
+    "WebTransport",
+    "datagrams",
+    "HTTP/3"
+   ],
+   "atlas_ids": [
+    "web.actions.webtransport"
+   ],
+   "atlas_status": "existing",
+   "source_url": "https://developer.mozilla.org/en-US/docs/Web/API/WebTransport_API",
+   "source_date": "2026",
+   "confidence": "documented",
+   "evidence": "page_read"
+  },
+  {
+   "slug": "eventsub-realtime-events",
+   "name": "Real time channel events via EventSub",
+   "vertical": "live-streaming",
+   "companies": [
+    "Twitch"
+   ],
+   "importance": "critical",
+   "why": "Chat, follows and subscriptions arrive as pushed events over WebSocket or webhook.",
+   "apis": [
+    "EventSub",
+    "WebSocket transport",
+    "Conduits"
+   ],
+   "atlas_ids": [
+    "web.actions.websockets"
+   ],
+   "atlas_status": "partial",
+   "source_url": "https://discuss.dev.twitch.tv/t/eventsub-websockets-are-now-available-in-open-beta/41639",
+   "source_date": "2022",
+   "confidence": "documented",
+   "evidence": "search_snippet"
+  },
+  {
+   "slug": "low-latency-abr",
+   "name": "Adaptive bitrate tuned for low latency",
+   "vertical": "live-streaming",
+   "companies": [
+    "Twitch",
+    "YouTube Live"
+   ],
+   "importance": "critical",
+   "why": "Standard ABR rebuffers at low latency, so players need algorithms built for small buffers.",
+   "apis": [
+    "adaptive bitrate",
+    "MSE",
+    "Network Information API"
+   ],
+   "atlas_ids": [
+    "web.network.network-information"
+   ],
+   "atlas_status": "partial",
+   "source_url": "https://blog.twitch.tv/en/2020/01/15/twitch-invites-you-to-take-on-our-acm-mmsys-2020-grand-challenge",
+   "source_date": "2020-01-15",
+   "confidence": "documented",
+   "evidence": "search_snippet"
+  },
+  {
+   "slug": "low-latency-hls",
+   "name": "Low latency HLS delivery",
+   "vertical": "live-streaming",
+   "companies": [
+    "Twitch",
+    "YouTube Live",
+    "Kick"
+   ],
+   "importance": "critical",
+   "why": "Partial segments and blocking playlist reloads cut glass to glass delay to a few seconds.",
+   "apis": [
+    "LL-HLS",
+    "_HLS_msn",
+    "_HLS_part",
+    "Media Source Extensions"
+   ],
+   "atlas_ids": [],
+   "atlas_status": "new",
+   "source_url": "https://developer.apple.com/documentation/http-live-streaming/enabling-low-latency-http-live-streaming-hls.md",
+   "source_date": "2019",
+   "confidence": "documented",
+   "evidence": "search_snippet"
+  },
+  {
+   "slug": "mse-adaptive-playback",
+   "name": "Adaptive playback through Media Source",
+   "vertical": "live-streaming",
+   "companies": [
+    "Twitch",
+    "YouTube Live",
+    "Kick"
+   ],
+   "importance": "critical",
+   "why": "Script fed buffers let players switch renditions and manage latency for live video.",
+   "apis": [
+    "MediaSource",
+    "SourceBuffer",
+    "HTMLVideoElement"
+   ],
+   "atlas_ids": [],
+   "atlas_status": "new",
+   "source_url": "https://developer.mozilla.org/en-US/docs/Web/API/Media_Source_Extensions_API",
+   "source_date": "2026",
+   "confidence": "documented",
+   "evidence": "page_read"
+  },
+  {
+   "slug": "youtube-live-chat-stream",
+   "name": "Server streamed live chat",
+   "vertical": "live-streaming",
+   "companies": [
+    "YouTube Live"
+   ],
+   "importance": "critical",
+   "why": "A streaming connection pushes chat messages with resume tokens instead of costly polling.",
+   "apis": [
+    "liveChatMessages.streamList",
+    "pageToken"
+   ],
+   "atlas_ids": [
+    "web.actions.websockets"
+   ],
+   "atlas_status": "partial",
+   "source_url": "https://developers.google.com/youtube/data/live/reference/rest/v3/liveChatMessages/streamList",
+   "source_date": "2025-07-14",
+   "confidence": "confirmed",
+   "evidence": "page_read"
+  },
+  {
+   "slug": "channel-predictions",
+   "name": "Channel predictions voting",
+   "vertical": "live-streaming",
+   "companies": [
+    "Twitch",
+    "YouTube Live"
+   ],
+   "importance": "helpful",
+   "why": "Viewers wager points on outcomes, driving participation during a stream.",
+   "apis": [
+    "Predictions API",
+    "channel:manage:predictions"
+   ],
+   "atlas_ids": [],
+   "atlas_status": "new",
+   "source_url": "https://dev.twitch.tv/docs/api/reference/",
+   "source_date": "2026",
+   "confidence": "inferred",
+   "evidence": "search_snippet"
+  },
+  {
+   "slug": "hype-train",
+   "name": "Hype train engagement meter",
+   "vertical": "live-streaming",
+   "companies": [
+    "Twitch"
+   ],
+   "importance": "helpful",
+   "why": "A shared progress meter rewards communal subscribing and cheering with escalating levels.",
+   "apis": [
+    "channel.hype_train.begin",
+    "channel.hype_train.progress",
+    "channel.hype_train.end"
+   ],
+   "atlas_ids": [],
+   "atlas_status": "new",
+   "source_url": "https://dev.twitch.tv/docs/api/reference/",
+   "source_date": "2026",
+   "confidence": "documented",
+   "evidence": "search_snippet"
+  },
+  {
+   "slug": "kick-webhooks-chat",
+   "name": "Webhook events and unofficial chat socket",
+   "vertical": "live-streaming",
+   "companies": [
+    "Kick"
+   ],
+   "importance": "helpful",
+   "why": "Signed webhooks report chat and stream status while community tools read chat through a Pusher socket.",
+   "apis": [
+    "webhooks",
+    "Ed25519 signature",
+    "WebSocket"
+   ],
+   "atlas_ids": [
+    "web.actions.websockets"
+   ],
+   "atlas_status": "partial",
+   "source_url": "https://skills.sh/goncy/skills/kick-api",
+   "source_date": "2026",
+   "confidence": "inferred",
+   "evidence": "search_snippet"
+  },
+  {
+   "slug": "multi-encode-enhanced-broadcasting",
+   "name": "Client side multi rendition encoding",
+   "vertical": "live-streaming",
+   "companies": [
+    "Twitch"
+   ],
+   "importance": "helpful",
+   "why": "Streamers send several qualities from their GPU so viewers on weak networks still get a stream.",
+   "apis": [
+    "Enhanced Broadcasting",
+    "AV1",
+    "multi-encode"
+   ],
+   "atlas_ids": [],
+   "atlas_status": "new",
+   "source_url": "https://blog.twitch.tv/2024/01/08/introducing-the-enhanced-broadcasting-beta/",
+   "source_date": "2024-01-08",
+   "confidence": "documented",
+   "evidence": "search_snippet"
+  },
+  {
+   "slug": "twitch-drops",
+   "name": "Drops reward campaigns",
+   "vertical": "live-streaming",
+   "companies": [
+    "Twitch"
+   ],
+   "importance": "helpful",
+   "why": "Watching time earns in game rewards linked through entitlements and fulfillment.",
+   "apis": [
+    "Drops entitlements",
+    "EventSub",
+    "Helix API"
+   ],
+   "atlas_ids": [],
+   "atlas_status": "new",
+   "source_url": "https://dev.twitch.tv/docs/drops/technical-guide/",
+   "source_date": "2026",
+   "confidence": "documented",
+   "evidence": "search_snippet"
+  },
+  {
+   "slug": "twitch-extensions",
+   "name": "Interactive extensions on the video player",
+   "vertical": "live-streaming",
+   "companies": [
+    "Twitch"
+   ],
+   "importance": "helpful",
+   "why": "Panel, overlay and component extensions let viewers interact with the stream without leaving it.",
+   "apis": [
+    "Extensions Helper",
+    "iframe",
+    "JWT"
+   ],
+   "atlas_ids": [
+    "web.display.iframe-embedding"
+   ],
+   "atlas_status": "partial",
+   "source_url": "https://dev.twitch.tv/docs/extensions/reference",
+   "source_date": "2026",
+   "confidence": "confirmed",
+   "evidence": "page_read"
+  },
+  {
+   "slug": "whip-webrtc-ingest",
+   "name": "WebRTC ingest with WHIP",
+   "vertical": "live-streaming",
+   "companies": [
+    "Twitch",
+    "YouTube Live",
+    "Kick"
+   ],
+   "importance": "helpful",
+   "why": "A standard HTTP signaling step lets browsers and encoders publish live video over WebRTC.",
+   "apis": [
+    "WHIP",
+    "RTCPeerConnection",
+    "SDP"
+   ],
+   "atlas_ids": [
+    "web.actions.webrtc-data-channel"
+   ],
+   "atlas_status": "partial",
+   "source_url": "https://www.rfc-editor.org/rfc/rfc9725",
+   "source_date": "2025-03",
+   "confidence": "confirmed",
+   "evidence": "search_snippet"
+  },
+  {
+   "slug": "background-audio-continuity",
+   "name": "Background audio continuity",
+   "vertical": "music-audio",
+   "companies": [
+    "Spotify",
+    "Apple Music",
+    "Audible",
+    "Pocket Casts"
+   ],
+   "importance": "critical",
+   "why": "Listening continues when the tab is hidden or the screen locks, which is the main use case.",
+   "apis": [
+    "Page Visibility API",
+    "Media Session API",
+    "Web Audio API"
+   ],
+   "atlas_ids": [
+    "web.actions.page-visibility-throttling",
+    "web.perf.page-visibility-focus",
+    "web.os.web-locks-media-session"
+   ],
+   "atlas_status": "partial",
+   "source_url": "https://web.dev/articles/media-session",
+   "source_date": "2023",
+   "confidence": "documented",
+   "evidence": "search_snippet"
+  },
+  {
+   "slug": "connect-cross-device-handoff",
+   "name": "Cross-device playback handoff (Connect)",
+   "vertical": "music-audio",
+   "companies": [
+    "Spotify",
+    "YouTube Music"
+   ],
+   "importance": "critical",
+   "why": "One account can control and move playback between phone, speaker and desktop, with state mirrored on all devices.",
+   "apis": [
+    "WebSocket",
+    "Remote Playback API",
+    "Web Playback SDK"
+   ],
+   "atlas_ids": [
+    "web.actions.websockets",
+    "web.peripherals.remote-playback"
+   ],
+   "atlas_status": "partial",
+   "source_url": "https://developer.spotify.com/documentation/commercial-hardware/implementation/guides/connect-basics",
+   "source_date": "2024",
+   "confidence": "documented",
+   "evidence": "search_snippet"
+  },
+  {
+   "slug": "gapless-playback-crossfade",
+   "name": "Gapless playback and crossfade",
+   "vertical": "music-audio",
+   "companies": [
+    "Spotify",
+    "Apple Music",
+    "Tidal",
+    "Deezer"
+   ],
+   "importance": "critical",
+   "why": "Album and mix listening breaks if track changes add silence or volume dips.",
+   "apis": [
+    "Web Audio API",
+    "AudioParam",
+    "AudioBufferSourceNode"
+   ],
+   "atlas_ids": [
+    "web.actions.web-audio",
+    "web.rendering.audio-base-latency"
+   ],
+   "atlas_status": "partial",
+   "source_url": "https://web.dev/articles/webaudio-intro",
+   "source_date": "2023",
+   "confidence": "documented",
+   "evidence": "search_snippet"
+  },
+  {
+   "slug": "media-session-lock-screen-controls",
+   "name": "Lock screen and media key controls",
+   "vertical": "music-audio",
+   "companies": [
+    "Spotify",
+    "Apple Music",
+    "SoundCloud",
+    "Pocket Casts",
+    "Apple Podcasts"
+   ],
+   "importance": "critical",
+   "why": "Playback must be controllable from the lock screen, headset and keyboard without opening the app.",
+   "apis": [
+    "Media Session API",
+    "MediaMetadata",
+    "setActionHandler"
+   ],
+   "atlas_ids": [
+    "web.os.web-locks-media-session"
+   ],
+   "atlas_status": "partial",
+   "source_url": "https://web.dev/articles/media-session",
+   "source_date": "2023",
+   "confidence": "confirmed",
+   "evidence": "page_read"
+  },
+  {
+   "slug": "offline-downloads-music-audio",
+   "name": "Offline downloads of tracks and episodes",
+   "vertical": "music-audio",
+   "companies": [
+    "Spotify",
+    "Apple Music",
+    "Tidal",
+    "Deezer",
+    "Pocket Casts"
+   ],
+   "importance": "critical",
+   "why": "Paid tiers sell on listening without a connection, so storage and license refresh matter.",
+   "apis": [
+    "Service Worker",
+    "Cache API",
+    "OPFS",
+    "Background Fetch API"
+   ],
+   "atlas_ids": [
+    "web.actions.service-worker-cache",
+    "web.storage.cache-storage",
+    "web.files.opfs",
+    "web.notify.background-fetch"
+   ],
+   "atlas_status": "existing",
+   "source_url": "https://web.dev/pwa-with-offline-streaming",
+   "source_date": "2021-07-05",
+   "confidence": "documented",
+   "evidence": "search_snippet"
+  },
+  {
+   "slug": "collaborative-playlists",
+   "name": "Collaborative playlists",
+   "vertical": "music-audio",
+   "companies": [
+    "Spotify"
+   ],
+   "importance": "helpful",
+   "why": "Shared editing of a list creates social stickiness; Spotify reported 200 million listening hours on them in a month.",
+   "apis": [
+    "WebSocket",
+    "CRDT or server ordering"
+   ],
+   "atlas_ids": [
+    "web.actions.websockets"
+   ],
+   "atlas_status": "partial",
+   "source_url": "https://newsroom.spotify.com/tag/collaborative-playlists",
+   "source_date": "2024",
+   "confidence": "documented",
+   "evidence": "search_snippet"
+  },
+  {
+   "slug": "lossless-quality-tiers",
+   "name": "Selectable lossless and hi-res quality tiers",
+   "vertical": "music-audio",
+   "companies": [
+    "Tidal",
+    "Deezer",
+    "Apple Music",
+    "Spotify"
+   ],
+   "importance": "helpful",
+   "why": "Users pick fidelity versus data use; the app must check codec and output capability.",
+   "apis": [
+    "Media Capabilities API",
+    "MediaSource Extensions",
+    "Network Information API"
+   ],
+   "atlas_ids": [
+    "web.device.media-capabilities",
+    "web.device.codec-support",
+    "web.network.network-information"
+   ],
+   "atlas_status": "partial",
+   "source_url": "https://support.tidal.com/hc/en-us/articles/17412130162961-HiRes-FLAC-audio",
+   "source_date": "2024",
+   "confidence": "documented",
+   "evidence": "search_snippet"
+  },
+  {
+   "slug": "pay-what-you-want-checkout",
+   "name": "Name your price purchase and fan collection",
+   "vertical": "music-audio",
+   "companies": [
+    "Bandcamp"
+   ],
+   "importance": "helpful",
+   "why": "Direct artist sales with a public collection replace streaming royalties as the core value.",
+   "apis": [
+    "Payment Request API",
+    "Web Share API"
+   ],
+   "atlas_ids": [
+    "web.payments.payment-request"
+   ],
+   "atlas_status": "partial",
+   "source_url": "https://blog.bandcamp.com/2009/04/16/minimum-name-your-price-minimum-now-zero",
+   "source_date": "2009-04-16",
+   "confidence": "documented",
+   "evidence": "search_snippet"
+  },
+  {
+   "slug": "synced-lyrics-karaoke",
+   "name": "Time-synced and karaoke lyrics",
+   "vertical": "music-audio",
+   "companies": [
+    "Apple Music",
+    "Spotify"
+   ],
+   "importance": "helpful",
+   "why": "Line and syllable timed lyrics turn passive listening into singing along, including offline for Spotify Premium.",
+   "apis": [
+    "requestAnimationFrame",
+    "HTMLMediaElement timeupdate",
+    "Web Audio API"
+   ],
+   "atlas_ids": [
+    "web.timing.request-animation-frame"
+   ],
+   "atlas_status": "partial",
+   "source_url": "https://www.techradar.com/news/apple-music-sing",
+   "source_date": "2022-12",
+   "confidence": "documented",
+   "evidence": "search_snippet"
+  },
+  {
+   "slug": "timed-waveform-comments",
+   "name": "Waveform with timed comments",
+   "vertical": "music-audio",
+   "companies": [
+    "SoundCloud"
+   ],
+   "importance": "helpful",
+   "why": "Comments pinned to a point on the waveform make audio social and scrubbable.",
+   "apis": [
+    "Canvas 2D",
+    "SVG",
+    "Pointer Events"
+   ],
+   "atlas_ids": [
+    "web.render.canvas",
+    "web.input.pointer-events"
+   ],
+   "atlas_status": "new",
+   "source_url": "https://developers.soundcloud.com/blog/wave-raid",
+   "source_date": "2014",
+   "confidence": "documented",
+   "evidence": "search_snippet"
+  },
+  {
+   "slug": "playback-speed-variable",
+   "name": "Variable playback speed with pitch preservation",
+   "vertical": "reading-podcasts",
+   "companies": [
+    "Pocket Casts",
+    "Apple Podcasts",
+    "Audible"
+   ],
+   "importance": "critical",
+   "why": "Heavy listeners run 1.5x to 3x, and Pocket Casts goes to 5x on web and desktop.",
+   "apis": [
+    "HTMLMediaElement playbackRate",
+    "preservesPitch"
+   ],
+   "atlas_ids": [
+    "web.actions.web-audio"
+   ],
+   "atlas_status": "partial",
+   "source_url": "https://support.pocketcasts.com/article/playback-effects/",
+   "source_date": "2024",
+   "confidence": "confirmed",
+   "evidence": "page_read"
+  },
+  {
+   "slug": "reading-position-sync",
+   "name": "Reading and listening position sync across devices",
+   "vertical": "reading-podcasts",
+   "companies": [
+    "Kindle",
+    "Audible",
+    "Apple Podcasts",
+    "Pocket Casts"
+   ],
+   "importance": "critical",
+   "why": "Resume exactly where you left off on any device; Kindle syncs furthest page, notes and highlights.",
+   "apis": [
+    "fetch",
+    "IndexedDB",
+    "BroadcastChannel",
+    "Page Lifecycle events"
+   ],
+   "atlas_ids": [
+    "web.storage.indexeddb",
+    "web.storage.broadcastchannel",
+    "web.timing.page-lifecycle-bfcache",
+    "web.actions.send-beacon"
+   ],
+   "atlas_status": "partial",
+   "source_url": "https://www.guidingtech.com/fix-kindle-books-not-syncing-between-devices/",
+   "source_date": "2024",
+   "confidence": "documented",
+   "evidence": "search_snippet"
+  },
+  {
+   "slug": "chapters-bookmarks-clips",
+   "name": "Chapters, bookmarks and audio clips",
+   "vertical": "reading-podcasts",
+   "companies": [
+    "Audible",
+    "Apple Podcasts",
+    "Pocket Casts"
+   ],
+   "importance": "helpful",
+   "why": "Chapter navigation and one tap bookmarks make long audio navigable and shareable.",
+   "apis": [
+    "Media Session seek actions",
+    "WebVTT chapters"
+   ],
+   "atlas_ids": [
+    "web.os.web-locks-media-session"
+   ],
+   "atlas_status": "new",
+   "source_url": "https://forums.pocketcasts.com/forums/topic/end-of-chapter-option-for-sleep-timer",
+   "source_date": "2024",
+   "confidence": "inferred",
+   "evidence": "search_snippet"
+  },
+  {
+   "slug": "podcast-background-download",
+   "name": "Background episode downloads and auto download",
+   "vertical": "reading-podcasts",
+   "companies": [
+    "Pocket Casts",
+    "Apple Podcasts"
+   ],
+   "importance": "helpful",
+   "why": "New episodes arrive before the commute without opening the app.",
+   "apis": [
+    "Background Fetch API",
+    "Periodic Background Sync",
+    "Push API"
+   ],
+   "atlas_ids": [
+    "web.notify.background-fetch",
+    "web.notify.periodic-background-sync",
+    "web.notify.push-api"
+   ],
+   "atlas_status": "existing",
+   "source_url": "https://developer.mozilla.org/en-US/docs/Web/API/Background_Fetch_API",
+   "source_date": "2024",
+   "confidence": "documented",
+   "evidence": "search_snippet"
+  },
+  {
+   "slug": "silence-trimming-volume-boost",
+   "name": "Silence trimming and volume boost",
+   "vertical": "reading-podcasts",
+   "companies": [
+    "Pocket Casts",
+    "Overcast"
+   ],
+   "importance": "helpful",
+   "why": "Removes pauses and levels quiet voices; Pocket Casts offers Mild, Medium and Mad Max, mobile only.",
+   "apis": [
+    "Web Audio API",
+    "AudioWorklet",
+    "DynamicsCompressorNode"
+   ],
+   "atlas_ids": [
+    "web.actions.web-audio"
+   ],
+   "atlas_status": "partial",
+   "source_url": "https://support.pocketcasts.com/article/playback-effects/",
+   "source_date": "2024",
+   "confidence": "confirmed",
+   "evidence": "page_read"
+  },
+  {
+   "slug": "sleep-timer",
+   "name": "Sleep timer with end of episode option",
+   "vertical": "reading-podcasts",
+   "companies": [
+    "Apple Podcasts",
+    "Pocket Casts",
+    "Audible"
+   ],
+   "importance": "helpful",
+   "why": "Bedtime listening needs auto stop that does not lose the place.",
+   "apis": [
+    "setTimeout",
+    "Media Session API",
+    "Screen Wake Lock"
+   ],
+   "atlas_ids": [
+    "web.notify.screen-wake-lock",
+    "web.os.web-locks-media-session"
+   ],
+   "atlas_status": "new",
+   "source_url": "https://support.pocketcasts.com/article/sleep-timer/",
+   "source_date": "2024",
+   "confidence": "documented",
+   "evidence": "search_snippet"
+  },
+  {
+   "slug": "text-highlights-and-quotes",
+   "name": "Text selection highlights and shared quotes",
+   "vertical": "reading-podcasts",
+   "companies": [
+    "Medium",
+    "Kindle",
+    "Substack"
+   ],
+   "importance": "helpful",
+   "why": "Select a passage to highlight or quote; Medium popularized public highlights, with a toggle to hide others.",
+   "apis": [
+    "Selection API",
+    "Range",
+    "Text Fragments",
+    "Clipboard API"
+   ],
+   "atlas_ids": [
+    "web.input.selection",
+    "web.actions.text-fragments",
+    "web.input.clipboard-write"
+   ],
+   "atlas_status": "partial",
+   "source_url": "https://blog.medium.com/is-it-ok-to-highlight-your-own-stuff-fd3768dace9a",
+   "source_date": "2015",
+   "confidence": "documented",
+   "evidence": "search_snippet"
+  },
+  {
+   "slug": "text-to-speech-narration",
+   "name": "Text to speech and voiceover for articles",
+   "vertical": "reading-podcasts",
+   "companies": [
+    "Substack",
+    "Medium",
+    "Audible"
+   ],
+   "importance": "helpful",
+   "why": "Turns written posts into audio; Substack adds auto voiceovers and writer recorded audio gated by paywall.",
+   "apis": [
+    "Web Speech API speechSynthesis",
+    "MediaRecorder"
+   ],
+   "atlas_ids": [
+    "web.actions.speech-synthesis",
+    "web.camera.media-recorder"
+   ],
+   "atlas_status": "existing",
+   "source_url": "https://on.substack.com/p/new-ways-to-listen-to-your-favorite",
+   "source_date": "2022",
+   "confidence": "documented",
+   "evidence": "search_snippet"
+  },
+  {
+   "slug": "ar-camera-lenses",
+   "name": "Real time AR lenses on the camera feed",
+   "vertical": "short-form",
+   "companies": [
+    "Snapchat",
+    "TikTok",
+    "Instagram Reels"
+   ],
+   "importance": "critical",
+   "why": "Playful face and world effects are the main reason people open Snapchat's camera.",
+   "apis": [
+    "getUserMedia",
+    "WebAssembly",
+    "WebGL",
+    "Camera Kit"
+   ],
+   "atlas_ids": [
+    "web.camera.camera",
+    "web.actions.webassembly",
+    "web.render.webgl"
+   ],
+   "atlas_status": "partial",
+   "source_url": "https://developers.snap.com/reference/CameraKit/web/1.21.0/index.html",
+   "source_date": "2024",
+   "confidence": "documented",
+   "evidence": "search_snippet"
+  },
+  {
+   "slug": "duet-stitch-reaction-capture",
+   "name": "Duet and Stitch reaction recording",
+   "vertical": "short-form",
+   "companies": [
+    "TikTok"
+   ],
+   "importance": "critical",
+   "why": "Turns viewers into creators by recording alongside or after another clip.",
+   "apis": [
+    "getUserMedia",
+    "MediaRecorder",
+    "WebCodecs"
+   ],
+   "atlas_ids": [
+    "web.camera.camera",
+    "web.camera.microphone",
+    "web.camera.media-recorder"
+   ],
+   "atlas_status": "partial",
+   "source_url": "https://www.shopify.com/blog/how-to-stitch-on-tiktok",
+   "source_date": "2024",
+   "confidence": "documented",
+   "evidence": "search_snippet"
+  },
+  {
+   "slug": "first-chunk-prefetch-tradeoff",
+   "name": "First chunk prefetch of upcoming videos",
+   "vertical": "short-form",
+   "companies": [
+    "TikTok",
+    "Douyin",
+    "Kuaishou"
+   ],
+   "importance": "critical",
+   "why": "Prefetching the opening seconds hides latency but wastes data when clips are skipped.",
+   "apis": [
+    "HTTP range requests",
+    "fetch priority"
+   ],
+   "atlas_ids": [
+    "web.actions.speculation-rules"
+   ],
+   "atlas_status": "partial",
+   "source_url": "https://www.theregister.com/2025/09/23/short_video_prefetch_research/",
+   "source_date": "2025-09-23",
+   "confidence": "documented",
+   "evidence": "search_snippet"
+  },
+  {
+   "slug": "for-you-feed-personalization",
+   "name": "For You feed ranked on interaction signals",
+   "vertical": "short-form",
+   "companies": [
+    "TikTok"
+   ],
+   "importance": "critical",
+   "why": "The feed itself, not a follow graph, decides what each person watches.",
+   "apis": [
+    "recommendation service"
+   ],
+   "atlas_ids": [],
+   "atlas_status": "new",
+   "source_url": "https://newsroom.tiktok.com/en-us/how-tiktok-recommends-videos-for-you/",
+   "source_date": "2023-11-01",
+   "confidence": "documented",
+   "evidence": "search_snippet"
+  },
+  {
+   "slug": "shorts-remix-green-screen-cut-collab",
+   "name": "Remix tools: green screen, cut and collab",
+   "vertical": "short-form",
+   "companies": [
+    "YouTube Shorts"
+   ],
+   "importance": "critical",
+   "why": "Lets creators sample another video as background, segment or side by side layout.",
+   "apis": [
+    "getUserMedia",
+    "MediaRecorder",
+    "canvas compositing"
+   ],
+   "atlas_ids": [
+    "web.camera.camera",
+    "web.camera.media-recorder"
+   ],
+   "atlas_status": "partial",
+   "source_url": "https://support.google.com/youtube/answer/10623810",
+   "source_date": "2024",
+   "confidence": "confirmed",
+   "evidence": "page_read"
+  },
+  {
+   "slug": "sound-on-autoplay-policy",
+   "name": "Sound off by default, tap to unmute",
+   "vertical": "short-form",
+   "companies": [
+    "TikTok",
+    "Instagram Reels",
+    "YouTube Shorts",
+    "Snapchat"
+   ],
+   "importance": "critical",
+   "why": "Browsers allow muted autoplay only, so feeds start silent and unmute after a gesture.",
+   "apis": [
+    "autoplay policy",
+    "video.muted",
+    "user activation"
+   ],
+   "atlas_ids": [
+    "web.actions.autoplay"
+   ],
+   "atlas_status": "existing",
+   "source_url": "https://developer.chrome.com/blog/autoplay",
+   "source_date": "2018",
+   "confidence": "confirmed",
+   "evidence": "page_read"
+  },
+  {
+   "slug": "vertical-feed-adjacent-preload",
+   "name": "Vertical swipe feed with adjacent video preload",
+   "vertical": "short-form",
+   "companies": [
+    "Instagram Reels",
+    "TikTok",
+    "YouTube Shorts"
+   ],
+   "importance": "critical",
+   "why": "The next and previous clips are ready in memory, so swipes feel instant.",
+   "apis": [
+    "Media3 PreloadManager",
+    "ExoPlayer",
+    "scroll snap"
+   ],
+   "atlas_ids": [],
+   "atlas_status": "new",
+   "source_url": "https://android-developers.googleblog.com/2026/03/instagram-and-facebook-deliver-instant.html",
+   "source_date": "2026-03-05",
+   "confidence": "confirmed",
+   "evidence": "page_read"
+  },
+  {
+   "slug": "device-load-gated-preload",
+   "name": "Preloading paused under CPU or I/O pressure",
+   "vertical": "short-form",
+   "companies": [
+    "Instagram Reels",
+    "Facebook Reels"
+   ],
+   "importance": "helpful",
+   "why": "Stops background fetching from making a busy phone stutter.",
+   "apis": [
+    "Compute Pressure"
+   ],
+   "atlas_ids": [
+    "web.perf.compute-pressure"
+   ],
+   "atlas_status": "partial",
+   "source_url": "https://android-developers.googleblog.com/2026/03/instagram-and-facebook-deliver-instant.html",
+   "source_date": "2026-03-05",
+   "confidence": "documented",
+   "evidence": "search_snippet"
+  },
+  {
+   "slug": "network-aware-prefetch-limits",
+   "name": "Prefetch depth tied to connection quality and data saver",
+   "vertical": "short-form",
+   "companies": [
+    "TikTok",
+    "Instagram Reels",
+    "YouTube Shorts"
+   ],
+   "importance": "helpful",
+   "why": "Cuts waste on slow or metered links while keeping fast links smooth.",
+   "apis": [
+    "Network Information",
+    "Save-Data"
+   ],
+   "atlas_ids": [
+    "web.network.network-information",
+    "web.network.save-data-header",
+    "web.display.prefers-reduced-data"
+   ],
+   "atlas_status": "existing",
+   "source_url": "https://www.techinterview.org/post/3233474985/design-tiktok-video-feed-mobile/",
+   "source_date": "2025",
+   "confidence": "inferred",
+   "evidence": "search_snippet"
+  },
+  {
+   "slug": "reuse-permission-controls",
+   "name": "Creator controls over who can duet, stitch or remix",
+   "vertical": "short-form",
+   "companies": [
+    "TikTok",
+    "YouTube Shorts"
+   ],
+   "importance": "helpful",
+   "why": "Gives creators consent over reuse, which keeps remix culture safe to join.",
+   "apis": [
+    "account settings"
+   ],
+   "atlas_ids": [],
+   "atlas_status": "new",
+   "source_url": "https://www.shopify.com/blog/how-to-stitch-on-tiktok",
+   "source_date": "2024",
+   "confidence": "documented",
+   "evidence": "search_snippet"
+  },
+  {
+   "slug": "shorts-swipe-away-signal",
+   "name": "Shorts feed ranked on viewed versus swiped away",
+   "vertical": "short-form",
+   "companies": [
+    "YouTube Shorts"
+   ],
+   "importance": "helpful",
+   "why": "The swipe is a clean, instant feedback signal for ranking and for creators.",
+   "apis": [
+    "recommendation service"
+   ],
+   "atlas_ids": [],
+   "atlas_status": "new",
+   "source_url": "https://support.google.com/youtube/answer/16089387",
+   "source_date": "2025",
+   "confidence": "documented",
+   "evidence": "search_snippet"
+  },
+  {
+   "slug": "single-player-instance-reuse",
+   "name": "One player instance serving many preloaded clips",
+   "vertical": "short-form",
+   "companies": [
+    "Instagram Reels",
+    "TikTok"
+   ],
+   "importance": "helpful",
+   "why": "Avoids the memory and startup cost of a new player per clip.",
+   "apis": [
+    "Media3 PreloadManager",
+    "MediaSource"
+   ],
+   "atlas_ids": [],
+   "atlas_status": "new",
+   "source_url": "https://android-developers.googleblog.com/2026/03/instagram-and-facebook-deliver-instant.html",
+   "source_date": "2026-03-05",
+   "confidence": "confirmed",
+   "evidence": "page_read"
+  },
+  {
+   "slug": "trial-reels-test-audience",
+   "name": "Trial Reels shown to non-followers first",
+   "vertical": "short-form",
+   "companies": [
+    "Instagram Reels"
+   ],
+   "importance": "helpful",
+   "why": "Lets creators test a clip safely before it reaches their audience.",
+   "apis": [
+    "experimentation service"
+   ],
+   "atlas_ids": [],
+   "atlas_status": "new",
+   "source_url": "https://www.tubefilter.com/2024/12/12/instagram-trial-reels-for-creator-a-b-tests/amp/",
+   "source_date": "2024-12-12",
+   "confidence": "documented",
+   "evidence": "search_snippet"
+  },
+  {
+   "slug": "adaptive-bitrate-mse",
+   "name": "Adaptive bitrate streaming over Media Source Extensions",
+   "vertical": "video-streaming",
+   "companies": [
+    "Netflix",
+    "YouTube",
+    "Disney+",
+    "Max",
+    "Prime Video"
+   ],
+   "importance": "critical",
+   "why": "Lets the player switch quality mid-playback so video starts fast and rarely stalls.",
+   "apis": [
+    "MSE",
+    "DASH",
+    "HLS",
+    "ManagedMediaSource"
+   ],
+   "atlas_ids": [],
+   "atlas_status": "new",
+   "source_url": "https://developer.mozilla.org/en-US/docs/Web/API/Media_Source_Extensions_API",
+   "source_date": "2025",
+   "confidence": "documented",
+   "evidence": "search_snippet"
+  },
+  {
+   "slug": "caption-subtitle-styling",
+   "name": "Caption and subtitle tracks with user styling",
+   "vertical": "video-streaming",
+   "companies": [
+    "Netflix",
+    "YouTube",
+    "Disney+",
+    "Max",
+    "Prime Video",
+    "Apple TV+"
+   ],
+   "importance": "critical",
+   "why": "Accessibility and international reach depend on selectable, restylable text tracks.",
+   "apis": [
+    "WebVTT",
+    "TextTrack",
+    "::cue"
+   ],
+   "atlas_ids": [],
+   "atlas_status": "new",
+   "source_url": "https://developer.mozilla.org/docs/Web/API/WebVTT_API",
+   "source_date": "2025",
+   "confidence": "documented",
+   "evidence": "search_snippet"
+  },
+  {
+   "slug": "codec-hdr-capability-negotiation",
+   "name": "Codec, HDR and hardware capability negotiation",
+   "vertical": "video-streaming",
+   "companies": [
+    "Netflix",
+    "Disney+",
+    "Max",
+    "Prime Video",
+    "Apple TV+"
+   ],
+   "importance": "critical",
+   "why": "Chooses 4K, HDR, Dolby or AV1 only when the device can really play them.",
+   "apis": [
+    "MediaCapabilities",
+    "canPlayType",
+    "matchMedia dynamic-range"
+   ],
+   "atlas_ids": [
+    "web.device.media-capabilities",
+    "web.device.codec-support",
+    "web.display.dynamic-range",
+    "web.display.color-gamut"
+   ],
+   "atlas_status": "existing",
+   "source_url": "https://helgeklein.com/blog/browser-video-codecs-formats-hardware-acceleration/",
+   "source_date": "2024",
+   "confidence": "inferred",
+   "evidence": "search_snippet"
+  },
+  {
+   "slug": "drm-encrypted-media-extensions",
+   "name": "DRM via Encrypted Media Extensions",
+   "vertical": "video-streaming",
+   "companies": [
+    "Netflix",
+    "Disney+",
+    "Max",
+    "Prime Video",
+    "Apple TV+"
+   ],
+   "importance": "critical",
+   "why": "Studios require licensed, hardware backed decryption before premium titles will play.",
+   "apis": [
+    "EME",
+    "MediaKeys",
+    "Widevine",
+    "FairPlay",
+    "PlayReady"
+   ],
+   "atlas_ids": [],
+   "atlas_status": "new",
+   "source_url": "https://web.dev/articles/eme-basics",
+   "source_date": "2014",
+   "confidence": "confirmed",
+   "evidence": "page_read"
+  },
+  {
+   "slug": "media-session-lock-screen",
+   "name": "Lock screen and notification media controls",
+   "vertical": "video-streaming",
+   "companies": [
+    "YouTube",
+    "Netflix",
+    "Disney+",
+    "Max",
+    "Prime Video",
+    "Apple TV+"
+   ],
+   "importance": "critical",
+   "why": "Play, pause and seek from the lock screen, headphones and notification shade.",
+   "apis": [
+    "navigator.mediaSession",
+    "MediaMetadata",
+    "setActionHandler"
+   ],
+   "atlas_ids": [
+    "web.os.web-locks-media-session"
+   ],
+   "atlas_status": "existing",
+   "source_url": "https://web.dev/articles/media-session",
+   "source_date": "2019",
+   "confidence": "confirmed",
+   "evidence": "page_read"
+  },
+  {
+   "slug": "muted-autoplay-previews",
+   "name": "Muted autoplay previews on hover and in rows",
+   "vertical": "video-streaming",
+   "companies": [
+    "Netflix",
+    "Disney+",
+    "Max",
+    "Prime Video",
+    "Apple TV+",
+    "YouTube"
+   ],
+   "importance": "critical",
+   "why": "Motion previews sell a title in seconds, and browsers allow them only when muted.",
+   "apis": [
+    "autoplay attribute",
+    "muted",
+    "playsinline",
+    "HTMLMediaElement.play"
+   ],
+   "atlas_ids": [
+    "web.actions.autoplay"
+   ],
+   "atlas_status": "existing",
+   "source_url": "https://developer.chrome.com/blog/autoplay",
+   "source_date": "2018",
+   "confidence": "confirmed",
+   "evidence": "page_read"
+  },
+  {
+   "slug": "offline-downloads",
+   "name": "Offline downloads with expiry licenses",
+   "vertical": "video-streaming",
+   "companies": [
+    "Netflix",
+    "Disney+",
+    "Max",
+    "Prime Video",
+    "Apple TV+",
+    "YouTube"
+   ],
+   "importance": "critical",
+   "why": "Lets people watch on planes and in dead zones, with rights enforced by persistent licenses.",
+   "apis": [
+    "Background Fetch",
+    "StorageManager.persist",
+    "OPFS",
+    "EME persistent-license"
+   ],
+   "atlas_ids": [
+    "web.notify.background-fetch",
+    "web.storage.persistent-storage",
+    "web.storage.opfs",
+    "web.storage.cache-storage"
+   ],
+   "atlas_status": "partial",
+   "source_url": "https://help.netflix.com/en/node/119204",
+   "source_date": "2021",
+   "confidence": "documented",
+   "evidence": "search_snippet"
+  },
+  {
+   "slug": "recommendation-home-feed",
+   "name": "Personalized home and up next recommendations",
+   "vertical": "video-streaming",
+   "companies": [
+    "YouTube",
+    "Netflix"
+   ],
+   "importance": "critical",
+   "why": "Ranking by watch and search history is how viewers find something to play.",
+   "apis": [
+    "recommendation service"
+   ],
+   "atlas_ids": [],
+   "atlas_status": "new",
+   "source_url": "https://support.google.com/youtube/answer/16089387",
+   "source_date": "2025",
+   "confidence": "documented",
+   "evidence": "search_snippet"
+  },
+  {
+   "slug": "remote-playback-casting",
+   "name": "Cast to a TV with Remote Playback",
+   "vertical": "video-streaming",
+   "companies": [
+    "YouTube",
+    "Netflix",
+    "Disney+",
+    "Max",
+    "Prime Video"
+   ],
+   "importance": "critical",
+   "why": "Moves viewing from phone to the big screen with one tap.",
+   "apis": [
+    "RemotePlayback",
+    "watchAvailability",
+    "prompt"
+   ],
+   "atlas_ids": [
+    "web.peripherals.remote-playback"
+   ],
+   "atlas_status": "existing",
+   "source_url": "https://developer.mozilla.org/en-US/docs/Web/API/Remote_Playback_API",
+   "source_date": "2025",
+   "confidence": "confirmed",
+   "evidence": "page_read"
+  },
+  {
+   "slug": "skip-intro-button",
+   "name": "Skip intro and skip recap button",
+   "vertical": "video-streaming",
+   "companies": [
+    "Netflix",
+    "Disney+",
+    "Max",
+    "Prime Video",
+    "Apple TV+"
+   ],
+   "importance": "critical",
+   "why": "Removes repeated openings so binge viewing flows without scrubbing.",
+   "apis": [
+    "timed metadata",
+    "overlay UI"
+   ],
+   "atlas_ids": [],
+   "atlas_status": "new",
+   "source_url": "https://www.tvbeurope.com/media-consumption/netflixs-skip-intro-button-is-pressed-136-million-times-a-day",
+   "source_date": "2019",
+   "confidence": "documented",
+   "evidence": "search_snippet"
+  },
+  {
+   "slug": "auto-downloads-for-you",
+   "name": "Automatic downloads of next episode and recommendations",
+   "vertical": "video-streaming",
+   "companies": [
+    "Netflix"
+   ],
+   "importance": "helpful",
+   "why": "Fills the phone with the right shows over Wi-Fi so offline mode is never empty.",
+   "apis": [
+    "Periodic Background Sync",
+    "Background Fetch",
+    "Network Information"
+   ],
+   "atlas_ids": [
+    "web.notify.periodic-background-sync",
+    "web.notify.background-fetch",
+    "web.network.network-information"
+   ],
+   "atlas_status": "partial",
+   "source_url": "https://about.netflix.com/news/downloads-for-you-takes-on-the-go-to-the-next-level",
+   "source_date": "2021",
+   "confidence": "documented",
+   "evidence": "search_snippet"
+  },
+  {
+   "slug": "cast-sender-sdk-presentation",
+   "name": "Google Cast sender and Presentation API sessions",
+   "vertical": "video-streaming",
+   "companies": [
+    "YouTube",
+    "Netflix",
+    "Max"
+   ],
+   "importance": "helpful",
+   "why": "Drives a receiver app with queue, volume and transport control after the session starts.",
+   "apis": [
+    "Cast Web Sender",
+    "Presentation API"
+   ],
+   "atlas_ids": [
+    "web.peripherals.presentation-api"
+   ],
+   "atlas_status": "partial",
+   "source_url": "https://developers.google.com/cast/docs/web_sender/integrate",
+   "source_date": "2024",
+   "confidence": "documented",
+   "evidence": "search_snippet"
+  },
+  {
+   "slug": "document-picture-in-picture-player",
+   "name": "Document Picture in Picture for custom player UI",
+   "vertical": "video-streaming",
+   "companies": [
+    "YouTube",
+    "Netflix"
+   ],
+   "importance": "helpful",
+   "why": "Floats a whole custom player with its own controls, not just a bare video.",
+   "apis": [
+    "documentPictureInPicture.requestWindow"
+   ],
+   "atlas_ids": [
+    "web.display.document-pip"
+   ],
+   "atlas_status": "existing",
+   "source_url": "https://developer.chrome.com/docs/web-platform/document-picture-in-picture",
+   "source_date": "2024",
+   "confidence": "confirmed",
+   "evidence": "page_read"
+  },
+  {
+   "slug": "live-origin-cdn-distribution",
+   "name": "Live origin plus ISP embedded CDN delivery",
+   "vertical": "video-streaming",
+   "companies": [
+    "Netflix"
+   ],
+   "importance": "helpful",
+   "why": "Keeps huge live audiences from overwhelming servers, so streams hold up at peak.",
+   "apis": [
+    "Open Connect",
+    "nginx proxy cache"
+   ],
+   "atlas_ids": [],
+   "atlas_status": "new",
+   "source_url": "https://www.infoq.com/news/2025/12/netflix-live-streaming-pipeline",
+   "source_date": "2025",
+   "confidence": "documented",
+   "evidence": "search_snippet"
+  },
+  {
+   "slug": "low-latency-live-hls",
+   "name": "Low latency live streaming with partial segments",
+   "vertical": "video-streaming",
+   "companies": [
+    "Apple TV+",
+    "Netflix",
+    "Prime Video",
+    "YouTube"
+   ],
+   "importance": "helpful",
+   "why": "Cuts live delay so sports and events feel near real time.",
+   "apis": [
+    "LL-HLS",
+    "EXT-X-SERVER-CONTROL",
+    "CMAF"
+   ],
+   "atlas_ids": [],
+   "atlas_status": "new",
+   "source_url": "https://developer.apple.com/documentation/http-live-streaming/enabling-low-latency-http-live-streaming-hls",
+   "source_date": "2019",
+   "confidence": "documented",
+   "evidence": "search_snippet"
+  },
+  {
+   "slug": "per-title-shot-encoding",
+   "name": "Per-title and per-shot encoding ladders",
+   "vertical": "video-streaming",
+   "companies": [
+    "Netflix"
+   ],
+   "importance": "helpful",
+   "why": "Spends bits where each title or scene needs them, so picture quality rises while data use falls.",
+   "apis": [
+    "VMAF",
+    "HEVC",
+    "VP9",
+    "AV1"
+   ],
+   "atlas_ids": [],
+   "atlas_status": "new",
+   "source_url": "https://streamingmedia.com/Articles/Editorial/Featured-Articles/How-Netflix-Pioneered-Per-Title-Video-Encoding-Optimization-108547.aspx",
+   "source_date": "2018",
+   "confidence": "documented",
+   "evidence": "search_snippet"
+  },
+  {
+   "slug": "personalized-artwork",
+   "name": "Personalized title artwork via contextual bandits",
+   "vertical": "video-streaming",
+   "companies": [
+    "Netflix"
+   ],
+   "importance": "helpful",
+   "why": "Shows each member the thumbnail most likely to make them press play.",
+   "apis": [
+    "contextual bandits",
+    "image CDN"
+   ],
+   "atlas_ids": [],
+   "atlas_status": "new",
+   "source_url": "https://netflixtechblog.com/artwork-personalization-c589f074ad76",
+   "source_date": "2017",
+   "confidence": "documented",
+   "evidence": "search_snippet"
+  },
+  {
+   "slug": "picture-in-picture-video",
+   "name": "Picture in Picture video window",
+   "vertical": "video-streaming",
+   "companies": [
+    "YouTube",
+    "Netflix",
+    "Disney+",
+    "Max",
+    "Prime Video",
+    "Apple TV+"
+   ],
+   "importance": "helpful",
+   "why": "Keeps playback floating while the viewer does other things.",
+   "apis": [
+    "requestPictureInPicture",
+    "enterpictureinpicture",
+    "Media Session"
+   ],
+   "atlas_ids": [
+    "web.camera.picture-in-picture",
+    "web.display.picture-in-picture"
+   ],
+   "atlas_status": "existing",
+   "source_url": "https://web.dev/patterns/media/picture-in-picture",
+   "source_date": "2021",
+   "confidence": "documented",
+   "evidence": "search_snippet"
+  },
+  {
+   "slug": "watch-together-shareplay",
+   "name": "Watch together sessions (SharePlay, group watch)",
+   "vertical": "video-streaming",
+   "companies": [
+    "Disney+",
+    "Apple TV+",
+    "Max"
+   ],
+   "importance": "helpful",
+   "why": "Synchronized playback makes remote viewing social.",
+   "apis": [
+    "GroupActivities",
+    "SharePlay",
+    "WebSocket sync"
+   ],
+   "atlas_ids": [],
+   "atlas_status": "new",
+   "source_url": "https://appleinsider.com/articles/21/12/15/disney-adds-support-for-shareplay-on-iphone-ipad-and-apple-tv",
+   "source_date": "2021",
+   "confidence": "documented",
+   "evidence": "search_snippet"
+  },
+  {
+   "slug": "webcodecs-hardware-decode",
+   "name": "Hardware decoded video via WebCodecs",
+   "vertical": "video-streaming",
+   "companies": [
+    "YouTube",
+    "Netflix"
+   ],
+   "importance": "helpful",
+   "why": "Gives frame level control and efficient decode for custom players and thumbnails.",
+   "apis": [
+    "VideoDecoder",
+    "hardwareAcceleration",
+    "isConfigSupported"
+   ],
+   "atlas_ids": [
+    "web.actions.webcodecs"
+   ],
+   "atlas_status": "existing",
+   "source_url": "https://developer.mozilla.org/Web/API/WebCodecs_API",
+   "source_date": "2025",
+   "confidence": "documented",
+   "evidence": "search_snippet"
+  },
+  {
+   "slug": "xray-info-overlay",
+   "name": "X-Ray cast, music and trivia overlay on pause",
+   "vertical": "video-streaming",
+   "companies": [
+    "Prime Video"
+   ],
+   "importance": "helpful",
+   "why": "Answers who is that actor or what is that song without leaving the show.",
+   "apis": [
+    "timed metadata",
+    "overlay UI"
+   ],
+   "atlas_ids": [],
+   "atlas_status": "new",
+   "source_url": "https://www.aboutamazon.com/news/entertainment/what-is-x-ray-on-prime-video",
+   "source_date": "2024",
+   "confidence": "documented",
+   "evidence": "search_snippet"
+  }
+ ],
+ "company_sources": [
+  {
+   "vertical": "games",
+   "company": "Balatro (LocalThunk)",
+   "why_innovative": "Poker hands plus joker cards as a roguelike deckbuilder; Apple Design Award for Delight and Fun",
+   "source_url": "https://www.apple.com/newsroom/2025/06/apple-unveils-winners-and-finalists-of-the-2025-apple-design-awards/",
+   "source_date": "2025-06-03",
+   "evidence": "page_read"
+  },
+  {
+   "vertical": "games",
+   "company": "DREDGE (Black Salt Games)",
+   "why_innovative": "Smooth controls across iPhone, iPad and Mac; Apple Design Award for Interaction",
+   "source_url": "https://www.apple.com/newsroom/2025/06/apple-unveils-winners-and-finalists-of-the-2025-apple-design-awards/",
+   "source_date": "2025-06-03",
+   "evidence": "page_read"
+  },
+  {
+   "vertical": "games",
+   "company": "PBJ: The Musical (Philipp Stollenmayer)",
+   "why_innovative": "Rhythm game that uses haptics and soundtrack; Apple Design Award for Innovation",
+   "source_url": "https://www.apple.com/newsroom/2025/06/apple-unveils-winners-and-finalists-of-the-2025-apple-design-awards/",
+   "source_date": "2025-06-03",
+   "evidence": "page_read"
+  },
+  {
+   "vertical": "games",
+   "company": "Infinity Nikki (Infold Games)",
+   "why_innovative": "Open world praised for color, detail and rendering; Apple Design Award for Visuals and Graphics",
+   "source_url": "https://www.apple.com/newsroom/2025/06/apple-unveils-winners-and-finalists-of-the-2025-apple-design-awards/",
+   "source_date": "2025-06-03",
+   "evidence": "page_read"
+  },
+  {
+   "vertical": "games",
+   "company": "Art of Fauna (Klemens Strasser)",
+   "why_innovative": "Puzzle game with full VoiceOver and haptic feedback; Apple Design Award for Inclusivity",
+   "source_url": "https://www.apple.com/newsroom/2025/06/apple-unveils-winners-and-finalists-of-the-2025-apple-design-awards/",
+   "source_date": "2025-06-03",
+   "evidence": "page_read"
+  },
+  {
+   "vertical": "games",
+   "company": "Pokemon TCG Pocket (The Pokemon Company)",
+   "why_innovative": "Tactile booster pack opening and phone friendly card battles; iPhone Game of the Year and Google Play Best Game",
+   "source_url": "https://www.apple.com/newsroom/2025/12/apple-unveils-the-winners-of-the-2025-app-store-awards/",
+   "source_date": "2025-12-04",
+   "evidence": "page_read"
+  },
+  {
+   "vertical": "games",
+   "company": "Chants of Sennaar (Playdigious)",
+   "why_innovative": "Thought provoking adventure about the power of language; Apple Cultural Impact and Google Play Best Indie",
+   "source_url": "https://www.apple.com/newsroom/2025/12/apple-unveils-the-winners-of-the-2025-app-store-awards/",
+   "source_date": "2025-12-04",
+   "evidence": "page_read"
+  },
+  {
+   "vertical": "games",
+   "company": "Disney Speedstorm",
+   "why_innovative": "Optimized for play across PC, tablet and mobile; Google Play Best Multi-device Game",
+   "source_url": "https://blog.google/products-and-platforms/platforms/google-play/best-apps-games-2025/",
+   "source_date": "2025-11-18",
+   "evidence": "page_read"
+  },
+  {
+   "vertical": "games",
+   "company": "Porta Nubi (Michael Temper)",
+   "why_innovative": "Transforms the player's surroundings into atmospheric puzzles; Apple Vision Pro Game of the Year",
+   "source_url": "https://www.apple.com/newsroom/2025/12/apple-unveils-the-winners-of-the-2025-app-store-awards/",
+   "source_date": "2025-12-04",
+   "evidence": "page_read"
+  },
+  {
+   "vertical": "games",
+   "company": "Lost in Play (Happy Juice Games)",
+   "why_innovative": "Hand drawn point and tap adventure; 2024 Apple Design Award for Innovation",
+   "source_url": "https://bgr.com/tech/2024-apple-design-awards-winners-announced-procreate-dreams-gentler-streak-more/",
+   "source_date": "2024-06-06",
+   "evidence": "search_snippet"
+  },
+  {
+   "vertical": "games",
+   "company": "Roblox",
+   "why_innovative": "Named to Fast Company gaming lists in 2022 and 2024",
+   "source_url": "https://www.fastcompany.com/91039670/gaming-most-innovative-companies-2024",
+   "source_date": "2024",
+   "evidence": "search_snippet"
+  },
+  {
+   "vertical": "video",
+   "company": "YouTube",
+   "why_innovative": "Named to Fast Company 10 most innovative companies in video 2025 and No. 11 overall; creator tools for TV screens",
+   "source_url": "https://www.fastcompany.com/91270234/video-most-innovative-companies-2025",
+   "source_date": "2025-03",
+   "evidence": "search_snippet"
+  },
+  {
+   "vertical": "video",
+   "company": "Tubi",
+   "why_innovative": "Ranked No. 33 on Fast Company World's 50 Most Innovative Companies 2025 and on its video list",
+   "source_url": "https://www.fastcompany.com/91271134/tubi-most-innovative-companies-2025",
+   "source_date": "2025-03",
+   "evidence": "search_snippet"
+  },
+  {
+   "vertical": "video",
+   "company": "HBO Max",
+   "why_innovative": "Apple TV App of the Year for inclusive streaming including American Sign Language additions",
+   "source_url": "https://www.apple.com/newsroom/2025/12/apple-unveils-the-winners-of-the-2025-app-store-awards/",
+   "source_date": "2025-12-04",
+   "evidence": "page_read"
+  },
+  {
+   "vertical": "video",
+   "company": "Explore POV (James Hustler)",
+   "why_innovative": "Apple Immersive Video travel on Vision Pro; Vision Pro App of the Year",
+   "source_url": "https://www.apple.com/newsroom/2025/12/apple-unveils-the-winners-of-the-2025-app-store-awards/",
+   "source_date": "2025-12-04",
+   "evidence": "page_read"
+  },
+  {
+   "vertical": "video",
+   "company": "Detail (Detail Technologies)",
+   "why_innovative": "AI video editing tools for beginners and pros; iPad App of the Year",
+   "source_url": "https://www.apple.com/newsroom/2025/12/apple-unveils-the-winners-of-the-2025-app-store-awards/",
+   "source_date": "2025-12-04",
+   "evidence": "page_read"
+  },
+  {
+   "vertical": "video",
+   "company": "Taobao",
+   "why_innovative": "Immersive shopping video and 3D models on Vision Pro; Apple Design Award for Interaction",
+   "source_url": "https://www.apple.com/newsroom/2025/06/apple-unveils-winners-and-finalists-of-the-2025-apple-design-awards/",
+   "source_date": "2025-06-03",
+   "evidence": "page_read"
+  },
+  {
+   "vertical": "video",
+   "company": "Netflix",
+   "why_innovative": "Appears on Fast Company film and television most innovative list 2025",
+   "source_url": "https://www.fastcompany.com/91271138/youtube-most-innovative-companies-2025",
+   "source_date": "2025-03",
+   "evidence": "search_snippet"
+  },
+  {
+   "vertical": "music",
+   "company": "Spotify",
+   "why_innovative": "10 Years of Wrapped won two 2025 Webby People's Voice awards (Best User Experience, Best Data Visualization)",
+   "source_url": "https://winners.webbyawards.com/2025/websites-and-mobile-sites/features-design/best-user-experience/338531/10-years-of-wrapped",
+   "source_date": "2025",
+   "evidence": "page_read"
+  },
+  {
+   "vertical": "music",
+   "company": "SoundCloud",
+   "why_innovative": "AI powered First Fans recommendations; on Fast Company music list 2025; Google Play Best for Cars",
+   "source_url": "https://www.hypebot.com/hypebot/2025/03/fast-company-names-10-most-innovative-music-companies-2025.html",
+   "source_date": "2025-03-18",
+   "evidence": "page_read"
+  },
+  {
+   "vertical": "music",
+   "company": "Music AI (Moises)",
+   "why_innovative": "50 plus AI audio models power stem separation for practice; Fast Company music list 2025 and ADA Innovation finalist",
+   "source_url": "https://www.hypebot.com/hypebot/2025/03/fast-company-names-10-most-innovative-music-companies-2025.html",
+   "source_date": "2025-03-18",
+   "evidence": "page_read"
+  },
+  {
+   "vertical": "music",
+   "company": "Tone",
+   "why_innovative": "Turns label payment data into artist earnings insights; Fast Company music list 2025",
+   "source_url": "https://www.hypebot.com/hypebot/2025/03/fast-company-names-10-most-innovative-music-companies-2025.html",
+   "source_date": "2025-03-18",
+   "evidence": "page_read"
+  },
+  {
+   "vertical": "music",
+   "company": "pgLang",
+   "why_innovative": "No. 1 on Fast Company music list 2025 for creative company work and video",
+   "source_url": "https://www.hypebot.com/hypebot/2025/03/fast-company-names-10-most-innovative-music-companies-2025.html",
+   "source_date": "2025-03-18",
+   "evidence": "page_read"
+  },
+  {
+   "vertical": "music",
+   "company": "djay pro (Algoriddim)",
+   "why_innovative": "Spatial computing winner at 2024 Apple Design Awards",
+   "source_url": "https://www.apple.com/in/newsroom/2024/06/apple-announces-winners-of-the-2024-apple-design-awards/",
+   "source_date": "2024-06-06",
+   "evidence": "search_snippet"
+  },
+  {
+   "vertical": "short-form video",
+   "company": "Edits (Instagram)",
+   "why_innovative": "Google Play Best for Fun 2025 for short video creation",
+   "source_url": "https://blog.google/products-and-platforms/platforms/google-play/best-apps-games-2025/",
+   "source_date": "2025-11-18",
+   "evidence": "page_read"
+  },
+  {
+   "vertical": "short-form video",
+   "company": "TikTok",
+   "why_innovative": "Vertical snap paged feed, preloading adjacent clips and swipe to next video analyzed in UX teardowns",
+   "source_url": "https://raw.studio/blog/how-tiktok-uses-3-algorithm-driven-ux-systems-to-maximize-engagement/",
+   "source_date": "2025",
+   "evidence": "search_snippet"
+  },
+  {
+   "vertical": "short-form video",
+   "company": "Xiaohongshu (Little Red Book)",
+   "why_innovative": "UX Collective case study of the feed design that competes with TikTok",
+   "source_url": "https://uxdesign.cc/analyzing-tiktoks-biggest-competitor-s-ux-4728dca0f844",
+   "source_date": "2024",
+   "evidence": "search_snippet"
+  },
+  {
+   "vertical": "live streaming",
+   "company": "Twitch",
+   "why_innovative": "Vertical live format, dual format streaming and TikTok style Discovery Feed announced at TwitchCon",
+   "source_url": "https://www.lindseygamble.com/blog/twitch-announces-dual-format-streaming-clip-recommendations-and-more-at-twitchcon-rotterdam",
+   "source_date": "2025",
+   "evidence": "search_snippet"
+  },
+  {
+   "vertical": "live streaming",
+   "company": "YouTube Live",
+   "why_innovative": "Playables mini games in Live and a practice mode, announced at Made on YouTube 2025",
+   "source_url": "https://www.aol.com/articles/youtube-live-gets-twitch-tiktok-224611441.html",
+   "source_date": "2025",
+   "evidence": "search_snippet"
+  },
+  {
+   "vertical": "reading and podcasts",
+   "company": "Speechify",
+   "why_innovative": "Text to audio with hundreds of voices in 50 plus languages; Apple Design Award for Inclusivity",
+   "source_url": "https://www.apple.com/newsroom/2025/06/apple-unveils-winners-and-finalists-of-the-2025-apple-design-awards/",
+   "source_date": "2025-06-03",
+   "evidence": "page_read"
+  },
+  {
+   "vertical": "reading and podcasts",
+   "company": "StoryGraph",
+   "why_innovative": "Inclusive book community; Apple Cultural Impact award",
+   "source_url": "https://www.apple.com/newsroom/2025/12/apple-unveils-the-winners-of-the-2025-app-store-awards/",
+   "source_date": "2025-12-04",
+   "evidence": "page_read"
+  },
+  {
+   "vertical": "reading and podcasts",
+   "company": "Wiser (15 Minute Audio Books)",
+   "why_innovative": "Google Play Best Everyday Essential 2025",
+   "source_url": "https://blog.google/products-and-platforms/platforms/google-play/best-apps-games-2025/",
+   "source_date": "2025-11-18",
+   "evidence": "page_read"
+  },
+  {
+   "vertical": "reading and podcasts",
+   "company": "Ground News (Snapwise)",
+   "why_innovative": "Apple Design Awards 2025 finalist, Social Impact",
+   "source_url": "https://www.apple.com/newsroom/2025/06/apple-unveils-winners-and-finalists-of-the-2025-apple-design-awards/",
+   "source_date": "2025-06-03",
+   "evidence": "page_read"
+  },
+  {
+   "vertical": "reading and podcasts",
+   "company": "The New York Times app and NYT Games",
+   "why_innovative": "Redesigned NYT app won Fast Company Innovation by Design 2025; NYT Games won 2024 ADA Delight and Fun",
+   "source_url": "https://www.fastcompany.com/innovation-by-design/2025",
+   "source_date": "2025",
+   "evidence": "search_snippet"
+  },
+  {
+   "vertical": "creative tools",
+   "company": "Procreate Dreams",
+   "why_innovative": "2D animation app; 2024 Apple Design Award for Innovation",
+   "source_url": "https://bgr.com/tech/2024-apple-design-awards-winners-announced-procreate-dreams-gentler-streak-more/",
+   "source_date": "2024-06-06",
+   "evidence": "search_snippet"
+  },
+  {
+   "vertical": "creative tools",
+   "company": "Feather: Draw in 3D (Sketchsoft)",
+   "why_innovative": "Turns 2D drawings into 3D with touch and Apple Pencil; ADA Visuals and Graphics",
+   "source_url": "https://www.apple.com/newsroom/2025/06/apple-unveils-winners-and-finalists-of-the-2025-apple-design-awards/",
+   "source_date": "2025-06-03",
+   "evidence": "page_read"
+  },
+  {
+   "vertical": "creative tools",
+   "company": "Play (Rabbit 3 Times)",
+   "why_innovative": "Interactive SwiftUI prototypes syncing in real time Mac to iPhone; ADA Innovation",
+   "source_url": "https://www.apple.com/newsroom/2025/06/apple-unveils-winners-and-finalists-of-the-2025-apple-design-awards/",
+   "source_date": "2025-06-03",
+   "evidence": "page_read"
+  },
+  {
+   "vertical": "creative tools",
+   "company": "Luminar: Photo Editor",
+   "why_innovative": "AI tools for beginners and pros on any device; Google Play Best Multi-device App",
+   "source_url": "https://blog.google/products-and-platforms/platforms/google-play/best-apps-games-2025/",
+   "source_date": "2025-11-18",
+   "evidence": "page_read"
+  },
+  {
+   "vertical": "creative tools",
+   "company": "Goodnotes",
+   "why_innovative": "Google Play Best for Large Screens 2025",
+   "source_url": "https://blog.google/products-and-platforms/platforms/google-play/best-apps-games-2025/",
+   "source_date": "2025-11-18",
+   "evidence": "page_read"
+  },
+  {
+   "vertical": "creative tools",
+   "company": "Adobe Frame.io V4",
+   "why_innovative": "Webby 2025 win for Creative Production, Software Services and Platforms",
+   "source_url": "https://www.webbyawards.com/press/press-releases/29th-annual-webby-awards-announce-2025-winners/",
+   "source_date": "2025-04-22",
+   "evidence": "search_snippet"
+  },
+  {
+   "vertical": "wellness and focus",
+   "company": "Focus Friend (Hank Green)",
+   "why_innovative": "Gamifies focus sessions; Google Play Best App and Apple Cultural Impact",
+   "source_url": "https://www.apple.com/newsroom/2025/12/apple-unveils-the-winners-of-the-2025-app-store-awards/",
+   "source_date": "2025-12-04",
+   "evidence": "page_read"
+  },
+  {
+   "vertical": "wellness and focus",
+   "company": "Tiimo",
+   "why_innovative": "Visual planner with AI; iPhone App of the Year 2025",
+   "source_url": "https://www.apple.com/newsroom/2025/12/apple-unveils-the-winners-of-the-2025-app-store-awards/",
+   "source_date": "2025-12-04",
+   "evidence": "page_read"
+  },
+  {
+   "vertical": "wellness and focus",
+   "company": "Strava",
+   "why_innovative": "Community and real time segment tracking; Apple Watch App of the Year",
+   "source_url": "https://www.apple.com/newsroom/2025/12/apple-unveils-the-winners-of-the-2025-app-store-awards/",
+   "source_date": "2025-12-04",
+   "evidence": "page_read"
+  }
+ ]
+}
