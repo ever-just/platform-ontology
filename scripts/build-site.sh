@@ -13,7 +13,7 @@ node apps/console/scripts/gen-console-data.mjs >/dev/null
 mkdir -p site/console && cp -R apps/console/dist/. site/console/
 # Voice page served at ai.platformontology.lol (see vercel.json).
 (cd apps/console && npx vite build -c vite.ai.config.ts)
-mkdir -p site/ai && cp -R apps/console/dist-ai/. site/ai/
+mkdir -p site/ai && cp -R apps/console/dist-ai/. site/ai/ && cp site/ai/ai.html site/ai/index.html
 # No homepage: "/" opens the console. Its assets and data resolve under /console/ by absolute path.
 mkdir -p site/about && mv site/index.html site/about/index.html
 cp apps/console/dist/index.html site/index.html
