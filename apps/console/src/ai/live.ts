@@ -39,15 +39,28 @@ export class LiveSession {
     this.outCtx.resume().catch(() => {});
   }
 
+  /** Throw if close() ran while we were awaiting, after releasing anything acquired since. */
+  private alive() {
+    if (!this.closed) return;
+    this.mic?.getTracks().forEach((t) => t.stop());
+    try { this.ws?.close(); } catch {}
+    this.inCtx?.close().catch(() => {});
+    throw new Error("Stopped.");
+  }
+
   async open() {
     this.on.status("Getting a session…");
     await signedIn();
+    this.alive();
     const r = await fetch("/api/gemini-token", { method: "POST", credentials: "include" });
     const t = await r.json().catch(() => ({}));
     if (!r.ok) throw new Error(t.error || "Could not start");
+    this.alive();
     this.mic = await navigator.mediaDevices.getUserMedia({ audio: { echoCancellation: true, noiseSuppression: true, channelCount: 1 } });
+    this.alive();
     this.ws = new WebSocket(`${WS}?access_token=${encodeURIComponent(t.token)}`);
     await new Promise<void>((ok, bad) => { this.ws.onopen = () => ok(); this.ws.onerror = () => bad(new Error("Connection failed")); });
+    this.alive();
     this.ws.onmessage = (e) => this.onMessage(e);
     this.ws.onclose = (e) => { if (!this.closed) { this.close(); this.on.ended(e.reason ? `Ended: ${e.reason}` : "Session ended"); } };
     this.send(buildSetup(t.model, this.tools, ["AUDIO"], this.system));
@@ -66,6 +79,8 @@ export class LiveSession {
     this.inCtx = new AudioContext({ sampleRate: 16000 });
     const url = URL.createObjectURL(new Blob([WORKLET], { type: "text/javascript" }));
     await this.inCtx.audioWorklet.addModule(url);
+    URL.revokeObjectURL(url);
+    if (this.closed) { this.inCtx.close().catch(() => {}); return; }
     const node = new AudioWorkletNode(this.inCtx, "pcm");
     node.port.onmessage = (e) => {
       const f = e.data as Float32Array;

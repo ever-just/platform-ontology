@@ -64,9 +64,10 @@ export function VoiceDock({ atlas, scopes }: { atlas: Atlas; scopes: ScopeDef[] 
     }, CONSOLE_SYSTEM));
     try {
       await s.open();
-      setOn(true);
+      if (session.current === s) setOn(true);
     } catch (e) {
-      stop((e as Error).message || "Could not start");
+      if (session.current === s) stop((e as Error).message || "Could not start");
+      else s.close();
     } finally {
       setBusy(false);
     }
