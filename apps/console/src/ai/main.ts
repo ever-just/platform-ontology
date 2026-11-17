@@ -60,7 +60,8 @@ class Session {
 
   async open() {
     status("Getting a session…");
-    const r = await fetch("/api/gemini-token", { method: "POST" });
+    await signedIn();
+    const r = await fetch("/api/gemini-token", { method: "POST", credentials: "include" });
     const t = await r.json().catch(() => ({}));
     if (!r.ok) throw new Error(t.error || "Could not start");
     this.mic = await navigator.mediaDevices.getUserMedia({ audio: { echoCancellation: true, noiseSuppression: true, channelCount: 1 } });
@@ -143,6 +144,14 @@ class Session {
   }
 }
 
+// The token endpoint needs a session; start an anonymous one if this browser has none.
+async function signedIn() {
+  const s = await fetch("/api/auth/get-session", { credentials: "include" }).then((r) => r.json()).catch(() => null);
+  if (s?.user) return;
+  const r = await fetch("/api/auth/sign-in/anonymous", { method: "POST", credentials: "include", headers: { "content-type": "application/json" }, body: "{}" });
+  if (!r.ok) throw new Error("Could not sign in. Try again.");
+}
+
 function stop() {
   session?.close();
   session = null;
@@ -154,11 +163,12 @@ function stop() {
 btn.onclick = async () => {
   if (session) { stop(); status("Stopped."); log(""); return; }
   btn.disabled = true;
+  // Create and resume audio inside the click gesture, before any await, or Safari keeps it suspended.
+  const s = (session = new Session());
+  s.outCtx.resume().catch(() => {});
   try {
     await agent();
-    session = new Session();
-    await session.outCtx.resume();
-    await session.open();
+    await s.open();
     btn.textContent = "Stop";
     btn.classList.add("on");
   } catch (err) {

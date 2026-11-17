@@ -15,7 +15,7 @@ const camel = (s) => s.replace(/_([a-z])/g, (_, c) => c.toUpperCase());
 const toSnake = (o) => (o ? Object.fromEntries(Object.entries(o).map(([k, v]) => [snake(k), v])) : o);
 const toCamel = (o) => (o && typeof o === "object" ? Object.fromEntries(Object.entries(o).map(([k, v]) => [camel(k), v])) : o);
 const where = (w) => (w || []).map((c) => ({ ...c, field: snake(c.field) }));
-const db = (p) => rpc("po_auth_db", { p });
+export const db = (p) => rpc("po_auth_db", { p });
 
 const lakeAdapter = createAdapterFactory({
   config: {
