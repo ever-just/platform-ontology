@@ -1,23 +1,41 @@
 import type { Atlas } from "../core/types";
-import { startAgent, type RpcRequest } from "../agent";
+import { startAgent, type RpcRequest, type ToolDef } from "../agent";
+import { buildSetup } from "./setup";
 
 // https://ai.platformontology.lol: one Start button that opens a Gemini Live voice session.
 // The page asks /api/gemini-token for a one use token, streams the microphone to Gemini, plays the
 // spoken answer, and runs every tool call on the in-page MCP server over this browser's capabilities.
 
 const WS = "wss://generativelanguage.googleapis.com/ws/google.ai.generativelanguage.v1beta.GenerativeService.BidiGenerateContentConstrained";
-const SYSTEM = `You are the voice of Platform Ontology, a live map of every permission, sensor and silent signal a web page can reach.
-You can switch this person's own browser capabilities on and off with your tools and read what they report.
-Keep answers short and spoken. Find ids with list_capabilities. Before you start anything that shows a browser prompt
-(camera, microphone, location and similar), say what it will do and wait for a yes. Never read out long raw data; summarise it.`;
-
 const $ = (id: string) => document.getElementById(id)!;
 const btn = $("go") as HTMLButtonElement;
 const status = (s: string) => { $("status").textContent = s; };
-const log = (s: string) => { $("log").textContent = s; };
+// The conversation as it happens: what the person said, what the AI said, and each tool it used.
+const feed = $("feed");
+let turn: { who: string; el: HTMLElement } | null = null;
+function say(who: "you" | "ai", text: string) {
+  if (!text) return;
+  if (turn?.who !== who) {
+    const el = document.createElement("p");
+    el.className = who;
+    feed.append(el);
+    turn = { who, el };
+  }
+  turn.el.textContent += text;
+  feed.scrollTop = feed.scrollHeight;
+}
+function step(text: string) {
+  const el = document.createElement("p");
+  el.className = "step";
+  el.textContent = text;
+  feed.append(el);
+  turn = null;
+  feed.scrollTop = feed.scrollHeight;
+  return el;
+}
 
 let mcp: { handle(m: RpcRequest): Promise<any> } | null = null;
-let tools: { name: string; description: string; inputSchema: any }[] = [];
+let tools: ToolDef[] = [];
 let session: Session | null = null;
 
 async function agent() {
@@ -26,22 +44,6 @@ async function agent() {
   const a = startAgent(atlas);
   mcp = a.mcp;
   tools = a.tools.tools;
-}
-
-// Gemini function declarations take an OpenAPI subset: one type per field.
-function schema(s: any): any {
-  if (!s || typeof s !== "object") return { type: "string" };
-  const o: any = {};
-  o.type = Array.isArray(s.type) ? "string" : s.type || "string";
-  if (s.description) o.description = s.description;
-  if (s.enum) o.enum = s.enum.map(String);
-  if (o.type === "object") {
-    o.properties = Object.fromEntries(Object.entries(s.properties || {}).map(([k, v]) => [k, schema(v)]));
-    if (s.required?.length) o.required = s.required;
-    if (!Object.keys(o.properties).length) delete o.properties;
-  }
-  if (o.type === "array") o.items = schema(s.items);
-  return o;
 }
 
 const b64 = (buf: ArrayBuffer) => { let s = ""; const u = new Uint8Array(buf); for (let i = 0; i < u.length; i += 0x8000) s += String.fromCharCode(...u.subarray(i, i + 0x8000)); return btoa(s); };
@@ -69,14 +71,7 @@ class Session {
     await new Promise<void>((ok, bad) => { this.ws.onopen = () => ok(); this.ws.onerror = () => bad(new Error("Connection failed")); });
     this.ws.onmessage = (e) => this.onMessage(e);
     this.ws.onclose = (e) => { if (!this.closed) { status(e.reason ? `Ended: ${e.reason}` : "Session ended"); stop(); } };
-    this.send({
-      setup: {
-        model: `models/${t.model}`,
-        generationConfig: { responseModalities: ["AUDIO"] },
-        systemInstruction: { parts: [{ text: SYSTEM }] },
-        tools: [{ functionDeclarations: tools.map((d) => ({ name: d.name, description: d.description, parameters: schema(d.inputSchema) })) }],
-      },
-    });
+    this.send(buildSetup(t.model, tools));
   }
 
   send(o: unknown) { if (this.ws?.readyState === 1) this.ws.send(JSON.stringify(o)); }
@@ -120,11 +115,15 @@ class Session {
     if (m.setupComplete) { await this.startMic(); return; }
     const sc = m.serverContent;
     if (sc?.interrupted) this.hush();
+    if (sc?.inputTranscription?.text) say("you", sc.inputTranscription.text);
+    if (sc?.outputTranscription?.text) say("ai", sc.outputTranscription.text);
+    if (sc?.turnComplete) turn = null;
     sc?.modelTurn?.parts?.forEach((p: any) => { if (p.inlineData?.data) this.play(unb64(p.inlineData.data)); });
     if (m.toolCall?.functionCalls) {
       const functionResponses = await Promise.all(m.toolCall.functionCalls.map(async (c: any) => {
-        log(`Using ${c.name.replace(/_/g, " ")}${c.args?.id ? `: ${c.args.id}` : ""}`);
+        const el = step(`${c.name.replace(/_/g, " ")}${c.args?.id ? `: ${c.args.id}` : c.args?.query ? `: ${c.args.query}` : ""}`);
         const r = await mcp!.handle({ jsonrpc: "2.0", id: c.id, method: "tools/call", params: { name: c.name, arguments: c.args || {} } });
+        el.classList.add(r?.error || r?.result?.isError ? "bad" : "ok");
         const out = r?.result?.structuredContent ?? r?.result?.content?.map((x: any) => x.text).join("\n") ?? r?.error ?? null;
         return { id: c.id, name: c.name, response: { result: out } };
       }));
@@ -161,8 +160,10 @@ function stop() {
 }
 
 btn.onclick = async () => {
-  if (session) { stop(); status("Stopped."); log(""); return; }
+  if (session) { stop(); status("Stopped."); return; }
   btn.disabled = true;
+  feed.textContent = "";
+  turn = null;
   // Create and resume audio inside the click gesture, before any await, or Safari keeps it suspended.
   const s = (session = new Session());
   s.outCtx.resume().catch(() => {});

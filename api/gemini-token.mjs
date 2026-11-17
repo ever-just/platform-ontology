@@ -43,7 +43,9 @@ export async function POST(req) {
   if (all >= GLOBAL) return json(429, { error: "Voice is busy right now. Try again later." });
   await Promise.all([mark(mine, now), mark(net, now), mark("gemini:all", now)]);
 
-  // REST shape of AuthToken: the session config lock is bidiGenerateContentSetup.
+  // REST shape of AuthToken: the session config lock is bidiGenerateContentSetup. fieldMask names the
+  // locked fields; without it Gemini ignores the page's whole setup message, which silently drops the
+  // system instruction and every tool. Lock only the model so the page's instructions and tools apply.
   const res = await fetch("https://generativelanguage.googleapis.com/v1beta/auth_tokens", {
     method: "POST",
     headers: { "x-goog-api-key": key, "content-type": "application/json" },
@@ -52,6 +54,7 @@ export async function POST(req) {
       expireTime: new Date(now + 30 * 60e3).toISOString(),
       newSessionExpireTime: new Date(now + 60e3).toISOString(),
       bidiGenerateContentSetup: { model: `models/${MODEL}` },
+      fieldMask: "model",
     }),
   });
   if (!res.ok) {
