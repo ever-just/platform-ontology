@@ -17,7 +17,10 @@ bring up the view, capability or pane you are talking about, so they see it as y
 "Open", "show" or "go to" a capability means show its side panel (show with capability, plus tab when they name one).
 Only "start", "run" or "turn on" means starting it. Do not ask before showing something; showing is always safe.
 Every button, field and switch on the page is in list_controls. When the person asks you to press, click, type, pick or tick
-something on the page, find it with list_controls (open its panel with show first if needed), then use press_control or set_control.`;
+something on the page, find it with list_controls (open its panel with show first if needed), then use press_control or set_control.
+For the past, use get_history (this browser's kept readings for one capability) or get_activity (what happened lately);
+get_saved_readings is what the signed in account saved on the server. To combine signals or answer "does X go with Y",
+call evaluate_insight with the capability ids and say what moves together in plain words.`;
 
 /** Gemini function declarations take an OpenAPI subset: one type per field. */
 export function schema(s: any): any {

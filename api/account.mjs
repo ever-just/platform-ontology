@@ -1,6 +1,7 @@
 // GET /api/account: the signed in account, a summary of its saved readings and whether GitHub linking is on.
 // POST /api/account {action:"link_visit", visit}: ties this browser's visit id to the account so its
 // readings are kept with it.
+// Readings: {action:"readings", scope?, since?, limit?} lists this account's saved readings (read only).
 // Keys: {action:"create_key", name} (the key is returned once), "list_keys", {action:"revoke_key", id}.
 // Relay: "relay_claim" waits up to 20 s for MCP requests sent with this account's keys;
 // {action:"relay_answer", id, response} returns the tab's answer.
@@ -40,6 +41,12 @@ export async function POST(req) {
     if (body.action === "create_key") {
       try { return json(200, await createKey(user.id, body.name)); }
       catch { return json(400, { error: "You can have at most 5 active keys. Revoke one first." }); }
+    }
+    if (body.action === "readings") {
+      const limit = Math.min(50, Math.max(1, parseInt(body.limit, 10) || 20));
+      const scope = typeof body.scope === "string" && /^[a-z0-9_.-]{1,80}$/i.test(body.scope) ? body.scope : null;
+      const since = typeof body.since === "string" && !isNaN(Date.parse(body.since)) ? new Date(body.since).toISOString() : null;
+      return json(200, { readings: await rpc("po_readings", { p_user: user.id, p_scope: scope, p_since: since, p_limit: limit }) });
     }
     if (body.action === "list_keys") return json(200, await rpc("po_key_list", { p_user: user.id }));
     if (body.action === "revoke_key") return json(200, { revoked: await rpc("po_key_revoke", { p_user: user.id, p_id: String(body.id || "") }) });
