@@ -11,6 +11,7 @@ import { logTalk, memoryBrief, onLoopEvent, restoreLoops } from "../core/agent-m
 import { describeEl, pointerNow, startAwareness } from "../core/awareness";
 import { screen } from "../core/screen";
 import { getAsk, onClickAsks, openAsks, settleAsk } from "../core/click-asks";
+import { findControl } from "../agent/control-tools";
 import { getSession, isActive, request } from "../core/harness";
 import { CapIcon } from "./icons";
 import { A2uiSurface } from "@a2ui/react/v0_9";
@@ -145,7 +146,7 @@ export function VoiceDock({ atlas, scopes }: { atlas: Atlas; scopes: ScopeDef[] 
     settleAsk(key, "clicked");
     setLines((xs) => xs.map((x) => (x.ask === key ? { ...x, ok: true } : x)));
     if (a.act === "press") {
-      (document.querySelector(`[data-control="${CSS.escape(a.id)}"]`) as HTMLElement | null)?.click();
+      findControl(a.id)?.click();
       session.current?.note(`[click] The person clicked your button "${a.label}". Check the result and tell them plainly.`, true);
       return;
     }
