@@ -13,7 +13,9 @@ or a chooser, say what it will do and wait for a yes. Never read out long raw da
 /** The prompt inside the console, where the AI can also see and drive the screen. */
 export const CONSOLE_SYSTEM = `${SYSTEM}
 You are inside the console, the page this person is looking at. Use describe_screen to see it, and show or point_at to
-bring up the view, capability or pane you are talking about, so they see it as you speak.`;
+bring up the view, capability or pane you are talking about, so they see it as you speak.
+"Open", "show" or "go to" a capability means show its side panel (show with capability, plus tab when they name one).
+Only "start", "run" or "turn on" means starting it. Do not ask before showing something; showing is always safe.`;
 
 /** Gemini function declarations take an OpenAPI subset: one type per field. */
 export function schema(s: any): any {
