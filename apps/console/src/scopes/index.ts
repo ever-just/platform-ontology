@@ -11,6 +11,7 @@ import { reachScopes } from "./reach";
 import { extrasScopes } from "./extras";
 import { genericScopes } from "./generic";
 import { pageControlScopes } from "./page-controls";
+import { pageActionDisplayScopes } from "./page-actions-display";
 import { pageActionComputeScopes } from "./page-actions-compute";
 import { manifestScriptScopes } from "./manifest-scripts";
 
@@ -19,6 +20,7 @@ export const curatedScopes: ScopeDef[] = [
   ...deviceScopes, ...fingerprintScopes, ...linkScopes, ...identityScopes, ...reachScopes,
   ...pageControlScopes,
   ...pageActionComputeScopes,
+  ...pageActionDisplayScopes,
   ...manifestScriptScopes,
 ];
 

@@ -60,7 +60,7 @@ export function useCtl<T>(scope: ScopeDef, session: Session) {
   return { d, on, sim: session.source === "sim", send: (p: Patch) => sinks.get(scope.id)?.(p) };
 }
 
-function Panel({ on, sim, error, children, note }: { on: boolean; sim: boolean; error?: string; children: ReactNode; note?: string }) {
+export function Panel({ on, sim, error, children, note }: { on: boolean; sim: boolean; error?: string; children: ReactNode; note?: string }) {
   return (
     <div className="pc">
       {children}
@@ -73,7 +73,7 @@ function Panel({ on, sim, error, children, note }: { on: boolean; sim: boolean; 
   );
 }
 
-const short = (s: string, n = 64) => (s.length > n ? s.slice(0, n) + "…" : s);
+export const short = (s: string, n = 64) => (s.length > n ? s.slice(0, n) + "…" : s);
 
 // ---------- Tab title and icon ----------
 
