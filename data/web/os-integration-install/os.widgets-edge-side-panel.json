@@ -1,0 +1,186 @@
+{
+  "id": "web.os.widgets-edge-side-panel",
+  "name": "Windows widgets and Edge side panel",
+  "kind": "capability",
+  "group": "os-integration-install",
+  "subgroup": "Manifest",
+  "tags": [
+    "manifest",
+    "edge",
+    "windows"
+  ],
+  "plain": "An installed app can show a small card in the Windows Widgets Board or pin itself to the Edge sidebar.",
+  "meaning": "Microsoft Edge only. The widgets member lets a service worker update Adaptive Card widgets. The edge_side_panel member lets the app load in the Edge sidebar and announce itself with a Sec-CH-UA brand.",
+  "lifecycle": [
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "manifest.widgets; manifest.edge_side_panel",
+      "access": {
+        "grant": "gesture",
+        "prompt_ui": "You add a widget from the board, or pin the app to the sidebar",
+        "secure_context": true,
+        "user_gesture": true,
+        "persistence": "Per origin",
+        "revocation": "Clear site data",
+        "iframe": "Same as top level",
+        "steps": [
+          "Page calls the API",
+          "Browser answers with no prompt",
+          "Page reads the result"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "n",
+          "v": "",
+          "note": "Ignored"
+        },
+        "edge": {
+          "s": "y",
+          "v": "",
+          "note": "Windows 11 only. Microsoft says to check the docs for the current state of the sidebar feature"
+        },
+        "safari": {
+          "s": "n",
+          "v": "",
+          "note": "Ignored"
+        },
+        "firefox": {
+          "s": "n",
+          "v": "",
+          "note": "Ignored"
+        },
+        "ios_safari": {
+          "s": "n",
+          "v": "",
+          "note": "Ignored"
+        },
+        "chrome_android": {
+          "s": "n",
+          "v": "",
+          "note": "Ignored"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "object",
+    "metric": "An installed app can show a small card in the Windows Widgets Board or pin itself to the Edge sidebar.",
+    "update": "on demand",
+    "fields": [
+      {
+        "name": "widgets",
+        "type": "list",
+        "range": "Adaptive Card templates and data"
+      },
+      {
+        "name": "edge_side_panel",
+        "type": "object",
+        "range": "preferred_width"
+      },
+      {
+        "name": "Sec-CH-UA brand",
+        "type": "string",
+        "range": "Edge Side Panel"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can put a live card on your Windows desktop board, on Edge only",
+    "user_action": "None, the page reads it silently",
+    "can": [
+      "Update a widget card from a service worker",
+      "Receive widget clicks",
+      "Load in the Edge sidebar and be told so by a Client Hint brand"
+    ],
+    "cannot": [
+      "Add a widget or pin itself without you",
+      "Work in other browsers"
+    ],
+    "reach": 1,
+    "reach_label": "A widget card and a sidebar slot",
+    "differs": "Microsoft Edge on Windows only."
+  },
+  "story": {
+    "what_it_is": "A web app can place a small live card on the Windows desktop board and live in the Edge sidebar.",
+    "icon": "layout-panel-left",
+    "tags": [
+      "Installed apps",
+      "Asks first",
+      "Capability"
+    ],
+    "marketing": [
+      {
+        "vendor": "Microsoft Learn",
+        "name": "PWA widgets in Windows 11",
+        "pitch": "Installed PWAs can show Adaptive Card widgets in the Widgets Board.",
+        "url": "https://learn.microsoft.com/en-us/microsoft-edge/progressive-web-apps/how-to/widgets"
+      }
+    ],
+    "for_you": "You decide whether a site's card appears on your Windows board. It can then refresh in the background.",
+    "for_makers": "Makers add a glanceable view of their app that reaches users without opening it.",
+    "use_cases": [
+      {
+        "type": "travel",
+        "example": "A flight tracker keeps a status card on the Windows board.",
+        "apps": []
+      },
+      {
+        "type": "news",
+        "example": "A news reader shows headlines in the board.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "A widget keeps a service worker active"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Edge on Windows only",
+    "The sidebar feature state is subject to change per Microsoft"
+  ],
+  "scores": {
+    "sensitivity": 1,
+    "utility": 2,
+    "fingerprint_bits": null,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Glanceable info"
+    ],
+    "abuse": [
+      "Persistent presence on the desktop"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [],
+  "related": [
+    "web.os.manifest-member-support",
+    "web.os.install-prompt",
+    "web.net.sec-ch-ua"
+  ],
+  "refs": [
+    {
+      "t": "vendor",
+      "label": "Microsoft Edge PWA widgets (checked 2026-11-16)",
+      "url": "https://learn.microsoft.com/en-us/microsoft-edge/progressive-web-apps/how-to/widgets"
+    },
+    {
+      "t": "vendor",
+      "label": "Microsoft Edge PWA sidebar (checked 2026-11-16)",
+      "url": "https://learn.microsoft.com/en-us/microsoft-edge/progressive-web-apps/how-to/sidebar"
+    }
+  ],
+  "confidence": "inferred"
+}

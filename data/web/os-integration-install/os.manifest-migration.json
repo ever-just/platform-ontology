@@ -1,0 +1,173 @@
+{
+  "id": "web.os.manifest-migration",
+  "name": "Manifest migration (migrate_from and migrate_to)",
+  "kind": "capability",
+  "group": "os-integration-install",
+  "subgroup": "Manifest",
+  "tags": [
+    "manifest",
+    "identity",
+    "chromium"
+  ],
+  "plain": "A site can move people from an old installed app identity to a new one.",
+  "meaning": "Moving an installed app to a new origin normally means a fresh install. These members let the browser carry the install over and, by doing so, reveal the old app identity.",
+  "lifecycle": [
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "manifest.migrate_from (id and start_url of the old app); manifest.migrate_to",
+      "access": {
+        "grant": "gesture",
+        "prompt_ui": "A consent flow per the spec",
+        "secure_context": true,
+        "user_gesture": true,
+        "persistence": "Per origin",
+        "revocation": "Clear site data",
+        "iframe": "Same as top level",
+        "steps": [
+          "Page calls the API",
+          "Browser answers with no prompt",
+          "Page reads the result"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "",
+          "note": "Medium confidence, per compat data"
+        },
+        "edge": {
+          "s": "y",
+          "v": "",
+          "note": "Chromium behavior"
+        },
+        "safari": {
+          "s": "n",
+          "v": "",
+          "note": "Ignored"
+        },
+        "firefox": {
+          "s": "n",
+          "v": "",
+          "note": "Ignored"
+        },
+        "ios_safari": {
+          "s": "n",
+          "v": "",
+          "note": "Ignored"
+        },
+        "chrome_android": {
+          "s": "n",
+          "v": "",
+          "note": "Ignored"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "object",
+    "metric": "A site can move people from an old installed app identity to a new one.",
+    "update": "on demand",
+    "fields": [
+      {
+        "name": "migrate_from",
+        "type": "list",
+        "range": "old app id and start URL"
+      },
+      {
+        "name": "migrate_to",
+        "type": "string",
+        "range": "new app id"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can move an installed app to a new address, if the browser and you agree",
+    "user_action": "None, the page reads it silently",
+    "can": [
+      "Carry an install from one origin to another",
+      "Name the old identity it replaces"
+    ],
+    "cannot": [
+      "Move data without a consent step",
+      "Work outside Chromium"
+    ],
+    "reach": 1,
+    "reach_label": "One app identity",
+    "differs": "Chromium only. Spec details are medium confidence."
+  },
+  "story": {
+    "what_it_is": "A site can hand an installed app over to a new address without a new install.",
+    "icon": "app-window",
+    "tags": [
+      "Installed apps",
+      "Capability"
+    ],
+    "marketing": [
+      {
+        "vendor": "WICG",
+        "name": "Manifest incubations",
+        "pitch": "Proposals for manifest features beyond the core spec.",
+        "url": "https://wicg.github.io/manifest-incubations/"
+      }
+    ],
+    "for_you": "If a company changes its web address you may be offered a smooth move instead of installing again.",
+    "for_makers": "Makers who rebrand or change domains keep their installed base.",
+    "use_cases": [
+      {
+        "type": "shopping",
+        "example": "A store moves its installed app to a new domain after a rebrand.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Reveals old app identities"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Chromium only",
+    "Details are medium confidence"
+  ],
+  "scores": {
+    "sensitivity": 1,
+    "utility": 2,
+    "fingerprint_bits": null,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Domain moves"
+    ],
+    "abuse": [
+      "Linking old and new identities"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [],
+  "related": [
+    "web.os.manifest-member-support",
+    "web.os.install-prompt"
+  ],
+  "refs": [
+    {
+      "t": "bcd",
+      "label": "MDN browser-compat-data 8.1.9 (checked 2026-11-16)",
+      "url": "https://cdn.jsdelivr.net/npm/@mdn/browser-compat-data@8.1.9/data.json"
+    },
+    {
+      "t": "spec",
+      "label": "WICG Manifest incubations (checked 2026-11-16)",
+      "url": "https://wicg.github.io/manifest-incubations/"
+    }
+  ],
+  "confidence": "inferred"
+}
