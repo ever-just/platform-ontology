@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
-import { AudioLines, Mic, Send, Square, X, EyeOff, MessageSquare } from "lucide-react";
+import { AudioLines, Mic, Send, Square, X, EyeOff, MessageSquare, MousePointerClick, Hand, Check } from "lucide-react";
 import type { Atlas, ScopeDef } from "../core/types";
 import { createAgentTools, createMcpServer } from "../agent";
 import type { RpcRequest, ToolDef } from "../agent";
@@ -10,13 +10,16 @@ import { abilitiesBrief } from "../agent/aware-tools";
 import { logTalk, memoryBrief, onLoopEvent, restoreLoops } from "../core/agent-memory";
 import { describeEl, pointerNow, startAwareness } from "../core/awareness";
 import { screen } from "../core/screen";
+import { getAsk, onClickAsks, openAsks, settleAsk } from "../core/click-asks";
+import { getSession, isActive, request } from "../core/harness";
+import { CapIcon } from "./icons";
 
 // The AI inside the console: a header button opens a dock that runs a Gemini Live voice session over
 // the same tools as the MCP server, plus the screen tools, so the AI can show and point at what it means.
 // It starts on its own on the ai. host (or with ?voice), comes back after a refresh with the same
 // conversation, remembers earlier visits, and can show, hide, move and resize its own transcript.
 
-type Line = { k: "you" | "ai" | "step"; t: string; ok?: boolean; id?: number };
+type Line = { k: "you" | "ai" | "step" | "click"; t: string; ok?: boolean; id?: number; ask?: string };
 type Ui = { hidden: boolean; side: "right" | "left"; size: "compact" | "normal" | "tall" };
 type Saved = { on: boolean; handle: string | null; at: number; lines: Line[]; ui: Ui };
 let seq = 0;
@@ -60,7 +63,8 @@ export function VoiceDock({ atlas, scopes }: { atlas: Atlas; scopes: ScopeDef[] 
   uiRef.current = ui;
 
   useEffect(() => { feed.current?.scrollTo({ top: feed.current.scrollHeight }); }, [lines]);
-  useEffect(() => { save({ lines: lines.slice(-60).map(({ k, t, ok }) => ({ k, t, ok })) }); }, [lines]);
+  // Click buttons only work in this page load, so they are not saved across a refresh.
+  useEffect(() => { save({ lines: lines.filter((l) => l.k !== "click").slice(-60).map(({ k, t, ok }) => ({ k, t, ok })) }); }, [lines]);
   useEffect(() => { save({ ui }); }, [ui]);
 
   useEffect(() => {
@@ -68,15 +72,27 @@ export function VoiceDock({ atlas, scopes }: { atlas: Atlas; scopes: ScopeDef[] 
     restoreLoops();
     // Loop results come back as notes the AI answers out loud.
     const off = onLoopEvent((e) => {
-      add({ k: "step", t: `loop ${e.loop}: ${e.kind}` });
-      session.current?.note(`[loop ${e.loop}] ${e.tool} ${e.kind}: ${e.text}`, true);
+      if (!e.quiet) add({ k: "step", t: e.tool === "job" ? `${e.loop}: ${e.kind}` : `loop ${e.loop}: ${e.kind}` });
+      session.current?.note(`[${e.tool === "job" ? "job" : "loop"} ${e.loop}] ${e.tool} ${e.kind}: ${e.text}`, !e.quiet);
+    });
+    // Anything that needs the person's click shows up as a button in the conversation.
+    const shown = new Set<string>();
+    const offAsks = onClickAsks(() => {
+      openAsks().forEach((a) => {
+        if (shown.has(a.key)) return;
+        shown.add(a.key);
+        merge.current = false;
+        setLines((xs) => [...xs, { k: "click", t: a.label, ask: a.key }]);
+        setOpen(true);
+        setUi((u) => (u.hidden ? { ...u, hidden: false } : u));
+      });
     });
     // Audio started without a click stays silent until the first gesture.
     const wake = () => session.current?.outCtx.resume().catch(() => {});
     window.addEventListener("pointerdown", wake);
     window.addEventListener("keydown", wake);
     if (resumable || autoHost()) void start(resumable ? saved0.current!.handle : null, false);
-    return () => { off(); window.removeEventListener("pointerdown", wake); window.removeEventListener("keydown", wake); session.current?.close(); session.current = null; };
+    return () => { off(); offAsks(); window.removeEventListener("pointerdown", wake); window.removeEventListener("keydown", wake); session.current?.close(); session.current = null; };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -87,6 +103,30 @@ export function VoiceDock({ atlas, scopes }: { atlas: Atlas; scopes: ScopeDef[] 
       merge.current = l.k !== "step";
       return [...xs, l];
     });
+  }
+
+  /** Runs inside the person's click, so the browser allows choosers, pickers and gated starts. */
+  function clickAsk(key: string) {
+    const a = getAsk(key);
+    if (!a || a.done) return;
+    settleAsk(key, "clicked");
+    setLines((xs) => xs.map((x) => (x.ask === key ? { ...x, ok: true } : x)));
+    if (a.act === "press") {
+      (document.querySelector(`[data-control="${CSS.escape(a.id)}"]`) as HTMLElement | null)?.click();
+      session.current?.note(`[click] The person clicked your button "${a.label}". Check the result and tell them plainly.`, true);
+      return;
+    }
+    void request(a.id);
+    // Tell the AI how it went once the capability answers.
+    const t0 = Date.now();
+    const check = () => {
+      const ses = getSession(a.id);
+      if (ses.state === "requesting" && Date.now() - t0 < 30000) { setTimeout(check, 500); return; }
+      const on = isActive(ses);
+      setLines((xs) => xs.map((x) => (x.ask === key ? { ...x, ok: on } : x)));
+      session.current?.note(`[click] The person clicked "${a.label}". Result: ${on ? "it is on and confirmed" : `it did not turn on (${ses.error || ses.state})`}. Tell them in one plain sentence.`, true);
+    };
+    setTimeout(check, 300);
   }
 
   function stop(msg = "Stopped.") {
@@ -200,7 +240,7 @@ export function VoiceDock({ atlas, scopes }: { atlas: Atlas; scopes: ScopeDef[] 
           </div>
           <div className="voice-f" ref={feed} aria-live="polite">
             {!lines.length && <p className="voice-hint">Try “open the camera and show me the record tab”, “what is running right now?” or “tell me when the battery drops below 20%”.</p>}
-            {lines.map((l, i) => <p key={i} className={"vl " + l.k + (l.ok === true ? " ok" : l.ok === false ? " bad" : "")}>{l.t}</p>)}
+            {lines.map((l, i) => l.k === "click" ? <ClickLine key={i} line={l} scopes={scopes} onClick={clickAsk} /> : <p key={i} className={"vl " + l.k + (l.ok === true ? " ok" : l.ok === false ? " bad" : "")}>{l.t}</p>)}
           </div>
           <p className="voice-s" role="status">{status}</p>
           <div className="voice-c">
@@ -218,5 +258,22 @@ export function VoiceDock({ atlas, scopes }: { atlas: Atlas; scopes: ScopeDef[] 
         document.body,
       )}
     </>
+  );
+}
+
+/** A button the AI put in the chat: the capability's icon, a plain label, and why it needs a click. */
+function ClickLine({ line, scopes, onClick }: { line: Line; scopes: ScopeDef[]; onClick: (key: string) => void }) {
+  const a = line.ask ? getAsk(line.ask) : undefined;
+  if (!a) return null;
+  const scope = a.act === "start" ? scopes.find((s) => s.id === a.id) : undefined;
+  const done = !!a.done;
+  return (
+    <div className={"vl click" + (line.ok === true ? " ok" : line.ok === false ? " bad" : "")}>
+      <button data-control={`voice.click.${a.id}`} className="voice-ask" onClick={() => onClick(a.key)} disabled={done}>
+        <span className="voice-ask-i">{scope ? <CapIcon scope={scope} size={16} fallback={a.act === "press" ? Hand : MousePointerClick} /> : <Hand size={16} />}</span>
+        <span className="voice-ask-t"><b>{done ? (line.ok === false ? `${a.label}: did not turn on` : line.ok ? `${a.label}: on` : `${a.label}…`) : a.label}</b><small>{a.why}</small></span>
+        {done && line.ok ? <Check size={15} /> : <MousePointerClick size={15} />}
+      </button>
+    </div>
   );
 }

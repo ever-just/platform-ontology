@@ -9,6 +9,19 @@ import { ACCOUNT_TOOLS, INSIGHT_TOOLS, insightCall } from "./insight-tools";
 import { highlight } from "../core/screen";
 import { AWARE_TOOLS, awareCall } from "./aware-tools";
 import { logAction, setLoopRunner } from "../core/agent-memory";
+import { askClick, hasGesture } from "../core/click-asks";
+import { expandQuery, plainResult } from "./plain";
+import { JOB_TOOLS, jobCall } from "./job-tools";
+
+const ASK_CLICK: ToolDef = {
+  name: "ask_for_click",
+  description: "Put a button in the chat for something only the person's own click can start: a chooser, file picker, full screen, or a page button. Use id of a capability (act start) or a page control (act press). The person clicks it and you get a note with the result.",
+  inputSchema: { type: "object", properties: {
+    id: { type: "string" }, act: { type: "string", enum: ["start", "press"], description: "Default start" },
+    label: { type: "string", description: "Short button text, for example Pick a USB device" },
+    why: { type: "string", description: "One plain sentence on why it needs a click" },
+  }, required: ["id"] },
+};
 
 // The agent control layer. A small, fixed set of tools covers every capability: the capability ids,
 // descriptions, related entries and actions all come from the atlas and the registered scopes, so a
@@ -150,12 +163,15 @@ export function createAgentTools(atlas: Atlas, scopes: ScopeDef[], opts: { pageC
     ...(opts.account ? ACCOUNT_TOOLS : []),
     ...(opts.pageControls ? CONTROL_TOOLS : []),
     ...(opts.pageControls ? AWARE_TOOLS : []),
+    ...(opts.pageControls ? [...JOB_TOOLS, ASK_CLICK] : []),
   ];
 
   // Every call is logged so the agent can read back what it did and what failed.
   async function call(name: string, a: Record<string, any> = {}, by: "agent" | "loop" = "agent"): Promise<ToolResult> {
     let r: ToolResult;
     try { r = await inner(name, a); } catch (e) { r = { ok: false, error: e instanceof Error ? e.message : String(e) }; }
+    // Every result carries a plain sentence and, for changes, whether a read back confirmed it.
+    r = plainResult(name, a, r);
     if (opts.pageControls) logAction(name, a, r as { ok: boolean; error?: unknown }, by);
     return r;
   }
@@ -170,12 +186,22 @@ export function createAgentTools(atlas: Atlas, scopes: ScopeDef[], opts: { pageC
     if (cc) return cc;
     const ic = await insightCall(name, a, find, !!opts.account);
     if (ic) return ic;
+    const jc = opts.pageControls ? await jobCall(name, a, { scopes, call: (n, x) => call(n, x), kindOf, getSession, isActive }) : null;
+    if (jc) return jc;
+    if (name === "ask_for_click") {
+      const act = a.act === "press" ? "press" : "start";
+      const s = act === "start" ? find(a.id) : undefined;
+      if (act === "start" && !s) return nope(a.id);
+      if (act === "press" && !document.querySelector(`[data-control="${CSS.escape(String(a.id))}"]`)) return { ok: false, error: `No control "${a.id}" on the page. Call list_controls.` };
+      const ask = askClick({ id: s ? s.id : String(a.id), act, label: String(a.label || (s ? `Turn on ${s.name}` : "Click to continue")), why: String(a.why || "Your browser only allows this after your own click.") });
+      return { ok: true, needs_click: true, button: ask.key, verified: false, said: "I put a button in the chat. It starts as soon as you click it." };
+    }
     // Show the person which capability the agent is working on.
     const target = a.id ? find(a.id) : undefined;
     if (target) highlight(target.id);
     switch (name) {
       case "list_capabilities": {
-        const q = String(a.query || "").toLowerCase().split(/\s+/).filter(Boolean);
+        const q = expandQuery(String(a.query || "")).toLowerCase().split(/\s+/).filter(Boolean);
         const lim = Math.min(60, Math.max(1, Number(a.limit) || 15));
         let list = scopes.filter((s) => !s.reference || q.length > 0);
         if (a.group) list = list.filter((s) => s.domain === a.group);
@@ -207,24 +233,37 @@ export function createAgentTools(atlas: Atlas, scopes: ScopeDef[], opts: { pageC
         if (!s) return nope(a.id);
         if (a.source === "live" || a.source === "sim") setSource(s.id, a.source as Source);
         if (a.params && typeof a.params === "object") Object.entries(a.params as Params).forEach(([k, v]) => setParam(s.id, k, v));
+        // Choosers and click only starts need the person's own click; show a button in the chat instead of failing.
+        const k = kindOf(s);
+        if ((k === "tap" || k === "pick") && getSession(s.id).source === "live" && !hasGesture()) {
+          const ask = askClick({ id: s.id, act: "start", label: `Turn on ${s.name}`, why: k === "pick" ? "Your browser opens a chooser only after your own click." : "Your browser allows this only after your own click." });
+          return { ok: false, id: s.id, needs_click: true, button: ask.key, verified: false, said: `${s.name} needs your click. I put a button for it in the chat.` };
+        }
         void request(s.id);
         const ses = await settle(s.id, 2500);
         const hint = ses.state === "denied" ? "The person or the browser refused. Offer the simulated source instead."
           : ses.state === "unsupported" ? "This browser does not have it. The simulated source still works."
           : ses.state === "requesting" ? "Waiting on the person to answer a browser prompt or chooser."
           : undefined;
-        return { ok: isActive(ses), id: s.id, ...status(ses), hint };
+        // A refusal that came from having no click gets a button too, so the person can retry in one tap.
+        if (!isActive(ses) && ses.source === "live" && (ses.state === "denied" || ses.state === "error") && /gesture|activation|user.?click|transient/i.test(String(ses.error || ""))) {
+          const ask = askClick({ id: s.id, act: "start", label: `Turn on ${s.name}`, why: "Your browser wants your own click for this." });
+          return { ok: false, id: s.id, ...status(ses), needs_click: true, button: ask.key, verified: false, said: `${s.name} needs your click. I put a button for it in the chat.` };
+        }
+        return { ok: isActive(ses), id: s.id, ...status(ses), hint, verified: isActive(ses) };
       }
       case "stop_capability": {
         const s = find(a.id);
         if (!s) return nope(a.id);
         stop(s.id);
-        return { ok: true, id: s.id, state: getSession(s.id).state };
+        const off = !isActive(getSession(s.id));
+        return { ok: off, id: s.id, state: getSession(s.id).state, verified: off, ...(off ? {} : { error: "It is still running after the stop." }) };
       }
       case "stop_all": {
         const n = allSessions().filter(isActive).length;
         stopAll();
-        return { ok: true, stopped: n };
+        const left = allSessions().filter(isActive).length;
+        return { ok: left === 0, stopped: n - left, still_running: left, verified: left === 0 };
       }
       case "get_status": {
         const running = allSessions().filter(isActive).map((ses) => ({ id: ses.id, name: byId.get(ses.id)?.name, ...status(ses) }));
@@ -246,9 +285,12 @@ export function createAgentTools(atlas: Atlas, scopes: ScopeDef[], opts: { pageC
         if (!act) return { ok: false, error: `No action "${a.action}" on ${s.id}. Actions: ${(ACTIONS[s.id] || []).map((x) => x.name).join(", ") || "none"}.` };
         let ses = getSession(s.id);
         if (!isActive(ses)) { void request(s.id); ses = await settle(s.id, 2500); }
+        const before = getSession(s.id).count;
         if (!runPageAction(s.id, act.patch(a.args || {}))) return { ok: false, error: `${s.name} is not running (${ses.state}).` };
         const after = await settle(s.id, 400);
-        return { ok: true, id: s.id, action: act.name, latest: after.last ? clip(after.last.data) : null };
+        // Confirmed when the capability reported a new reading after the action.
+        const moved = getSession(s.id).count > before;
+        return { ok: true, id: s.id, action: act.name, latest: after.last ? clip(after.last.data) : null, verified: moved, ...(moved ? {} : { hint: "No new reading came back yet. Read the stream before saying it worked." }) };
       }
       case "set_param": {
         const s = find(a.id);
@@ -259,7 +301,8 @@ export function createAgentTools(atlas: Atlas, scopes: ScopeDef[], opts: { pageC
         if (p.type === "select" && !p.options.includes(v as string)) return { ok: false, error: `Choose one of ${p.options.join(", ")}.` };
         setParam(s.id, p.key, v);
         if (isActive(getSession(s.id))) { void request(s.id); await settle(s.id, 1500); }
-        return { ok: true, id: s.id, key: p.key, value: v };
+        const now = getSession(s.id).params?.[p.key];
+        return { ok: true, id: s.id, key: p.key, value: v, verified: now === v };
       }
     }
     return { ok: false, error: `Unknown tool ${name}` };
