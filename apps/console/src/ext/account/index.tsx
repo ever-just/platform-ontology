@@ -1,20 +1,23 @@
 import { useEffect, useState } from "react";
 import { Button, Callout, HTMLTable, Tag } from "@blueprintjs/core";
 import { registerView, type ConsoleCtx } from "../registry";
+import { noteCtx } from "./bridge";
 
 // Account: keep your readings across visits. Starts as an anonymous account (no email, no name);
 // GitHub can be linked later when the site has it turned on. Self contained module: it talks to
 // /api/auth and /api/account with plain fetch and registers one view.
 
 type Readings = { visits: number; chunks: { scope?: string; at?: string }[]; scopes: Record<string, number> };
-type State = { user: { id: string; name: string; anonymous: boolean; created: string } | null; readings?: Readings; github: boolean };
+export type State = { user: { id: string; name: string; anonymous: boolean; created: string } | null; readings?: Readings; github: boolean };
 
 const VISIT_KEY = "po.visit";
 const visitId = () => { try { return sessionStorage.getItem(VISIT_KEY) || ""; } catch { return ""; } };
-const post = (url: string, body: unknown) =>
+export const post = (url: string, body: unknown) =>
   fetch(url, { method: "POST", credentials: "include", headers: { "content-type": "application/json" }, body: JSON.stringify(body) });
 
 let cache: State | null = null;
+export const accountState = () => cache;
+export function onAccount(f: (s: State) => void) { listeners.add(f); return () => { listeners.delete(f); }; }
 const listeners = new Set<(s: State) => void>();
 const publish = (s: State) => { cache = s; listeners.forEach((f) => f(s)); };
 
@@ -106,7 +109,8 @@ registerView({
   id: "account",
   label: "Account",
   order: 900,
-  metric: () => {
+  metric: (ctx) => {
+    noteCtx(ctx);
     const s = cache;
     if (!s?.user) return { value: "Off", sub: "readings not kept" };
     return { value: String(s.readings?.visits ?? 0), unit: "visits", sub: s.user.anonymous ? "anonymous" : "GitHub", tone: "ok" };
