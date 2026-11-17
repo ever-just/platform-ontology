@@ -44,6 +44,15 @@ const TASKS = [
   { say: "Turn on all the sensors with simulated data.", want: ["turn_on_everything", "start_capability", "run_job"] },
   { say: "In the background, start the battery and the network info and then tell me when you are done.", want: ["run_job", "turn_on_everything", "start_capability", "list_capabilities"] },
   { say: "Let me pick a USB device.", want: ["ask_for_click", "start_capability", "list_capabilities"] },
+  { say: "Put a card in the chat with my battery level and a button to stop it.", want: ["show_ui", "list_capabilities"] },
+  { say: "Show me a little chart comparing how many capabilities each group has.", want: ["show_ui", "list_capabilities"] },
+  { say: "Give me a short form where I can type my name.", want: ["show_ui"] },
+  { say: "Take that card away.", want: ["clear_ui"] },
+  { say: "Is this page installed as an app on my device?", want: ["check_install_state"] },
+  { say: "Read this site's web app manifest.", want: ["read_manifest"] },
+  { say: "Does this site have a service worker or any background jobs?", want: ["list_background_jobs"] },
+  { say: "Are any of my browser extensions leaving traces on this page?", want: ["find_extension_traces"] },
+  { say: "Which features does the permissions policy allow here?", want: ["read_permissions_policy"] },
 ];
 
 const vite = await createServer({ server: { middlewareMode: true }, appType: "custom", logLevel: "error" });
