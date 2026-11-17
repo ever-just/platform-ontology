@@ -1,0 +1,194 @@
+{
+  "id": "web.device.extension-dom-injection",
+  "name": "Extension traces in the DOM and globals",
+  "kind": "signal",
+  "group": "device-system-profile",
+  "subgroup": "Browser extensions",
+  "tags": [
+    "extensions",
+    "dom",
+    "fingerprint"
+  ],
+  "plain": "Browser extensions leave marks in the page that the page can see.",
+  "meaning": "Ad blockers, password managers and similar tools add elements, attributes and global variables to pages. A page that looks for those marks can tell which of them you run. It works in all desktop browsers.",
+  "lifecycle": [
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "document.querySelectorAll for injected nodes; compare window globals against a clean iframe; MutationObserver on documentElement",
+      "bcd": [
+        "api.MutationObserver"
+      ],
+      "access": {
+        "grant": "none",
+        "prompt_ui": "None",
+        "secure_context": true,
+        "user_gesture": false,
+        "persistence": "Per origin",
+        "revocation": "Clear site data",
+        "iframe": "Same as top level",
+        "steps": [
+          "Page calls the API",
+          "Browser answers with no prompt",
+          "Page reads the result"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "",
+          "note": "Content scripts run in an isolated world but the DOM they change is shared"
+        },
+        "edge": {
+          "s": "y",
+          "v": "",
+          "note": "Same as Chrome"
+        },
+        "safari": {
+          "s": "y",
+          "v": "",
+          "note": "Safari extensions can inject too"
+        },
+        "firefox": {
+          "s": "y",
+          "v": "",
+          "note": "Same"
+        },
+        "ios_safari": {
+          "s": "y",
+          "v": "",
+          "note": "Extensions exist but the report lists no support"
+        },
+        "chrome_android": {
+          "s": "n",
+          "v": "",
+          "note": "No extension support"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "object",
+    "metric": "Browser extensions leave marks in the page that the page can see.",
+    "update": "on demand",
+    "fields": [
+      {
+        "name": "injected nodes",
+        "type": "list",
+        "range": "ids, classes, custom elements, attributes on html or body"
+      },
+      {
+        "name": "new globals",
+        "type": "list",
+        "range": "names missing from a clean window"
+      },
+      {
+        "name": "chrome-extension:// URLs",
+        "type": "list",
+        "range": "image or script sources inside the document"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can spot some of your extensions from what they add to the page",
+    "user_action": "None, the page reads it silently",
+    "can": [
+      "See elements an extension inserted",
+      "See attributes an extension set on html or body",
+      "See globals an extension exposed to the page world"
+    ],
+    "cannot": [
+      "List extensions that do not touch the page",
+      "Read extension settings or data",
+      "See isolated world variables"
+    ],
+    "reach": 2,
+    "reach_label": "Extensions that touch the page",
+    "differs": "Desktop browsers. Extension code in the isolated world is hidden, but anything it writes to the page DOM or MAIN world is visible."
+  },
+  "story": {
+    "what_it_is": "The page looks for the footprints extensions leave behind.",
+    "icon": "puzzle",
+    "tags": [
+      "Extensions",
+      "Silent",
+      "Signal"
+    ],
+    "marketing": [
+      {
+        "vendor": "Chrome for Developers",
+        "name": "Content scripts",
+        "pitch": "Explains how extensions run scripts in pages and what they can change.",
+        "url": "https://developer.chrome.com/docs/extensions/develop/concepts/content-scripts"
+      }
+    ],
+    "for_you": "A site can notice that you run an ad blocker or a password manager without asking.",
+    "for_makers": "Makers detect ad blockers to show a wall, and detect scraping or automation extensions.",
+    "use_cases": [
+      {
+        "type": "news",
+        "example": "A news site notices an ad blocker and shows a notice.",
+        "apps": []
+      },
+      {
+        "type": "social",
+        "example": "A site checks for scraping extensions.",
+        "apps": []
+      }
+    ],
+    "risks": [
+      "Reveals interests and tools",
+      "Adds fingerprint bits"
+    ],
+    "android_note": "",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Only extensions that modify the page are visible",
+    "Content script isolated world variables are hidden",
+    "Spectroscopy style timing signals are low confidence"
+  ],
+  "scores": {
+    "sensitivity": 3,
+    "utility": 2,
+    "fingerprint_bits": 6,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Detect scraper extensions",
+      "Compatibility"
+    ],
+    "abuse": [
+      "Inferring habits from extensions"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": true,
+      "how": "BrowserGate also scans the DOM for injected extension nodes beside its chrome-extension URL probe."
+    }
+  },
+  "history": [],
+  "related": [
+    "web.device.extension-probing",
+    "web.device.adblock-detection",
+    "web.device.extension-probe-defenses",
+    "web.tracking.linkedin-spectroscopy-dom-scan"
+  ],
+  "refs": [
+    {
+      "t": "docs",
+      "label": "Chrome content scripts (checked 2026-11-16)",
+      "url": "https://developer.chrome.com/docs/extensions/develop/concepts/content-scripts"
+    },
+    {
+      "t": "docs",
+      "label": "Chrome web_accessible_resources (checked 2026-11-16)",
+      "url": "https://developer.chrome.com/docs/extensions/reference/manifest/web-accessible-resources"
+    }
+  ],
+  "confidence": "verified"
+}

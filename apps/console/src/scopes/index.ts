@@ -11,11 +11,12 @@ import { reachScopes } from "./reach";
 import { extrasScopes } from "./extras";
 import { genericScopes } from "./generic";
 import { pageControlScopes } from "./page-controls";
+import { manifestScriptScopes } from "./manifest-scripts";
 
 export const curatedScopes: ScopeDef[] = [
   ...placeScopes, ...motionScopes, ...surroundingsScopes, ...extrasScopes, ...captureScopes,
   ...deviceScopes, ...fingerprintScopes, ...linkScopes, ...identityScopes, ...reachScopes,
-  ...pageControlScopes,
+  ...pageControlScopes, ...manifestScriptScopes,
 ];
 
 export function buildScopes(nodes: AtlasNode[]): ScopeDef[] {

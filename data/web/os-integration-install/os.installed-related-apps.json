@@ -1,0 +1,203 @@
+{
+  "id": "web.os.installed-related-apps",
+  "name": "Installed related apps",
+  "kind": "signal",
+  "group": "os-integration-install",
+  "subgroup": "Install",
+  "tags": [
+    "install",
+    "related_applications",
+    "chromium"
+  ],
+  "plain": "A page can ask whether its own native app, store app or installed web app is on this device.",
+  "meaning": "It answers only for apps the site has a verified link to, but that is enough to tell a customer from a stranger. Chrome 140 added same scope installed PWAs on desktop.",
+  "lifecycle": [
+    "in-session"
+  ],
+  "space": "web",
+  "platforms": {
+    "web": {
+      "api": "navigator.getInstalledRelatedApps() with manifest related_applications",
+      "bcd": [
+        "api.Navigator.getInstalledRelatedApps"
+      ],
+      "access": {
+        "grant": "none",
+        "prompt_ui": "None",
+        "secure_context": true,
+        "user_gesture": false,
+        "persistence": "Per origin",
+        "revocation": "Clear site data",
+        "iframe": "Same as top level",
+        "steps": [
+          "Page calls the API",
+          "Browser answers with no prompt",
+          "Page reads the result"
+        ]
+      },
+      "support": {
+        "chrome": {
+          "s": "y",
+          "v": "",
+          "note": "Same scope installed PWAs on desktop from Chrome 140"
+        },
+        "edge": {
+          "s": "y",
+          "v": "",
+          "note": "Chromium behavior"
+        },
+        "safari": {
+          "s": "n",
+          "v": "",
+          "note": "Not implemented"
+        },
+        "firefox": {
+          "s": "n",
+          "v": "",
+          "note": "Not implemented"
+        },
+        "ios_safari": {
+          "s": "n",
+          "v": "",
+          "note": "Not implemented"
+        },
+        "chrome_android": {
+          "s": "y",
+          "v": "",
+          "note": "Reports installed Android apps with a verified assetlinks link"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "object",
+    "metric": "A page can ask whether its own native app, store app or installed web app is on this device.",
+    "update": "on demand",
+    "fields": [
+      {
+        "name": "platform",
+        "type": "enum",
+        "range": "play, chromeos_play, webapp, windows, f-droid, amazon"
+      },
+      {
+        "name": "id",
+        "type": "string",
+        "range": "app id from the manifest"
+      },
+      {
+        "name": "version",
+        "type": "string",
+        "range": "optional"
+      }
+    ]
+  },
+  "limits": {
+    "headline": "Can tell whether the site's own app is installed, but not list your apps",
+    "user_action": "None, the page reads it silently",
+    "can": [
+      "Check for the site's own Android, Windows or web app",
+      "Skip a \"get our app\" banner for people who have it",
+      "See an installed PWA of the same scope on desktop Chrome"
+    ],
+    "cannot": [
+      "List every app on the device",
+      "Check apps the site has no verified link to",
+      "Work in Safari, Firefox or on iPhone"
+    ],
+    "reach": 1,
+    "reach_label": "The site's own apps only",
+    "differs": "Chromium only. Android needs a Digital Asset Links file that proves the site and app belong together."
+  },
+  "story": {
+    "what_it_is": "The page can learn whether the site's own app is installed on your device.",
+    "icon": "smartphone",
+    "tags": [
+      "Installed apps",
+      "Silent",
+      "Signal"
+    ],
+    "marketing": [
+      {
+        "vendor": "Chrome for Developers",
+        "name": "Detect your installed apps",
+        "pitch": "Lets a site decide whether to show an install banner or hand off to the app.",
+        "url": "https://developer.chrome.com/docs/capabilities/get-installed-related-apps"
+      }
+    ],
+    "for_you": "You never see this. A shop that already has its app on your phone may stop nagging you to install it, or send you into the app.",
+    "for_makers": "Makers avoid promoting an app people already have, and route returning customers into the app.",
+    "use_cases": [
+      {
+        "type": "shopping",
+        "example": "A retailer hides its app banner when its Android app is already installed.",
+        "apps": [
+          "Starbucks"
+        ]
+      },
+      {
+        "type": "social",
+        "example": "A social site offers Open in app instead of Install.",
+        "apps": [
+          "Twitter"
+        ]
+      }
+    ],
+    "risks": [
+      "Reveals customer status with no prompt"
+    ],
+    "android_note": "Chrome on Android reads installed apps that carry a verified assetlinks.json relationship.",
+    "ios_note": ""
+  },
+  "technical_bounds": [
+    "Needs related_applications in the manifest",
+    "Android needs a verified Digital Asset Links relationship",
+    "Safari, Firefox and iOS do not implement it"
+  ],
+  "scores": {
+    "sensitivity": 3,
+    "utility": 3,
+    "fingerprint_bits": 1,
+    "friction": 0
+  },
+  "value": {
+    "legit_uses": [
+      "Hide install banners",
+      "Hand off to the native app"
+    ],
+    "abuse": [
+      "Tell customers of one brand from another"
+    ]
+  },
+  "case_study": {
+    "linkedin": {
+      "used": false,
+      "how": ""
+    }
+  },
+  "history": [
+    {
+      "date": "2025-09",
+      "browser": "chrome",
+      "version": "140",
+      "change": "Same scope installed PWAs reported on desktop"
+    }
+  ],
+  "related": [
+    "web.os.install-prompt",
+    "web.os.install-state-detection",
+    "web.notexposed.installed-apps"
+  ],
+  "refs": [
+    {
+      "t": "bcd",
+      "label": "MDN browser-compat-data 8.1.9 (checked 2026-11-16)",
+      "url": "https://cdn.jsdelivr.net/npm/@mdn/browser-compat-data@8.1.9/data.json"
+    },
+    {
+      "t": "mdn",
+      "label": "MDN Web app manifest (checked 2026-11-16)",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/Manifest"
+    }
+  ],
+  "confidence": "verified"
+}
