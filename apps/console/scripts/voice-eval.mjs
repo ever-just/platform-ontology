@@ -30,6 +30,10 @@ const TASKS = [
   { say: "Open the camera and show me the record tab.", want: ["show", "list_capabilities"] },
   { say: "Click the run all button on the page.", want: ["list_controls", "press_control", "describe_screen"] },
   { say: "Type battery into the search box on the page.", want: ["list_controls", "set_control", "describe_screen"] },
+  { say: "How has my battery level changed over the last hour?", want: ["get_history", "list_capabilities"] },
+  { say: "What has been happening in the console for the last few minutes?", want: ["get_activity"] },
+  { say: "Does my device motion line up with the ambient light level?", want: ["evaluate_insight", "list_capabilities"] },
+  { say: "Show me the readings saved to my account.", want: ["get_saved_readings"] },
 ];
 
 const vite = await createServer({ server: { middlewareMode: true }, appType: "custom", logLevel: "error" });
@@ -37,7 +41,7 @@ const { createAgentTools } = await vite.ssrLoadModule("/src/agent/tools.ts");
 const { buildSetup, CONSOLE_SYSTEM } = await vite.ssrLoadModule("/src/ai/setup.ts");
 await vite.close();
 const atlas = JSON.parse(fs.readFileSync(new URL("../public/data/console.json", import.meta.url), "utf8"));
-const setup = buildSetup(MODEL, createAgentTools(atlas, []).tools, ["AUDIO"], CONSOLE_SYSTEM);
+const setup = buildSetup(MODEL, createAgentTools(atlas, [], { pageControls: true, account: true }).tools, ["AUDIO"], CONSOLE_SYSTEM);
 
 async function token() {
   const now = Date.now();

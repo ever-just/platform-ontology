@@ -4,6 +4,7 @@ import { runPageAction } from "../scopes/page-controls";
 import { ACTIONS, type JsonSchema } from "./actions";
 import { SCREEN_TOOLS, screenCall } from "./screen-tools";
 import { CONTROL_TOOLS, controlCall } from "./control-tools";
+import { ACCOUNT_TOOLS, INSIGHT_TOOLS, insightCall } from "./insight-tools";
 import { highlight } from "../core/screen";
 
 // The agent control layer. A small, fixed set of tools covers every capability: the capability ids,
@@ -70,8 +71,9 @@ function settle(id: string, ms: number): Promise<Session> {
 const DOMAINS = ["place", "motion", "surroundings", "capture", "device", "fingerprint", "link", "identity", "reach"];
 
 /** pageControls adds list_controls, press_control and set_control. Only the local voice agent, with the
- *  person at the page, turns them on; the remote MCP relay and WebMCP never get them. */
-export function createAgentTools(atlas: Atlas, scopes: ScopeDef[], opts: { pageControls?: boolean } = {}): AgentTools {
+ *  person at the page, turns them on; the remote MCP relay and WebMCP never get them. account adds
+ *  get_saved_readings (server readings of the signed in account), also only for the local voice agent. */
+export function createAgentTools(atlas: Atlas, scopes: ScopeDef[], opts: { pageControls?: boolean; account?: boolean } = {}): AgentTools {
   const byId = new Map(scopes.map((s) => [s.id, s]));
   const byAtlas = new Map<string, ScopeDef>();
   scopes.forEach((s) => s.atlas.forEach((a) => { if (!byAtlas.has(a)) byAtlas.set(a, s); }));
@@ -139,6 +141,8 @@ export function createAgentTools(atlas: Atlas, scopes: ScopeDef[], opts: { pageC
       inputSchema: { type: "object", properties: { id: { type: "string" }, key: { type: "string" }, value: { type: ["string", "number", "boolean"] } }, required: ["id", "key", "value"] },
     },
     ...SCREEN_TOOLS,
+    ...INSIGHT_TOOLS,
+    ...(opts.account ? ACCOUNT_TOOLS : []),
     ...(opts.pageControls ? CONTROL_TOOLS : []),
   ];
 
@@ -147,6 +151,8 @@ export function createAgentTools(atlas: Atlas, scopes: ScopeDef[], opts: { pageC
     if (sc) return sc;
     const cc = opts.pageControls ? await controlCall(name, a) : null;
     if (cc) return cc;
+    const ic = await insightCall(name, a, find, !!opts.account);
+    if (ic) return ic;
     // Show the person which capability the agent is working on.
     const target = a.id ? find(a.id) : undefined;
     if (target) highlight(target.id);

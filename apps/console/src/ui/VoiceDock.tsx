@@ -50,7 +50,7 @@ export function VoiceDock({ atlas, scopes }: { atlas: Atlas; scopes: ScopeDef[] 
     setBusy(true);
     setLines([]);
     merge.current = false;
-    if (!tools.current) { tools.current = createAgentTools(atlas, scopes, { pageControls: true }); server.current = createMcpServer(tools.current); }
+    if (!tools.current) { tools.current = createAgentTools(atlas, scopes, { pageControls: true, account: true }); server.current = createMcpServer(tools.current); }
     const s = (session.current = new LiveSession(server.current!, tools.current.tools, {
       status: setStatus,
       say: (k, t) => t && add({ k, t }),
