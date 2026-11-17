@@ -38,6 +38,10 @@ const TASKS = [
   { say: "What did you do earlier, and did anything fail?", want: ["get_my_history"] },
   { say: "Keep checking the battery every minute and tell me when it drops below twenty percent.", want: ["start_loop", "list_capabilities", "describe_capability"] },
   { say: "Where is my mouse pointer on the page?", want: ["look"] },
+  { say: "Turn everything on. Give it full access.", want: ["turn_on_everything"] },
+  { say: "Turn on all the sensors with simulated data.", want: ["turn_on_everything", "start_capability", "run_job"] },
+  { say: "In the background, start the battery and the network info and then tell me when you are done.", want: ["run_job", "turn_on_everything", "start_capability", "list_capabilities"] },
+  { say: "Let me pick a USB device.", want: ["ask_for_click", "start_capability", "list_capabilities"] },
 ];
 
 const vite = await createServer({ server: { middlewareMode: true }, appType: "custom", logLevel: "error" });
