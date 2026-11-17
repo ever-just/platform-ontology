@@ -2,6 +2,8 @@ import type { Atlas, AtlasNode, Params, ScopeDef, Session, Source } from "../cor
 import { allSessions, getSession, isActive, request, setParam, setSource, stop, stopAll, subscribe } from "../core/harness";
 import { runPageAction } from "../scopes/page-controls";
 import { ACTIONS, type JsonSchema } from "./actions";
+import { SCREEN_TOOLS, screenCall } from "./screen-tools";
+import { highlight } from "../core/screen";
 
 // The agent control layer. A small, fixed set of tools covers every capability: the capability ids,
 // descriptions, related entries and actions all come from the atlas and the registered scopes, so a
@@ -133,9 +135,15 @@ export function createAgentTools(atlas: Atlas, scopes: ScopeDef[]): AgentTools {
       description: "Change one setting of a capability. A running capability restarts to pick it up.",
       inputSchema: { type: "object", properties: { id: { type: "string" }, key: { type: "string" }, value: { type: ["string", "number", "boolean"] } }, required: ["id", "key", "value"] },
     },
+    ...SCREEN_TOOLS,
   ];
 
   async function call(name: string, a: Record<string, any> = {}): Promise<ToolResult> {
+    const sc = await screenCall(name, a, find);
+    if (sc) return sc;
+    // Show the person which capability the agent is working on.
+    const target = a.id ? find(a.id) : undefined;
+    if (target) highlight(target.id);
     switch (name) {
       case "list_capabilities": {
         const q = String(a.query || "").toLowerCase().split(/\s+/).filter(Boolean);

@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import "./inspector.css";
+import { registerInspectorTab } from "../core/screen";
 import { HistoryChart } from "./history-view";
 import { Replay } from "./replay";
 import { TradeChart } from "./trade";
@@ -92,6 +93,9 @@ export function Inspector({ ctx, scope, onClose }: { ctx: ConsoleCtx; scope: Sco
 function ScopeInspector({ ctx, scope, onClose, open, back, backName }: { ctx: ConsoleCtx; scope: ScopeDef; onClose: () => void; open: (id: string) => void; back?: () => void; backName?: string }) {
   const session = useSession(scope.id);
   const [tab, setTab] = useState<Tab>("live");
+  const tabRef = useRef(tab);
+  tabRef.current = tab;
+  useEffect(() => registerInspectorTab({ get: () => tabRef.current, set: setTab }), []);
   const [view, setView] = useState<"now" | "chart" | "replay">("now");
   const active = isActive(session);
   const node = ctx.nodeOf(scope);
@@ -155,7 +159,7 @@ function ScopeInspector({ ctx, scope, onClose, open, back, backName }: { ctx: Co
       )}
       <div className="tabs line" role="tablist">
         {TABS.map((t) => (
-          <button key={t.id} role="tab" aria-selected={tab === t.id} className={tab === t.id ? "on" : ""} onClick={() => setTab(t.id)}>
+          <button key={t.id} data-tab={t.id} role="tab" aria-selected={tab === t.id} className={tab === t.id ? "on" : ""} onClick={() => setTab(t.id)}>
             {t.label}{t.id === "log" && session.logs.length > 0 && <em>{session.logs.length}</em>}
           </button>
         ))}
