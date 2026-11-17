@@ -2,7 +2,7 @@
 
 Status: research snapshot, 2026-11-17. Owner: platform-ontology. Lake run: see the last section.
 
-Platform Ontology is an atlas of what a page or platform can sense and do. The goal is an AI agent that sees the screen, acts on it, and takes voice commands. This census looks at what already exists so the atlas can serve as the typed sense and action schema for such a loop. Related work: `docs/research/voice-agents-2026-11.md` (voice stack choice) and `docs/agent-control-layer.md` (the in page control layer) when those land; this file does not repeat them.
+Platform Ontology is an atlas of what a page or platform can sense and do. The goal is an AI agent that sees the screen, acts on it, and takes voice commands. This census looks at what already exists so the atlas can serve as the typed sense and action schema for such a loop. Related work: `docs/research/voice-agents-2026-11.md` (voice stack choice) and `docs/agent-control-layer.md` (the in page control layer); this file does not repeat them.
 
 ## Headlines
 
@@ -222,5 +222,5 @@ GitHub stars, licenses and last push dates were read from the GitHub API on 2026
 
 ## Where it lives
 
-- Lake: Supabase `cd-lake-prod`. Entities are `product:agentctl-<id>`. The run id and document path are listed in the pull request and in the report Artifact.
+- Lake: Supabase `cd-lake-prod`. Entities are `product:agentctl-<id>` (63 products, 126 observations). Run `run:research-agent-control-census-2026-11:20261117T002044.382Z`. Document `doc:9ce04284407fff78` (condensed summary). Report Artifact: https://claude.ai/artifact/Wkf3arXacA69qR2XfuVAPq
 - Data file: `docs/research/agent-control-census.json` (same rows as the tables).
