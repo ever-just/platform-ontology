@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import { AudioLines, Mic, Send, Square, X } from "lucide-react";
 import type { Atlas, ScopeDef } from "../core/types";
 import { createAgentTools, createMcpServer } from "../agent";
@@ -87,7 +88,7 @@ export function VoiceDock({ atlas, scopes }: { atlas: Atlas; scopes: ScopeDef[] 
       <button className={"icon-b voice-b" + (on ? " on" : "")} onClick={() => setOpen(!open)} aria-expanded={open} aria-label="Talk to the console" title="Talk to the console">
         <AudioLines size={16} />
       </button>
-      {open && (
+      {open && createPortal(
         <aside className="voice" aria-label="Voice assistant">
           <div className="voice-h">
             <b>Ask the console</b>
@@ -110,7 +111,8 @@ export function VoiceDock({ atlas, scopes }: { atlas: Atlas; scopes: ScopeDef[] 
               </form>
             )}
           </div>
-        </aside>
+        </aside>,
+        document.body,
       )}
     </>
   );
