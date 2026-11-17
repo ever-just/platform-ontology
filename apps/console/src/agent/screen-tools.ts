@@ -1,3 +1,4 @@
+import { personSees } from "../ai/stage";
 import type { ScopeDef } from "../core/types";
 import { getSession } from "../core/harness";
 import { INSPECTOR_TABS, type InspectorTab, highlight, inspectorTab, screen, settle } from "../core/screen";
@@ -7,7 +8,7 @@ import type { ToolDef, ToolResult } from "./tools";
 // inspector has open, and moving between them. They work only where the console is on the page.
 
 export const SCREEN_TOOLS: ToolDef[] = [
-  { name: "describe_screen", description: "What the console shows right now: the pane, the chart view and its tabs, and which capability the side panel has open. Call this before talking about the screen.", inputSchema: { type: "object", properties: {} } },
+  { name: "describe_screen", description: "What the console shows right now: the pane, the chart view and its tabs, which capability the side panel has open, and person_sees (white page or console). Works even while the white page covers the console. Call this before talking about the screen.", inputSchema: { type: "object", properties: {} } },
   {
     name: "show",
     description: "Change what the console shows. Pass view to switch the chart tab (ids from describe_screen), capability to open a capability's side panel, pane to switch between the overview and the capability list on phones, tab to switch the open side panel to its live, record, about or log tab, or close true to close the side panel. Combine them, for example capability plus tab.",
@@ -41,6 +42,8 @@ export async function screenCall(name: string, a: Record<string, any>, find: (id
       const cap = st.inspector && find(st.inspector.id);
       return {
         ok: true, ...st,
+        person_sees: personSees(),
+        ...(personSees() === "white page" ? { note: "The console is behind the white page and fully under your control; any show, point_at or control action lifts the white page." } : {}),
         inspector: cap ? { id: cap.id, name: cap.name, tab: st.inspector?.tab, summary: cap.summary, state: getSession(cap.id).state, records: getSession(cap.id).count } : null,
       };
     }

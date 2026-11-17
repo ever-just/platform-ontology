@@ -57,14 +57,19 @@ const TASKS = [
   { say: "Think this through step by step before answering: which three sensors would best tell whether I am walking or driving?", want: ["sequential_thinking", "think_in_background", "list_capabilities"] },
   { say: "Work on this in the background while we talk: plan a one week experiment to measure how my browser fingerprint changes.", want: ["think_in_background"] },
   { say: "Run some code to compute the mean and standard deviation of 3, 9, 4, 12 and 7.", want: ["run_code"] },
+  { say: "I only see a white page. Can you actually control the console from here?", want: ["describe_screen", "show", "list_controls", "point_at", "list_capabilities", "show_ui"] },
+  { say: "Show me what you can do.", want: ["show", "show_ui", "list_capabilities", "ask_for_click", "describe_screen", "start_capability", "get_abilities"] },
+  { say: "Sure, you can use my location.", want: ["ask_for_click", "start_capability", "list_capabilities", "show"] },
 ];
 
 const vite = await createServer({ server: { middlewareMode: true }, appType: "custom", logLevel: "error" });
 const { createAgentTools } = await vite.ssrLoadModule("/src/agent/tools.ts");
-const { buildSetup, CONSOLE_SYSTEM } = await vite.ssrLoadModule("/src/ai/setup.ts");
+const { buildSetup, CONSOLE_SYSTEM, ACCESS_SYSTEM } = await vite.ssrLoadModule("/src/ai/setup.ts");
+// EVAL_STAGE=console checks the console prompt; the default is the Access Agent prompt used on the ai host.
+const SYSTEM = process.env.EVAL_STAGE === "console" ? CONSOLE_SYSTEM : ACCESS_SYSTEM;
 await vite.close();
 const atlas = JSON.parse(fs.readFileSync(new URL("../public/data/console.json", import.meta.url), "utf8"));
-const setup = buildSetup(MODEL, createAgentTools(atlas, [], { pageControls: true, account: true }).tools, ["AUDIO"], CONSOLE_SYSTEM);
+const setup = buildSetup(MODEL, createAgentTools(atlas, [], { pageControls: true, account: true }).tools, ["AUDIO"], SYSTEM);
 
 async function token() {
   const now = Date.now();
