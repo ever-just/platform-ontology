@@ -2,29 +2,13 @@
 // initialize and ping are answered here. Every other request is queued in the lake for the key's
 // owner; their open console tab (signed in to the same account) claims it, runs it on its in-page
 // MCP server and posts the answer back, which this function returns.
-import { rpc, json } from "./_lib/lake.mjs";
+import { json } from "./_lib/lake.mjs";
+import { relay, rpcError } from "./_lib/relay.mjs";
 import { resolveKey, CORS } from "./_lib/keys.mjs";
 
 const PROTOCOL = "2025-06-18";
-const WAIT_MS = 25000;
 const out = (status, obj) => json(status, obj, CORS);
-const err = (id, code, message) => ({ jsonrpc: "2.0", id: id ?? null, error: { code, message } });
-const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
-
-async function relay(keyId, msg) {
-  const id = await rpc("po_relay_send", { p_key: keyId, p_request: msg });
-  const end = Date.now() + WAIT_MS;
-  let claimed = false;
-  while (Date.now() < end) {
-    await sleep(claimed ? 250 : 600);
-    const r = await rpc("po_relay_result", { p_key: keyId, p_id: id });
-    if (r?.answered) return r.response;
-    claimed = !!r?.claimed;
-  }
-  return err(msg.id, -32001, claimed
-    ? "Your console tab took the request but did not answer in time."
-    : "No console tab is listening. Open https://platformontology.lol, sign in under Account, and keep the tab open.");
-}
+const err = rpcError;
 
 async function one(keyId, msg) {
   if (!msg || msg.jsonrpc !== "2.0" || typeof msg.method !== "string") return err(msg?.id, -32600, "Invalid request");

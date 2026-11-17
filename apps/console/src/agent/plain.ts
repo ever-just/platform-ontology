@@ -47,6 +47,11 @@ export function meaning(v: unknown): Record<string, string> | undefined {
 
 // Everyday words the person might use, mapped to words the capability names and summaries contain.
 const SAY: [RegExp, string][] = [
+  [/\b(installed|install(ed)? as an? app|home screen|pwa|standalone)\b/, "install state reach"],
+  [/\b(manifest|app name|app icon)\b/, "manifest reader"],
+  [/\b(service workers?|background (jobs?|sync|tasks?)|push notifications?|badge)\b/, "background apis service worker"],
+  [/\b(extensions?|add-?ons?|plugins?)\b/, "extension traces fingerprint"],
+  [/\b(permissions? policy|feature policy|allowed features?)\b/, "permissions policy fingerprint"],
   [/\b(where am i|my location|gps|whereabouts)\b/, "location geolocation place"],
   [/\b(mic|microphone|hear|listen|sound|noise|loud)\b/, "microphone audio"],
   [/\b(webcam|camera|see me|video)\b/, "camera video"],

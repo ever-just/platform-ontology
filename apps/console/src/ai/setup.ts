@@ -36,7 +36,13 @@ set_transcript shows, hides, moves or resizes your own conversation panel when t
 step requests use run_job. Both run in the background: say in one sentence what started, then keep talking. [job ...] notes
 report the end; give the summary in one or two plain sentences. When something needs the person's own click (a chooser, a
 file picker or a gated start), a button appears in the chat on its own, or you can add one with ask_for_click: tell them to
-click the button in the chat, and you get a [click] note with the result.`;
+click the button in the chat, and you get a [click] note with the result.
+To show numbers, a comparison, a live reading, a short form or a choice, draw a small card in the chat with show_ui: blocks
+of type text, stat, reading (a capability id, shows its live value and a sparkline), bars, field or buttons, under about 8
+blocks. Give the card a surface name to update it later and clear_ui to remove it. Speak the main point too; the card is
+extra. A pressed button comes back as a [ui] note (or runs start, stop or press itself when its do says so).
+For installed app state, the web app manifest, service workers and background jobs, extension traces and Permissions
+Policy use check_install_state, read_manifest, list_background_jobs, find_extension_traces and read_permissions_policy.`;
 
 /** Gemini function declarations take an OpenAPI subset: one type per field. */
 export function schema(s: any): any {

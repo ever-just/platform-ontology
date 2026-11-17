@@ -13,6 +13,9 @@ import { logAction, setLoopRunner } from "../core/agent-memory";
 import { askClick, hasGesture } from "../core/click-asks";
 import { expandQuery, plainResult } from "./plain";
 import { JOB_TOOLS, jobCall } from "./job-tools";
+import { PAGE_SCRIPT_TOOLS, pageScriptCall } from "./page-script-tools";
+import { GENUI_TOOLS, genuiCall } from "./genui-tools";
+import { setCatalogScopes } from "../genui/scopes";
 
 const ASK_CLICK: ToolDef = {
   name: "ask_for_click",
@@ -98,6 +101,7 @@ export function createAgentTools(atlas: Atlas, scopes: ScopeDef[], opts: { pageC
   scopes.forEach((s) => s.atlas.forEach((a) => { if (!byAtlas.has(a)) byAtlas.set(a, s); }));
   const nodes = new Map<string, AtlasNode>(atlas.nodes.map((n) => [n.i, n]));
   const find = (id: unknown) => (typeof id === "string" ? byId.get(id) || byAtlas.get(id) : undefined);
+  setCatalogScopes(scopes);
   const nope = (id: unknown) => ({ ok: false, error: `No capability "${id}". Call list_capabilities to find ids.` });
 
   function related(s: ScopeDef) {
@@ -166,6 +170,8 @@ export function createAgentTools(atlas: Atlas, scopes: ScopeDef[], opts: { pageC
     ...(opts.pageControls ? AWARE_TOOLS : []),
     ...(opts.pageControls ? DRAW_TOOLS : []),
     ...(opts.pageControls ? [...JOB_TOOLS, ASK_CLICK] : []),
+    ...PAGE_SCRIPT_TOOLS,
+    ...(opts.pageControls ? GENUI_TOOLS : []),
   ];
 
   // Every call is logged so the agent can read back what it did and what failed.
@@ -192,6 +198,10 @@ export function createAgentTools(atlas: Atlas, scopes: ScopeDef[], opts: { pageC
     if (ic) return ic;
     const jc = opts.pageControls ? await jobCall(name, a, { scopes, call: (n, x) => call(n, x), kindOf, getSession, isActive }) : null;
     if (jc) return jc;
+    const ps = await pageScriptCall(name, a, find);
+    if (ps) return ps;
+    const gu = opts.pageControls ? await genuiCall(name, a) : null;
+    if (gu) return gu;
     if (name === "ask_for_click") {
       const act = a.act === "press" ? "press" : "start";
       const s = act === "start" ? find(a.id) : undefined;

@@ -13,13 +13,15 @@ import { screen } from "../core/screen";
 import { getAsk, onClickAsks, openAsks, settleAsk } from "../core/click-asks";
 import { getSession, isActive, request } from "../core/harness";
 import { CapIcon } from "./icons";
+import { A2uiSurface } from "@a2ui/react/v0_9";
+import { getSurface, onSurfaces, setPressHandler, surfaceIds } from "../genui/store";
 
 // The AI inside the console: a header button opens a dock that runs a Gemini Live voice session over
 // the same tools as the MCP server, plus the screen tools, so the AI can show and point at what it means.
 // It starts on its own on the ai. host (or with ?voice), comes back after a refresh with the same
 // conversation, remembers earlier visits, and can show, hide, move and resize its own transcript.
 
-type Line = { k: "you" | "ai" | "step" | "click"; t: string; ok?: boolean; id?: number; ask?: string };
+type Line = { k: "you" | "ai" | "step" | "click" | "ui"; t: string; ok?: boolean; id?: number; ask?: string; ui?: string };
 type Ui = { hidden: boolean; side: "right" | "left"; size: "compact" | "normal" | "tall" };
 type Saved = { on: boolean; handle: string | null; at: number; lines: Line[]; ui: Ui };
 let seq = 0;
@@ -52,6 +54,7 @@ export function VoiceDock({ atlas, scopes }: { atlas: Atlas; scopes: ScopeDef[] 
   const [busy, setBusy] = useState(false);
   const [status, setStatus] = useState("Talk to the console. It can show you anything on this page.");
   const [lines, setLines] = useState<Line[]>(() => (resumable ? saved0.current!.lines || [] : []));
+  const [uiTick, setUiTick] = useState(0);
   const [ui, setUi] = useState<Ui>(() => ({ ...UI0, ...(saved0.current?.ui || {}) }));
   const [draft, setDraft] = useState("");
   const session = useRef<LiveSession | null>(null);
@@ -64,7 +67,7 @@ export function VoiceDock({ atlas, scopes }: { atlas: Atlas; scopes: ScopeDef[] 
 
   useEffect(() => { feed.current?.scrollTo({ top: feed.current.scrollHeight }); }, [lines]);
   // Click buttons only work in this page load, so they are not saved across a refresh.
-  useEffect(() => { save({ lines: lines.filter((l) => l.k !== "click").slice(-60).map(({ k, t, ok }) => ({ k, t, ok })) }); }, [lines]);
+  useEffect(() => { save({ lines: lines.filter((l) => l.k !== "click" && l.k !== "ui").slice(-60).map(({ k, t, ok }) => ({ k, t, ok })) }); }, [lines]);
   useEffect(() => { save({ ui }); }, [ui]);
 
   useEffect(() => {
@@ -87,12 +90,42 @@ export function VoiceDock({ atlas, scopes }: { atlas: Atlas; scopes: ScopeDef[] 
         setUi((u) => (u.hidden ? { ...u, hidden: false } : u));
       });
     });
+    // Cards the AI draws with show_ui (A2UI, "po" catalog) appear in the conversation; a redraw
+    // of the same card updates it in place, and clear_ui removes it.
+    const drawn = new Set<string>();
+    const offUi = onSurfaces(() => {
+      const ids = surfaceIds();
+      ids.forEach((id) => {
+        if (drawn.has(id)) return;
+        drawn.add(id);
+        merge.current = false;
+        setLines((xs) => [...xs, { k: "ui", t: id, ui: id }]);
+        setOpen(true);
+        setUi((u) => (u.hidden ? { ...u, hidden: false } : u));
+      });
+      [...drawn].forEach((id) => { if (!ids.includes(id)) drawn.delete(id); });
+      setUiTick((n) => n + 1);
+    });
+    // A pressed card button either runs a tool directly or tells the AI what the person chose.
+    setPressHandler((p) => {
+      const b = p.button;
+      const t = tools.current;
+      const form = Object.entries(p.form).filter(([, v]) => v !== "").map(([k, v]) => `${k}: "${v}"`).join(", ");
+      if (t && b.id && (b.do === "start" || b.do === "stop" || b.do === "press")) {
+        const tool = b.do === "start" ? "start_capability" : b.do === "stop" ? "stop_capability" : "press_control";
+        add({ k: "step", t: `${p.label}` });
+        void t.call(tool, { id: b.id }).then((r) => session.current?.note(`[ui] The person pressed "${p.label}" on card ${p.surface}. ${tool} ${b.id}: ${String(r.said || (r.ok ? "done" : r.error))}`, true));
+        return;
+      }
+      add({ k: "you", t: p.label });
+      session.current?.note(`[ui] The person pressed "${p.label}" on card ${p.surface}.${b.say ? ` ${b.say}` : ""}${form ? ` Form: ${form}.` : ""}`, true);
+    });
     // Audio started without a click stays silent until the first gesture.
     const wake = () => session.current?.outCtx.resume().catch(() => {});
     window.addEventListener("pointerdown", wake);
     window.addEventListener("keydown", wake);
     if (resumable || autoHost()) void start(resumable ? saved0.current!.handle : null, false);
-    return () => { off(); offAsks(); window.removeEventListener("pointerdown", wake); window.removeEventListener("keydown", wake); session.current?.close(); session.current = null; };
+    return () => { off(); offAsks(); offUi(); setPressHandler(null); window.removeEventListener("pointerdown", wake); window.removeEventListener("keydown", wake); session.current?.close(); session.current = null; };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -240,7 +273,7 @@ export function VoiceDock({ atlas, scopes }: { atlas: Atlas; scopes: ScopeDef[] 
           </div>
           <div className="voice-f" ref={feed} aria-live="polite">
             {!lines.length && <p className="voice-hint">Try “open the camera and show me the record tab”, “what is running right now?” or “tell me when the battery drops below 20%”.</p>}
-            {lines.map((l, i) => l.k === "click" ? <ClickLine key={i} line={l} scopes={scopes} onClick={clickAsk} /> : <p key={i} className={"vl " + l.k + (l.ok === true ? " ok" : l.ok === false ? " bad" : "")}>{l.t}</p>)}
+            {lines.map((l, i) => l.k === "click" ? <ClickLine key={i} line={l} scopes={scopes} onClick={clickAsk} /> : l.k === "ui" ? <UiLine key={i} id={l.ui!} tick={uiTick} /> : <p key={i} className={"vl " + l.k + (l.ok === true ? " ok" : l.ok === false ? " bad" : "")}>{l.t}</p>)}
           </div>
           <p className="voice-s" role="status">{status}</p>
           <div className="voice-c">
@@ -259,6 +292,13 @@ export function VoiceDock({ atlas, scopes }: { atlas: Atlas; scopes: ScopeDef[] 
       )}
     </>
   );
+}
+
+/** A card the AI drew with show_ui, rendered by the A2UI React renderer from the po catalog. */
+function UiLine({ id }: { id: string; tick: number }) {
+  const s = getSurface(id);
+  if (!s) return null;
+  return <div className="vl ui gu" data-surface={id}><A2uiSurface surface={s} /></div>;
 }
 
 /** A button the AI put in the chat: the capability's icon, a plain label, and why it needs a click. */
