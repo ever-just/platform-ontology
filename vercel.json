@@ -3,5 +3,47 @@
   "framework": null,
   "installCommand": "npm ci",
   "buildCommand": "bash scripts/build-site.sh",
-  "outputDirectory": "site"
+  "outputDirectory": "site",
+  "rewrites": [
+    {
+      "source": "/",
+      "has": [
+        {
+          "type": "host",
+          "value": "api.platformontology.lol"
+        }
+      ],
+      "destination": "/api/v1"
+    },
+    {
+      "source": "/v1",
+      "has": [
+        {
+          "type": "host",
+          "value": "api.platformontology.lol"
+        }
+      ],
+      "destination": "/api/v1"
+    },
+    {
+      "source": "/v1/:path*",
+      "has": [
+        {
+          "type": "host",
+          "value": "api.platformontology.lol"
+        }
+      ],
+      "destination": "/api/v1?path=:path*"
+    },
+    {
+      "source": "/mcp",
+      "has": [
+        {
+          "type": "host",
+          "value": "api.platformontology.lol"
+        }
+      ],
+      "destination": "/api/mcp"
+    }
+  ]
 }

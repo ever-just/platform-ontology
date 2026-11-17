@@ -5,6 +5,7 @@ import "./styles.css";
 import { App } from "./App";
 import { applyLook } from "./ui/look";
 import "./ext/account";
+import "./ext/api-keys";
 
 applyLook();
 
