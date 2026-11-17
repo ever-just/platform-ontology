@@ -38,6 +38,8 @@ const TASKS = [
   { say: "What did you do earlier, and did anything fail?", want: ["get_my_history"] },
   { say: "Keep checking the battery every minute and tell me when it drops below twenty percent.", want: ["start_loop", "list_capabilities", "describe_capability"] },
   { say: "Where is my mouse pointer on the page?", want: ["look"] },
+  { say: "Draw an arrow pointing at the run all button and write click here next to it.", want: ["draw", "list_controls"] },
+  { say: "Clear everything you drew on the screen.", want: ["erase", "list_drawings"] },
 ];
 
 const vite = await createServer({ server: { middlewareMode: true }, appType: "custom", logLevel: "error" });

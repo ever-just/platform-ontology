@@ -3,6 +3,7 @@ import { allSessions, getSession, isActive } from "../core/harness";
 import { pageNow, pointerNow, seeingNow } from "../core/awareness";
 import { inspectorTab, screen } from "../core/screen";
 import { actionHistory, listLoops, recall, startLoop, stopAllLoops, stopLoop } from "../core/agent-memory";
+import { drawingCount, listDrawings } from "../core/draw-layer";
 import type { ToolDef, ToolResult } from "./tools";
 
 // Self awareness for the voice agent: what it can do (get_abilities), what is going on across every
@@ -27,7 +28,7 @@ export const AWARE_TOOLS: ToolDef[] = [
   }, required: ["tool"] } },
   { name: "stop_loop", description: "Stop one loop by id, or all of them.", inputSchema: { type: "object", properties: { id: { type: "string" }, all: { type: "boolean" } } } },
   { name: "list_loops", description: "Your loops that are running now.", inputSchema: { type: "object", properties: {} } },
-  { name: "look", description: "Where the person is on the page: pointer position and what is under it, focused field, selected text, scroll, the screen view and side panel, whether the tab is visible, and which video feed you are being shown.", inputSchema: { type: "object", properties: {} } },
+  { name: "look", description: "Where the person is on the page: pointer position and what is under it, focused field, selected text, scroll, the screen view and side panel, whether the tab is visible, which video feed you are being shown, and the drawings you have on screen with their boxes.", inputSchema: { type: "object", properties: {} } },
 ];
 
 const GROUPS: Record<string, string> = {
@@ -41,7 +42,7 @@ const TOOL_GROUPS: [string, RegExp][] = [
   ["Find and run capabilities", /^(list_capabilities|describe_capability|start_capability|stop_capability|stop_all|get_status|read_stream|run_action|set_param)$/],
   ["Remember and repeat", /^(get_my_history|recall_conversation|start_loop|stop_loop|list_loops)$/],
   ["Infer across data", /^(get_history|get_activity|evaluate_insight|get_saved_readings)$/],
-  ["See and drive the screen", /^(describe_screen|show|point_at|list_controls|press_control|set_control)$/],
+  ["See and drive the screen", /^(describe_screen|show|point_at|list_controls|press_control|set_control|draw|erase|list_drawings)$/],
   ["Your own panel", /^(set_transcript)$/],
 ];
 
@@ -67,6 +68,7 @@ export function abilitiesBrief(tools: ToolDef[], scopes: ScopeDef[]) {
     `Data you can reach, by group: ${domains}.`,
     "When the camera or screen capture is running you also receive its frames about once a second, so you can describe what it shows. Short notes marked [screen update] tell you when the view changes; do not answer them out loud.",
     "You remember: get_my_history lists what you did and what failed (check it before retrying), recall_conversation finds what was said before. You can run long jobs: start_loop repeats any tool with no time limit and tells you when a condition is met.",
+    "Draw: draw writes text, arrows, boxes, circles, lines, freehand paths and element highlights on a layer over the page, live; erase removes them. You cannot see that layer in frames, so trust the box each result gives, and look or list_drawings to check what is on screen.",
     "Infer: read related signals together (get_situation shows the groups and the pairs worth comparing), then say what they mean as a whole, not reading by reading.",
   ].join("\n");
 }
@@ -148,6 +150,7 @@ export async function awareCall(name: string, a: Record<string, any>, c: Ctx): P
       return {
         ok: true, pointer: pointerNow(), page: pageNow(), seeing: seeingNow(),
         screen: st ? { view: st.view, pane: st.pane, side_panel: cap ? { id: cap.id, name: cap.name, tab, state: getSession(cap.id).state } : null } : null,
+        your_drawings: drawingCount() ? listDrawings() : [],
       };
     }
   }

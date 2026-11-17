@@ -7,6 +7,7 @@ import { CONTROL_TOOLS, controlCall } from "./control-tools";
 import { ACCOUNT_TOOLS, INSIGHT_TOOLS, insightCall } from "./insight-tools";
 import { highlight } from "../core/screen";
 import { AWARE_TOOLS, awareCall } from "./aware-tools";
+import { DRAW_TOOLS, drawCall } from "./draw-tools";
 import { logAction, setLoopRunner } from "../core/agent-memory";
 
 // The agent control layer. A small, fixed set of tools covers every capability: the capability ids,
@@ -147,6 +148,7 @@ export function createAgentTools(atlas: Atlas, scopes: ScopeDef[], opts: { pageC
     ...(opts.account ? ACCOUNT_TOOLS : []),
     ...(opts.pageControls ? CONTROL_TOOLS : []),
     ...(opts.pageControls ? AWARE_TOOLS : []),
+    ...(opts.pageControls ? DRAW_TOOLS : []),
   ];
 
   // Every call is logged so the agent can read back what it did and what failed.
@@ -161,6 +163,8 @@ export function createAgentTools(atlas: Atlas, scopes: ScopeDef[], opts: { pageC
   async function inner(name: string, a: Record<string, any> = {}): Promise<ToolResult> {
     const aw = opts.pageControls ? await awareCall(name, a, { scopes, tools: () => tools, find, related }) : null;
     if (aw) return aw;
+    const dc = opts.pageControls ? await drawCall(name, a) : null;
+    if (dc) return dc;
     const sc = await screenCall(name, a, find);
     if (sc) return sc;
     const cc = opts.pageControls ? await controlCall(name, a) : null;
