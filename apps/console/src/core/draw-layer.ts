@@ -92,15 +92,15 @@ function offRects(): Box[] {
   return [...document.querySelectorAll(OFF)].map((el) => el.getBoundingClientRect()).filter((b) => b.width && b.height).map((b) => ({ x: b.left, y: b.top, w: b.width, h: b.height }));
 }
 
-/** Resolve a control id or CSS selector to a visible element, refusing private panels. */
-export function resolveAnchor(anchor: string, byControlId?: (id: string) => Element | undefined): { el?: Element; error?: string } {
+/**
+ * Resolve a control id to an element, only through the public control directory (list_controls),
+ * which already leaves out the voice dock and private panels. No free CSS selectors: those could
+ * probe private text (attribute or :has matching) through match or no-match answers.
+ */
+export function resolveAnchor(anchor: string, byControlId: (id: string) => Element | undefined): { el?: Element; error?: string } {
   if (typeof document === "undefined") return { error: "No page." };
-  let el: Element | null = byControlId?.(anchor) || null;
-  if (!el) try { el = document.querySelector(`[data-control="${CSS.escape(anchor)}"]`); } catch { /* not an id */ }
-  if (!el) { try { el = document.querySelector(anchor); } catch { return { error: `"${anchor}" is neither a control id nor a valid selector. Call list_controls for ids.` }; } }
-  if (!el) return { error: `Nothing on the page matches "${anchor}". Call list_controls for ids.` };
-  if (el.closest(OFF)) return { error: "That is inside an account or key panel; you may not draw there." };
-  if (el.closest("[data-draw-layer]")) return { error: "That is one of your own drawings." };
+  const el = byControlId(anchor);
+  if (!el || el.closest(OFF) || el.closest(".voice") || el.closest("[data-draw-layer]")) return { error: `No control "${anchor}" you can draw on. Call list_controls for ids.` };
   return { el };
 }
 

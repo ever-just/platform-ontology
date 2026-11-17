@@ -13,11 +13,11 @@ const pct = { type: "number", description: "Percent of the visible window, 0 to 
 export const DRAW_TOOLS: ToolDef[] = [
   {
     name: "draw",
-    description: "Write or draw on the person's screen, live, on a layer over the page that never blocks clicks. kind text writes words at x,y (or under the element in to). highlight boxes an element and follows it as the page scrolls. arrow points from x,y (or near the element) to the element in to, or from points[0] to points[1]. box and circle use x,y,w,h, or wrap the element in to. line goes from points[0] to points[1]. path is freehand through points. Positions are percent of the visible window (0,0 top left; 100,100 bottom right). to is a control id from list_controls or a CSS selector. seconds makes it fade away; without it, it stays until erase. Returns the drawing id and its on-screen box, since you cannot see your drawings in video frames.",
+    description: "Write or draw on the person's screen, live, on a layer over the page that never blocks clicks. kind text writes words at x,y (or under the element in to). highlight boxes an element and follows it as the page scrolls. arrow points from x,y (or near the element) to the element in to, or from points[0] to points[1]. box and circle use x,y,w,h, or wrap the element in to. line goes from points[0] to points[1]. path is freehand through points. Positions are percent of the visible window (0,0 top left; 100,100 bottom right). to is a control id from list_controls. seconds makes it fade away; without it, it stays until erase. Returns the drawing id and its on-screen box, since you cannot see your drawings in video frames.",
     inputSchema: { type: "object", properties: {
       kind: { type: "string", enum: KINDS },
       text: { type: "string", description: "For text: the words to write" },
-      to: { type: "string", description: "Element to highlight, point at, wrap or write under: a control id or CSS selector" },
+      to: { type: "string", description: "Element to highlight, point at, wrap or write under: a control id from list_controls" },
       x: pct, y: pct, w: pct, h: pct,
       points: { type: "array", items: { type: "array", items: { type: "number" } }, description: "For line, arrow and path: [[x,y], ...] in percent of the window" },
       label: { type: "string", description: "Short caption shown next to a shape" },
@@ -74,7 +74,7 @@ export async function drawCall(name: string, a: Record<string, any>): Promise<To
       };
       let target: Element | undefined;
       if (a.to) {
-        // Any id list_controls gives (including auto ids and #2 suffixes), else a data-control value or selector.
+        // Only ids list_controls gives (including auto ids and #2 suffixes); never free selectors.
         const r = resolveAnchor(String(a.to), (id) => scanControls().find((c) => c.control.id === id)?.el);
         if (!r.el) return { ok: false, error: r.error };
         target = r.el;
@@ -96,7 +96,7 @@ export async function drawCall(name: string, a: Record<string, any>): Promise<To
           break;
         }
         case "highlight": {
-          if (!target) return { ok: false, error: "highlight needs to: a control id from list_controls or a CSS selector." };
+          if (!target) return { ok: false, error: "highlight needs to: a control id from list_controls." };
           Object.assign(spec, { el: target, anchor: String(a.to) });
           break;
         }
