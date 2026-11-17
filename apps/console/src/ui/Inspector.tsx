@@ -1,4 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { TypedMetrics } from "./value";
+import { showsRate } from "../core/datatype";
 import "./inspector.css";
 import { registerInspectorTab } from "../core/screen";
 import { HistoryChart } from "./history-view";
@@ -15,7 +17,6 @@ import type { ScopeDef, Session } from "../core/types";
 import { isActive, request, setParam, setSource, stop, useSession } from "../core/harness";
 import { useInternals } from "../browser/engine";
 import type { ConsoleCtx } from "../ext/registry";
-import { fmt } from "./kit";
 import { CapIcon, MECH, MODES, SupportMatrix, mechanismOf } from "./icons";
 import { supportOf } from "../browser/profile";
 import { useDeps } from "../core/deps";
@@ -181,11 +182,9 @@ function ScopeInspector({ ctx, scope, onClose, open, back, backName }: { ctx: Co
           <div className="ins-pad i-tab" key="record">
             <div className="mets">
               <div><span>Sequence</span><b>{session.last?.seq ?? 0}</b></div>
-              <div><span>Rate</span><b>{session.hz ? session.hz.toFixed(1) : "0"}<em> Hz</em></b></div>
+              <TypedMetrics scope={scope} s={session} />
+              {showsRate(scope, session) && <div><span>Update rate</span><b>{session.hz.toFixed(1)}<em> Hz</em></b></div>}
               <div><span>To first record</span><b>{session.firstAt && session.startedAt ? session.firstAt - session.startedAt : "n/a"}<em> ms</em></b></div>
-              {(scope.metrics || []).slice(0, 3).map((m) => (
-                <div key={m.key}><span>{m.label}</span><b>{session.last ? fmt((session.last.data as any)[m.key], m.digits ?? 2) : "n/a"}{m.unit && <em> {m.unit}</em>}</b></div>
-              ))}
             </div>
             <h5>Change over time</h5>
             <HistoryChart scope={scope} session={session} />
