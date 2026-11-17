@@ -183,24 +183,24 @@ function TabInstrument({ scope, session }: InstrumentProps) {
             </div>
           </div>
           <form className="pc-row" onSubmit={(e) => { e.preventDefault(); send({ title: draft }); }}>
-            <input className="pc-in" value={draft} onChange={(e) => setDraft(e.target.value)} aria-label="New tab title" disabled={!on} />
-            <button className="btn sm pri" disabled={!on}>Set title</button>
+            <input data-control="motion.tab-title.title" className="pc-in" value={draft} onChange={(e) => setDraft(e.target.value)} aria-label="New tab title" disabled={!on} />
+            <button data-control="motion.tab-title.set-title" className="btn sm pri" disabled={!on}>Set title</button>
           </form>
           <div className="pc-row">
             <span className="pc-l">Icon</span>
             <div className="seg">
               {["original", ...EMOJI, "badge"].map((k) => (
-                <button key={k} type="button" className={d.iconKind === k ? "on" : ""} disabled={!on} onClick={() => send({ icon: k, badge: k === "badge" ? count : d.badge })}>{k === "original" ? "Original" : k === "badge" ? "Count" : k}</button>
+                <button data-control={`motion.tab-title.icon-${k}`} key={k} type="button" className={d.iconKind === k ? "on" : ""} disabled={!on} onClick={() => send({ icon: k, badge: k === "badge" ? count : d.badge })}>{k === "original" ? "Original" : k === "badge" ? "Count" : k}</button>
               ))}
             </div>
           </div>
           <div className="pc-row">
             <span className="pc-l">Count</span>
-            <input className="pc-num" type="number" min={0} max={99} value={count} onChange={(e) => setCount(Math.max(0, Math.min(99, +e.target.value || 0)))} disabled={!on} aria-label="Unread count" />
-            <button className="btn sm" type="button" disabled={!on} onClick={() => send({ badge: count })}>Apply count</button>
-            <label className="pc-sw"><input type="checkbox" checked={d.flash} disabled={!on} onChange={(e) => send({ flash: e.target.checked })} />Flash title when the tab is hidden</label>
+            <input data-control="motion.tab-title.count" className="pc-num" type="number" min={0} max={99} value={count} onChange={(e) => setCount(Math.max(0, Math.min(99, +e.target.value || 0)))} disabled={!on} aria-label="Unread count" />
+            <button data-control="motion.tab-title.apply-count" className="btn sm" type="button" disabled={!on} onClick={() => send({ badge: count })}>Apply count</button>
+            <label className="pc-sw"><input data-control="motion.tab-title.flash" type="checkbox" checked={d.flash} disabled={!on} onChange={(e) => send({ flash: e.target.checked })} />Flash title when the tab is hidden</label>
           </div>
-          <div className="pc-row"><button className="btn sm" type="button" disabled={!on} onClick={() => { send({ reset: true, badge: 0 }); setDraft(""); }}>Put back original</button></div>
+          <div className="pc-row"><button data-control="motion.tab-title.reset" className="btn sm" type="button" disabled={!on} onClick={() => { send({ reset: true, badge: 0 }); setDraft(""); }}>Put back original</button></div>
         </Panel>
       }
       side={<Readout rows={[
@@ -256,9 +256,9 @@ function ThemeInstrument({ scope, session }: InstrumentProps) {
           </div>
           <div className="pc-row">
             <span className="pc-l">Color</span>
-            {SWATCH.map((c) => <button key={c} type="button" className={"pc-sw-c" + (d.color === c ? " on" : "")} style={{ background: c }} aria-label={c} disabled={!on} onClick={() => send({ color: c })} />)}
-            <input type="color" className="pc-color" value={/^#[0-9a-f]{6}$/i.test(d.color) ? d.color : "#3b5bdb"} disabled={!on} onChange={(e) => send({ color: e.target.value })} aria-label="Pick any color" />
-            <button className="btn sm" type="button" disabled={!on} onClick={() => send({ reset: true })}>Put back original</button>
+            {SWATCH.map((c) => <button data-control={`device.theme-color.swatch-${c}`} key={c} type="button" className={"pc-sw-c" + (d.color === c ? " on" : "")} style={{ background: c }} aria-label={c} disabled={!on} onClick={() => send({ color: c })} />)}
+            <input data-control="device.theme-color.picker" type="color" className="pc-color" value={/^#[0-9a-f]{6}$/i.test(d.color) ? d.color : "#3b5bdb"} disabled={!on} onChange={(e) => send({ color: e.target.value })} aria-label="Pick any color" />
+            <button data-control="device.theme-color.reset" className="btn sm" type="button" disabled={!on} onClick={() => send({ reset: true })}>Put back original</button>
           </div>
         </Panel>
       }
@@ -315,10 +315,10 @@ function UrlInstrument({ scope, session }: InstrumentProps) {
           <div className="pc-url"><span className="pc-lock">https://</span>{location.host}<b>{d.path}</b><em>{d.search}</em>{d.hash}</div>
           <form className="pc-row" onSubmit={(e) => { e.preventDefault(); send({ op: "replace", query: q }); }}>
             <span className="pc-l">Query</span>
-            <input className="pc-in" value={q} onChange={(e) => setQ(e.target.value)} aria-label="Query string to put in the address bar" disabled={!on} />
-            <button className="btn sm pri" disabled={!on}>Replace</button>
-            <button className="btn sm" type="button" disabled={!on} onClick={() => send({ op: "push", query: q })}>Push new entry</button>
-            <button className="btn sm" type="button" disabled={!on} onClick={() => send({ reset: true })}>Put back</button>
+            <input data-control="reach.address-bar.query" className="pc-in" value={q} onChange={(e) => setQ(e.target.value)} aria-label="Query string to put in the address bar" disabled={!on} />
+            <button data-control="reach.address-bar.replace" className="btn sm pri" disabled={!on}>Replace</button>
+            <button data-control="reach.address-bar.push" className="btn sm" type="button" disabled={!on} onClick={() => send({ op: "push", query: q })}>Push new entry</button>
+            <button data-control="reach.address-bar.reset" className="btn sm" type="button" disabled={!on} onClick={() => send({ reset: true })}>Put back</button>
           </form>
         </Panel>
       }
@@ -381,8 +381,8 @@ function FsInstrument({ scope, session }: InstrumentProps) {
         <Panel on={on} sim={sim} error={d.error} note="Fullscreen hides the address bar, which is why scam pages use it to fake a whole desktop. Press Esc to leave.">
           <div className={"pc-screen" + (d.active ? " full" : "")}><div><span>{d.active ? "Fullscreen" : "Window"}</span><b>{d.win}</b></div></div>
           <div className="pc-row">
-            <button className="btn sm pri" type="button" disabled={!on || d.active} onClick={() => send({ op: "enter" })}>Go fullscreen</button>
-            <button className="btn sm" type="button" disabled={!on || !d.active} onClick={() => send({ op: "exit" })}>Exit</button>
+            <button data-control="reach.fullscreen.enter" className="btn sm pri" type="button" disabled={!on || d.active} onClick={() => send({ op: "enter" })}>Go fullscreen</button>
+            <button data-control="reach.fullscreen.exit" className="btn sm" type="button" disabled={!on || !d.active} onClick={() => send({ op: "exit" })}>Exit</button>
           </div>
         </Panel>
       }
@@ -446,18 +446,18 @@ function SpeakInstrument({ scope, session }: InstrumentProps) {
     <Frame
       visual={
         <Panel on={on} sim={sim} error={d.error} note="The installed voice list differs by system and language packs, so it doubles as a fingerprint.">
-          <textarea className="pc-in pc-ta" value={text} onChange={(e) => setText(e.target.value)} rows={2} aria-label="Text to read aloud" disabled={!on} />
+          <textarea data-control="surroundings.read-aloud.text" className="pc-in pc-ta" value={text} onChange={(e) => setText(e.target.value)} rows={2} aria-label="Text to read aloud" disabled={!on} />
           <div className="pc-row">
-            <select className="pc-in pc-sel" value={voice} onChange={(e) => setVoice(e.target.value)} disabled={!on} aria-label="Voice">
+            <select data-control="surroundings.read-aloud.voice" className="pc-in pc-sel" value={voice} onChange={(e) => setVoice(e.target.value)} disabled={!on} aria-label="Voice">
               <option value="">Default voice</option>
               {d.list.map((v) => <option key={v.name + v.lang} value={v.name}>{v.name} ({v.lang})</option>)}
             </select>
-            <label className="pc-rng">Speed <input type="range" min={0.5} max={2} step={0.1} value={rate} onChange={(e) => setRate(+e.target.value)} disabled={!on} /><b>{rate.toFixed(1)}</b></label>
-            <label className="pc-rng">Pitch <input type="range" min={0} max={2} step={0.1} value={pitch} onChange={(e) => setPitch(+e.target.value)} disabled={!on} /><b>{pitch.toFixed(1)}</b></label>
+            <label className="pc-rng">Speed <input data-control="surroundings.read-aloud.speed" type="range" min={0.5} max={2} step={0.1} value={rate} onChange={(e) => setRate(+e.target.value)} disabled={!on} /><b>{rate.toFixed(1)}</b></label>
+            <label className="pc-rng">Pitch <input data-control="surroundings.read-aloud.pitch" type="range" min={0} max={2} step={0.1} value={pitch} onChange={(e) => setPitch(+e.target.value)} disabled={!on} /><b>{pitch.toFixed(1)}</b></label>
           </div>
           <div className="pc-row">
-            <button className="btn sm pri" type="button" disabled={!on} onClick={() => send({ op: "speak", text, voice, rate, pitch })}>Read aloud</button>
-            <button className="btn sm" type="button" disabled={!on || !d.speaking} onClick={() => send({ op: "cancel" })}>Stop speaking</button>
+            <button data-control="surroundings.read-aloud.speak" className="btn sm pri" type="button" disabled={!on} onClick={() => send({ op: "speak", text, voice, rate, pitch })}>Read aloud</button>
+            <button data-control="surroundings.read-aloud.stop" className="btn sm" type="button" disabled={!on || !d.speaking} onClick={() => send({ op: "cancel" })}>Stop speaking</button>
             {d.word && <span className="pc-word">{d.word}</span>}
           </div>
         </Panel>
@@ -529,12 +529,12 @@ function ToneInstrument({ scope, session }: InstrumentProps) {
         <Panel on={on} sim={sim} error={d.error} note="Sound only starts from a click. The sample rate and latency also hint at your audio hardware.">
           <svg className={"pc-wave" + (d.playing ? " on" : "")} viewBox="0 0 240 60" preserveAspectRatio="none" aria-hidden><path d={wavePath(d.wave, d.freq)} /></svg>
           <div className="pc-row">
-            <button className={"btn sm" + (d.playing ? "" : " pri")} type="button" disabled={!on} onClick={() => send({ playing: !d.playing })}>{d.playing ? "Stop tone" : "Play tone"}</button>
-            <div className="seg">{WAVES.map((w) => <button key={w} type="button" className={d.wave === w ? "on" : ""} disabled={!on} onClick={() => send({ wave: w })}>{w}</button>)}</div>
+            <button data-control="surroundings.tone.play" className={"btn sm" + (d.playing ? "" : " pri")} type="button" disabled={!on} onClick={() => send({ playing: !d.playing })}>{d.playing ? "Stop tone" : "Play tone"}</button>
+            <div className="seg">{WAVES.map((w) => <button data-control={`surroundings.tone.wave-${w}`} key={w} type="button" className={d.wave === w ? "on" : ""} disabled={!on} onClick={() => send({ wave: w })}>{w}</button>)}</div>
           </div>
           <div className="pc-row">
-            <label className="pc-rng">Pitch <input type="range" min={55} max={1760} step={1} value={d.freq} onChange={(e) => send({ freq: +e.target.value })} disabled={!on} /><b>{d.freq} Hz</b></label>
-            <label className="pc-rng">Volume <input type="range" min={0} max={0.5} step={0.01} value={d.gain} onChange={(e) => send({ gain: +e.target.value })} disabled={!on} /><b>{Math.round(d.gain * 200)}%</b></label>
+            <label className="pc-rng">Pitch <input data-control="surroundings.tone.pitch" type="range" min={55} max={1760} step={1} value={d.freq} onChange={(e) => send({ freq: +e.target.value })} disabled={!on} /><b>{d.freq} Hz</b></label>
+            <label className="pc-rng">Volume <input data-control="surroundings.tone.volume" type="range" min={0} max={0.5} step={0.01} value={d.gain} onChange={(e) => send({ gain: +e.target.value })} disabled={!on} /><b>{Math.round(d.gain * 200)}%</b></label>
           </div>
         </Panel>
       }
@@ -582,8 +582,8 @@ function LeaveInstrument({ scope, session }: InstrumentProps) {
             <div><i>Cancel</i><i className="pri">Leave</i></div>
           </div>
           <div className="pc-row">
-            <label className="pc-sw"><input type="checkbox" checked={d.armed} disabled={!on} onChange={(e) => send({ armed: e.target.checked })} />Warn before leaving this page</label>
-            {!sim && <button className="btn sm" type="button" disabled={!on || !d.armed} onClick={() => send({ reload: true })}>Reload to test</button>}
+            <label className="pc-sw"><input data-control="reach.leave-warning.armed" type="checkbox" checked={d.armed} disabled={!on} onChange={(e) => send({ armed: e.target.checked })} />Warn before leaving this page</label>
+            {!sim && <button data-control="reach.leave-warning.reload" className="btn sm" type="button" disabled={!on || !d.armed} onClick={() => send({ reload: true })}>Reload to test</button>}
           </div>
         </Panel>
       }
@@ -652,14 +652,14 @@ function CookieInstrument({ scope, session }: InstrumentProps) {
             {d.list.length ? d.list.map((c) => (
               <div key={c.name} className="pc-li">
                 <code>{c.name}</code><span>{short(c.value, 48)}</span>
-                {c.mine && <button className="btn sm" type="button" disabled={!on} onClick={() => send({ op: "delete", name: c.name })}>Delete</button>}
+                {c.mine && <button data-control={`reach.cookies.delete-${c.name}`} className="btn sm" type="button" disabled={!on} onClick={() => send({ op: "delete", name: c.name })}>Delete</button>}
               </div>
             )) : <p className="pc-empty">No cookies visible to scripts on this site.</p>}
           </div>
           <form className="pc-row" onSubmit={(e) => { e.preventDefault(); send({ op: "set", name, value }); }}>
-            <input className="pc-in pc-short" value={name} onChange={(e) => setName(e.target.value)} aria-label="Cookie name" disabled={!on} />
-            <input className="pc-in" value={value} onChange={(e) => setValue(e.target.value)} aria-label="Cookie value" disabled={!on} />
-            <button className="btn sm pri" disabled={!on}>Set cookie</button>
+            <input data-control="reach.cookies.name" className="pc-in pc-short" value={name} onChange={(e) => setName(e.target.value)} aria-label="Cookie name" disabled={!on} />
+            <input data-control="reach.cookies.value" className="pc-in" value={value} onChange={(e) => setValue(e.target.value)} aria-label="Cookie value" disabled={!on} />
+            <button data-control="reach.cookies.set" className="btn sm pri" disabled={!on}>Set cookie</button>
           </form>
         </Panel>
       }
@@ -703,11 +703,11 @@ function DlInstrument({ scope, session }: InstrumentProps) {
     <Frame
       visual={
         <Panel on={on} sim={sim} error={d.error} note="After a few downloads in a row Chrome asks whether this site may download multiple files.">
-          <textarea className="pc-in pc-ta" rows={3} value={text} onChange={(e) => setText(e.target.value)} aria-label="File contents" disabled={!on} />
+          <textarea data-control="reach.download.text" className="pc-in pc-ta" rows={3} value={text} onChange={(e) => setText(e.target.value)} aria-label="File contents" disabled={!on} />
           <form className="pc-row" onSubmit={(e) => { e.preventDefault(); send({ name, kind, text }); }}>
-            <input className="pc-in pc-short" value={name} onChange={(e) => setName(e.target.value)} aria-label="File name" disabled={!on} />
-            <div className="seg">{["txt", "csv", "json"].map((k) => <button key={k} type="button" className={kind === k ? "on" : ""} disabled={!on} onClick={() => setKind(k)}>.{k}</button>)}</div>
-            <button className="btn sm pri" disabled={!on}><Download size={13} />Save file</button>
+            <input data-control="reach.download.name" className="pc-in pc-short" value={name} onChange={(e) => setName(e.target.value)} aria-label="File name" disabled={!on} />
+            <div className="seg">{["txt", "csv", "json"].map((k) => <button data-control={`reach.download.kind-${k}`} key={k} type="button" className={kind === k ? "on" : ""} disabled={!on} onClick={() => setKind(k)}>.{k}</button>)}</div>
+            <button data-control="reach.download.save" className="btn sm pri" disabled={!on}><Download size={13} />Save file</button>
           </form>
         </Panel>
       }
@@ -744,9 +744,9 @@ function NameInstrument({ scope, session }: InstrumentProps) {
         <Panel on={on} sim={sim} error={d.error} note="It survives reloads and same site pages in this tab. Modern browsers wipe it when the tab moves to another site, which closed an old tracking trick.">
           <div className="pc-big"><code>{d.value ? short(d.value, 80) : "(empty)"}</code></div>
           <form className="pc-row" onSubmit={(e) => { e.preventDefault(); send({ value: v }); }}>
-            <input className="pc-in" value={v} onChange={(e) => setV(e.target.value)} aria-label="New window name" disabled={!on} />
-            <button className="btn sm pri" disabled={!on}>Write</button>
-            <button className="btn sm" type="button" disabled={!on} onClick={() => send({ reset: true })}>Put back</button>
+            <input data-control="identity.window-name.value" className="pc-in" value={v} onChange={(e) => setV(e.target.value)} aria-label="New window name" disabled={!on} />
+            <button data-control="identity.window-name.write" className="btn sm pri" disabled={!on}>Write</button>
+            <button data-control="identity.window-name.reset" className="btn sm" type="button" disabled={!on} onClick={() => send({ reset: true })}>Put back</button>
           </form>
         </Panel>
       }

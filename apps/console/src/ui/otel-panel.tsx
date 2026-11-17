@@ -47,19 +47,19 @@ export function OtelPanel({ scope, session }: { scope: ScopeDef; session: Sessio
         <summary>Export as OTLP JSON</summary>
         <div className="otel-bar">
           <div className="seg" role="group" aria-label="Signal">
-            <button className={sig === "metrics" ? "on" : ""} onClick={() => setSig("metrics")}>Metrics</button>
-            <button className={sig === "traces" ? "on" : ""} onClick={() => setSig("traces")}>Trace</button>
+            <button data-control="otel.signal-metrics" className={sig === "metrics" ? "on" : ""} onClick={() => setSig("metrics")}>Metrics</button>
+            <button data-control="otel.signal-traces" className={sig === "traces" ? "on" : ""} onClick={() => setSig("traces")}>Trace</button>
           </div>
           <span className="grow" />
-          <button className="btn sm" onClick={copy} disabled={!session.count && sig === "metrics"}><Copy size={12} /> {copied ? "Copied" : "Copy"}</button>
-          <button className="btn sm" onClick={download} disabled={!session.count && sig === "metrics"}><Download size={12} /> Download</button>
+          <button data-control="otel.copy" className="btn sm" onClick={copy} disabled={!session.count && sig === "metrics"}><Copy size={12} /> {copied ? "Copied" : "Copy"}</button>
+          <button data-control="otel.download" className="btn sm" onClick={download} disabled={!session.count && sig === "metrics"}><Download size={12} /> Download</button>
         </div>
         <pre className="code otel-pre">{session.count || sig === "traces" ? preview : "// Run it first. Each record becomes a data point."}</pre>
         <div className="otel-send">
           <label htmlFor={"otlp-" + scope.id}>Send to your collector (optional, off until you press Send)</label>
           <div className="otel-row">
-            <input id={"otlp-" + scope.id} type="url" inputMode="url" placeholder="https://your-collector:4318" value={url} onChange={(e) => setUrl(e.target.value)} spellCheck={false} autoComplete="off" />
-            <button className="btn sm" onClick={send} disabled={busy || !url.trim() || !session.count}><Send size={12} /> {busy ? "Sending" : "Send"}</button>
+            <input data-control="otel.endpoint" id={"otlp-" + scope.id} type="url" inputMode="url" placeholder="https://your-collector:4318" value={url} onChange={(e) => setUrl(e.target.value)} spellCheck={false} autoComplete="off" />
+            <button data-control="otel.send" className="btn sm" onClick={send} disabled={busy || !url.trim() || !session.count}><Send size={12} /> {busy ? "Sending" : "Send"}</button>
           </div>
           <small>POSTs OTLP/HTTP JSON to <code>/v1/metrics</code> and <code>/v1/traces</code> under that address. The address stays in this browser only. The collector has to allow CORS from this page. Records include everything in the buffer, location included if this capability reports it.</small>
           {res && (typeof res === "string"

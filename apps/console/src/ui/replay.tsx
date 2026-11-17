@@ -106,9 +106,9 @@ export function Replay({ scope, session }: { scope: ScopeDef; session: Session }
     <div className="rp">
       <div className="rp-bar">
         <ButtonGroup>
-          <Button small icon={<StepBackward size={12} />} onClick={() => jump(-1)} aria-label="Previous reading" />
-          <Button small intent="primary" icon={playing ? <Pause size={12} /> : <Play size={12} />} onClick={() => { if (!playing && ph >= t1) setPh(t0); setPlaying(!playing); }}>{playing ? "Pause" : "Play"}</Button>
-          <Button small icon={<StepForward size={12} />} onClick={() => jump(1)} aria-label="Next reading" />
+          <Button data-control="replay.prev" small icon={<StepBackward size={12} />} onClick={() => jump(-1)} aria-label="Previous reading" />
+          <Button data-control="replay.play" small intent="primary" icon={playing ? <Pause size={12} /> : <Play size={12} />} onClick={() => { if (!playing && ph >= t1) setPh(t0); setPlaying(!playing); }}>{playing ? "Pause" : "Play"}</Button>
+          <Button data-control="replay.next" small icon={<StepForward size={12} />} onClick={() => jump(1)} aria-label="Next reading" />
         </ButtonGroup>
         <HTMLSelect minimal value={speed} onChange={(e) => setSpeed(Number(e.currentTarget.value))} aria-label="Speed">
           {SPEEDS.map((s) => <option key={s} value={s}>{s}x</option>)}
@@ -116,7 +116,7 @@ export function Replay({ scope, session }: { scope: ScopeDef; session: Session }
         <span className="rp-time">{clock(ph)}<em> +{((ph - t0) / 1000).toFixed(1)} s of {((t1 - t0) / 1000).toFixed(1)} s</em></span>
         <span className="grow" />
         <Tag minimal>{snap.from === "memory" ? `${recs.length} readings in memory` : `${recs.length} saved readings`}</Tag>
-        <Button small minimal icon={<Refresh size={12} />} onClick={() => void take()} title="Take a fresh snapshot of the recording">Refresh</Button>
+        <Button data-control="replay.refresh" small minimal icon={<Refresh size={12} />} onClick={() => void take()} title="Take a fresh snapshot of the recording">Refresh</Button>
       </div>
       <svg
         className="rp-track" viewBox={`0 0 ${W} ${H}`} preserveAspectRatio="none" role="slider" aria-label="Scrub" aria-valuemin={0} aria-valuemax={Math.round(t1 - t0)} aria-valuenow={Math.round(ph - t0)} tabIndex={0}

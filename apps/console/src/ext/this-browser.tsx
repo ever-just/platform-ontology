@@ -32,7 +32,7 @@ function Row({ node, scope, ctx }: { node: AtlasNode; scope?: ScopeDef; ctx: Con
   const [label, tone] = availabilityText(a);
   const [cls, V] = VERDICT[tone] || VERDICT.no;
   return (
-    <button className={"tb-row" + (scope ? "" : " ro")} onClick={() => scope && ctx.select(scope.id)} title={`${node.p || node.n}. ${g.label}. ${label}${a?.why ? ": " + a.why : ""}`}>
+    <button data-control={`caps.this-browser.${scope?.id ?? node.n}`} className={"tb-row" + (scope ? "" : " ro")} onClick={() => scope && ctx.select(scope.id)} title={`${node.p || node.n}. ${g.label}. ${label}${a?.why ? ": " + a.why : ""}`}>
       <span className="tb-g" aria-hidden>{G ? <G size={14} /> : null}</span>
       <span className="tb-n">{node.n}</span>
       <span className={"tb-v " + cls} aria-label={label}><V size={13} /></span>

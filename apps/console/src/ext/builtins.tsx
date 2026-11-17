@@ -69,7 +69,7 @@ function Start({ text, label, id }: { text: string; label: string; id: string })
   return (
     <span className="tc-start">
       <span>{text}</span>
-      <button className="btn primary" onClick={() => void request(id)}><Play size={12} />{label}</button>
+      <button data-control={`caps.run.${id}`} className="btn primary" onClick={() => void request(id)}><Play size={12} />{label}</button>
     </span>
   );
 }

@@ -168,7 +168,7 @@ function Timing({ session }: InstrumentProps) {
             {rows.map((r, i) => {
               let x = r.start;
               return (
-                <div key={i} className="pml-wf-row" onClick={() => setPick(i)} style={{ cursor: "pointer", color: sel === r ? C.ink : undefined }}>
+                <div key={i} data-control={`link.timing.row-${i}`} className="pml-wf-row" onClick={() => setPick(i)} style={{ cursor: "pointer", color: sel === r ? C.ink : undefined }}>
                   <span title={r.name}>{r.name}</span>
                   <div className="pml-wf-track">
                     {PHASES.map((p) => {

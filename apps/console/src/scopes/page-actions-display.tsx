@@ -18,11 +18,11 @@ const doc = () => document as any;
 const R = (n: number | null | undefined, d = 2) => (n === null || n === undefined || Number.isNaN(n) ? "n/a" : String(Math.round(n * 10 ** d) / 10 ** d));
 const onoff = (b: boolean) => (b ? "on" : "off");
 
-function Act({ on, onClick, pri, children }: { on: boolean; onClick: () => void; pri?: boolean; children: ReactNode }) {
-  return <button type="button" className={"btn sm" + (pri ? " pri" : "")} disabled={!on} onClick={onClick}>{children}</button>;
+function Act({ on, onClick, pri, children, "data-control": dc }: { on: boolean; onClick: () => void; pri?: boolean; children: ReactNode; "data-control": string }) {
+  return <button type="button" data-control={dc} className={"btn sm" + (pri ? " pri" : "")} disabled={!on} onClick={onClick}>{children}</button>;
 }
-function Tog({ on, checked, onChange, children }: { on: boolean; checked: boolean; onChange: (v: boolean) => void; children: ReactNode }) {
-  return <label className="pc-sw"><input type="checkbox" checked={checked} disabled={!on} onChange={(e) => onChange(e.target.checked)} />{children}</label>;
+function Tog({ on, checked, onChange, children, "data-control": dc }: { on: boolean; checked: boolean; onChange: (v: boolean) => void; children: ReactNode; "data-control": string }) {
+  return <label className="pc-sw"><input type="checkbox" data-control={dc} checked={checked} disabled={!on} onChange={(e) => onChange(e.target.checked)} />{children}</label>;
 }
 
 type Rec = Record<string, any>;
@@ -115,14 +115,14 @@ function ZoomInstrument({ scope, session }: InstrumentProps) {
         <Panel on={on} sim={sim} error={d.error} note="A page cannot set the browser zoom itself; it can only react to it, restyle its own content or take over the shortcuts. Stop turns every override off.">
           <div className="pd-zoom"><div data-pc-zoom className="pd-zoom-box"><b>Zoomable box</b><span>Hold Ctrl and scroll here, or press Ctrl plus and minus. With a block on, the browser zoom does nothing.</span></div></div>
           <div className="pc-row">
-            <Tog on={on} checked={d.blockWheel} onChange={set("blockWheel")}>Block Ctrl+wheel</Tog>
-            <Tog on={on} checked={d.blockKeys} onChange={set("blockKeys")}>Block Ctrl plus, minus, zero</Tog>
-            <Tog on={on} checked={d.replace} onChange={set("replace")}>Replace with zoom of the box</Tog>
-            <Tog on={on} checked={d.noPinch} onChange={set("noPinch")}>Block pinch (viewport meta)</Tog>
+            <Tog data-control="page-zoom.block-wheel" on={on} checked={d.blockWheel} onChange={set("blockWheel")}>Block Ctrl+wheel</Tog>
+            <Tog data-control="page-zoom.block-keys" on={on} checked={d.blockKeys} onChange={set("blockKeys")}>Block Ctrl plus, minus, zero</Tog>
+            <Tog data-control="page-zoom.replace-with-box-zoom" on={on} checked={d.replace} onChange={set("replace")}>Replace with zoom of the box</Tog>
+            <Tog data-control="page-zoom.block-pinch" on={on} checked={d.noPinch} onChange={set("noPinch")}>Block pinch (viewport meta)</Tog>
           </div>
           <div className="pc-row">
-            <label className="pc-rng">Box zoom<input type="range" min={50} max={200} step={5} value={Math.round(d.cssZoom * 100)} disabled={!on} onChange={(e) => send({ cssZoom: +e.target.value / 100 })} /><b>{Math.round(d.cssZoom * 100)}%</b></label>
-            <Act on={on} onClick={() => send({ reset: true })}>Put back</Act>
+            <label className="pc-rng">Box zoom<input data-control="page-zoom.box-zoom" type="range" min={50} max={200} step={5} value={Math.round(d.cssZoom * 100)} disabled={!on} onChange={(e) => send({ cssZoom: +e.target.value / 100 })} /><b>{Math.round(d.cssZoom * 100)}%</b></label>
+            <Act data-control="page-zoom.reset" on={on} onClick={() => send({ reset: true })}>Put back</Act>
           </div>
         </Panel>
       }
@@ -190,7 +190,7 @@ function CursorInstrument({ scope, session }: InstrumentProps) {
       visual={
         <Panel on={on} sim={sim} error={d.error} note="The pointer only changes inside the page. Touch screens have no pointer, so they ignore it.">
           <div data-pc-cursor className="pd-pad"><b>Move your mouse in here</b><span>{d.kind === "none" ? "The pointer is hidden" : d.kind === "image" ? "The pointer is a picture the page drew" : "Pick a pointer below"}</span></div>
-          <div className="pc-row"><span className="pc-l">Pointer</span><div className="seg">{CURSORS.map((k) => <button key={k} type="button" className={d.kind === k ? "on" : ""} disabled={!on} onClick={() => send({ kind: k })}>{k === "image" ? "custom image" : k === "none" ? "hidden" : k}</button>)}</div></div>
+          <div className="pc-row"><span className="pc-l">Pointer</span><div className="seg">{CURSORS.map((k) => <button data-control={`custom-cursor.kind-${k}`} key={k} type="button" className={d.kind === k ? "on" : ""} disabled={!on} onClick={() => send({ kind: k })}>{k === "image" ? "custom image" : k === "none" ? "hidden" : k}</button>)}</div></div>
         </Panel>
       }
       side={<Readout rows={[
@@ -273,14 +273,14 @@ function ScrollInstrument({ scope, session }: InstrumentProps) {
         <Panel on={on} sim={sim} error={d.error} note="A page can scroll itself, slow your wheel to a crawl or lock it. Browsers keep scrollbars and touch drags working in most cases.">
           <div data-pc-scroll className="pd-scroll">{Array.from({ length: 14 }, (_, i) => <p key={i}><b>Section {i + 1}</b> Scroll with the wheel to feel what the page decided.</p>)}</div>
           <div className="pc-row">
-            <Act on={on} pri onClick={() => send({ to: "bottom" })}>Scroll to the end</Act>
-            <Act on={on} onClick={() => send({ to: "top" })}>Back to top</Act>
+            <Act data-control="scroll-control.to-end" on={on} pri onClick={() => send({ to: "bottom" })}>Scroll to the end</Act>
+            <Act data-control="scroll-control.to-top" on={on} onClick={() => send({ to: "top" })}>Back to top</Act>
             <span className="pc-l">Wheel</span>
-            <div className="seg">{[["free", "Normal"], ["slow", "Slowed"], ["locked", "Locked"]].map(([k, l]) => <button key={k} type="button" className={d.mode === k ? "on" : ""} disabled={!on} onClick={() => send({ mode: k })}>{l}</button>)}</div>
+            <div className="seg">{[["free", "Normal"], ["slow", "Slowed"], ["locked", "Locked"]].map(([k, l]) => <button data-control={`scroll-control.mode-${k}`} key={k} type="button" className={d.mode === k ? "on" : ""} disabled={!on} onClick={() => send({ mode: k })}>{l}</button>)}</div>
           </div>
           <div className="pc-row">
-            <Tog on={on} checked={d.contain} onChange={(v) => send({ contain: v })}>Keep scroll inside the box</Tog>
-            <Tog on={on} checked={d.snap} onChange={(v) => send({ snap: v })}>Snap to sections</Tog>
+            <Tog data-control="scroll-control.contain" on={on} checked={d.contain} onChange={(v) => send({ contain: v })}>Keep scroll inside the box</Tog>
+            <Tog data-control="scroll-control.snap" on={on} checked={d.snap} onChange={(v) => send({ snap: v })}>Snap to sections</Tog>
           </div>
         </Panel>
       }
@@ -366,14 +366,14 @@ function WinInstrument({ scope, session }: InstrumentProps) {
       visual={
         <Panel on={on} sim={sim} error={d.error} note="Allow popups for this site if the browser blocks it. Browsers only let a page move or resize a window it opened itself.">
           <div className="pc-row">
-            <Act on={on} pri onClick={() => send({ op: "open" })}>Open popup</Act>
-            <Act on={on && d.open} onClick={() => send({ op: "moveBy", a: 60, b: 30 })}>Move by 60, 30</Act>
-            <Act on={on && d.open} onClick={() => send({ op: "moveTo", a: 100, b: 100 })}>Move to 100, 100</Act>
-            <Act on={on && d.open} onClick={() => send({ op: "resizeBy", a: 80, b: 40 })}>Grow</Act>
-            <Act on={on && d.open} onClick={() => send({ op: "resizeTo", a: 360, b: 240 })}>Reset size</Act>
-            <Act on={on && d.open} onClick={() => send({ op: "close" })}>Close popup</Act>
+            <Act data-control="window-move-resize.open" on={on} pri onClick={() => send({ op: "open" })}>Open popup</Act>
+            <Act data-control="window-move-resize.move-by" on={on && d.open} onClick={() => send({ op: "moveBy", a: 60, b: 30 })}>Move by 60, 30</Act>
+            <Act data-control="window-move-resize.move-to" on={on && d.open} onClick={() => send({ op: "moveTo", a: 100, b: 100 })}>Move to 100, 100</Act>
+            <Act data-control="window-move-resize.grow" on={on && d.open} onClick={() => send({ op: "resizeBy", a: 80, b: 40 })}>Grow</Act>
+            <Act data-control="window-move-resize.reset-size" on={on && d.open} onClick={() => send({ op: "resizeTo", a: 360, b: 240 })}>Reset size</Act>
+            <Act data-control="window-move-resize.close" on={on && d.open} onClick={() => send({ op: "close" })}>Close popup</Act>
           </div>
-          <div className="pc-row"><Act on={on} onClick={() => send({ op: "ownTry" })}>Try moving this tab instead</Act><span className="pc-l">{d.ownResult}</span></div>
+          <div className="pc-row"><Act data-control="window-move-resize.own-try" on={on} onClick={() => send({ op: "ownTry" })}>Try moving this tab instead</Act><span className="pc-l">{d.ownResult}</span></div>
           <div className="pd-stage"><div className="pd-mini" style={p ? { left: clamp((p.x / 2200) * 100, 0, 80) + "%", top: clamp((p.y / 1300) * 100, 0, 75) + "%", width: clamp((p.w / 2200) * 100, 8, 60) + "%", height: clamp((p.h / 1300) * 100, 8, 60) + "%" } : { display: "none" }}>popup</div></div>
         </Panel>
       }
@@ -421,8 +421,8 @@ function OrientInstrument({ scope, session }: InstrumentProps) {
       visual={
         <Panel on={on} sim={sim} error={d.error} note="Most browsers only allow the lock in fullscreen on a phone or tablet, so this goes fullscreen first. Desktop screens refuse. Stop unlocks and leaves fullscreen.">
           <div className={"pd-phone " + (d.portrait ? "p" : "l")}><span>{d.type}</span><b>{d.angle}°</b></div>
-          <div className="pc-row"><span className="pc-l">Lock to</span><div className="seg">{LOCKS.map((k) => <button key={k} type="button" className={d.locked === k ? "on" : ""} disabled={!on} onClick={() => send({ op: "lock", type: k })}>{k}</button>)}</div></div>
-          <div className="pc-row"><Act on={on} onClick={() => send({ op: "unlock" })}>Unlock</Act></div>
+          <div className="pc-row"><span className="pc-l">Lock to</span><div className="seg">{LOCKS.map((k) => <button data-control={`orientation-lock.lock-${k}`} key={k} type="button" className={d.locked === k ? "on" : ""} disabled={!on} onClick={() => send({ op: "lock", type: k })}>{k}</button>)}</div></div>
+          <div className="pc-row"><Act data-control="orientation-lock.unlock" on={on} onClick={() => send({ op: "unlock" })}>Unlock</Act></div>
         </Panel>
       }
       side={<Readout rows={[
@@ -519,9 +519,9 @@ function PipInstrument(key: "video" | "camera", what: string) {
           <Panel on={on} sim={sim} error={d.error} note={key === "camera" ? "The camera light stays on while it floats above other apps. Stop closes the window and turns the camera off." : "The floating window stays above other apps. Stop closes it."}>
             <div className="pd-video">{sim ? <div className="pd-fake">simulated video</div> : <video data-pc-pip={key} muted playsInline autoPlay />}{d.active && <span className="pd-badge">floating</span>}</div>
             <div className="pc-row">
-              <Act on={on && !d.active} pri onClick={() => send({ op: "enter" })}>Float the video</Act>
-              <Act on={on && d.active} onClick={() => send({ op: "exit" })}>Bring it back</Act>
-              <Tog on={on} checked={d.auto} onChange={(v) => send({ op: "auto", value: v })}>Float automatically when I switch tabs</Tog>
+              <Act data-control={`pip-${key}.enter`} on={on && !d.active} pri onClick={() => send({ op: "enter" })}>Float the video</Act>
+              <Act data-control={`pip-${key}.exit`} on={on && d.active} onClick={() => send({ op: "exit" })}>Bring it back</Act>
+              <Tog data-control={`pip-${key}.auto`} on={on} checked={d.auto} onChange={(v) => send({ op: "auto", value: v })}>Float automatically when I switch tabs</Tog>
             </div>
           </Panel>
         }
@@ -594,10 +594,10 @@ function CopyInstrument({ scope, session }: InstrumentProps) {
           <div data-pc-copy className="pd-pad"><b>Meet at the north gate at 9.</b></div>
           <div className="pc-row">
             <span className="pc-l">On copy</span>
-            <div className="seg">{[["off", "Leave alone"], ["append", "Add a link"], ["replace", "Swap the text"], ["block", "Empty it"]].map(([k, l]) => <button key={k} type="button" className={d.mode === k ? "on" : ""} disabled={!on} onClick={() => send({ mode: k })}>{l}</button>)}</div>
-            <Act on={on} pri onClick={() => send({ op: "copy" })}>Copy the text</Act>
+            <div className="seg">{[["off", "Leave alone"], ["append", "Add a link"], ["replace", "Swap the text"], ["block", "Empty it"]].map(([k, l]) => <button data-control={`copy-event.mode-${k}`} key={k} type="button" className={d.mode === k ? "on" : ""} disabled={!on} onClick={() => send({ mode: k })}>{l}</button>)}</div>
+            <Act data-control="copy-event.copy" on={on} pri onClick={() => send({ op: "copy" })}>Copy the text</Act>
           </div>
-          <textarea className="pc-in pc-ta" rows={3} placeholder="Paste here to see what you copied" aria-label="Paste test" />
+          <textarea data-control="copy-event.paste-test" className="pc-in pc-ta" rows={3} placeholder="Paste here to see what you copied" aria-label="Paste test" />
         </Panel>
       }
       side={<Readout rows={[
@@ -667,7 +667,7 @@ function DragInstrument({ scope, session }: InstrumentProps) {
         <Panel on={on} sim={sim} error={d.error} note={sim ? "Dragging does nothing in simulated mode." : "A page sees the names, sizes and types of dropped files, but not their folders. Dropping a file outside the box is ignored."}>
           <div className="pc-row">{CHIPS.map((c) => <span key={c} className="pd-chip" draggable data-pc-drag-item>{c}</span>)}</div>
           <div data-pc-drop className={"pd-drop" + (d.over ? " over" : "")}>{d.dropped.length ? d.dropped.map((x: string, i: number) => <span key={i} className="pd-chip">{x}</span>) : <span>Drop a chip here, or a file from your desktop</span>}</div>
-          <div className="pc-row"><Act on={on} onClick={() => send({ reset: true })}>Clear</Act></div>
+          <div className="pc-row"><Act data-control="drag-and-drop.clear" on={on} onClick={() => send({ reset: true })}>Clear</Act></div>
         </Panel>
       }
       side={<Readout rows={[
@@ -724,11 +724,11 @@ function FocusInstrument({ scope, session }: InstrumentProps) {
     <Frame
       visual={
         <Panel on={on} sim={sim} error={d.error} note="Click Steal, then start typing in your field. In three seconds your keystrokes land in the target. Browsers refuse window.focus() from background tabs.">
-          <div className="pc-row"><input className="pc-in" placeholder="Your field: type here" aria-label="Your field" /><input className="pc-in" placeholder="Target field" aria-label="Target field" data-pc-focus-target /></div>
+          <div className="pc-row"><input data-control="focus-stealing.own-field" className="pc-in" placeholder="Your field: type here" aria-label="Your field" /><input data-control="focus-stealing.target-field" className="pc-in" placeholder="Target field" aria-label="Target field" data-pc-focus-target /></div>
           <div className="pc-row">
-            <Act on={on} pri onClick={() => send({ op: "steal" })}>{d.pending ? "Stealing in 3 s…" : "Steal focus in 3 s"}</Act>
-            <Tog on={on} checked={d.loop} onChange={(v) => send({ op: "loop", value: v })}>Keep stealing every 2 s</Tog>
-            <Act on={on} onClick={() => send({ op: "win" })}>Call window.focus()</Act>
+            <Act data-control="focus-stealing.steal" on={on} pri onClick={() => send({ op: "steal" })}>{d.pending ? "Stealing in 3 s…" : "Steal focus in 3 s"}</Act>
+            <Tog data-control="focus-stealing.loop" on={on} checked={d.loop} onChange={(v) => send({ op: "loop", value: v })}>Keep stealing every 2 s</Tog>
+            <Act data-control="focus-stealing.window-focus" on={on} onClick={() => send({ op: "win" })}>Call window.focus()</Act>
           </div>
         </Panel>
       }
@@ -777,7 +777,7 @@ function DialogInstrument({ scope, session }: InstrumentProps) {
     <Frame
       visual={
         <Panel on={on} sim={sim} error={d.error} note="Chrome offers a tick box to stop a page from making more dialogs after a few. A dialog that returns at once usually means it was suppressed.">
-          <div className="pc-row">{(["alert", "confirm", "prompt"] as const).map((k) => <Act key={k} on={on} pri={k === "alert"} onClick={() => send({ kind: k })}>{k}()</Act>)}<Act on={on} onClick={() => send({ reset: true })}>Clear</Act></div>
+          <div className="pc-row">{(["alert", "confirm", "prompt"] as const).map((k) => <Act data-control={`dialogs.${k}`} key={k} on={on} pri={k === "alert"} onClick={() => send({ kind: k })}>{k}()</Act>)}<Act data-control="dialogs.clear" on={on} onClick={() => send({ reset: true })}>Clear</Act></div>
           {d.quick && d.count > 0 && <p className="pc-msg">That dialog came back instantly. It was probably suppressed by the browser.</p>}
         </Panel>
       }
@@ -838,13 +838,13 @@ function PopoverInstrument({ scope, session }: InstrumentProps) {
       visual={
         <Panel on={on} sim={sim} error={d.error} note="A modal dialog makes everything behind it unusable, so Stop is out of reach until you close it. Press Escape or use the Close button.">
           <div className="pc-row">
-            <Act on={on} pri onClick={() => send({ op: "modal" })}>Open modal dialog</Act>
-            <Act on={on} onClick={() => send({ op: "plain" })}>Open without blocking</Act>
-            <Act on={on} onClick={() => send({ op: "popover" })}>Toggle popover</Act>
+            <Act data-control="popover-dialog.modal" on={on} pri onClick={() => send({ op: "modal" })}>Open modal dialog</Act>
+            <Act data-control="popover-dialog.plain" on={on} onClick={() => send({ op: "plain" })}>Open without blocking</Act>
+            <Act data-control="popover-dialog.popover" on={on} onClick={() => send({ op: "popover" })}>Toggle popover</Act>
             <span className="pc-l">Popover</span>
-            <div className="seg">{["auto", "manual"].map((k) => <button key={k} type="button" className={d.mode === k ? "on" : ""} disabled={!on} onClick={() => send({ op: "mode", value: k })}>{k}</button>)}</div>
+            <div className="seg">{["auto", "manual"].map((k) => <button data-control={`popover-dialog.mode-${k}`} key={k} type="button" className={d.mode === k ? "on" : ""} disabled={!on} onClick={() => send({ op: "mode", value: k })}>{k}</button>)}</div>
           </div>
-          <dialog data-pc-dialog className="pd-dialog"><b>A dialog from the page</b><span>Modal means the rest of the page is switched off until you answer.</span><form method="dialog"><button className="btn sm pri" value="ok">Close</button></form></dialog>
+          <dialog data-pc-dialog className="pd-dialog"><b>A dialog from the page</b><span>Modal means the rest of the page is switched off until you answer.</span><form method="dialog"><button data-control="popover-dialog.close" className="btn sm pri" value="ok">Close</button></form></dialog>
           <div popover="auto" data-pc-popover className="pd-pop"><b>A popover</b><span>In auto mode, a click outside or Escape closes it. In manual mode only the page can.</span></div>
         </Panel>
       }
@@ -893,7 +893,7 @@ function PrintInstrument({ scope, session }: InstrumentProps) {
     <Frame
       visual={
         <Panel on={on} sim={sim} error={d.error} note="The page cannot print silently or pick a printer; it can only open the same dialog you get from Ctrl or Cmd P. Cancel it to carry on.">
-          <div className="pc-row"><Act on={on} pri onClick={() => send({ op: "print" })}>Open the print dialog</Act><Tog on={on} checked={d.swap} onChange={(v) => send({ swap: v })}>Rename the page for print</Tog></div>
+          <div className="pc-row"><Act data-control="print.open" on={on} pri onClick={() => send({ op: "print" })}>Open the print dialog</Act><Tog data-control="print.rename-toggle" on={on} checked={d.swap} onChange={(v) => send({ swap: v })}>Rename the page for print</Tog></div>
         </Panel>
       }
       side={<Readout rows={[
@@ -955,7 +955,7 @@ function AutoplayInstrument({ scope, session }: InstrumentProps) {
     <Frame
       visual={
         <Panel on={on} sim={sim} error={d.error} note="Because you clicked the button, sound is usually allowed here. On a page you only opened, the same call is refused until you touch the page.">
-          <div className="pc-row"><Act on={on} pri onClick={() => send({ op: "audio" })}>Play a beep</Act><Act on={on} onClick={() => send({ op: "muted" })}>Play it muted</Act><Act on={on} onClick={() => send({ op: "webaudio" })}>Start audio engine</Act></div>
+          <div className="pc-row"><Act data-control="autoplay.beep" on={on} pri onClick={() => send({ op: "audio" })}>Play a beep</Act><Act data-control="autoplay.muted" on={on} onClick={() => send({ op: "muted" })}>Play it muted</Act><Act data-control="autoplay.audio-engine" on={on} onClick={() => send({ op: "webaudio" })}>Start audio engine</Act></div>
           <ul className="pd-log">{d.log.length ? d.log.map((x: string, i: number) => <li key={i}>{x}</li>) : <li>Nothing tried yet</li>}</ul>
         </Panel>
       }
@@ -1007,9 +1007,9 @@ function VtInstrument({ scope, session }: InstrumentProps) {
         <Panel on={on} sim={sim} error={d.error} note="The browser takes a picture of the page before and after the change and animates between them. It also works across page loads on the same site.">
           <div className="pd-vt-stage"><div data-pc-vt data-state={d.flip ? "b" : "a"} className="pd-vt-box">{d.flip ? "After" : "Before"}</div></div>
           <div className="pc-row">
-            <Act on={on} pri onClick={() => send({ op: "run", kind: "slide" })}>Slide</Act>
-            <Act on={on} onClick={() => send({ op: "run", kind: "fade" })}>Change with a fade</Act>
-            <label className="pc-rng">Speed<input type="range" min={100} max={2000} step={100} value={d.ms} disabled={!on} onChange={(e) => send({ ms: +e.target.value })} /><b>{d.ms} ms</b></label>
+            <Act data-control="view-transitions.slide" on={on} pri onClick={() => send({ op: "run", kind: "slide" })}>Slide</Act>
+            <Act data-control="view-transitions.fade" on={on} onClick={() => send({ op: "run", kind: "fade" })}>Change with a fade</Act>
+            <label className="pc-rng">Speed<input data-control="view-transitions.speed" type="range" min={100} max={2000} step={100} value={d.ms} disabled={!on} onChange={(e) => send({ ms: +e.target.value })} /><b>{d.ms} ms</b></label>
           </div>
         </Panel>
       }
@@ -1069,8 +1069,8 @@ function FragInstrument({ scope, session }: InstrumentProps) {
       visual={
         <Panel on={on} sim={sim} error={d.error} note="Opens a small demo page in a new tab with the phrase highlighted. Leave the end empty to match one phrase. Stop closes the tab.">
           <div className="pd-quote">{FRAG_PARAGRAPHS[2]}</div>
-          <div className="pc-row"><span className="pc-l">From</span><input className="pc-in" value={start} onChange={(e) => setStart(e.target.value)} aria-label="Start of the phrase" disabled={!on} /><span className="pc-l">To</span><input className="pc-in" value={end} onChange={(e) => setEnd(e.target.value)} aria-label="End of the phrase" disabled={!on} /></div>
-          <div className="pc-row"><Act on={on} pri onClick={() => send({ op: "open", ...p })}>Open highlighted page</Act><Act on={on} onClick={() => send({ op: "copy", ...p })}>Copy the link</Act></div>
+          <div className="pc-row"><span className="pc-l">From</span><input data-control="text-fragments.start" className="pc-in" value={start} onChange={(e) => setStart(e.target.value)} aria-label="Start of the phrase" disabled={!on} /><span className="pc-l">To</span><input data-control="text-fragments.end" className="pc-in" value={end} onChange={(e) => setEnd(e.target.value)} aria-label="End of the phrase" disabled={!on} /></div>
+          <div className="pc-row"><Act data-control="text-fragments.open" on={on} pri onClick={() => send({ op: "open", ...p })}>Open highlighted page</Act><Act data-control="text-fragments.copy" on={on} onClick={() => send({ op: "copy", ...p })}>Copy the link</Act></div>
         </Panel>
       }
       side={<Readout rows={[
@@ -1119,8 +1119,8 @@ function PopupInstrument({ scope, session }: InstrumentProps) {
     <Frame
       visual={
         <Panel on={on} sim={sim} error={d.error} note="Popups opened straight from a click are allowed. One opened after waiting may be blocked, depending on the browser. Stop closes every window it opened.">
-          <div className="pc-row"><Act on={on} pri onClick={() => send({ op: "popup", noopener: no })}>Open small window</Act><Act on={on} onClick={() => send({ op: "tab", noopener: no })}>Open new tab</Act><Act on={on} onClick={() => send({ op: "delayed", noopener: no })}>Open after 3 s wait</Act></div>
-          <div className="pc-row"><Tog on={on} checked={no} onChange={setNo}>Cut the link back (noopener)</Tog></div>
+          <div className="pc-row"><Act data-control="open-popup.small-window" on={on} pri onClick={() => send({ op: "popup", noopener: no })}>Open small window</Act><Act data-control="open-popup.new-tab" on={on} onClick={() => send({ op: "tab", noopener: no })}>Open new tab</Act><Act data-control="open-popup.delayed" on={on} onClick={() => send({ op: "delayed", noopener: no })}>Open after 3 s wait</Act></div>
+          <div className="pc-row"><Tog data-control="open-popup.noopener" on={on} checked={no} onChange={setNo}>Cut the link back (noopener)</Tog></div>
         </Panel>
       }
       side={<Readout rows={[
@@ -1167,7 +1167,7 @@ function CloseInstrument({ scope, session }: InstrumentProps) {
     <Frame
       visual={
         <Panel on={on} sim={sim} error={d.error} note="Browsers let a page close windows it opened, but not a tab you opened yourself.">
-          <div className="pc-row"><Act on={on} pri onClick={() => send({ op: "open" })}>Open a window</Act><Act on={on && d.open} onClick={() => send({ op: "close" })}>Close it from script</Act><Act on={on} onClick={() => send({ op: "self" })}>Try closing this tab</Act></div>
+          <div className="pc-row"><Act data-control="window-close.open" on={on} pri onClick={() => send({ op: "open" })}>Open a window</Act><Act data-control="window-close.close" on={on && d.open} onClick={() => send({ op: "close" })}>Close it from script</Act><Act data-control="window-close.self" on={on} onClick={() => send({ op: "self" })}>Try closing this tab</Act></div>
         </Panel>
       }
       side={<Readout rows={[
@@ -1216,14 +1216,14 @@ function NavInstrument({ scope, session }: InstrumentProps) {
   const { d, on, sim, send } = useCtl<Rec>(scope, session);
   const [perm, setPerm] = useState("");
   const target = useMemo(navTarget, [d?.hash]); // eslint-disable-line react-hooks/exhaustive-deps
-  const srcDoc = useMemo(() => `<!doctype html><body style="font:13px system-ui;margin:12px"><button id=b style="font:13px system-ui;padding:6px 12px">Redirect the page that contains me</button><script>document.getElementById("b").onclick=function(){try{top.location.href=${JSON.stringify(target)}}catch(e){}parent.postMessage({pc:"nav-top"},"*")}<\/script>`, [target]);
+  const srcDoc = useMemo(() => `<!doctype html><body style="font:13px system-ui;margin:12px"><button data-control="navigate-top.iframe-redirect" id=b style="font:13px system-ui;padding:6px 12px">Redirect the page that contains me</button><script>document.getElementById("b").onclick=function(){try{top.location.href=${JSON.stringify(target)}}catch(e){}parent.postMessage({pc:"nav-top"},"*")}<\/script>`, [target]);
   if (!d) return <Frame visual={<Waiting session={session} what="Redirects this tab from script, and from an embedded frame that may or may not be allowed to." />} />;
   return (
     <Frame
       visual={
         <Panel on={on} sim={sim} error={d.error} note="Redirects here only flip the address between two names for this same view, so nothing is lost. Stop puts the address back.">
-          <div className="pc-row"><Act on={on} pri onClick={() => send({ op: "assign" })}>location.assign()</Act><Act on={on} onClick={() => send({ op: "replace" })}>location.replace()</Act></div>
-          <div className="pc-row"><span className="pc-l">Embedded frame may redirect this tab</span><div className="seg">{FRAME_PERMS.map(([k, l]) => <button key={k || "none"} type="button" className={perm === k ? "on" : ""} disabled={!on || sim} onClick={() => setPerm(k)}>{l}</button>)}</div></div>
+          <div className="pc-row"><Act data-control="navigate-top.assign" on={on} pri onClick={() => send({ op: "assign" })}>location.assign()</Act><Act data-control="navigate-top.replace" on={on} onClick={() => send({ op: "replace" })}>location.replace()</Act></div>
+          <div className="pc-row"><span className="pc-l">Embedded frame may redirect this tab</span><div className="seg">{FRAME_PERMS.map(([k, l]) => <button data-control={`navigate-top.frame-perm-${k || "none"}`} key={k || "none"} type="button" className={perm === k ? "on" : ""} disabled={!on || sim} onClick={() => setPerm(k)}>{l}</button>)}</div></div>
           {sim ? <p className="pc-foot">Frames do not run in simulated mode.</p> : <iframe key={perm} title="Embedded frame" className="pd-frame" sandbox={"allow-scripts " + perm} srcDoc={srcDoc} />}
         </Panel>
       }

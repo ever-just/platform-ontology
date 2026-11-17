@@ -6,7 +6,7 @@ import { CircleCheck, CircleX, Clock, Cookie, MessageSquare, ShieldCheck, X } fr
 export const openPrivacy = () => window.dispatchEvent(new Event("po:privacy"));
 
 export function PrivacyLink({ children = "Privacy" }: { children?: React.ReactNode }) {
-  return <a href="#privacy" className="priv-link" onClick={(e) => { e.preventDefault(); openPrivacy(); }}>{children}</a>;
+  return <a data-control="privacy.link" href="#privacy" className="priv-link" onClick={(e) => { e.preventDefault(); openPrivacy(); }}>{children}</a>;
 }
 
 const STORED = [
@@ -34,12 +34,12 @@ export function PrivacyDialog({ open, onClose }: { open: boolean; onClose: () =>
     if (!open && d.open) d.close();
   }, [open]);
   return (
-    <dialog ref={ref} className="priv" onClose={onClose} onClick={(e) => e.target === ref.current && onClose()} aria-labelledby="priv-t">
+    <dialog data-control="privacy.dialog" ref={ref} className="priv" onClose={onClose} onClick={(e) => e.target === ref.current && onClose()} aria-labelledby="priv-t">
       <div className="priv-in">
         <header>
           <ShieldCheck size={18} />
           <h2 id="priv-t">Privacy notice</h2>
-          <button className="btn ghost sm" onClick={onClose} aria-label="Close"><X size={14} /></button>
+          <button data-control="privacy.close" className="btn ghost sm" onClick={onClose} aria-label="Close"><X size={14} /></button>
         </header>
         <p>This console stores the readings it takes so we can study what browsers expose to websites. Personal content is removed on our server before anything is saved.</p>
         <div className="priv-cols">

@@ -174,7 +174,7 @@ export function DepChips({ ctx, info }: { ctx: ConsoleCtx; info: DepInfo }) {
             const title = `${r.label}: ${r.why} (${word[st]})${target ? ". Open it." : ""}`;
             const body = <><i /><I size={12} /><span className="t">{r.label}</span>{target && <ChevronRight size={12} className="go" />}</>;
             return target
-              ? <button key={reqKey(r)} className="chip" data-s={st} title={title} onClick={() => ctx.select(target.id)}>{body}</button>
+              ? <button data-control={`inspector.dep-chip.${reqKey(r)}`} key={reqKey(r)} className="chip" data-s={st} title={title} onClick={() => ctx.select(target.id)}>{body}</button>
               : <span key={reqKey(r)} className="chip" data-s={st} title={title}>{body}</span>;
           })}
         </div>
@@ -184,7 +184,7 @@ export function DepChips({ ctx, info }: { ctx: ConsoleCtx; info: DepInfo }) {
           <span className="chip-l">Needed by</span>
           <div className="chips">
             {unlocks.map((s) => (
-              <button key={s.id} className="chip" title={`${s.name} needs this. Open it.`} onClick={() => ctx.select(s.id)}>
+              <button data-control={`inspector.needed-by.${s.id}`} key={s.id} className="chip" title={`${s.name} needs this. Open it.`} onClick={() => ctx.select(s.id)}>
                 <span className="t">{s.name}</span><ChevronRight size={12} className="go" />
               </button>
             ))}

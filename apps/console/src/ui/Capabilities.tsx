@@ -69,16 +69,16 @@ export function Capabilities({ ctx, selected }: { ctx: ConsoleCtx; selected: str
       <div className="box-h">
         <h3>Capabilities <em>{ctx.scopes.length}</em></h3>
         <div className="tabs">
-          {TABS.map(([t, l]) => <button key={t} className={tab === t ? "on" : ""} onClick={() => setTab(t)}>{l}<em>{counts[t]}</em></button>)}
+          {TABS.map(([t, l]) => <button data-control={`caps.tab.${t}`} key={t} className={tab === t ? "on" : ""} onClick={() => setTab(t)}>{l}<em>{counts[t]}</em></button>)}
         </div>
       </div>
       <div className="caps-tools">
-        <label className="search"><Search size={14} /><input ref={input} value={q} onChange={(e) => setQ(e.target.value)} placeholder="Search capabilities" /><kbd>/</kbd>{q && <button onClick={() => setQ("")} aria-label="Clear"><X size={13} /></button>}</label>
+        <label className="search"><Search size={14} /><input data-control="caps.search" ref={input} value={q} onChange={(e) => setQ(e.target.value)} placeholder="Search capabilities" /><kbd>/</kbd>{q && <button data-control="caps.search-clear" onClick={() => setQ("")} aria-label="Clear"><X size={13} /></button>}</label>
       </div>
       {logged > 0 && <div className="logged-note" title="Any site can read these on load without asking"><History size={13} /><span>{logged} read silently on load</span></div>}
       <div className="chips">
-        <button className={!group ? "on" : ""} onClick={() => setGroup(null)}>All groups</button>
-        {groups.map((g) => { const I = g.icon; return <button key={g.id} className={group === g.id ? "on" : ""} onClick={() => setGroup(group === g.id ? null : g.id)}>{I && <I size={13} />}{g.label}<em>{all.get(g.id)?.length}</em></button>; })}
+        <button data-control="caps.group.all" className={!group ? "on" : ""} onClick={() => setGroup(null)}>All groups</button>
+        {groups.map((g) => { const I = g.icon; return <button data-control={`caps.group.${g.id}`} key={g.id} className={group === g.id ? "on" : ""} onClick={() => setGroup(group === g.id ? null : g.id)}>{I && <I size={13} />}{g.label}<em>{all.get(g.id)?.length}</em></button>; })}
       </div>
       <div className="caps-list">
         {visible.length === 0 && <div className="empty">{tab === "live" ? "Nothing is running." : tab === "blocked" ? "Nothing has been refused." : tab === "used" ? "Nothing has run yet." : tab === "ref" ? "Every entry has a live call." : "No match."}</div>}
@@ -89,7 +89,7 @@ export function Capabilities({ ctx, selected }: { ctx: ConsoleCtx; selected: str
             <div key={g.id} className="cg">
               <div className="cg-h">
                 {I && <I size={14} />}<b title={g.blurb}>{g.label}</b><em>{list.length}</em>
-                {silent > 0 && <button className="cg-run" onClick={() => runSilent(list)} title={`Run the ${silent} capabilities here that need no prompt`} aria-label={`Run ${silent} silent capabilities`}><Zap size={12} />{silent}</button>}
+                {silent > 0 && <button data-control={`caps.group-run.${g.id}`} className="cg-run" onClick={() => runSilent(list)} title={`Run the ${silent} capabilities here that need no prompt`} aria-label={`Run ${silent} silent capabilities`}><Zap size={12} />{silent}</button>}
               </div>
               {list.map((s) => <Row key={s.id} scope={s} on={selected === s.id} ok={works(s)} ctx={ctx} />)}
             </div>
@@ -105,13 +105,13 @@ const Row = memo(function Row({ scope, on, ok, ctx }: { scope: ScopeDef; on: boo
   const active = isActive(s);
   const mech = mechanismOf(scope, ok ? undefined : "n");
   return (
-    <div data-cap={scope.id} className={"row" + (on ? " on" : "") + (ok ? "" : " dim") + (active ? " live" : "")} onClick={() => ctx.select(scope.id)} title={scope.summary}>
+    <div data-control={`caps.row.${scope.id}`} data-cap={scope.id} className={"row" + (on ? " on" : "") + (ok ? "" : " dim") + (active ? " live" : "")} onClick={() => ctx.select(scope.id)} title={scope.summary}>
       <span className="row-i"><CapIcon scope={scope} size={15} /><i className={"dot st-" + s.state} /></span>
       <span className="row-n">{scope.name}</span>
       <MechBadge mech={mech} />
       <RowSpark scope={scope} records={s.records} />
       <span className="row-v">{active && s.hz ? s.hz.toFixed(1) + " Hz" : s.count ? short(s.count) : ""}</span>
-      <button className={"row-b" + (active ? " stop" : "")} onClick={(e) => { e.stopPropagation(); active ? stop(scope.id) : void request(scope.id); }} aria-label={active ? "Stop" : "Run"} title={active ? "Stop" : "Run"}>
+      <button data-control={`caps.row-run.${scope.id}`} className={"row-b" + (active ? " stop" : "")} onClick={(e) => { e.stopPropagation(); active ? stop(scope.id) : void request(scope.id); }} aria-label={active ? "Stop" : "Run"} title={active ? "Stop" : "Run"}>
         {active ? <Square size={11} /> : <Play size={11} />}
       </button>
     </div>

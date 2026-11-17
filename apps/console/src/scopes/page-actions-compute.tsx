@@ -58,17 +58,18 @@ function fill(n: number, kind: string): Uint8Array {
 // ---------- Shared instrument ----------
 
 type Row = { k: string; v: unknown; u?: string; digits?: number; hot?: boolean };
-type CtlProps<T> = { d: T; on: boolean; sim: boolean; send: (p: Patch) => void };
+type CtlProps<T> = { d: T; on: boolean; sim: boolean; send: (p: Patch) => void; sid?: string };
 
 function makeInstrument<T extends Base>(cfg: { wait: string; note: string; Controls: ComponentType<CtlProps<T>>; rows: (d: T) => Row[]; extra?: (d: T) => ReactNode; spark?: string }) {
   return function Instrument({ scope, session }: InstrumentProps) {
     const { d, on, sim, send } = useCtl<T>(scope, session);
+    const sid = scope.id;
     if (!d) return <Frame visual={<Waiting session={session} what={cfg.wait} />} />;
     return (
       <Frame
         visual={
           <div className="pc">
-            <cfg.Controls d={d} on={on} sim={sim} send={send} />
+            <cfg.Controls d={d} on={on} sim={sim} send={send} sid={sid} />
             {cfg.extra?.(d)}
             {d.series.length > 1 && <div className="pca-spark"><span>{cfg.spark}</span><Spark values={d.series} w={220} h={34} /></div>}
             {d.lines.length > 0 && <pre className="pca-log">{d.lines.join("\n")}</pre>}
@@ -84,25 +85,25 @@ function makeInstrument<T extends Base>(cfg: { wait: string; note: string; Contr
   };
 }
 
-function Run({ on, running, onClick, label = "Run", busyLabel = "Running" }: { on: boolean; running: boolean; onClick: () => void; label?: string; busyLabel?: string }) {
-  return <button className="btn sm pri" type="button" disabled={!on || running} onClick={onClick}>{running ? busyLabel + "…" : label}</button>;
+function Run({ on, running, onClick, label = "Run", busyLabel = "Running", "data-control": control }: { on: boolean; running: boolean; onClick: () => void; label?: string; busyLabel?: string; "data-control"?: string }) {
+  return <button data-control={control} className="btn sm pri" type="button" disabled={!on || running} onClick={onClick}>{running ? busyLabel + "…" : label}</button>;
 }
 
-function Seg({ value, opts, on, set }: { value: string; opts: string[]; on: boolean; set: (v: string) => void }) {
-  return <div className="seg">{opts.map((o) => <button key={o} type="button" className={value === o ? "on" : ""} disabled={!on} onClick={() => set(o)}>{o}</button>)}</div>;
+function Seg({ value, opts, on, set, "data-control": control }: { value: string; opts: string[]; on: boolean; set: (v: string) => void; "data-control"?: string }) {
+  return <div className="seg">{opts.map((o) => <button key={o} data-control={control ? `${control}.${o}` : undefined} type="button" className={value === o ? "on" : ""} disabled={!on} onClick={() => set(o)}>{o}</button>)}</div>;
 }
 
-function Rng({ label, value, min, max, step = 1, unit, on, set }: { label: string; value: number; min: number; max: number; step?: number; unit?: string; on: boolean; set: (v: number) => void }) {
+function Rng({ label, value, min, max, step = 1, unit, on, set, "data-control": control }: { label: string; value: number; min: number; max: number; step?: number; unit?: string; on: boolean; set: (v: number) => void; "data-control"?: string }) {
   return (
     <label className="pc-rng">{label}
-      <input type="range" min={min} max={max} step={step} value={value} disabled={!on} onChange={(e) => set(+e.target.value)} />
+      <input data-control={control} type="range" min={min} max={max} step={step} value={value} disabled={!on} onChange={(e) => set(+e.target.value)} />
       <b>{value}{unit ? " " + unit : ""}</b>
     </label>
   );
 }
 
-const OnlyRun = ({ on, d, send, label }: { on: boolean; d: Base; send: (p: Patch) => void; label: string }) => (
-  <div className="pc-row"><Run on={on} running={d.running} onClick={() => send({})} label={label} /></div>
+const OnlyRun = ({ on, d, send, label, "data-control": control }: { on: boolean; d: Base; send: (p: Patch) => void; label: string; "data-control"?: string }) => (
+  <div className="pc-row"><Run data-control={control} on={on} running={d.running} onClick={() => send({})} label={label} /></div>
 );
 
 // ---------- Compression streams ----------
@@ -161,9 +162,9 @@ function CompControls({ d, on, send }: CtlProps<CompRec>) {
   const [kind, setKind] = useState("text");
   return (
     <>
-      <div className="pc-row"><span className="pc-l">Format</span><Seg value={format} opts={["gzip", "deflate", "deflate-raw"]} on={on} set={setFormat} /></div>
-      <div className="pc-row"><span className="pc-l">Data</span><Seg value={kind} opts={["text", "random", "zeros"]} on={on} set={setKind} /></div>
-      <div className="pc-row"><Rng label="Size" value={kb} min={64} max={8192} step={64} unit="KB" on={on} set={setKb} /><Run on={on} running={d.running} onClick={() => send({ kb, format, kind })} label="Compress and check" /></div>
+      <div className="pc-row"><span className="pc-l">Format</span><Seg data-control="reach.compression.format" value={format} opts={["gzip", "deflate", "deflate-raw"]} on={on} set={setFormat} /></div>
+      <div className="pc-row"><span className="pc-l">Data</span><Seg data-control="reach.compression.data" value={kind} opts={["text", "random", "zeros"]} on={on} set={setKind} /></div>
+      <div className="pc-row"><Rng data-control="reach.compression.size" label="Size" value={kb} min={64} max={8192} step={64} unit="KB" on={on} set={setKb} /><Run data-control="reach.compression.run" on={on} running={d.running} onClick={() => send({ kb, format, kind })} label="Compress and check" /></div>
     </>
   );
 }
@@ -223,7 +224,7 @@ function isoSim(ctx: Ctx) {
 const IsoInstrument = makeInstrument<IsoRec>({
   wait: "Checks whether this page is cross origin isolated and what that unlocks.",
   note: "Live: read from this tab and this page's own response headers. Isolation needs two headers (COOP and COEP) from the server.",
-  Controls: ({ d, on, send }) => <OnlyRun on={on} d={d} send={send} label="Measure again" />,
+  Controls: ({ d, on, send }) => <OnlyRun data-control="reach.isolation.measure-again" on={on} d={d} send={send} label="Measure again" />,
   rows: (d) => [
     { k: "Cross origin isolated", v: d.isolated, hot: true },
     { k: "Secure context", v: d.secure },
@@ -278,9 +279,9 @@ function throttleCore(id: string, ctx: Ctx, fake: boolean) {
 const ThrControls = ({ d, on, sim, send }: CtlProps<ThrRec>) => (
   <>
     <div className="pc-row">
-      <button className="btn sm pri" type="button" disabled={!on} onClick={() => send({})}>{d.active ? "Pause the timer" : "Start the timer"}</button>
-      <button className="btn sm" type="button" disabled={!on} onClick={() => send({ reset: true })}>Clear numbers</button>
-      {sim && <label className="pc-sw"><input type="checkbox" checked={d.simHide} disabled={!on} onChange={(e) => send({ simHide: e.target.checked })} />Pretend the tab is hidden</label>}
+      <button data-control="reach.timer-throttle.toggle" className="btn sm pri" type="button" disabled={!on} onClick={() => send({})}>{d.active ? "Pause the timer" : "Start the timer"}</button>
+      <button data-control="reach.timer-throttle.clear" className="btn sm" type="button" disabled={!on} onClick={() => send({ reset: true })}>Clear numbers</button>
+      {sim && <label className="pc-sw"><input data-control="reach.timer-throttle.simulate-hidden" type="checkbox" checked={d.simHide} disabled={!on} onChange={(e) => send({ simHide: e.target.checked })} />Pretend the tab is hidden</label>}
     </div>
     <p className="pc-msg">A timer asks to fire every {EXPECT} ms. {sim ? "Tick the box to see a hidden tab." : "Switch to another tab for about 10 seconds, then come back and read the hidden numbers."}</p>
   </>
@@ -369,8 +370,8 @@ function SchControls({ d, on, send }: CtlProps<SchRec>) {
   const [w, setW] = useState(200);
   return (
     <div className="pc-row">
-      <Rng label="Work" value={w} min={100} max={600} step={50} unit="ms" on={on} set={setW} />
-      <Run on={on} running={d.running} onClick={() => send({ workMs: w })} label="Run all three tests" />
+      <Rng data-control="reach.scheduler.work" label="Work" value={w} min={100} max={600} step={50} unit="ms" on={on} set={setW} />
+      <Run data-control="reach.scheduler.run" on={on} running={d.running} onClick={() => send({ workMs: w })} label="Run all three tests" />
     </div>
   );
 }
@@ -451,8 +452,8 @@ function BeaControls({ d, on, send }: CtlProps<BeaRec>) {
   const [kb, setKb] = useState(4);
   return (
     <>
-      <div className="pc-row"><Rng label="Payload" value={kb} min={1} max={60} unit="KB" on={on} set={setKb} /><Run on={on} running={d.running} onClick={() => send({ kb })} label="Send a beacon" busyLabel="Sending" /></div>
-      <div className="pc-row"><label className="pc-sw"><input type="checkbox" checked={d.leave} disabled={!on} onChange={(e) => send({ leave: e.target.checked })} />Also send a tiny beacon each time this tab is hidden</label></div>
+      <div className="pc-row"><Rng data-control="reach.beacon.payload" label="Payload" value={kb} min={1} max={60} unit="KB" on={on} set={setKb} /><Run data-control="reach.beacon.send" on={on} running={d.running} onClick={() => send({ kb })} label="Send a beacon" busyLabel="Sending" /></div>
+      <div className="pc-row"><label className="pc-sw"><input data-control="reach.beacon.on-hide" type="checkbox" checked={d.leave} disabled={!on} onChange={(e) => send({ leave: e.target.checked })} />Also send a tiny beacon each time this tab is hidden</label></div>
       <p className="pc-msg">The probe goes to this site's own /api/ingest, which rejects it as a malformed batch and stores nothing. The point is that the browser sends it even if the tab closes.</p>
     </>
   );
@@ -537,10 +538,10 @@ function CacheControls({ d, on, send }: CtlProps<CacheRec>) {
   const [kb, setKb] = useState(64);
   return (
     <div className="pc-row">
-      <Rng label="Entry" value={kb} min={1} max={1024} unit="KB" on={on} set={setKb} />
-      <Run on={on} running={d.running} onClick={() => send({ op: "write", kb })} label="Store an entry" busyLabel="Working" />
-      <button className="btn sm" type="button" disabled={!on || d.running} onClick={() => send({ op: "read" })}>Read back</button>
-      <button className="btn sm" type="button" disabled={!on || d.running} onClick={() => send({ op: "clear" })}>Clear</button>
+      <Rng data-control="reach.cache.entry" label="Entry" value={kb} min={1} max={1024} unit="KB" on={on} set={setKb} />
+      <Run data-control="reach.cache.store" on={on} running={d.running} onClick={() => send({ op: "write", kb })} label="Store an entry" busyLabel="Working" />
+      <button data-control="reach.cache.read" className="btn sm" type="button" disabled={!on || d.running} onClick={() => send({ op: "read" })}>Read back</button>
+      <button data-control="reach.cache.clear" className="btn sm" type="button" disabled={!on || d.running} onClick={() => send({ op: "clear" })}>Clear</button>
     </div>
   );
 }
@@ -613,12 +614,12 @@ function SpecControls({ d, on, send }: CtlProps<SpecRec>) {
   const [eag, setEag] = useState("moderate");
   return (
     <>
-      <div className="pc-row"><span className="pc-l">Page</span><Seg value={target} opts={["/", "/?po-prefetch=1"]} on={on} set={setTarget} /></div>
-      <div className="pc-row"><span className="pc-l">When</span><Seg value={eag} opts={["conservative", "moderate", "eager", "immediate"]} on={on} set={setEag} /></div>
+      <div className="pc-row"><span className="pc-l">Page</span><Seg data-control="reach.prefetch.page" value={target} opts={["/", "/?po-prefetch=1"]} on={on} set={setTarget} /></div>
+      <div className="pc-row"><span className="pc-l">When</span><Seg data-control="reach.prefetch.when" value={eag} opts={["conservative", "moderate", "eager", "immediate"]} on={on} set={setEag} /></div>
       <div className="pc-row">
-        <Run on={on} running={d.running} onClick={() => send({ target, eagerness: eag })} label="Add the rule" busyLabel="Adding" />
-        <button className="btn sm" type="button" disabled={!on || !d.injected} onClick={() => send({ remove: true })}>Remove it</button>
-        {d.injected && <a className="pca-link" href={d.target} onClick={(e) => e.preventDefault()}>Test link to {d.target}</a>}
+        <Run data-control="reach.prefetch.add-rule" on={on} running={d.running} onClick={() => send({ target, eagerness: eag })} label="Add the rule" busyLabel="Adding" />
+        <button data-control="reach.prefetch.remove" className="btn sm" type="button" disabled={!on || !d.injected} onClick={() => send({ remove: true })}>Remove it</button>
+        {d.injected && <a data-control="reach.prefetch.test-link" className="pca-link" href={d.target} onClick={(e) => e.preventDefault()}>Test link to {d.target}</a>}
       </div>
     </>
   );
@@ -689,7 +690,7 @@ function crySim(ctx: Ctx) {
 
 function CryControls({ d, on, send }: CtlProps<CryRec>) {
   const [kb, setKb] = useState(1024);
-  return <div className="pc-row"><Rng label="Data" value={kb} min={16} max={16384} step={16} unit="KB" on={on} set={setKb} /><Run on={on} running={d.running} onClick={() => send({ kb })} label="Hash, sign and encrypt" /></div>;
+  return <div className="pc-row"><Rng data-control="reach.crypto.data" label="Data" value={kb} min={16} max={16384} step={16} unit="KB" on={on} set={setKb} /><Run data-control="reach.crypto.run" on={on} running={d.running} onClick={() => send({ kb })} label="Hash, sign and encrypt" /></div>;
 }
 
 const CryInstrument = makeInstrument<CryRec>({
@@ -776,8 +777,8 @@ function WorkControls({ d, on, send }: CtlProps<WorkRec>) {
   const [size, setSize] = useState("medium");
   return (
     <>
-      <div className="pc-row"><span className="pc-l">Work</span><Seg value={size} opts={["light", "medium", "heavy"]} on={on} set={setSize} /></div>
-      <div className="pc-row"><Rng label="Workers" value={n} min={1} max={8} on={on} set={setN} /><Run on={on} running={d.running} onClick={() => send({ n, size })} label="Run in parallel" /></div>
+      <div className="pc-row"><span className="pc-l">Work</span><Seg data-control="reach.workers.work" value={size} opts={["light", "medium", "heavy"]} on={on} set={setSize} /></div>
+      <div className="pc-row"><Rng data-control="reach.workers.workers" label="Workers" value={n} min={1} max={8} on={on} set={setN} /><Run data-control="reach.workers.run" on={on} running={d.running} onClick={() => send({ n, size })} label="Run in parallel" /></div>
     </>
   );
 }
@@ -843,8 +844,8 @@ function WasmControls({ d, on, send }: CtlProps<WasmRec>) {
   return (
     <div className="pc-row">
       <span className="pc-l">Count to</span>
-      <Seg value={n} opts={["10000000", "100000000", "400000000"]} on={on} set={setN} />
-      <Run on={on} running={d.running} onClick={() => send({ n: +n })} label="Compile and run" />
+      <Seg data-control="reach.wasm.size" value={n} opts={["10000000", "100000000", "400000000"]} on={on} set={setN} />
+      <Run data-control="reach.wasm.run" on={on} running={d.running} onClick={() => send({ n: +n })} label="Compile and run" />
     </div>
   );
 }
@@ -925,8 +926,8 @@ function CodControls({ d, on, send }: CtlProps<CodRec>) {
   const [frames, setFrames] = useState(30);
   return (
     <>
-      <div className="pc-row"><span className="pc-l">Codec</span><Seg value={codec} opts={["vp8", "vp9", "h264", "av1"]} on={on} set={setCodec} /></div>
-      <div className="pc-row"><Rng label="Frames" value={frames} min={5} max={120} step={5} on={on} set={setFrames} /><Run on={on} running={d.running} onClick={() => send({ codec, frames })} label="Encode canvas frames" busyLabel="Encoding" /></div>
+      <div className="pc-row"><span className="pc-l">Codec</span><Seg data-control="reach.codecs.codec" value={codec} opts={["vp8", "vp9", "h264", "av1"]} on={on} set={setCodec} /></div>
+      <div className="pc-row"><Rng data-control="reach.codecs.frames" label="Frames" value={frames} min={5} max={120} step={5} on={on} set={setFrames} /><Run data-control="reach.codecs.run" on={on} running={d.running} onClick={() => send({ codec, frames })} label="Encode canvas frames" busyLabel="Encoding" /></div>
     </>
   );
 }
@@ -1002,12 +1003,12 @@ function McpControls({ d, on, send }: CtlProps<McpRec>) {
   return (
     <>
       <div className="pc-row">
-        <button className="btn sm pri" type="button" disabled={!on || d.running || d.registered} onClick={() => send({ op: "register" })}>Register the tool</button>
-        <button className="btn sm" type="button" disabled={!on || d.running || !d.registered} onClick={() => send({ op: "unregister" })}>Remove it</button>
+        <button data-control="reach.webmcp.register" className="btn sm pri" type="button" disabled={!on || d.running || d.registered} onClick={() => send({ op: "register" })}>Register the tool</button>
+        <button data-control="reach.webmcp.unregister" className="btn sm" type="button" disabled={!on || d.running || !d.registered} onClick={() => send({ op: "unregister" })}>Remove it</button>
       </div>
       <form className="pc-row" onSubmit={(e) => { e.preventDefault(); send({ op: "call", text }); }}>
-        <input className="pc-in" value={text} onChange={(e) => setText(e.target.value)} aria-label="Text for the tool" disabled={!on || !d.registered} />
-        <button className="btn sm" disabled={!on || !d.registered}>Call it</button>
+        <input data-control="reach.webmcp.text" className="pc-in" value={text} onChange={(e) => setText(e.target.value)} aria-label="Text for the tool" disabled={!on || !d.registered} />
+        <button data-control="reach.webmcp.call" className="btn sm" disabled={!on || !d.registered}>Call it</button>
       </form>
     </>
   );
@@ -1100,8 +1101,8 @@ function RtcControls({ d, on, send }: CtlProps<RtcRec>) {
   const [count, setCount] = useState(50);
   return (
     <>
-      <div className="pc-row"><Rng label="Message" value={size} min={16} max={65536} step={16} unit="bytes" on={on} set={setSize} /></div>
-      <div className="pc-row"><Rng label="Messages" value={count} min={10} max={500} step={10} on={on} set={setCount} /><Run on={on} running={d.running} onClick={() => send({ size, count })} label="Connect and ping" busyLabel="Pinging" /></div>
+      <div className="pc-row"><Rng data-control="reach.datachannel.message-size" label="Message" value={size} min={16} max={65536} step={16} unit="bytes" on={on} set={setSize} /></div>
+      <div className="pc-row"><Rng data-control="reach.datachannel.messages" label="Messages" value={count} min={10} max={500} step={10} on={on} set={setCount} /><Run data-control="reach.datachannel.run" on={on} running={d.running} onClick={() => send({ size, count })} label="Connect and ping" busyLabel="Pinging" /></div>
     </>
   );
 }
@@ -1162,7 +1163,7 @@ const wtFacts = (): DetRec["facts"] => [
 
 const DetInstrument = (wait: string, note: string) => makeInstrument<DetRec>({
   wait, note,
-  Controls: ({ d, on, send }) => <OnlyRun on={on} d={d} send={send} label="Check again" />,
+  Controls: ({ d, on, send, sid }) => <OnlyRun data-control={`${sid}.check-again`} on={on} d={d} send={send} label="Check again" />,
   rows: (d) => d.facts.map((f, i) => ({ k: f.k, v: f.v, hot: i === 0 })),
 });
 

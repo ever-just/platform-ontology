@@ -129,7 +129,7 @@ export function BarList({ rows, empty = "Nothing yet", max }: { rows: BarRow[]; 
       {rows.map((r) => {
         const Tag = r.onClick ? "button" : "div";
         return (
-          <Tag key={r.key} className={"bl-row" + (r.onClick ? " click" : "")} onClick={r.onClick}>
+          <Tag data-control={`chart.row.${r.key}`} key={r.key} className={"bl-row" + (r.onClick ? " click" : "")} onClick={r.onClick}>
             {r.segs ? (
               <span className="bl-segs">{r.segs.map((s, i) => <i key={i} style={{ width: (s.v / m) * 100 + "%", background: s.c }} />)}</span>
             ) : (
