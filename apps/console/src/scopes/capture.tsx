@@ -233,7 +233,7 @@ function CameraInstrument({ session }: InstrumentProps) {
             <Cv draw={draw} w={640} h={360} className="cdf-overlay" />
           </div>
           <div className="cdf-actions">
-            <button type="button" className="btn sm pri" disabled={!canShoot} title={canShoot ? "Grab the current frame" : "Start the camera first"} onClick={takePhoto}>Take photo</button>
+            <button type="button" data-control="capture.camera.take-photo" className="btn sm pri" disabled={!canShoot} title={canShoot ? "Grab the current frame" : "Start the camera first"} onClick={takePhoto}>Take photo</button>
             {shots.length > 0 && <span className="cdf-note">{shots.length} of {MAX_SHOTS} kept. Photos stay in this tab.</span>}
             {shotErr && <span className="cdf-err">{shotErr}</span>}
           </div>
@@ -385,7 +385,7 @@ function MicInstrument({ session }: InstrumentProps) {
   const recorder = (
     <div className="cdf-rec">
       <div className="cdf-actions">
-        <button type="button" className="btn sm pri" disabled={!hasAudio || recording} title={recTitle} onClick={record}>
+        <button type="button" data-control="capture.microphone.record" className="btn sm pri" disabled={!hasAudio || recording} title={recTitle} onClick={record}>
           {recording ? `Recording, ${left}s left` : `Record ${REC_SECONDS} seconds`}
         </button>
         {recording && <span className="cdf-recdot" aria-hidden="true" />}
@@ -762,11 +762,11 @@ function ClipInstrument({ session }: InstrumentProps) {
           <div><span className="cdf-tag">looks like: {d.kind}</span></div>
           <div className="cdf-mask">{d.text || "(nothing on the clipboard)"}</div>
           <div className="cdf-actions">
-            <button type="button" className="btn sm" disabled={busy} onClick={readAgain}>Read again</button>
+            <button type="button" data-control="capture.clipboard.read-again" className="btn sm" disabled={busy} onClick={readAgain}>Read again</button>
           </div>
           <form className="cdf-actions" onSubmit={(e) => { e.preventDefault(); void write(); }}>
-            <input className="cdf-input" type="text" value={draft} placeholder="Text to put on the clipboard" aria-label="Text to write to the clipboard" onChange={(e) => setDraft(e.target.value)} />
-            <button type="submit" className="btn sm pri" disabled={busy}>Write to clipboard</button>
+            <input data-control="capture.clipboard.text" className="cdf-input" type="text" value={draft} placeholder="Text to put on the clipboard" aria-label="Text to write to the clipboard" onChange={(e) => setDraft(e.target.value)} />
+            <button type="submit" data-control="capture.clipboard.write" className="btn sm pri" disabled={busy}>Write to clipboard</button>
           </form>
           {msg && <p className={"cdf-note " + (msg.ok ? "cdf-ok" : "cdf-err")}>{msg.text}</p>}
           <p className="cdf-note">A real page receives the whole text, which is often a password, a one-time code or a copied address. Pages can also overwrite it.</p>

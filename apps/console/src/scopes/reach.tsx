@@ -12,8 +12,8 @@ const COLOR = DOMAIN_COLOR.reach;
 // Instruments have only the session, so live adapters register an action hook the instrument button calls.
 const hooks: Record<string, (() => void) | null> = {};
 
-function ActionButton({ id, label, ghost, disabled }: { id: string; label: string; ghost?: boolean; disabled?: boolean }) {
-  return <button className={"eir-btn" + (ghost ? " ghost" : "")} disabled={disabled} onClick={() => hooks[id]?.()}>{label}</button>;
+function ActionButton({ id, label, ghost, disabled, "data-control": control }: { id: string; label: string; ghost?: boolean; disabled?: boolean; "data-control"?: string }) {
+  return <button data-control={control ?? `${id}.action`} className={"eir-btn" + (ghost ? " ghost" : "")} disabled={disabled} onClick={() => hooks[id]?.()}>{label}</button>;
 }
 
 // ---------- Notifications ----------

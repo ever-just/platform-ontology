@@ -138,15 +138,15 @@ export function RunAll({ ctx }: { ctx: ConsoleCtx }) {
 
   return (
     <>
-      <button className={"btn sm ra-b" + (phase === "step" ? " on" : "")} onClick={show} title="Start every capability this browser supports, one prompt at a time">
+      <button data-control="runall.start" className={"btn sm ra-b" + (phase === "step" ? " on" : "")} onClick={show} title="Start every capability this browser supports, one prompt at a time">
         <Zap size={13} /><span>{label}</span>
       </button>
-      <dialog ref={ref} className="ra" onClose={() => setOpen(false)} onClick={(e) => e.target === ref.current && setOpen(false)} aria-labelledby="ra-t">
+      <dialog data-control="runall.dialog" ref={ref} className="ra" onClose={() => setOpen(false)} onClick={(e) => e.target === ref.current && setOpen(false)} aria-labelledby="ra-t">
         <div className="ra-in">
           <header>
             <Zap size={17} />
             <h2 id="ra-t">{phase === "done" ? "Run all: finished" : "Run all"}</h2>
-            <button className="btn ghost sm" onClick={() => setOpen(false)} aria-label={phase === "step" ? "Pause" : "Close"} title={phase === "step" ? "Pause. Press Resume in the header to carry on." : "Close"}><X size={14} /></button>
+            <button data-control="runall.dialog-close" className="btn ghost sm" onClick={() => setOpen(false)} aria-label={phase === "step" ? "Pause" : "Close"} title={phase === "step" ? "Pause. Press Resume in the header to carry on." : "Close"}><X size={14} /></button>
           </header>
 
           {phase === "intro" && (
@@ -167,7 +167,7 @@ export function RunAll({ ctx }: { ctx: ConsoleCtx }) {
                   ))}
                 </div>
               )}
-              <label className="ra-opt"><input type="checkbox" checked={pickers} onChange={(e) => setPickers(e.target.checked)} />Include choosers (devices, screen, files, contacts)</label>
+              <label className="ra-opt"><input data-control="runall.include-pickers" type="checkbox" checked={pickers} onChange={(e) => setPickers(e.target.checked)} />Include choosers (devices, screen, files, contacts)</label>
               {plan.out.length > 0 && (
                 <details className="ra-out">
                   <summary><Ban size={13} />{plan.out.length} left out because they cannot start here</summary>
@@ -175,7 +175,7 @@ export function RunAll({ ctx }: { ctx: ConsoleCtx }) {
                     {plan.out.map(([s, g]) => (
                       <div key={s.id} className="ra-row" title={s.summary}>
                         <CapIcon scope={s} size={14} />
-                        <button className="lnk" onClick={() => { ctx.select(s.id); setOpen(false); }}>{s.name}</button>
+                        <button data-control={`runall.open-capability.${s.id}`} className="lnk" onClick={() => { ctx.select(s.id); setOpen(false); }}>{s.name}</button>
                         <span className={"ra-why " + g.why}>{g.text}</span>
                       </div>
                     ))}
@@ -184,8 +184,8 @@ export function RunAll({ ctx }: { ctx: ConsoleCtx }) {
               )}
               <p className="ra-fine">{checking ? "Checking what this browser and device can run. " : ""}{plan.running > 0 && `${plan.running} already running. `}You can pause at any point and pick up where you left off.</p>
               <footer>
-                <button className="btn" onClick={() => setOpen(false)}>Cancel</button>
-                <button className="btn pri" data-af onClick={start} disabled={checking}>{checking ? <><span className="ra-spin" />Checking</> : <><Play size={13} />Start</>}</button>
+                <button data-control="runall.cancel" className="btn" onClick={() => setOpen(false)}>Cancel</button>
+                <button data-control="runall.confirm-start" className="btn pri" data-af onClick={start} disabled={checking}>{checking ? <><span className="ra-spin" />Checking</> : <><Play size={13} />Start</>}</button>
               </footer>
             </>
           )}
@@ -349,15 +349,15 @@ function Step({ scope, kind, pos, total, next, ctx, silent, known, onDone, onSto
       {outcome === "failed" && <p className="ra-msg warn"><CircleAlert size={14} /><span>{scope.name} could not start{msg ? `: ${msg}` : "."} Moving on.</span></p>}
 
       <footer>
-        <button className="btn ghost" onClick={onStop} title="Stop asking and see the summary">Stop asking</button>
+        <button data-control="runall.stop-asking" className="btn ghost" onClick={onStop} title="Stop asking and see the summary">Stop asking</button>
         <span className="grow" />
         {(outcome || lingered || slow) && (
-          <button className="btn" onClick={() => onDone(outcome ?? "skipped")}>
+          <button data-control="runall.next" className="btn" onClick={() => onDone(outcome ?? "skipped")}>
             <SkipForward size={13} />{outcome ? "Next" : "Skip"}
           </button>
         )}
         {(!outcome || outcome === "refused" || outcome === "blocked" || outcome === "none") && (
-          <button ref={primary} className="btn pri" disabled={waiting} onClick={go}>
+          <button data-control="runall.step-go" ref={primary} className="btn pri" disabled={waiting} onClick={go}>
             {waiting ? <><span className="ra-spin" />Waiting</> : outcome ? <><RotateCcw size={13} />{outcome === "none" ? "Pick again" : "Ask again"}</> : <><Play size={13} />{known === "denied" ? "Try" : verb} {scope.name}</>}
           </button>
         )}
@@ -393,9 +393,9 @@ function Summary({ ids, results, byId, silentLive, silentFailed, ctx, again: ask
               return (
                 <div key={id} className="ra-row">
                   <CapIcon scope={s} size={14} />
-                  <button className="lnk" onClick={() => { ctx.select(id); onClose(); }}>{s.name}</button>
+                  <button data-control={`runall.summary-open.${id}`} className="lnk" onClick={() => { ctx.select(id); onClose(); }}>{s.name}</button>
                   <span className={"ra-tag " + tone} title={err || undefined}><I size={12} />{l}</span>
-                  <button className="btn sm" onClick={() => onRetry([id])}><RotateCcw size={12} />Ask again</button>
+                  <button data-control={`runall.retry.${id}`} className="btn sm" onClick={() => onRetry([id])}><RotateCcw size={12} />Ask again</button>
                 </div>
               );
             })}
@@ -403,8 +403,8 @@ function Summary({ ids, results, byId, silentLive, silentFailed, ctx, again: ask
         </>
       ) : <p>Everything you were asked about is running. Use Stop in the header to turn it all off.</p>}
       <footer>
-        <button className="btn" onClick={onClose}>Close</button>
-        {again.length > 0 && <button className="btn pri" data-af onClick={() => onRetry(again)}><RotateCcw size={13} />Ask again for {again.length}</button>}
+        <button data-control="runall.summary-close" className="btn" onClick={onClose}>Close</button>
+        {again.length > 0 && <button data-control="runall.retry-all" className="btn pri" data-af onClick={() => onRetry(again)}><RotateCcw size={13} />Ask again for {again.length}</button>}
       </footer>
     </>
   );

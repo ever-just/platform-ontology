@@ -216,13 +216,13 @@ function Console({ atlas }: { atlas: Atlas }) {
           </nav>
           <span className="grow" />
           {live > 0 && (
-            <button className="live-chip" onClick={stopAll} title="Stop every running capability">
+            <button data-control="app.stop-all" className="live-chip" onClick={stopAll} title="Stop every running capability">
               <span className="live-dot on" />{live} live<span className="live-x"><Square size={10} />Stop</span>
             </button>
           )}
           <VoiceDock atlas={atlas} scopes={scopes} />
           <RunAll ctx={ctx} />
-          <button className="icon-b look-b" onClick={() => setLook(nextLook.id)} title={`Look: ${LOOKS[lookIdx]?.label}. Switch to ${nextLook.label}`} aria-label={`Switch look to ${nextLook.label}`}><LookIcon size={16} /></button>
+          <button data-control="app.look" className="icon-b look-b" onClick={() => setLook(nextLook.id)} title={`Look: ${LOOKS[lookIdx]?.label}. Switch to ${nextLook.label}`} aria-label={`Switch look to ${nextLook.label}`}><LookIcon size={16} /></button>
           <a className="icon-b gh-b" href="https://github.com/ever-just/platform-ontology" target="_blank" rel="noreferrer" aria-label="Source on GitHub" title="Source on GitHub"><svg viewBox="0 0 24 24" width={16} height={16} aria-hidden="true"><path d={siGithub.path} fill="currentColor" /></svg></a>
         </div>
       </header>
@@ -237,7 +237,7 @@ function Console({ atlas }: { atlas: Atlas }) {
               const on = v.id === current?.id;
               const showSpark = m.spark && m.spark.some((x) => x !== m.spark![0]);
               return (
-                <button key={v.id} data-view={v.id} role="tab" aria-selected={on} title={m.sub} className={"kpi" + (on ? " on" : "")} onClick={() => setView(v.id)}>
+                <button data-control={`app.view.${v.id}`} key={v.id} data-view={v.id} role="tab" aria-selected={on} title={m.sub} className={"kpi" + (on ? " on" : "")} onClick={() => setView(v.id)}>
                   <span className="kpi-l">{(m.tone === "err" || m.tone === "ok") && <i className={"kpi-dot " + m.tone} aria-hidden />}{v.label}</span>
                   <b>{m.value}{m.unit && <em>{m.unit}</em>}</b>
                   <span className="kpi-sp" aria-hidden>{showSpark && <Spark values={m.spark!} w={64} h={14} />}</span>
@@ -249,23 +249,23 @@ function Console({ atlas }: { atlas: Atlas }) {
             <h2>{current?.label}</h2>
             <span className="grow" />
             <div className="seg" role="group" aria-label="Time range">
-              {RANGES.map(([r, l]) => <button key={r} className={range === r ? "on" : ""} onClick={() => setRange(r)}>{l}</button>)}
+              {RANGES.map(([r, l]) => <button data-control={`app.range.${r}`} key={r} className={range === r ? "on" : ""} onClick={() => setRange(r)}>{l}</button>)}
             </div>
             <details className="menu">
               <summary className="icon-b" title="Chart options" aria-label="Chart options"><SlidersHorizontal size={15} /></summary>
               <div className="menu-p">
                 <span className="menu-h">Chart</span>
                 <div className="seg full">
-                  {TYPES.map(([t, l, I]) => <button key={t} className={chart.type === t ? "on" : ""} onClick={() => setChart({ type: t })} title={l + " chart"}><I size={13} />{l}</button>)}
+                  {TYPES.map(([t, l, I]) => <button data-control={`chart.type.${t}`} key={t} className={chart.type === t ? "on" : ""} onClick={() => setChart({ type: t })} title={l + " chart"}><I size={13} />{l}</button>)}
                 </div>
                 <span className="menu-h">Group the list by</span>
                 <div className="seg full">
-                  {GROUPINGS.map(([g, l]) => <button key={g} className={chart.by === g ? "on" : ""} onClick={() => setChart({ by: g })}>{l}</button>)}
+                  {GROUPINGS.map(([g, l]) => <button data-control={`chart.group.${g}`} key={g} className={chart.by === g ? "on" : ""} onClick={() => setChart({ by: g })}>{l}</button>)}
                 </div>
                 <span className="menu-h">Spacing</span>
                 <div className="seg full">
-                  <button className={chart.density !== "compact" ? "on" : ""} onClick={() => setChart({ density: "comfortable" })}><Rows2 size={13} />Roomy</button>
-                  <button className={chart.density === "compact" ? "on" : ""} onClick={() => setChart({ density: "compact" })}><Rows4 size={13} />Compact</button>
+                  <button data-control="chart.density-roomy" className={chart.density !== "compact" ? "on" : ""} onClick={() => setChart({ density: "comfortable" })}><Rows2 size={13} />Roomy</button>
+                  <button data-control="chart.density-compact" className={chart.density === "compact" ? "on" : ""} onClick={() => setChart({ density: "compact" })}><Rows4 size={13} />Compact</button>
                 </div>
               </div>
             </details>
@@ -280,13 +280,13 @@ function Console({ atlas }: { atlas: Atlas }) {
           </footer>
         </section>
 
-        {scope && <button className="scrim" aria-label="Close inspector" tabIndex={-1} onClick={close} />}
+        {scope && <button data-control="inspector.scrim" className="scrim" aria-label="Close inspector" tabIndex={-1} onClick={close} />}
         <Inspector ctx={ctx} scope={scope} onClose={close} />
       </main>
 
       <nav className="tabbar" aria-label="Views">
-        <button className={pane === "overview" ? "on" : ""} aria-current={pane === "overview" ? "page" : undefined} onClick={() => setPane("overview")}><Gauge size={18} /><span>Overview</span></button>
-        <button className={pane === "caps" ? "on" : ""} aria-current={pane === "caps" ? "page" : undefined} onClick={() => setPane("caps")}><List size={18} /><span>Capabilities</span></button>
+        <button data-control="app.nav.overview" className={pane === "overview" ? "on" : ""} aria-current={pane === "overview" ? "page" : undefined} onClick={() => setPane("overview")}><Gauge size={18} /><span>Overview</span></button>
+        <button data-control="app.nav.caps" className={pane === "caps" ? "on" : ""} aria-current={pane === "caps" ? "page" : undefined} onClick={() => setPane("caps")}><List size={18} /><span>Capabilities</span></button>
       </nav>
       <PrivacyDialog open={privacy} onClose={closePrivacy} />
     </div>
@@ -303,14 +303,14 @@ function Activity({ ctx }: { ctx: ConsoleCtx }) {
       <div className="act-h">
         <ScrollText size={13} /><b>Activity</b>
         <span className="grow" />
-        {feed().length > 3 && <button className="lnk" onClick={() => setOpen(!open)}>{open ? "Show less" : `Show all ${Math.min(feed().length, 200)}`}<ChevronDown size={13} className={open ? "flip" : ""} /></button>}
+        {feed().length > 3 && <button data-control="app.feed-toggle" className="lnk" onClick={() => setOpen(!open)}>{open ? "Show less" : `Show all ${Math.min(feed().length, 200)}`}<ChevronDown size={13} className={open ? "flip" : ""} /></button>}
       </div>
       {!rows.length ? <div className="act-empty">Run a capability and each request, grant, reading and refusal appears here.</div> : (
         <div className="feed">
           {rows.map((l, i) => (
             <div key={l.t + ":" + i} className={"fe " + l.level}>
               <time>{clock(l.t)}</time>
-              <button className="lnk" onClick={() => ctx.select(l.scope)}>{name(l.scope)}</button>
+              <button data-control={`app.feed-open.${l.scope}`} className="lnk" onClick={() => ctx.select(l.scope)}>{name(l.scope)}</button>
               <span>{l.msg}</span>
             </div>
           ))}

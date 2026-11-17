@@ -126,8 +126,8 @@ function ScopeInspector({ ctx, scope, onClose, open, back, backName }: { ctx: Co
           </div>
         </div>
         <div className="ins-hb">
-          {back && <button className="icon-b ins-back" onClick={back} title={backName ? `Back to ${backName}` : "Back"} aria-label="Back"><ArrowLeft size={16} /></button>}
-          <button className="icon-b ins-x" onClick={onClose} aria-label="Close"><X size={16} /></button>
+          {back && <button data-control="inspector.back" className="icon-b ins-back" onClick={back} title={backName ? `Back to ${backName}` : "Back"} aria-label="Back"><ArrowLeft size={16} /></button>}
+          <button data-control="inspector.close" className="icon-b ins-x" onClick={onClose} aria-label="Close"><X size={16} /></button>
         </div>
       </div>
       {cannot ? (
@@ -138,28 +138,28 @@ function ScopeInspector({ ctx, scope, onClose, open, back, backName }: { ctx: Co
           <span>{g!.why === "blocked" ? "" : g!.text + " "}{scope.reference ? (/reference only/.test(g!.text) ? "" : g!.why === "blocked" ? WHY_FIX.blocked : "Try a browser that supports it.") : WHY_FIX[g!.why]}</span>
         </div>
         <div className="ins-na-b">
-          {g!.why === "blocked" && <button className="btn" onClick={() => setTick((t) => t + 1)}><RotateCw size={12} />Check again</button>}
-          {canSim && <button className="btn" onClick={() => { setSource(scope.id, "sim"); void request(scope.id); }}><FlaskConical size={12} />Simulate</button>}
+          {g!.why === "blocked" && <button data-control="inspector.check-again" className="btn" onClick={() => setTick((t) => t + 1)}><RotateCw size={12} />Check again</button>}
+          {canSim && <button data-control="inspector.simulate" className="btn" onClick={() => { setSource(scope.id, "sim"); void request(scope.id); }}><FlaskConical size={12} />Simulate</button>}
         </div>
       </div>
       ) : (
       <div className="ins-ctl">
         <span className="ins-st" data-tone={TONE[session.state] || "mute"} data-state={session.state}><i />{session.state}</span>
         {!scope.reference && <div className="seg">
-          <button className={session.source === "live" ? "on" : ""} onClick={() => setSource(scope.id, "live")}>Live</button>
-          <button className={session.source === "sim" ? "on" : ""} onClick={() => setSource(scope.id, "sim")}>Simulated</button>
+          <button data-control="inspector.source-live" className={session.source === "live" ? "on" : ""} onClick={() => setSource(scope.id, "live")}>Live</button>
+          <button data-control="inspector.source-sim" className={session.source === "sim" ? "on" : ""} onClick={() => setSource(scope.id, "sim")}>Simulated</button>
         </div>}
         <span className="grow" />
         {active
-          ? <button className="btn" onClick={() => stop(scope.id)}><Square size={12} />Stop</button>
+          ? <button data-control="inspector.stop" className="btn" onClick={() => stop(scope.id)}><Square size={12} />Stop</button>
           : g === undefined && session.source !== "sim"
-            ? <button className="btn" disabled><Play size={12} />Checking</button>
-            : <button className="btn pri" onClick={() => void request(scope.id)}><Play size={12} />{scope.reference ? "Check availability" : session.source === "sim" ? "Run simulated" : scope.passive ? "Run" : "Request access"}</button>}
+            ? <button data-control="inspector.checking" className="btn" disabled><Play size={12} />Checking</button>
+            : <button data-control="inspector.run" className="btn pri" onClick={() => void request(scope.id)}><Play size={12} />{scope.reference ? "Check availability" : session.source === "sim" ? "Run simulated" : scope.passive ? "Run" : "Request access"}</button>}
       </div>
       )}
       <div className="tabs line" role="tablist">
         {TABS.map((t) => (
-          <button key={t.id} data-tab={t.id} role="tab" aria-selected={tab === t.id} className={tab === t.id ? "on" : ""} onClick={() => setTab(t.id)}>
+          <button data-control={`inspector.tab.${t.id}`} key={t.id} data-tab={t.id} role="tab" aria-selected={tab === t.id} className={tab === t.id ? "on" : ""} onClick={() => setTab(t.id)}>
             {t.label}{t.id === "log" && session.logs.length > 0 && <em>{session.logs.length}</em>}
           </button>
         ))}
@@ -169,9 +169,9 @@ function ScopeInspector({ ctx, scope, onClose, open, back, backName }: { ctx: Co
           <div className="i-tab" key={"live-" + view}>
             <div className="i-sub">
               <div className="seg" role="group" aria-label="View">
-                <button className={view === "now" ? "on" : ""} onClick={() => setView("now")}>Now</button>
-                <button className={view === "chart" ? "on" : ""} onClick={() => setView("chart")}>Chart</button>
-                <button className={view === "replay" ? "on" : ""} onClick={() => setView("replay")}>Replay</button>
+                <button data-control="inspector.view-now" className={view === "now" ? "on" : ""} onClick={() => setView("now")}>Now</button>
+                <button data-control="inspector.view-chart" className={view === "chart" ? "on" : ""} onClick={() => setView("chart")}>Chart</button>
+                <button data-control="inspector.view-replay" className={view === "replay" ? "on" : ""} onClick={() => setView("replay")}>Replay</button>
               </div>
             </div>
             {view === "now" ? <div className="ins-data"><Inst scope={scope} session={session} /></div> : view === "chart" ? <div className="ins-pad"><div className="tr-chartview"><TradeChart scope={scope} session={session} /></div></div> : <div className="ins-pad"><Replay scope={scope} session={session} /></div>}
@@ -229,9 +229,9 @@ function ScopeInspector({ ctx, scope, onClose, open, back, backName }: { ctx: Co
                     {scope.params.map((p) => (
                       <label key={p.key} title={p.hint}>
                         <span>{p.label}</span>
-                        {p.type === "bool" ? <input type="checkbox" checked={!!session.params[p.key]} onChange={(e) => setParam(scope.id, p.key, e.target.checked)} />
-                          : p.type === "number" ? <input type="number" min={p.min} max={p.max} step={p.step || 1} value={Number(session.params[p.key])} onChange={(e) => setParam(scope.id, p.key, Number(e.target.value))} />
-                          : <select value={String(session.params[p.key])} onChange={(e) => setParam(scope.id, p.key, e.target.value)}>{p.options.map((o) => <option key={o}>{o}</option>)}</select>}
+                        {p.type === "bool" ? <input data-control={`inspector.param.${p.key}`} type="checkbox" checked={!!session.params[p.key]} onChange={(e) => setParam(scope.id, p.key, e.target.checked)} />
+                          : p.type === "number" ? <input data-control={`inspector.param.${p.key}`} type="number" min={p.min} max={p.max} step={p.step || 1} value={Number(session.params[p.key])} onChange={(e) => setParam(scope.id, p.key, Number(e.target.value))} />
+                          : <select data-control={`inspector.param.${p.key}`} value={String(session.params[p.key])} onChange={(e) => setParam(scope.id, p.key, e.target.value)}>{p.options.map((o) => <option key={o}>{o}</option>)}</select>}
                       </label>
                     ))}
                   </div>
@@ -242,7 +242,7 @@ function ScopeInspector({ ctx, scope, onClose, open, back, backName }: { ctx: Co
               <h5>Call it</h5>
               <details className="more">
                 <summary>Show code</summary>
-                <div className="snip"><button className="icon-b" title="Copy" aria-label="Copy code" onClick={() => navigator.clipboard?.writeText(code).catch(() => {})}><Copy size={12} /></button><pre className="code">{code}</pre></div>
+                <div className="snip"><button data-control="inspector.copy-code" className="icon-b" title="Copy" aria-label="Copy code" onClick={() => navigator.clipboard?.writeText(code).catch(() => {})}><Copy size={12} /></button><pre className="code">{code}</pre></div>
               </details>
               <p className="fine">Atlas {scope.atlas.map((a) => <a key={a} href={`/about/#${a}`}>{a}</a>)}</p>
             </section>

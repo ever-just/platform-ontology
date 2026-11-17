@@ -99,7 +99,7 @@ function NodeBox({ n, select, byId }: { n: GNode; select: (id: string) => void; 
   const sc = n.scope ? byId.get(n.scope) : undefined;
   const Ic = n.Icon;
   return (
-    <g className={"dg-n" + (click ? " click" : "")} onClick={click} role={click ? "button" : undefined} tabIndex={click ? 0 : undefined}
+    <g data-control={`deps.node.${n.key}`} className={"dg-n" + (click ? " click" : "")} onClick={click} role={click ? "button" : undefined} tabIndex={click ? 0 : undefined}
        onKeyDown={click ? (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); click(); } } : undefined}>
       <title>{n.title}</title>
       <rect x={n.x} y={n.y} width={n.w} height={n.h} rx={n.center ? 9 : 7} style={{ fill: tint(st), stroke: st, strokeWidth: n.center ? 1.6 : 1 }} />
@@ -155,7 +155,7 @@ export function DepsList({ ctx, info }: { ctx: ConsoleCtx; info: DepInfo }) {
             <span className={"dpl-s s-" + st} title={STATUS_WORD[st]}>{st}</span>
           </>
         );
-        return <li key={reqKey(r)}>{target ? <button className="dpl-r" onClick={() => ctx.select(target.id)}>{body}</button> : <div className="dpl-r">{body}</div>}</li>;
+        return <li key={reqKey(r)}>{target ? <button data-control={`deps.open.${target.id}`} className="dpl-r" onClick={() => ctx.select(target.id)}>{body}</button> : <div className="dpl-r">{body}</div>}</li>;
       })}
     </ul>
   );

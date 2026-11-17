@@ -244,7 +244,7 @@ function GeoMap({ scope, session }: InstrumentProps) {
                 {estimated
                   ? <span><Est /> {inf("lat") || inf("accuracy")}{d.place ? ` (${d.place})` : ""}. The dashed ring is the likely error.</span>
                   : <span>Dot: your fix. Ring: how sure the device is ({Math.round(d.accuracy)} m).</span>}
-                {!following && <button type="button" className="pml-recentre" onClick={recentre}>Follow</button>}
+                {!following && <button type="button" data-control="place.geolocation.follow" className="pml-recentre" onClick={recentre}>Follow</button>}
               </div>
             </>
           ) : <Waiting session={session} what="A street map with your position, an accuracy ring in metres, and a trail of recent fixes." />}

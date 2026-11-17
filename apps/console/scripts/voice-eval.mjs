@@ -28,6 +28,8 @@ const TASKS = [
   { say: "What am I looking at right now?", want: ["describe_screen"] },
   { say: "Show me the camera.", want: ["show", "point_at", "list_capabilities"] },
   { say: "Open the camera and show me the record tab.", want: ["show", "list_capabilities"] },
+  { say: "Click the run all button on the page.", want: ["list_controls", "press_control", "describe_screen"] },
+  { say: "Type battery into the search box on the page.", want: ["list_controls", "set_control", "describe_screen"] },
 ];
 
 const vite = await createServer({ server: { middlewareMode: true }, appType: "custom", logLevel: "error" });

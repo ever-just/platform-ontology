@@ -335,7 +335,7 @@ function Radar({ scope, session }: InstrumentProps) {
               const on = sel && x.id === sel.id;
               const fresh = Date.now() - x.seen < 2500;
               return (
-                <g key={x.id} transform={`translate(${(Math.cos(a) * r).toFixed(2)} ${(Math.sin(a) * r).toFixed(2)})`} onClick={() => setPick(x.id)} className="blip">
+                <g key={x.id} data-control={`surroundings.bluetooth.blip-${x.id}`} transform={`translate(${(Math.cos(a) * r).toFixed(2)} ${(Math.sin(a) * r).toFixed(2)})`} onClick={() => setPick(x.id)} className="blip">
                   {fresh && streaming && <circle r="2" fill="none" stroke={COLOR} strokeWidth="0.3" className="blip-ping" />}
                   <circle r={on ? 3.4 : 2.3} fill={COLOR} opacity="0.16" />
                   <circle r={on ? 1.6 : 1.1} fill={on ? C.ink : COLOR} />
@@ -366,7 +366,7 @@ function Radar({ scope, session }: InstrumentProps) {
           <div className="ble-list">
             {devices.length === 0 && <div className="sx-empty">No devices yet</div>}
             {devices.slice(0, 16).map((x) => (
-              <button key={x.id} className={"ble-row" + (sel && sel.id === x.id ? " on" : "")} onClick={() => setPick(x.id)}>
+              <button key={x.id} data-control={`surroundings.bluetooth.device-${x.id}`} className={"ble-row" + (sel && sel.id === x.id ? " on" : "")} onClick={() => setPick(x.id)}>
                 <Bars rssi={x.rssi} />
                 <span className="ble-n"><b>{x.name}</b><em>{x.company || (x.appearance != null ? btAppearance(x.appearance) : null) || x.kind}</em></span>
                 <span className="ble-v">{fmt(x.rssi, 0)}<i>dBm</i></span>
@@ -546,18 +546,18 @@ function SerialPanel({ scopeId, idx, sim }: PanelProps) {
     <div className="sx-panel">
       <div className="sx-bar">
         <label>Baud
-          <select value={baud} disabled={open} onChange={(e) => setBaud(e.target.value)}>
+          <select data-control="surroundings.serial.baud" value={baud} disabled={open} onChange={(e) => setBaud(e.target.value)}>
             <option>9600</option><option>115200</option>
           </select>
         </label>
         {open
-          ? <button className="btn sm" onClick={() => void disconnect()}>Disconnect</button>
-          : <button className="btn sm pri" onClick={() => void connect()}>Connect</button>}
+          ? <button data-control="surroundings.serial.disconnect" className="btn sm" onClick={() => void disconnect()}>Disconnect</button>
+          : <button data-control="surroundings.serial.connect" className="btn sm pri" onClick={() => void connect()}>Connect</button>}
         <div className="sx-seg" role="group" aria-label="Display">
-          <button className={mode === "text" ? "on" : ""} onClick={() => setMode("text")}>Text</button>
-          <button className={mode === "hex" ? "on" : ""} onClick={() => setMode("hex")}>Hex</button>
+          <button data-control="surroundings.serial.mode-text" className={mode === "text" ? "on" : ""} onClick={() => setMode("text")}>Text</button>
+          <button data-control="surroundings.serial.mode-hex" className={mode === "hex" ? "on" : ""} onClick={() => setMode("hex")}>Hex</button>
         </div>
-        <button className="btn sm ghost" onClick={() => { feed.clear(); setRx(0); setTx(0); }}>Clear</button>
+        <button data-control="surroundings.serial.clear" className="btn sm ghost" onClick={() => { feed.clear(); setRx(0); setTx(0); }}>Clear</button>
         <span className={"sx-badge" + (open ? " live" : "")}>{open ? (sim ? "simulated" : "open") : "closed"}</span>
         <span className="sx-count">{rx} B in, {tx} B out</span>
       </div>
@@ -571,11 +571,11 @@ function SerialPanel({ scopeId, idx, sim }: PanelProps) {
         ))}
       </Feed>
       <form className="sx-form" onSubmit={(e) => { e.preventDefault(); void send(); }}>
-        <input value={text} disabled={!open} placeholder={open ? "Text to send" : "Connect first"} onChange={(e) => setText(e.target.value)} aria-label="Text to send" />
-        <select value={ending} disabled={!open} onChange={(e) => setEnding(e.target.value)} aria-label="Line ending">
+        <input data-control="surroundings.serial.text" value={text} disabled={!open} placeholder={open ? "Text to send" : "Connect first"} onChange={(e) => setText(e.target.value)} aria-label="Text to send" />
+        <select data-control="surroundings.serial.line-ending" value={ending} disabled={!open} onChange={(e) => setEnding(e.target.value)} aria-label="Line ending">
           <option value="">no ending</option><option value="\n">LF</option><option value="\r\n">CRLF</option>
         </select>
-        <button className="btn sm pri" type="submit" disabled={!open || !text}>Send</button>
+        <button data-control="surroundings.serial.send" className="btn sm pri" type="submit" disabled={!open || !text}>Send</button>
       </form>
       {err && <div className="sx-err">{err}</div>}
     </div>
@@ -666,9 +666,9 @@ function HidPanel({ scopeId, idx, sim }: PanelProps) {
     <div className="sx-panel">
       <div className="sx-bar">
         {open
-          ? <button className="btn sm" onClick={() => void stop()}>Close</button>
-          : <button className="btn sm pri" onClick={() => void start()}>Open</button>}
-        <button className="btn sm ghost" onClick={() => { feed.clear(); setTotal(0); }}>Clear</button>
+          ? <button data-control="surroundings.hid.close" className="btn sm" onClick={() => void stop()}>Close</button>
+          : <button data-control="surroundings.hid.open" className="btn sm pri" onClick={() => void start()}>Open</button>}
+        <button data-control="surroundings.hid.clear" className="btn sm ghost" onClick={() => { feed.clear(); setTotal(0); }}>Clear</button>
         <span className={"sx-badge" + (open ? " live" : "")}>{open ? (sim ? "simulated" : "open") : "closed"}</span>
         <span className="sx-count"><b>{rate}</b> reports/s, {total} total</span>
       </div>
@@ -683,9 +683,9 @@ function HidPanel({ scopeId, idx, sim }: PanelProps) {
         ))}
       </Feed>
       <form className="sx-form" onSubmit={(e) => { e.preventDefault(); void send(); }}>
-        <input className="sx-id-in" value={rid} disabled={!open} inputMode="numeric" onChange={(e) => setRid(e.target.value)} aria-label="Report id" />
-        <input value={body} disabled={!open} placeholder={open ? "Hex bytes, for example 01 ff 10" : "Open first"} onChange={(e) => setBody(e.target.value)} aria-label="Report bytes in hex" />
-        <button className="btn sm pri" type="submit" disabled={!open}>Send report</button>
+        <input data-control="surroundings.hid.report-id" className="sx-id-in" value={rid} disabled={!open} inputMode="numeric" onChange={(e) => setRid(e.target.value)} aria-label="Report id" />
+        <input data-control="surroundings.hid.report-bytes" value={body} disabled={!open} placeholder={open ? "Hex bytes, for example 01 ff 10" : "Open first"} onChange={(e) => setBody(e.target.value)} aria-label="Report bytes in hex" />
+        <button data-control="surroundings.hid.send-report" className="btn sm pri" type="submit" disabled={!open}>Send report</button>
       </form>
       {err && <div className="sx-err">{err}</div>}
     </div>
@@ -759,8 +759,8 @@ function UsbPanel({ scopeId, idx, sim }: PanelProps) {
     <div className="sx-panel">
       <div className="sx-bar">
         {open
-          ? <button className="btn sm" onClick={() => void stop()}>Close</button>
-          : <button className="btn sm pri" onClick={() => void start()}>Open</button>}
+          ? <button data-control="surroundings.usb.close" className="btn sm" onClick={() => void stop()}>Close</button>
+          : <button data-control="surroundings.usb.open" className="btn sm pri" onClick={() => void start()}>Open</button>}
         <span className={"sx-badge" + (open ? " live" : "")}>{open ? (sim ? "simulated" : "open") : "closed"}</span>
         <span className="sx-count">Read only. No data is transferred.</span>
       </div>

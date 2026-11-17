@@ -308,7 +308,7 @@ export function TradeChart({ scope, session, keys, compact = false, height }: { 
           const sel = m.key === key;
           const tone = !c || c.d === 0 ? "flat" : c.d > 0 ? "up" : "down";
           return (
-            <button key={m.key} role="tab" aria-selected={sel} className={"tr-t" + (sel ? " on" : "")} data-tone={tone} onClick={() => setPrimary(m.key)} onContextMenu={(e) => { e.preventDefault(); setCompare((cc) => cc.includes(m.key) ? cc.filter((k) => k !== m.key) : [...cc, m.key]); }} title="Click to chart. Right click to overlay.">
+            <button data-control={`trade.metric.${m.key}`} key={m.key} role="tab" aria-selected={sel} className={"tr-t" + (sel ? " on" : "")} data-tone={tone} onClick={() => setPrimary(m.key)} onContextMenu={(e) => { e.preventDefault(); setCompare((cc) => cc.includes(m.key) ? cc.filter((k) => k !== m.key) : [...cc, m.key]); }} title="Click to chart. Right click to overlay.">
               <span className="tr-tl">{m.label}</span>
               <b>{c ? fmt(c.last, m.digits ?? 2) : "n/a"}{m.unit && <em> {m.unit}</em>}</b>
               <span className="tr-tc">{tone === "up" ? <ArrowUpRight size={11} /> : tone === "down" ? <ArrowDownRight size={11} /> : <Minus size={11} />}{c ? (c.d >= 0 ? "+" : "") + fmt(c.d, m.digits ?? 2) : ""}{c && c.pct !== null && isFinite(c.pct) ? ` (${c.pct >= 0 ? "+" : ""}${c.pct.toFixed(1)}%)` : ""}</span>
@@ -320,18 +320,18 @@ export function TradeChart({ scope, session, keys, compact = false, height }: { 
       {/* Toolbar: range presets, chart type, pause, zoom, reset, overlay picker. */}
       <div className="tr-bar">
         <div className="seg tr-seg" role="group" aria-label="Time range">
-          {RANGES.map((r) => <button key={r.id} className={rangeId === r.id ? "on" : ""} onClick={() => pickRange(r.id, r.ms)}>{r.id}</button>)}
+          {RANGES.map((r) => <button data-control={`trade.range.${r.id}`} key={r.id} className={rangeId === r.id ? "on" : ""} onClick={() => pickRange(r.id, r.ms)}>{r.id}</button>)}
         </div>
         <div className="seg tr-seg" role="group" aria-label="Chart type">
-          {KINDS.map((k) => <button key={k.id} className={kind === k.id ? "on" : ""} onClick={() => setKind(k.id)} title={k.label}><KindIcon k={k.id} /><span className="tr-kl">{k.label}</span></button>)}
+          {KINDS.map((k) => <button data-control={`trade.kind.${k.id}`} key={k.id} className={kind === k.id ? "on" : ""} onClick={() => setKind(k.id)} title={k.label}><KindIcon k={k.id} /><span className="tr-kl">{k.label}</span></button>)}
         </div>
         <span className="grow" />
-        <button className={"btn sm tr-live" + (follow ? " on-live" : "")} onClick={togglePause} title={follow ? "Pause (space)" : "Follow live (space)"} aria-label={follow ? "Pause" : "Follow live"}>
+        <button data-control="trade.follow" className={"btn sm tr-live" + (follow ? " on-live" : "")} onClick={togglePause} title={follow ? "Pause (space)" : "Follow live (space)"} aria-label={follow ? "Pause" : "Follow live"}>
           {follow ? <><Pause size={12} /><span>{live ? "Live" : "Latest"}</span></> : <><Play size={12} /><span>Go live</span></>}
         </button>
-        <button className="icon-b" onClick={() => zoomBy(0.7)} title="Zoom in (+)" aria-label="Zoom in"><ZoomIn size={14} /></button>
-        <button className="icon-b" onClick={() => zoomBy(1.4)} title="Zoom out (-)" aria-label="Zoom out"><ZoomOut size={14} /></button>
-        <button className="icon-b" onClick={reset} title="Reset view (0)" aria-label="Reset view"><RotateCcw size={14} /></button>
+        <button data-control="trade.zoom-in" className="icon-b" onClick={() => zoomBy(0.7)} title="Zoom in (+)" aria-label="Zoom in"><ZoomIn size={14} /></button>
+        <button data-control="trade.zoom-out" className="icon-b" onClick={() => zoomBy(1.4)} title="Zoom out (-)" aria-label="Zoom out"><ZoomOut size={14} /></button>
+        <button data-control="trade.reset" className="icon-b" onClick={reset} title="Reset view (0)" aria-label="Reset view"><RotateCcw size={14} /></button>
       </div>
 
       <div className="tr-plot" ref={plotRef} tabIndex={0} aria-label={`${meta?.label} chart. Arrows pan, plus and minus zoom, space pauses.`}
@@ -418,7 +418,7 @@ export function TradeChart({ scope, session, keys, compact = false, height }: { 
         {(extra.length > 0 || metrics.length > 1) && (
           <label className="tr-ov">
             <span>Overlay</span>
-            <select value="" onChange={(e) => { const k = e.target.value; if (k) setCompare((cc) => cc.includes(k) ? cc.filter((z) => z !== k) : [...cc, k].slice(-3)); }}>
+            <select data-control="trade.overlay" value="" onChange={(e) => { const k = e.target.value; if (k) setCompare((cc) => cc.includes(k) ? cc.filter((z) => z !== k) : [...cc, k].slice(-3)); }}>
               <option value="">{compare.length ? compare.join(", ") : "none"}</option>
               {[...metrics.map((m) => m.key), ...extra].filter((k) => k !== key).map((k) => <option key={k} value={k}>{compare.includes(k) ? "remove " : "add "}{k}</option>)}
             </select>
@@ -427,7 +427,7 @@ export function TradeChart({ scope, session, keys, compact = false, height }: { 
         {extra.length > 0 && (
           <label className="tr-ov">
             <span>Field</span>
-            <select value={key || ""} onChange={(e) => setPrimary(e.target.value)}>
+            <select data-control="trade.metric-select" value={key || ""} onChange={(e) => setPrimary(e.target.value)}>
               {[...metrics.map((m) => m.key), ...extra].map((k) => <option key={k} value={k}>{k}</option>)}
             </select>
           </label>

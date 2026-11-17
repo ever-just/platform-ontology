@@ -78,7 +78,7 @@ function AccountPanel(_: { ctx: ConsoleCtx }) {
         {!s.user ? (
           <>
             <p className="vp-lede">Readings from this tab are sampled anonymously. Start an account to keep them with you across visits. It needs no email and no name.</p>
-            <Button intent="primary" loading={busy} onClick={run(signInAnonymous)} text="Keep my readings" />
+            <Button data-control="account.keep-readings" intent="primary" loading={busy} onClick={run(signInAnonymous)} text="Keep my readings" />
           </>
         ) : (
           <>
@@ -87,9 +87,9 @@ function AccountPanel(_: { ctx: ConsoleCtx }) {
               {" "}{s.readings?.visits ?? 0} visit{s.readings?.visits === 1 ? "" : "s"} saved.
             </p>
             <div style={{ display: "flex", gap: 8, marginBottom: 14 }}>
-              <Button loading={busy} onClick={run(async () => { await linkVisit(); await refreshAccount(); })} text="Save this visit" />
-              {s.user.anonymous && s.github && <Button intent="primary" onClick={run(linkGithub)} text="Link GitHub" />}
-              <Button minimal onClick={run(signOut)} text="Sign out" />
+              <Button data-control="account.save-visit" loading={busy} onClick={run(async () => { await linkVisit(); await refreshAccount(); })} text="Save this visit" />
+              {s.user.anonymous && s.github && <Button data-control="account.link-github" intent="primary" onClick={run(linkGithub)} text="Link GitHub" />}
+              <Button data-control="account.sign-out" minimal onClick={run(signOut)} text="Sign out" />
             </div>
             {s.user.anonymous && !s.github && <Callout compact>GitHub linking is not turned on yet. Your anonymous account works on its own.</Callout>}
             {top.length > 0 && (

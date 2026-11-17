@@ -85,7 +85,7 @@ export function VoiceDock({ atlas, scopes }: { atlas: Atlas; scopes: ScopeDef[] 
 
   return (
     <>
-      <button className={"icon-b voice-b" + (on ? " on" : "")} onClick={() => setOpen(!open)} aria-expanded={open} aria-label="Talk to the console" title="Talk to the console">
+      <button data-control="voice.toggle" className={"icon-b voice-b" + (on ? " on" : "")} onClick={() => setOpen(!open)} aria-expanded={open} aria-label="Talk to the console" title="Talk to the console">
         <AudioLines size={16} />
       </button>
       {open && createPortal(
@@ -93,7 +93,7 @@ export function VoiceDock({ atlas, scopes }: { atlas: Atlas; scopes: ScopeDef[] 
           <div className="voice-h">
             <b>Ask the console</b>
             <span className="grow" />
-            <button className="icon-b" onClick={() => { stop(); setOpen(false); }} aria-label="Close voice assistant"><X size={15} /></button>
+            <button data-control="voice.close" className="icon-b" onClick={() => { stop(); setOpen(false); }} aria-label="Close voice assistant"><X size={15} /></button>
           </div>
           <div className="voice-f" ref={feed} aria-live="polite">
             {!lines.length && <p className="voice-hint">Try “open the camera and show me the record tab” or “what is running right now?”</p>}
@@ -101,13 +101,13 @@ export function VoiceDock({ atlas, scopes }: { atlas: Atlas; scopes: ScopeDef[] 
           </div>
           <p className="voice-s" role="status">{status}</p>
           <div className="voice-c">
-            <button className={"voice-go" + (on ? " on" : "")} onClick={start} disabled={busy}>
+            <button data-control="voice.talk" className={"voice-go" + (on ? " on" : "")} onClick={start} disabled={busy}>
               {on ? <><Square size={13} />Stop</> : <><Mic size={14} />{busy ? "Starting…" : "Start talking"}</>}
             </button>
             {on && (
               <form className="voice-t" onSubmit={send}>
-                <input value={draft} onChange={(e) => setDraft(e.target.value)} placeholder="Or type" aria-label="Type a message" />
-                <button className="icon-b" aria-label="Send"><Send size={14} /></button>
+                <input data-control="voice.text" value={draft} onChange={(e) => setDraft(e.target.value)} placeholder="Or type" aria-label="Type a message" />
+                <button data-control="voice.send" className="icon-b" aria-label="Send"><Send size={14} /></button>
               </form>
             )}
           </div>

@@ -55,7 +55,7 @@ export function HistoryChart({ scope, session }: { scope: ScopeDef; session: Ses
         {pts.length > 1 && <div><span>Change</span><b className={delta > 0 ? "up" : delta < 0 ? "down" : ""}>{delta > 0 ? "+" : ""}{fmt(delta, dg)}{meta?.unit && <em> {meta.unit}</em>}</b></div>}
       </div>
       {keys.length > 1 && (
-        <div className="hist-keys">{keys.map((k) => <button key={k} className={k === key ? "on" : ""} onClick={() => setPick(k)}>{scope.metrics?.find((m) => m.key === k)?.label || k}</button>)}</div>
+        <div className="hist-keys">{keys.map((k) => <button data-control={`history.key.${k}`} key={k} className={k === key ? "on" : ""} onClick={() => setPick(k)}>{scope.metrics?.find((m) => m.key === k)?.label || k}</button>)}</div>
       )}
       {pts.length > 1 ? (
         <svg className="hist-c" viewBox={`0 0 ${W} ${H}`} preserveAspectRatio="none" role="img" aria-label={`${key} over time`}>
@@ -71,7 +71,7 @@ export function HistoryChart({ scope, session }: { scope: ScopeDef; session: Ses
       )}
       <div className="hist-f">
         <span><HardDrive size={12} />Kept in this browser, so it is still here when you come back.</span>
-        <button className="btn ghost" onClick={() => void clearHistory(scope.id).then(() => setRows([]))}><Trash2 size={12} />Clear</button>
+        <button data-control="history.clear" className="btn ghost" onClick={() => void clearHistory(scope.id).then(() => setRows([]))}><Trash2 size={12} />Clear</button>
       </div>
     </div>
   );

@@ -123,7 +123,7 @@ function LinkCard({ ctx, link }: { ctx: ConsoleCtx; link: LinkDef }) {
           const s = ss[i];
           const vals = p.key ? series(s.records, p.key, 40) : [];
           return (
-            <button key={p.id} className={"jn-part st-" + s.state} onClick={() => ctx.select(p.id)} title="Open in the Inspector">
+            <button data-control={`links.part.${p.id}`} key={p.id} className={"jn-part st-" + s.state} onClick={() => ctx.select(p.id)} title="Open in the Inspector">
               <span className="jn-pn">{sc && <MechBadge mech={mechanismOf(sc)} />}<b>{p.label || sc?.name || p.id}</b></span>
               <span className="jn-ps"><i className="jn-dot" />{STATE_WORD[s.state] || s.state}{s.count > 0 && <em>{s.count} read{s.count === 1 ? "" : "s"}</em>}</span>
               {vals.length > 1 ? <Spark values={vals} w={120} h={20} /> : <span className="jn-flat" />}
@@ -138,9 +138,9 @@ function LinkCard({ ctx, link }: { ctx: ConsoleCtx; link: LinkDef }) {
           : <div><span>{live ? waitText : "Run them together to see what they say as a pair."}</span></div>}
       </div>
       <footer className="jn-f">
-        {runLabel && <button className="btn primary" onClick={() => missing.forEach((p) => void request(p.id))}><Play size={12} />{runLabel}</button>}
-        {blocked.length > 0 && <button className="btn" onClick={sample}><FlaskConical size={12} />Use a sample</button>}
-        {live && <button className="btn ghost" onClick={() => link.parts.forEach((p) => stop(p.id))}><Square size={11} />Stop</button>}
+        {runLabel && <button data-control="links.run" className="btn primary" onClick={() => missing.forEach((p) => void request(p.id))}><Play size={12} />{runLabel}</button>}
+        {blocked.length > 0 && <button data-control="links.sample" className="btn" onClick={sample}><FlaskConical size={12} />Use a sample</button>}
+        {live && <button data-control="links.stop" className="btn ghost" onClick={() => link.parts.forEach((p) => stop(p.id))}><Square size={11} />Stop</button>}
       </footer>
     </article>
   );

@@ -3,6 +3,7 @@ import { allSessions, getSession, isActive, request, setParam, setSource, stop, 
 import { runPageAction } from "../scopes/page-controls";
 import { ACTIONS, type JsonSchema } from "./actions";
 import { SCREEN_TOOLS, screenCall } from "./screen-tools";
+import { CONTROL_TOOLS, controlCall } from "./control-tools";
 import { highlight } from "../core/screen";
 
 // The agent control layer. A small, fixed set of tools covers every capability: the capability ids,
@@ -136,11 +137,14 @@ export function createAgentTools(atlas: Atlas, scopes: ScopeDef[]): AgentTools {
       inputSchema: { type: "object", properties: { id: { type: "string" }, key: { type: "string" }, value: { type: ["string", "number", "boolean"] } }, required: ["id", "key", "value"] },
     },
     ...SCREEN_TOOLS,
+    ...CONTROL_TOOLS,
   ];
 
   async function call(name: string, a: Record<string, any> = {}): Promise<ToolResult> {
     const sc = await screenCall(name, a, find);
     if (sc) return sc;
+    const cc = await controlCall(name, a);
+    if (cc) return cc;
     // Show the person which capability the agent is working on.
     const target = a.id ? find(a.id) : undefined;
     if (target) highlight(target.id);

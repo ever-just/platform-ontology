@@ -317,7 +317,7 @@ function Keystroke({ session }: InstrumentProps) {
     <Frame
       visual={
         <div className="pml-vis">
-          <input className="pml-input" placeholder="Type here: only timing is measured, never which key" spellCheck={false} autoComplete="off" />
+          <input data-control="motion.typing.input" className="pml-input" placeholder="Type here: only timing is measured, never which key" spellCheck={false} autoComplete="off" />
           {d ? (
             <>
               <div className="pml-bars">
